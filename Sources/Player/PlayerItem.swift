@@ -97,9 +97,13 @@ public final class PlayerItem: Equatable {
                 publisher,
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
+            .handleEvents(receiveSubscription: { _ in
+                // swiftlint:disable:previous trailing_closure
+                metricLog.clear()
+            })
             .measureDateInterval { dateInterval in
                 let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
-                metricLog.addEvent(event)
+                metricLog.appendEvent(event)
             }
             .map { asset, trackerAdapters in
                 trackerAdapters.forEach { adapter in
@@ -112,7 +116,7 @@ public final class PlayerItem: Equatable {
             }
             .switchToLatest()
             .map { asset, metadata in
-                AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration, metricLog: metricLog)
+                AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration)
             }
             .catch { error in
                 Just(.failing(id: id, error: error))

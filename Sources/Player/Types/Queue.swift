@@ -29,6 +29,11 @@ struct Queue {
         itemState.item
     }
 
+    var items: QueueItems? {
+        guard let item, let playerItem else { return nil }
+        return .init(item: item, playerItem: playerItem)
+    }
+
     init(elements: [QueueElement], itemState: ItemState) {
         self.elements = elements
         self.itemState = !elements.isEmpty ? itemState : .empty

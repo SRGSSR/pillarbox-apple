@@ -107,17 +107,12 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
-    private(set) var metricLog: MetricLog? {
-        get {
-            objc_getAssociatedObject(self, &kMetricLogKey) as? MetricLog
+    var metricLog: MetricLog {
+        if let metricLog = objc_getAssociatedObject(self, &kMetricLogKey) as? MetricLog {
+            return metricLog
         }
-        set {
-            objc_setAssociatedObject(self, &kMetricLogKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-
-    func withMetricLog(_ metricLog: MetricLog?) -> AVPlayerItem {
-        self.metricLog = metricLog
-        return self
+        let metricLog = MetricLog()
+        objc_setAssociatedObject(self, &kMetricLogKey, metricLog, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return metricLog
     }
 }

@@ -7,6 +7,7 @@
 @testable import PillarboxPlayer
 
 import Combine
+import Nimble
 import PillarboxCircumspect
 
 final class MetricLogTests: TestCase {
@@ -15,30 +16,12 @@ final class MetricLogTests: TestCase {
         expectNothingPublished(from: metricLog.eventPublisher(), during: .milliseconds(100))
     }
 
-    func testOneEvent() {
+    func testAppend() {
         let metricLog = MetricLog()
         let event = MetricEvent(kind: .assetLoading(.init()))
         expectSimilarPublished(values: [event], from: metricLog.eventPublisher(), during: .milliseconds(100)) {
-            metricLog.addEvent(event)
+            metricLog.appendEvent(event)
+            expect(metricLog.events).to(beSimilarTo([event]))
         }
-    }
-
-    func testManyEvents() {
-        let metricLog = MetricLog()
-        let event1 = MetricEvent(kind: .assetLoading(.init()))
-        let event2 = MetricEvent(kind: .resourceLoading(.init()))
-        expectSimilarPublished(values: [event1, event2], from: metricLog.eventPublisher(), during: .milliseconds(100)) {
-            metricLog.addEvent(event1)
-            metricLog.addEvent(event2)
-        }
-    }
-
-    func testWithPreviousEvent() {
-        let metricLog = MetricLog()
-        let event1 = MetricEvent(kind: .assetLoading(.init()))
-        let event2 = MetricEvent(kind: .resourceLoading(.init()))
-        metricLog.addEvent(event1)
-        metricLog.addEvent(event2)
-        expectSimilarPublished(values: [event1, event2], from: metricLog.eventPublisher(), during: .milliseconds(100))
     }
 }

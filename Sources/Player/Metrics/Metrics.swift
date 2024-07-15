@@ -7,7 +7,7 @@
 import CoreMedia
 import Foundation
 
-/// An object used to capture metrics associated with a player.
+/// A capture of metrics associated with a player.
 public struct Metrics: Equatable {
     /// The player time at the time metrics were captured.
     public let time: CMTime

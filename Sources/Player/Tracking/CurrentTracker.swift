@@ -5,35 +5,59 @@
 //
 
 import Combine
+import Foundation
 
-/// Tracks the provided item during its lifecycle.
-///
-/// This class implements a Resource Acquisition Is Initialization (RAII) approach to ensure lifecycle events are
-/// properly balanced.
 final class CurrentTracker {
-    let item: PlayerItem
     private var cancellables = Set<AnyCancellable>()
+    private weak var player: Player?
 
-    init(item: PlayerItem, player: Player) {
-        self.item = item
-        item.enableTrackers(for: player)
+    private var item: PlayerItem? {
+        willSet {
+            guard item != newValue else { return }
+            item?.disableTrackers()
+        }
+        didSet {
+            guard let player, item != oldValue else { return }
+            item?.enableTrackers(for: player)
+        }
+    }
 
-        player.propertiesPublisher
+    init(player: Player) {
+        self.player = player
+
+        configureItemPublisher(for: player)
+        configurePropertiesPublisher(for: player)
+        configureMetricEventPublisher(for: player)
+    }
+
+    private func configureItemPublisher(for player: Player) {
+        player.queuePublisher
+            .slice(at: \.item)
             .receiveOnMainThread()
-            .sink { properties in
-                item.updateTrackerProperties(properties)
+            .sink { [weak self] item in
+                self?.item = item
             }
             .store(in: &cancellables)
+    }
 
-        item.metricLog.eventPublisher()
+    private func configurePropertiesPublisher(for player: Player) {
+        player.propertiesPublisher
             .receiveOnMainThread()
-            .sink { event in
-                item.receiveMetricEvent(event)
+            .sink { [weak self] properties in
+                self?.item?.updateTrackerProperties(properties)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func configureMetricEventPublisher(for player: Player) {
+        player.metricEventPublisher
+            .sink { [weak self] event in
+                self?.item?.receiveMetricEvent(event)
             }
             .store(in: &cancellables)
     }
 
     deinit {
-        item.disableTrackers()
+        item?.disableTrackers()
     }
 }

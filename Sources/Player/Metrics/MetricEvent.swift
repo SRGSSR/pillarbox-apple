@@ -7,7 +7,7 @@
 import CoreMedia
 
 /// A metric event.
-public struct MetricEvent {
+public struct MetricEvent: Hashable {
     /// A kind of metric event.
     public enum Kind {
         /// Asset loading.
@@ -19,7 +19,15 @@ public struct MetricEvent {
         ///
         /// Measures the time for the player to load the associated resource until playback is ready to start.
         case resourceLoading(DateInterval)
+
+        /// Failure.
+        case failure(Error)
+
+        /// Warning.
+        case warning(Error)
     }
+
+    private let id = UUID()
 
     /// The kind of event.
     public let kind: Kind
@@ -39,6 +47,8 @@ public struct MetricEvent {
             return dateInterval.duration
         case let .resourceLoading(dateInterval):
             return dateInterval.duration
+        default:
+            return 0
         }
     }
 
@@ -46,6 +56,14 @@ public struct MetricEvent {
         self.kind = kind
         self.date = date
         self.time = time
+    }
+
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
@@ -56,6 +74,10 @@ extension MetricEvent: CustomStringConvertible {
             return "assetLoading(\(dateInterval.duration))"
         case let .resourceLoading(dateInterval):
             return "resourceLoading(\(dateInterval.duration))"
+        case let .failure(error):
+            return "failure(\(error.localizedDescription))"
+        case let .warning(error):
+            return "warning(\(error.localizedDescription))"
         }
     }
 }

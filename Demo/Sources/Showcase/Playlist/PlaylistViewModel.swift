@@ -73,7 +73,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     var otherStandardTemplates: [Template] {
-        Array(OrderedSet(Self.standardTemplates).subtracting(OrderedSet(templates)))
+        Array(OrderedSet(Self.standardTemplates).subtracting(Set(templates)))
     }
 
     var templates: [Template] = [] {

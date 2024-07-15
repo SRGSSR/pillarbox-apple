@@ -25,7 +25,12 @@ public final class Player: ObservableObject, Equatable {
     @Published public private(set) var currentIndex: Int?
 
     /// A Boolean setting whether trackers must be enabled or not.
-    @Published public var isTrackingEnabled = true
+    @Published public var isTrackingEnabled = true {
+        didSet {
+            guard isTrackingEnabled != oldValue else { return }
+            configureTracking()
+        }
+    }
 
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
@@ -90,22 +95,6 @@ public final class Player: ObservableObject, Equatable {
         .removeDuplicates()
         .share(replay: 1)
         .eraseToAnyPublisher()
-    }()
-
-    /// A shared publisher delivering metric events associated to the current item.
-    ///
-    /// All metric events related to the item currently being played, if any, are received upon subscription.
-    /// Events are ordered from the oldest to the newest one.
-    public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
-        currentItemPublisher()
-            .map { item -> AnyPublisher<[MetricEvent], Never> in
-                guard let item else { return Just([]).eraseToAnyPublisher() }
-                return item.metricLog.$events
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .share(replay: 1)
-            .eraseToAnyPublisher()
     }()
 
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
@@ -224,11 +213,11 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
+        configureTracking()
 
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureControlCenterPublishers()
-        configureCurrentTrackerPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
     }
@@ -270,6 +259,10 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
+    }
+
+    private func configureTracking() {
+        currentTracker = isTrackingEnabled ? CurrentTracker(player: self) : nil
     }
 
     private func configureControlCenterPublishers() {
@@ -360,12 +353,6 @@ private extension Player {
         metadataPublisher
             .receiveOnMainThread()
             .assign(to: &$metadata)
-    }
-
-    func configureCurrentTrackerPublishers() {
-        currentTrackerPublisher()
-            .weakAssign(to: \.currentTracker, on: self)
-            .store(in: &cancellables)
     }
 
     func configurePlaybackSpeedPublisher() {
