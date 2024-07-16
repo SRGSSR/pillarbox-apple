@@ -16,7 +16,7 @@ struct MetricStartData: Encodable {
     let playerPlatform: String
     let playerVersion: String
     let origin: String?
-    let mediaId: String
-    let mediaSource: String
+    let mediaId: String?
+    let mediaSource: String?
     let timeMetrics: TimeMetrics
 }

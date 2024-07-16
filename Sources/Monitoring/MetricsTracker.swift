@@ -10,13 +10,16 @@ import UIKit
 
 public final class MetricsTracker: PlayerItemTracker {
     private let sessionId = UUID()
-    var mediaSource: UInt?
+    private var mediaSource: UInt?
+    private var metadata: Metadata?
 
     public init(configuration: Void) {}
 
     public func enable(for player: Player) {}
 
-    public func updateMetadata(with metadata: Void) {}
+    public func updateMetadata(with metadata: Metadata) {
+        self.metadata = metadata
+    }
 
     public func updateProperties(with properties: PlayerProperties) {}
 
@@ -44,8 +47,8 @@ public final class MetricsTracker: PlayerItemTracker {
                     playerPlatform: "Apple",
                     playerVersion: Player.version,
                     origin: Bundle.main.bundleIdentifier,
-                    mediaId: "URN-will-be-retrieved-from-the-metadata",
-                    mediaSource: "URL-will-be-retrieved-from-the-metadata",
+                    mediaId: metadata?.mediaId,
+                    mediaSource: metadata?.mediaSource,
                     timeMetrics: timeMetrics
                 )
             )
@@ -79,4 +82,18 @@ extension MetricsTracker {
             return "Phone"
         }
     }()
+}
+
+public extension MetricsTracker {
+    /// Metadata associated with the tracker.
+    struct Metadata {
+        let mediaId: String
+        let mediaSource: String
+
+        /// Creates metadata.
+        public init(mediaId: String, mediaSource: String) {
+            self.mediaId = mediaId
+            self.mediaSource = mediaSource
+        }
+    }
 }
