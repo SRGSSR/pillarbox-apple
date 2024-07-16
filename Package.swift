@@ -28,6 +28,10 @@ let package = Package(
         .library(
             name: "PillarboxPlayer",
             targets: ["PillarboxPlayer"]
+        ),
+        .library(
+            name: "PillarboxMonitoring",
+            targets: ["PillarboxMonitoring"]
         )
     ],
     dependencies: [
@@ -77,6 +81,13 @@ let package = Package(
             plugins: [
                 .plugin(name: "PackageInfoPlugin")
             ]
+        ),
+        .target(
+            name: "PillarboxMonitoring",
+            dependencies: [
+                .target(name: "PillarboxPlayer")
+            ],
+            path: "Sources/Monitoring"
         ),
         .target(
             name: "PillarboxCircumspect",
@@ -142,6 +153,12 @@ let package = Package(
             dependencies: [
                 .target(name: "PillarboxCircumspect"),
                 .target(name: "PillarboxCoreBusiness")
+            ]
+        ),
+        .testTarget(
+            name: "MonitoringTests",
+            dependencies: [
+                .target(name: "PillarboxMonitoring")
             ]
         ),
         .testTarget(
