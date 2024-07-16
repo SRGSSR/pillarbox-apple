@@ -32,7 +32,12 @@ public extension PlayerItem {
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
                 CommandersActTracker.adapter { $0.analyticsMetadata },
-                MetricsTracker.adapter()
+                MetricsTracker.adapter { mediaMetadata in
+                    .init(
+                        mediaId: mediaMetadata.mediaComposition.chapterUrn,
+                        mediaSource: mediaMetadata.resource.url.absoluteString
+                    )
+                }
             ] + trackerAdapters
         )
     }
