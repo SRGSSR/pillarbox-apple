@@ -37,7 +37,7 @@ public final class MetricsTracker: PlayerItemTracker {
                 timestamp: Date().timeIntervalSince1970,
                 data: MetricStartData(
                     deviceId: UIDevice.current.identifierForVendor?.uuidString,
-                    deviceModel: UIDevice.current.model,
+                    deviceModel: Self.deviceModel,
                     deviceType: Self.deviceType,
                     screenWidth: UInt(UIScreen.main.bounds.width),
                     screenHeight: UInt(UIScreen.main.bounds.height),
@@ -80,6 +80,14 @@ extension MetricsTracker {
             return "Headset"
         default:
             return "Phone"
+        }
+    }()
+
+    static let deviceModel: String = {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        return withUnsafePointer(to: &systemInfo.machine.0) { pointer in
+            String(cString: pointer)
         }
     }()
 }
