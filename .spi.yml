@@ -6,6 +6,7 @@ builder:
       documentation_targets: [
         PillarboxPlayer,
         PillarboxCoreBusiness,
+        PillarboxMonitoring,
         PillarboxAnalytics,
         PillarboxCore,
         PillarboxCircumspect,

@@ -211,6 +211,18 @@
             testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "MonitoringTests"
+               BuildableName = "MonitoringTests"
+               BlueprintName = "MonitoringTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "PlayerTests"
                BuildableName = "PlayerTests"
                BlueprintName = "PlayerTests"
