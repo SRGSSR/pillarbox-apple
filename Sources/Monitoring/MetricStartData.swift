@@ -5,7 +5,7 @@
 //
 
 struct MetricStartData: Encodable {
-    let deviceId: String
+    let deviceId: String?
     let deviceModel: String
     let deviceType: String
     let screenWidth: UInt
@@ -15,7 +15,7 @@ struct MetricStartData: Encodable {
     let playerName: String
     let playerPlatform: String
     let playerVersion: String
-    let origin: String
+    let origin: String?
     let mediaId: String
     let mediaSource: String
     let timeMetrics: TimeMetrics
