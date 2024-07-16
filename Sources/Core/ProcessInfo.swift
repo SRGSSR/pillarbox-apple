@@ -6,8 +6,9 @@
 
 import Foundation
 
-extension ProcessInfo {
-    var isDesktopApp: Bool {
+public extension ProcessInfo {
+    /// A Boolean value that indicates whether the process is running on a Mac.
+    var isRunningOnMac: Bool {
         isMacCatalystApp || isiOSAppOnMac
     }
 }

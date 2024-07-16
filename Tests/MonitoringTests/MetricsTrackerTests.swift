@@ -9,6 +9,6 @@ import XCTest
 
 final class MetricsTrackerTests: XCTestCase {
     func testEmpty() {
-        XCTAssertTrue(true)
+        print("testEmpty")
     }
 }

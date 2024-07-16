@@ -4,9 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
+import Foundation
+
 struct MetricPayload<Data: Encodable>: Encodable {
-    let sessionId: String
+    let sessionId: UUID
     let eventName: MetricName
-    let timestamp: String
+    let timestamp: TimeInterval
     let data: Data
 }
