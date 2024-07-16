@@ -5,6 +5,7 @@
 //
 
 import CoreMedia
+import Foundation
 
 /// A metric event.
 public struct MetricEvent: Hashable {
@@ -75,21 +76,59 @@ public struct MetricEvent: Hashable {
     }
 }
 
-extension MetricEvent: CustomStringConvertible {
+extension MetricEvent.Kind: CustomStringConvertible {
     public var description: String {
-        switch kind {
+        switch self {
         case let .assetLoading(dateInterval):
-            return "assetLoading(\(dateInterval.duration))"
+            return "Asset loaded in \(Self.duration(from: dateInterval.duration))"
         case let .resourceLoading(dateInterval):
-            return "resourceLoading(\(dateInterval.duration))"
+            return "Resource loaded in \(Self.duration(from: dateInterval.duration))"
         case let .failure(error):
-            return "failure(\(error.localizedDescription))"
+            return "[FAILURE] \(error.localizedDescription)"
         case let .warning(error):
-            return "warning(\(error.localizedDescription))"
+            return "[WARNING] \(error.localizedDescription)"
         case .stall:
-            return "stall"
+            return "Stall"
         case let .resumeAfterStall(dateInterval):
-            return "resumeAfterStall(\(dateInterval.duration))"
+            return "Resume after stall for \(Self.duration(from: dateInterval.duration))"
         }
+    }
+
+    private static func duration(from interval: TimeInterval) -> String {
+        String(format: "%.3fs", interval)
+    }
+}
+
+extension MetricEvent: CustomStringConvertible {
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter
+    }()
+
+    private static let durationFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    private var formattedDate: String {
+        Self.dateFormatter.string(from: date)
+    }
+
+    public var description: String {
+        if let duration = Self.duration(from: time) {
+            "[\(duration)] \(formattedDate) - \(kind.description)"
+        }
+        else {
+            "\(formattedDate) - \(kind.description)"
+        }
+    }
+
+    private static func duration(from time: CMTime) -> String? {
+        guard time.isValid else { return nil }
+        return durationFormatter.string(from: time.seconds)
     }
 }
