@@ -13,6 +13,10 @@ public final class MetricsTracker: PlayerItemTracker {
     private var mediaSource: UInt?
     private var metadata: Metadata?
 
+    public var description: String? {
+        "Monitoring: \(sessionId)"
+    }
+
     public init(configuration: Void) {}
 
     public func enable(for player: Player) {}
