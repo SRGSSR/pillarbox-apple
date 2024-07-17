@@ -17,6 +17,7 @@ public final class MetricsTracker: PlayerItemTracker {
 
     private let sessionId = UUID()
     private var mediaSource: DateInterval?
+    private weak var player: Player?
     private var metadata: Metadata?
     private var properties: PlayerProperties?
     private var stallDuration: UInt = 0
@@ -27,7 +28,9 @@ public final class MetricsTracker: PlayerItemTracker {
 
     public init(configuration: Void) {}
 
-    public func enable(for player: Player) {}
+    public func enable(for player: Player) {
+        self.player = player
+    }
 
     public func updateMetadata(with metadata: Metadata) {
         self.metadata = metadata
@@ -104,8 +107,8 @@ private extension MetricsTracker {
                 bufferDuration: Self.bufferDuration(properties: properties),
                 stallCount: UInt(metrics?.total.numberOfStalls ?? 0),
                 stallDuration: stallDuration,
-                playbackDuration: 0,
-                playerPosition: 0
+                playbackDuration: UInt((metrics?.total.playbackDuration ?? 0) * 1000),
+                playerPosition: UInt((player?.time.seconds ?? 0) * 1000)
             )
         )
         return try? Self.jsonEncoder.encode(payload)
