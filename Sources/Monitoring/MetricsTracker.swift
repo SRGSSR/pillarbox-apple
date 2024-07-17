@@ -9,9 +9,17 @@ import PillarboxPlayer
 import UIKit
 
 public final class MetricsTracker: PlayerItemTracker {
+    private static let jsonEncoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        return encoder
+    }()
+
     private let sessionId = UUID()
     private var mediaSource: DateInterval?
     private var metadata: Metadata?
+    private var properties: PlayerProperties?
+    private var stallDuration: UInt = 0
 
     public var description: String? {
         "Monitoring: \(sessionId)"
@@ -25,7 +33,9 @@ public final class MetricsTracker: PlayerItemTracker {
         self.metadata = metadata
     }
 
-    public func updateProperties(with properties: PlayerProperties) {}
+    public func updateProperties(with properties: PlayerProperties) {
+        self.properties = properties
+    }
 
     public func receiveMetricEvent(_ event: MetricEvent) {
         switch event.kind {
@@ -34,17 +44,25 @@ public final class MetricsTracker: PlayerItemTracker {
         case let .resourceLoading(dateInterval):
             guard let mediaSource else { return }
             print("\(Self.self): \(String(decoding: startPayload(mediaSource: mediaSource, asset: dateInterval)!, as: UTF8.self))")
-        case let .failure(error):
-            print(error)
+        case let .resumeAfterStall(dateInterval):
+            stallDuration += UInt(dateInterval.duration * 1000)
         default:
             break
         }
     }
 
-    public func disable() {}
+    public func disable() {
+        print("\(Self.self): \(String(decoding: stopPayload()!, as: UTF8.self))")
+    }
 }
 
 private extension MetricsTracker {
+    static func bufferDuration(properties: PlayerProperties?) -> UInt? {
+        guard let properties else { return nil }
+        let loadedTimeRange = properties.loadedTimeRange
+        return loadedTimeRange.isValid ? UInt(loadedTimeRange.duration.seconds * 1000) : 0
+    }
+
     func startPayload(mediaSource: DateInterval, asset: DateInterval) -> Data? {
         let asset = UInt(round(asset.duration * 1000))
         let mediaSource = UInt(round(mediaSource.duration * 1000))
@@ -70,9 +88,27 @@ private extension MetricsTracker {
                 timeMetrics: timeMetrics
             )
         )
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        return try? encoder.encode(payload)
+        return try? Self.jsonEncoder.encode(payload)
+    }
+
+    func stopPayload() -> Data? {
+        let metrics = properties?.metrics()
+        let payload = MetricPayload(
+            sessionId: sessionId,
+            eventName: .stop,
+            timestamp: Date().timeIntervalSince1970,
+            data: MetricEventData(
+                url: metrics?.uri,
+                bitrate: UInt(metrics?.indicatedBitrate ?? 0),
+                bandwidth: UInt(metrics?.observedBitrate ?? 0),
+                bufferDuration: Self.bufferDuration(properties: properties),
+                stallCount: UInt(metrics?.total.numberOfStalls ?? 0),
+                stallDuration: stallDuration,
+                playbackDuration: 0,
+                playerPosition: 0
+            )
+        )
+        return try? Self.jsonEncoder.encode(payload)
     }
 }
 
