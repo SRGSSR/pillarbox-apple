@@ -35,6 +35,10 @@ public struct TrackerAdapter<M> {
 }
 
 extension TrackerAdapter: TrackerLifeCycle {
+    var description: String? {
+        tracker.description
+    }
+
     func enable(for player: Player) {
         tracker.enable(for: player)
     }
