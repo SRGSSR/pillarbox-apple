@@ -10,7 +10,7 @@ import UIKit
 
 public final class MetricsTracker: PlayerItemTracker {
     private let sessionId = UUID()
-    private var mediaSource: UInt?
+    private var mediaSource: DateInterval?
     private var metadata: Metadata?
 
     public var description: String? {
@@ -30,36 +30,10 @@ public final class MetricsTracker: PlayerItemTracker {
     public func receiveMetricEvent(_ event: MetricEvent) {
         switch event.kind {
         case let .assetLoading(dateInterval):
-            mediaSource = UInt(round(dateInterval.duration * 1000))
+            mediaSource = dateInterval
         case let .resourceLoading(dateInterval):
             guard let mediaSource else { return }
-            let asset = UInt(round(dateInterval.duration * 1000))
-            let timeMetrics = TimeMetrics(mediaSource: mediaSource, asset: asset, total: mediaSource + asset)
-            let payload = MetricPayload(
-                sessionId: sessionId,
-                eventName: .start,
-                timestamp: Date().timeIntervalSince1970,
-                data: MetricStartData(
-                    deviceId: UIDevice.current.identifierForVendor?.uuidString,
-                    deviceModel: Self.deviceModel,
-                    deviceType: Self.deviceType,
-                    screenWidth: UInt(UIScreen.main.nativeBounds.width),
-                    screenHeight: UInt(UIScreen.main.nativeBounds.height),
-                    osName: UIDevice.current.systemName,
-                    osVersion: UIDevice.current.systemVersion,
-                    playerName: "Pillarbox",
-                    playerPlatform: "Apple",
-                    playerVersion: Player.version,
-                    origin: Bundle.main.bundleIdentifier,
-                    mediaId: metadata?.mediaId,
-                    mediaSource: metadata?.mediaSource,
-                    timeMetrics: timeMetrics
-                )
-            )
-            let encoder = JSONEncoder()
-            encoder.keyEncodingStrategy = .convertToSnakeCase
-            let data = try? encoder.encode(payload)
-            print("--> \(String(decoding: data!, as: UTF8.self))")
+            print("\(Self.self): \(String(decoding: startPayload(mediaSource: mediaSource, asset: dateInterval)!, as: UTF8.self))")
         case let .failure(error):
             print(error)
         default:
@@ -68,6 +42,38 @@ public final class MetricsTracker: PlayerItemTracker {
     }
 
     public func disable() {}
+}
+
+private extension MetricsTracker {
+    func startPayload(mediaSource: DateInterval, asset: DateInterval) -> Data? {
+        let asset = UInt(round(asset.duration * 1000))
+        let mediaSource = UInt(round(mediaSource.duration * 1000))
+        let timeMetrics = TimeMetrics(mediaSource: mediaSource, asset: asset, total: mediaSource + asset)
+        let payload = MetricPayload(
+            sessionId: sessionId,
+            eventName: .start,
+            timestamp: Date().timeIntervalSince1970,
+            data: MetricStartData(
+                deviceId: UIDevice.current.identifierForVendor?.uuidString,
+                deviceModel: Self.deviceModel,
+                deviceType: Self.deviceType,
+                screenWidth: UInt(UIScreen.main.nativeBounds.width),
+                screenHeight: UInt(UIScreen.main.nativeBounds.height),
+                osName: UIDevice.current.systemName,
+                osVersion: UIDevice.current.systemVersion,
+                playerName: "Pillarbox",
+                playerPlatform: "Apple",
+                playerVersion: Player.version,
+                origin: Bundle.main.bundleIdentifier,
+                mediaId: metadata?.mediaId,
+                mediaSource: metadata?.mediaSource,
+                timeMetrics: timeMetrics
+            )
+        )
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        return try? encoder.encode(payload)
+    }
 }
 
 extension MetricsTracker {
