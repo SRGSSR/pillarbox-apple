@@ -49,7 +49,9 @@ public protocol PlayerItemTracker: AnyObject {
     func receiveMetricEvent(_ event: MetricEvent)
 
     /// A method called when the tracker is disabled.
-    func disable()
+    ///
+    /// - Parameter player: The player for which the tracker must be disabled.
+    func disable(for player: Player)
 }
 
 public extension PlayerItemTracker {

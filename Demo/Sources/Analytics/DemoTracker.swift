@@ -34,7 +34,7 @@ final class DemoTracker: PlayerItemTracker {
         Self.logger.debug("Receive metric event for \(self.id): \(event)")
     }
 
-    func disable() {
+    func disable(for player: Player) {
         Self.logger.debug("Disable demo tracker for \(self.id)")
     }
 

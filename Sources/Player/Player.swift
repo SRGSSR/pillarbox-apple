@@ -262,7 +262,13 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configureTracking() {
-        currentTracker = isTrackingEnabled ? CurrentTracker(player: self) : nil
+        if isTrackingEnabled {
+            currentTracker = CurrentTracker(player: self)
+        }
+        else {
+            currentTracker?.release(player: self)
+            currentTracker = nil
+        }
     }
 
     private func configureControlCenterPublishers() {
@@ -290,6 +296,8 @@ public final class Player: ObservableObject, Equatable {
         // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 
         // see https://github.com/SRGSSR/pillarbox-apple/issues/520
         queuePlayer.volume = 0
+
+        currentTracker?.release(player: self)
     }
 }
 

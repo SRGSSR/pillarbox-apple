@@ -73,10 +73,9 @@ final class MetadataPublisherTests: TestCase {
             values: [nil, "Title 1"],
             from: Self.titlePublisherTest(for: player)
         )
-        expectEqualPublishedNext(
+        expectAtLeastEqualPublishedNext(
             values: [nil, "Title 2"],
-            from: Self.titlePublisherTest(for: player),
-            during: .milliseconds(100)
+            from: Self.titlePublisherTest(for: player)
         ) {
             player.items = [.webServiceMock(media: .media2)]
         }

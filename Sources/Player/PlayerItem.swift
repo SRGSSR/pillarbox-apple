@@ -169,9 +169,9 @@ extension PlayerItem {
         }
     }
 
-    func disableTrackers() {
+    func disableTrackers(for player: Player) {
         trackerAdapters.forEach { adapter in
-            adapter.disable()
+            adapter.disable(for: player)
         }
     }
 }

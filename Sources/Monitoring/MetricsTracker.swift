@@ -17,7 +17,6 @@ public final class MetricsTracker: PlayerItemTracker {
 
     private let sessionId = UUID()
     private var mediaSource: DateInterval?
-    private weak var player: Player?
     private var metadata: Metadata?
     private var properties: PlayerProperties?
     private var stallDuration: UInt = 0
@@ -28,9 +27,7 @@ public final class MetricsTracker: PlayerItemTracker {
 
     public init(configuration: Void) {}
 
-    public func enable(for player: Player) {
-        self.player = player
-    }
+    public func enable(for player: Player) {}
 
     public func updateMetadata(with metadata: Metadata) {
         self.metadata = metadata
@@ -54,8 +51,8 @@ public final class MetricsTracker: PlayerItemTracker {
         }
     }
 
-    public func disable() {
-        print("\(Self.self): \(String(decoding: stopPayload()!, as: UTF8.self))")
+    public func disable(for player: Player) {
+        print("\(Self.self): \(String(decoding: stopPayload(with: player)!, as: UTF8.self))")
     }
 }
 
@@ -94,7 +91,7 @@ private extension MetricsTracker {
         return try? Self.jsonEncoder.encode(payload)
     }
 
-    func stopPayload() -> Data? {
+    func stopPayload(with player: Player) -> Data? {
         let metrics = properties?.metrics()
         let payload = MetricPayload(
             sessionId: sessionId,
@@ -108,7 +105,7 @@ private extension MetricsTracker {
                 stallCount: UInt(metrics?.total.numberOfStalls ?? 0),
                 stallDuration: stallDuration,
                 playbackDuration: UInt((metrics?.total.playbackDuration ?? 0) * 1000),
-                playerPosition: UInt((player?.time.seconds ?? 0) * 1000)
+                playerPosition: player.time.isValid ? UInt(player.time.seconds * 1000) : nil
             )
         )
         return try? Self.jsonEncoder.encode(payload)

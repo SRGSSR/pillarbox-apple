@@ -39,7 +39,7 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
         configuration.statePublisher.send(.enabled)
     }
 
-    func disable() {
+    func disable(for player: Player) {
         configuration.statePublisher.send(.disabled)
     }
 

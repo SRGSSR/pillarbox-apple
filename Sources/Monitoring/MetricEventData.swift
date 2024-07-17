@@ -12,5 +12,5 @@ struct MetricEventData: Encodable {
     let stallCount: UInt
     let stallDuration: UInt
     let playbackDuration: UInt
-    let playerPosition: UInt
+    let playerPosition: UInt?
 }

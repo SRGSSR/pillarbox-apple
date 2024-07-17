@@ -51,7 +51,7 @@ extension TrackerAdapter: TrackerLifeCycle {
         tracker.receiveMetricEvent(event)
     }
 
-    func disable() {
-        tracker.disable()
+    func disable(for player: Player) {
+        tracker.disable(for: player)
     }
 }

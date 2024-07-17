@@ -62,9 +62,9 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     public func receiveMetricEvent(_ event: MetricEvent) {}
 
-    public func disable() {
+    public func disable(for player: Player) {
         streamingAnalytics = CommandersActStreamingAnalytics()
-        player = nil
+        self.player = nil
     }
 }
 

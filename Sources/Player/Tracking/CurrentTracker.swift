@@ -13,8 +13,8 @@ final class CurrentTracker {
 
     private var item: PlayerItem? {
         willSet {
-            guard item != newValue else { return }
-            item?.disableTrackers()
+            guard let player, item != newValue else { return }
+            item?.disableTrackers(for: player)
         }
         didSet {
             guard let player, item != oldValue else { return }
@@ -28,6 +28,10 @@ final class CurrentTracker {
         configureItemPublisher(for: player)
         configurePropertiesPublisher(for: player)
         configureMetricEventPublisher(for: player)
+    }
+
+    func release(player: Player) {
+        item?.disableTrackers(for: player)
     }
 
     private func configureItemPublisher(for player: Player) {
@@ -55,9 +59,5 @@ final class CurrentTracker {
                 self?.item?.receiveMetricEvent(event)
             }
             .store(in: &cancellables)
-    }
-
-    deinit {
-        item?.disableTrackers()
     }
 }
