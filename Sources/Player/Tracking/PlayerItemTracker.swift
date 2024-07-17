@@ -18,6 +18,9 @@ public protocol PlayerItemTracker: AnyObject {
     /// Use `Void` if no metadata is required.
     associatedtype Metadata
 
+    /// An optional description of the tracker.
+    var description: String? { get }
+
     /// Creates the tracker.
     ///
     /// - Parameter configuration: The tracker configuration.
@@ -50,6 +53,9 @@ public protocol PlayerItemTracker: AnyObject {
 }
 
 public extension PlayerItemTracker {
+    /// The default description.
+    var description: String? { nil }
+
     /// Creates an adapter for the receiver with the provided mapping to its metadata format.
     ///
     /// - Parameters:
