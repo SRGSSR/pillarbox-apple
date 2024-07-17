@@ -28,6 +28,11 @@ public final class PlayerItem: Equatable {
 
     let id = UUID()
 
+    /// The tracker descriptions.
+    public var trackerDescriptions: [String] {
+        trackerAdapters.compactMap(\.description)
+    }
+
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
     /// - Parameters:
