@@ -88,11 +88,11 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         player?.play()
-        expect(player?.time.seconds).toEventually(beGreaterThan(5))
+        expect(player?.time.seconds).toEventually(beGreaterThan(1))
 
         expectAtLeastHits(
             .stop { labels in
-                expect(labels.media_position).to(equal(5))
+                expect(labels.media_position).to(equal(1))
             }
         ) {
             player = nil
