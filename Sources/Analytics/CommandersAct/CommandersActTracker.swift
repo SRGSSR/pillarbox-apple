@@ -112,8 +112,8 @@ private extension CommandersActTracker {
     }
 
     func mediaPosition(for player: Player?) -> Int {
-        guard let player else { return 0 }
-        return Int(player.time.timeInterval())
+        guard let time = player?.time, time.isValid else { return 0 }
+        return Int(time.timeInterval())
     }
 
     func playbackDuration() -> Int {
@@ -122,8 +122,8 @@ private extension CommandersActTracker {
     }
 
     func timeshiftOffset(for player: Player?) -> Int {
-        guard let player, let range = properties?.seekableTimeRange, player.time.isValid else { return 0 }
-        return Int((range.end - player.time).timeInterval())
+        guard let time = player?.time, time.isValid, let range = properties?.seekableTimeRange else { return 0 }
+        return Int((range.end - time).timeInterval())
     }
 
     func volume(for player: Player?) -> String {
