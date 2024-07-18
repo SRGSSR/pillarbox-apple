@@ -15,6 +15,8 @@ import PillarboxPlayer
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class CommandersActTracker: PlayerItemTracker {
     private weak var player: Player?
+    private var properties: PlayerProperties?
+    private var metadata: [String: String] = [:]
     private var lastEvent: Event = .none
 
     public init(configuration: Void) {}
@@ -23,9 +25,13 @@ public final class CommandersActTracker: PlayerItemTracker {
         self.player = player
     }
 
-    public func updateMetadata(with metadata: [String: String]) {}
+    public func updateMetadata(with metadata: [String: String]) {
+        self.metadata = metadata
+    }
 
     public func updateProperties(with properties: PlayerProperties) {
+        self.properties = properties
+
         if properties.isSeeking {
             notify(.seek, player: player)
         }
@@ -51,13 +57,6 @@ public final class CommandersActTracker: PlayerItemTracker {
 }
 
 private extension CommandersActTracker {
-    func mediaPosition(for player: Player?) -> Int {
-        guard let player else { return 0 }
-        return Int(player.time.timeInterval())
-    }
-}
-
-private extension CommandersActTracker {
     enum Event: String {
         case none
         case play
@@ -78,10 +77,42 @@ private extension CommandersActTracker {
         default:
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: event.rawValue,
-                labels: ["media_position": String(mediaPosition(for: player))]
+                labels: labels(player: player)
             ))
             lastEvent = event
         }
+    }
+
+    private func labels(player: Player?) -> [String: String] {
+        var labels = metadata
+        switch properties?.streamType {
+        case .onDemand:
+            labels["media_position"] = String(mediaPosition(for: player))
+        case .live:
+            labels["media_position"] = String(playbackDuration())
+            labels["media_timeshift"] = "0"
+        case .dvr:
+            labels["media_position"] = String(playbackDuration())
+            labels["media_timeshift"] = String(timeshiftOffset(for: player))
+        default:
+            break
+        }
+        return labels
+    }
+
+    func mediaPosition(for player: Player?) -> Int {
+        guard let player else { return 0 }
+        return Int(player.time.timeInterval())
+    }
+
+    func playbackDuration() -> Int {
+        guard let metrics = properties?.metrics() else { return 0 }
+        return Int(metrics.total.playbackDuration)
+    }
+
+    func timeshiftOffset(for player: Player?) -> Int {
+        guard let player, let range = properties?.seekableTimeRange, player.time.isValid else { return 0 }
+        return Int((range.end - player.time).timeInterval())
     }
 }
 
