@@ -66,7 +66,7 @@ private extension CommandersActTracker {
         case stop
     }
 
-    private func notify(_ event: Event, player: Player?) {
+    func notify(_ event: Event, player: Player?) {
         guard event != lastEvent else { return }
 
         switch (lastEvent, event) {
@@ -83,8 +83,18 @@ private extension CommandersActTracker {
         }
     }
 
-    private func labels(player: Player?) -> [String: String] {
+    func labels(player: Player?) -> [String: String] {
         var labels = metadata
+
+        labels["media_player_display"] = "Pillarbox"
+        labels["media_player_version"] = Player.version
+
+        labels["media_volume"] = volume(for: player)
+        labels["media_audio_track"] = audioTrack(for: player)
+        labels["media_audiodescription_on"] = audioDescription(for: player)
+        labels["media_subtitles_on"] = subtitleOn(for: player)
+        labels["media_subtitle_selection"] = subtitleSelection(for: player)
+
         switch properties?.streamType {
         case .onDemand:
             labels["media_position"] = String(mediaPosition(for: player))
@@ -97,6 +107,7 @@ private extension CommandersActTracker {
         default:
             break
         }
+
         return labels
     }
 
@@ -114,59 +125,48 @@ private extension CommandersActTracker {
         guard let player, let range = properties?.seekableTimeRange, player.time.isValid else { return 0 }
         return Int((range.end - player.time).timeInterval())
     }
-}
 
-private extension CommandersActStreamingAnalytics {
-    func setMetadata(for player: Player?) {
-        guard let player else { return }
-        setMetadata(value: volume(for: player), forKey: "media_volume")
-        setMetadata(value: audioTrack(for: player), forKey: "media_audio_track")
-        setMetadata(value: audioDescription(for: player), forKey: "media_audiodescription_on")
-        setMetadata(value: subtitleOn(for: player), forKey: "media_subtitles_on")
-        setMetadata(value: subtitleSelection(for: player), forKey: "media_subtitle_selection")
-    }
-
-    private func volume(for player: Player) -> String {
-        guard !player.isMuted else { return "0" }
+    func volume(for player: Player?) -> String {
+        guard player?.isMuted == false else { return "0" }
         return String(Int(AVAudioSession.sharedInstance().outputVolume * 100))
     }
 
-    private func languageCode(from option: AVMediaSelectionOption?) -> String {
+    func languageCode(from option: AVMediaSelectionOption?) -> String {
         option?.locale?.language.languageCode?.identifier.uppercased() ?? "UND"
     }
 
-    private func audioTrack(for player: Player) -> String {
-        switch player.currentMediaOption(for: .audible) {
-        case let .on(option):
+    func audioTrack(for player: Player?) -> String {
+        if case let .on(option) = player?.currentMediaOption(for: .audible) {
             return languageCode(from: option)
-        default:
+        }
+        else {
             return languageCode(from: nil)
         }
     }
 
-    private func audioDescription(for player: Player) -> String? {
-        switch player.currentMediaOption(for: .audible) {
-        case let .on(option):
-            return option.hasMediaCharacteristic(.describesVideoForAccessibility) ? "true" : "false"
-        default:
-            return nil
-        }
-    }
-
-    private func subtitleOn(for player: Player) -> String {
-        switch player.currentMediaOption(for: .legible) {
-        case let .on(option) where !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles):
+    func audioDescription(for player: Player?) -> String {
+        if case let .on(option) = player?.currentMediaOption(for: .audible), option.hasMediaCharacteristic(.describesVideoForAccessibility) {
             return "true"
-        default:
+        }
+        else {
             return "false"
         }
     }
 
-    private func subtitleSelection(for player: Player) -> String? {
-        switch player.currentMediaOption(for: .legible) {
-        case let .on(option) where !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles):
+    func subtitleOn(for player: Player?) -> String {
+        if case let .on(option) = player?.currentMediaOption(for: .legible), !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles) {
+            return "true"
+        }
+        else {
+            return "false"
+        }
+    }
+
+    func subtitleSelection(for player: Player?) -> String? {
+        if case let .on(option) = player?.currentMediaOption(for: .legible), !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles) {
             return languageCode(from: option)
-        default:
+        }
+        else {
             return nil
         }
     }
