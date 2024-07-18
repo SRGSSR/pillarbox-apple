@@ -27,7 +27,9 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     public func updateProperties(with properties: PlayerProperties) {
         guard properties.playbackState != lastPlaybackState else { return }
-        lastPlaybackState = properties.playbackState
+        defer {
+            lastPlaybackState = properties.playbackState
+        }
 
         switch properties.playbackState {
         case .playing:
@@ -36,6 +38,7 @@ public final class CommandersActTracker: PlayerItemTracker {
                 labels: ["media_position": String(mediaPosition(for: player))]
             ))
         case .paused:
+            guard lastPlaybackState == .playing else { return }
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: "pause",
                 labels: ["media_position": String(mediaPosition(for: player))]
