@@ -14,9 +14,7 @@ import PillarboxPlayer
 ///
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class CommandersActTracker: PlayerItemTracker {
-    private lazy var streamingAnalytics = CommandersActStreamingAnalytics()
-    private var metadata: [String: String] = [:]
-    private weak var player: Player?
+    private var player: Player?
 
     public init(configuration: Void) {}
 
@@ -24,47 +22,26 @@ public final class CommandersActTracker: PlayerItemTracker {
         self.player = player
     }
 
-    public func updateMetadata(with metadata: [String: String]) {
-        self.metadata = metadata
-    }
+    public func updateMetadata(with metadata: [String: String]) {}
 
     public func updateProperties(with properties: PlayerProperties) {
-        streamingAnalytics.notify(streamType: properties.streamType)
-
-        streamingAnalytics.setMetadata(value: "Pillarbox", forKey: "media_player_display")
-        streamingAnalytics.setMetadata(value: Player.version, forKey: "media_player_version")
-        streamingAnalytics.setMetadata(for: player)
-
-        metadata.forEach { key, value in
-            streamingAnalytics.setMetadata(value: value, forKey: key)
-        }
-
-        streamingAnalytics.update(time: player?.time ?? .zero, range: properties.seekableTimeRange)
-        streamingAnalytics.notify(isBuffering: properties.isBuffering)
-        streamingAnalytics.notifyPlaybackSpeed(properties.rate)
-
-        if properties.isSeeking {
-            streamingAnalytics.notify(.seek)
-        }
-        else {
-            switch (properties.playbackState, properties.isBuffering) {
-            case (.playing, false):
-                streamingAnalytics.notify(.play)
-            case (.paused, false):
-                streamingAnalytics.notify(.pause)
-            case (.ended, false):
-                streamingAnalytics.notify(.eof)
-            default:
-                break
-            }
+        if properties.playbackState == .playing {
+            Analytics.shared.sendEvent(commandersAct: .init(
+                name: "play",
+                labels: ["media_position": String(mediaPosition(for: player))]
+            ))
         }
     }
 
     public func receiveMetricEvent(_ event: MetricEvent) {}
 
-    public func disable(for player: Player) {
-        streamingAnalytics = CommandersActStreamingAnalytics()
-        self.player = nil
+    public func disable(for player: Player) {}
+}
+
+private extension CommandersActTracker {
+    func mediaPosition(for player: Player?) -> Int {
+        guard let player else { return 0 }
+        return Int(player.time.timeInterval())
     }
 }
 
