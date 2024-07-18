@@ -15,6 +15,7 @@ import PillarboxPlayer
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class CommandersActTracker: PlayerItemTracker {
     private var player: Player?
+    private var lastPlaybackState: PlaybackState = .idle
 
     public init(configuration: Void) {}
 
@@ -25,11 +26,27 @@ public final class CommandersActTracker: PlayerItemTracker {
     public func updateMetadata(with metadata: [String: String]) {}
 
     public func updateProperties(with properties: PlayerProperties) {
-        if properties.playbackState == .playing {
+        guard properties.playbackState != lastPlaybackState else { return }
+        lastPlaybackState = properties.playbackState
+
+        switch properties.playbackState {
+        case .playing:
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: "play",
                 labels: ["media_position": String(mediaPosition(for: player))]
             ))
+        case .paused:
+            Analytics.shared.sendEvent(commandersAct: .init(
+                name: "pause",
+                labels: ["media_position": String(mediaPosition(for: player))]
+            ))
+        case .ended:
+            Analytics.shared.sendEvent(commandersAct: .init(
+                name: "eof",
+                labels: ["media_position": String(mediaPosition(for: player))]
+            ))
+        default:
+            break
         }
     }
 
