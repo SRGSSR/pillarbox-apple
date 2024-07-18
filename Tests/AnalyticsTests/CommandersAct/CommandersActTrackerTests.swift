@@ -172,7 +172,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.time.seconds).toEventually(beGreaterThan(5))
+        expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(.stop()) {
             player.isTrackingEnabled = false
