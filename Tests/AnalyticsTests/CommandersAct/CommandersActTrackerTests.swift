@@ -132,7 +132,20 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             player?.play()
         }
 
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .seconds(1)) {
+            player = nil
+        }
+    }
+
+    func testDestroyPlayerWhenPaused() {
+        var player: Player? = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in [:] }
+            ]
+        ))
+        expectNoHits(during: .seconds(1)) {
+            _ = player
             player = nil
         }
     }

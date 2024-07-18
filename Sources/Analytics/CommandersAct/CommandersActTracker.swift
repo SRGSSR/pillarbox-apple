@@ -53,6 +53,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     public func receiveMetricEvent(_ event: MetricEvent) {}
 
     public func disable(for player: Player) {
+        guard lastPlaybackState == .playing || lastPlaybackState == .paused else { return }
         Analytics.shared.sendEvent(commandersAct: .init(
             name: "stop",
             labels: ["media_position": String(mediaPosition(for: player))]
