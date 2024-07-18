@@ -25,12 +25,7 @@ public final class Player: ObservableObject, Equatable {
     @Published public private(set) var currentIndex: Int?
 
     /// A Boolean setting whether trackers must be enabled or not.
-    @Published public var isTrackingEnabled = true {
-        didSet {
-            guard isTrackingEnabled != oldValue else { return }
-            configureTracking()
-        }
-    }
+    @Published public var isTrackingEnabled = true
 
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
@@ -213,11 +208,11 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
-        configureTracking()
 
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureControlCenterPublishers()
+        configureCurrentTrackerPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
     }
@@ -259,16 +254,6 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
-    }
-
-    private func configureTracking() {
-        if isTrackingEnabled {
-            currentTracker = CurrentTracker(player: self)
-        }
-        else {
-            currentTracker?.release(player: self)
-            currentTracker = nil
-        }
     }
 
     private func configureControlCenterPublishers() {
@@ -361,6 +346,12 @@ private extension Player {
         metadataPublisher
             .receiveOnMainThread()
             .assign(to: &$metadata)
+    }
+
+    func configureCurrentTrackerPublishers() {
+        currentTrackerPublisher()
+            .weakAssign(to: \.currentTracker, on: self)
+            .store(in: &cancellables)
     }
 
     func configurePlaybackSpeedPublisher() {
