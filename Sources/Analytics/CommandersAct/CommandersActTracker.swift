@@ -15,7 +15,7 @@ import PillarboxPlayer
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class CommandersActTracker: PlayerItemTracker {
     private weak var player: Player?
-    private var lastPlaybackState: PlaybackState = .idle
+    private var lastEvent: Event = .none
 
     public init(configuration: Void) {}
 
@@ -26,41 +26,27 @@ public final class CommandersActTracker: PlayerItemTracker {
     public func updateMetadata(with metadata: [String: String]) {}
 
     public func updateProperties(with properties: PlayerProperties) {
-        guard properties.playbackState != lastPlaybackState else { return }
-        defer {
-            lastPlaybackState = properties.playbackState
+        if properties.isSeeking {
+            notify(.seek, player: player)
         }
-
-        switch properties.playbackState {
-        case .playing:
-            Analytics.shared.sendEvent(commandersAct: .init(
-                name: "play",
-                labels: ["media_position": String(mediaPosition(for: player))]
-            ))
-        case .paused:
-            guard lastPlaybackState == .playing else { return }
-            Analytics.shared.sendEvent(commandersAct: .init(
-                name: "pause",
-                labels: ["media_position": String(mediaPosition(for: player))]
-            ))
-        case .ended:
-            Analytics.shared.sendEvent(commandersAct: .init(
-                name: "eof",
-                labels: ["media_position": String(mediaPosition(for: player))]
-            ))
-        default:
-            break
+        else {
+            switch properties.playbackState {
+            case .playing:
+                notify(.play, player: player)
+            case .paused:
+                notify(.pause, player: player)
+            case .ended:
+                notify(.eof, player: player)
+            default:
+                break
+            }
         }
     }
 
     public func receiveMetricEvent(_ event: MetricEvent) {}
 
     public func disable(for player: Player) {
-        guard lastPlaybackState == .playing || lastPlaybackState == .paused else { return }
-        Analytics.shared.sendEvent(commandersAct: .init(
-            name: "stop",
-            labels: ["media_position": String(mediaPosition(for: player))]
-        ))
+        notify(.stop, player: player)
     }
 }
 
@@ -68,6 +54,34 @@ private extension CommandersActTracker {
     func mediaPosition(for player: Player?) -> Int {
         guard let player else { return 0 }
         return Int(player.time.timeInterval())
+    }
+}
+
+private extension CommandersActTracker {
+    enum Event: String {
+        case none
+        case play
+        case pause
+        case seek
+        case eof
+        case stop
+    }
+
+    private func notify(_ event: Event, player: Player?) {
+        guard event != lastEvent else { return }
+
+        switch (lastEvent, event) {
+        case (.pause, .seek), (.pause, .eof), (.seek, .pause), (.seek, .eof), (.stop, _):
+            break
+        case (.none, _) where event != .play, (.eof, _) where event != .play:
+            break
+        default:
+            Analytics.shared.sendEvent(commandersAct: .init(
+                name: event.rawValue,
+                labels: ["media_position": String(mediaPosition(for: player))]
+            ))
+            lastEvent = event
+        }
     }
 }
 
