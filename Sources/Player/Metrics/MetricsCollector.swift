@@ -80,7 +80,9 @@ public final class MetricsCollector: ObservableObject {
                 guard let player else {
                     return Just([]).eraseToAnyPublisher()
                 }
-                return player.metricEventsPublisher
+                return player.propertiesPublisher
+                    .map(\.metricEvents)
+                    .eraseToAnyPublisher()
             }
             .switchToLatest()
             .receiveOnMainThread()
