@@ -75,17 +75,17 @@ public final class Player: ObservableObject, Equatable {
             queuePlayer.playbackPropertiesPublisher(),
             queuePlayer.seekTimePublisher()
         )
-        .map { QueueItemsProperties, playbackProperties, seekTime in
+        .map { queueItemsProperties, playbackProperties, seekTime in
             .init(
                 coreProperties: .init(
-                    itemProperties: QueueItemsProperties.itemProperties.itemProperties,
-                    mediaSelectionProperties: QueueItemsProperties.itemProperties.mediaSelectionProperties,
+                    itemProperties: queueItemsProperties.itemProperties.itemProperties,
+                    mediaSelectionProperties: queueItemsProperties.itemProperties.mediaSelectionProperties,
                     playbackProperties: playbackProperties
                 ),
-                timeProperties: QueueItemsProperties.itemProperties.timeProperties,
-                metadata: QueueItemsProperties.metadata,
-                metricEvents: QueueItemsProperties.metricEvents,
-                isEmpty: QueueItemsProperties.itemProperties.isEmpty,
+                timeProperties: queueItemsProperties.itemProperties.timeProperties,
+                metadata: queueItemsProperties.metadata,
+                metricEvents: queueItemsProperties.metricEvents,
+                isEmpty: queueItemsProperties.itemProperties.isEmpty,
                 seekTime: seekTime
             )
         }
