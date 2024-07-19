@@ -9,8 +9,19 @@ import Combine
 import MediaAccessibility
 import PillarboxCore
 
+private var kPropertiesPublisherKey: Void?
+
 extension AVPlayerItem {
-    func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
+    var propertiesPublisher: AnyPublisher<PlayerItemProperties, Never> {
+        if let propertiesPublisher = objc_getAssociatedObject(self, &kPropertiesPublisherKey) as? AnyPublisher<PlayerItemProperties, Never> {
+            return propertiesPublisher
+        }
+        let propertiesPublisher = _propertiesPublisher().share(replay: 1)
+        objc_setAssociatedObject(self, &kPropertiesPublisherKey, propertiesPublisher, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return propertiesPublisher
+    }
+
+    func _propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         Publishers.CombineLatest8(
             statusPublisher()
                 .lane("player_item_status"),

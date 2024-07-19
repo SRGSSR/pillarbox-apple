@@ -108,7 +108,7 @@ public final class Player: ObservableObject, Equatable {
         currentItemPublisher()
             .map { item -> AnyPublisher<PlayerMetadata, Never> in
                 guard let item else { return Just(.empty).eraseToAnyPublisher() }
-                return item.metadataPublisher()
+                return item.metadataPublisher
             }
             .switchToLatest()
             .removeDuplicates()

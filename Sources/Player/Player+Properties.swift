@@ -62,7 +62,7 @@ extension Player {
         currentPlayerItemPublisher()
             .map { item in
                 guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
-                return item.propertiesPublisher()
+                return item.propertiesPublisher
             }
             .switchToLatest()
             .prepend(.empty)

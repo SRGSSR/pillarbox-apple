@@ -29,6 +29,14 @@ public final class PlayerItem: Equatable {
     let id = UUID()
     let metricLog = MetricLog()
 
+    lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
+        $content
+            .map(\.metadata)
+            .removeDuplicates()
+            .share(replay: 1)
+            .eraseToAnyPublisher()
+    }()
+
     /// The tracker descriptions.
     public var trackerDescriptions: [String] {
         trackerAdapters.compactMap(\.description)
@@ -303,15 +311,6 @@ public extension PlayerItem {
             asset: .encrypted(url: url, delegate: delegate, configuration: configuration),
             trackerAdapters: trackerAdapters
         )
-    }
-}
-
-extension PlayerItem {
-    func metadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
-        $content
-            .map(\.metadata)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
     }
 }
 
