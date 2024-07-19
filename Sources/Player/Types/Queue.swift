@@ -67,21 +67,3 @@ struct Queue {
         }
     }
 }
-
-extension Queue {
-    func propertiesPublisher() -> AnyPublisher<QueueProperties, Never> {
-        guard let items else {
-            return Just(.empty).eraseToAnyPublisher()
-        }
-        return Publishers.CombineLatest3(
-            items.item.metadataPublisher,
-            items.playerItem.propertiesPublisher,
-            items.metricEventPublisher()
-                .scan([]) { $0 + [$1] }
-                .prepend([])
-        )
-        .map { .init(metadata: $0, itemProperties: $1, metricEvents: $2) }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-}

@@ -26,3 +26,18 @@ struct QueueItems: Equatable {
         .eraseToAnyPublisher()
     }
 }
+
+extension QueueItems {
+    func propertiesPublisher() -> AnyPublisher<QueueItemsProperties, Never> {
+        Publishers.CombineLatest3(
+            item.metadataPublisher,
+            playerItem.propertiesPublisher,
+            metricEventPublisher()
+                .scan([]) { $0 + [$1] }
+                .prepend([])
+        )
+        .map { .init(metadata: $0, itemProperties: $1, metricEvents: $2) }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+}

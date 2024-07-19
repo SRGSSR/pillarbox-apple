@@ -71,21 +71,21 @@ public final class Player: ObservableObject, Equatable {
     /// fast-paced property changes into corresponding local bindings.
     public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
         Publishers.CombineLatest3(
-            queuePropertiesPublisher(),
+            queueItemsPropertiesPublisher(),
             queuePlayer.playbackPropertiesPublisher(),
             queuePlayer.seekTimePublisher()
         )
-        .map { queueProperties, playbackProperties, seekTime in
+        .map { QueueItemsProperties, playbackProperties, seekTime in
             .init(
                 coreProperties: .init(
-                    itemProperties: queueProperties.itemProperties.itemProperties,
-                    mediaSelectionProperties: queueProperties.itemProperties.mediaSelectionProperties,
+                    itemProperties: QueueItemsProperties.itemProperties.itemProperties,
+                    mediaSelectionProperties: QueueItemsProperties.itemProperties.mediaSelectionProperties,
                     playbackProperties: playbackProperties
                 ),
-                timeProperties: queueProperties.itemProperties.timeProperties,
-                metadata: queueProperties.metadata,
-                metricEvents: queueProperties.metricEvents,
-                isEmpty: queueProperties.itemProperties.isEmpty,
+                timeProperties: QueueItemsProperties.itemProperties.timeProperties,
+                metadata: QueueItemsProperties.metadata,
+                metricEvents: QueueItemsProperties.metricEvents,
+                isEmpty: QueueItemsProperties.itemProperties.isEmpty,
                 seekTime: seekTime
             )
         }

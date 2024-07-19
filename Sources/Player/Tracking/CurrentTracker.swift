@@ -11,6 +11,7 @@ import Combine
 /// This class implements a Resource Acquisition Is Initialization (RAII) approach to ensure lifecycle events are
 /// properly balanced.
 final class CurrentTracker {
+    // TODO: Receive current QueueItems and observe, consolidating as properties
     let item: PlayerItem
     private var cancellables = Set<AnyCancellable>()
 

@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-struct QueueProperties: Equatable {
+struct QueueItemsProperties: Equatable {
     static let empty = Self(metadata: .empty, itemProperties: .empty, metricEvents: [])
 
     let metadata: PlayerMetadata
