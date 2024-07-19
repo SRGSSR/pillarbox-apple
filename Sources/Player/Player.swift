@@ -215,6 +215,16 @@ public final class Player: ObservableObject, Equatable {
         configureCurrentTrackerPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
+
+        queuePublisher
+            .map { queue in
+                queue.propertiesPublisher()
+            }
+            .switchToLatest()
+            .sink { properties in
+                print("--> \(properties)")
+            }
+            .store(in: &cancellables)
     }
 
     /// Creates a player with a single item in its queue.
