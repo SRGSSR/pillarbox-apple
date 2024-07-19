@@ -12,6 +12,7 @@ public struct PlayerProperties: Equatable {
         coreProperties: .empty,
         timeProperties: .empty,
         metadata: .empty,
+        metricEvents: [],
         isEmpty: true,
         seekTime: nil
     )
@@ -19,6 +20,7 @@ public struct PlayerProperties: Equatable {
     let coreProperties: CoreProperties
     private let timeProperties: TimeProperties
     let metadata: PlayerMetadata
+    let metricEvents: [MetricEvent]
     let isEmpty: Bool
 
     /// The time at which the player is currently seeking, if any.
@@ -28,12 +30,14 @@ public struct PlayerProperties: Equatable {
         coreProperties: CoreProperties,
         timeProperties: TimeProperties,
         metadata: PlayerMetadata,
+        metricEvents: [MetricEvent],
         isEmpty: Bool,
         seekTime: CMTime?
     ) {
         self.timeProperties = timeProperties
         self.coreProperties = coreProperties
         self.metadata = metadata
+        self.metricEvents = metricEvents
         self.isEmpty = isEmpty
         self.seekTime = seekTime
     }

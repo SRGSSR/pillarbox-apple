@@ -84,6 +84,7 @@ public final class Player: ObservableObject, Equatable {
                 ),
                 timeProperties: queueProperties.itemProperties.timeProperties,
                 metadata: queueProperties.metadata,
+                metricEvents: queueProperties.metricEvents,
                 isEmpty: queueProperties.itemProperties.isEmpty,
                 seekTime: seekTime
             )
