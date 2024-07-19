@@ -71,19 +71,20 @@ public final class Player: ObservableObject, Equatable {
     /// fast-paced property changes into corresponding local bindings.
     public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
         Publishers.CombineLatest3(
-            playerItemPropertiesPublisher(),
+            queuePropertiesPublisher(),
             queuePlayer.playbackPropertiesPublisher(),
             queuePlayer.seekTimePublisher()
         )
-        .map { playerItemProperties, playbackProperties, seekTime in
+        .map { queueProperties, playbackProperties, seekTime in
             .init(
                 coreProperties: .init(
-                    itemProperties: playerItemProperties.itemProperties,
-                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
+                    itemProperties: queueProperties.itemProperties.itemProperties,
+                    mediaSelectionProperties: queueProperties.itemProperties.mediaSelectionProperties,
                     playbackProperties: playbackProperties
                 ),
-                timeProperties: playerItemProperties.timeProperties,
-                isEmpty: playerItemProperties.isEmpty,
+                timeProperties: queueProperties.itemProperties.timeProperties,
+                metadata: queueProperties.metadata,
+                isEmpty: queueProperties.itemProperties.isEmpty,
                 seekTime: seekTime
             )
         }
@@ -105,12 +106,8 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
-        currentItemPublisher()
-            .map { item -> AnyPublisher<PlayerMetadata, Never> in
-                guard let item else { return Just(.empty).eraseToAnyPublisher() }
-                return item.metadataPublisher
-            }
-            .switchToLatest()
+        propertiesPublisher
+            .map(\.metadata)
             .removeDuplicates()
             .share(replay: 1)
             .eraseToAnyPublisher()
@@ -215,16 +212,6 @@ public final class Player: ObservableObject, Equatable {
         configureCurrentTrackerPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
-
-        queuePublisher
-            .map { queue in
-                queue.propertiesPublisher()
-            }
-            .switchToLatest()
-            .sink { properties in
-                print("--> \(properties)")
-            }
-            .store(in: &cancellables)
     }
 
     /// Creates a player with a single item in its queue.

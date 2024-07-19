@@ -11,12 +11,14 @@ public struct PlayerProperties: Equatable {
     static let empty = Self(
         coreProperties: .empty,
         timeProperties: .empty,
+        metadata: .empty,
         isEmpty: true,
         seekTime: nil
     )
 
     let coreProperties: CoreProperties
     private let timeProperties: TimeProperties
+    let metadata: PlayerMetadata
     let isEmpty: Bool
 
     /// The time at which the player is currently seeking, if any.
@@ -25,11 +27,13 @@ public struct PlayerProperties: Equatable {
     init(
         coreProperties: CoreProperties,
         timeProperties: TimeProperties,
+        metadata: PlayerMetadata,
         isEmpty: Bool,
         seekTime: CMTime?
     ) {
         self.timeProperties = timeProperties
         self.coreProperties = coreProperties
+        self.metadata = metadata
         self.isEmpty = isEmpty
         self.seekTime = seekTime
     }

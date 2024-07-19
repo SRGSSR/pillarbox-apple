@@ -58,12 +58,9 @@ extension Player {
 }
 
 extension Player {
-    func playerItemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        currentPlayerItemPublisher()
-            .map { item in
-                guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
-                return item.propertiesPublisher
-            }
+    func queuePropertiesPublisher() -> AnyPublisher<QueueProperties, Never> {
+        queuePublisher
+            .map { $0.propertiesPublisher() }
             .switchToLatest()
             .prepend(.empty)
             .removeDuplicates()

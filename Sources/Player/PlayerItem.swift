@@ -136,7 +136,6 @@ public final class PlayerItem: Equatable {
             }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
-        .receive(on: DispatchQueue.main)
         .assign(to: &$content)
     }
 
