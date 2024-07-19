@@ -45,7 +45,11 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private var currentTracker: CurrentTracker?
+    private var currentTracker: CurrentTracker? {
+        willSet {
+            currentTracker?.release(player: self)
+        }
+    }
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -347,7 +351,13 @@ private extension Player {
     }
 
     func configureCurrentTrackerPublishers() {
-        currentTrackerPublisher()
+        queuePublisher
+            .slice(at: \.items)
+            .map { [weak self] items -> CurrentTracker? in
+                guard let self, let items else { return nil }
+                return CurrentTracker(queueItems: items, player: self)
+            }
+            .receiveOnMainThread()
             .weakAssign(to: \.currentTracker, on: self)
             .store(in: &cancellables)
     }
