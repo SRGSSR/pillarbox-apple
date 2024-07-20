@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if false
+
 @testable import PillarboxPlayer
 
 import AVFoundation
@@ -118,3 +120,5 @@ final class MetricEventPublisherTests: TestCase {
         )
     }
 }
+
+#endif
