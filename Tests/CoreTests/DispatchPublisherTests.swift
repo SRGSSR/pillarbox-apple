@@ -29,7 +29,7 @@ final class DispatchPublisherTests: XCTestCase {
     func testReceiveOnMainThreadFromBackgroundThread() {
         var value = 0
         Just(3)
-            .receive(on: DispatchQueue(label: "com.srgssr.pillarbox-tests"))
+            .receive(on: DispatchQueue(label: "ch.srgssr.pillarbox-tests"))
             .receiveOnMainThread()
             .sink { i in
                 expect(Thread.isMainThread).to(beTrue())
@@ -54,7 +54,7 @@ final class DispatchPublisherTests: XCTestCase {
     func testStandardReceiveOnMainThreadFromBackgroundThread() {
         var value = 0
         Just(3)
-            .receive(on: DispatchQueue(label: "com.srgssr.pillarbox-tests"))
+            .receive(on: DispatchQueue(label: "ch.srgssr.pillarbox-tests"))
             .receive(on: DispatchQueue.main)
             .sink { i in
                 expect(Thread.isMainThread).to(beTrue())
@@ -72,7 +72,7 @@ final class DispatchPublisherTests: XCTestCase {
 
     func testReceiveOnMainThreadReceivesAllOutputFromBackgroundThreads() {
         let publisher = [1, 2, 3].publisher
-            .receive(on: DispatchQueue(label: "com.srgssr.pillarbox-tests"))
+            .receive(on: DispatchQueue(label: "ch.srgssr.pillarbox-tests"))
             .receiveOnMainThread()
         expectOnlyEqualPublished(values: [1, 2, 3], from: publisher)
     }

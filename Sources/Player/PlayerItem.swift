@@ -67,7 +67,11 @@ public final class PlayerItem: Equatable {
         asset: Asset<M>,
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where M: AssetMetadata {
-        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
+        self.init(
+            publisher: Just(asset)
+                .receive(on: DispatchQueue.main),
+            trackerAdapters: trackerAdapters
+        )
     }
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
@@ -95,7 +99,11 @@ public final class PlayerItem: Equatable {
         asset: Asset<Void>,
         trackerAdapters: [TrackerAdapter<Void>] = []
     ) {
-        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
+        self.init(
+            publisher: Just(asset)
+                .receive(on: DispatchQueue.main),
+            trackerAdapters: trackerAdapters
+        )
     }
 
     private init<P, M>(
