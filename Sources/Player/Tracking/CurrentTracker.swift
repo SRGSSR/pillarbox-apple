@@ -19,35 +19,11 @@ final class CurrentTracker {
 
         queueItems.item.enableTrackers(for: player)
 
-        Self.propertiesPublisher(queueItems: queueItems, player: player)
+        player.queuePlayer.propertiesPublisher(queueItems: queueItems)
             .sink { properties in
                 queueItems.item.updateTrackerProperties(properties)
             }
             .store(in: &cancellables)
-    }
-
-    private static func propertiesPublisher(queueItems: QueueItems, player: Player) -> AnyPublisher<PlayerProperties, Never> {
-        Publishers.CombineLatest3(
-            queueItems.propertiesPublisher(),
-            player.queuePlayer.playbackPropertiesPublisher(),
-            player.queuePlayer.seekTimePublisher()
-        )
-        .map { queueItemsProperties, playbackProperties, seekTime in
-            .init(
-                coreProperties: .init(
-                    itemProperties: queueItemsProperties.itemProperties.itemProperties,
-                    mediaSelectionProperties: queueItemsProperties.itemProperties.mediaSelectionProperties,
-                    playbackProperties: playbackProperties
-                ),
-                timeProperties: queueItemsProperties.itemProperties.timeProperties,
-                metadata: queueItemsProperties.metadata,
-                metricEvents: queueItemsProperties.metricEvents,
-                isEmpty: queueItemsProperties.itemProperties.isEmpty,
-                seekTime: seekTime
-            )
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
     }
 
     func release(player: Player) {
