@@ -5,22 +5,17 @@
 //
 
 import Combine
+import Foundation
 
 final class MetricLog {
-    private(set) var events: [MetricEvent] = []
-
-    private let subject = PassthroughSubject<MetricEvent, Never>()
+    private let subject = CurrentValueSubject<[MetricEvent], Never>([])
 
     func appendEvent(_ event: MetricEvent) {
-        events.append(event)
-        subject.send(event)
+        subject.send(subject.value + [event])
     }
 
-    func clear() {
-        events.removeAll()
-    }
-
-    func eventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        subject.eraseToAnyPublisher()
+    func eventPublisher() -> AnyPublisher<[MetricEvent], Never> {
+        subject
+            .eraseToAnyPublisher()
     }
 }

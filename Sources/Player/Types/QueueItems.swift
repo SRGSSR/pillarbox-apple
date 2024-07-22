@@ -12,29 +12,23 @@ import PillarboxCore
 struct QueueItems: Equatable {
     let item: PlayerItem
     let playerItem: AVPlayerItem
-
-    private func events() -> [MetricEvent] {
-        item.metricLog.events + playerItem.metricLog.events
-    }
-
-    func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        Publishers.Merge(
-            item.metricLog.eventPublisher(),
-            playerItem.metricLog.eventPublisher()
-        )
-        .prepend(events().publisher)
-        .eraseToAnyPublisher()
-    }
 }
 
 extension QueueItems {
+    private func metricEventsPublisher() -> AnyPublisher<[MetricEvent], Never> {
+        Publishers.CombineLatest(
+            item.metricLog.eventPublisher(),
+            playerItem.metricLog.eventPublisher()
+        )
+        .map { $0 + $1 }
+        .eraseToAnyPublisher()
+    }
+
     func propertiesPublisher() -> AnyPublisher<QueueItemsProperties, Never> {
         Publishers.CombineLatest3(
             item.metadataPublisher,
             playerItem.propertiesPublisher,
-            metricEventPublisher()
-                .scan([]) { $0 + [$1] }
-                .prepend([])
+            metricEventsPublisher()
         )
         .map { .init(metadata: $0, itemProperties: $1, metricEvents: $2) }
         .removeDuplicates()
