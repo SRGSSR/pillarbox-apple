@@ -45,11 +45,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private var currentTracker: CurrentTracker? {
-        willSet {
-            currentTracker?.release(player: self)
-        }
-    }
+    private var currentTracker: CurrentTracker?
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -271,8 +267,6 @@ public final class Player: ObservableObject, Equatable {
         // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 
         // see https://github.com/SRGSSR/pillarbox-apple/issues/520
         queuePlayer.volume = 0
-
-        currentTracker?.release(player: self)
     }
 }
 
@@ -340,9 +334,9 @@ private extension Player {
 
     func configureCurrentTrackerPublishers() {
         queuePublisher
-            .slice(at: \.items)
-            .map { [weak self] items -> CurrentTracker? in
-                guard let self, let items else { return nil }
+            .removeDuplicates { $0.item == $1.item }
+            .map { [weak self] queue -> CurrentTracker? in
+                guard let self, let items = queue.items else { return nil }
                 return CurrentTracker(queueItems: items, player: self)
             }
             .receiveOnMainThread()

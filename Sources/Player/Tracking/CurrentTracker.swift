@@ -12,10 +12,13 @@ import Combine
 /// properly balanced.
 final class CurrentTracker {
     let queueItems: QueueItems
+
+    private weak var player: Player?
     private var cancellables = Set<AnyCancellable>()
 
     init(queueItems: QueueItems, player: Player) {
         self.queueItems = queueItems
+        self.player = player
 
         queueItems.item.enableTrackers(for: player)
 
@@ -26,9 +29,8 @@ final class CurrentTracker {
             .store(in: &cancellables)
     }
 
-    func release(player: Player) {
-        // TODO: Provide playerItem.time explicitly since player.time probably invalid? But maybe not needed if
-        // cleanup is explicit?
+    deinit {
+        guard let player else { return }
         queueItems.item.disableTrackers(for: player)
     }
 }
