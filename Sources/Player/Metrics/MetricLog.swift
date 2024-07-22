@@ -8,14 +8,9 @@ import Combine
 import Foundation
 
 final class MetricLog {
-    private let subject = CurrentValueSubject<[MetricEvent], Never>([])
+    @Published private(set) var events: [MetricEvent] = []
 
     func appendEvent(_ event: MetricEvent) {
-        subject.send(subject.value + [event])
-    }
-
-    func eventPublisher() -> AnyPublisher<[MetricEvent], Never> {
-        subject
-            .eraseToAnyPublisher()
+        events += [event]
     }
 }

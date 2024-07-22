@@ -17,8 +17,8 @@ struct QueueItems: Equatable {
 extension QueueItems {
     private func metricEventsPublisher() -> AnyPublisher<[MetricEvent], Never> {
         Publishers.CombineLatest(
-            item.metricLog.eventPublisher(),
-            playerItem.metricLog.eventPublisher()
+            item.metricLog.$events,
+            playerItem.metricLog.$events
         )
         .map { $0 + $1 }
         .eraseToAnyPublisher()
