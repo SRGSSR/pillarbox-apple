@@ -152,21 +152,12 @@ public extension NotificationCenter {
     /// Unlike usual notification publishers this publisher does not retain the observed object, preventing reference
     /// cycles.
     func weakPublisher<T>(for name: Notification.Name, object: T?) -> AnyPublisher<Notification, Never> where T: AnyObject {
-        if let object {
-            return publisher(for: name)
-                .weakCapture(object)
-                .filter { notification, object in
-                    guard let notificationObject = notification.object as? AnyObject else {
-                        return false
-                    }
-                    return notificationObject === object
-                }
-                .map(\.0)
-                .eraseToAnyPublisher()
-        }
-        else {
-            return publisher(for: name)
-                .eraseToAnyPublisher()
-        }
+        Just(())
+            .weakCapture(object)
+            .map { _, object in
+                self.publisher(for: name, object: object)
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 }
