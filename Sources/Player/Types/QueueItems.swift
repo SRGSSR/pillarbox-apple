@@ -27,7 +27,7 @@ extension QueueItems {
     func propertiesPublisher() -> AnyPublisher<QueueItemsProperties, Never> {
         Publishers.CombineLatest3(
             item.metadataPublisher,
-            playerItem.propertiesPublisher,
+            playerItem.propertiesPublisher(),
             metricEventsPublisher()
         )
         .map { .init(metadata: $0, itemProperties: $1, metricEvents: $2) }
