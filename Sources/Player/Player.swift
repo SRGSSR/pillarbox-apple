@@ -211,6 +211,7 @@ public final class Player: ObservableObject, Equatable {
 
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
+        configureTrackerPublisher()
         configureControlCenterPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
@@ -255,31 +256,57 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
     }
 
-    private func configureControlCenterPublishers() {
-        guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
-        configureControlCenterMetadataUpdatePublisher()
-        configureControlCenterRemoteCommandUpdatePublisher()
-    }
-
-    private func configureQueuePlayerUpdatePublishers() {
-        configureQueuePlayerItemsPublisher()
-        configureRateUpdatePublisher()
-        configureTextStyleRulesUpdatePublisher()
-    }
-
-    private func configurePublishedPropertyPublishers() {
-        configurePropertiesPublisher()
-        configureErrorPublisher()
-        configureCurrentIndexPublisher()
-        configurePlaybackSpeedPublisher()
-    }
-
     deinit {
         uninstallRemoteCommands()
 
         // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 
         // see https://github.com/SRGSSR/pillarbox-apple/issues/520
         queuePlayer.volume = 0
+    }
+}
+
+private extension Player {
+    func configurePublishedPropertyPublishers() {
+        configurePropertiesPublisher()
+        configureErrorPublisher()
+        configureCurrentIndexPublisher()
+        configurePlaybackSpeedPublisher()
+    }
+
+    func configureQueuePlayerUpdatePublishers() {
+        configureQueuePlayerItemsPublisher()
+        configureRateUpdatePublisher()
+        configureTextStyleRulesUpdatePublisher()
+    }
+
+    func configureTrackerPublisher() {
+        queuePublisher.slice(at: \.item)
+            .weakAssign(to: \.item, on: tracker)
+            .store(in: &cancellables)
+    }
+
+    func configureControlCenterPublishers() {
+        guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
+        configureControlCenterMetadataUpdatePublisher()
+        configureControlCenterRemoteCommandUpdatePublisher()
+    }
+
+    func configureMetadataPublisher() {
+        metadataPublisher
+            .receiveOnMainThread()
+            .assign(to: &$metadata)
+    }
+
+    func configureBlockedTimeRangesPublishers() {
+        nextUnblockedTimePublisher()
+            .sink { [weak self] time in
+                self?.seek(at(time))
+            }
+            .store(in: &cancellables)
+
+        metadataPublisher.slice(at: \.blockedTimeRanges)
+            .assign(to: \.blockedTimeRanges, on: queuePlayer)
+            .store(in: &cancellables)
     }
 }
 
@@ -339,28 +366,10 @@ private extension Player {
             .assign(to: &$currentIndex)
     }
 
-    func configureMetadataPublisher() {
-        metadataPublisher
-            .receiveOnMainThread()
-            .assign(to: &$metadata)
-    }
-
     func configurePlaybackSpeedPublisher() {
         playbackSpeedPublisher()
             .receiveOnMainThread()
             .assign(to: &$_playbackSpeed)
-    }
-
-    func configureBlockedTimeRangesPublishers() {
-        nextUnblockedTimePublisher()
-            .sink { [weak self] time in
-                self?.seek(at(time))
-            }
-            .store(in: &cancellables)
-
-        metadataPublisher.slice(at: \.blockedTimeRanges)
-            .assign(to: \.blockedTimeRanges, on: queuePlayer)
-            .store(in: &cancellables)
     }
 }
 
