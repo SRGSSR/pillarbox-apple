@@ -35,7 +35,7 @@ final class DemoTracker: PlayerItemTracker {
     }
 
     func disable(with properties: PlayerProperties, time: CMTime) {
-        Self.logger.debug("Disable demo tracker for \(self.id)")
+        Self.logger.debug("Disable demo tracker for \(self.id) - \(time.seconds)")
     }
 
     deinit {

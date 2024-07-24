@@ -280,8 +280,8 @@ private extension Player {
     }
 
     func configureTrackerPublisher() {
-        queuePublisher.slice(at: \.item)
-            .weakAssign(to: \.item, on: tracker)
+        queuePublisher.slice(at: \.items)
+            .weakAssign(to: \.items, on: tracker)
             .store(in: &cancellables)
     }
 
