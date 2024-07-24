@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
+
 /// A protocol for custom player item tracking implementation.
 ///
 /// For more information about implementing custom trackers please read <doc:tracking>.
@@ -26,7 +28,7 @@ public protocol PlayerItemTracker: AnyObject {
     /// A method called when the tracker is enabled for a player.
     ///
     /// - Parameter player: The player for which the tracker must be enabled.
-    func enable(for player: Player)
+    func enable(for player: AVPlayer)
 
     /// A method called when metadata is updated.
     ///
@@ -35,10 +37,12 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// A method called when player properties have changed.
     ///
-    /// - Parameter properties: The updated properties.
+    /// - Parameters:
+    ///   - properties: The updated properties.
+    ///   - time: The player time.
     ///
     /// This method can be called quite often. Implementations should avoid performing significant work unnecessarily.
-    func updateProperties(with properties: PlayerProperties)
+    func updateProperties(with properties: PlayerProperties, time: CMTime)
 
     /// A method called when a metric event is received.
     /// 
@@ -46,7 +50,11 @@ public protocol PlayerItemTracker: AnyObject {
     func receiveMetricEvent(_ event: MetricEvent)
 
     /// A method called when the tracker is disabled.
-    func disable()
+    ///
+    /// - Parameters:
+    ///   - properties: The updated properties.
+    ///   - time: The player time.
+    func disable(with properties: PlayerProperties, time: CMTime)
 }
 
 public extension PlayerItemTracker {

@@ -6,8 +6,8 @@
 
 @testable import PillarboxPlayer
 
+import AVFoundation
 import Combine
-import Foundation
 
 final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
     typealias StatePublisher = PassthroughSubject<State, Never>
@@ -29,7 +29,7 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
         self.configuration = configuration
     }
 
-    func enable(for player: Player) {
+    func enable(for player: AVPlayer) {
         configuration.statePublisher.send(.enabled)
     }
 
@@ -37,13 +37,13 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
         configuration.statePublisher.send(.updatedMetadata(metadata))
     }
 
-    func updateProperties(with properties: PlayerProperties) {
+    func updateProperties(with properties: PlayerProperties, time: CMTime) {
         configuration.statePublisher.send(.updatedProperties)
     }
 
     func receiveMetricEvent(_ event: MetricEvent) {}
 
-    func disable() {
+    func disable(with properties: PlayerProperties, time: CMTime) {
         configuration.statePublisher.send(.disabled)
     }
 }

@@ -146,27 +146,27 @@ public final class PlayerItem: Equatable {
 }
 
 extension PlayerItem {
-    func enableTrackers(for player: Player) {
+    func enableTrackers(for player: AVPlayer) {
         trackerAdapters.forEach { adapter in
             adapter.enable(for: player)
         }
     }
 
-    func updateTrackerProperties(_ properties: PlayerProperties) {
+    func updateTrackerProperties(with properties: PlayerProperties, time: CMTime) {
         trackerAdapters.forEach { adapter in
-            adapter.updateProperties(with: properties)
+            adapter.updateProperties(with: properties, time: time)
         }
     }
 
-    func receiveMetricEvent(_ event: MetricEvent) {
+    func receiveTrackerMetricEvent(_ event: MetricEvent) {
         trackerAdapters.forEach { adapter in
             adapter.receiveMetricEvent(event)
         }
     }
 
-    func disableTrackers() {
+    func disableTrackers(with properties: PlayerProperties, time: CMTime) {
         trackerAdapters.forEach { adapter in
-            adapter.disable()
+            adapter.disable(with: properties, time: time)
         }
     }
 }

@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import AVFoundation
 
 /// An adapter which instantiates and manages a tracker of a specified type.
 ///
@@ -35,19 +35,19 @@ public class TrackerAdapter<M> {
 }
 
 extension TrackerAdapter: TrackerLifeCycle {
-    func enable(for player: Player) {
+    func enable(for player: AVPlayer) {
         tracker.enable(for: player)
     }
 
-    func updateProperties(with properties: PlayerProperties) {
-        tracker.updateProperties(with: properties)
+    func updateProperties(with properties: PlayerProperties, time: CMTime) {
+        tracker.updateProperties(with: properties, time: time)
     }
 
     func receiveMetricEvent(_ event: MetricEvent) {
         tracker.receiveMetricEvent(event)
     }
 
-    func disable() {
-        tracker.disable()
+    func disable(with properties: PlayerProperties, time: CMTime) {
+        tracker.disable(with: properties, time: time)
     }
 }
