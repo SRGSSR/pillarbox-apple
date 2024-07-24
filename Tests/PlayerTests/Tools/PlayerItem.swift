@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import PillarboxStreams
 
 enum MediaMock: String {
     case media1
@@ -65,7 +66,7 @@ extension PlayerItem {
             .map(\.data)
             .decode(type: AssetMetadataMock.self, decoder: JSONDecoder())
             .map { metadata in
-                Asset.simple(url: url, metadata: metadata)
+                Asset.simple(url: Stream.onDemand.url, metadata: metadata)
             }
         return .init(
             publisher: publisher,
