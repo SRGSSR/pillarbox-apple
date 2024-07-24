@@ -25,12 +25,7 @@ public final class Player: ObservableObject, Equatable {
     @Published public private(set) var currentIndex: Int?
 
     /// A Boolean setting whether trackers must be enabled or not.
-    @Published public var isTrackingEnabled = true {
-        didSet {
-            guard isTrackingEnabled != oldValue else { return }
-            configureTracking()
-        }
-    }
+    @Published public var isTrackingEnabled = true
 
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
@@ -50,7 +45,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private var tracker: Tracker?
+    private lazy var tracker = Tracker(player: queuePlayer)
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -213,7 +208,6 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
-        configureTracking()
 
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
@@ -259,10 +253,6 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
-    }
-
-    private func configureTracking() {
-        tracker = isTrackingEnabled ? Tracker(player: self) : nil
     }
 
     private func configureControlCenterPublishers() {
