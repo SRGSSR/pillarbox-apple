@@ -70,26 +70,14 @@ public final class Player: ObservableObject, Equatable {
     /// When implementing a custom SwiftUI user interface, you should use `View.onReceive(player:assign:to:)` to read
     /// fast-paced property changes into corresponding local bindings.
     public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
-        Publishers.CombineLatest3(
-            playerItemPropertiesPublisher(),
-            queuePlayer.playbackPropertiesPublisher(),
-            queuePlayer.seekTimePublisher()
-        )
-        .map { playerItemProperties, playbackProperties, seekTime in
-            .init(
-                coreProperties: .init(
-                    itemProperties: playerItemProperties.itemProperties,
-                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
-                    playbackProperties: playbackProperties
-                ),
-                timeProperties: playerItemProperties.timeProperties,
-                isEmpty: playerItemProperties.isEmpty,
-                seekTime: seekTime
-            )
-        }
-        .removeDuplicates()
-        .share(replay: 1)
-        .eraseToAnyPublisher()
+        currentPlayerItemPublisher()
+            .map { [queuePlayer] item in
+                guard let item else { return Just(PlayerProperties.empty).eraseToAnyPublisher() }
+                return queuePlayer.propertiesPublisher(with: item)
+            }
+            .switchToLatest()
+            .share(replay: 1)
+            .eraseToAnyPublisher()
     }()
 
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
