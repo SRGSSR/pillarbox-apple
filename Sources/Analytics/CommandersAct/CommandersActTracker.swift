@@ -16,30 +16,29 @@ import PillarboxPlayer
 public final class CommandersActTracker: PlayerItemTracker {
     private lazy var streamingAnalytics = CommandersActStreamingAnalytics()
     private var metadata: [String: String] = [:]
-    private weak var player: Player?
 
     public init(configuration: Void) {}
 
-    public func enable(for player: Player) {
-        self.player = player
-    }
+    public func enable(for player: AVPlayer) {}
 
     public func updateMetadata(with metadata: [String: String]) {
         self.metadata = metadata
     }
 
-    public func updateProperties(with properties: PlayerProperties) {
+    public func updateProperties(with properties: PlayerProperties, time: CMTime) {
         streamingAnalytics.notify(streamType: properties.streamType)
 
         streamingAnalytics.setMetadata(value: "Pillarbox", forKey: "media_player_display")
         streamingAnalytics.setMetadata(value: Player.version, forKey: "media_player_version")
-        streamingAnalytics.setMetadata(for: player)
+
+        // TODO: Uncomment
+        // streamingAnalytics.setMetadata(for: player)
 
         metadata.forEach { key, value in
             streamingAnalytics.setMetadata(value: value, forKey: key)
         }
 
-        streamingAnalytics.update(time: player?.time ?? .zero, range: properties.seekableTimeRange)
+        streamingAnalytics.update(time: time, range: properties.seekableTimeRange)
         streamingAnalytics.notify(isBuffering: properties.isBuffering)
         streamingAnalytics.notifyPlaybackSpeed(properties.rate)
 
@@ -62,9 +61,8 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     public func receiveMetricEvent(_ event: MetricEvent) {}
 
-    public func disable() {
+    public func disable(with properties: PlayerProperties, time: CMTime) {
         streamingAnalytics = CommandersActStreamingAnalytics()
-        player = nil
     }
 }
 

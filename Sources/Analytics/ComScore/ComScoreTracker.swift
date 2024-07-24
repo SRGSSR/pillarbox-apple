@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import ComScore
 import PillarboxPlayer
 
@@ -15,12 +16,10 @@ import PillarboxPlayer
 public final class ComScoreTracker: PlayerItemTracker {
     private lazy var streamingAnalytics = ComScoreStreamingAnalytics()
     private var metadata: [String: String] = [:]
-    private weak var player: Player?
 
     public init(configuration: Void) {}
 
-    public func enable(for player: Player) {
-        self.player = player
+    public func enable(for player: AVPlayer) {
         createPlaybackSession()
     }
 
@@ -29,11 +28,11 @@ public final class ComScoreTracker: PlayerItemTracker {
         addMetadata(metadata)
     }
 
-    public func updateProperties(with properties: PlayerProperties) {
-        guard !metadata.isEmpty, let player else { return }
+    public func updateProperties(with properties: PlayerProperties, time: CMTime) {
+        guard !metadata.isEmpty else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
-        streamingAnalytics.setProperties(for: properties, time: player.time, streamType: properties.streamType)
+        streamingAnalytics.setProperties(for: properties, time: time, streamType: properties.streamType)
 
         switch (properties.isSeeking, properties.isBuffering) {
         case (true, true):
@@ -53,9 +52,8 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     public func receiveMetricEvent(_ event: MetricEvent) {}
 
-    public func disable() {
+    public func disable(with properties: PlayerProperties, time: CMTime) {
         streamingAnalytics = ComScoreStreamingAnalytics()
-        player = nil
     }
 
     private func renewPlaybackSessionIfNeeded(for playbackState: PlaybackState) {

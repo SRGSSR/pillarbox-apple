@@ -6,6 +6,7 @@
 
 @testable import PillarboxPlayer
 
+import AVFoundation
 import Combine
 
 final class TrackerLifeCycleMock: PlayerItemTracker {
@@ -31,15 +32,15 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
 
     func updateMetadata(with metadata: Void) {}
 
-    func updateProperties(with properties: PlayerProperties) {}
+    func updateProperties(with properties: PlayerProperties, time: CMTime) {}
 
     func receiveMetricEvent(_ event: MetricEvent) {}
 
-    func enable(for player: Player) {
+    func enable(for player: AVPlayer) {
         configuration.statePublisher.send(.enabled)
     }
 
-    func disable() {
+    func disable(with properties: PlayerProperties, time: CMTime) {
         configuration.statePublisher.send(.disabled)
     }
 
