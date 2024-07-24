@@ -44,6 +44,18 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         }
     }
 
+    func testDisableDuringDeinitPlayer() {
+        var player: Player? = Player()
+        let publisher = TrackerLifeCycleMock.StatePublisher()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: publisher) {
+            player?.append(.simple(
+                url: Stream.shortOnDemand.url,
+                trackerAdapters: [TrackerLifeCycleMock.adapter(statePublisher: publisher)]
+            ))
+            player = nil
+        }
+    }
+
     func testNetworkLoadedItemEntirePlayback() {
         let player = Player()
         let publisher = TrackerLifeCycleMock.StatePublisher()
