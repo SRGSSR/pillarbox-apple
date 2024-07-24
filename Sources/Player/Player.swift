@@ -24,9 +24,6 @@ public final class Player: ObservableObject, Equatable {
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
 
-    /// A Boolean setting whether trackers must be enabled or not.
-    @Published public var isTrackingEnabled = true
-
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
 
@@ -111,6 +108,16 @@ public final class Player: ObservableObject, Equatable {
         }
         set {
             queuePlayer.isMuted = newValue
+        }
+    }
+
+    /// A Boolean setting whether trackers must be enabled or not.
+    public var isTrackingEnabled: Bool {
+        get {
+            tracker.isEnabled
+        }
+        set {
+            tracker.isEnabled = newValue
         }
     }
 
