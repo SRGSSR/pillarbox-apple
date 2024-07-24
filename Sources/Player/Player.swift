@@ -50,7 +50,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private var currentTracker: CurrentTracker?
+    private var tracker: Tracker?
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -262,7 +262,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configureTracking() {
-        currentTracker = isTrackingEnabled ? CurrentTracker(player: self) : nil
+        tracker = isTrackingEnabled ? Tracker(player: self) : nil
     }
 
     private func configureControlCenterPublishers() {

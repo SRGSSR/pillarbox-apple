@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 
-final class CurrentTracker {
+final class Tracker {
     private var cancellables = Set<AnyCancellable>()
     private weak var player: Player?
 
