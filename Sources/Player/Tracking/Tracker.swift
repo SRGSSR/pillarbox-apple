@@ -8,7 +8,8 @@ import AVFoundation
 import Combine
 
 final class Tracker {
-    private let player: AVPlayer
+    private var cancellables = Set<AnyCancellable>()
+    private let player: QueuePlayer
 
     var items: QueueItems? {
         willSet {
@@ -16,12 +17,20 @@ final class Tracker {
             items.item.disableTrackers(with: .empty, time: items.playerItem.currentTime())
         }
         didSet {
-            guard oldValue?.item != items?.item else { return }
-            items?.item.enableTrackers(for: player)
+            cancellables = []
+            guard let items else { return }
+            if oldValue?.item != items.item {
+                items.item.enableTrackers(for: player)
+            }
+            player.propertiesPublisher(with: items.playerItem)
+                .sink { properties in
+                    items.item.updateTrackerProperties(with: properties, time: items.playerItem.currentTime())
+                }
+                .store(in: &cancellables)
         }
     }
 
-    init(player: AVPlayer) {
+    init(player: QueuePlayer) {
         self.player = player
     }
 
