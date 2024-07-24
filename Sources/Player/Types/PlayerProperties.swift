@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreMedia
 
 /// A type describing player properties.
@@ -54,6 +55,21 @@ public extension PlayerProperties {
     /// The type of stream currently being played.
     var streamType: StreamType {
         StreamType(for: seekableTimeRange, duration: coreProperties.duration)
+    }
+}
+
+public extension PlayerProperties {
+    /// The current media option for a characteristic.
+    ///
+    /// - Parameter characteristic: The characteristic.
+    /// - Returns: The current option.
+    ///
+    /// Unlike `selectedMediaOption(for:)` this method provides the currently applied option. This method can
+    /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
+    /// and `.off` options (forced options might be returned where applicable).
+    func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
+        guard let option = mediaSelectionProperties.selectedOption(for: characteristic) else { return .off }
+        return .on(option)
     }
 }
 
