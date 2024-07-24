@@ -73,7 +73,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
                 expect(labels.media_position).to(equal(0))
             },
             .stop { labels in
-                expect(labels.media_position).to(equal(0))
+                expect(labels.media_position).to(equal(7))
             }
         ) {
             player?.seek(at(.init(value: 7, timescale: 1)))
