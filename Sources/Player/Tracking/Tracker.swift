@@ -10,12 +10,14 @@ import Combine
 final class Tracker {
     private let player: AVPlayer
 
-    var item: PlayerItem? {
+    var items: QueueItems? {
         willSet {
-            item?.disableTrackers(with: .empty, time: .invalid)
+            guard let items, newValue?.item != items.item else { return }
+            items.item.disableTrackers(with: .empty, time: items.playerItem.currentTime())
         }
         didSet {
-            item?.enableTrackers(for: player)
+            guard oldValue?.item != items?.item else { return }
+            items?.item.enableTrackers(for: player)
         }
     }
 
@@ -24,6 +26,7 @@ final class Tracker {
     }
 
     deinit {
-        item?.disableTrackers(with: .empty, time: .invalid)
+        guard let items else { return }
+        items.item.disableTrackers(with: .empty, time: items.playerItem.currentTime())
     }
 }
