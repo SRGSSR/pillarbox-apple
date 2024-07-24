@@ -100,8 +100,7 @@ public extension Player {
     /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
     /// and `.off` options (forced options might be returned where applicable).
     func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        guard let option = properties.mediaSelectionProperties.selectedOption(for: characteristic) else { return .off }
-        return .on(option)
+        properties.currentMediaOption(for: characteristic)
     }
 
     /// Sets media selection preferred languages for the specified media characteristic.
