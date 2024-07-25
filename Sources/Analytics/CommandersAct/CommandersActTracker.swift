@@ -64,11 +64,11 @@ private extension CommandersActTracker {
     func updateHeartbeat(event: Event, properties: PlayerProperties) {
         if event == .play {
             guard cancellable == nil else { return }
-            cancellable = Self.heartbeatEventNamePublisher(for: properties)
-                .sink { [weak self] eventName in
+            cancellable = Self.heartbeatPublisher(for: properties)
+                .sink { [weak self] event in
                     guard let self else { return }
                     Analytics.shared.sendEvent(commandersAct: .init(
-                        name: eventName,
+                        name: event.rawValue,
                         labels: labels(properties: properties)
                     ))
                 }
@@ -202,18 +202,25 @@ private extension CommandersActTracker {
             .eraseToAnyPublisher()
     }
 
-    static func heartbeatEventNamePublisher(for properties: PlayerProperties) -> AnyPublisher<String, Never> {
+    static func posPublisher() -> AnyPublisher<Heartbeat, Never> {
+        heartbeatPublisher(delay: 30, interval: 30)
+            .map { _ in .pos }
+            .eraseToAnyPublisher()
+    }
+
+    static func uptimePublisher() -> AnyPublisher<Heartbeat, Never> {
+        heartbeatPublisher(delay: 30, interval: 60)
+            .map { _ in .uptime }
+            .eraseToAnyPublisher()
+    }
+
+    static func heartbeatPublisher(for properties: PlayerProperties) -> AnyPublisher<Heartbeat, Never> {
         switch properties.streamType {
         case .onDemand:
-            return heartbeatPublisher(delay: 30, interval: 30)
-                .map { _ in "pos" }
-                .eraseToAnyPublisher()
+            return posPublisher()
         case .live, .dvr:
-            return Publishers.Merge(
-                heartbeatPublisher(delay: 30, interval: 30).map { _ in "pos" },
-                heartbeatPublisher(delay: 30, interval: 60).map { _ in "uptime" }
-            )
-            .eraseToAnyPublisher()
+            return Publishers.Merge(posPublisher(), uptimePublisher())
+                .eraseToAnyPublisher()
         default:
             return Empty().eraseToAnyPublisher()
         }
@@ -228,5 +235,10 @@ private extension CommandersActTracker {
         case seek
         case eof
         case stop
+    }
+
+    enum Heartbeat: String {
+        case pos
+        case uptime
     }
 }
