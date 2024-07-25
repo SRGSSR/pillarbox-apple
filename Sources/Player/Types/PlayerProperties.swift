@@ -114,6 +114,13 @@ public extension PlayerProperties {
     var isMuted: Bool {
         coreProperties.isMuted
     }
+}
+
+public extension PlayerProperties {
+    /// The player time.
+    func time() -> CMTime {
+        coreProperties.time()
+    }
 
     /// The current player metrics, if available.
     ///
