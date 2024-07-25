@@ -16,6 +16,7 @@ import PillarboxPlayer
 public final class CommandersActTracker: PlayerItemTracker {
     private var metadata: [String: String] = [:]
     private var lastEvent: Event = .none
+    private let stopwatch = Stopwatch()
 
     public init(configuration: Void) {}
 
@@ -63,6 +64,8 @@ private extension CommandersActTracker {
     func notify(_ event: Event, properties: PlayerProperties, time: CMTime) {
         guard event != lastEvent else { return }
 
+        updateStopwatch(for: event, properties: properties)
+
         switch (lastEvent, event) {
         case (.pause, .seek), (.pause, .eof), (.seek, .pause), (.seek, .eof), (.stop, _):
             break
@@ -93,16 +96,27 @@ private extension CommandersActTracker {
         case .onDemand:
             labels["media_position"] = String(mediaPosition(for: time))
         case .live:
-            labels["media_position"] = String(playbackDuration(for: properties))
+            labels["media_position"] = String(stopwatch.time())
             labels["media_timeshift"] = "0"
         case .dvr:
-            labels["media_position"] = String(playbackDuration(for: properties))
+            labels["media_position"] = String(stopwatch.time())
             labels["media_timeshift"] = String(timeshiftOffset(for: properties, time: time))
         default:
             break
         }
 
         return labels
+    }
+
+    func updateStopwatch(for event: Event, properties: PlayerProperties) {
+        switch event {
+        case .play where !properties.isBuffering:
+            stopwatch.start()
+        case .stop:
+            stopwatch.reset()
+        default:
+            stopwatch.stop()
+        }
     }
 
     func volume(for properties: PlayerProperties) -> String {
@@ -148,11 +162,6 @@ private extension CommandersActTracker {
 
     func mediaPosition(for time: CMTime) -> Int {
         Int(time.timeInterval())
-    }
-
-    func playbackDuration(for properties: PlayerProperties) -> Int {
-        guard let metrics = properties.metrics() else { return 0 }
-        return Int(metrics.total.playbackDuration)
     }
 
     func timeshiftOffset(for properties: PlayerProperties, time: CMTime) -> Int {
