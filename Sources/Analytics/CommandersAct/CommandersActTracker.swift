@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Combine
 import Foundation
 import PillarboxPlayer
 
@@ -17,6 +18,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     private var metadata: [String: String] = [:]
     private var lastEvent: Event = .none
     private let stopwatch = Stopwatch()
+    private var cancellable: AnyCancellable?
 
     public init(configuration: Void) {}
 
@@ -82,6 +84,20 @@ private extension CommandersActTracker {
                 labels: labels(properties: properties)
             ))
             lastEvent = event
+        }
+
+        if event == .play {
+            cancellable = Self.heartbeatEventNamePublisher(for: properties)
+                .sink { [weak self] eventName in
+                    guard let self else { return }
+                    Analytics.shared.sendEvent(commandersAct: .init(
+                        name: eventName,
+                        labels: labels(properties: properties)
+                    ))
+                }
+        }
+        else {
+            cancellable = nil
         }
 
         if event == .stop {
@@ -172,5 +188,33 @@ private extension CommandersActTracker {
 
     func languageCode(from option: AVMediaSelectionOption?) -> String {
         option?.locale?.language.languageCode?.identifier.uppercased() ?? "UND"
+    }
+}
+
+private extension CommandersActTracker {
+    static func heartbeatPublisher(delay: TimeInterval, interval: TimeInterval) -> AnyPublisher<Void, Never> {
+        Timer.publish(every: interval, on: .main, in: .common)
+            .autoconnect()
+            .map { _ in }
+            .prepend(())
+            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+
+    static func heartbeatEventNamePublisher(for properties: PlayerProperties) -> AnyPublisher<String, Never> {
+        switch properties.streamType {
+        case .onDemand:
+            return heartbeatPublisher(delay: 30, interval: 30)
+                .map { _ in "pos" }
+                .eraseToAnyPublisher()
+        case .live, .dvr:
+            return Publishers.Merge(
+                heartbeatPublisher(delay: 30, interval: 30).map { _ in "pos" },
+                heartbeatPublisher(delay: 30, interval: 60).map { _ in "uptime" }
+            )
+            .eraseToAnyPublisher()
+        default:
+            return Empty().eraseToAnyPublisher()
+        }
     }
 }
