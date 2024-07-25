@@ -8,6 +8,7 @@
 public protocol AnalyticsDataSource: AnyObject {
     /// comScore global labels.
     var comScoreGlobals: ComScoreGlobals { get }
+    
     /// Commanders Act global labels.
     var commandersActGlobals: CommandersActGlobals { get }
 }

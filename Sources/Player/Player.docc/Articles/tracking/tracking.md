@@ -33,6 +33,8 @@ Once types associated with an item tracker have been defined, start implementing
 5. ``PlayerItemTracker/disable()`` is called when the player item stops being the current one. Your implementation should cleanup resources acquired in ``PlayerItemTracker/enable(for:)``.
 6. Since item trackers are required to be classes you can use `deinit` to perform any necessary final cleanup when the tracker and its item are discarded.
 
+> Important: The tracker associated with an item is reused when the same item is played again. If the tracker stores any state, ensure that the state is properly initialized or cleaned up when the tracker is enabled or disabled.
+
 > Warning: Some 3rd party trackers might require low-level access to the `AVPlayer` instance, which can be obtained with ``Player/systemPlayer``.
 >
 > Even though the low-level player can be accessed you should never attempt to mutate its state directly. Changes might namely confuse the parent ``Player``, leading to undefined behavior.
