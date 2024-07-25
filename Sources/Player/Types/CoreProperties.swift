@@ -32,6 +32,12 @@ extension CoreProperties {
     var presentationSize: CGSize? {
         itemProperties.presentationSize
     }
+}
+
+extension CoreProperties {
+    func time() -> CMTime {
+        itemProperties.time()
+    }
 
     func metrics() -> Metrics? {
         itemProperties.metrics()
