@@ -63,6 +63,7 @@ private extension CommandersActTracker {
 
     func updateHeartbeat(event: Event, properties: PlayerProperties) {
         if event == .play {
+            guard cancellable == nil else { return }
             cancellable = Self.heartbeatEventNamePublisher(for: properties)
                 .sink { [weak self] eventName in
                     guard let self else { return }
