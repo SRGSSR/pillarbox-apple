@@ -24,6 +24,8 @@ The ``PlayerItemTracker`` protocol declares two associated types which you shoul
 
 ### Respond to tracker life cycle events
 
+> Important: The tracker associated with an item is reused when the same item is played again. If the tracker stores any state, ensure that the state is properly initialized or cleaned up when the tracker is enabled or disabled.
+
 Once types associated with an item tracker have been defined, start implementing the tracker life cycle itself:
 
 1. ``PlayerItemTracker/init(configuration:)`` is called when the tracker and its item are created. This initializer receives an instance of the configuration type you defined above.
@@ -32,8 +34,6 @@ Once types associated with an item tracker have been defined, start implementing
 4. ``PlayerItemTracker/updateProperties(with:)`` is called when player properties change. Be careful that properties can change often and that your implementation should be as efficient as possible.
 5. ``PlayerItemTracker/disable()`` is called when the player item stops being the current one. Your implementation should cleanup resources acquired in ``PlayerItemTracker/enable(for:)``.
 6. Since item trackers are required to be classes you can use `deinit` to perform any necessary final cleanup when the tracker and its item are discarded.
-
-> Important: The tracker associated with an item is reused when the same item is played again. If the tracker stores any state, ensure that the state is properly initialized or cleaned up when the tracker is enabled or disabled.
 
 > Warning: Some 3rd party trackers might require low-level access to the `AVPlayer` instance, which can be obtained with ``Player/systemPlayer``.
 >
