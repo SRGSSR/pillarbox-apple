@@ -19,18 +19,6 @@ final class ComScoreStreamingAnalytics: SCORStreamingAnalytics {
 }
 
 extension ComScoreStreamingAnalytics {
-    private static func duration(for properties: PlayerProperties) -> Int {
-        Int(properties.seekableTimeRange.duration.timeInterval().toMilliseconds)
-    }
-
-    private static func position(for properties: PlayerProperties) -> Int {
-        Int(properties.time().timeInterval().toMilliseconds)
-    }
-
-    private static func offset(for properties: PlayerProperties) -> Int {
-        Int(properties.endOffset().timeInterval().toMilliseconds)
-    }
-
     func notifyEvent(for playbackState: PlaybackState, at rate: Float) {
         switch playbackState {
         case .playing:
@@ -53,5 +41,19 @@ extension ComScoreStreamingAnalytics {
         else {
             start(fromPosition: Self.position(for: properties))
         }
+    }
+}
+
+private extension ComScoreStreamingAnalytics {
+    static func duration(for properties: PlayerProperties) -> Int {
+        Int(properties.seekableTimeRange.duration.timeInterval().toMilliseconds)
+    }
+
+    static func position(for properties: PlayerProperties) -> Int {
+        Int(properties.time().timeInterval().toMilliseconds)
+    }
+
+    static func offset(for properties: PlayerProperties) -> Int {
+        Int(properties.endOffset().timeInterval().toMilliseconds)
     }
 }

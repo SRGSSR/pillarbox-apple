@@ -50,27 +50,18 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     public func disable(with properties: PlayerProperties) {
         notify(.stop, properties: properties)
+        stopwatch.reset()
     }
 }
 
 private extension CommandersActTracker {
-    enum Event: String {
-        case none
-        case play
-        case pause
-        case seek
-        case eof
-        case stop
+    func notify(_ event: Event, properties: PlayerProperties) {
+        updateStopwatch(event: event, properties: properties)
+        updateHeartbeat(event: event, properties: properties)
+        sendEventIfNeeded(event: event, properties: properties)
     }
 
-    func notify(_ event: Event, properties: PlayerProperties) {
-        if event == .play && !properties.isBuffering {
-            stopwatch.start()
-        }
-        else {
-            stopwatch.stop()
-        }
-
+    func updateHeartbeat(event: Event, properties: PlayerProperties) {
         if event == .play {
             cancellable = Self.heartbeatEventNamePublisher(for: properties)
                 .sink { [weak self] eventName in
@@ -84,7 +75,18 @@ private extension CommandersActTracker {
         else {
             cancellable = nil
         }
+    }
 
+    func updateStopwatch(event: Event, properties: PlayerProperties) {
+        if event == .play && !properties.isBuffering {
+            stopwatch.start()
+        }
+        else {
+            stopwatch.stop()
+        }
+    }
+
+    func sendEventIfNeeded(event: Event, properties: PlayerProperties) {
         guard event != lastEvent else { return }
 
         switch (lastEvent, event) {
@@ -99,12 +101,10 @@ private extension CommandersActTracker {
             ))
             lastEvent = event
         }
-
-        if event == .stop {
-            stopwatch.reset()
-        }
     }
+}
 
+private extension CommandersActTracker {
     func labels(properties: PlayerProperties) -> [String: String] {
         var labels = metadata
 
@@ -216,5 +216,16 @@ private extension CommandersActTracker {
         default:
             return Empty().eraseToAnyPublisher()
         }
+    }
+}
+
+private extension CommandersActTracker {
+    enum Event: String {
+        case none
+        case play
+        case pause
+        case seek
+        case eof
+        case stop
     }
 }

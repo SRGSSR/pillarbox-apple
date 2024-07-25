@@ -55,20 +55,22 @@ public final class ComScoreTracker: PlayerItemTracker {
     public func disable(with properties: PlayerProperties) {
         streamingAnalytics = ComScoreStreamingAnalytics()
     }
+}
 
-    private func renewPlaybackSessionIfNeeded(for playbackState: PlaybackState) {
+private extension ComScoreTracker {
+    func renewPlaybackSessionIfNeeded(for playbackState: PlaybackState) {
         guard playbackState == .ended else { return }
         createPlaybackSession()
         addMetadata(metadata)
     }
 
-    private func createPlaybackSession() {
+    func createPlaybackSession() {
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(Player.version)
     }
 
-    private func addMetadata(_ metadata: [String: String]) {
+    func addMetadata(_ metadata: [String: String]) {
         let builder = SCORStreamingContentMetadataBuilder()
         if let globals = Analytics.shared.comScoreGlobals {
             builder.setCustomLabels(metadata.merging(globals.labels) { _, new in new })
