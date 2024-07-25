@@ -7,8 +7,8 @@
 import Foundation
 
 final class Stopwatch {
-    var date: Date?
-    var total: TimeInterval = 0
+    private var date: Date?
+    private var total: TimeInterval = 0
 
     func start() {
         guard date == nil else { return }
@@ -28,5 +28,10 @@ final class Stopwatch {
         else {
             return total
         }
+    }
+
+    func reset() {
+        date = nil
+        total = 0
     }
 }
