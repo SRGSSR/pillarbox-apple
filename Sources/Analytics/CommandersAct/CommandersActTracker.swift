@@ -71,6 +71,20 @@ private extension CommandersActTracker {
             stopwatch.stop()
         }
 
+        if event == .play {
+            cancellable = Self.heartbeatEventNamePublisher(for: properties)
+                .sink { [weak self] eventName in
+                    guard let self else { return }
+                    Analytics.shared.sendEvent(commandersAct: .init(
+                        name: eventName,
+                        labels: labels(properties: properties)
+                    ))
+                }
+        }
+        else {
+            cancellable = nil
+        }
+
         guard event != lastEvent else { return }
 
         switch (lastEvent, event) {
@@ -84,20 +98,6 @@ private extension CommandersActTracker {
                 labels: labels(properties: properties)
             ))
             lastEvent = event
-        }
-
-        if event == .play {
-            cancellable = Self.heartbeatEventNamePublisher(for: properties)
-                .sink { [weak self] eventName in
-                    guard let self else { return }
-                    Analytics.shared.sendEvent(commandersAct: .init(
-                        name: eventName,
-                        labels: labels(properties: properties)
-                    ))
-                }
-        }
-        else {
-            cancellable = nil
         }
 
         if event == .stop {
