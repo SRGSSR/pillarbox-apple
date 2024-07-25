@@ -8,58 +8,66 @@ import AVFoundation
 import Combine
 
 final class Tracker {
-    private var cancellables = Set<AnyCancellable>()
     private let player: QueuePlayer
     private var properties: PlayerProperties = .empty
-
-    var isEnabled = true {
-        didSet {
-            update(from: items, to: items, previouslyEnabled: oldValue, currentlyEnabled: isEnabled)
-        }
-    }
+    private var cancellables = Set<AnyCancellable>()
 
     var items: QueueItems? {
+        willSet {
+            if items?.item != newValue?.item {
+                disable(with: items)
+            }
+        }
         didSet {
-            update(from: oldValue, to: items, previouslyEnabled: isEnabled, currentlyEnabled: isEnabled)
+            guard isEnabled else { return }
+            if items?.item != oldValue?.item {
+                enable(with: items)
+            }
+            updatePublishers(for: items)
         }
     }
 
-    init(player: QueuePlayer) {
+    var isEnabled: Bool {
+        willSet {
+            if isEnabled, isEnabled != newValue {
+                disable(with: items)
+            }
+        }
+        didSet {
+            if isEnabled, isEnabled != oldValue {
+                enable(with: items)
+                updatePublishers(for: items)
+            }
+        }
+    }
+
+    init(player: QueuePlayer, isEnabled: Bool) {
         self.player = player
+        self.isEnabled = isEnabled
     }
 
-    private func update(from oldItems: QueueItems?, to newItems: QueueItems?, previouslyEnabled: Bool, currentlyEnabled: Bool) {
+    private func enable(with items: QueueItems?) {
+        items?.item.enableTrackers(for: player)
+    }
+
+    private func disable(with items: QueueItems?) {
+        items?.item.disableTrackers(with: properties)
+    }
+
+    private func updatePublishers(for items: QueueItems?) {
         cancellables = []
-
-        if let oldItems {
-            if previouslyEnabled, newItems?.item != oldItems.item {
-                oldItems.item.disableTrackers(with: properties)
+        guard let items else { return }
+        player.propertiesPublisher(with: items.playerItem)
+            .sink { [weak self] properties in
+                items.item.updateTrackerProperties(with: properties)
+                self?.properties = properties
             }
-            else if currentlyEnabled, !previouslyEnabled {
-                oldItems.item.enableTrackers(for: player)
-            }
-        }
-
-        if let newItems {
-            if currentlyEnabled, oldItems?.item != newItems.item {
-                newItems.item.enableTrackers(for: player)
-            }
-            else if previouslyEnabled && !currentlyEnabled {
-                newItems.item.disableTrackers(with: properties)
-            }
-
-            if currentlyEnabled {
-                player.propertiesPublisher(with: newItems.playerItem)
-                    .sink { [weak self] properties in
-                        newItems.item.updateTrackerProperties(with: properties)
-                        self?.properties = properties
-                    }
-                    .store(in: &cancellables)
-            }
-        }
+            .store(in: &cancellables)
     }
 
     deinit {
-        items?.item.disableTrackers(with: properties)
+        if isEnabled {
+            disable(with: items)
+        }
     }
 }
