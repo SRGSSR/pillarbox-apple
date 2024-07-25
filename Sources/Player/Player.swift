@@ -42,7 +42,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private lazy var tracker = Tracker(player: queuePlayer)
+    private lazy var tracker = Tracker(player: queuePlayer, isEnabled: isTrackingEnabled)
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -112,12 +112,9 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// A Boolean setting whether trackers must be enabled or not.
-    public var isTrackingEnabled: Bool {
-        get {
-            tracker.isEnabled
-        }
-        set {
-            tracker.isEnabled = newValue
+    public var isTrackingEnabled = true {
+        didSet {
+            tracker.isEnabled = isTrackingEnabled
         }
     }
 
@@ -275,7 +272,8 @@ private extension Player {
     }
 
     func configureTrackerPublisher() {
-        queuePublisher.slice(at: \.items)
+        queuePublisher
+            .slice(at: \.items)
             .weakAssign(to: \.items, on: tracker)
             .store(in: &cancellables)
     }
