@@ -9,6 +9,6 @@ import PillarboxPlayer
 
 extension PlayerProperties {
     func endOffset() -> CMTime {
-        seekableTimeRange.end - time()
+        max(seekableTimeRange.end - time(), .zero)
     }
 }
