@@ -62,9 +62,14 @@ private extension CommandersActTracker {
     }
 
     func notify(_ event: Event, properties: PlayerProperties, time: CMTime) {
-        guard event != lastEvent else { return }
+        if event == .play && !properties.isBuffering {
+            stopwatch.start()
+        }
+        else {
+            stopwatch.stop()
+        }
 
-        updateStopwatch(for: event, properties: properties)
+        guard event != lastEvent else { return }
 
         switch (lastEvent, event) {
         case (.pause, .seek), (.pause, .eof), (.seek, .pause), (.seek, .eof), (.stop, _):
@@ -77,6 +82,10 @@ private extension CommandersActTracker {
                 labels: labels(properties: properties, time: time)
             ))
             lastEvent = event
+        }
+
+        if event == .stop {
+            stopwatch.reset()
         }
     }
 
@@ -96,27 +105,16 @@ private extension CommandersActTracker {
         case .onDemand:
             labels["media_position"] = String(mediaPosition(for: time))
         case .live:
-            labels["media_position"] = String(stopwatch.time())
+            labels["media_position"] = String(playbackDuration())
             labels["media_timeshift"] = "0"
         case .dvr:
-            labels["media_position"] = String(stopwatch.time())
+            labels["media_position"] = String(playbackDuration())
             labels["media_timeshift"] = String(timeshiftOffset(for: properties, time: time))
         default:
             break
         }
 
         return labels
-    }
-
-    func updateStopwatch(for event: Event, properties: PlayerProperties) {
-        switch event {
-        case .play where !properties.isBuffering:
-            stopwatch.start()
-        case .stop:
-            stopwatch.reset()
-        default:
-            stopwatch.stop()
-        }
     }
 
     func volume(for properties: PlayerProperties) -> String {
@@ -162,6 +160,10 @@ private extension CommandersActTracker {
 
     func mediaPosition(for time: CMTime) -> Int {
         Int(time.timeInterval())
+    }
+
+    func playbackDuration() -> Int {
+        Int(stopwatch.time())
     }
 
     func timeshiftOffset(for properties: PlayerProperties, time: CMTime) -> Int {
