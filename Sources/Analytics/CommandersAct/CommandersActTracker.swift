@@ -26,18 +26,18 @@ public final class CommandersActTracker: PlayerItemTracker {
         self.metadata = metadata
     }
 
-    public func updateProperties(with properties: PlayerProperties, time: CMTime) {
+    public func updateProperties(with properties: PlayerProperties) {
         if properties.isSeeking {
-            notify(.seek, properties: properties, time: time)
+            notify(.seek, properties: properties)
         }
         else {
             switch properties.playbackState {
             case .playing:
-                notify(.play, properties: properties, time: time)
+                notify(.play, properties: properties)
             case .paused:
-                notify(.pause, properties: properties, time: time)
+                notify(.pause, properties: properties)
             case .ended:
-                notify(.eof, properties: properties, time: time)
+                notify(.eof, properties: properties)
             default:
                 break
             }
@@ -46,8 +46,8 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     public func receiveMetricEvent(_ event: MetricEvent) {}
 
-    public func disable(with properties: PlayerProperties, time: CMTime) {
-        notify(.stop, properties: properties, time: time)
+    public func disable(with properties: PlayerProperties) {
+        notify(.stop, properties: properties)
     }
 }
 
@@ -61,7 +61,7 @@ private extension CommandersActTracker {
         case stop
     }
 
-    func notify(_ event: Event, properties: PlayerProperties, time: CMTime) {
+    func notify(_ event: Event, properties: PlayerProperties) {
         if event == .play && !properties.isBuffering {
             stopwatch.start()
         }
@@ -79,7 +79,7 @@ private extension CommandersActTracker {
         default:
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: event.rawValue,
-                labels: labels(properties: properties, time: time)
+                labels: labels(properties: properties)
             ))
             lastEvent = event
         }
@@ -89,7 +89,7 @@ private extension CommandersActTracker {
         }
     }
 
-    func labels(properties: PlayerProperties, time: CMTime) -> [String: String] {
+    func labels(properties: PlayerProperties) -> [String: String] {
         var labels = metadata
 
         labels["media_player_display"] = "Pillarbox"
@@ -103,13 +103,13 @@ private extension CommandersActTracker {
 
         switch properties.streamType {
         case .onDemand:
-            labels["media_position"] = String(mediaPosition(for: time))
+            labels["media_position"] = String(mediaPosition(for: properties))
         case .live:
             labels["media_position"] = String(playbackDuration())
             labels["media_timeshift"] = "0"
         case .dvr:
             labels["media_position"] = String(playbackDuration())
-            labels["media_timeshift"] = String(timeshiftOffset(for: properties, time: time))
+            labels["media_timeshift"] = String(timeshiftOffset(for: properties))
         default:
             break
         }
@@ -158,17 +158,16 @@ private extension CommandersActTracker {
         }
     }
 
-    func mediaPosition(for time: CMTime) -> Int {
-        Int(time.timeInterval())
+    func mediaPosition(for properties: PlayerProperties) -> Int {
+        Int(properties.time().timeInterval())
     }
 
     func playbackDuration() -> Int {
         Int(stopwatch.time())
     }
 
-    func timeshiftOffset(for properties: PlayerProperties, time: CMTime) -> Int {
-        guard time.isValid else { return 0 }
-        return Int((properties.seekableTimeRange.end - time).timeInterval())
+    func timeshiftOffset(for properties: PlayerProperties) -> Int {
+        Int(properties.endOffset().timeInterval())
     }
 
     func languageCode(from option: AVMediaSelectionOption?) -> String {

@@ -39,15 +39,15 @@ extension TrackerAdapter: TrackerLifeCycle {
         tracker.enable(for: player)
     }
 
-    func updateProperties(with properties: PlayerProperties, time: CMTime) {
-        tracker.updateProperties(with: properties, time: time)
+    func updateProperties(with properties: PlayerProperties) {
+        tracker.updateProperties(with: properties)
     }
 
     func receiveMetricEvent(_ event: MetricEvent) {
         tracker.receiveMetricEvent(event)
     }
 
-    func disable(with properties: PlayerProperties, time: CMTime) {
-        tracker.disable(with: properties, time: time)
+    func disable(with properties: PlayerProperties) {
+        tracker.disable(with: properties)
     }
 }

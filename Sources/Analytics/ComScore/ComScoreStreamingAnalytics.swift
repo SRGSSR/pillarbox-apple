@@ -20,17 +20,15 @@ final class ComScoreStreamingAnalytics: SCORStreamingAnalytics {
 
 extension ComScoreStreamingAnalytics {
     private static func duration(for properties: PlayerProperties) -> Int {
-        properties.seekableTimeRange.isValid ? Int(properties.seekableTimeRange.duration.seconds.toMilliseconds) : 0
+        Int(properties.seekableTimeRange.duration.timeInterval().toMilliseconds)
     }
 
-    private static func position(for time: CMTime) -> Int {
-        time.isValid ? Int(time.seconds.toMilliseconds) : 0
+    private static func position(for properties: PlayerProperties) -> Int {
+        Int(properties.time().timeInterval().toMilliseconds)
     }
 
-    private static func offset(for properties: PlayerProperties, time: CMTime) -> Int {
-        guard properties.seekableTimeRange.isValid, time.isValid else { return 0 }
-        let offset = properties.seekableTimeRange.end - time
-        return Int(offset.seconds.toMilliseconds)
+    private static func offset(for properties: PlayerProperties) -> Int {
+        Int(properties.endOffset().timeInterval().toMilliseconds)
     }
 
     func notifyEvent(for playbackState: PlaybackState, at rate: Float) {
@@ -47,13 +45,13 @@ extension ComScoreStreamingAnalytics {
         }
     }
 
-    func setProperties(for properties: PlayerProperties, time: CMTime, streamType: StreamType) {
-        if streamType == .dvr {
-            start(fromDvrWindowOffset: Self.offset(for: properties, time: time))
+    func setProperties(for properties: PlayerProperties) {
+        if properties.streamType == .dvr {
+            start(fromDvrWindowOffset: Self.offset(for: properties))
             setDVRWindowLength(Self.duration(for: properties))
         }
         else {
-            start(fromPosition: Self.position(for: time))
+            start(fromPosition: Self.position(for: properties))
         }
     }
 }
