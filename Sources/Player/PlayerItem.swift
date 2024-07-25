@@ -152,9 +152,9 @@ extension PlayerItem {
         }
     }
 
-    func updateTrackerProperties(with properties: PlayerProperties, time: CMTime) {
+    func updateTrackerProperties(with properties: PlayerProperties) {
         trackerAdapters.forEach { adapter in
-            adapter.updateProperties(with: properties, time: time)
+            adapter.updateProperties(with: properties)
         }
     }
 
@@ -164,9 +164,9 @@ extension PlayerItem {
         }
     }
 
-    func disableTrackers(with properties: PlayerProperties, time: CMTime) {
+    func disableTrackers(with properties: PlayerProperties) {
         trackerAdapters.forEach { adapter in
-            adapter.disable(with: properties, time: time)
+            adapter.disable(with: properties)
         }
     }
 }

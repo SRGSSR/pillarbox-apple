@@ -37,12 +37,10 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// A method called when player properties have changed.
     ///
-    /// - Parameters:
-    ///   - properties: The updated properties.
-    ///   - time: The player time.
+    /// - Parameter properties: The updated properties.
     ///
     /// This method can be called quite often. Implementations should avoid performing significant work unnecessarily.
-    func updateProperties(with properties: PlayerProperties, time: CMTime)
+    func updateProperties(with properties: PlayerProperties)
 
     /// A method called when a metric event is received.
     /// 
@@ -51,10 +49,8 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// A method called when the tracker is disabled.
     ///
-    /// - Parameters:
-    ///   - properties: The updated properties.
-    ///   - time: The player time.
-    func disable(with properties: PlayerProperties, time: CMTime)
+    /// - Parameter properties: The updated properties.
+    func disable(with properties: PlayerProperties)
 }
 
 public extension PlayerItemTracker {

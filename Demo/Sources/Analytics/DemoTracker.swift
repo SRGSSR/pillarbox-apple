@@ -28,14 +28,14 @@ final class DemoTracker: PlayerItemTracker {
         Self.logger.debug("Update demo tracker metadata for \(self.id): \(metadata.title)")
     }
 
-    func updateProperties(with properties: PlayerProperties, time: CMTime) {}
+    func updateProperties(with properties: PlayerProperties) {}
 
     func receiveMetricEvent(_ event: MetricEvent) {
         Self.logger.debug("Receive metric event for \(self.id): \(event)")
     }
 
-    func disable(with properties: PlayerProperties, time: CMTime) {
-        Self.logger.debug("Disable demo tracker for \(self.id) - \(time.seconds)")
+    func disable(with properties: PlayerProperties) {
+        Self.logger.debug("Disable demo tracker for \(self.id) - \(properties.time().seconds)")
     }
 
     deinit {

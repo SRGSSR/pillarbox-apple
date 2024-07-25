@@ -28,11 +28,11 @@ public final class ComScoreTracker: PlayerItemTracker {
         addMetadata(metadata)
     }
 
-    public func updateProperties(with properties: PlayerProperties, time: CMTime) {
+    public func updateProperties(with properties: PlayerProperties) {
         guard !metadata.isEmpty else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
-        streamingAnalytics.setProperties(for: properties, time: time, streamType: properties.streamType)
+        streamingAnalytics.setProperties(for: properties)
 
         switch (properties.isSeeking, properties.isBuffering) {
         case (true, true):
@@ -52,7 +52,7 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     public func receiveMetricEvent(_ event: MetricEvent) {}
 
-    public func disable(with properties: PlayerProperties, time: CMTime) {
+    public func disable(with properties: PlayerProperties) {
         streamingAnalytics = ComScoreStreamingAnalytics()
     }
 

@@ -33,7 +33,7 @@ final class Tracker {
 
         if let oldItems {
             if previouslyEnabled, newItems?.item != oldItems.item {
-                oldItems.item.disableTrackers(with: properties, time: oldItems.playerItem.currentTime())
+                oldItems.item.disableTrackers(with: properties)
             }
             else if currentlyEnabled, !previouslyEnabled {
                 oldItems.item.enableTrackers(for: player)
@@ -45,13 +45,13 @@ final class Tracker {
                 newItems.item.enableTrackers(for: player)
             }
             else if previouslyEnabled && !currentlyEnabled {
-                newItems.item.disableTrackers(with: properties, time: newItems.playerItem.currentTime())
+                newItems.item.disableTrackers(with: properties)
             }
 
             if currentlyEnabled {
                 player.propertiesPublisher(with: newItems.playerItem)
                     .sink { [weak self] properties in
-                        newItems.item.updateTrackerProperties(with: properties, time: newItems.playerItem.currentTime())
+                        newItems.item.updateTrackerProperties(with: properties)
                         self?.properties = properties
                     }
                     .store(in: &cancellables)
@@ -60,7 +60,6 @@ final class Tracker {
     }
 
     deinit {
-        guard let items else { return }
-        items.item.disableTrackers(with: properties, time: items.playerItem.currentTime())
+        items?.item.disableTrackers(with: properties)
     }
 }

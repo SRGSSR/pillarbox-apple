@@ -32,7 +32,7 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
 
     func updateMetadata(with metadata: Void) {}
 
-    func updateProperties(with properties: PlayerProperties, time: CMTime) {}
+    func updateProperties(with properties: PlayerProperties) {}
 
     func receiveMetricEvent(_ event: MetricEvent) {}
 
@@ -40,7 +40,7 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
         configuration.statePublisher.send(.enabled)
     }
 
-    func disable(with properties: PlayerProperties, time: CMTime) {
+    func disable(with properties: PlayerProperties) {
         configuration.statePublisher.send(.disabled)
     }
 
