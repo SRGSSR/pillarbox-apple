@@ -422,6 +422,10 @@ enum URLTemplate {
         subtitle: "Mobile resolutions with relative Base URLs    ",
         type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-mobile-en-rel.m3u8")
     )
+    static let mux_LowLatency = Template(
+        title: "Low-Latency",
+        type: .url("https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8")
+    )
     static let bitmovin_360 = Template(
         title: "Bitmovin 360°",
         imageUrl: kThreeSixtyImageUrl,

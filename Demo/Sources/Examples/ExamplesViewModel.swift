@@ -104,6 +104,10 @@ final class ExamplesViewModel: ObservableObject {
         URLTemplate.bbcTestCard_NoTLS_Relative_Mobile
     ])
 
+    let muxMedias = Template.medias(from: [
+        URLTemplate.mux_LowLatency
+    ])
+
     let aspectRatioMedias = Template.medias(from: [
         URNTemplate.onDemandHorizontalVideo,
         URNTemplate.onDemandSquareVideo,
