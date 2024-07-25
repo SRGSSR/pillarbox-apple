@@ -52,7 +52,7 @@ final class ExamplesViewModel: ObservableObject {
         URLTemplate.bitmovinOnDemandProgressive
     ])
 
-    let unifiedStreamingSourceMedias = Template.medias(from: [
+    let unifiedStreamingMedias = Template.medias(from: [
         URLTemplate.unifiedStreamingOnDemand_fMP4,
         URLTemplate.unifiedStreamingOnDemandKeyRotation,
         URLTemplate.unifiedStreamingOnDemandAlternateAudio,
@@ -66,6 +66,42 @@ final class ExamplesViewModel: ObservableObject {
         URLTemplate.unifiedStreamingPureLiveScte35,
         URLTemplate.unifiedStreamingOnDemand_fMP4_Clear,
         URLTemplate.unifiedStreamingOnDemand_fMP4_HEVC_4K
+    ])
+
+    let bbcTestCardMedias = Template.medias(from: [
+        URLTemplate.bbcTestCard_Audio_Video_AVC,
+        URLTemplate.bbcTestCard_Audio_Video_AVC_TVs,
+        URLTemplate.bbcTestCard_Audio_Video_AVC_Mobile,
+        URLTemplate.bbcTestCard_Audio_Video_HEVC_TVs,
+        URLTemplate.bbcTestCard_Audio_HE_LC_AAC_en,
+        URLTemplate.bbcTestCard_Audio_HE_AAC_en,
+        URLTemplate.bbcTestCard_Audio_AAC_LC_en,
+        URLTemplate.bbcTestCard_Audio_AAC_LC_de,
+        URLTemplate.bbcTestCard_Audio_AAC_LC_fr,
+        URLTemplate.bbcTestCard_Audio_HE_LC_AAC_all,
+        URLTemplate.bbcTestCard_Audio_AAC_LC_surround_en,
+        URLTemplate.bbcTestCard_Audio_AAC_LC_surround_de,
+        URLTemplate.bbcTestCard_Audio_AAC_LC_surround_fr,
+        URLTemplate.bbcTestCard_Audio_FLAC_en,
+        URLTemplate.bbcTestCard_Restricted_Stereo_TVs,
+        URLTemplate.bbcTestCard_Restricted_HEVC_Stereo_TVs,
+        URLTemplate.bbcTestCard_Restricted_NoSubtitles_TVs,
+        URLTemplate.bbcTestCard_Single_192x108p25_AAC_LC,
+        URLTemplate.bbcTestCard_Single_256x144p25_AAC_LC,
+        URLTemplate.bbcTestCard_Single_384x216p25_AAC_LC,
+        URLTemplate.bbcTestCard_Single_512x288p25_AAC_LC,
+        URLTemplate.bbcTestCard_Single_704x396p25_AAC_LC,
+        URLTemplate.bbcTestCard_Single_704x396p50_AAC_LC,
+        URLTemplate.bbcTestCard_Single_896x504p25_AAC_LC,
+        URLTemplate.bbcTestCard_Single_960x540p50_AAC_LC,
+        URLTemplate.bbcTestCard_Single_1280x720p50_AAC_LC,
+        URLTemplate.bbcTestCard_Single_1920x1080p50_AAC_LC,
+        URLTemplate.bbcTestCard_Single_1280x720p50_HE_AAC,
+        URLTemplate.bbcTestCard_Single_1280x720p50_HEVC_AAC_LC,
+        URLTemplate.bbcTestCard_Single_1920x1080p50_HEVC_AAC_LC,
+        URLTemplate.bbcTestCard_NoTLS_HTTP_TVs,
+        URLTemplate.bbcTestCard_NoTLS_Relative_TVs,
+        URLTemplate.bbcTestCard_NoTLS_Relative_Mobile
     ])
 
     let aspectRatioMedias = Template.medias(from: [

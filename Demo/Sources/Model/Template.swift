@@ -17,6 +17,7 @@ private let kUnifiedStreamingImageUrl2 = URL("https://website-storage.unified-st
 
 // Apple streams are found at https://developer.apple.com/streaming/examples/
 // Unified Streaming streams are found at https://demo.unified-streaming.com/k8s/features/stable/#!/hls
+// swiftlint:disable:next type_body_length
 enum URLTemplate {
     static let onDemandVideoHLS = Template(
         title: "Sacha part à la rencontre d'univers atypiques",
@@ -255,6 +256,171 @@ enum URLTemplate {
         title: "fMP4, HEVC 4K",
         imageUrl: kUnifiedStreamingImageUrl1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-hevc.ism/.m3u8")
+    )
+    static let bbcTestCard_Audio_Video_AVC = Template(
+        title: "Audio and AVC video",
+        subtitle: "All representations in all languages",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-full.m3u8")
+    )
+    static let bbcTestCard_Audio_Video_AVC_TVs = Template(
+        title: "Audio and AVC video",
+        subtitle: "Representations for Connected TVs in all languages",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-ctv.m3u8")
+    )
+    static let bbcTestCard_Audio_Video_AVC_Mobile = Template(
+        title: "Audio and AVC video",
+        subtitle: "Representations for Mobile Devices in all languages",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-mobile.m3u8")
+    )
+    static let bbcTestCard_Audio_Video_HEVC_TVs = Template(
+        title: "Audio and HEVC video",
+        subtitle: "Representations for Connected TVs in all languages",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/hevc-ctv.m3u8")
+    )
+    static let bbcTestCard_Audio_HE_LC_AAC_en = Template(
+        title: "Audio only",
+        subtitle: "HE and LC AAC Stereo in English",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-en.m3u8")
+    )
+    static let bbcTestCard_Audio_HE_AAC_en = Template(
+        title: "Audio only",
+        subtitle: "HE-AAC Stereo in English",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-he-en.m3u8")
+    )
+    static let bbcTestCard_Audio_AAC_LC_en = Template(
+        title: "Audio only",
+        subtitle: "AAC-LC Stereo in English",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-lc-en.m3u8")
+    )
+    static let bbcTestCard_Audio_AAC_LC_de = Template(
+        title: "Audio only",
+        subtitle: "AAC-LC Stereo in German",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-lc-de.m3u8")
+    )
+    static let bbcTestCard_Audio_AAC_LC_fr = Template(
+        title: "Audio only",
+        subtitle: "AAC-LC Stereo in French",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-lc-fr.m3u8")
+    )
+    static let bbcTestCard_Audio_HE_LC_AAC_all = Template(
+        title: "Audio only",
+        subtitle: "HE and LC AAC Stereo in all languages",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-multilang.m3u8")
+    )
+    static let bbcTestCard_Audio_AAC_LC_surround_en = Template(
+        title: "Audio only",
+        subtitle: "AAC-LC Surround (4 active channels) in English",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-surround-en.m3u8")
+    )
+    static let bbcTestCard_Audio_AAC_LC_surround_de = Template(
+        title: "Audio only",
+        subtitle: "AAC-LC Surround (4 active channels) in German",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-surround-de.m3u8")
+    )
+    static let bbcTestCard_Audio_AAC_LC_surround_fr = Template(
+        title: "Audio only",
+        subtitle: "AAC-LC Surround (4 active channels) in French",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-surround-fr.m3u8")
+    )
+    static let bbcTestCard_Audio_FLAC_en = Template(
+        title: "Audio only",
+        subtitle: "FLAC Stereo in English",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/radio-flac-en.m3u8")
+    )
+    static let bbcTestCard_Restricted_Stereo_TVs = Template(
+        title: "Restricted manifests",
+        subtitle: "Connected TV representations with only stereo audio",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-ctv-stereo-en.m3u8")
+    )
+    static let bbcTestCard_Restricted_HEVC_Stereo_TVs = Template(
+        title: "Restricted manifests",
+        subtitle: "Connected TV representations (HEVC) with only stereo audio",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/hevc-ctv-stereo-en.m3u8")
+    )
+    static let bbcTestCard_Restricted_NoSubtitles_TVs = Template(
+        title: "Restricted manifests",
+        subtitle: "Connected TV representations with no subtitles",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-ctv-no_subs-en.m3u8")
+    )
+    static let bbcTestCard_Single_192x108p25_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "192x108p25, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-192x108p25-en.m3u8")
+    )
+    static let bbcTestCard_Single_256x144p25_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "256x144p25, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-256x144p25-en.m3u8")
+    )
+    static let bbcTestCard_Single_384x216p25_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "384x216p25, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-384x216p25-en.m3u8")
+    )
+    static let bbcTestCard_Single_512x288p25_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "512x288p25, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-512x288p25-en.m3u8")
+    )
+    static let bbcTestCard_Single_704x396p25_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "704x396p25, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-704x396p25-en.m3u8")
+    )
+    static let bbcTestCard_Single_704x396p50_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "704x396p50, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-704x396p50-en.m3u8")
+    )
+    static let bbcTestCard_Single_896x504p25_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "896x504p25, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-896x504p25-en.m3u8")
+    )
+    static let bbcTestCard_Single_960x540p50_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "960x540p50, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-960x540p50-en.m3u8")
+    )
+    static let bbcTestCard_Single_1280x720p50_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "1280x720p50, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-1280x720p50-en.m3u8")
+    )
+    static let bbcTestCard_Single_1920x1080p50_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "1920x1080p50, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-128kbps-1920x1080p50-en.m3u8")
+    )
+    static let bbcTestCard_Single_1280x720p50_HE_AAC = Template(
+        title: "Single representations",
+        subtitle: "1280x720p50, 96kbps HE-AAC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-single-96kbps-1280x720p50-en.m3u8")
+    )
+    static let bbcTestCard_Single_1280x720p50_HEVC_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "1280x720p50 HEVC, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/hevc-single-128kbps-1280x720p50-en.m3u8")
+    )
+    static let bbcTestCard_Single_1920x1080p50_HEVC_AAC_LC = Template(
+        title: "Single representations",
+        subtitle: "1920x1080p50 HEVC, 128kbps AAC-LC",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/hevc-single-128kbps-1920x1080p50-en.m3u8")
+    )
+    static let bbcTestCard_NoTLS_HTTP_TVs = Template(
+        title: "Relative or HTTP only BaseURLs",
+        subtitle: "Connected TV representations - using HTTP",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-ctv-en-http.m3u8")
+    )
+    static let bbcTestCard_NoTLS_Relative_TVs = Template(
+        title: "Relative or HTTP only BaseURLs",
+        subtitle: "Connected TV representations - using relative paths",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-ctv-en-rel.m3u8")
+    )
+    static let bbcTestCard_NoTLS_Relative_Mobile = Template(
+        title: "Relative or HTTP only BaseURLs",
+        subtitle: "Mobile resolutions with relative Base URLs    ",
+        type: .url("https://rdmedia.bbc.co.uk/testcard/simulcast/manifests/avc-mobile-en-rel.m3u8")
     )
     static let bitmovin_360 = Template(
         title: "Bitmovin 360°",

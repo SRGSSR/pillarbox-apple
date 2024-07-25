@@ -207,7 +207,8 @@ struct ExamplesView: View {
         section(title: "Apple streams", medias: model.appleMedias)
         section(title: "Third-party streams", medias: model.thirdPartyMedias)
         section(title: "Bitmovin streams streams", medias: model.bitmovinMedias)
-        section(title: "Unified Streaming", medias: model.unifiedStreamingSourceMedias)
+        section(title: "Unified Streaming", medias: model.unifiedStreamingMedias)
+        section(title: "BBC Test Card", medias: model.bbcTestCardMedias)
     }
 
     @ViewBuilder
