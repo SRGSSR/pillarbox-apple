@@ -225,7 +225,25 @@ extension AVPlayerItem {
     }
 
     func warningMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        Empty().eraseToAnyPublisher()
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
+            .compactMap { notification -> Error? in
+                guard let lastErrorEvent = (notification.object as? AVPlayerItem)?.errorLog()?.events.last else { return nil }
+                return NSError(
+                    domain: lastErrorEvent.errorDomain,
+                    code: lastErrorEvent.errorStatusCode,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: lastErrorEvent.errorComment
+                    ].compactMapValues { $0 }
+                )
+            }
+            .weakCapture(self)
+            .map { error, item in
+                MetricEvent(
+                    kind: .warning(error),
+                    time: item.currentTime()
+                )
+            }
+            .eraseToAnyPublisher()
     }
 
     func stallEventPublisher() -> AnyPublisher<MetricEvent, Never> {

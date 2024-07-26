@@ -44,4 +44,10 @@ final class AVPlayerItemMetricEventPublisherTests: TestCase {
             from: item.failureMetricEventPublisher()
         )
     }
+
+    func testPlayableItemWarningMetricEvent() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        _ = AVPlayer(playerItem: item)
+        expectNothingPublished(from: item.warningMetricEventPublisher(), during: .milliseconds(500))
+    }
 }
