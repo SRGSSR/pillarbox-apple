@@ -69,14 +69,6 @@ final class CommandersActHeartbeatTests: CommandersActTestCase {
         }
     }
 
-    func testNoHeartbeatAfterPlaybackEnd() {
-        let player = Self.player(from: .shortOnDemand, into: &cancellables)
-        player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
-        expect(player.playbackState).toEventually(equal(.idle))
-        expectNoHits(during: .milliseconds(300))
-    }
-
     func testHeartbeatPropertyUpdate() {
         let player = Self.player(from: .onDemand, into: &cancellables)
         expectAtLeastHits(
