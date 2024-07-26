@@ -52,6 +52,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     public func disable(with properties: PlayerProperties) {
         notify(.stop, properties: properties)
         stopwatch.reset()
+        heartbeat.reset()
     }
 }
 
