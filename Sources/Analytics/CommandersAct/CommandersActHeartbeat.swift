@@ -33,8 +33,12 @@ final class CommandersActHeartbeat {
                 }
         }
         else {
-            cancellable = nil
+            reset()
         }
+    }
+
+    func reset() {
+        cancellable = nil
     }
 
     private func sendEvent(_ event: Event, labels: @escaping (PlayerProperties) -> [String: String]) {
