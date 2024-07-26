@@ -12,11 +12,11 @@ extension PlayerItem {
             .eraseToAnyPublisher()
     }
 
-    private func assetLoadingMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+    func assetLoadingMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Empty().eraseToAnyPublisher()
     }
 
-    private func failureMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+    func failureMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Empty().eraseToAnyPublisher()
     }
 }
