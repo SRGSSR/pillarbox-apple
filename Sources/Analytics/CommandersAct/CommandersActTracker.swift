@@ -18,6 +18,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     private var metadata: [String: String] = [:]
     private var lastEvent: Event = .none
     private let stopwatch = Stopwatch()
+    private let heartbeat = CommandersActHeartbeat()
     private var cancellable: AnyCancellable?
 
     public init(configuration: Void) {}
@@ -57,25 +58,8 @@ public final class CommandersActTracker: PlayerItemTracker {
 private extension CommandersActTracker {
     func notify(_ event: Event, properties: PlayerProperties) {
         updateStopwatch(event: event, properties: properties)
-        updateHeartbeat(event: event, properties: properties)
         sendEventIfNeeded(event: event, properties: properties)
-    }
-
-    func updateHeartbeat(event: Event, properties: PlayerProperties) {
-        if event == .play {
-            guard cancellable == nil else { return }
-            cancellable = Self.heartbeatPublisher(for: properties)
-                .sink { [weak self] event in
-                    guard let self else { return }
-                    Analytics.shared.sendEvent(commandersAct: .init(
-                        name: event.rawValue,
-                        labels: labels(properties: properties)
-                    ))
-                }
-        }
-        else {
-            cancellable = nil
-        }
+        heartbeat.update(with: properties, labels: labels)
     }
 
     func updateStopwatch(event: Event, properties: PlayerProperties) {
@@ -193,41 +177,6 @@ private extension CommandersActTracker {
 }
 
 private extension CommandersActTracker {
-    static func heartbeatPublisher(delay: TimeInterval, interval: TimeInterval) -> AnyPublisher<Void, Never> {
-        Timer.publish(every: interval, on: .main, in: .common)
-            .autoconnect()
-            .map { _ in }
-            .prepend(())
-            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
-            .eraseToAnyPublisher()
-    }
-
-    static func posPublisher() -> AnyPublisher<Heartbeat, Never> {
-        heartbeatPublisher(delay: 30, interval: 30)
-            .map { _ in .pos }
-            .eraseToAnyPublisher()
-    }
-
-    static func uptimePublisher() -> AnyPublisher<Heartbeat, Never> {
-        heartbeatPublisher(delay: 30, interval: 60)
-            .map { _ in .uptime }
-            .eraseToAnyPublisher()
-    }
-
-    static func heartbeatPublisher(for properties: PlayerProperties) -> AnyPublisher<Heartbeat, Never> {
-        switch properties.streamType {
-        case .onDemand:
-            return posPublisher()
-        case .live, .dvr:
-            return Publishers.Merge(posPublisher(), uptimePublisher())
-                .eraseToAnyPublisher()
-        default:
-            return Empty().eraseToAnyPublisher()
-        }
-    }
-}
-
-private extension CommandersActTracker {
     enum Event: String {
         case none
         case play
@@ -235,10 +184,5 @@ private extension CommandersActTracker {
         case seek
         case eof
         case stop
-    }
-
-    enum Heartbeat: String {
-        case pos
-        case uptime
     }
 }
