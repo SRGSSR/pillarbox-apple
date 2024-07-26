@@ -56,6 +56,18 @@ extension PlayerItem {
 
     static func webServiceMock(media: MediaMock, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
         let url = URL(string: "http://localhost:8123/json/\(media).json")!
+        return webServiceMock(url: url, trackerAdapters: trackerAdapters)
+    }
+
+    static func failing(
+        loadedAfter delay: TimeInterval,
+        trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []
+    ) -> Self {
+        let url = URL(string: "http://localhost:8123/missing.json")!
+        return webServiceMock(url: url, trackerAdapters: trackerAdapters)
+    }
+
+    private static func webServiceMock(url: URL, trackerAdapters: [TrackerAdapter<AssetMetadataMock>]) -> Self {
         let publisher = URLSession(configuration: .default).dataTaskPublisher(for: url)
             .map(\.data)
             .decode(type: AssetMetadataMock.self, decoder: JSONDecoder())
@@ -63,6 +75,5 @@ extension PlayerItem {
                 Asset.simple(url: Stream.onDemand.url, metadata: metadata)
             }
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
-    }
     }
 }
