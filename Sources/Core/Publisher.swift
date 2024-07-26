@@ -186,6 +186,17 @@ public extension Publisher {
 }
 
 public extension Publisher {
+    /// Measure the interval between consecutive events.
+    ///
+    /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
+    /// the interval between subscription and the first event.
+    func measureDateInterval() -> AnyPublisher<DateInterval, Failure> {
+        map { _ in Date() }
+            .withPrevious(Date())
+            .map { .init(start: $0.previous, end: $0.current) }
+            .eraseToAnyPublisher()
+    }
+
     /// Measure the date interval between consecutive outputs.
     ///
     /// - Parameter measure: A closure called for each output delivered upstream.
