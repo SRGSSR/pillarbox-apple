@@ -11,16 +11,6 @@ import PillarboxCore
 private let kMetricsQueue = DispatchQueue(label: "ch.srgssr.player.metrics")
 
 public extension Player {
-    /// A publisher delivering metric events associated with the current item.
-    ///
-    /// All metric events related to the item currently being played, if any, are received upon subscription.
-    var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
-        metricEventUpdatePublisher
-            .map(\.events)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
     /// Returns a periodically updated metrics history associated with the current item.
     ///
     /// - Parameters:
@@ -52,35 +42,6 @@ public extension Player {
             .switchToLatest()
             .removeDuplicates()
             .receive(on: queue)
-            .eraseToAnyPublisher()
-    }
-}
-
-extension Player {
-    var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
-        metricEventUpdatePublisher
-            .map(\.newEvents)
-            .map { $0.publisher }
-            .switchToLatest()
-            .eraseToAnyPublisher()
-    }
-
-    private var metricEventUpdatePublisher: AnyPublisher<MetricEventUpdate, Never> {
-        queuePublisher
-            .slice(at: \.items)
-            .withPrevious(nil)
-            .compactMap { items -> AnyPublisher<MetricEventUpdate, Never> in
-                guard let currentItems = items.current else {
-                    return Just(.empty).eraseToAnyPublisher()
-                }
-                let update = QueueItems.metricEventUpdate(from: items.previous, to: currentItems)
-                return currentItems.metricEventPublisher()
-                    .scan(update) { $0.updated(with: $1) }
-                    .prepend(update)
-                    .filter { !$0.newEvents.isEmpty }
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
             .eraseToAnyPublisher()
     }
 }
