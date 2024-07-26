@@ -34,10 +34,7 @@ extension PlayerItem {
     ) -> Self {
         let publisher = Just(Asset.simple(url: url, metadata: withMetadata))
             .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(
-            publisher: publisher,
-            trackerAdapters: trackerAdapters
-        )
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
     static func mock(
@@ -54,10 +51,7 @@ extension PlayerItem {
             url: url,
             metadata: AssetMetadataMock(title: "title0", subtitle: "subtitle0")
         ))
-        return .init(
-            publisher: publisher,
-            trackerAdapters: trackerAdapters
-        )
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
     static func webServiceMock(media: MediaMock, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
@@ -68,9 +62,7 @@ extension PlayerItem {
             .map { metadata in
                 Asset.simple(url: Stream.onDemand.url, metadata: metadata)
             }
-        return .init(
-            publisher: publisher,
-            trackerAdapters: trackerAdapters
-        )
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
+    }
     }
 }
