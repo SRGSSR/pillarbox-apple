@@ -33,7 +33,7 @@ public struct MetricEvent: Hashable {
         /// Resume after stall.
         ///
         /// Measures the time for the player to recover after a stall.
-        case resumeAfterStall(DateInterval)
+        case resumeAfterStall
     }
 
     private let id = UUID()
