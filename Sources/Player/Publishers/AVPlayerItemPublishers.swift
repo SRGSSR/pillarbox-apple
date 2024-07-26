@@ -202,13 +202,26 @@ extension AVPlayerItem {
             .measureDateInterval()
             .weakCapture(self)
             .map { dateInterval, item in
-                MetricEvent(kind: .resourceLoading(dateInterval), time: item.currentTime())
+                MetricEvent(
+                    kind: .resourceLoading(dateInterval),
+                    date: dateInterval.end,
+                    time: item.currentTime()
+                )
             }
             .eraseToAnyPublisher()
     }
 
     func failureMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        Empty().eraseToAnyPublisher()
+        errorPublisher()
+            .first()
+            .weakCapture(self)
+            .map { error, item in
+                MetricEvent(
+                    kind: .failure(error),
+                    time: item.currentTime()
+                )
+            }
+            .eraseToAnyPublisher()
     }
 
     func warningMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
