@@ -50,4 +50,10 @@ final class AVPlayerItemMetricEventPublisherTests: TestCase {
         _ = AVPlayer(playerItem: item)
         expectNothingPublished(from: item.warningMetricEventPublisher(), during: .milliseconds(500))
     }
+
+    func testPlayableItemStallMetricEvent() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        _ = AVPlayer(playerItem: item)
+        expectNothingPublished(from: item.stallEventPublisher(), during: .milliseconds(500))
+    }
 }

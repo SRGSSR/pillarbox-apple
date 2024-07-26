@@ -248,6 +248,8 @@ extension AVPlayerItem {
 
     func stallEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         isStalledPublisher()
+            .dropFirst()
+            .removeDuplicates()
             .weakCapture(self)
             .map { isStalled, item in
                 MetricEvent(
