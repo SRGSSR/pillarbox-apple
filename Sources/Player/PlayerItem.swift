@@ -27,7 +27,6 @@ public final class PlayerItem: Equatable {
     private let trackerAdapters: [any TrackerLifeCycle]
 
     let id = UUID()
-    let metricLog = MetricLog()
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
@@ -92,19 +91,11 @@ public final class PlayerItem: Equatable {
     ) where P: Publisher, P.Output == Asset<M> {
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id, metricLog] in
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             Publishers.CombineLatest(
                 publisher,
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
-            .handleEvents(receiveSubscription: { _ in
-                // swiftlint:disable:previous trailing_closure
-                metricLog.clear()
-            })
-            .measureDateInterval { dateInterval in
-                let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
-                metricLog.appendEvent(event)
-            }
             .map { asset, trackerAdapters in
                 trackerAdapters.forEach { adapter in
                     adapter.updateMetadata(with: asset.metadata)
