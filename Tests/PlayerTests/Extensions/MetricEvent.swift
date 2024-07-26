@@ -13,5 +13,4 @@ extension MetricEvent.Kind {
     static let anyResourceLoading = Self.resourceLoading(.init())
     static let anyFailure = Self.failure(AnyError())
     static let anyWarning = Self.warning(AnyError())
-    static let anyResumeAfterStall = Self.resumeAfterStall(.init())
 }

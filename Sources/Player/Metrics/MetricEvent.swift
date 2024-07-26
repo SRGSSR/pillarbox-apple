@@ -89,8 +89,8 @@ extension MetricEvent.Kind: CustomStringConvertible {
             return "[WARNING] \(error.localizedDescription)"
         case .stall:
             return "Stall"
-        case let .resumeAfterStall(dateInterval):
-            return "Resume after stall for \(Self.duration(from: dateInterval.duration))"
+        case .resumeAfterStall:
+            return "Resume after stall"
         }
     }
 
