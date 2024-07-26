@@ -247,6 +247,14 @@ extension AVPlayerItem {
     }
 
     func stallEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        Empty().eraseToAnyPublisher()
+        isStalledPublisher()
+            .weakCapture(self)
+            .map { isStalled, item in
+                MetricEvent(
+                    kind: isStalled ? .stall : .resumeAfterStall,
+                    time: item.currentTime()
+                )
+            }
+            .eraseToAnyPublisher()
     }
 }
