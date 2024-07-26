@@ -95,7 +95,7 @@ extension MetricEvent.Kind: CustomStringConvertible {
     }
 
     private static func duration(from interval: TimeInterval) -> String {
-        String(format: "%.3fs", interval)
+        String(format: "%.6fs", interval)
     }
 }
 
