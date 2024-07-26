@@ -196,19 +196,26 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    private func resourceLoadingMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+    func resourceLoadingMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        publisher(for: \.isPlaybackLikelyToKeepUp)
+            .first { $0 }
+            .measureDateInterval()
+            .weakCapture(self)
+            .map { dateInterval, item in
+                MetricEvent(kind: .resourceLoading(dateInterval), time: item.currentTime())
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func failureMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Empty().eraseToAnyPublisher()
     }
 
-    private func failureMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+    func warningMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Empty().eraseToAnyPublisher()
     }
 
-    private func warningMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        Empty().eraseToAnyPublisher()
-    }
-
-    private func stallEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+    func stallEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Empty().eraseToAnyPublisher()
     }
 }
