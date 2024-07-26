@@ -184,3 +184,31 @@ extension AVPlayerItem {
             .eraseToAnyPublisher()
     }
 }
+
+extension AVPlayerItem {
+    func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        Publishers.Merge4(
+            resourceLoadingMetricEventPublisher(),
+            failureMetricEventPublisher(),
+            warningMetricEventPublisher(),
+            stallEventPublisher()
+        )
+        .eraseToAnyPublisher()
+    }
+
+    private func resourceLoadingMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        Empty().eraseToAnyPublisher()
+    }
+
+    private func failureMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        Empty().eraseToAnyPublisher()
+    }
+
+    private func warningMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        Empty().eraseToAnyPublisher()
+    }
+
+    private func stallEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        Empty().eraseToAnyPublisher()
+    }
+}
