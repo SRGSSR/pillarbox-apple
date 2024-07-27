@@ -96,11 +96,13 @@ public final class PlayerItem: Equatable {
                 publisher,
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
-            .map { asset, trackerAdapters in
+            .handleEvents(receiveOutput: { asset, trackerAdapters in
                 trackerAdapters.forEach { adapter in
                     adapter.updateMetadata(with: asset.metadata)
                 }
-                return Publishers.CombineLatest(
+            })
+            .map { asset, trackerAdapters in
+                Publishers.CombineLatest(
                     Just(asset),
                     metadataMapper(asset.metadata).playerMetadataPublisher()
                 )
