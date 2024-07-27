@@ -92,7 +92,7 @@ private extension PlayerItem {
                     throw DataError.noResourceAvailable
                 }
                 let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, dataProvider: dataProvider)
-                return Self.asset(for: metadata, configuration: configuration)
+                return asset(for: metadata, configuration: configuration)
             }
             .eraseToAnyPublisher()
     }
