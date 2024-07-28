@@ -302,6 +302,6 @@ extension PlayerItem {
 
 extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
-        "\(content)"
+        "\(id)"
     }
 }
