@@ -10,7 +10,9 @@ import Combine
 final class Tracker {
     private let player: QueuePlayer
     private var properties: PlayerProperties = .empty
-    private var cancellables = Set<AnyCancellable>()
+
+    private var itemCancellables = Set<AnyCancellable>()
+    private var playerItemCancellables = Set<AnyCancellable>()
 
     var items: QueueItems? {
         willSet {
@@ -22,8 +24,9 @@ final class Tracker {
             guard isEnabled else { return }
             if items?.item != oldValue?.item {
                 enable(with: items)
+                updateItemPublishers(for: items)
             }
-            updatePublishers(for: items)
+            updatePlayerItemPublishers(for: items)
         }
     }
 
@@ -36,7 +39,8 @@ final class Tracker {
         didSet {
             if isEnabled, isEnabled != oldValue {
                 enable(with: items)
-                updatePublishers(for: items)
+                updateItemPublishers(for: items)
+                updatePlayerItemPublishers(for: items)
             }
         }
     }
@@ -54,21 +58,34 @@ final class Tracker {
         items?.item.disableTrackers(with: properties)
     }
 
-    private func updatePublishers(for items: QueueItems?) {
-        cancellables = []
+    private func updateItemPublishers(for items: QueueItems?) {
+        itemCancellables = []
         guard let items else { return }
+
+        items.item
+            .metricEventPublisher()
+            .sink { event in
+                items.item.receiveTrackerMetricEvent(event)
+            }
+            .store(in: &itemCancellables)
+    }
+
+    private func updatePlayerItemPublishers(for items: QueueItems?) {
+        playerItemCancellables = []
+        guard let items else { return }
+
         player.propertiesPublisher(with: items.playerItem)
             .sink { [weak self] properties in
                 items.item.updateTrackerProperties(with: properties)
                 self?.properties = properties
             }
-            .store(in: &cancellables)
-        
-        items.metricEventPublisher()
+            .store(in: &playerItemCancellables)
+        items.playerItem
+            .metricEventPublisher()
             .sink { event in
                 items.item.receiveTrackerMetricEvent(event)
             }
-            .store(in: &cancellables)
+            .store(in: &playerItemCancellables)
     }
 
     deinit {
