@@ -207,6 +207,22 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
+
+        queuePublisher.slice(at: \.items?.item)
+            .compactMap { $0?.metricEventPublisher() }
+            .switchToLatest()
+            .sink { event in
+                print("--> event (asset) \(event)")
+            }
+            .store(in: &cancellables)
+
+        queuePublisher.slice(at: \.items?.playerItem)
+            .compactMap { $0?.metricEventPublisher() }
+            .switchToLatest()
+            .sink { event in
+                print("--> event (resource): \(event)")
+            }
+            .store(in: &cancellables)
     }
 
     /// Creates a player with a single item in its queue.
