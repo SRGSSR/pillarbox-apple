@@ -26,7 +26,9 @@ final class Tracker {
                 enable(with: queue)
                 updateItemPublishers(for: queue)
             }
-            updatePlayerItemPublishers(for: queue)
+            if queue.itemState.item != oldValue.itemState.item {
+                updatePlayerItemPublishers(for: queue)
+            }
         }
     }
 
