@@ -14,12 +14,7 @@ struct AssetContent {
     let configuration: PlayerItemConfiguration
 
     var isLoaded: Bool {
-        switch resource {
-        case .loading, .failing:
-            return false
-        default:
-            return true
-        }
+        !resource.isLoading && !resource.isFailing
     }
 
     static func loading(id: UUID) -> Self {
