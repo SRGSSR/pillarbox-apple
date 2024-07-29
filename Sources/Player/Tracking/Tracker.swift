@@ -14,33 +14,33 @@ final class Tracker {
     private var itemCancellables = Set<AnyCancellable>()
     private var playerItemCancellables = Set<AnyCancellable>()
 
-    var items: QueueItems? {
+    var queue: Queue = .empty {
         willSet {
-            if items?.item != newValue?.item {
-                disable(with: items)
+            if queue.item != newValue.item {
+                disable(with: queue)
             }
         }
         didSet {
             guard isEnabled else { return }
-            if items?.item != oldValue?.item {
-                enable(with: items)
-                updateItemPublishers(for: items)
+            if queue.item != oldValue.item {
+                enable(with: queue)
+                updateItemPublishers(for: queue)
             }
-            updatePlayerItemPublishers(for: items)
+            updatePlayerItemPublishers(for: queue)
         }
     }
 
     var isEnabled: Bool {
         willSet {
             if isEnabled, isEnabled != newValue {
-                disable(with: items)
+                disable(with: queue)
             }
         }
         didSet {
             if isEnabled, isEnabled != oldValue {
-                enable(with: items)
-                updateItemPublishers(for: items)
-                updatePlayerItemPublishers(for: items)
+                enable(with: queue)
+                updateItemPublishers(for: queue)
+                updatePlayerItemPublishers(for: queue)
             }
         }
     }
@@ -50,47 +50,45 @@ final class Tracker {
         self.isEnabled = isEnabled
     }
 
-    private func enable(with items: QueueItems?) {
-        items?.item.enableTrackers(for: player)
+    private func enable(with queue: Queue) {
+        queue.item?.enableTrackers(for: player)
     }
 
-    private func disable(with items: QueueItems?) {
-        items?.item.disableTrackers(with: properties)
+    private func disable(with queue: Queue) {
+        queue.item?.disableTrackers(with: properties)
     }
 
-    private func updateItemPublishers(for items: QueueItems?) {
+    private func updateItemPublishers(for queue: Queue) {
         itemCancellables = []
-        guard let items else { return }
+        guard let item = queue.item else { return }
 
-        items.item
-            .metricEventPublisher()
+        item.metricEventPublisher()
             .sink { event in
-                items.item.receiveTrackerMetricEvent(event)
+                item.receiveTrackerMetricEvent(event)
             }
             .store(in: &itemCancellables)
     }
 
-    private func updatePlayerItemPublishers(for items: QueueItems?) {
+    private func updatePlayerItemPublishers(for queue: Queue) {
         playerItemCancellables = []
-        guard let items else { return }
+        guard let playerItem = queue.itemState.item else { return }
 
-        player.propertiesPublisher(with: items.playerItem)
+        player.propertiesPublisher(with: playerItem)
             .sink { [weak self] properties in
-                items.item.updateTrackerProperties(with: properties)
+                queue.item?.updateTrackerProperties(with: properties)
                 self?.properties = properties
             }
             .store(in: &playerItemCancellables)
-        items.playerItem
-            .metricEventPublisher()
+        playerItem.metricEventPublisher()
             .sink { event in
-                items.item.receiveTrackerMetricEvent(event)
+                queue.item?.receiveTrackerMetricEvent(event)
             }
             .store(in: &playerItemCancellables)
     }
 
     deinit {
         if isEnabled {
-            disable(with: items)
+            disable(with: queue)
         }
     }
 }
