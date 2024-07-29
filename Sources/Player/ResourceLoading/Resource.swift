@@ -14,10 +14,17 @@ enum Resource {
     case simple(url: URL)
     case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
     case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
-    case loading
-    case failing(error: Error)
 
     private static let logger = Logger(category: "Resource")
+
+    var isFailing: Bool {
+        switch self {
+        case let .custom(url: url, _) where url == Self.failingUrl:
+            true
+        default:
+            false
+        }
+    }
 
     func playerItem() -> AVPlayerItem {
         switch self {
@@ -39,19 +46,19 @@ enum Resource {
             kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
             return AVPlayerItem(asset: asset)
 #endif
-        case .loading:
-            // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-            return ResourceLoadedPlayerItem(
-                url: URL(string: "pillarbox://loading.m3u8")!,
-                resourceLoaderDelegate: LoadingResourceLoaderDelegate()
-            )
-        case let .failing(error: error):
-            // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-            return ResourceLoadedPlayerItem(
-                url: URL(string: "pillarbox://failing.m3u8")!,
-                resourceLoaderDelegate: FailedResourceLoaderDelegate(error: error)
-            )
         }
+    }
+}
+
+extension Resource {
+    // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+    static let loadingUrl = URL(string: "pillarbox://loading.m3u8")!
+    static let failingUrl = URL(string: "pillarbox://failing.m3u8")!
+
+    static let loading = Self.custom(url: loadingUrl, delegate: LoadingResourceLoaderDelegate())
+
+    static func failing(error: Error) -> Self {
+        .custom(url: failingUrl, delegate: FailedResourceLoaderDelegate(error: error))
     }
 }
 
@@ -64,10 +71,6 @@ extension Resource: Equatable {
             return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
         case let (.encrypted(url: lhsUrl, delegate: lhsDelegate), .encrypted(url: rhsUrl, delegate: rhsDelegate)):
             return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
-        case (.loading, .loading):
-            return true
-        case let (.failing(error: lhsError), .failing(error: rhsError)):
-            return lhsError as NSError == rhsError as NSError
         default:
             return false
         }
