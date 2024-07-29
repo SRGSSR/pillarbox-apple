@@ -18,8 +18,16 @@ enum Resource {
     private static let logger = Logger(category: "Resource")
 
     var isFailing: Bool {
+        containsUrl(Self.failingUrl)
+    }
+
+    var isLoading: Bool {
+        containsUrl(Self.loadingUrl)
+    }
+
+    private func containsUrl(_ containedUrl: URL) -> Bool {
         switch self {
-        case let .custom(url: url, _) where url == Self.failingUrl:
+        case let .custom(url: url, _) where url == containedUrl:
             true
         default:
             false
