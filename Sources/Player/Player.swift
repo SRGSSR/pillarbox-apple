@@ -209,13 +209,7 @@ public final class Player: ObservableObject, Equatable {
         configureBlockedTimeRangesPublishers()
 
         queuePublisher.slice(at: \.items)
-            .compactMap { $0 }
-            .map { items in
-                Publishers.Merge(
-                    items.item.metricEventPublisher(),
-                    items.playerItem.metricEventPublisher()
-                )
-            }
+            .compactMap { $0?.metricEventPublisher() }
             .switchToLatest()
             .sink { event in
                 print("--> \(event)")
