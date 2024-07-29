@@ -8,7 +8,6 @@ import Combine
 import PillarboxCore
 
 extension PlayerItem {
-    // FIXME: Should probably also be delivered when restarting the same item (with values 0)
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         $content
             .dropFirst()
