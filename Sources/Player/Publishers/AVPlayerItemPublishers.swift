@@ -198,6 +198,7 @@ extension AVPlayerItem {
 
     func resourceLoadingMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         publisher(for: \.isPlaybackLikelyToKeepUp)
+            .dropFirst()
             .first { $0 }
             .measureDateInterval()
             .weakCapture(self)

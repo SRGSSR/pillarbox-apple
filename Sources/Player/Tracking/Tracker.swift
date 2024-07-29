@@ -63,6 +63,7 @@ final class Tracker {
                 self?.properties = properties
             }
             .store(in: &cancellables)
+        
         items.metricEventPublisher()
             .sink { event in
                 items.item.receiveTrackerMetricEvent(event)
