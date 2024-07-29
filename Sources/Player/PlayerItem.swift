@@ -122,12 +122,12 @@ public final class PlayerItem: Equatable {
     }
 
     static func load(for id: UUID) {
-        Self.trigger.activate(for: TriggerId.load(id))
+        trigger.activate(for: TriggerId.load(id))
     }
 
     static func reload(for id: UUID) {
-        Self.trigger.activate(for: TriggerId.reset(id))
-        Self.trigger.activate(for: TriggerId.load(id))
+        trigger.activate(for: TriggerId.reset(id))
+        trigger.activate(for: TriggerId.load(id))
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
