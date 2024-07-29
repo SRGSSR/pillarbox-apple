@@ -33,26 +33,4 @@ extension QueuePlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
-
-    func propertiesPublisher(with playerItem: AVPlayerItem) -> AnyPublisher<PlayerProperties, Never> {
-        Publishers.CombineLatest3(
-            playerItem.propertiesPublisher(),
-            playbackPropertiesPublisher(),
-            seekTimePublisher()
-        )
-        .map { playerItemProperties, playbackProperties, seekTime in
-            .init(
-                coreProperties: .init(
-                    itemProperties: playerItemProperties.itemProperties,
-                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
-                    playbackProperties: playbackProperties
-                ),
-                timeProperties: playerItemProperties.timeProperties,
-                isEmpty: playerItemProperties.isEmpty,
-                seekTime: seekTime
-            )
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
 }
