@@ -70,7 +70,7 @@ public final class Player: ObservableObject, Equatable {
         currentPlayerItemPublisher()
             .map { [queuePlayer] item in
                 guard let item else { return Just(PlayerProperties.empty).eraseToAnyPublisher() }
-                return queuePlayer.propertiesPublisher(with: item)
+                return item.propertiesPublisher(with: queuePlayer)
             }
             .switchToLatest()
             .share(replay: 1)

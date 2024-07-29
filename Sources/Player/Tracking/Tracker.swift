@@ -74,8 +74,8 @@ final class Tracker {
     private func updatePlayerItemPublishers(for queue: Queue) {
         playerItemCancellables = []
         guard let playerItem = queue.itemState.item else { return }
-
-        player.propertiesPublisher(with: playerItem)
+        
+        playerItem.propertiesPublisher(with: player)
             .sink { [weak self] properties in
                 queue.item?.updateTrackerProperties(with: properties)
                 self?.properties = properties
