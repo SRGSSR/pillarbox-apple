@@ -9,18 +9,15 @@ import PillarboxCore
 
 extension PlayerItem {
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        Empty().eraseToAnyPublisher()
-        // TODO:
-        //   - Define \.isLoaded property on Resource
-        //   - Produce stream of values via slice, detect change to true.
-//        $content
-//            .measureDateInterval()
-//            .map { dateInterval in
-//                MetricEvent(
-//                    kind: .assetLoading(dateInterval),
-//                    date: dateInterval.end
-//                )
-//            }
-//            .eraseToAnyPublisher()
+        $content
+            .first { $0.isLoaded }
+            .measureDateInterval()
+            .map { dateInterval in
+                MetricEvent(
+                    kind: .assetLoading(dateInterval),
+                    date: dateInterval.end
+                )
+            }
+            .eraseToAnyPublisher()
     }
 }
