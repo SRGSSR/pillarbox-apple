@@ -93,6 +93,7 @@ public final class PlayerItem: Equatable {
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             publisher
+                // swiftlint:disable:next trailing_closure
                 .handleEvents(receiveOutput: { asset in
                     trackerAdapters.forEach { adapter in
                         adapter.updateMetadata(with: asset.metadata)

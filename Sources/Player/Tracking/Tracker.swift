@@ -79,6 +79,7 @@ private extension Tracker {
 
         items.item.enableTrackers(for: player)
         items.item.metricEventPublisher()
+            // swiftlint:disable:next trailing_closure
             .handleEvents(receiveOutput: { event in
                 items.item.receiveTrackerMetricEvent(event)
             })
@@ -101,6 +102,7 @@ private extension Tracker {
         guard let items else { return }
 
         items.playerItem.propertiesPublisher(with: player)
+            // swiftlint:disable:next trailing_closure
             .handleEvents(receiveOutput: { properties in
                 items.item.updateTrackerProperties(with: properties)
             })
@@ -108,6 +110,7 @@ private extension Tracker {
             .store(in: &playerItemCancellables)
 
         items.playerItem.metricEventPublisher()
+        // swiftlint:disable:next trailing_closure
             .handleEvents(receiveOutput: { event in
                 items.item.receiveTrackerMetricEvent(event)
             })
