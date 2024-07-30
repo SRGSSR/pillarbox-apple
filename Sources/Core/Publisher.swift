@@ -191,9 +191,11 @@ public extension Publisher {
     /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
     /// the interval between subscription and the first event.
     func measureDateInterval() -> AnyPublisher<DateInterval, Failure> {
-        map { _ in Date() }
-            .withPrevious(Date())
-            .map { .init(start: $0.previous, end: $0.current) }
+        return measureInterval(using: RunLoop.main)
+            .map { interval in
+                let date = Date()
+                return DateInterval(start: date.addingTimeInterval(-interval.timeInterval), end: date)
+            }
             .eraseToAnyPublisher()
     }
 }
