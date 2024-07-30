@@ -11,6 +11,13 @@ import PillarboxCore
 private let kMetricsQueue = DispatchQueue(label: "ch.srgssr.player.metrics")
 
 public extension Player {
+    /// A publisher delivering metric events associated with the current item.
+    ///
+    /// All metric events related to the item currently being played, if any, are received upon subscription.
+    var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
+        tracker.metricEventsPublisher
+    }
+
     /// Returns a periodically updated metrics history associated with the current item.
     ///
     /// - Parameters:

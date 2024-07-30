@@ -12,7 +12,8 @@ final class Tracker {
     private let player: QueuePlayer
     private var properties: PlayerProperties = .empty
 
-    private let metricEventSubject = PassthroughSubject<MetricEvent, Never>()
+    private let itemMetricEventSubject = PassthroughSubject<[MetricEvent], Never>()
+    private let playerItemMetricEventSubject = PassthroughSubject<[MetricEvent], Never>()
 
     private var itemCancellables = Set<AnyCancellable>()
     private var playerItemCancellables = Set<AnyCancellable>()
@@ -52,8 +53,11 @@ final class Tracker {
         }
     }
 
-    var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
-        metricEventSubject.eraseToAnyPublisher()
+    var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
+        Publishers.CombineLatest(itemMetricEventSubject, playerItemMetricEventSubject)
+            .map { $0 + $1 }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     init(player: QueuePlayer, isEnabled: Bool) {
@@ -78,9 +82,9 @@ private extension Tracker {
             .handleEvents(receiveOutput: { event in
                 items.item.receiveTrackerMetricEvent(event)
             })
-            .sink { [metricEventSubject] event in
-                metricEventSubject.send(event)
-            }
+            .scan([]) { $0 + [$1] }
+            .prepend([])
+            .subscribe(itemMetricEventSubject)
             .store(in: &itemCancellables)
     }
 
@@ -105,9 +109,9 @@ private extension Tracker {
             .handleEvents(receiveOutput: { event in
                 items.item.receiveTrackerMetricEvent(event)
             })
-            .sink { [metricEventSubject] event in
-                metricEventSubject.send(event)
-            }
+            .scan([]) { $0 + [$1] }
+            .prepend([])
+            .subscribe(playerItemMetricEventSubject)
             .store(in: &playerItemCancellables)
     }
 
