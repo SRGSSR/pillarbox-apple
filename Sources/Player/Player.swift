@@ -42,7 +42,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private lazy var tracker = Tracker(player: queuePlayer, isEnabled: isTrackingEnabled)
+    lazy var tracker = Tracker(player: queuePlayer, isEnabled: isTrackingEnabled)
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -208,9 +208,9 @@ public final class Player: ObservableObject, Equatable {
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
 
-        tracker.metricEventPublisher
-            .sink { event in
-                print("--> ev: \(event)")
+        tracker.metricEventsPublisher
+            .sink { events in
+                print("--> ev: \(events)")
             }
             .store(in: &cancellables)
     }
