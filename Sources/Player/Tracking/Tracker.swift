@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 
 final class Tracker {
     private let player: QueuePlayer
@@ -59,7 +60,7 @@ final class Tracker {
         self.player = player
         self.isEnabled = isEnabled
     }
-    
+
     deinit {
         if isEnabled {
             disableForPlayerItem(in: items)
@@ -68,8 +69,8 @@ final class Tracker {
     }
 }
 
-extension Tracker {
-    private func enableForItem(in items: QueueItems?) {
+private extension Tracker {
+    func enableForItem(in items: QueueItems?) {
         guard let items else { return }
         items.item.enableTrackers(for: player)
         items.item.metricEventPublisher()
@@ -80,21 +81,20 @@ extension Tracker {
             .store(in: &itemCancellables)
     }
 
-    private func disableForItem(in items: QueueItems?) {
+    func disableForItem(in items: QueueItems?) {
         itemCancellables = []
         items?.item.disableTrackers(with: properties)
     }
 }
 
-extension Tracker {
-    private func enableForPlayerItem(in items: QueueItems?) {
+private extension Tracker {
+    func enableForPlayerItem(in items: QueueItems?) {
         guard let items else { return }
         items.playerItem.propertiesPublisher(with: player)
-            .sink { [weak self] properties in
-                guard let self else { return }
+            .handleEvents(receiveOutput: { properties in
                 items.item.updateTrackerProperties(with: properties)
-                self.properties = properties
-            }
+            })
+            .weakAssign(to: \.properties, on: self)
             .store(in: &playerItemCancellables)
         items.playerItem.metricEventPublisher()
             .sink { [metricEventSubject] event in
@@ -104,7 +104,7 @@ extension Tracker {
             .store(in: &playerItemCancellables)
     }
 
-    private func disableForPlayerItem(in items: QueueItems?) {
+    func disableForPlayerItem(in items: QueueItems?) {
         playerItemCancellables = []
     }
 }
