@@ -72,11 +72,14 @@ final class Tracker {
 private extension Tracker {
     func enableForItem(in items: QueueItems?) {
         guard let items else { return }
+
         items.item.enableTrackers(for: player)
         items.item.metricEventPublisher()
+            .handleEvents(receiveOutput: { event in
+                items.item.receiveTrackerMetricEvent(event)
+            })
             .sink { [metricEventSubject] event in
                 metricEventSubject.send(event)
-                items.item.receiveTrackerMetricEvent(event)
             }
             .store(in: &itemCancellables)
     }
@@ -90,16 +93,20 @@ private extension Tracker {
 private extension Tracker {
     func enableForPlayerItem(in items: QueueItems?) {
         guard let items else { return }
+
         items.playerItem.propertiesPublisher(with: player)
             .handleEvents(receiveOutput: { properties in
                 items.item.updateTrackerProperties(with: properties)
             })
             .weakAssign(to: \.properties, on: self)
             .store(in: &playerItemCancellables)
+
         items.playerItem.metricEventPublisher()
+            .handleEvents(receiveOutput: { event in
+                items.item.receiveTrackerMetricEvent(event)
+            })
             .sink { [metricEventSubject] event in
                 metricEventSubject.send(event)
-                items.item.receiveTrackerMetricEvent(event)
             }
             .store(in: &playerItemCancellables)
     }
