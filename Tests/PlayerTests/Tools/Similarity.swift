@@ -32,10 +32,6 @@ extension Resource: Similar {
             let (.custom(url: lhsUrl, delegate: _), .custom(url: rhsUrl, delegate: _)),
             let (.encrypted(url: lhsUrl, delegate: _), .encrypted(url: rhsUrl, delegate: _)):
             return lhsUrl == rhsUrl
-        case (.loading, .loading):
-            return true
-        case let (.failing(error: lhsError), .failing(error: rhsError)):
-            return lhsError as NSError == rhsError as NSError
         default:
             return false
         }
