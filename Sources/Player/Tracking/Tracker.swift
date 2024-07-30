@@ -84,7 +84,9 @@ private extension Tracker {
             })
             .scan([]) { $0 + [$1] }
             .prepend([])
-            .subscribe(itemMetricEventSubject)
+            .sink { [itemMetricEventSubject] event in
+                itemMetricEventSubject.send(event)
+            }
             .store(in: &itemCancellables)
     }
 
@@ -111,7 +113,9 @@ private extension Tracker {
             })
             .scan([]) { $0 + [$1] }
             .prepend([])
-            .subscribe(playerItemMetricEventSubject)
+            .sink { [playerItemMetricEventSubject] event in
+                playerItemMetricEventSubject.send(event)
+            }
             .store(in: &playerItemCancellables)
     }
 
