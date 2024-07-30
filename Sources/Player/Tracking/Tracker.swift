@@ -11,40 +11,52 @@ final class Tracker {
     private let player: QueuePlayer
     private var properties: PlayerProperties = .empty
 
+    private let metricEventSubject = PassthroughSubject<MetricEvent, Never>()
+
     private var itemCancellables = Set<AnyCancellable>()
     private var playerItemCancellables = Set<AnyCancellable>()
 
-    var queue: Queue = .empty {
+    private var item: PlayerItem? {
         willSet {
-            if queue.item != newValue.item {
-                disable(with: queue)
-            }
+            guard item != newValue else { return }
+            disable(for: item)
         }
         didSet {
-            guard isEnabled else { return }
-            if queue.item != oldValue.item {
-                enable(with: queue)
-                updateItemPublishers(for: queue)
-            }
-            if queue.itemState.item != oldValue.itemState.item {
-                updatePlayerItemPublishers(for: queue)
-            }
+            guard isEnabled, item != oldValue else { return }
+            enable(for: item)
+        }
+    }
+
+    private var playerItem: AVPlayerItem? {
+        didSet {
+            guard isEnabled, playerItem != oldValue else { return }
+            enable(for: playerItem)
+        }
+    }
+
+    var queue: Queue = .empty {
+        didSet {
+            item = queue.item
+            playerItem = queue.itemState.item
         }
     }
 
     var isEnabled: Bool {
         willSet {
             if isEnabled, isEnabled != newValue {
-                disable(with: queue)
+                disable(for: item)
             }
         }
         didSet {
             if isEnabled, isEnabled != oldValue {
-                enable(with: queue)
-                updateItemPublishers(for: queue)
-                updatePlayerItemPublishers(for: queue)
+                enable(for: item)
+                enable(for: playerItem)
             }
         }
+    }
+
+    var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
+        metricEventSubject.eraseToAnyPublisher()
     }
 
     init(player: QueuePlayer, isEnabled: Bool) {
@@ -52,45 +64,46 @@ final class Tracker {
         self.isEnabled = isEnabled
     }
 
-    private func enable(with queue: Queue) {
-        queue.item?.enableTrackers(for: player)
-    }
-
-    private func disable(with queue: Queue) {
-        queue.item?.disableTrackers(with: properties)
-    }
-
-    private func updateItemPublishers(for queue: Queue) {
+    private func enable(for item: PlayerItem?) {
         itemCancellables = []
-        guard let item = queue.item else { return }
-
+        guard let item else { return }
+        item.enableTrackers(for: player)
         item.metricEventPublisher()
-            .sink { event in
+            .sink { [metricEventSubject] event in
+                metricEventSubject.send(event)
                 item.receiveTrackerMetricEvent(event)
             }
             .store(in: &itemCancellables)
     }
 
-    private func updatePlayerItemPublishers(for queue: Queue) {
+    private func enable(for playerItem: AVPlayerItem?) {
         playerItemCancellables = []
-        guard let playerItem = queue.itemState.item else { return }
-        
+        guard let playerItem else { return }
         playerItem.propertiesPublisher(with: player)
             .sink { [weak self] properties in
-                queue.item?.updateTrackerProperties(with: properties)
-                self?.properties = properties
+                guard let self else { return }
+                item?.updateTrackerProperties(with: properties)
+                self.properties = properties
             }
             .store(in: &playerItemCancellables)
         playerItem.metricEventPublisher()
-            .sink { event in
-                queue.item?.receiveTrackerMetricEvent(event)
+            .sink { [weak self, metricEventSubject] event in
+                guard let self else { return }
+                metricEventSubject.send(event)
+                item?.receiveTrackerMetricEvent(event)
             }
             .store(in: &playerItemCancellables)
     }
 
+    private func disable(for item: PlayerItem?) {
+        itemCancellables = []
+        playerItemCancellables = []
+        item?.disableTrackers(with: properties)
+    }
+
     deinit {
         if isEnabled {
-            disable(with: queue)
+            disable(for: item)
         }
     }
 }
