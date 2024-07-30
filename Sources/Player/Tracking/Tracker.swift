@@ -59,7 +59,16 @@ final class Tracker {
         self.player = player
         self.isEnabled = isEnabled
     }
+    
+    deinit {
+        if isEnabled {
+            disableForPlayerItem(in: items)
+            disableForItem(in: items)
+        }
+    }
+}
 
+extension Tracker {
     private func enableForItem(in items: QueueItems?) {
         guard let items else { return }
         items.item.enableTrackers(for: player)
@@ -75,7 +84,9 @@ final class Tracker {
         itemCancellables = []
         items?.item.disableTrackers(with: properties)
     }
+}
 
+extension Tracker {
     private func enableForPlayerItem(in items: QueueItems?) {
         guard let items else { return }
         items.playerItem.propertiesPublisher(with: player)
@@ -95,12 +106,5 @@ final class Tracker {
 
     private func disableForPlayerItem(in items: QueueItems?) {
         playerItemCancellables = []
-    }
-
-    deinit {
-        if isEnabled {
-            disableForPlayerItem(in: items)
-            disableForItem(in: items)
-        }
     }
 }
