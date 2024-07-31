@@ -188,10 +188,11 @@ public extension Publisher {
 public extension Publisher {
     /// Measure the interval between consecutive events.
     ///
-    /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
-    /// the interval between subscription and the first event.
-    func measureDateInterval() -> AnyPublisher<DateInterval, Failure> {
-        measureInterval(using: DispatchQueue.main)
+    /// - Parameter scheduler: A scheduler to use for tracking the timing of events.
+    /// - Returns: A publisher that emits elements representing the date time interval between the elements it receives.
+    func measureDateInterval<S>(scheduler: S = DispatchQueue.main) -> AnyPublisher<DateInterval, Failure>
+    where S: Scheduler, S.SchedulerTimeType == DispatchQueue.SchedulerTimeType {
+        measureInterval(using: scheduler)
             .map { stride in
                 let date = Date()
                 return DateInterval(start: date.addingTimeInterval(-TimeInterval(from: stride)), end: date)
