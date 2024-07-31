@@ -26,4 +26,23 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
             [Self.assetLoading, Self.resourceLoading]
         ], from: player.tracker.metricEventsPublisher)
     }
+
+    func testReplayContent() {
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        expectSimilarPublished(
+            values: [
+                [Self.assetLoading],
+                [Self.assetLoading, Self.resourceLoading],
+                [Self.assetLoading],
+                [Self.assetLoading, Self.resourceLoading]
+            ],
+            from: player.tracker.metricEventsPublisher,
+            during: .seconds(2)
+        ) {
+            player.play()
+            expect(player.playbackState).toEventually(equal(.playing))
+            expect(player.playbackState).toEventually(equal(.idle))
+            player.replay()
+        }
+    }
 }
