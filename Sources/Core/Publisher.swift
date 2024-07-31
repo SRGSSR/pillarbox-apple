@@ -191,11 +191,26 @@ public extension Publisher {
     /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
     /// the interval between subscription and the first event.
     func measureDateInterval() -> AnyPublisher<DateInterval, Failure> {
-        measureInterval(using: RunLoop.main)
-            .map { interval in
+        measureInterval(using: DispatchQueue.main)
+            .map { stride in
                 let date = Date()
-                return DateInterval(start: date.addingTimeInterval(-interval.timeInterval), end: date)
+                return DateInterval(start: date.addingTimeInterval(-timeInterval(from: stride)), end: date)
             }
             .eraseToAnyPublisher()
+    }
+}
+
+func timeInterval(from stride: DispatchQueue.SchedulerTimeType.Stride) -> TimeInterval {
+    switch stride.timeInterval {
+    case .seconds(let time):
+        return TimeInterval(time)
+    case .milliseconds(let time):
+        return TimeInterval(time) / 1_000
+    case .microseconds(let time):
+        return TimeInterval(time) / 1_000_000
+    case .nanoseconds(let time):
+        return TimeInterval(time) / 1_000_000_000
+    default:
+        return .nan
     }
 }
