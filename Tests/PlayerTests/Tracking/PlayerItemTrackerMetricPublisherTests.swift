@@ -13,6 +13,7 @@ import PillarboxStreams
 final class PlayerItemTrackerMetricPublisherTests: TestCase {
     private static let assetLoading: MetricEvent = .init(kind: .assetLoading(.init()))
     private static let resourceLoading: MetricEvent = .init(kind: .resourceLoading(.init()))
+    private static let anyFailure: MetricEvent = .init(kind: .anyFailure)
 
     func testEmptyPlayer() {
         let player = Player()
@@ -24,6 +25,14 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         expectAtLeastSimilarPublished(values: [
             [Self.assetLoading],
             [Self.assetLoading, Self.resourceLoading]
+        ], from: player.tracker.metricEventsPublisher)
+    }
+
+    func testError() {
+        let player = Player(item: .simple(url: Stream.unavailable.url))
+        expectAtLeastSimilarPublished(values: [
+            [Self.assetLoading],
+            [Self.assetLoading, Self.anyFailure]
         ], from: player.tracker.metricEventsPublisher)
     }
 
@@ -54,6 +63,22 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
                 [Self.assetLoading, Self.resourceLoading],
                 [Self.assetLoading],
                 [Self.assetLoading, Self.resourceLoading]
+            ],
+            from: player.tracker.metricEventsPublisher,
+            during: .milliseconds(1500)
+        ) {
+            player.play()
+        }
+    }
+
+    func testPlaylistWithError() {
+        let player = Player(items: [.simple(url: Stream.shortOnDemand.url), .simple(url: Stream.unauthorized.url)])
+        expectSimilarPublished(
+            values: [
+                [Self.assetLoading],
+                [Self.assetLoading, Self.resourceLoading],
+                [Self.assetLoading],
+                [Self.assetLoading, Self.anyFailure]
             ],
             from: player.tracker.metricEventsPublisher,
             during: .milliseconds(1500)
