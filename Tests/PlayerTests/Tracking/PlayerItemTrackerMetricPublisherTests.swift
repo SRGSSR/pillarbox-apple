@@ -27,7 +27,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         ], from: player.tracker.metricEventsPublisher)
     }
 
-    func testReplayContent() {
+    func testReplay() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expectSimilarPublished(
             values: [
@@ -37,7 +37,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
                 [Self.assetLoading, Self.resourceLoading]
             ],
             from: player.tracker.metricEventsPublisher,
-            during: .seconds(2)
+            during: .milliseconds(1500)
         ) {
             player.play()
             expect(player.playbackState).toEventually(equal(.playing))
