@@ -55,7 +55,14 @@ final class Tracker {
 
     var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
         Publishers.CombineLatest(itemMetricEventSubject, playerItemMetricEventSubject)
-            .map { $0 + $1 }
+            .withPrevious()
+            .map { (previousItemEvents: $0?.0, previousPlayerItemEvents: $0?.1, currentItemEvents: $1.0, currentPlayerItemEvents: $1.1) }
+            .compactMap { previousItemEvents, previousPlayerItemEvents, currentItemEvents, currentPlayerItemEvents in
+                if let previousItemEvents, previousItemEvents != currentItemEvents {
+                    return nil
+                }
+                return currentItemEvents + currentPlayerItemEvents
+            }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
