@@ -194,23 +194,8 @@ public extension Publisher {
         measureInterval(using: DispatchQueue.main)
             .map { stride in
                 let date = Date()
-                return DateInterval(start: date.addingTimeInterval(-timeInterval(from: stride)), end: date)
+                return DateInterval(start: date.addingTimeInterval(-TimeInterval(from: stride)), end: date)
             }
             .eraseToAnyPublisher()
-    }
-}
-
-func timeInterval(from stride: DispatchQueue.SchedulerTimeType.Stride) -> TimeInterval {
-    switch stride.timeInterval {
-    case .seconds(let time):
-        return TimeInterval(time)
-    case .milliseconds(let time):
-        return TimeInterval(time) / 1_000
-    case .microseconds(let time):
-        return TimeInterval(time) / 1_000_000
-    case .nanoseconds(let time):
-        return TimeInterval(time) / 1_000_000_000
-    default:
-        return .nan
     }
 }
