@@ -56,14 +56,7 @@ final class Tracker {
     var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
         Publishers.CombineLatest(itemMetricEventSubject, playerItemMetricEventSubject)
             .withPrevious()
-            .map { (previousItemEvents: $0?.0, previousPlayerItemEvents: $0?.1, currentItemEvents: $1.0, currentPlayerItemEvents: $1.1) }
-            .compactMap { previousItemEvents, previousPlayerItemEvents, currentItemEvents, currentPlayerItemEvents in
-                if let previousItemEvents, previousItemEvents != currentItemEvents {
-                    return nil
-                }
-                return currentItemEvents + currentPlayerItemEvents
-            }
-            .removeDuplicates()
+            .compactMap(Self.metricEvents)
             .eraseToAnyPublisher()
     }
 
@@ -76,6 +69,21 @@ final class Tracker {
         if isEnabled {
             disableForPlayerItem(in: items)
             disableForItem(in: items)
+        }
+    }
+}
+
+private extension Tracker {
+    static func metricEvents(
+        from previous: (itemEvents: [MetricEvent], _: [MetricEvent])?,
+        from current: (itemEvents: [MetricEvent], playerItemEvents: [MetricEvent])
+    ) -> [MetricEvent]? {
+        // swiftlint:disable:previous discouraged_optional_collection
+        if let previousItemEvents = previous?.itemEvents, previousItemEvents != current.itemEvents {
+            return nil
+        }
+        else {
+            return current.itemEvents + current.playerItemEvents
         }
     }
 }
