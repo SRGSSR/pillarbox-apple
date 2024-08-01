@@ -4,13 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-import PillarboxPlayer
+@testable import PillarboxPlayer
 
 private struct AnyError: Error {}
 
-extension MetricEvent.Kind {
-    static let anyAssetLoading = Self.assetLoading(.init())
-    static let anyResourceLoading = Self.resourceLoading(.init())
-    static let anyFailure = Self.failure(AnyError())
-    static let anyWarning = Self.warning(AnyError())
+extension MetricEvent {
+    static let anyAssetLoading = Self(kind: .assetLoading(.init()))
+    static let anyResourceLoading = Self(kind: .resourceLoading(.init()))
+    static let anyFailure = Self(kind: .failure(AnyError()))
+    static let anyWarning = Self(kind: .warning(AnyError()))
 }

@@ -15,9 +15,7 @@ final class AVPlayerItemMetricEventPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         _ = AVPlayer(playerItem: item)
         expectOnlySimilarPublished(
-            values: [
-                .init(kind: .anyResourceLoading)
-            ],
+            values: [.anyResourceLoading],
             from: item.resourceLoadingMetricEventPublisher()
         )
     }
@@ -38,9 +36,7 @@ final class AVPlayerItemMetricEventPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         _ = AVPlayer(playerItem: item)
         expectOnlySimilarPublished(
-            values: [
-                .init(kind: .anyFailure)
-            ],
+            values: [.anyFailure],
             from: item.failureMetricEventPublisher()
         )
     }

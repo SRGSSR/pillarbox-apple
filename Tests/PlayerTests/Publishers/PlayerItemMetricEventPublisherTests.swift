@@ -15,7 +15,7 @@ final class PlayerItemMetricEventPublisherTests: TestCase {
         let item = PlayerItem.mock(url: Stream.onDemand.url, loadedAfter: 0.1)
         expectOnlySimilarPublished(
             values: [
-                .init(kind: .anyAssetLoading)
+                .anyAssetLoading
             ],
             from: item.metricEventPublisher()
         ) {

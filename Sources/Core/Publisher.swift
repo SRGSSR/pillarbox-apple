@@ -169,7 +169,7 @@ public extension Publisher where Failure == Never {
             object?[keyPath: keyPath] = value
         }
     }
-    
+
     /// Assigns a publisher a subject.
     ///
     /// - Parameter subject: The subject to assign the publisher to.
