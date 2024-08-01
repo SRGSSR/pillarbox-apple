@@ -56,17 +56,3 @@ extension Player {
         properties.seekableTimeRange
     }
 }
-
-extension Player {
-    func playerItemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        currentPlayerItemPublisher()
-            .map { item in
-                guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
-                return item.propertiesPublisher()
-            }
-            .switchToLatest()
-            .prepend(.empty)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-}
