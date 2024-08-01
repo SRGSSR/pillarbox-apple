@@ -195,7 +195,7 @@ public extension Publisher {
         measureInterval(using: scheduler)
             .map { stride in
                 let date = Date()
-                return DateInterval(start: date.addingTimeInterval(-TimeInterval(from: stride)), end: date)
+                return DateInterval(start: date.advanced(by: -TimeInterval(from: stride)), end: date)
             }
             .eraseToAnyPublisher()
     }
