@@ -7,7 +7,6 @@
 @testable import PillarboxAnalytics
 
 import Combine
-import Foundation
 import Nimble
 import PillarboxPlayer
 import PillarboxStreams

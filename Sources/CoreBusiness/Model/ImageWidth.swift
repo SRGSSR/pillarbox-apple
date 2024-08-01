@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 enum ImageWidth: Int {
     case width240 = 240
     case width320 = 320

@@ -8,7 +8,6 @@
 
 import CoreMedia
 import Nimble
-import PillarboxCircumspect
 import PillarboxStreams
 
 private let kBlockedTimeRange = CMTimeRange(start: .init(value: 20, timescale: 1), end: .init(value: 60, timescale: 1))

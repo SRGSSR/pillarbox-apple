@@ -7,7 +7,6 @@
 @testable import PillarboxPlayer
 
 import AVFoundation
-import Combine
 import PillarboxStreams
 
 final class AVPlayerItemMetricEventPublisherTests: TestCase {

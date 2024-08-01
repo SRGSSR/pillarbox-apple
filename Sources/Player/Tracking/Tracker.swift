@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
 import Combine
 import PillarboxCore
 

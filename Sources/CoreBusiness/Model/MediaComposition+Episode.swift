@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 public extension MediaComposition {
     /// A description of an episode.
     struct Episode: Decodable {

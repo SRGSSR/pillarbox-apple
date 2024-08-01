@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Combine
 import CoreMedia
 
 // MARK: Public CoreProperties shortcut
