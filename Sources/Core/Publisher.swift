@@ -164,9 +164,21 @@ public extension Publisher where Failure == Never {
     ///   - object: The object that contains the property. The subscriber assigns the object’s property every time it 
     ///     receives a new value.
     /// - Returns: An `AnyCancellable` instance which can be used to cancel the subscription.
-    func weakAssign<T: AnyObject>(to keyPath: ReferenceWritableKeyPath<T, Output>, on object: T) -> AnyCancellable {
+    func weakAssign<T>(to keyPath: ReferenceWritableKeyPath<T, Output>, on object: T) -> AnyCancellable where T: AnyObject {
         sink { [weak object] value in
             object?[keyPath: keyPath] = value
+        }
+    }
+    
+    /// Assigns a publisher a subject.
+    ///
+    /// - Parameter subject: The subject to assign the publisher to.
+    /// - Returns: An `AnyCancellable` instance which can be used to cancel the subscription.
+    ///
+    /// All values received from the publisher are sent to the subject.
+    func assign<S>(on subject: S) -> AnyCancellable where S: Subject, S.Output == Output {
+        sink { value in
+            subject.send(value)
         }
     }
 }
