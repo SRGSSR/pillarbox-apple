@@ -6,12 +6,17 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 
-final class Tracker {
+final class Tracker: NSObject {
     let item: PlayerItem
-    var playerItem: AVPlayerItem
+
+    @objc dynamic var playerItem: AVPlayerItem
+
+    private var properties: PlayerProperties = .empty
 
     private let player: QueuePlayer
+    private var cancellables = Set<AnyCancellable>()
 
     var isEnabled: Bool {
         didSet {
@@ -20,7 +25,7 @@ final class Tracker {
                 item.enableTrackers(for: player)
             }
             else {
-                item.disableTrackers(with: .empty)
+                item.disableTrackers(with: properties)
             }
         }
     }
@@ -34,15 +39,28 @@ final class Tracker {
         self.playerItem = items.playerItem
         self.player = player
         self.isEnabled = isEnabled
+        super.init()
 
         if isEnabled {
             item.enableTrackers(for: player)
         }
+
+        configurePropertiesPublisher(with: player)
+    }
+
+    private func configurePropertiesPublisher(with player: QueuePlayer) {
+        publisher(for: \.playerItem)
+            .map { playerItem in
+                playerItem.propertiesPublisher(with: player)
+            }
+            .switchToLatest()
+            .weakAssign(to: \.properties, on: self)
+            .store(in: &cancellables)
     }
 
     deinit {
         if isEnabled {
-            item.disableTrackers(with: .empty)
+            item.disableTrackers(with: properties)
         }
     }
 }
