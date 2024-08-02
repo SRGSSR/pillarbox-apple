@@ -15,7 +15,7 @@ final class PlayerTrackingTests: TestCase {
         player.isTrackingEnabled = false
         let publisher = TrackerLifeCycleMock.StatePublisher()
 
-        expectEqualPublished(values: [.initialized], from: publisher, during: .milliseconds(500)) {
+        expectEqualPublished(values: [.initialized, .metricEvent, .metricEvent], from: publisher, during: .milliseconds(500)) {
             player.append(
                 .simple(
                     url: Stream.shortOnDemand.url,
@@ -34,7 +34,7 @@ final class PlayerTrackingTests: TestCase {
 
         let publisher = TrackerLifeCycleMock.StatePublisher()
 
-        expectEqualPublished(values: [.initialized], from: publisher, during: .seconds(1)) {
+        expectEqualPublished(values: [.initialized, .metricEvent, .metricEvent], from: publisher, during: .seconds(1)) {
             player.append(
                 .simple(
                     url: Stream.shortOnDemand.url,
@@ -46,7 +46,7 @@ final class PlayerTrackingTests: TestCase {
         }
 
         expectAtLeastEqualPublished(
-            values: [.enabled, .metricEvent, .metricEvent, .disabled],
+            values: [.enabled, .disabled],
             from: publisher
         ) {
             player.isTrackingEnabled = true
