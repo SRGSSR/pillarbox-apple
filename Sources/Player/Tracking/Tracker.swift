@@ -9,27 +9,40 @@ import Combine
 
 final class Tracker {
     let item: PlayerItem
+    var playerItem: AVPlayerItem
 
-    var playerItem: AVPlayerItem {
+    private let player: QueuePlayer
+
+    var isEnabled: Bool {
         didSet {
-            print("--> update tracker \(item.id) with player item \(playerItem)")
+            guard isEnabled != oldValue else { return }
+            if isEnabled {
+                item.enableTrackers(for: player)
+            }
+            else {
+                item.disableTrackers(with: .empty)
+            }
         }
-    }
-
-    var isEnabled: Bool
-
-    init(items: QueueItems, player: QueuePlayer, isEnabled: Bool) {
-        self.item = items.item
-        self.playerItem = items.playerItem
-        self.isEnabled = isEnabled
-        print("--> create tracker \(item.id) with player item \(playerItem)")
     }
 
     var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
         Empty().eraseToAnyPublisher()
     }
 
+    init(items: QueueItems, player: QueuePlayer, isEnabled: Bool) {
+        self.item = items.item
+        self.playerItem = items.playerItem
+        self.player = player
+        self.isEnabled = isEnabled
+
+        if isEnabled {
+            item.enableTrackers(for: player)
+        }
+    }
+
     deinit {
-        print("--> destroy tracker \(item.id)")
+        if isEnabled {
+            item.disableTrackers(with: .empty)
+        }
     }
 }

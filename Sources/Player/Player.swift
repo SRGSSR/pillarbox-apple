@@ -116,7 +116,11 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// A Boolean setting whether trackers must be enabled or not.
-    public var isTrackingEnabled = true
+    public var isTrackingEnabled = true {
+        didSet {
+            tracker?.isEnabled = isTrackingEnabled
+        }
+    }
 
     /// The current time.
     ///
