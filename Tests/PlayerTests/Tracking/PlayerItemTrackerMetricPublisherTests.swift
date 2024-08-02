@@ -13,7 +13,7 @@ import PillarboxStreams
 final class PlayerItemTrackerMetricPublisherTests: TestCase {
     func testEmptyPlayer() {
         let player = Player()
-        expectNothingPublished(from: player.tracker.metricEventsPublisher, during: .milliseconds(100))
+        expectNothingPublished(from: player.metricEventsPublisher, during: .milliseconds(100))
     }
 
     func testNotEmptyPlayer() {
@@ -21,7 +21,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         expectAtLeastSimilarPublished(values: [
             [.anyAssetLoading],
             [.anyAssetLoading, .anyResourceLoading]
-        ], from: player.tracker.metricEventsPublisher)
+        ], from: player.metricEventsPublisher)
     }
 
     func testError() {
@@ -29,7 +29,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         expectAtLeastSimilarPublished(values: [
             [.anyAssetLoading],
             [.anyAssetLoading, .anyFailure]
-        ], from: player.tracker.metricEventsPublisher)
+        ], from: player.metricEventsPublisher)
     }
 
     func testReplay() {
@@ -41,7 +41,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
                 [.anyAssetLoading],
                 [.anyAssetLoading, .anyResourceLoading]
             ],
-            from: player.tracker.metricEventsPublisher,
+            from: player.metricEventsPublisher,
             during: .milliseconds(1500)
         ) {
             player.play()
@@ -60,7 +60,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
                 [.anyAssetLoading],
                 [.anyAssetLoading, .anyResourceLoading]
             ],
-            from: player.tracker.metricEventsPublisher,
+            from: player.metricEventsPublisher,
             during: .milliseconds(1500)
         ) {
             player.play()
@@ -76,7 +76,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
                 [.anyAssetLoading],
                 [.anyAssetLoading, .anyFailure]
             ],
-            from: player.tracker.metricEventsPublisher,
+            from: player.metricEventsPublisher,
             during: .milliseconds(1500)
         ) {
             player.play()
