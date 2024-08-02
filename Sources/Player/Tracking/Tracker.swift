@@ -14,9 +14,12 @@ final class Tracker: NSObject {
     @objc dynamic var playerItem: AVPlayerItem
 
     private var properties: PlayerProperties = .empty
+    private var itemMetricEventSubject = PassthroughSubject<MetricEvent, Never>()
 
     private let player: QueuePlayer
     private var cancellables = Set<AnyCancellable>()
+
+    @Published private(set) var metricEvents: [MetricEvent] = []
 
     var isEnabled: Bool {
         didSet {
@@ -30,10 +33,6 @@ final class Tracker: NSObject {
         }
     }
 
-    var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
-        Empty().eraseToAnyPublisher()
-    }
-
     init(items: QueueItems, player: QueuePlayer, isEnabled: Bool) {
         self.item = items.item
         self.playerItem = items.playerItem
@@ -45,16 +44,22 @@ final class Tracker: NSObject {
             item.enableTrackers(for: player)
         }
 
-        configurePropertiesPublisher(with: player)
+        configureItemPublishers()
     }
 
-    private func configurePropertiesPublisher(with player: QueuePlayer) {
+    private func configureItemPublishers() {
         publisher(for: \.playerItem)
-            .map { playerItem in
+            .map { [player] playerItem in
                 playerItem.propertiesPublisher(with: player)
             }
             .switchToLatest()
             .weakAssign(to: \.properties, on: self)
+            .store(in: &cancellables)
+        itemMetricEventSubject
+            .scan([]) { $0 + [$1] }
+            .assign(to: &$metricEvents)
+        item.metricEventPublisher()
+            .assign(on: itemMetricEventSubject)
             .store(in: &cancellables)
     }
 
