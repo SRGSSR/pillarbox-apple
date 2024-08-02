@@ -11,13 +11,21 @@ import PillarboxCore
 final class Tracker: NSObject {
     let item: PlayerItem
 
-    @objc dynamic var playerItem: AVPlayerItem
+    @objc dynamic var playerItem: AVPlayerItem {
+        didSet {
+            configurePlayerItemPublishers()
+        }
+    }
 
     private var properties: PlayerProperties = .empty
+
     private var itemMetricEventSubject = PassthroughSubject<MetricEvent, Never>()
+    private var playerItemMetricEventSubject = PassthroughSubject<MetricEvent, Never>()
 
     private let player: QueuePlayer
-    private var cancellables = Set<AnyCancellable>()
+
+    private var itemCancellables = Set<AnyCancellable>()
+    private var playerItemCancellables = Set<AnyCancellable>()
 
     @Published private(set) var metricEvents: [MetricEvent] = []
 
@@ -45,6 +53,7 @@ final class Tracker: NSObject {
         }
 
         configureItemPublishers()
+        configurePlayerItemPublishers()
     }
 
     private func configureItemPublishers() {
@@ -54,13 +63,20 @@ final class Tracker: NSObject {
             }
             .switchToLatest()
             .weakAssign(to: \.properties, on: self)
-            .store(in: &cancellables)
-        itemMetricEventSubject
+            .store(in: &itemCancellables)
+        Publishers.Merge(itemMetricEventSubject, playerItemMetricEventSubject)
             .scan([]) { $0 + [$1] }
             .assign(to: &$metricEvents)
         item.metricEventPublisher()
             .assign(on: itemMetricEventSubject)
-            .store(in: &cancellables)
+            .store(in: &itemCancellables)
+    }
+
+    private func configurePlayerItemPublishers() {
+        playerItemCancellables = []
+        playerItem.metricEventPublisher()
+            .assign(on: playerItemMetricEventSubject)
+            .store(in: &playerItemCancellables)
     }
 
     deinit {
