@@ -62,9 +62,15 @@ final class Tracker: NSObject {
                 playerItem.propertiesPublisher(with: player)
             }
             .switchToLatest()
+            .handleEvents(receiveOutput: { [item] properties in
+                item.updateTrackerProperties(with: properties)
+            })
             .weakAssign(to: \.properties, on: self)
             .store(in: &itemCancellables)
         Publishers.Merge(itemMetricEventSubject, playerItemMetricEventSubject)
+            .handleEvents(receiveOutput: { [item] event in
+                item.receiveTrackerMetricEvent(event)
+            })
             .scan([]) { $0 + [$1] }
             .assign(to: &$metricEvents)
         item.metricEventPublisher()
