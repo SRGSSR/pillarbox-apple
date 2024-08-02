@@ -42,7 +42,11 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    lazy var tracker = Tracker(player: queuePlayer, isEnabled: isTrackingEnabled)
+    @Published var tracker: Tracker? {
+        didSet {
+            tracker?.isEnabled = isTrackingEnabled
+        }
+    }
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -112,11 +116,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// A Boolean setting whether trackers must be enabled or not.
-    public var isTrackingEnabled = true {
-        didSet {
-            tracker.isEnabled = isTrackingEnabled
-        }
-    }
+    public var isTrackingEnabled = true
 
     /// The current time.
     ///
@@ -274,8 +274,19 @@ private extension Player {
     func configureTrackerPublisher() {
         queuePublisher
             .slice(at: \.items)
-            .weakAssign(to: \.items, on: tracker)
-            .store(in: &cancellables)
+            .scan(nil) { [weak self] initial, next in
+                if let self, let next {
+                    guard next.item != initial?.item else {
+                        initial?.playerItem = next.playerItem
+                        return initial
+                    }
+                    return Tracker(items: next, player: queuePlayer, isEnabled: isTrackingEnabled)
+                }
+                else {
+                    return nil
+                }
+            }
+            .assign(to: &$tracker)
     }
 
     func configureControlCenterPublishers() {

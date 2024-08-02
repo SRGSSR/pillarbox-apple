@@ -15,7 +15,8 @@ public extension Player {
     ///
     /// All metric events related to the item currently being played, if any, are received upon subscription.
     var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
-        tracker.metricEventsPublisher
+        guard let tracker else { return Just([]).eraseToAnyPublisher() }
+        return tracker.metricEventsPublisher
     }
 
     /// Returns a periodically updated metrics history associated with the current item.
