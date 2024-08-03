@@ -11,7 +11,7 @@ import PillarboxCore
 final class MetricEventCollector {
     var playerItem: AVPlayerItem {
         didSet {
-            configurePlayerItemPublisher()
+            configurePlayerItemPublisher(for: playerItem)
         }
     }
 
@@ -25,20 +25,20 @@ final class MetricEventCollector {
 
     init(items: QueueItems) {
         playerItem = items.playerItem
-        configurePublishers(for: items.item)
+        configurePublishers(for: items)
     }
 
-    private func configurePublishers(for item: PlayerItem) {
+    private func configurePublishers(for items: QueueItems) {
         Publishers.Merge(itemMetricEventSubject, playerItemMetricEventSubject)
             .scan([]) { $0 + [$1] }
             .assign(to: &$metricEvents)
-        item.metricEventPublisher()
+        items.item.metricEventPublisher()
             .assign(on: itemMetricEventSubject)
             .store(in: &cancellables)
-        configurePlayerItemPublisher()
+        configurePlayerItemPublisher(for: items.playerItem)
     }
 
-    private func configurePlayerItemPublisher() {
+    private func configurePlayerItemPublisher(for playerItem: AVPlayerItem) {
         playerItemCancellable = playerItem.metricEventPublisher()
             .assign(on: playerItemMetricEventSubject)
     }
