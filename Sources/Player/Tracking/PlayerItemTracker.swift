@@ -47,7 +47,7 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// A method called when metric events are updated.
     ///
-    /// - Parameter event: The received event.
+    /// - Parameter events: All events that have currently been recorded for the item.
     ///
     /// This method is only called when the tracker is active.
     func updateMetricEvents(to events: [MetricEvent])
