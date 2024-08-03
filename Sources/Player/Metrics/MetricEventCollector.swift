@@ -28,7 +28,6 @@ final class MetricEventCollector {
     private func metricEventsPublisher() -> AnyPublisher<[MetricEvent], Never> {
         Publishers.Merge(item.metricEventPublisher(), playerItemMetricEventPublisher())
             .scan([]) { $0 + [$1] }
-            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
