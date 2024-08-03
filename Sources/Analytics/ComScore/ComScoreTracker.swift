@@ -32,7 +32,7 @@ public final class ComScoreTracker: PlayerItemTracker {
         guard !metadata.isEmpty else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
-        streamingAnalytics.setProperties(for: properties)
+        streamingAnalytics.setPlaybackPosition(from: properties)
 
         switch (properties.isSeeking, properties.isBuffering) {
         case (true, true):
