@@ -175,7 +175,7 @@ public extension Publisher where Failure == Never {
     /// - Parameter subject: The subject to assign the publisher to.
     /// - Returns: An `AnyCancellable` instance which can be used to cancel the subscription.
     ///
-    /// The subject republishes all values received from the publisher.
+    /// The subject is sent all upstream values.
     func assign<S>(on subject: S) -> AnyCancellable where S: Subject, S.Output == Output {
         sink { value in
             subject.send(value)
