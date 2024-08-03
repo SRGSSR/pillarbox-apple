@@ -18,7 +18,7 @@ public extension Player {
         $tracker
             .map { tracker -> AnyPublisher<[MetricEvent], Never> in
                 guard let tracker else { return Just([]).eraseToAnyPublisher() }
-                return tracker.$metricEvents.eraseToAnyPublisher()
+                return tracker.metricEventsPublisher
             }
             .switchToLatest()
             .removeDuplicates()
