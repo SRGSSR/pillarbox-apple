@@ -11,6 +11,7 @@ import PillarboxCore
 final class MetricEventCollector {
     var playerItem: AVPlayerItem {
         didSet {
+            guard playerItem != oldValue else { return }
             configurePlayerItemPublisher(for: playerItem)
         }
     }
