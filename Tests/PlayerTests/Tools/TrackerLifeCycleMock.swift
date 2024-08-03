@@ -30,11 +30,11 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
         configuration.statePublisher.send(.initialized)
     }
 
-    func updateMetadata(with metadata: Void) {}
+    func updateMetadata(to metadata: Void) {}
 
-    func updateProperties(with properties: PlayerProperties) {}
+    func updateProperties(to properties: PlayerProperties) {}
 
-    func updateMetricEvents(with events: [MetricEvent]) {}
+    func updateMetricEvents(to events: [MetricEvent]) {}
 
     func enable(for player: AVPlayer) {
         configuration.statePublisher.send(.enabled)

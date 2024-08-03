@@ -96,7 +96,7 @@ public final class PlayerItem: Equatable {
                 // swiftlint:disable:next trailing_closure
                 .handleEvents(receiveOutput: { asset in
                     trackerAdapters.forEach { adapter in
-                        adapter.updateMetadata(with: asset.metadata)
+                        adapter.updateMetadata(to: asset.metadata)
                     }
                 })
                 .map { asset in
@@ -143,15 +143,15 @@ extension PlayerItem {
         }
     }
 
-    func updateTrackerProperties(with properties: PlayerProperties) {
+    func updateTrackersProperties(to properties: PlayerProperties) {
         trackerAdapters.forEach { adapter in
-            adapter.updateProperties(with: properties)
+            adapter.updateProperties(to: properties)
         }
     }
 
-    func updateTrackerMetricEvents(with events: [MetricEvent]) {
+    func updateTrackersMetricEvents(to events: [MetricEvent]) {
         trackerAdapters.forEach { adapter in
-            adapter.updateMetricEvents(with: events)
+            adapter.updateMetricEvents(to: events)
         }
     }
 

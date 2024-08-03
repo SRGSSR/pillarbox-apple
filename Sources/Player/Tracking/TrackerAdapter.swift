@@ -23,13 +23,13 @@ public class TrackerAdapter<M> {
         let tracker = trackerType.init(configuration: configuration)
         update = { metadata in
             if let mapper {
-                tracker.updateMetadata(with: mapper(metadata))
+                tracker.updateMetadata(to: mapper(metadata))
             }
         }
         self.tracker = tracker
     }
 
-    func updateMetadata(with metadata: M) {
+    func updateMetadata(to metadata: M) {
         update(metadata)
     }
 }
@@ -39,12 +39,12 @@ extension TrackerAdapter: TrackerLifeCycle {
         tracker.enable(for: player)
     }
 
-    func updateProperties(with properties: PlayerProperties) {
-        tracker.updateProperties(with: properties)
+    func updateProperties(to properties: PlayerProperties) {
+        tracker.updateProperties(to: properties)
     }
 
-    func updateMetricEvents(with events: [MetricEvent]) {
-        tracker.updateMetricEvents(with: events)
+    func updateMetricEvents(to events: [MetricEvent]) {
+        tracker.updateMetricEvents(to: events)
     }
 
     func disable(with properties: PlayerProperties) {

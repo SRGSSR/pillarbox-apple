@@ -25,11 +25,11 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     public func enable(for player: AVPlayer) {}
 
-    public func updateMetadata(with metadata: [String: String]) {
+    public func updateMetadata(to metadata: [String: String]) {
         self.metadata = metadata
     }
 
-    public func updateProperties(with properties: PlayerProperties) {
+    public func updateProperties(to properties: PlayerProperties) {
         if properties.isSeeking {
             notify(.seek, properties: properties)
         }
@@ -47,7 +47,7 @@ public final class CommandersActTracker: PlayerItemTracker {
         }
     }
 
-    public func updateMetricEvents(with events: [MetricEvent]) {}
+    public func updateMetricEvents(to events: [MetricEvent]) {}
 
     public func disable(with properties: PlayerProperties) {
         notify(.stop, properties: properties)
