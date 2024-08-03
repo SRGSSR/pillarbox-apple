@@ -8,26 +8,14 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
-final class Tracker: NSObject {
+final class Tracker {
     let item: PlayerItem
 
-    @objc dynamic var playerItem: AVPlayerItem {
+    var playerItem: AVPlayerItem {
         didSet {
-            configurePlayerItemPublishers()
+            metricEventCollector.playerItem = playerItem
         }
     }
-
-    private var properties: PlayerProperties = .empty
-
-    private var itemMetricEventSubject = PassthroughSubject<MetricEvent, Never>()
-    private var playerItemMetricEventSubject = PassthroughSubject<MetricEvent, Never>()
-
-    private let player: QueuePlayer
-
-    private var itemCancellables = Set<AnyCancellable>()
-    private var playerItemCancellables = Set<AnyCancellable>()
-
-    @Published private(set) var metricEvents: [MetricEvent] = []
 
     var isEnabled: Bool {
         didSet {
@@ -41,48 +29,26 @@ final class Tracker: NSObject {
         }
     }
 
+    private let player: QueuePlayer
+    private let metricEventCollector: MetricEventCollector
+    private var properties: PlayerProperties = .empty
+
+    var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
+        metricEventCollector.$metricEvents.eraseToAnyPublisher()
+    }
+
     init(items: QueueItems, player: QueuePlayer, isEnabled: Bool) {
         self.item = items.item
         self.playerItem = items.playerItem
+
         self.player = player
         self.isEnabled = isEnabled
-        super.init()
 
+        self.metricEventCollector = MetricEventCollector(items: items)
+        
         if isEnabled {
             item.enableTrackers(for: player)
         }
-
-        configureItemPublishers()
-        configurePlayerItemPublishers()
-    }
-
-    private func configureItemPublishers() {
-        publisher(for: \.playerItem)
-            .map { [player] playerItem in
-                playerItem.propertiesPublisher(with: player)
-            }
-            .switchToLatest()
-            .handleEvents(receiveOutput: { [item] properties in
-                item.updateTrackerProperties(with: properties)
-            })
-            .weakAssign(to: \.properties, on: self)
-            .store(in: &itemCancellables)
-        Publishers.Merge(itemMetricEventSubject, playerItemMetricEventSubject)
-            .handleEvents(receiveOutput: { [item] event in
-                item.receiveTrackerMetricEvent(event)
-            })
-            .scan([]) { $0 + [$1] }
-            .assign(to: &$metricEvents)
-        item.metricEventPublisher()
-            .assign(on: itemMetricEventSubject)
-            .store(in: &itemCancellables)
-    }
-
-    private func configurePlayerItemPublishers() {
-        playerItemCancellables = []
-        playerItem.metricEventPublisher()
-            .assign(on: playerItemMetricEventSubject)
-            .store(in: &playerItemCancellables)
     }
 
     deinit {
