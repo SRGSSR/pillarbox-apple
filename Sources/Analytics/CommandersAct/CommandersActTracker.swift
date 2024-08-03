@@ -47,7 +47,7 @@ public final class CommandersActTracker: PlayerItemTracker {
         }
     }
 
-    public func receiveMetricEvent(_ event: MetricEvent) {}
+    public func updateMetricEvents(with events: [MetricEvent]) {}
 
     public func disable(with properties: PlayerProperties) {
         notify(.stop, properties: properties)

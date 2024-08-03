@@ -8,17 +8,12 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
-final class Tracker {
+final class Tracker: NSObject {
     let item: PlayerItem
 
-    var playerItem: AVPlayerItem {
+    @objc dynamic var playerItem: AVPlayerItem {
         didSet {
-            guard playerItem != oldValue else { return }
             metricEventCollector.playerItem = playerItem
-            unregisterPublishers()
-            if isEnabled {
-                registerPublishers()
-            }
         }
     }
 
@@ -27,10 +22,8 @@ final class Tracker {
             guard isEnabled != oldValue else { return }
             if isEnabled {
                 enable()
-                registerPublishers()
             }
             else {
-                unregisterPublishers()
                 disable()
             }
         }
@@ -48,28 +41,28 @@ final class Tracker {
     init(items: QueueItems, player: QueuePlayer, isEnabled: Bool) {
         self.item = items.item
         self.playerItem = items.playerItem
-
         self.player = player
         self.isEnabled = isEnabled
-
         self.metricEventCollector = MetricEventCollector(items: items)
-        
+        super.init()
+
         if isEnabled {
             enable()
-            registerPublishers()
         }
     }
 
     private func enable() {
         item.enableTrackers(for: player)
-    }
-
-    private func disable() {
-        item.disableTrackers(with: properties)
-    }
-
-    private func registerPublishers() {
-        playerItem.propertiesPublisher(with: player)
+        metricEventCollector.$metricEvents
+            .sink { [item] events in
+                item.updateTrackerMetricEvents(with: events)
+            }
+            .store(in: &cancellables)
+        publisher(for: \.playerItem)
+            .map { [player] playerItem in
+                playerItem.propertiesPublisher(with: player)
+            }
+            .switchToLatest()
             .handleEvents(receiveOutput: { [item] properties in
                 item.updateTrackerProperties(with: properties)
             })
@@ -77,8 +70,9 @@ final class Tracker {
             .store(in: &cancellables)
     }
 
-    private func unregisterPublishers() {
+    private func disable() {
         cancellables = []
+        item.disableTrackers(with: properties)
     }
 
     deinit {

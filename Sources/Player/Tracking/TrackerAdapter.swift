@@ -43,8 +43,8 @@ extension TrackerAdapter: TrackerLifeCycle {
         tracker.updateProperties(with: properties)
     }
 
-    func receiveMetricEvent(_ event: MetricEvent) {
-        tracker.receiveMetricEvent(event)
+    func updateMetricEvents(with events: [MetricEvent]) {
+        tracker.updateMetricEvents(with: events)
     }
 
     func disable(with properties: PlayerProperties) {
