@@ -34,7 +34,7 @@ public protocol PlayerItemTracker: AnyObject {
     ///
     /// - Parameter metadata: The updated metadata.
     ///
-    /// This method is always called, no matter whether the tracker is currently active or not.
+    /// This method is always called, whether the tracker is currently active or not.
     func updateMetadata(to metadata: Metadata)
 
     /// A method called when player properties have changed.
