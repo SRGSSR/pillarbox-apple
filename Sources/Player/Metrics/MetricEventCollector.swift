@@ -8,40 +8,35 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
-final class MetricEventCollector {
-    var playerItem: AVPlayerItem {
-        didSet {
-            guard playerItem != oldValue else { return }
-            configurePlayerItemPublisher(for: playerItem)
-        }
-    }
+final class MetricEventCollector: NSObject {
+    private let item: PlayerItem
+    @objc dynamic var playerItem: AVPlayerItem
 
     @Published private(set) var metricEvents: [MetricEvent] = []
 
-    private var itemMetricEventSubject = PassthroughSubject<MetricEvent, Never>()
-    private var playerItemMetricEventSubject = PassthroughSubject<MetricEvent, Never>()
-
-    private var cancellables = Set<AnyCancellable>()
-    private var playerItemCancellable: AnyCancellable?
-
     init(items: QueueItems) {
+        item = items.item
         playerItem = items.playerItem
-        configurePublishers(for: items)
+        super.init()
+        configureMetricEventsPublisher()
     }
 
-    private func configurePublishers(for items: QueueItems) {
-        Publishers.Merge(itemMetricEventSubject, playerItemMetricEventSubject)
+    private func configureMetricEventsPublisher() {
+        metricEventsPublisher()
+            .assign(to: &$metricEvents)
+    }
+
+    private func metricEventsPublisher() -> AnyPublisher<[MetricEvent], Never> {
+        Publishers.Merge(item.metricEventPublisher(), playerItemMetricEventPublisher())
             .scan([]) { $0 + [$1] }
             .removeDuplicates()
-            .assign(to: &$metricEvents)
-        items.item.metricEventPublisher()
-            .assign(on: itemMetricEventSubject)
-            .store(in: &cancellables)
-        configurePlayerItemPublisher(for: items.playerItem)
+            .eraseToAnyPublisher()
     }
 
-    private func configurePlayerItemPublisher(for playerItem: AVPlayerItem) {
-        playerItemCancellable = playerItem.metricEventPublisher()
-            .assign(on: playerItemMetricEventSubject)
+    private func playerItemMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        publisher(for: \.playerItem)
+            .map { $0.metricEventPublisher() }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 }
