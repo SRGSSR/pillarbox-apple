@@ -8,16 +8,15 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
-final class MetricEventCollector: NSObject {
+final class MetricEventCollector {
     private let item: PlayerItem
-    @objc dynamic var playerItem: AVPlayerItem
 
+    @Published var playerItem: AVPlayerItem
     @Published private(set) var metricEvents: [MetricEvent] = []
 
     init(items: QueueItems) {
         item = items.item
         playerItem = items.playerItem
-        super.init()
         configureMetricEventsPublisher()
     }
 
@@ -34,7 +33,7 @@ final class MetricEventCollector: NSObject {
     }
 
     private func playerItemMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        publisher(for: \.playerItem)
+        $playerItem
             .map { $0.metricEventPublisher() }
             .switchToLatest()
             .eraseToAnyPublisher()
