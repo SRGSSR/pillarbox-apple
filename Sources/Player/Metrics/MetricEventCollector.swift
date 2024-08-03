@@ -21,14 +21,9 @@ final class MetricEventCollector {
     }
 
     private func configureMetricEventsPublisher() {
-        metricEventsPublisher()
-            .assign(to: &$metricEvents)
-    }
-
-    private func metricEventsPublisher() -> AnyPublisher<[MetricEvent], Never> {
         Publishers.Merge(item.metricEventPublisher(), playerItemMetricEventPublisher())
             .scan([]) { $0 + [$1] }
-            .eraseToAnyPublisher()
+            .assign(to: &$metricEvents)
     }
 
     private func playerItemMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
