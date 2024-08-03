@@ -64,6 +64,7 @@ final class Tracker: NSObject {
             }
             .switchToLatest()
             .handleEvents(receiveOutput: { [item] properties in
+                // swiftlint:disable:previous trailing_closure
                 item.updateTrackerProperties(with: properties)
             })
             .weakAssign(to: \.properties, on: self)
