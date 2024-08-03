@@ -8,10 +8,10 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
-final class Tracker: NSObject {
+final class Tracker {
     let item: PlayerItem
 
-    @objc dynamic var playerItem: AVPlayerItem {
+    @Published var playerItem: AVPlayerItem {
         didSet {
             metricEventCollector.playerItem = playerItem
         }
@@ -44,7 +44,6 @@ final class Tracker: NSObject {
         self.player = player
         self.isEnabled = isEnabled
         self.metricEventCollector = MetricEventCollector(items: items)
-        super.init()
 
         if isEnabled {
             enable()
@@ -59,7 +58,7 @@ final class Tracker: NSObject {
                 item.updateTrackersMetricEvents(to: events)
             }
             .store(in: &cancellables)
-        publisher(for: \.playerItem)
+        $playerItem
             .map { [player] playerItem in
                 playerItem.propertiesPublisher(with: player)
             }
