@@ -13,7 +13,12 @@ final class Tracker {
 
     var playerItem: AVPlayerItem {
         didSet {
+            guard playerItem != oldValue else { return }
             metricEventCollector.playerItem = playerItem
+            unregisterPublishers()
+            if isEnabled {
+                registerPublishers()
+            }
         }
     }
 
@@ -21,10 +26,12 @@ final class Tracker {
         didSet {
             guard isEnabled != oldValue else { return }
             if isEnabled {
-                item.enableTrackers(for: player)
+                enable()
+                registerPublishers()
             }
             else {
-                item.disableTrackers(with: properties)
+                unregisterPublishers()
+                disable()
             }
         }
     }
@@ -32,6 +39,7 @@ final class Tracker {
     private let player: QueuePlayer
     private let metricEventCollector: MetricEventCollector
     private var properties: PlayerProperties = .empty
+    private var cancellables = Set<AnyCancellable>()
 
     var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
         metricEventCollector.$metricEvents.eraseToAnyPublisher()
@@ -47,13 +55,35 @@ final class Tracker {
         self.metricEventCollector = MetricEventCollector(items: items)
         
         if isEnabled {
-            item.enableTrackers(for: player)
+            enable()
+            registerPublishers()
         }
+    }
+
+    private func enable() {
+        item.enableTrackers(for: player)
+    }
+
+    private func disable() {
+        item.disableTrackers(with: properties)
+    }
+
+    private func registerPublishers() {
+        playerItem.propertiesPublisher(with: player)
+            .handleEvents(receiveOutput: { [item] properties in
+                item.updateTrackerProperties(with: properties)
+            })
+            .weakAssign(to: \.properties, on: self)
+            .store(in: &cancellables)
+    }
+
+    private func unregisterPublishers() {
+        cancellables = []
     }
 
     deinit {
         if isEnabled {
-            item.disableTrackers(with: properties)
+            disable()
         }
     }
 }
