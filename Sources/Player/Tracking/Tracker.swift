@@ -54,6 +54,7 @@ final class Tracker: NSObject {
     private func enable() {
         item.enableTrackers(for: player)
         metricEventCollector.$metricEvents
+            .filter { !$0.isEmpty }
             .sink { [item] events in
                 item.updateTrackersMetricEvents(to: events)
             }
