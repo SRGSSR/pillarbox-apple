@@ -33,27 +33,27 @@ extension ComScoreStreamingAnalytics {
         }
     }
 
-    func setProperties(for properties: PlayerProperties) {
+    func setPlaybackPosition(from properties: PlayerProperties) {
         if properties.streamType == .dvr {
-            start(fromDvrWindowOffset: Self.offset(for: properties))
-            setDVRWindowLength(Self.duration(for: properties))
+            start(fromDvrWindowOffset: Self.offset(from: properties))
+            setDVRWindowLength(Self.duration(from: properties))
         }
         else {
-            start(fromPosition: Self.position(for: properties))
+            start(fromPosition: Self.position(from: properties))
         }
     }
 }
 
 private extension ComScoreStreamingAnalytics {
-    static func duration(for properties: PlayerProperties) -> Int {
+    static func duration(from properties: PlayerProperties) -> Int {
         Int(properties.seekableTimeRange.duration.timeInterval().toMilliseconds)
     }
 
-    static func position(for properties: PlayerProperties) -> Int {
+    static func position(from properties: PlayerProperties) -> Int {
         Int(properties.time().timeInterval().toMilliseconds)
     }
 
-    static func offset(for properties: PlayerProperties) -> Int {
+    static func offset(from properties: PlayerProperties) -> Int {
         Int(properties.endOffset().timeInterval().toMilliseconds)
     }
 }
