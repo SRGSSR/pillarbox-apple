@@ -31,8 +31,6 @@ public struct MetricEvent: Hashable {
         case stall
 
         /// Resume after stall.
-        ///
-        /// Measures the time for the player to recover after a stall.
         case resumeAfterStall
     }
 
