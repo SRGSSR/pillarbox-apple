@@ -6,11 +6,6 @@
 
 import AVFoundation
 
-struct QueueItems: Equatable {
-    let item: PlayerItem
-    let playerItem: AVPlayerItem
-}
-
 struct Queue {
     static let empty = Self(elements: [], itemState: .empty)
 
