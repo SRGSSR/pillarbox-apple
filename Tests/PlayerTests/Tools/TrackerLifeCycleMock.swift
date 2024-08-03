@@ -15,7 +15,6 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
     enum State: Equatable {
         case initialized
         case enabled
-        case metricEvents
         case disabled
         case deinitialized
     }
@@ -35,9 +34,7 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
 
     func updateProperties(with properties: PlayerProperties) {}
 
-    func updateMetricEvents(with events: [MetricEvent]) {
-        configuration.statePublisher.send(.metricEvents)
-    }
+    func updateMetricEvents(with events: [MetricEvent]) {}
 
     func enable(for player: AVPlayer) {
         configuration.statePublisher.send(.enabled)
