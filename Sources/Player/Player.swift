@@ -319,6 +319,37 @@ private extension Player {
 }
 
 private extension Player {
+    func configurePropertiesPublisher() {
+        propertiesPublisher
+            .receiveOnMainThread()
+            .weakAssign(to: \.properties, on: self)
+            .store(in: &cancellables)
+    }
+
+    func configureErrorPublisher() {
+        queuePublisher
+            .map(\.error)
+            .removeDuplicates { $0 as? NSError == $1 as? NSError }
+            .receiveOnMainThread()
+            .assign(to: &$error)
+    }
+
+    func configureCurrentIndexPublisher() {
+        queuePublisher
+            .slice(at: \.index)
+            .receiveOnMainThread()
+            .lane("player_current_index")
+            .assign(to: &$currentIndex)
+    }
+
+    func configurePlaybackSpeedPublisher() {
+        playbackSpeedPublisher()
+            .receiveOnMainThread()
+            .assign(to: &$_playbackSpeed)
+    }
+}
+
+private extension Player {
     func configureQueuePlayerItemsPublisher() {
         queuePlayerItemsPublisher()
             .receiveOnMainThread()
@@ -347,37 +378,6 @@ private extension Player {
             item?.textStyleRules = textStyleRules
         }
         .store(in: &cancellables)
-    }
-}
-
-private extension Player {
-    func configurePropertiesPublisher() {
-        propertiesPublisher
-            .receiveOnMainThread()
-            .weakAssign(to: \.properties, on: self)
-            .store(in: &cancellables)
-    }
-
-    func configureErrorPublisher() {
-        queuePublisher
-            .map(\.error)
-            .removeDuplicates { $0 as? NSError == $1 as? NSError }
-            .receiveOnMainThread()
-            .assign(to: &$error)
-    }
-
-    func configureCurrentIndexPublisher() {
-        queuePublisher
-            .slice(at: \.index)
-            .receiveOnMainThread()
-            .lane("player_current_index")
-            .assign(to: &$currentIndex)
-    }
-
-    func configurePlaybackSpeedPublisher() {
-        playbackSpeedPublisher()
-            .receiveOnMainThread()
-            .assign(to: &$_playbackSpeed)
     }
 }
 
