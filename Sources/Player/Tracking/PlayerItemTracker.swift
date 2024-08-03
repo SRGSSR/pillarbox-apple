@@ -42,10 +42,10 @@ public protocol PlayerItemTracker: AnyObject {
     /// This method can be called quite often. Implementations should avoid performing significant work unnecessarily.
     func updateProperties(with properties: PlayerProperties)
 
-    /// A method called when a metric event is received.
-    /// 
+    /// A method called when metric events are updated.
+    ///
     /// - Parameter event: The received event.
-    func receiveMetricEvent(_ event: MetricEvent)
+    func updateMetricEvents(with events: [MetricEvent])
 
     /// A method called when the tracker is disabled.
     ///

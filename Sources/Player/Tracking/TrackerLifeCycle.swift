@@ -9,6 +9,6 @@ import AVFoundation
 protocol TrackerLifeCycle {
     func enable(for player: AVPlayer)
     func updateProperties(with properties: PlayerProperties)
-    func receiveMetricEvent(_ event: MetricEvent)
+    func updateMetricEvents(with events: [MetricEvent])
     func disable(with properties: PlayerProperties)
 }

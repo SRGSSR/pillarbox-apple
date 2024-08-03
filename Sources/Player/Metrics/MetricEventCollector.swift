@@ -32,6 +32,7 @@ final class MetricEventCollector {
     private func configurePublishers(for items: QueueItems) {
         Publishers.Merge(itemMetricEventSubject, playerItemMetricEventSubject)
             .scan([]) { $0 + [$1] }
+            .removeDuplicates()
             .assign(to: &$metricEvents)
         items.item.metricEventPublisher()
             .assign(on: itemMetricEventSubject)
