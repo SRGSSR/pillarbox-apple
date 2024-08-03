@@ -55,7 +55,7 @@ final class Tracker: NSObject {
         item.enableTrackers(for: player)
         metricEventCollector.$metricEvents
             .sink { [item] events in
-                item.updateTrackerMetricEvents(with: events)
+                item.updateTrackersMetricEvents(to: events)
             }
             .store(in: &cancellables)
         publisher(for: \.playerItem)
@@ -65,7 +65,7 @@ final class Tracker: NSObject {
             .switchToLatest()
             .handleEvents(receiveOutput: { [item] properties in
                 // swiftlint:disable:previous trailing_closure
-                item.updateTrackerProperties(with: properties)
+                item.updateTrackersProperties(to: properties)
             })
             .weakAssign(to: \.properties, on: self)
             .store(in: &cancellables)

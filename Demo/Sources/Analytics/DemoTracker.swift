@@ -24,13 +24,13 @@ final class DemoTracker: PlayerItemTracker {
         Self.logger.debug("Enable demo tracker for \(self.id)")
     }
 
-    func updateMetadata(with metadata: Metadata) {
+    func updateMetadata(to metadata: Metadata) {
         Self.logger.debug("Update demo tracker metadata for \(self.id): \(metadata.title)")
     }
 
-    func updateProperties(with properties: PlayerProperties) {}
+    func updateProperties(to properties: PlayerProperties) {}
 
-    func updateMetricEvents(with events: [MetricEvent]) {
+    func updateMetricEvents(to events: [MetricEvent]) {
         Self.logger.debug("Update demo tracker metric events for \(self.id): \(events)")
     }
 

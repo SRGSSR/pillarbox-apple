@@ -33,19 +33,19 @@ public protocol PlayerItemTracker: AnyObject {
     /// A method called when metadata is updated.
     ///
     /// - Parameter metadata: The updated metadata.
-    func updateMetadata(with metadata: Metadata)
+    func updateMetadata(to metadata: Metadata)
 
     /// A method called when player properties have changed.
     ///
     /// - Parameter properties: The updated properties.
     ///
     /// This method can be called quite often. Implementations should avoid performing significant work unnecessarily.
-    func updateProperties(with properties: PlayerProperties)
+    func updateProperties(to properties: PlayerProperties)
 
     /// A method called when metric events are updated.
     ///
     /// - Parameter event: The received event.
-    func updateMetricEvents(with events: [MetricEvent])
+    func updateMetricEvents(to events: [MetricEvent])
 
     /// A method called when the tracker is disabled.
     ///

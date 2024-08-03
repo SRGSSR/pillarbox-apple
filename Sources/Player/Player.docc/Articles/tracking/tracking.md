@@ -30,8 +30,8 @@ Once types associated with an item tracker have been defined, start implementing
 
 1. ``PlayerItemTracker/init(configuration:)`` is called when the tracker and its item are created. This initializer receives an instance of the configuration type you defined above.
 2. ``PlayerItemTracker/enable(for:)`` is called when the associated item becomes the current one. You can perform player-related setup in this method, e.g. passing the underlying system player to a 3rd party SDK which requires it.
-3. ``PlayerItemTracker/updateMetadata(with:)`` is called when metadata is updated for the player item, following retrieval of a new ``Asset``. The method receives an instance of the metadata type you defined above.
-4. ``PlayerItemTracker/updateProperties(with:)`` is called when player properties change. Be careful that properties can change often and that your implementation should be as efficient as possible.
+3. ``PlayerItemTracker/updateMetadata(to:)`` is called when metadata is updated for the player item, following retrieval of a new ``Asset``. The method receives an instance of the metadata type you defined above.
+4. ``PlayerItemTracker/updateProperties(to:)`` is called when player properties change. Be careful that properties can change often and that your implementation should be as efficient as possible.
 5. ``PlayerItemTracker/disable()`` is called when the player item stops being the current one. Your implementation should cleanup resources acquired in ``PlayerItemTracker/enable(for:)``.
 6. Since item trackers are required to be classes you can use `deinit` to perform any necessary final cleanup when the tracker and its item are discarded.
 
