@@ -97,21 +97,21 @@ private extension CommandersActTracker {
         labels["media_player_display"] = "Pillarbox"
         labels["media_player_version"] = Player.version
 
-        labels["media_volume"] = volume(for: properties)
-        labels["media_audio_track"] = audioTrack(for: properties)
-        labels["media_audiodescription_on"] = audioDescription(for: properties)
-        labels["media_subtitles_on"] = subtitleOn(for: properties)
-        labels["media_subtitle_selection"] = subtitleSelection(for: properties)
+        labels["media_volume"] = volume(from: properties)
+        labels["media_audio_track"] = audioTrack(from: properties)
+        labels["media_audiodescription_on"] = audioDescription(from: properties)
+        labels["media_subtitles_on"] = subtitleOn(from: properties)
+        labels["media_subtitle_selection"] = subtitleSelection(from: properties)
 
         switch properties.streamType {
         case .onDemand:
-            labels["media_position"] = String(mediaPosition(for: properties))
+            labels["media_position"] = String(mediaPosition(from: properties))
         case .live:
             labels["media_position"] = String(playbackDuration())
             labels["media_timeshift"] = "0"
         case .dvr:
             labels["media_position"] = String(playbackDuration())
-            labels["media_timeshift"] = String(timeshiftOffset(for: properties))
+            labels["media_timeshift"] = String(timeshiftOffset(from: properties))
         default:
             break
         }
@@ -119,12 +119,12 @@ private extension CommandersActTracker {
         return labels
     }
 
-    func volume(for properties: PlayerProperties) -> String {
+    func volume(from properties: PlayerProperties) -> String {
         guard !properties.isMuted else { return "0" }
         return String(Int(AVAudioSession.sharedInstance().outputVolume * 100))
     }
 
-    func audioTrack(for properties: PlayerProperties) -> String {
+    func audioTrack(from properties: PlayerProperties) -> String {
         if case let .on(option) = properties.currentMediaOption(for: .audible) {
             return languageCode(from: option)
         }
@@ -133,7 +133,7 @@ private extension CommandersActTracker {
         }
     }
 
-    func audioDescription(for properties: PlayerProperties) -> String {
+    func audioDescription(from properties: PlayerProperties) -> String {
         if case let .on(option) = properties.currentMediaOption(for: .audible), option.hasMediaCharacteristic(.describesVideoForAccessibility) {
             return "true"
         }
@@ -142,7 +142,7 @@ private extension CommandersActTracker {
         }
     }
 
-    func subtitleOn(for properties: PlayerProperties) -> String {
+    func subtitleOn(from properties: PlayerProperties) -> String {
         if case let .on(option) = properties.currentMediaOption(for: .legible), !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles) {
             return "true"
         }
@@ -151,7 +151,7 @@ private extension CommandersActTracker {
         }
     }
 
-    func subtitleSelection(for properties: PlayerProperties) -> String? {
+    func subtitleSelection(from properties: PlayerProperties) -> String? {
         if case let .on(option) = properties.currentMediaOption(for: .legible), !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles) {
             return languageCode(from: option)
         }
@@ -160,7 +160,7 @@ private extension CommandersActTracker {
         }
     }
 
-    func mediaPosition(for properties: PlayerProperties) -> Int {
+    func mediaPosition(from properties: PlayerProperties) -> Int {
         Int(properties.time().timeInterval())
     }
 
@@ -168,7 +168,7 @@ private extension CommandersActTracker {
         Int(stopwatch.time())
     }
 
-    func timeshiftOffset(for properties: PlayerProperties) -> Int {
+    func timeshiftOffset(from properties: PlayerProperties) -> Int {
         Int(properties.endOffset().timeInterval())
     }
 
