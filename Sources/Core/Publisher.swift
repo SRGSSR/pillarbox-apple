@@ -202,8 +202,9 @@ public extension Publisher {
     ///
     /// - Parameter scheduler: A scheduler to use for tracking the timing of events.
     /// - Returns: A publisher that emits elements representing the date interval between the elements it receives.
-    func measureDateInterval<S>(scheduler: S = DispatchQueue.main) -> AnyPublisher<DateInterval, Failure>
-    where S: Scheduler, S.SchedulerTimeType == DispatchQueue.SchedulerTimeType {
+    func measureDateInterval<S>(
+        scheduler: S = DispatchQueue.main
+    ) -> AnyPublisher<DateInterval, Failure> where S: Scheduler, S.SchedulerTimeType == DispatchQueue.SchedulerTimeType {
         measureInterval(using: scheduler)
             .map { stride in
                 let date = Date()
