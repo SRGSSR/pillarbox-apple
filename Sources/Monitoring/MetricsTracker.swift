@@ -16,7 +16,6 @@ public final class MetricsTracker: PlayerItemTracker {
     }()
 
     private let sessionId = UUID()
-    private var mediaSource: DateInterval?
     private var stallDate: Date?
     private var metadata: Metadata?
     private var properties: PlayerProperties?
@@ -40,10 +39,8 @@ public final class MetricsTracker: PlayerItemTracker {
 
     public func updateMetricEvents(to events: [MetricEvent]) {
         switch events.last?.kind {
-        case let .assetLoading(dateInterval):
-            mediaSource = dateInterval
         case let .resourceLoading(dateInterval):
-            guard let mediaSource else { return }
+            guard let mediaSource = events.compactMap(Self.assetLoadingDateInterval(from:)).last else { return }
             print("\(Self.self): \(String(decoding: startPayload(mediaSource: mediaSource, asset: dateInterval)!, as: UTF8.self))")
         case .stall:
             stallDate = Date()
@@ -58,6 +55,17 @@ public final class MetricsTracker: PlayerItemTracker {
 
     public func disable(with properties: PlayerProperties) {
         print("\(Self.self): \(String(decoding: stopPayload(with: properties)!, as: UTF8.self))")
+    }
+}
+
+private extension MetricsTracker {
+    static func assetLoadingDateInterval(from event: MetricEvent) -> DateInterval? {
+        switch event.kind {
+        case let .assetLoading(dateInterval):
+            return dateInterval
+        default:
+            return nil
+        }
     }
 }
 
