@@ -57,7 +57,7 @@ public final class MetricsTracker: PlayerItemTracker {
     }
 
     public func disable(with properties: PlayerProperties) {
-        print("\(Self.self): \(String(decoding: stopPayload()!, as: UTF8.self))")
+        print("\(Self.self): \(String(decoding: stopPayload(with: properties)!, as: UTF8.self))")
     }
 }
 
@@ -96,8 +96,8 @@ private extension MetricsTracker {
         return try? Self.jsonEncoder.encode(payload)
     }
 
-    func stopPayload() -> Data? {
-        let metrics = properties?.metrics()
+    func stopPayload(with properties: PlayerProperties) -> Data? {
+        let metrics = properties.metrics()
         let payload = MetricPayload(
             sessionId: sessionId,
             eventName: .stop,
@@ -110,7 +110,7 @@ private extension MetricsTracker {
                 stallCount: UInt(metrics?.total.numberOfStalls ?? 0),
                 stallDuration: UInt(stallDuration),
                 playbackDuration: UInt((metrics?.total.playbackDuration ?? 0) * 1000),
-                playerPosition: UInt((properties?.time().seconds ?? 0) * 1000)
+                playerPosition: UInt(properties.time().seconds * 1000)
             )
         )
         return try? Self.jsonEncoder.encode(payload)
