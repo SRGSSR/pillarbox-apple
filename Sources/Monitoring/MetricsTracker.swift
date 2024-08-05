@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import AVFoundation
 import PillarboxPlayer
 import UIKit
 
@@ -17,10 +17,10 @@ public final class MetricsTracker: PlayerItemTracker {
 
     private let sessionId = UUID()
     private var mediaSource: DateInterval?
-    private weak var player: Player?
+    private var stallDate: Date?
     private var metadata: Metadata?
     private var properties: PlayerProperties?
-    private var stallDuration: UInt = 0
+    private var stallDuration: TimeInterval = 0
 
     public var description: String? {
         "Monitoring: \(sessionId)"
@@ -28,33 +28,35 @@ public final class MetricsTracker: PlayerItemTracker {
 
     public init(configuration: Void) {}
 
-    public func enable(for player: Player) {
-        self.player = player
-    }
+    public func enable(for player: AVPlayer) {}
 
-    public func updateMetadata(with metadata: Metadata) {
+    public func updateMetadata(to metadata: Metadata) {
         self.metadata = metadata
     }
 
-    public func updateProperties(with properties: PlayerProperties) {
+    public func updateProperties(to properties: PlayerProperties) {
         self.properties = properties
     }
 
-    public func receiveMetricEvent(_ event: MetricEvent) {
-        switch event.kind {
+    public func updateMetricEvents(to events: [MetricEvent]) {
+        switch events.last?.kind {
         case let .assetLoading(dateInterval):
             mediaSource = dateInterval
         case let .resourceLoading(dateInterval):
             guard let mediaSource else { return }
             print("\(Self.self): \(String(decoding: startPayload(mediaSource: mediaSource, asset: dateInterval)!, as: UTF8.self))")
-        case let .resumeAfterStall(dateInterval):
-            stallDuration += UInt(dateInterval.duration * 1000)
+        case .stall:
+            stallDate = Date()
+        case .resumeAfterStall:
+            if let stallDate {
+                stallDuration += Date().timeIntervalSince(stallDate)
+            }
         default:
             break
         }
     }
 
-    public func disable() {
+    public func disable(with properties: PlayerProperties) {
         print("\(Self.self): \(String(decoding: stopPayload()!, as: UTF8.self))")
     }
 }
@@ -106,9 +108,9 @@ private extension MetricsTracker {
                 bandwidth: UInt(metrics?.observedBitrate ?? 0),
                 bufferDuration: Self.bufferDuration(properties: properties),
                 stallCount: UInt(metrics?.total.numberOfStalls ?? 0),
-                stallDuration: stallDuration,
+                stallDuration: UInt(stallDuration),
                 playbackDuration: UInt((metrics?.total.playbackDuration ?? 0) * 1000),
-                playerPosition: UInt((player?.time.seconds ?? 0) * 1000)
+                playerPosition: UInt((properties?.time().seconds ?? 0) * 1000)
             )
         )
         return try? Self.jsonEncoder.encode(payload)
