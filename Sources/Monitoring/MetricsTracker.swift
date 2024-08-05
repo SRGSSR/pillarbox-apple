@@ -120,11 +120,16 @@ private extension MetricsTracker {
 
     func errorPayload(error: Error, severity: Severity) -> Data? {
         let error = error as NSError
-        let payload = MetricErrorData(
-            severity: severity,
-            name: "\(error.domain)(\(error.code))",
-            message: error.localizedDescription,
-            playerPosition: properties?.time().toMilliseconds
+        let payload = MetricPayload(
+            sessionId: sessionId,
+            eventName: .error,
+            timestamp: Date().timeIntervalSince1970,
+            data: MetricErrorData(
+                severity: severity,
+                name: "\(error.domain)(\(error.code))",
+                message: error.localizedDescription,
+                playerPosition: properties?.time().toMilliseconds
+            )
         )
         return try? Self.jsonEncoder.encode(payload)
     }
