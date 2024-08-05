@@ -5,6 +5,11 @@
 //
 
 struct MetricErrorData: Encodable {
+    enum Severity: String, Encodable {
+        case warning = "WARNING"
+        case fatal = "FATAL"
+    }
+
     let severity: Severity
     let name: String
     let message: String

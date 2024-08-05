@@ -34,8 +34,9 @@ public extension PlayerItem {
                 CommandersActTracker.adapter { $0.analyticsMetadata },
                 MetricsTracker.adapter { mediaMetadata in
                     .init(
-                        mediaId: mediaMetadata.mediaComposition.chapterUrn,
-                        mediaSource: mediaMetadata.resource.url.absoluteString
+                        id: mediaMetadata.mediaComposition.chapterUrn,
+                        metadataUrl: nil, // TODO: Use the media composition URL.
+                        assetUrl: mediaMetadata.resource.url
                     )
                 }
             ] + trackerAdapters

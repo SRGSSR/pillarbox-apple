@@ -79,22 +79,34 @@ private extension MetricsTracker {
             eventName: .start,
             timestamp: Date().timeIntervalSince1970,
             data: MetricStartData(
-                deviceId: UIDevice.current.identifierForVendor?.uuidString,
-                deviceModel: Self.deviceModel,
-                deviceType: Self.deviceType,
-                screenWidth: UInt(UIScreen.main.nativeBounds.width),
-                screenHeight: UInt(UIScreen.main.nativeBounds.height),
-                osName: UIDevice.current.systemName,
-                osVersion: UIDevice.current.systemVersion,
-                playerName: "Pillarbox",
-                playerPlatform: "Apple",
-                playerVersion: Player.version,
-                origin: Bundle.main.bundleIdentifier,
-                mediaId: metadata?.mediaId,
-                mediaSource: metadata?.mediaSource,
-                timeMetrics: TimeMetrics(events: events)
+                device: .init(
+                    id: UIDevice.current.identifierForVendor?.uuidString,
+                    model: Self.deviceModel,
+                    type: Self.deviceType
+                ),
+                os: .init(
+                    name: UIDevice.current.systemName,
+                    version: UIDevice.current.systemVersion
+                ),
+                screen: .init(
+                    width: Int(UIScreen.main.nativeBounds.width),
+                    height: Int(UIScreen.main.nativeBounds.height)
+                ),
+                player: .init(
+                    name: "Pillarbox",
+                    platform: "Apple",
+                    version: Player.version
+                ),
+                media: .init(
+                    id: metadata?.id,
+                    metadataUrl: metadata?.metadataUrl,
+                    assetUrl: metadata?.assetUrl,
+                    origin: Bundle.main.bundleIdentifier
+                ),
+                timeMetrics: .init(events: events)
             )
         )
+
         return try? Self.jsonEncoder.encode(payload)
     }
 
@@ -118,7 +130,7 @@ private extension MetricsTracker {
         return try? Self.jsonEncoder.encode(payload)
     }
 
-    func errorPayload(error: Error, severity: Severity) -> Data? {
+    func errorPayload(error: Error, severity: MetricErrorData.Severity) -> Data? {
         let error = error as NSError
         let payload = MetricPayload(
             sessionId: sessionId,
@@ -180,13 +192,15 @@ extension MetricsTracker {
 public extension MetricsTracker {
     /// Metadata associated with the tracker.
     struct Metadata {
-        let mediaId: String
-        let mediaSource: String
+        let id: String?
+        let metadataUrl: URL?
+        let assetUrl: URL?
 
         /// Creates metadata.
-        public init(mediaId: String, mediaSource: String) {
-            self.mediaId = mediaId
-            self.mediaSource = mediaSource
+        public init(id: String?, metadataUrl: URL?, assetUrl: URL?) {
+            self.id = id
+            self.metadataUrl = metadataUrl
+            self.assetUrl = assetUrl
         }
     }
 }
