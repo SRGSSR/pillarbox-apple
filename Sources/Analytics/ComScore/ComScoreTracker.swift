@@ -46,7 +46,6 @@ public final class ComScoreTracker: PlayerItemTracker {
         case (false, false):
             streamingAnalytics.notifyBufferStop()
             streamingAnalytics.notifyEvent(for: properties.playbackState, at: properties.rate)
-            renewPlaybackSessionIfNeeded(for: properties.playbackState)
         }
     }
 
@@ -58,12 +57,6 @@ public final class ComScoreTracker: PlayerItemTracker {
 }
 
 private extension ComScoreTracker {
-    func renewPlaybackSessionIfNeeded(for playbackState: PlaybackState) {
-        guard playbackState == .ended else { return }
-        createPlaybackSession()
-        addMetadata(metadata)
-    }
-
     func createPlaybackSession() {
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
