@@ -20,6 +20,7 @@ public final class MetricsTracker: PlayerItemTracker {
     private var metadata: Metadata?
     private var properties: PlayerProperties?
     private var stallDuration: TimeInterval = 0
+    private var isStarted = false
 
     public var description: String? {
         "Monitoring: \(sessionId)"
@@ -39,9 +40,9 @@ public final class MetricsTracker: PlayerItemTracker {
 
     public func updateMetricEvents(to events: [MetricEvent]) {
         switch events.last?.kind {
-        case let .resourceLoading(dateInterval):
-            guard let mediaSource = events.compactMap(Self.assetLoadingDateInterval(from:)).last else { return }
-            print("\(Self.self): \(String(decoding: startPayload(mediaSource: mediaSource, asset: dateInterval)!, as: UTF8.self))")
+        case .resourceLoading:
+            isStarted = true
+            print("\(Self.self): \(String(decoding: startPayload(from: events)!, as: UTF8.self))")
         case .stall:
             stallDate = Date()
         case .resumeAfterStall:
@@ -49,6 +50,9 @@ public final class MetricsTracker: PlayerItemTracker {
                 stallDuration += Date().timeIntervalSince(stallDate)
             }
         case let .failure(error):
+            if !isStarted {
+                print("\(Self.self): \(String(decoding: startPayload(from: events)!, as: UTF8.self))")
+            }
             print("\(Self.self): \(String(decoding: errorPayload(error: error, severity: .fatal)!, as: UTF8.self))")
         case let .warning(error):
             print("\(Self.self): \(String(decoding: errorPayload(error: error, severity: .warning)!, as: UTF8.self))")
@@ -60,17 +64,7 @@ public final class MetricsTracker: PlayerItemTracker {
     public func disable(with properties: PlayerProperties) {
         print("\(Self.self): \(String(decoding: stopPayload(with: properties)!, as: UTF8.self))")
         sessionId = UUID()
-    }
-}
-
-private extension MetricsTracker {
-    static func assetLoadingDateInterval(from event: MetricEvent) -> DateInterval? {
-        switch event.kind {
-        case let .assetLoading(dateInterval):
-            return dateInterval
-        default:
-            return nil
-        }
+        isStarted = false
     }
 }
 
@@ -81,10 +75,7 @@ private extension MetricsTracker {
         return loadedTimeRange.isValid ? UInt(loadedTimeRange.duration.seconds * 1000) : 0
     }
 
-    func startPayload(mediaSource: DateInterval, asset: DateInterval) -> Data? {
-        let asset = UInt(round(asset.duration * 1000))
-        let mediaSource = UInt(round(mediaSource.duration * 1000))
-        let timeMetrics = TimeMetrics(mediaSource: mediaSource, asset: asset, total: mediaSource + asset)
+    func startPayload(from events: [MetricEvent]) -> Data? {
         let payload = MetricPayload(
             sessionId: sessionId,
             eventName: .start,
@@ -103,7 +94,7 @@ private extension MetricsTracker {
                 origin: Bundle.main.bundleIdentifier,
                 mediaId: metadata?.mediaId,
                 mediaSource: metadata?.mediaSource,
-                timeMetrics: timeMetrics
+                timeMetrics: TimeMetrics(events: events)
             )
         )
         return try? Self.jsonEncoder.encode(payload)
@@ -131,11 +122,12 @@ private extension MetricsTracker {
 
     func errorPayload(error: Error, severity: Severity) -> Data? {
         let error = error as NSError
+        let playerPosition = properties?.time().seconds
         let payload = MetricErrorData(
             severity: severity,
             name: "\(error.domain)(\(error.code))",
             message: error.localizedDescription,
-            playerPosition: UInt((properties?.time().seconds ?? 0) * 1000)
+            playerPosition: playerPosition != nil ? UInt(playerPosition! * 1000) : nil
         )
         return try? Self.jsonEncoder.encode(payload)
     }

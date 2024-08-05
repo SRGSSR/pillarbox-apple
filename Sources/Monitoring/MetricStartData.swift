@@ -18,5 +18,5 @@ struct MetricStartData: Encodable {
     let origin: String?
     let mediaId: String?
     let mediaSource: String?
-    let timeMetrics: TimeMetrics
+    let timeMetrics: TimeMetrics?
 }
