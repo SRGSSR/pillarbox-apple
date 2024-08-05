@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-
 /// A protocol associating metadata with an asset.
 public protocol AssetMetadata {
     /// Returns associated player metadata.

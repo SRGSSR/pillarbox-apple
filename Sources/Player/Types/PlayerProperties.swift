@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreMedia
 
 /// A type describing player properties.
@@ -57,6 +58,21 @@ public extension PlayerProperties {
     }
 }
 
+public extension PlayerProperties {
+    /// The current media option for a characteristic.
+    ///
+    /// - Parameter characteristic: The characteristic.
+    /// - Returns: The current option.
+    ///
+    /// Unlike `selectedMediaOption(for:)` this method provides the currently applied option. This method can
+    /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
+    /// and `.off` options (forced options might be returned where applicable).
+    func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
+        guard let option = mediaSelectionProperties.selectedOption(for: characteristic) else { return .off }
+        return .on(option)
+    }
+}
+
 // MARK: CoreProperties
 
 public extension PlayerProperties {
@@ -97,6 +113,13 @@ public extension PlayerProperties {
     /// A Boolean describing whether the player is currently muted.
     var isMuted: Bool {
         coreProperties.isMuted
+    }
+}
+
+public extension PlayerProperties {
+    /// The player time.
+    func time() -> CMTime {
+        coreProperties.time()
     }
 
     /// The current player metrics, if available.

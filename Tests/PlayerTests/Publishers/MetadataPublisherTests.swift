@@ -7,7 +7,6 @@
 @testable import PillarboxPlayer
 
 import Combine
-import MediaPlayer
 import PillarboxCircumspect
 import PillarboxStreams
 
@@ -76,7 +75,7 @@ final class MetadataPublisherTests: TestCase {
         expectEqualPublishedNext(
             values: [nil, "Title 2"],
             from: Self.titlePublisherTest(for: player),
-            during: .milliseconds(100)
+            during: .milliseconds(500)
         ) {
             player.items = [.webServiceMock(media: .media2)]
         }

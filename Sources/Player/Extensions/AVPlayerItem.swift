@@ -7,7 +7,6 @@
 import AVFoundation
 
 private var kIdKey: Void?
-private var kMetricLogKey: Void?
 
 extension AVPlayerItem {
     var timeRange: CMTimeRange {
@@ -103,16 +102,5 @@ extension AVPlayerItem {
     func withId(_ id: UUID) -> AVPlayerItem {
         self.id = id
         return self
-    }
-}
-
-extension AVPlayerItem {
-    var metricLog: MetricLog {
-        if let metricLog = objc_getAssociatedObject(self, &kMetricLogKey) as? MetricLog {
-            return metricLog
-        }
-        let metricLog = MetricLog()
-        objc_setAssociatedObject(self, &kMetricLogKey, metricLog, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return metricLog
     }
 }

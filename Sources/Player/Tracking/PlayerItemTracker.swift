@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
+
 /// A protocol for custom player item tracking implementation.
 ///
 /// For more information about implementing custom trackers please read <doc:tracking>.
@@ -26,27 +28,34 @@ public protocol PlayerItemTracker: AnyObject {
     /// A method called when the tracker is enabled for a player.
     ///
     /// - Parameter player: The player for which the tracker must be enabled.
-    func enable(for player: Player)
+    func enable(for player: AVPlayer)
 
     /// A method called when metadata is updated.
     ///
     /// - Parameter metadata: The updated metadata.
-    func updateMetadata(with metadata: Metadata)
+    ///
+    /// This method is always called, whether the tracker is currently active or not.
+    func updateMetadata(to metadata: Metadata)
 
     /// A method called when player properties have changed.
     ///
     /// - Parameter properties: The updated properties.
     ///
-    /// This method can be called quite often. Implementations should avoid performing significant work unnecessarily.
-    func updateProperties(with properties: PlayerProperties)
+    /// This method can be called quite often, but only when the tracker is active. Implementations should avoid
+    /// performing significant work unnecessarily.
+    func updateProperties(to properties: PlayerProperties)
 
-    /// A method called when a metric event is received.
-    /// 
-    /// - Parameter event: The received event.
-    func receiveMetricEvent(_ event: MetricEvent)
+    /// A method called when metric events are updated.
+    ///
+    /// - Parameter events: All events that have currently been recorded for the item.
+    ///
+    /// This method is only called when the tracker is active.
+    func updateMetricEvents(to events: [MetricEvent])
 
     /// A method called when the tracker is disabled.
-    func disable()
+    ///
+    /// - Parameter properties: The updated properties.
+    func disable(with properties: PlayerProperties)
 }
 
 public extension PlayerItemTracker {

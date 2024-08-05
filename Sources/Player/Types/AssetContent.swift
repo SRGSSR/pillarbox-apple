@@ -13,6 +13,10 @@ struct AssetContent {
     let metadata: PlayerMetadata
     let configuration: PlayerItemConfiguration
 
+    var isLoaded: Bool {
+        !resource.isLoading && !resource.isFailing
+    }
+
     static func loading(id: UUID) -> Self {
         .init(id: id, resource: .loading, metadata: .empty, configuration: .default)
     }

@@ -23,7 +23,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
     func testItemPlayback() {
         let player = Player()
         let publisher = TrackerLifeCycleMock.StatePublisher()
-        expectEqualPublished(values: [.initialized, .enabled], from: publisher, during: .seconds(2)) {
+        expectEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher, during: .seconds(2)) {
             player.append(.simple(
                 url: Stream.onDemand.url,
                 trackerAdapters: [TrackerLifeCycleMock.adapter(statePublisher: publisher)]
@@ -35,7 +35,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
     func testItemEntirePlayback() {
         let player = Player()
         let publisher = TrackerLifeCycleMock.StatePublisher()
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: publisher) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents, .disabled], from: publisher) {
             player.append(.simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [TrackerLifeCycleMock.adapter(statePublisher: publisher)]
@@ -44,10 +44,22 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         }
     }
 
+    func testDisableDuringDeinitPlayer() {
+        var player: Player? = Player()
+        let publisher = TrackerLifeCycleMock.StatePublisher()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: publisher) {
+            player?.append(.simple(
+                url: Stream.shortOnDemand.url,
+                trackerAdapters: [TrackerLifeCycleMock.adapter(statePublisher: publisher)]
+            ))
+            player = nil
+        }
+    }
+
     func testNetworkLoadedItemEntirePlayback() {
         let player = Player()
         let publisher = TrackerLifeCycleMock.StatePublisher()
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: publisher) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents, .disabled], from: publisher) {
             player.append(.mock(
                 url: Stream.shortOnDemand.url,
                 loadedAfter: 1,
@@ -60,7 +72,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
     func testFailedItem() {
         let player = Player()
         let publisher = TrackerLifeCycleMock.StatePublisher()
-        expectEqualPublished(values: [.initialized, .enabled], from: publisher, during: .milliseconds(500)) {
+        expectEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher, during: .milliseconds(500)) {
             player.append(.simple(
                 url: Stream.unavailable.url,
                 trackerAdapters: [TrackerLifeCycleMock.adapter(statePublisher: publisher)]
@@ -72,7 +84,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
     func testMoveCurrentItem() {
         let publisher = TrackerLifeCycleMock.StatePublisher()
         let player = Player()
-        expectAtLeastEqualPublished(values: [.initialized, .enabled], from: publisher) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher) {
             player.append(.simple(
                 url: Stream.onDemand.url,
                 trackerAdapters: [TrackerLifeCycleMock.adapter(statePublisher: publisher)]

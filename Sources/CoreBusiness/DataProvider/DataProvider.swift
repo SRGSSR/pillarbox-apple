@@ -6,7 +6,6 @@
 
 import Combine
 import Foundation
-import UIKit
 
 final class DataProvider {
     private let server: Server

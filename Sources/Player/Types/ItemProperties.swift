@@ -28,6 +28,13 @@ struct ItemProperties: Equatable {
     let metricsState: MetricsState
 
     let isStalled: Bool
+}
+
+extension ItemProperties {
+    func time() -> CMTime {
+        guard let item else { return .invalid }
+        return item.currentTime()
+    }
 
     func metrics() -> Metrics? {
         guard let item else { return nil }

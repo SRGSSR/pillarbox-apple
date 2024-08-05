@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Analytics"
-               BuildableName = "Analytics"
-               BlueprintName = "Analytics"
+               BlueprintIdentifier = "PillarboxAnalytics"
+               BuildableName = "PillarboxAnalytics"
+               BlueprintName = "PillarboxAnalytics"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,9 +28,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Core"
-               BuildableName = "Core"
-               BlueprintName = "Core"
+               BlueprintIdentifier = "PillarboxCore"
+               BuildableName = "PillarboxCore"
+               BlueprintName = "PillarboxCore"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,9 +42,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Circumspect"
-               BuildableName = "Circumspect"
-               BlueprintName = "Circumspect"
+               BlueprintIdentifier = "PillarboxCircumspect"
+               BuildableName = "PillarboxCircumspect"
+               BlueprintName = "PillarboxCircumspect"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -56,9 +56,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CoreBusiness"
-               BuildableName = "CoreBusiness"
-               BlueprintName = "CoreBusiness"
+               BlueprintIdentifier = "PillarboxCoreBusiness"
+               BuildableName = "PillarboxCoreBusiness"
+               BlueprintName = "PillarboxCoreBusiness"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -70,9 +70,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Player"
-               BuildableName = "Player"
-               BlueprintName = "Player"
+               BlueprintIdentifier = "PillarboxPlayer"
+               BuildableName = "PillarboxPlayer"
+               BlueprintName = "PillarboxPlayer"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -98,9 +98,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CoreTests"
-               BuildableName = "CoreTests"
-               BlueprintName = "CoreTests"
+               BlueprintIdentifier = "CircumspectTests"
+               BuildableName = "CircumspectTests"
+               BlueprintName = "CircumspectTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -112,9 +112,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CircumspectTests"
-               BuildableName = "CircumspectTests"
-               BlueprintName = "CircumspectTests"
+               BlueprintIdentifier = "CoreTests"
+               BuildableName = "CoreTests"
+               BlueprintName = "CoreTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -239,9 +239,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "Analytics"
-            BuildableName = "Analytics"
-            BlueprintName = "Analytics"
+            BlueprintIdentifier = "PillarboxAnalytics"
+            BuildableName = "PillarboxAnalytics"
+            BlueprintName = "PillarboxAnalytics"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

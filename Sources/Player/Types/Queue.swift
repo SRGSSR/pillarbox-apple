@@ -21,17 +21,17 @@ struct Queue {
         return elements[index].item
     }
 
+    var items: QueueItems? {
+        guard let item, let playerItem else { return nil }
+        return .init(item: item, playerItem: playerItem)
+    }
+
     var error: Error? {
         itemState.error
     }
 
     private var playerItem: AVPlayerItem? {
         itemState.item
-    }
-
-    var items: QueueItems? {
-        guard let item, let playerItem else { return nil }
-        return .init(item: item, playerItem: playerItem)
     }
 
     init(elements: [QueueElement], itemState: ItemState) {

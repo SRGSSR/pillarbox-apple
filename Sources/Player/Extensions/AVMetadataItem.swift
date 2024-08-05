@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import Combine
 
 extension AVMetadataItem {
     convenience init?<T>(identifier: AVMetadataIdentifier, value: T?) {

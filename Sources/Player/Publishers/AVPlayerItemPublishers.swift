@@ -43,19 +43,34 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
+    func propertiesPublisher(with player: QueuePlayer) -> AnyPublisher<PlayerProperties, Never> {
+        Publishers.CombineLatest3(
+            propertiesPublisher(),
+            player.playbackPropertiesPublisher(),
+            player.seekTimePublisher()
+        )
+        .map { playerItemProperties, playbackProperties, seekTime in
+            .init(
+                coreProperties: .init(
+                    itemProperties: playerItemProperties.itemProperties,
+                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
+                    playbackProperties: playbackProperties
+                ),
+                timeProperties: playerItemProperties.timeProperties,
+                isEmpty: playerItemProperties.isEmpty,
+                seekTime: seekTime
+            )
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
     private func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
         Publishers.CombineLatest3(
             publisher(for: \.loadedTimeRanges),
             publisher(for: \.seekableTimeRanges)
                 .lane("player_item_seekable_time_ranges"),
             publisher(for: \.isPlaybackLikelyToKeepUp)
-                .measureFirstDateInterval { [weak self] interval in
-                    guard let self else { return }
-                    let event = MetricEvent(kind: .resourceLoading(interval), time: currentTime())
-                    metricLog.appendEvent(event)
-                } when: { isPlaybackLikelyToKeepUp in
-                    isPlaybackLikelyToKeepUp
-                }
         )
         .map { .init(loadedTimeRanges: $0, seekableTimeRanges: $1, isPlaybackLikelyToKeepUp: $2) }
         .removeDuplicates()
@@ -149,28 +164,15 @@ extension AVPlayerItem {
         )
         .prepend(false)
         .removeDuplicates()
-        .measureEachDateInterval { [weak self] dateInterval in
-            guard let self else { return }
-            let event = MetricEvent(kind: .resumeAfterStall(dateInterval), time: currentTime())
-            metricLog.appendEvent(event)
-        } after: { [weak self] isStalled in
-            guard let self, isStalled else { return false }
-            let event = MetricEvent(kind: .stall, time: currentTime())
-            metricLog.appendEvent(event)
-            return true
-        } until: { isStalled in
-            !isStalled
-        }
         .eraseToAnyPublisher()
     }
 }
 
 extension AVPlayerItem {
     func errorPublisher() -> AnyPublisher<Error, Never> {
-        Publishers.Merge3(
+        Publishers.Merge(
             intrinsicErrorPublisher(),
-            playbackErrorPublisher(),
-            errorLogMonitoringPublisher()
+            playbackErrorPublisher()
         )
         .eraseToAnyPublisher()
     }
@@ -190,28 +192,6 @@ extension AVPlayerItem {
             .compactMap { $0.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error }
             .eraseToAnyPublisher()
     }
-
-    private func errorLogMonitoringPublisher() -> AnyPublisher<Error, Never> {
-        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
-            .compactMap { notification -> Error? in
-                guard let lastErrorEvent = (notification.object as? AVPlayerItem)?.errorLog()?.events.last else { return nil }
-                return NSError(
-                    domain: lastErrorEvent.errorDomain,
-                    code: lastErrorEvent.errorStatusCode,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: lastErrorEvent.errorComment
-                    ].compactMapValues { $0 }
-                )
-            }
-            .handleEvents(receiveOutput: { [weak self] error in
-                // swiftlint:disable:previous trailing_closure
-                guard let self else { return }
-                let event = MetricEvent(kind: .warning(error), time: currentTime())
-                metricLog.appendEvent(event)
-            })
-            .filter { _ in false }
-            .eraseToAnyPublisher()
-    }
 }
 
 extension AVPlayerItem {
@@ -223,6 +203,82 @@ extension AVPlayerItem {
                 state.updated(with: item.accessLog(), at: item.currentTime())
             }
             .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+}
+
+extension AVPlayerItem {
+    func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        Publishers.Merge4(
+            resourceLoadingMetricEventPublisher(),
+            failureMetricEventPublisher(),
+            warningMetricEventPublisher(),
+            stallEventPublisher()
+        )
+        .eraseToAnyPublisher()
+    }
+
+    func resourceLoadingMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        publisher(for: \.isPlaybackLikelyToKeepUp)
+            .first { $0 }
+            .measureDateInterval()
+            .weakCapture(self)
+            .map { dateInterval, item in
+                MetricEvent(
+                    kind: .resourceLoading(dateInterval),
+                    date: dateInterval.end,
+                    time: item.currentTime()
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func failureMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        errorPublisher()
+            .first()
+            .weakCapture(self)
+            .map { error, item in
+                MetricEvent(
+                    kind: .failure(error),
+                    time: item.currentTime()
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func warningMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
+            .compactMap { notification -> Error? in
+                guard let lastErrorEvent = (notification.object as? AVPlayerItem)?.errorLog()?.events.last else { return nil }
+                return NSError(
+                    domain: lastErrorEvent.errorDomain,
+                    code: lastErrorEvent.errorStatusCode,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: lastErrorEvent.errorComment
+                    ].compactMapValues { $0 }
+                )
+            }
+            .weakCapture(self)
+            .map { error, item in
+                MetricEvent(
+                    kind: .warning(error),
+                    time: item.currentTime()
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func stallEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        isStalledPublisher()
+            .dropFirst()
+            .removeDuplicates()
+            .weakCapture(self)
+            .map { isStalled, item in
+                MetricEvent(
+                    kind: isStalled ? .stall : .resumeAfterStall,
+                    time: item.currentTime()
+                )
+            }
             .eraseToAnyPublisher()
     }
 }

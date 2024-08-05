@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import PillarboxStreams
 
 enum MediaMock: String {
     case media1
@@ -33,10 +34,7 @@ extension PlayerItem {
     ) -> Self {
         let publisher = Just(Asset.simple(url: url, metadata: withMetadata))
             .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(
-            publisher: publisher,
-            trackerAdapters: trackerAdapters
-        )
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
     static func mock(
@@ -53,23 +51,29 @@ extension PlayerItem {
             url: url,
             metadata: AssetMetadataMock(title: "title0", subtitle: "subtitle0")
         ))
-        return .init(
-            publisher: publisher,
-            trackerAdapters: trackerAdapters
-        )
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
     static func webServiceMock(media: MediaMock, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
         let url = URL(string: "http://localhost:8123/json/\(media).json")!
+        return webServiceMock(url: url, trackerAdapters: trackerAdapters)
+    }
+
+    static func failing(
+        loadedAfter delay: TimeInterval,
+        trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []
+    ) -> Self {
+        let url = URL(string: "http://localhost:8123/missing.json")!
+        return webServiceMock(url: url, trackerAdapters: trackerAdapters)
+    }
+
+    private static func webServiceMock(url: URL, trackerAdapters: [TrackerAdapter<AssetMetadataMock>]) -> Self {
         let publisher = URLSession(configuration: .default).dataTaskPublisher(for: url)
             .map(\.data)
             .decode(type: AssetMetadataMock.self, decoder: JSONDecoder())
             .map { metadata in
-                Asset.simple(url: url, metadata: metadata)
+                Asset.simple(url: Stream.onDemand.url, metadata: metadata)
             }
-        return .init(
-            publisher: publisher,
-            trackerAdapters: trackerAdapters
-        )
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 }

@@ -6,10 +6,8 @@
 
 @testable import PillarboxPlayer
 
-import Combine
 import CoreMedia
 import Nimble
-import PillarboxCircumspect
 import PillarboxStreams
 
 final class MetricsCollectorEventsTests: TestCase {

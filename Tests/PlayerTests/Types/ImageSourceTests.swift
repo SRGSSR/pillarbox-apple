@@ -63,7 +63,7 @@ final class ImageSourceTests: TestCase {
     }
 
     func testFailingUrl() {
-        let url = URL(string: "https://localhost/missing.jpg")!
+        let url = URL(string: "https://localhost:8123/missing.jpg")!
         let source = ImageSource.url(url)
         expectSimilarPublished(
             values: [.url(url), .none],

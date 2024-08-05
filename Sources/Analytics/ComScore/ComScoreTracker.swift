@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import ComScore
 import PillarboxPlayer
 
@@ -15,25 +16,23 @@ import PillarboxPlayer
 public final class ComScoreTracker: PlayerItemTracker {
     private lazy var streamingAnalytics = ComScoreStreamingAnalytics()
     private var metadata: [String: String] = [:]
-    private weak var player: Player?
 
     public init(configuration: Void) {}
 
-    public func enable(for player: Player) {
-        self.player = player
+    public func enable(for player: AVPlayer) {
         createPlaybackSession()
     }
 
-    public func updateMetadata(with metadata: [String: String]) {
+    public func updateMetadata(to metadata: [String: String]) {
         self.metadata = metadata
         addMetadata(metadata)
     }
 
-    public func updateProperties(with properties: PlayerProperties) {
-        guard !metadata.isEmpty, let player else { return }
+    public func updateProperties(to properties: PlayerProperties) {
+        guard !metadata.isEmpty else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
-        streamingAnalytics.setProperties(for: properties, time: player.time, streamType: properties.streamType)
+        streamingAnalytics.setPlaybackPosition(from: properties)
 
         switch (properties.isSeeking, properties.isBuffering) {
         case (true, true):
@@ -51,26 +50,27 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
     }
 
-    public func receiveMetricEvent(_ event: MetricEvent) {}
+    public func updateMetricEvents(to events: [MetricEvent]) {}
 
-    public func disable() {
+    public func disable(with properties: PlayerProperties) {
         streamingAnalytics = ComScoreStreamingAnalytics()
-        player = nil
     }
+}
 
-    private func renewPlaybackSessionIfNeeded(for playbackState: PlaybackState) {
+private extension ComScoreTracker {
+    func renewPlaybackSessionIfNeeded(for playbackState: PlaybackState) {
         guard playbackState == .ended else { return }
         createPlaybackSession()
         addMetadata(metadata)
     }
 
-    private func createPlaybackSession() {
+    func createPlaybackSession() {
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(Player.version)
     }
 
-    private func addMetadata(_ metadata: [String: String]) {
+    func addMetadata(_ metadata: [String: String]) {
         let builder = SCORStreamingContentMetadataBuilder()
         if let globals = Analytics.shared.comScoreGlobals {
             builder.setCustomLabels(metadata.merging(globals.labels) { _, new in new })

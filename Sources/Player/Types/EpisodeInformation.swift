@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// Information about an episode.
 public enum EpisodeInformation: Equatable {
     /// Season and episode number.

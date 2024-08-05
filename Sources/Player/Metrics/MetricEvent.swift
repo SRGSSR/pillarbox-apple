@@ -31,9 +31,7 @@ public struct MetricEvent: Hashable {
         case stall
 
         /// Resume after stall.
-        ///
-        /// Measures the time for the player to recover after a stall.
-        case resumeAfterStall(DateInterval)
+        case resumeAfterStall
     }
 
     private let id = UUID()
@@ -89,13 +87,13 @@ extension MetricEvent.Kind: CustomStringConvertible {
             return "[WARNING] \(error.localizedDescription)"
         case .stall:
             return "Stall"
-        case let .resumeAfterStall(dateInterval):
-            return "Resume after stall for \(Self.duration(from: dateInterval.duration))"
+        case .resumeAfterStall:
+            return "Resume after stall"
         }
     }
 
     private static func duration(from interval: TimeInterval) -> String {
-        String(format: "%.3fs", interval)
+        String(format: "%.6fs", interval)
     }
 }
 

@@ -24,14 +24,6 @@ public final class Player: ObservableObject, Equatable {
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
 
-    /// A Boolean setting whether trackers must be enabled or not.
-    @Published public var isTrackingEnabled = true {
-        didSet {
-            guard isTrackingEnabled != oldValue else { return }
-            configureTracking()
-        }
-    }
-
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
 
@@ -50,7 +42,11 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private var currentTracker: CurrentTracker?
+    @Published var tracker: Tracker? {
+        didSet {
+            tracker?.isEnabled = isTrackingEnabled
+        }
+    }
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -75,26 +71,14 @@ public final class Player: ObservableObject, Equatable {
     /// When implementing a custom SwiftUI user interface, you should use `View.onReceive(player:assign:to:)` to read
     /// fast-paced property changes into corresponding local bindings.
     public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
-        Publishers.CombineLatest3(
-            playerItemPropertiesPublisher(),
-            queuePlayer.playbackPropertiesPublisher(),
-            queuePlayer.seekTimePublisher()
-        )
-        .map { playerItemProperties, playbackProperties, seekTime in
-            .init(
-                coreProperties: .init(
-                    itemProperties: playerItemProperties.itemProperties,
-                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
-                    playbackProperties: playbackProperties
-                ),
-                timeProperties: playerItemProperties.timeProperties,
-                isEmpty: playerItemProperties.isEmpty,
-                seekTime: seekTime
-            )
-        }
-        .removeDuplicates()
-        .share(replay: 1)
-        .eraseToAnyPublisher()
+        currentPlayerItemPublisher()
+            .map { [queuePlayer] item in
+                guard let item else { return Just(PlayerProperties.empty).eraseToAnyPublisher() }
+                return item.propertiesPublisher(with: queuePlayer)
+            }
+            .switchToLatest()
+            .share(replay: 1)
+            .eraseToAnyPublisher()
     }()
 
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
@@ -128,6 +112,13 @@ public final class Player: ObservableObject, Equatable {
         }
         set {
             queuePlayer.isMuted = newValue
+        }
+    }
+
+    /// A Boolean setting whether trackers must be enabled or not.
+    public var isTrackingEnabled = true {
+        didSet {
+            tracker?.isEnabled = isTrackingEnabled
         }
     }
 
@@ -213,10 +204,10 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
-        configureTracking()
 
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
+        configureTrackerPublisher()
         configureControlCenterPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
@@ -261,35 +252,105 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
     }
 
-    private func configureTracking() {
-        currentTracker = isTrackingEnabled ? CurrentTracker(player: self) : nil
-    }
-
-    private func configureControlCenterPublishers() {
-        guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
-        configureControlCenterMetadataUpdatePublisher()
-        configureControlCenterRemoteCommandUpdatePublisher()
-    }
-
-    private func configureQueuePlayerUpdatePublishers() {
-        configureQueuePlayerItemsPublisher()
-        configureRateUpdatePublisher()
-        configureTextStyleRulesUpdatePublisher()
-    }
-
-    private func configurePublishedPropertyPublishers() {
-        configurePropertiesPublisher()
-        configureErrorPublisher()
-        configureCurrentIndexPublisher()
-        configurePlaybackSpeedPublisher()
-    }
-
     deinit {
         uninstallRemoteCommands()
 
         // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 
         // see https://github.com/SRGSSR/pillarbox-apple/issues/520
         queuePlayer.volume = 0
+    }
+}
+
+private extension Player {
+    func configurePublishedPropertyPublishers() {
+        configurePropertiesPublisher()
+        configureErrorPublisher()
+        configureCurrentIndexPublisher()
+        configurePlaybackSpeedPublisher()
+    }
+
+    func configureQueuePlayerUpdatePublishers() {
+        configureQueuePlayerItemsPublisher()
+        configureRateUpdatePublisher()
+        configureTextStyleRulesUpdatePublisher()
+    }
+
+    func configureTrackerPublisher() {
+        queuePublisher
+            .slice(at: \.items)
+            .sink { [weak self] items in
+                self?.updateTracker(with: items)
+            }
+            .store(in: &cancellables)
+    }
+
+    func configureControlCenterPublishers() {
+        guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
+        configureControlCenterMetadataUpdatePublisher()
+        configureControlCenterRemoteCommandUpdatePublisher()
+    }
+
+    func configureMetadataPublisher() {
+        metadataPublisher
+            .receiveOnMainThread()
+            .assign(to: &$metadata)
+    }
+
+    func configureBlockedTimeRangesPublishers() {
+        nextUnblockedTimePublisher()
+            .sink { [weak self] time in
+                self?.seek(at(time))
+            }
+            .store(in: &cancellables)
+
+        metadataPublisher.slice(at: \.blockedTimeRanges)
+            .assign(to: \.blockedTimeRanges, on: queuePlayer)
+            .store(in: &cancellables)
+    }
+
+    func updateTracker(with items: QueueItems?) {
+        if let items {
+            if items.item == tracker?.item {
+                tracker?.playerItem = items.playerItem
+            }
+            else {
+                tracker = Tracker(items: items, player: queuePlayer, isEnabled: isTrackingEnabled)
+            }
+        }
+        else {
+            tracker = nil
+        }
+    }
+}
+
+private extension Player {
+    func configurePropertiesPublisher() {
+        propertiesPublisher
+            .receiveOnMainThread()
+            .weakAssign(to: \.properties, on: self)
+            .store(in: &cancellables)
+    }
+
+    func configureErrorPublisher() {
+        queuePublisher
+            .map(\.error)
+            .removeDuplicates { $0 as? NSError == $1 as? NSError }
+            .receiveOnMainThread()
+            .assign(to: &$error)
+    }
+
+    func configureCurrentIndexPublisher() {
+        queuePublisher
+            .slice(at: \.index)
+            .receiveOnMainThread()
+            .lane("player_current_index")
+            .assign(to: &$currentIndex)
+    }
+
+    func configurePlaybackSpeedPublisher() {
+        playbackSpeedPublisher()
+            .receiveOnMainThread()
+            .assign(to: &$_playbackSpeed)
     }
 }
 
@@ -322,55 +383,6 @@ private extension Player {
             item?.textStyleRules = textStyleRules
         }
         .store(in: &cancellables)
-    }
-}
-
-private extension Player {
-    func configurePropertiesPublisher() {
-        propertiesPublisher
-            .receiveOnMainThread()
-            .weakAssign(to: \.properties, on: self)
-            .store(in: &cancellables)
-    }
-
-    func configureErrorPublisher() {
-        queuePublisher
-            .map(\.error)
-            .removeDuplicates { $0 as? NSError == $1 as? NSError }
-            .receiveOnMainThread()
-            .assign(to: &$error)
-    }
-
-    func configureCurrentIndexPublisher() {
-        queuePublisher
-            .slice(at: \.index)
-            .receiveOnMainThread()
-            .lane("player_current_index")
-            .assign(to: &$currentIndex)
-    }
-
-    func configureMetadataPublisher() {
-        metadataPublisher
-            .receiveOnMainThread()
-            .assign(to: &$metadata)
-    }
-
-    func configurePlaybackSpeedPublisher() {
-        playbackSpeedPublisher()
-            .receiveOnMainThread()
-            .assign(to: &$_playbackSpeed)
-    }
-
-    func configureBlockedTimeRangesPublishers() {
-        nextUnblockedTimePublisher()
-            .sink { [weak self] time in
-                self?.seek(at(time))
-            }
-            .store(in: &cancellables)
-
-        metadataPublisher.slice(at: \.blockedTimeRanges)
-            .assign(to: \.blockedTimeRanges, on: queuePlayer)
-            .store(in: &cancellables)
     }
 }
 

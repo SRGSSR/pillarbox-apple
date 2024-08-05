@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Combine
-import CoreMedia
 
 extension QueuePlayer {
     /// Publishes the current time, smoothing out emitted values during seeks.

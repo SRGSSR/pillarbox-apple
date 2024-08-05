@@ -6,7 +6,6 @@
 
 @testable import PillarboxPlayer
 
-import AVFoundation
 import Nimble
 
 final class AccessLogEventTests: TestCase {

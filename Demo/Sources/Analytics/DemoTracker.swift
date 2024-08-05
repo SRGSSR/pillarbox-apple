@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import AVFoundation
 import os
 import PillarboxPlayer
 
@@ -20,22 +20,22 @@ final class DemoTracker: PlayerItemTracker {
         Self.logger.debug("Init demo tracker \(self.id)")
     }
 
-    func enable(for player: Player) {
+    func enable(for player: AVPlayer) {
         Self.logger.debug("Enable demo tracker for \(self.id)")
     }
 
-    func updateMetadata(with metadata: Metadata) {
+    func updateMetadata(to metadata: Metadata) {
         Self.logger.debug("Update demo tracker metadata for \(self.id): \(metadata.title)")
     }
 
-    func updateProperties(with properties: PlayerProperties) {}
+    func updateProperties(to properties: PlayerProperties) {}
 
-    func receiveMetricEvent(_ event: MetricEvent) {
-        Self.logger.debug("Receive metric event for \(self.id): \(event)")
+    func updateMetricEvents(to events: [MetricEvent]) {
+        Self.logger.debug("Update demo tracker metric events for \(self.id): \(events)")
     }
 
-    func disable() {
-        Self.logger.debug("Disable demo tracker for \(self.id)")
+    func disable(with properties: PlayerProperties) {
+        Self.logger.debug("Disable demo tracker for \(self.id) - \(properties.time().seconds)")
     }
 
     deinit {

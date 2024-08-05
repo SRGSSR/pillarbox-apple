@@ -27,7 +27,6 @@ public final class PlayerItem: Equatable {
     private let trackerAdapters: [any TrackerLifeCycle]
 
     let id = UUID()
-    let metricLog = MetricLog()
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
@@ -92,35 +91,27 @@ public final class PlayerItem: Equatable {
     ) where P: Publisher, P.Output == Asset<M> {
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id, metricLog] in
-            Publishers.CombineLatest(
-                publisher,
-                Just(trackerAdapters).setFailureType(to: P.Failure.self)
-            )
-            .handleEvents(receiveSubscription: { _ in
-                // swiftlint:disable:previous trailing_closure
-                metricLog.clear()
-            })
-            .measureDateInterval { dateInterval in
-                let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
-                metricLog.appendEvent(event)
-            }
-            .map { asset, trackerAdapters in
-                trackerAdapters.forEach { adapter in
-                    adapter.updateMetadata(with: asset.metadata)
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
+            publisher
+                .handleEvents(receiveOutput: { asset in
+                    // swiftlint:disable:previous trailing_closure
+                    trackerAdapters.forEach { adapter in
+                        adapter.updateMetadata(to: asset.metadata)
+                    }
+                })
+                .map { asset in
+                    Publishers.CombineLatest(
+                        Just(asset),
+                        metadataMapper(asset.metadata).playerMetadataPublisher()
+                    )
                 }
-                return Publishers.CombineLatest(
-                    Just(asset),
-                    metadataMapper(asset.metadata).playerMetadataPublisher()
-                )
-            }
-            .switchToLatest()
-            .map { asset, metadata in
-                AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration)
-            }
-            .catch { error in
-                Just(.failing(id: id, error: error))
-            }
+                .switchToLatest()
+                .map { asset, metadata in
+                    AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration)
+                }
+                .catch { error in
+                    Just(.failing(id: id, error: error))
+                }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)
@@ -132,12 +123,12 @@ public final class PlayerItem: Equatable {
     }
 
     static func load(for id: UUID) {
-        Self.trigger.activate(for: TriggerId.load(id))
+        trigger.activate(for: TriggerId.load(id))
     }
 
     static func reload(for id: UUID) {
-        Self.trigger.activate(for: TriggerId.reset(id))
-        Self.trigger.activate(for: TriggerId.load(id))
+        trigger.activate(for: TriggerId.reset(id))
+        trigger.activate(for: TriggerId.load(id))
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
@@ -146,27 +137,27 @@ public final class PlayerItem: Equatable {
 }
 
 extension PlayerItem {
-    func enableTrackers(for player: Player) {
+    func enableTrackers(for player: AVPlayer) {
         trackerAdapters.forEach { adapter in
             adapter.enable(for: player)
         }
     }
 
-    func updateTrackerProperties(_ properties: PlayerProperties) {
+    func updateTrackersProperties(to properties: PlayerProperties) {
         trackerAdapters.forEach { adapter in
-            adapter.updateProperties(with: properties)
+            adapter.updateProperties(to: properties)
         }
     }
 
-    func receiveMetricEvent(_ event: MetricEvent) {
+    func updateTrackersMetricEvents(to events: [MetricEvent]) {
         trackerAdapters.forEach { adapter in
-            adapter.receiveMetricEvent(event)
+            adapter.updateMetricEvents(to: events)
         }
     }
 
-    func disableTrackers() {
+    func disableTrackers(with properties: PlayerProperties) {
         trackerAdapters.forEach { adapter in
-            adapter.disable()
+            adapter.disable(with: properties)
         }
     }
 }
@@ -312,6 +303,6 @@ extension PlayerItem {
 
 extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
-        "\(content)"
+        "\(id)"
     }
 }
