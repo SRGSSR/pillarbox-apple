@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Combine
-import PillarboxCore
 
 final class MetricEventCollector {
     private let item: PlayerItem
