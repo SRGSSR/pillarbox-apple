@@ -69,10 +69,8 @@ public final class MetricsTracker: PlayerItemTracker {
 }
 
 private extension MetricsTracker {
-    static func bufferDuration(properties: PlayerProperties?) -> UInt? {
-        guard let properties else { return nil }
-        let loadedTimeRange = properties.loadedTimeRange
-        return loadedTimeRange.isValid ? UInt(loadedTimeRange.duration.seconds * 1000) : 0
+    static func bufferDuration(properties: PlayerProperties?) -> Int? {
+        properties?.loadedTimeRange.duration.toMilliseconds
     }
 
     func startPayload(from events: [MetricEvent]) -> Data? {
@@ -108,13 +106,13 @@ private extension MetricsTracker {
             timestamp: Date().timeIntervalSince1970,
             data: MetricEventData(
                 url: metrics?.uri,
-                bitrate: UInt(metrics?.indicatedBitrate ?? 0),
-                bandwidth: UInt(metrics?.observedBitrate ?? 0),
+                bitrate: metrics?.indicatedBitrate?.toBytes,
+                bandwidth: metrics?.observedBitrate?.toBytes,
                 bufferDuration: Self.bufferDuration(properties: properties),
-                stallCount: UInt(metrics?.total.numberOfStalls ?? 0),
-                stallDuration: UInt(stallDuration),
-                playbackDuration: UInt((metrics?.total.playbackDuration ?? 0) * 1000),
-                playerPosition: UInt(properties.time().seconds * 1000)
+                stallCount: metrics?.total.numberOfStalls,
+                stallDuration: stallDuration.toMilliseconds,
+                playbackDuration: metrics?.total.playbackDuration.toMilliseconds, // FIXME: Use Stopwatch.
+                playerPosition: properties.time().toMilliseconds
             )
         )
         return try? Self.jsonEncoder.encode(payload)
@@ -122,14 +120,29 @@ private extension MetricsTracker {
 
     func errorPayload(error: Error, severity: Severity) -> Data? {
         let error = error as NSError
-        let playerPosition = properties?.time().seconds
         let payload = MetricErrorData(
             severity: severity,
             name: "\(error.domain)(\(error.code))",
             message: error.localizedDescription,
-            playerPosition: playerPosition != nil ? UInt(playerPosition! * 1000) : nil
+            playerPosition: properties?.time().toMilliseconds
         )
         return try? Self.jsonEncoder.encode(payload)
+    }
+}
+
+extension CMTime {
+    var toMilliseconds: Int? {
+        isValid ? seconds.toMilliseconds : nil
+    }
+}
+
+extension Double {
+    var toMilliseconds: Int {
+        Int(roundl(self * 1000))
+    }
+
+    var toBytes: Int {
+        Int(roundl(self / 8))
     }
 }
 

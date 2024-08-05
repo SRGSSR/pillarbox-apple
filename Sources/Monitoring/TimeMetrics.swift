@@ -8,9 +8,9 @@ import Foundation
 import PillarboxPlayer
 
 struct TimeMetrics: Encodable {
-    let mediaSource: UInt?
-    let asset: UInt?
-    let total: UInt
+    let mediaSource: Int?
+    let asset: Int?
+    let total: Int
 
     init?(events: [MetricEvent]) {
         mediaSource = events.compactMap(Self.assetLoadingDateInterval(from:)).last
@@ -31,19 +31,19 @@ struct TimeMetrics: Encodable {
 }
 
 private extension TimeMetrics {
-    static func assetLoadingDateInterval(from event: MetricEvent) -> UInt? {
+    static func assetLoadingDateInterval(from event: MetricEvent) -> Int? {
         switch event.kind {
         case let .assetLoading(dateInterval):
-            return UInt(round(dateInterval.duration * 1000))
+            return dateInterval.duration.toMilliseconds
         default:
             return nil
         }
     }
 
-    static func resourceLoadingDateInterval(from event: MetricEvent) -> UInt? {
+    static func resourceLoadingDateInterval(from event: MetricEvent) -> Int? {
         switch event.kind {
         case let .resourceLoading(dateInterval):
-            return UInt(round(dateInterval.duration * 1000))
+            return dateInterval.duration.toMilliseconds
         default:
             return nil
         }
