@@ -83,7 +83,7 @@ private extension CommandersActTracker {
         default:
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: event.rawValue,
-                labels: labels(properties: properties)
+                labels: labels(from: properties)
             ))
             lastEvent = event
         }
@@ -91,7 +91,7 @@ private extension CommandersActTracker {
 }
 
 private extension CommandersActTracker {
-    func labels(properties: PlayerProperties) -> [String: String] {
+    func labels(from properties: PlayerProperties) -> [String: String] {
         var labels = metadata
 
         labels["media_player_display"] = "Pillarbox"
