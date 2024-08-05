@@ -15,7 +15,7 @@ public final class MetricsTracker: PlayerItemTracker {
         return encoder
     }()
 
-    private let sessionId = UUID()
+    private var sessionId = UUID()
     private var stallDate: Date?
     private var metadata: Metadata?
     private var properties: PlayerProperties?
@@ -48,6 +48,10 @@ public final class MetricsTracker: PlayerItemTracker {
             if let stallDate {
                 stallDuration += Date().timeIntervalSince(stallDate)
             }
+        case let .failure(error):
+            print("\(Self.self): \(String(decoding: errorPayload(error: error, severity: .fatal)!, as: UTF8.self))")
+        case let .warning(error):
+            print("\(Self.self): \(String(decoding: errorPayload(error: error, severity: .warning)!, as: UTF8.self))")
         default:
             break
         }
@@ -55,6 +59,7 @@ public final class MetricsTracker: PlayerItemTracker {
 
     public func disable(with properties: PlayerProperties) {
         print("\(Self.self): \(String(decoding: stopPayload(with: properties)!, as: UTF8.self))")
+        sessionId = UUID()
     }
 }
 
@@ -120,6 +125,17 @@ private extension MetricsTracker {
                 playbackDuration: UInt((metrics?.total.playbackDuration ?? 0) * 1000),
                 playerPosition: UInt(properties.time().seconds * 1000)
             )
+        )
+        return try? Self.jsonEncoder.encode(payload)
+    }
+
+    func errorPayload(error: Error, severity: Severity) -> Data? {
+        let error = error as NSError
+        let payload = MetricErrorData(
+            severity: severity,
+            name: "\(error.domain)(\(error.code))",
+            message: error.localizedDescription,
+            playerPosition: UInt((properties?.time().seconds ?? 0) * 1000)
         )
         return try? Self.jsonEncoder.encode(payload)
     }

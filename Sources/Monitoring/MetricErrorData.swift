@@ -9,5 +9,4 @@ struct MetricErrorData: Encodable {
     let name: String
     let message: String
     let playerPosition: UInt
-    let log: String
 }
