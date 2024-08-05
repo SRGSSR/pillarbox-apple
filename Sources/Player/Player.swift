@@ -278,19 +278,10 @@ private extension Player {
     func configureTrackerPublisher() {
         queuePublisher
             .slice(at: \.items)
-            .scan(nil) { [weak self] initial, next in
-                if let self, let next {
-                    guard next.item != initial?.item else {
-                        initial?.playerItem = next.playerItem
-                        return initial
-                    }
-                    return Tracker(items: next, player: queuePlayer, isEnabled: isTrackingEnabled)
-                }
-                else {
-                    return nil
-                }
+            .sink { [weak self] items in
+                self?.updateTracker(with: items)
             }
-            .assign(to: &$tracker)
+            .store(in: &cancellables)
     }
 
     func configureControlCenterPublishers() {
@@ -315,6 +306,20 @@ private extension Player {
         metadataPublisher.slice(at: \.blockedTimeRanges)
             .assign(to: \.blockedTimeRanges, on: queuePlayer)
             .store(in: &cancellables)
+    }
+
+    func updateTracker(with items: QueueItems?) {
+        if let items {
+            if items.item == tracker?.item {
+                tracker?.playerItem = items.playerItem
+            }
+            else {
+                tracker = Tracker(items: items, player: queuePlayer, isEnabled: isTrackingEnabled)
+            }
+        }
+        else {
+            tracker = nil
+        }
     }
 }
 
