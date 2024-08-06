@@ -8,10 +8,10 @@ import Foundation
 
 extension Double {
     var toMilliseconds: Int {
-        Int(roundl(self * 1000))
+        Int((self * 1000).rounded())
     }
 
     var toBytes: Int {
-        Int(roundl(self / 8))
+        Int((self / 8).rounded())
     }
 }

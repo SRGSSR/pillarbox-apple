@@ -726,7 +726,9 @@ private struct PlaybackMessageView: View {
                 Text(subtitle)
                     .foregroundColor(Color(uiColor: .lightGray))
                     .font(.subheadline)
+#if os(iOS)
                     .textSelection(.enabled)
+#endif
             }
         }
         .padding()
