@@ -41,6 +41,7 @@ public final class MetricsTracker: PlayerItemTracker {
         updateStopwatch(with: properties)
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     public func updateMetricEvents(to events: [MetricEvent]) {
         switch events.last?.kind {
         case .resourceLoading:
@@ -49,9 +50,8 @@ public final class MetricsTracker: PlayerItemTracker {
         case .stall:
             stallDate = Date()
         case .resumeAfterStall:
-            if let stallDate {
-                stallDuration += Date().timeIntervalSince(stallDate)
-            }
+            guard let stallDate else { break }
+            stallDuration += Date().timeIntervalSince(stallDate)
         case let .failure(error):
             if !isStarted {
                 print("\(Self.self): \(String(decoding: startPayload(from: events)!, as: UTF8.self))")
@@ -67,8 +67,25 @@ public final class MetricsTracker: PlayerItemTracker {
     public func disable(with properties: PlayerProperties) {
         print("\(Self.self): \(String(decoding: stopPayload(with: properties)!, as: UTF8.self))")
         sessionId = UUID()
+        stallDuration = 0
         isStarted = false
         stopwatch.reset()
+    }
+}
+
+public extension MetricsTracker {
+    /// Metadata associated with the tracker.
+    struct Metadata {
+        let id: String?
+        let metadataUrl: URL?
+        let assetUrl: URL?
+
+        /// Creates metadata.
+        public init(id: String?, metadataUrl: URL?, assetUrl: URL?) {
+            self.id = id
+            self.metadataUrl = metadataUrl
+            self.assetUrl = assetUrl
+        }
     }
 }
 
@@ -160,23 +177,7 @@ private extension MetricsTracker {
     }
 }
 
-extension CMTime {
-    var toMilliseconds: Int? {
-        isValid ? seconds.toMilliseconds : nil
-    }
-}
-
-extension Double {
-    var toMilliseconds: Int {
-        Int(roundl(self * 1000))
-    }
-
-    var toBytes: Int {
-        Int(roundl(self / 8))
-    }
-}
-
-extension MetricsTracker {
+private extension MetricsTracker {
     static let deviceType: String = {
         guard !ProcessInfo.processInfo.isRunningOnMac else { return "Computer" }
         switch UIDevice.current.userInterfaceIdiom {
@@ -200,20 +201,4 @@ extension MetricsTracker {
             String(cString: pointer)
         }
     }()
-}
-
-public extension MetricsTracker {
-    /// Metadata associated with the tracker.
-    struct Metadata {
-        let id: String?
-        let metadataUrl: URL?
-        let assetUrl: URL?
-
-        /// Creates metadata.
-        public init(id: String?, metadataUrl: URL?, assetUrl: URL?) {
-            self.id = id
-            self.metadataUrl = metadataUrl
-            self.assetUrl = assetUrl
-        }
-    }
 }

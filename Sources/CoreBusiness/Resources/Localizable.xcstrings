@@ -36,42 +36,6 @@
         }
       }
     },
-    "The data is invalid." : {
-      "comment" : "Generic error message returned when data is invalid",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Die Daten sind ungültig."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The data is invalid."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les données sont invalides."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I dati non sono validi."
-          }
-        },
-        "rm" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Las datas n'èn betg valaivlas."
-          }
-        }
-      }
-    },
     "This commercial content is not available." : {
       "comment" : "Blocking reason description message",
       "localizations" : {

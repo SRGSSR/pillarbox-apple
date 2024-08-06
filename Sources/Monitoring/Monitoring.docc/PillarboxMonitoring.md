@@ -1,6 +1,6 @@
 # ``PillarboxMonitoring``
 
-Monitor playback performance.
+Monitor playback activity.
 
 ## Overview
 

@@ -7,7 +7,6 @@
 import AVFoundation
 import Combine
 import PillarboxAnalytics
-import PillarboxMonitoring
 import PillarboxPlayer
 
 public extension PlayerItem {
@@ -28,7 +27,7 @@ public extension PlayerItem {
         configuration: PlayerItemConfiguration = .default
     ) -> Self {
         .init(
-            publisher: publisher(for: urn, server: server, configuration: configuration),
+            publisher: publisher(forUrn: urn, server: server, configuration: configuration),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
                 CommandersActTracker.adapter { $0.analyticsMetadata }
@@ -84,7 +83,7 @@ public extension PlayerItem {
 }
 
 private extension PlayerItem {
-    static func publisher(for urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
+    static func publisher(forUrn urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
         let dataProvider = DataProvider(server: server)
         return dataProvider.mediaMetadataPublisher(forUrn: urn)
             .map { metadata in

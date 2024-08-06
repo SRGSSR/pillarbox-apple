@@ -5,10 +5,12 @@
 //
 
 @testable import PillarboxMonitoring
+
+import Nimble
 import XCTest
 
 final class MetricsTrackerTests: XCTestCase {
     func testEmpty() {
-        print("testEmpty")
+        expect(true).to(beTrue())
     }
 }
