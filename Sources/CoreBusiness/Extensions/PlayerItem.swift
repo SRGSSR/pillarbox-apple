@@ -93,15 +93,9 @@ public extension PlayerItem {
 private extension PlayerItem {
     static func publisher(for urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
         let dataProvider = DataProvider(server: server)
-        return dataProvider.mediaCompositionPublisher(forUrn: urn)
-            .tryMap { mediaCompositionResponse in
-                asset(
-                    metadata: try MediaMetadata(
-                        mediaCompositionResponse: mediaCompositionResponse,
-                        dataProvider: dataProvider
-                    ),
-                    configuration: configuration
-                )
+        return dataProvider.mediaMetadataPublisher(forUrn: urn)
+            .map { metadata in
+                asset(metadata: metadata, configuration: configuration)
             }
             .eraseToAnyPublisher()
     }

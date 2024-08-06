@@ -21,7 +21,7 @@ public struct MediaMetadata {
     /// The playback context.
     public let mediaComposition: MediaComposition
 
-    
+    /// The URL at which the playback context was retrieved.
     public let mediaCompositionUrl: URL?
 
     /// The resource to be played.
@@ -52,10 +52,7 @@ public struct MediaMetadata {
         return analyticsMetadata
     }
 
-    init(
-        mediaCompositionResponse: MediaCompositionResponse,
-        dataProvider: DataProvider
-    ) throws {
+    init(mediaCompositionResponse: MediaCompositionResponse, dataProvider: DataProvider) throws {
         let mediaComposition = mediaCompositionResponse.mediaComposition
         let mainChapter = mediaComposition.mainChapter
         if let blockingReason = mainChapter.blockingReason {

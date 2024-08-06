@@ -38,6 +38,7 @@
     },
     "The data is invalid." : {
       "comment" : "Generic error message returned when data is invalid",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

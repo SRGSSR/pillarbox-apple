@@ -22,4 +22,11 @@ final class DataProviderTests: XCTestCase {
             from: DataProvider().mediaCompositionPublisher(forUrn: "urn:rts:video:unknown")
         )
     }
+
+    func testBlockedMediaMetadata() {
+        expectFailure(
+            DataError.blocked(withMessage: "Some message"),
+            from: DataProvider().mediaMetadataPublisher(forUrn: "urn:rts:video:13382911")
+        )
+    }
 }
