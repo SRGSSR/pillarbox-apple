@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 
 private struct _PeriodicTimePublisher: Publisher {
     typealias Output = CMTime
@@ -21,7 +22,7 @@ private struct _PeriodicTimePublisher: Publisher {
         self.queue = queue
     }
 
-    func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Never, S.Input == Output {
+    func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
         let subscription = PeriodicTimeSubscription(subscriber: subscriber, player: player, interval: interval, queue: queue)
         subscriber.receive(subscription: subscription)
     }
@@ -32,5 +33,53 @@ extension Publishers {
         _PeriodicTimePublisher(player: player, interval: interval, queue: queue)
             .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
             .eraseToAnyPublisher()
+    }
+}
+
+extension _PeriodicTimePublisher {
+    private final class PeriodicTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
+        private var subscriber: S?
+        private let player: AVPlayer
+        private let interval: CMTime
+        private let queue: DispatchQueue
+
+        private let buffer = DemandBuffer<CMTime>()
+        private var timeObserver: Any?
+
+        init(subscriber: S, player: AVPlayer, interval: CMTime, queue: DispatchQueue) {
+            self.subscriber = subscriber
+            self.player = player
+            self.interval = interval
+            self.queue = queue
+        }
+
+        func request(_ demand: Subscribers.Demand) {
+            if timeObserver == nil {
+                timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
+                    self?.send(time)
+                }
+            }
+            process(buffer.request(demand))
+        }
+
+        private func send(_ time: CMTime) {
+            process(buffer.append(time))
+        }
+
+        func cancel() {
+            if let timeObserver {
+                player.removeTimeObserver(timeObserver)
+                self.timeObserver = nil
+            }
+            subscriber = nil
+        }
+
+        private func process(_ values: [CMTime]) {
+            guard let subscriber else { return }
+            values.forEach { value in
+                let demand = subscriber.receive(value)
+                request(demand)
+            }
+        }
     }
 }
