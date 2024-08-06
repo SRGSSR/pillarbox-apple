@@ -18,6 +18,11 @@ public final class Player: ObservableObject, Equatable {
     /// The player version.
     public static let version = PackageInfo.version
 
+    /// The current item.
+    public var currentItem: PlayerItem? {
+        tracker?.item
+    }
+
     /// The last error received by the player.
     @Published public private(set) var error: Error?
 
