@@ -8,6 +8,10 @@ import Combine
 
 #if compiler(>=6.0)
 /// A publisher that delivers output from an `AsyncSequence`.
+///
+/// > Important: `AsyncSequence` [does not currently support](https://forums.swift.org/t/consuming-an-asyncstream-from-multiple-tasks/54453/3)
+///   multiple consumers. The same limitation applies to `AsyncSequencePublisher`. To support multiple subscribers
+///   use a stored publisher that is shared using `share()` or ``share(replay:)``.
 @available(iOS 18.0, tvOS 18.0, *)
 public struct AsyncSequencePublisher<Output, Failure>: Publisher where Failure: Error {
     private let sequence: any AsyncSequence<Output, Failure>
