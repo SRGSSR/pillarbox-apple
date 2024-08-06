@@ -22,11 +22,4 @@ final class DataProviderTests: XCTestCase {
             from: DataProvider().mediaCompositionPublisher(forUrn: "urn:rts:video:unknown")
         )
     }
-
-    func testBlockedMediaComposition() {
-        expectFailure(
-            DataError.blocked(withMessage: "Some message"),
-            from: DataProvider().playableMediaCompositionPublisher(forUrn: "urn:rts:video:13382911")
-        )
-    }
 }

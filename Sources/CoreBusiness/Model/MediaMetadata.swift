@@ -57,7 +57,11 @@ public struct MediaMetadata {
         dataProvider: DataProvider
     ) throws {
         let mediaComposition = mediaCompositionResponse.mediaComposition
-        guard let resource = mediaComposition.mainChapter.recommendedResource else {
+        let mainChapter = mediaComposition.mainChapter
+        if let blockingReason = mainChapter.blockingReason {
+            throw DataError.blocked(withMessage: blockingReason.description)
+        }
+        guard let resource = mainChapter.recommendedResource else {
             throw DataError.noResourceAvailable
         }
         self.mediaComposition = mediaComposition
