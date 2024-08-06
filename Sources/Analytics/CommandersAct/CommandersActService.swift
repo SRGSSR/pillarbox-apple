@@ -11,7 +11,7 @@ final class CommandersActService {
     private var vendor: Vendor?
 
     private static func device() -> String {
-        guard !ProcessInfo.processInfo.isDesktopApp else { return "desktop" }
+        guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop" }
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
             return "phone"

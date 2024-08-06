@@ -6,22 +6,29 @@
 
 import Foundation
 
-final class Stopwatch {
+/// A stopwatch.
+public final class Stopwatch {
     private var date: Date?
     private var total: TimeInterval = 0
 
-    func start() {
+    /// Creates a stopwatch.
+    public init() {}
+
+    /// Starts the stopwatch.
+    public func start() {
         guard date == nil else { return }
         date = Date()
     }
 
-    func stop() {
+    /// Stops the stopwatch.
+    public func stop() {
         guard let date else { return }
         total += Date().timeIntervalSince(date)
         self.date = nil
     }
 
-    func time() -> TimeInterval {
+    /// The time accumulated by the stopwatch.
+    public func time() -> TimeInterval {
         if let date {
             return total + Date().timeIntervalSince(date)
         }
@@ -30,7 +37,8 @@ final class Stopwatch {
         }
     }
 
-    func reset() {
+    /// Resets the stopwatch.
+    public func reset() {
         date = nil
         total = 0
     }

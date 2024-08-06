@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import CoreMedia
 
-extension ProcessInfo {
-    var isDesktopApp: Bool {
-        isMacCatalystApp || isiOSAppOnMac
+extension CMTime {
+    var toMilliseconds: Int? {
+        isValid ? seconds.toMilliseconds : nil
     }
 }

@@ -22,31 +22,22 @@ final class DataProvider {
         return decoder
     }
 
-    private static func error(from mediaComposition: MediaComposition) -> Error? {
-        let mainChapter = mediaComposition.mainChapter
-        if let blockingReason = mainChapter.blockingReason {
-            return DataError.blocked(withMessage: blockingReason.description)
-        }
-        else {
-            return nil
-        }
-    }
-
-    func mediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
+    func mediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaCompositionResponse, Error> {
         session.dataTaskPublisher(for: server.mediaCompositionRequest(forUrn: urn))
             .mapHttpErrors()
-            .map(\.data)
-            .decode(type: MediaComposition.self, decoder: Self.decoder())
+            .tryMap { data, response in
+                MediaCompositionResponse(
+                    mediaComposition: try Self.decoder().decode(MediaComposition.self, from: data),
+                    response: response
+                )
+            }
             .eraseToAnyPublisher()
     }
 
-    func playableMediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
+    func mediaMetadataPublisher(forUrn urn: String) -> AnyPublisher<MediaMetadata, Error> {
         mediaCompositionPublisher(forUrn: urn)
-            .tryMap { mediaComposition in
-                if let error = Self.error(from: mediaComposition) {
-                    throw error
-                }
-                return mediaComposition
+            .tryMap { response in
+                try MediaMetadata(mediaCompositionResponse: response, dataProvider: self)
             }
             .eraseToAnyPublisher()
     }

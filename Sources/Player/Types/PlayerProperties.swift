@@ -156,6 +156,13 @@ public extension PlayerProperties {
         timeProperties.seekableTimeRange
     }
 
+    /// The time range which has been loaded.
+    ///
+    /// Returns `.invalid` when the time range is unknown.
+    var loadedTimeRange: CMTimeRange {
+        timeProperties.loadedTimeRange
+    }
+
     /// The buffer position.
     ///
     /// Returns a value between 0 and 1 indicating up to where content has been loaded and is available for

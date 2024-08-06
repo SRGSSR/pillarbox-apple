@@ -4,11 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import PillarboxAnalytics
+@testable import PillarboxCore
 
 import Nimble
+import XCTest
 
-final class StopwatchTests: TestCase {
+final class StopwatchTests: XCTestCase {
     func testCreation() {
         let stopwatch = Stopwatch()
         wait(for: .milliseconds(500))
@@ -19,7 +20,7 @@ final class StopwatchTests: TestCase {
         let stopwatch = Stopwatch()
         stopwatch.start()
         wait(for: .milliseconds(500))
-        expect(stopwatch.time().toMilliseconds).to(beCloseTo(500, within: 100))
+        expect(stopwatch.time() * 1000).to(beCloseTo(500, within: 100))
     }
 
     func testStartAndStop() {
@@ -28,14 +29,14 @@ final class StopwatchTests: TestCase {
         wait(for: .milliseconds(200))
         stopwatch.stop()
         wait(for: .milliseconds(200))
-        expect(stopwatch.time().toMilliseconds).to(beCloseTo(200, within: 100))
+        expect(stopwatch.time() * 1000).to(beCloseTo(200, within: 100))
     }
 
     func testStopWithoutStart() {
         let stopwatch = Stopwatch()
         stopwatch.stop()
         wait(for: .milliseconds(200))
-        expect(stopwatch.time().toMilliseconds).to(beCloseTo(0, within: 100))
+        expect(stopwatch.time() * 1000).to(beCloseTo(0, within: 100))
     }
 
     func testReset() {
@@ -53,7 +54,7 @@ final class StopwatchTests: TestCase {
         wait(for: .milliseconds(200))
         stopwatch.start()
         wait(for: .milliseconds(200))
-        expect(stopwatch.time().toMilliseconds).to(beCloseTo(400, within: 100))
+        expect(stopwatch.time() * 1000).to(beCloseTo(400, within: 100))
     }
 
     func testAccumulation() {
@@ -64,6 +65,6 @@ final class StopwatchTests: TestCase {
         wait(for: .milliseconds(200))
         stopwatch.start()
         wait(for: .milliseconds(200))
-        expect(stopwatch.time().toMilliseconds).to(beCloseTo(400, within: 100))
+        expect(stopwatch.time() * 1000).to(beCloseTo(400, within: 100))
     }
 }

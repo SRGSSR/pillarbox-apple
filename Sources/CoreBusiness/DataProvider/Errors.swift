@@ -23,12 +23,6 @@ struct DataError: LocalizedError {
         comment: "Generic error message returned when no playable resources could be found"
     ))
 
-    static let malformedData = Self(errorDescription: String(
-        localized: "The data is invalid.",
-        bundle: .module,
-        comment: "Generic error message returned when data is invalid"
-    ))
-
     let errorDescription: String?
 
     static func http(from response: URLResponse) -> Self? {

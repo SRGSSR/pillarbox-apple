@@ -9,7 +9,7 @@ import AVFoundation
 /// An adapter which instantiates and manages a tracker of a specified type.
 ///
 /// An adapter transforms metadata delivered by a player item into the metadata format required by the tracker.
-public class TrackerAdapter<M> {
+public struct TrackerAdapter<M> {
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
 
@@ -35,6 +35,10 @@ public class TrackerAdapter<M> {
 }
 
 extension TrackerAdapter: TrackerLifeCycle {
+    var description: String? {
+        tracker.description
+    }
+
     func enable(for player: AVPlayer) {
         tracker.enable(for: player)
     }

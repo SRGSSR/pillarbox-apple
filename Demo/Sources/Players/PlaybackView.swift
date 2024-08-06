@@ -714,13 +714,30 @@ private struct MainSystemView: View {
 
 // Behavior: h-hug, v-hug
 private struct PlaybackMessageView: View {
-    let message: String
+    let title: String
+    let subtitle: String?
 
     var body: some View {
-        Text(message)
-            .multilineTextAlignment(.center)
-            .foregroundColor(.white)
-            .padding()
+        VStack {
+            Text(title)
+                .foregroundColor(.white)
+                .font(.body)
+            if let subtitle {
+                Text(subtitle)
+                    .foregroundColor(Color(uiColor: .lightGray))
+                    .font(.subheadline)
+#if os(iOS)
+                    .textSelection(.enabled)
+#endif
+            }
+        }
+        .padding()
+        .multilineTextAlignment(.center)
+    }
+
+    init(title: String, subtitle: String? = nil) {
+        self.title = title
+        self.subtitle = subtitle
     }
 }
 
@@ -772,10 +789,14 @@ private struct ErrorView: View {
     let description: String
     @ObservedObject var player: Player
 
+    private var subtitle: String? {
+        player.currentItem?.trackerDescriptions.joined(separator: ", ")
+    }
+
     var body: some View {
         VStack {
             PlaybackButton(player: player)
-            PlaybackMessageView(message: description)
+            PlaybackMessageView(title: description, subtitle: subtitle)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .topLeading) {
@@ -811,7 +832,7 @@ struct PlaybackView: View {
                     .persistentSystemOverlays(.hidden)
             }
             else {
-                PlaybackMessageView(message: "No content")
+                PlaybackMessageView(title: "No content")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(alignment: .topLeading) {
                         CloseButton()

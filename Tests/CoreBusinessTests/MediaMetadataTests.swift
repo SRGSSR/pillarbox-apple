@@ -10,13 +10,18 @@ import Nimble
 import XCTest
 
 final class MediaMetadataTests: XCTestCase {
-    func testStandardMetadata() {
-        let mediaComposition = Mock.mediaComposition(.onDemand)
-        let metadata = MediaMetadata(
-            mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!,
-            dataProvider: DataProvider(server: .production)
+    private static func metadata(_ kind: Mock.MediaCompositionKind) throws -> MediaMetadata {
+        try MediaMetadata(
+            mediaCompositionResponse: .init(
+                mediaComposition: Mock.mediaComposition(kind),
+                response: .init()
+            ),
+            dataProvider: DataProvider()
         )
+    }
+
+    func testStandardMetadata() throws {
+        let metadata = try Self.metadata(.onDemand)
         expect(metadata.title).to(equal("Yadebat"))
         expect(metadata.subtitle).to(equal("On réunit des ex après leur rupture"))
         expect(metadata.description).to(equal("""
@@ -26,50 +31,30 @@ final class MediaMetadataTests: XCTestCase {
         expect(metadata.episodeInformation).to(equal(.long(season: 2, episode: 12)))
     }
 
-    func testRedundantMetadata() {
-        let mediaComposition = Mock.mediaComposition(.redundant)
-        let metadata = MediaMetadata(
-            mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!,
-            dataProvider: DataProvider(server: .production)
-        )
+    func testRedundantMetadata() throws {
+        let metadata = try Self.metadata(.redundant)
         expect(metadata.title).to(equal("19h30"))
         expect(metadata.subtitle).to(contain("February"))
         expect(metadata.description).to(beNil())
         expect(metadata.episodeInformation).to(beNil())
     }
 
-    func testLiveMetadata() {
-        let mediaComposition = Mock.mediaComposition(.live)
-        let metadata = MediaMetadata(
-            mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!,
-            dataProvider: DataProvider(server: .production)
-        )
+    func testLiveMetadata() throws {
+        let metadata = try Self.metadata(.live)
         expect(metadata.title).to(equal("La 1ère en direct"))
         expect(metadata.subtitle).to(beNil())
         expect(metadata.description).to(beNil())
         expect(metadata.episodeInformation).to(beNil())
     }
 
-    func testAnalytics() {
-        let mediaComposition = Mock.mediaComposition(.onDemand)
-        let metadata = MediaMetadata(
-            mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!,
-            dataProvider: DataProvider(server: .production)
-        )
+    func testAnalytics() throws {
+        let metadata = try Self.metadata(.onDemand)
         expect(metadata.analyticsData).notTo(beEmpty())
         expect(metadata.analyticsMetadata).notTo(beEmpty())
     }
 
-    func testMissingChapterAnalytics() {
-        let mediaComposition = Mock.mediaComposition(.missingAnalytics)
-        let metadata = MediaMetadata(
-            mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!,
-            dataProvider: DataProvider(server: .production)
-        )
+    func testMissingChapterAnalytics() throws {
+        let metadata = try Self.metadata(.missingAnalytics)
         expect(metadata.analyticsData).to(beEmpty())
         expect(metadata.analyticsMetadata).to(beEmpty())
     }
