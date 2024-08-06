@@ -31,14 +31,7 @@ public extension PlayerItem {
             publisher: publisher(for: urn, server: server, configuration: configuration),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
-                CommandersActTracker.adapter { $0.analyticsMetadata },
-                MetricsTracker.adapter { mediaMetadata in
-                    .init(
-                        id: mediaMetadata.mediaComposition.chapterUrn,
-                        metadataUrl: mediaMetadata.mediaCompositionUrl,
-                        assetUrl: mediaMetadata.resource.url
-                    )
-                }
+                CommandersActTracker.adapter { $0.analyticsMetadata }
             ] + trackerAdapters
         )
     }

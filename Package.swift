@@ -72,8 +72,7 @@ let package = Package(
         .target(
             name: "PillarboxCoreBusiness",
             dependencies: [
-                .target(name: "PillarboxAnalytics"),
-                .target(name: "PillarboxMonitoring")
+                .target(name: "PillarboxAnalytics")
             ],
             path: "Sources/CoreBusiness",
             resources: [
