@@ -21,6 +21,9 @@ public struct MediaMetadata {
     /// The playback context.
     public let mediaComposition: MediaComposition
 
+    
+    public let mediaCompositionUrl: URL?
+
     /// The resource to be played.
     public let resource: MediaComposition.Resource
 
@@ -49,8 +52,16 @@ public struct MediaMetadata {
         return analyticsMetadata
     }
 
-    init(mediaComposition: MediaComposition, resource: MediaComposition.Resource, dataProvider: DataProvider) {
+    init(
+        mediaCompositionResponse: MediaCompositionResponse,
+        dataProvider: DataProvider
+    ) throws {
+        let mediaComposition = mediaCompositionResponse.mediaComposition
+        guard let resource = mediaComposition.mainChapter.recommendedResource else {
+            throw DataError.noResourceAvailable
+        }
         self.mediaComposition = mediaComposition
+        self.mediaCompositionUrl = mediaCompositionResponse.response.url
         self.resource = resource
         self.dataProvider = dataProvider
     }

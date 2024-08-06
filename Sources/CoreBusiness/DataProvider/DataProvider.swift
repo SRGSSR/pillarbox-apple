@@ -32,21 +32,25 @@ final class DataProvider {
         }
     }
 
-    func mediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
+    func mediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaCompositionResponse, Error> {
         session.dataTaskPublisher(for: server.mediaCompositionRequest(forUrn: urn))
             .mapHttpErrors()
-            .map(\.data)
-            .decode(type: MediaComposition.self, decoder: Self.decoder())
+            .tryMap { data, response in
+                MediaCompositionResponse(
+                    mediaComposition: try Self.decoder().decode(MediaComposition.self, from: data),
+                    response: response
+                )
+            }
             .eraseToAnyPublisher()
     }
 
-    func playableMediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
+    func playableMediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaCompositionResponse, Error> {
         mediaCompositionPublisher(forUrn: urn)
-            .tryMap { mediaComposition in
-                if let error = Self.error(from: mediaComposition) {
+            .tryMap { mediaCompositionResponse in
+                if let error = Self.error(from: mediaCompositionResponse.mediaComposition) {
                     throw error
                 }
-                return mediaComposition
+                return mediaCompositionResponse
             }
             .eraseToAnyPublisher()
     }

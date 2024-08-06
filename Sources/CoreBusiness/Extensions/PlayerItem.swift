@@ -35,7 +35,7 @@ public extension PlayerItem {
                 MetricsTracker.adapter { mediaMetadata in
                     .init(
                         id: mediaMetadata.mediaComposition.chapterUrn,
-                        metadataUrl: nil, // TODO: Use the media composition URL.
+                        metadataUrl: mediaMetadata.mediaCompositionUrl,
                         assetUrl: mediaMetadata.resource.url
                     )
                 }
@@ -94,18 +94,19 @@ private extension PlayerItem {
     static func publisher(for urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
         let dataProvider = DataProvider(server: server)
         return dataProvider.playableMediaCompositionPublisher(forUrn: urn)
-            .tryMap { mediaComposition in
-                let mainChapter = mediaComposition.mainChapter
-                guard let resource = mainChapter.recommendedResource else {
-                    throw DataError.noResourceAvailable
-                }
-                let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, dataProvider: dataProvider)
-                return asset(for: metadata, configuration: configuration)
+            .tryMap { mediaCompositionResponse in
+                asset(
+                    metadata: try MediaMetadata(
+                        mediaCompositionResponse: mediaCompositionResponse,
+                        dataProvider: dataProvider
+                    ),
+                    configuration: configuration
+                )
             }
             .eraseToAnyPublisher()
     }
 
-    private static func asset(for metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
+    private static func asset(metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
         let resource = metadata.resource
         let configuration = assetConfiguration(for: resource, configuration: configuration)
 
