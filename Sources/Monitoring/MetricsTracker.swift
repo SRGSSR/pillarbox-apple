@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import PillarboxCore
 import PillarboxPlayer
 import UIKit
 
@@ -19,6 +20,7 @@ public final class MetricsTracker: PlayerItemTracker {
     private var stallDate: Date?
     private var metadata: Metadata?
     private var properties: PlayerProperties?
+    private let stopwatch = Stopwatch()
     private var stallDuration: TimeInterval = 0
     private var isStarted = false
 
@@ -36,6 +38,7 @@ public final class MetricsTracker: PlayerItemTracker {
 
     public func updateProperties(to properties: PlayerProperties) {
         self.properties = properties
+        updateStopwatch(with: properties)
     }
 
     public func updateMetricEvents(to events: [MetricEvent]) {
@@ -65,6 +68,7 @@ public final class MetricsTracker: PlayerItemTracker {
         print("\(Self.self): \(String(decoding: stopPayload(with: properties)!, as: UTF8.self))")
         sessionId = UUID()
         isStarted = false
+        stopwatch.reset()
     }
 }
 
@@ -123,7 +127,7 @@ private extension MetricsTracker {
                 bufferDuration: Self.bufferDuration(properties: properties),
                 stallCount: metrics?.total.numberOfStalls,
                 stallDuration: stallDuration.toMilliseconds,
-                playbackDuration: metrics?.total.playbackDuration.toMilliseconds, // FIXME: Use Stopwatch.
+                playbackDuration: stopwatch.time().toMilliseconds,
                 playerPosition: properties.time().toMilliseconds
             )
         )
@@ -144,6 +148,15 @@ private extension MetricsTracker {
             )
         )
         return try? Self.jsonEncoder.encode(payload)
+    }
+
+    func updateStopwatch(with properties: PlayerProperties) {
+        if properties.playbackState == .playing && !properties.isBuffering {
+            stopwatch.start()
+        }
+        else {
+            stopwatch.stop()
+        }
     }
 }
 
