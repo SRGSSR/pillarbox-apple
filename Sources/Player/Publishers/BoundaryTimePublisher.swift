@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 
 private struct _BoundaryTimePublisher: Publisher {
     typealias Output = Void
@@ -21,7 +22,7 @@ private struct _BoundaryTimePublisher: Publisher {
         self.queue = queue
     }
 
-    func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Never, S.Input == Output {
+    func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
         let subscription = BoundaryTimeSubscription(subscriber: subscriber, player: player, times: times, queue: queue)
         subscriber.receive(subscription: subscription)
     }
@@ -31,5 +32,54 @@ extension Publishers {
     static func BoundaryTimePublisher(for player: AVPlayer, times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
         _BoundaryTimePublisher(player: player, times: times, queue: queue)
             .eraseToAnyPublisher()
+    }
+}
+
+extension _BoundaryTimePublisher {
+    private final class BoundaryTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
+        private var subscriber: S?
+        private let player: AVPlayer
+        private let times: [CMTime]
+        private let queue: DispatchQueue
+
+        private let buffer = DemandBuffer<Void>()
+        private var timeObserver: Any?
+
+        init(subscriber: S, player: AVPlayer, times: [CMTime], queue: DispatchQueue) {
+            self.subscriber = subscriber
+            self.player = player
+            self.times = times
+            self.queue = queue
+        }
+
+        func request(_ demand: Subscribers.Demand) {
+            if timeObserver == nil {
+                let timeValues = times.map { NSValue(time: $0) }
+                timeObserver = player.addBoundaryTimeObserver(forTimes: timeValues, queue: queue) { [weak self] in
+                    self?.send()
+                }
+            }
+            process(buffer.request(demand))
+        }
+
+        private func send() {
+            process(buffer.append(()))
+        }
+
+        func cancel() {
+            if let timeObserver {
+                player.removeTimeObserver(timeObserver)
+                self.timeObserver = nil
+            }
+            subscriber = nil
+        }
+
+        private func process(_ values: [Void]) {
+            guard let subscriber else { return }
+            values.forEach { value in
+                let demand = subscriber.receive(value)
+                request(demand)
+            }
+        }
     }
 }

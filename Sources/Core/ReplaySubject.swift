@@ -15,7 +15,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     private let buffer: LimitedBuffer<Output>
     private var completion: Subscribers.Completion<Failure>?
     private let lock = NSRecursiveLock()
-    var subscriptions: [ReplaySubscription<Output, Failure>] = []
+    var subscriptions: [ReplaySubscription] = []
 
     /// Creates a subject able to buffer the provided number of values.
     ///
@@ -51,7 +51,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
         subscription.request(.unlimited)
     }
 
-    public func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
+    public func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
         withLock(lock) {
             let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
             subscription.onCancel = { [weak self] in
@@ -67,6 +67,57 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
                 subscription.send(completion: completion)
             }
             subscriptions.append(subscription)
+        }
+    }
+}
+
+extension ReplaySubject {
+    final class ReplaySubscription: Subscription {
+        var onCancel: (() -> Void)?
+
+        private var subscriber: AnySubscriber<Output, Failure>?
+        private var buffer = DemandBuffer<Output>()
+        private var pendingValues: [Output] = []
+
+        init<S>(subscriber: S, values: [Output]) where S: Subscriber, S.Input == Output, S.Failure == Failure {
+            self.subscriber = AnySubscriber(subscriber)
+        }
+
+        func request(_ demand: Subscribers.Demand) {
+            process(buffer.request(demand))
+        }
+
+        func append(_ value: Output) {
+            pendingValues += buffer.append(value)
+        }
+
+        func send() {
+            let values = pendingValues
+            pendingValues = []
+            process(values)
+        }
+
+        func send(completion: Subscribers.Completion<Failure>) {
+            process(completion: completion)
+        }
+
+        func cancel() {
+            subscriber = nil
+            onCancel?()
+            onCancel = nil
+        }
+
+        private func process(_ values: [Output]) {
+            guard let subscriber else { return }
+            values.forEach { value in
+                let demand = subscriber.receive(value)
+                request(demand)
+            }
+        }
+
+        private func process(completion: Subscribers.Completion<Failure>?) {
+            guard let subscriber, let completion else { return }
+            subscriber.receive(completion: completion)
         }
     }
 }
