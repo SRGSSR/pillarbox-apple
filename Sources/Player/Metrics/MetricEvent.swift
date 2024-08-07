@@ -23,6 +23,8 @@ public struct MetricEvent: Hashable {
         /// perspective.
         case asset(experience: DateInterval)
 
+        case contentKeyLoading(service: DateInterval)
+
         /// Failure.
         case failure(Error)
 
@@ -71,6 +73,8 @@ extension MetricEvent.Kind: CustomStringConvertible {
             return "Metadata: \(Self.duration(from: experience.duration)) (experience), \(Self.duration(from: service.duration)) (service)"
         case let .asset(experience: experience):
             return "Asset: \(Self.duration(from: experience.duration)) (experience)"
+        case let .contentKeyLoading(service: service):
+            return "Content key loading: \(Self.duration(from: service.duration)) (service)"
         case let .failure(error):
             return "Failure: \(error.localizedDescription)"
         case let .warning(error):
