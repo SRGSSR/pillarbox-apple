@@ -46,7 +46,9 @@ public final class MetricsTracker: PlayerItemTracker {
         switch events.last?.kind {
         case .resourceLoading:
             isStarted = true
-            print("\(Self.self): \(String(decoding: startPayload(from: events)!, as: UTF8.self))")
+            if let data = startPayload(from: events) {
+                Self.send(data: data)
+            }
         case .stall:
             stallDate = Date()
         case .resumeAfterStall:
@@ -54,22 +56,29 @@ public final class MetricsTracker: PlayerItemTracker {
             stallDuration += Date().timeIntervalSince(stallDate)
         case let .failure(error):
             if !isStarted {
-                print("\(Self.self): \(String(decoding: startPayload(from: events)!, as: UTF8.self))")
+                if let data = startPayload(from: events) {
+                    Self.send(data: data)
+                }
             }
-            print("\(Self.self): \(String(decoding: errorPayload(error: error, severity: .fatal)!, as: UTF8.self))")
+            if let data = errorPayload(error: error, severity: .fatal) {
+                Self.send(data: data)
+            }
         case let .warning(error):
-            print("\(Self.self): \(String(decoding: errorPayload(error: error, severity: .warning)!, as: UTF8.self))")
+            if let data = errorPayload(error: error, severity: .warning) {
+                Self.send(data: data)
+            }
         default:
             break
         }
     }
 
     public func disable(with properties: PlayerProperties) {
-        print("\(Self.self): \(String(decoding: stopPayload(with: properties)!, as: UTF8.self))")
-        sessionId = UUID()
-        stallDuration = 0
-        isStarted = false
-        stopwatch.reset()
+        defer {
+            reset()
+        }
+        if let data = stopPayload(with: properties) {
+            Self.send(data: data)
+        }
     }
 }
 
@@ -174,6 +183,23 @@ private extension MetricsTracker {
         else {
             stopwatch.stop()
         }
+    }
+
+    func reset() {
+        sessionId = UUID()
+        stallDuration = 0
+        isStarted = false
+        stopwatch.reset()
+    }
+}
+
+private extension MetricsTracker {
+    static func send(data: Data) {
+        var request = URLRequest(url: .init(string: "https://echo.free.beeceptor.com")!)
+        request.httpMethod = "POST"
+        request.httpBody = data
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        URLSession.shared.dataTask(with: request).resume()
     }
 }
 
