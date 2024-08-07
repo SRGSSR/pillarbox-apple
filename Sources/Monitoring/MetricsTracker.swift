@@ -49,9 +49,7 @@ public final class MetricsTracker: PlayerItemTracker {
         switch events.last?.kind {
         case .resourceLoading:
             isStarted = true
-            if let data = startPayload(from: events) {
-                send(data: data)
-            }
+            sendPayload(data: startPayload(from: events))
         case .stall:
             stallDate = Date()
         case .resumeAfterStall:
@@ -59,17 +57,11 @@ public final class MetricsTracker: PlayerItemTracker {
             stallDuration += Date().timeIntervalSince(stallDate)
         case let .failure(error):
             if !isStarted {
-                if let data = startPayload(from: events) {
-                    send(data: data)
-                }
+                sendPayload(data: startPayload(from: events))
             }
-            if let data = errorPayload(error: error, severity: .fatal) {
-                send(data: data)
-            }
+            sendPayload(data: errorPayload(error: error, severity: .fatal))
         case let .warning(error):
-            if let data = errorPayload(error: error, severity: .warning) {
-                send(data: data)
-            }
+            sendPayload(data: errorPayload(error: error, severity: .warning))
         default:
             break
         }
@@ -79,9 +71,7 @@ public final class MetricsTracker: PlayerItemTracker {
         defer {
             reset()
         }
-        if let data = stopPayload(with: properties) {
-            send(data: data)
-        }
+        sendPayload(data: stopPayload(with: properties))
     }
 }
 
@@ -197,7 +187,8 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    func send(data: Data) {
+    func sendPayload(data: Data?) {
+        guard let data else { return }
         var request = URLRequest(url: serverUrl)
         request.httpMethod = "POST"
         request.httpBody = data
