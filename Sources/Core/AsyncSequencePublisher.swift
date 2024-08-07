@@ -32,7 +32,7 @@ extension AsyncSequencePublisher {
         private let sequence: any AsyncSequence<Output, Failure>
 
         private let buffer = DemandBuffer<Output>()
-        private var task: Task<Void, Error>?
+        private var task: Task<Void, Never>?
 
         init(subscriber: S, sequence: any AsyncSequence<Output, Failure>) {
             self.subscriber = subscriber
