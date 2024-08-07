@@ -22,6 +22,8 @@ public struct MetricEvent: Hashable {
         /// An associated duration is provided, measuring asset retrieval from an end-user perspective.
         case asset(experience: Duration)
 
+        case contentKeyLoading(service: Duration)
+
         /// Failure.
         case failure(Error)
 
@@ -72,6 +74,8 @@ extension MetricEvent.Kind: CustomStringConvertible {
             return "Metadata: \(Self.duration(from: experience.timeInterval())) (experience), \(Self.duration(from: service.timeInterval())) (service)"
         case let .asset(experience: experience):
             return "Asset: \(Self.duration(from: experience.timeInterval())) (experience)"
+        case let .contentKeyLoading(service: service):
+            return "Content key loading: \(Self.duration(from: service.timeInterval())) (service)"
         case let .failure(error):
             return "Failure: \(error.localizedDescription)"
         case let .warning(error):

@@ -173,11 +173,12 @@ extension AVPlayerItem {
 
 extension AVPlayerItem {
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        Publishers.Merge4(
+        Publishers.Merge5(
             assetMetricEventPublisher(),
             failureMetricEventPublisher(),
             warningMetricEventPublisher(),
-            stallEventPublisher()
+            stallEventPublisher(),
+            nativeEventPublisher()
         )
         .eraseToAnyPublisher()
     }
@@ -244,6 +245,15 @@ extension AVPlayerItem {
             }
             .eraseToAnyPublisher()
     }
+
+    func nativeEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        if #available(iOS 18, tvOS 18, *) {
+            return contentKeyLoadingMetricEventPublisher()
+        }
+        else {
+            return Empty().eraseToAnyPublisher()
+        }
+    }
 }
 
 #if compiler(>=6.0)
@@ -269,6 +279,24 @@ extension AVPlayerItem {
         )
         .map(\.0)
         .eraseToAnyPublisher()
+    }
+
+    func contentKeyLoadingMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        nativeMetricEventPublisher(forType: AVMetricContentKeyRequestEvent.self)
+            .catch { _ in
+                Empty().eraseToAnyPublisher()
+            }
+            .compactMap { event in
+                guard let resourceRequestEvent = event.mediaResourceRequestEvent else { return nil }
+                let interval = resourceRequestEvent.responseEndTime.timeIntervalSince(resourceRequestEvent.requestStartTime)
+                return MetricEvent(
+                    kind: .contentKeyLoading(
+                        service: .init(attoseconds: Int128(interval * 10e18))
+                    ),
+                    time: event.mediaTime
+                )
+            }
+            .eraseToAnyPublisher()
     }
 }
 #endif
