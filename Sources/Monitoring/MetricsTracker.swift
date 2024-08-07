@@ -16,6 +16,7 @@ public final class MetricsTracker: PlayerItemTracker {
         return encoder
     }()
 
+    private let serverUrl: URL
     private var sessionId = UUID()
     private var stallDate: Date?
     private var metadata: Metadata?
@@ -28,7 +29,9 @@ public final class MetricsTracker: PlayerItemTracker {
         "Monitoring: \(sessionId)"
     }
 
-    public init(configuration: Void) {}
+    public init(configuration: URL) {
+        serverUrl = configuration
+    }
 
     public func enable(for player: AVPlayer) {}
 
@@ -47,7 +50,7 @@ public final class MetricsTracker: PlayerItemTracker {
         case .resourceLoading:
             isStarted = true
             if let data = startPayload(from: events) {
-                Self.send(data: data)
+                send(data: data)
             }
         case .stall:
             stallDate = Date()
@@ -57,15 +60,15 @@ public final class MetricsTracker: PlayerItemTracker {
         case let .failure(error):
             if !isStarted {
                 if let data = startPayload(from: events) {
-                    Self.send(data: data)
+                    send(data: data)
                 }
             }
             if let data = errorPayload(error: error, severity: .fatal) {
-                Self.send(data: data)
+                send(data: data)
             }
         case let .warning(error):
             if let data = errorPayload(error: error, severity: .warning) {
-                Self.send(data: data)
+                send(data: data)
             }
         default:
             break
@@ -77,7 +80,7 @@ public final class MetricsTracker: PlayerItemTracker {
             reset()
         }
         if let data = stopPayload(with: properties) {
-            Self.send(data: data)
+            send(data: data)
         }
     }
 }
@@ -194,8 +197,8 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static func send(data: Data) {
-        var request = URLRequest(url: .init(string: "https://echo.free.beeceptor.com")!)
+    func send(data: Data) {
+        var request = URLRequest(url: serverUrl)
         request.httpMethod = "POST"
         request.httpBody = data
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
