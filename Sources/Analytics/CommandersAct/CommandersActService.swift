@@ -32,6 +32,7 @@ final class CommandersActService {
             serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
             serverSide.addPermanentData("navigation_device", withValue: Self.device())
             serverSide.enableRunningInBackground()
+            serverSide.waitForUserAgent()
             self.serverSide = serverSide
         }
 
