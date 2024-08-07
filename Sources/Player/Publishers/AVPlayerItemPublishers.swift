@@ -259,6 +259,22 @@ extension AVPlayerItem {
 #if compiler(>=6.0)
 @available(iOS 18.0, tvOS 18.0, *)
 extension AVPlayerItem {
+    static func metricEventKind(from event: AVMetricContentKeyRequestEvent) -> MetricEvent.Kind? {
+        guard let resourceRequestEvent = event.mediaResourceRequestEvent else { return nil }
+        // TODO: These times are currently missing
+        let service = Duration(attoseconds: Int128(resourceRequestEvent.responseEndTime.timeIntervalSince(resourceRequestEvent.requestStartTime) * 10e18))
+        switch event.contentKeySpecifier.keySystem {
+        case .fairPlayStreaming:
+            return .fairPlayKeyLoading(service: service)
+        case .clearKey:
+            return .clearKeyLoading(service: service)
+        case .authorizationToken:
+            return .authorizationTokenLoading(service: service)
+        default:
+            return nil
+        }
+    }
+
     func nativeMetricEventPublisher() -> AnyPublisher<AVMetricEvent, Error> {
         AsyncSequencePublisher(from: allMetrics())
             .eraseToAnyPublisher()
@@ -287,14 +303,8 @@ extension AVPlayerItem {
                 Empty().eraseToAnyPublisher()
             }
             .compactMap { event in
-                guard let resourceRequestEvent = event.mediaResourceRequestEvent else { return nil }
-                let interval = resourceRequestEvent.responseEndTime.timeIntervalSince(resourceRequestEvent.requestStartTime)
-                return MetricEvent(
-                    kind: .contentKeyLoading(
-                        service: .init(attoseconds: Int128(interval * 10e18))
-                    ),
-                    time: event.mediaTime
-                )
+                guard let kind = Self.metricEventKind(from: event) else { return nil }
+                return MetricEvent(kind: kind, time: event.mediaTime)
             }
             .eraseToAnyPublisher()
     }

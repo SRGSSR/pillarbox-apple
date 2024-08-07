@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreMedia
-import Foundation
 
 /// A metric event.
 public struct MetricEvent: Hashable {
@@ -22,7 +22,14 @@ public struct MetricEvent: Hashable {
         /// An associated duration is provided, measuring asset retrieval from an end-user perspective.
         case asset(experience: Duration)
 
-        case contentKeyLoading(service: Duration)
+        /// Clear key loading.
+        case clearKeyLoading(service: Duration)
+
+        /// Authorization token loading.
+        case authorizationTokenLoading(service: Duration)
+
+        /// FairPlay key loading.
+        case fairPlayKeyLoading(service: Duration)
 
         /// Failure.
         case failure(Error)
@@ -74,8 +81,12 @@ extension MetricEvent.Kind: CustomStringConvertible {
             return "Metadata: \(Self.duration(from: experience.timeInterval())) (experience), \(Self.duration(from: service.timeInterval())) (service)"
         case let .asset(experience: experience):
             return "Asset: \(Self.duration(from: experience.timeInterval())) (experience)"
-        case let .contentKeyLoading(service: service):
-            return "Content key loading: \(Self.duration(from: service.timeInterval())) (service)"
+        case let .fairPlayKeyLoading(service: service):
+            return "FairPlay key loading: \(Self.duration(from: service.timeInterval())) (service)"
+        case let .clearKeyLoading(service: service):
+            return "Clear key loading: \(Self.duration(from: service.timeInterval())) (service)"
+        case let .authorizationTokenLoading(service: service):
+            return "Authorization token loading: \(Self.duration(from: service.timeInterval())) (service)"
         case let .failure(error):
             return "Failure: \(error.localizedDescription)"
         case let .warning(error):
