@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreMedia
-import Foundation
 
 /// A metric event.
 public struct MetricEvent: Hashable {
@@ -21,7 +21,14 @@ public struct MetricEvent: Hashable {
         /// Measures the time for the player to load the associated resource until playback is ready to start.
         case resourceLoading(DateInterval)
 
-        case contentKeyLoading(DateInterval)
+        /// Clear key loading.
+        case clearKeyLoading(DateInterval)
+
+        /// Authorization token loading.
+        case authorizationTokenLoading(DateInterval)
+
+        /// FairPlay key loading.
+        case fairPlayKeyLoading(DateInterval)
 
         /// Failure.
         case failure(Error)
@@ -83,8 +90,12 @@ extension MetricEvent.Kind: CustomStringConvertible {
             return "Asset loaded in \(Self.duration(from: dateInterval.duration))"
         case let .resourceLoading(dateInterval):
             return "Resource loaded in \(Self.duration(from: dateInterval.duration))"
-        case let .contentKeyLoading(dateInterval):
-            return "Content key loaded in \(Self.duration(from: dateInterval.duration))"
+        case let .fairPlayKeyLoading(dateInterval):
+            return "FairPlay key loaded in \(Self.duration(from: dateInterval.duration))"
+        case let .clearKeyLoading(dateInterval):
+            return "Clear key loaded in \(Self.duration(from: dateInterval.duration))"
+        case let .authorizationTokenLoading(dateInterval):
+            return "Authorization token loaded in \(Self.duration(from: dateInterval.duration))"
         case let .failure(error):
             return "[FAILURE] \(error.localizedDescription)"
         case let .warning(error):
