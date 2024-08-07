@@ -278,6 +278,7 @@ extension AVPlayerItem {
 
     func nativeEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         if #available(iOS 18, tvOS 18, *) {
+            // WARNING: Only a single publisher must be used to deliver all events, see https://github.com/SRGSSR/pillarbox-apple/issues.
             return contentKeyLoadingMetricEventPublisher()
         }
         else {
