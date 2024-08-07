@@ -21,6 +21,8 @@ public struct MetricEvent: Hashable {
         /// Measures the time for the player to load the associated resource until playback is ready to start.
         case resourceLoading(DateInterval)
 
+        case contentKeyLoading(DateInterval)
+
         /// Failure.
         case failure(Error)
 
@@ -81,6 +83,8 @@ extension MetricEvent.Kind: CustomStringConvertible {
             return "Asset loaded in \(Self.duration(from: dateInterval.duration))"
         case let .resourceLoading(dateInterval):
             return "Resource loaded in \(Self.duration(from: dateInterval.duration))"
+        case let .contentKeyLoading(dateInterval):
+            return "Content key loaded in \(Self.duration(from: dateInterval.duration))"
         case let .failure(error):
             return "[FAILURE] \(error.localizedDescription)"
         case let .warning(error):
