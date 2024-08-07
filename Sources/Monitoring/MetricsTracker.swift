@@ -163,6 +163,7 @@ private extension MetricsTracker {
                 severity: severity,
                 name: "\(error.domain)(\(error.code))",
                 message: error.localizedDescription,
+                url: URL(string: properties?.metrics()?.uri),
                 playerPosition: properties?.time().toMilliseconds
             )
         )
