@@ -31,6 +31,7 @@ final class WorkQueue: @unchecked Sendable {
             for item in items {
                 try await item()
                 withLock(lock) {
+                    guard !items.isEmpty else { return }
                     items.removeFirst()
                 }
             }
