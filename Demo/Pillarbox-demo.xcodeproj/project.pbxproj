@@ -26,6 +26,7 @@
 		6F09A2922B48744000700365 /* PillarboxCoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F09A2912B48744000700365 /* PillarboxCoreBusiness */; };
 		6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */; };
 		6F0B2E8B2A40EE0700B69675 /* ContentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E8A2A40EE0700B69675 /* ContentList.swift */; };
+		6F0DDA892C64E64C00859ACD /* PillarboxMonitoring in Frameworks */ = {isa = PBXBuildFile; productRef = 6F0DDA882C64E64C00859ACD /* PillarboxMonitoring */; };
 		6F0E5CD32B3394EA0031E313 /* PiPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E5CD22B3394EA0031E313 /* PiPButton.swift */; };
 		6F0E5CD52B33A41F0031E313 /* MonoscopicVideoView~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E5CD42B33A41F0031E313 /* MonoscopicVideoView~ios.swift */; };
 		6F12A9522BD2B8A300AD6DDB /* IntegratingWithControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F12A9512BD2B8A300AD6DDB /* IntegratingWithControlCenter.swift */; };
@@ -216,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */,
+				6F0DDA892C64E64C00859ACD /* PillarboxMonitoring in Frameworks */,
 				0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */,
 				6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */,
 				6F09A2922B48744000700365 /* PillarboxCoreBusiness in Frameworks */,
@@ -585,6 +587,7 @@
 				6FCA4746292CBEC7008C2812 /* ShowTime */,
 				0EF42CB529AE513400553165 /* SRGDataProviderCombine */,
 				6F09A2912B48744000700365 /* PillarboxCoreBusiness */,
+				6F0DDA882C64E64C00859ACD /* PillarboxMonitoring */,
 			);
 			productName = PillarboxDemo;
 			productReference = 6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */;
@@ -1067,6 +1070,10 @@
 		6F09A2912B48744000700365 /* PillarboxCoreBusiness */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PillarboxCoreBusiness;
+		};
+		6F0DDA882C64E64C00859ACD /* PillarboxMonitoring */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PillarboxMonitoring;
 		};
 		6F9B5BC828CF8C530074B9E0 /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
