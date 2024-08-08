@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
       "state" : {
-        "revision" : "c2f74c7cc02f8bb01b51c08297f7cbc486f3ca65",
-        "version" : "6.12.3"
+        "revision" : "2d1cd9c0cb52ca76702023b528a059fc0a7d5a4d",
+        "version" : "6.13.0"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CommandersAct/iOSV5.git",
       "state" : {
-        "revision" : "3b5c3167d10bf009d1cd4aa9076600a1bde584d0",
-        "version" : "5.4.6"
+        "revision" : "b65eb27cde41d3c40b05520f8713d55a52821553",
+        "version" : "5.4.9"
       }
     },
     {
