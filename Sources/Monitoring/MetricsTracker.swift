@@ -16,6 +16,7 @@ public final class MetricsTracker: PlayerItemTracker {
         return encoder
     }()
 
+    private let workQueue = WorkQueue()
     private let serverUrl: URL
     private var sessionId = UUID()
     private var stallDate: Date?
@@ -194,7 +195,10 @@ private extension MetricsTracker {
         request.httpMethod = "POST"
         request.httpBody = data
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        URLSession.shared.dataTask(with: request).resume()
+        workQueue.add {
+            _ = try await URLSession.shared.data(for: request)
+        }
+        workQueue.process()
     }
 }
 
