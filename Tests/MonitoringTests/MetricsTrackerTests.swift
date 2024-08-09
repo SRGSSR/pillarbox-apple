@@ -48,4 +48,21 @@ final class MetricsTrackerTests: MonitoringTestCase {
             player = nil
         }
     }
+
+    func testHeartbeats() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(
+                    configuration: .init(
+                        serviceUrl: URL(string: "https://localhost")!,
+                        heartbeatInterval: 1
+                    )
+                ) { _ in .test }
+            ]
+        ))
+        expectAtLeastHits(start(), heartbeat(), heartbeat()) {
+            player.play()
+        }
+    }
 }

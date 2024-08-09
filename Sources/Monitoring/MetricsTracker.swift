@@ -86,12 +86,17 @@ public extension MetricsTracker {
     /// Configuration associated with the tracker.
     struct Configuration {
         let serviceUrl: URL
+        let heartbeatInterval: TimeInterval
 
         /// Creates the configuration.
         ///
-        /// - Parameter serviceUrl: The URL service endpoint where data must be sent.
-        public init(serviceUrl: URL) {
+        /// - Parameters:
+        ///   - serviceUrl: The URL service endpoint where data must be sent.
+        ///   - heartbeatInterval: The interval between heartbeats, in seconds.
+        public init(serviceUrl: URL, heartbeatInterval: TimeInterval = 30) {
+            assert(heartbeatInterval >= 1)
             self.serviceUrl = serviceUrl
+            self.heartbeatInterval = heartbeatInterval
         }
     }
 
@@ -209,7 +214,7 @@ private extension MetricsTracker {
 
 private extension MetricsTracker {
     func startHeartbeat() {
-        Timer.publish(every: 30, on: .main, in: .common)
+        Timer.publish(every: configuration.heartbeatInterval, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 guard let self, let properties else { return }
