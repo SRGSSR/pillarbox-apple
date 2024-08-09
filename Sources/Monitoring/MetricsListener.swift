@@ -34,9 +34,9 @@ enum MetricsListener {
 
     static func capture(_ payload: Encodable) {
         guard let sessionIdentifier else { return }
-        NotificationCenter.default.post(name: .didSendMetricsRequest, object: self, userInfo: [
-            MetricsRequest.id: sessionIdentifier,
-            MetricsRequest.payload: payload
+        NotificationCenter.default.post(name: .didSendMetricRequest, object: self, userInfo: [
+            MetricRequestInfoKey.identifier: sessionIdentifier,
+            MetricRequestInfoKey.payload: payload
         ])
     }
 }

@@ -6,11 +6,11 @@
 
 import Foundation
 
-enum MetricsRequest: String {
-    case id = "metrics_request_id"
-    case payload = "metrics_request_payload"
+enum MetricRequestInfoKey: String {
+    case identifier = "MetricRequestIdentifier"
+    case payload = "MetricRequestIdentifierPayload"
 }
 
 extension Notification.Name {
-    static let didSendMetricsRequest = Notification.Name(rawValue: "MetricsTrackerDidSendMetricsRequestNotification")
+    static let didSendMetricRequest = Notification.Name(rawValue: "MetricsTrackerDidSendMetricRequestNotification")
 }
