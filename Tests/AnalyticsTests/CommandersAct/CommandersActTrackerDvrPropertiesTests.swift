@@ -22,7 +22,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         ))
 
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.media_timeshift).to(beNil())
             }
         ) {
@@ -39,7 +39,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         ))
 
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.media_timeshift).to(equal(0))
             }
         ) {
@@ -56,7 +56,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         ))
 
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.media_timeshift).to(equal(0))
             }
         ) {
@@ -76,10 +76,10 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
-            .seek { labels in
+            seek { labels in
                 expect(labels.media_timeshift).to(equal(0))
             },
-            .play { labels in
+            play { labels in
                 expect(labels.media_timeshift).to(beCloseTo(4, within: 2))
             }
         ) {
@@ -102,7 +102,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         wait(for: .seconds(2))
 
         expectAtLeastHits(
-            .stop { labels in
+            stop { labels in
                 expect(labels.media_position).to(equal(0))
             }
         ) {

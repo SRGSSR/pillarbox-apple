@@ -23,10 +23,10 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
-            .seek { labels in
+            seek { labels in
                 expect(labels.media_position).to(equal(0))
             },
-            .play { labels in
+            play { labels in
                 expect(labels.media_position).to(equal(7))
             }
         ) {
@@ -49,7 +49,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         }
 
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.media_position).to(equal(7))
             }
         ) {
@@ -69,10 +69,10 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         expect(player?.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
-            .seek { labels in
+            seek { labels in
                 expect(labels.media_position).to(equal(0))
             },
-            .stop { labels in
+            stop { labels in
                 expect(labels.media_position).to(equal(7))
             }
         ) {

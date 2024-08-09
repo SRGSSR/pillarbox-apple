@@ -39,28 +39,28 @@ final class CommandersActHeartbeatTests: CommandersActTestCase {
 
     func testOnDemandHeartbeatAfterPlay() {
         let player = Self.player(from: .onDemand, into: &cancellables)
-        expectAtLeastHits(.pos(), .pos()) {
+        expectAtLeastHits(pos(), pos()) {
             player.play()
         }
     }
 
     func testLiveHeartbeatAfterPlay() {
         let player = Self.player(from: .live, into: &cancellables)
-        expectAtLeastHits(.pos(), .uptime(), .pos(), .pos(), .uptime()) {
+        expectAtLeastHits(pos(), uptime(), pos(), pos(), uptime()) {
             player.play()
         }
     }
 
     func testDvrHeartbeatAfterPlay() {
         let player = Self.player(from: .dvr, into: &cancellables)
-        expectAtLeastHits(.pos(), .uptime(), .pos(), .pos(), .uptime()) {
+        expectAtLeastHits(pos(), uptime(), pos(), pos(), uptime()) {
             player.play()
         }
     }
 
     func testNoHeartbeatAfterPause() {
         let player = Self.player(from: .onDemand, into: &cancellables)
-        expectAtLeastHits(.pos()) {
+        expectAtLeastHits(pos()) {
             player.play()
         }
         expectNoHits(during: .milliseconds(300)) {
@@ -71,14 +71,14 @@ final class CommandersActHeartbeatTests: CommandersActTestCase {
     func testHeartbeatPropertyUpdate() {
         let player = Self.player(from: .onDemand, into: &cancellables)
         expectAtLeastHits(
-            .pos { labels in
+            pos { labels in
                 expect(labels.media_volume).notTo(equal(0))
             }
         ) {
             player.play()
         }
         expectAtLeastHits(
-            .pos { labels in
+            pos { labels in
                 expect(labels.media_volume).to(equal(0))
             }
         ) {

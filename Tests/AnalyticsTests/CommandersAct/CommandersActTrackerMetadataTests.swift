@@ -14,7 +14,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
     func testWhenInitialized() {
         var player: Player?
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.media_player_display).to(equal("Pillarbox"))
                 expect(labels.media_player_version).to(equal(PackageInfo.version))
                 expect(labels.media_volume).notTo(beNil())
@@ -46,7 +46,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         expect(player?.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
-            .stop { labels in
+            stop { labels in
                 expect(labels.media_player_display).to(equal("Pillarbox"))
                 expect(labels.media_player_version).to(equal(PackageInfo.version))
                 expect(labels.media_volume).notTo(beNil())
@@ -61,7 +61,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
     func testMuted() {
         var player: Player?
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.media_volume).to(equal(0))
             }
         ) {
@@ -89,7 +89,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
-            .pause { labels in
+            pause { labels in
                 expect(labels.media_audio_track).to(equal("FR"))
             }
         ) {
@@ -111,7 +111,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
 
         expectAtLeastHits(
-            .pause { labels in
+            pause { labels in
                 expect(labels.media_subtitles_on).to(beFalse())
             }
         ) {
@@ -132,7 +132,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
-            .pause { labels in
+            pause { labels in
                 expect(labels.media_subtitles_on).to(beTrue())
                 expect(labels.media_subtitle_selection).to(equal("FR"))
             }

@@ -20,7 +20,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.media_position).to(equal(0))
             }
         ) {
@@ -53,7 +53,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         expect(player.time.seconds).toEventually(beGreaterThan(1))
 
         expectAtLeastHits(
-            .pause { labels in
+            pause { labels in
                 expect(labels.media_position).to(equal(1))
             }
         ) {
@@ -70,8 +70,8 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         expectAtLeastHits(
-            .play(),
-            .eof { labels in
+            play(),
+            eof { labels in
                 expect(labels.media_position).to(equal(Int(Stream.mediumOnDemand.duration.seconds)))
             }
         ) {
@@ -91,7 +91,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         expect(player?.time.seconds).toEventually(beGreaterThan(5))
 
         expectAtLeastHits(
-            .stop { labels in
+            stop { labels in
                 expect(labels.media_position).to(equal(5))
             }
         ) {
@@ -112,7 +112,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         expect(player?.time.seconds).toEventually(beGreaterThan(2))
 
         expectAtLeastHits(
-            .stop { labels in
+            stop { labels in
                 expect(labels.media_position).to(equal(2))
             }
         ) {
@@ -128,7 +128,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             ]
         ))
 
-        expectAtLeastHits(.play(), .eof()) {
+        expectAtLeastHits(play(), eof()) {
             player?.play()
         }
 
@@ -161,7 +161,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         player.play()
         expect(player.time.seconds).toEventually(beGreaterThan(5))
 
-        expectAtLeastHits(.stop()) {
+        expectAtLeastHits(stop()) {
             player.isTrackingEnabled = false
         }
     }
@@ -180,7 +180,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             player.play()
         }
 
-        expectAtLeastHits(.play()) {
+        expectAtLeastHits(play()) {
             player.isTrackingEnabled = true
         }
     }
