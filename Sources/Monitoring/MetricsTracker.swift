@@ -117,8 +117,8 @@ private extension MetricsTracker {
         return encoder
     }()
 
-    func startPayload(from events: [MetricEvent], at date: Date) -> Data? {
-        let payload = MetricPayload(
+    func startPayload(from events: [MetricEvent], at date: Date) -> some Encodable {
+        MetricPayload(
             sessionId: sessionId,
             eventName: .start,
             timestamp: Self.timestamp(from: date),
@@ -139,12 +139,11 @@ private extension MetricsTracker {
                 qoeMetrics: .init(events: events)
             )
         )
-        return try? Self.jsonEncoder.encode(payload)
     }
 
-    func errorPayload(error: Error, severity: MetricErrorData.Severity, at date: Date) -> Data? {
+    func errorPayload(error: Error, severity: MetricErrorData.Severity, at date: Date) -> some Encodable {
         let error = error as NSError
-        let payload = MetricPayload(
+        return MetricPayload(
             sessionId: sessionId,
             eventName: .error,
             timestamp: Self.timestamp(from: date),
@@ -156,12 +155,11 @@ private extension MetricsTracker {
                 playerPosition: Self.playerPosition(from: properties)
             )
         )
-        return try? Self.jsonEncoder.encode(payload)
     }
 
-    func eventPayload(for eventName: EventName, with properties: PlayerProperties, at date: Date) -> Data? {
+    func eventPayload(for eventName: EventName, with properties: PlayerProperties, at date: Date) -> some Encodable {
         let metrics = properties.metrics()
-        let payload = MetricPayload(
+        return MetricPayload(
             sessionId: sessionId,
             eventName: eventName,
             timestamp: Self.timestamp(from: date),
@@ -176,7 +174,6 @@ private extension MetricsTracker {
                 playerPosition: Self.playerPosition(from: properties)
             )
         )
-        return try? Self.jsonEncoder.encode(payload)
     }
 
     func updateStopwatch(with properties: PlayerProperties) {
@@ -197,12 +194,14 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    func send(payload: Data?) {
-        guard let payload else { return }
+    func send(payload: Encodable) {
+        guard let httpBody = try? Self.jsonEncoder.encode(payload) else {
+            return
+        }
         var request = URLRequest(url: configuration.serviceUrl)
         request.httpMethod = "POST"
-        request.httpBody = payload
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = httpBody
         URLSession.shared.dataTask(with: request).resume()
     }
 }
