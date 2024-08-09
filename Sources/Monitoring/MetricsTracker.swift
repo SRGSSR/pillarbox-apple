@@ -131,7 +131,7 @@ private extension MetricsTracker {
                     assetUrl: metadata?.assetUrl,
                     origin: Bundle.main.bundleIdentifier
                 ),
-                timeMetrics: .init(events: events)
+                qoeMetrics: .init(events: events)
             )
         )
         return try? Self.jsonEncoder.encode(payload)
