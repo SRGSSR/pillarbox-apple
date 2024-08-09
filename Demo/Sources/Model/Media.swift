@@ -9,6 +9,7 @@ import Combine
 import CoreMedia
 import Foundation
 import PillarboxCoreBusiness
+import PillarboxMonitoring
 import PillarboxPlayer
 import UIKit
 
@@ -88,6 +89,13 @@ struct Media: Hashable {
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.mediaComposition.mainChapter.title)
+                    },
+                    MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://echo.free.beeceptor.com")!)) { metadata in
+                        .init(
+                            identifier: metadata.mediaComposition.chapterUrn,
+                            metadataUrl: metadata.mediaCompositionUrl,
+                            assetUrl: metadata.resource.url
+                        )
                     }
                 ],
                 configuration: .init(position: at(startTime))
