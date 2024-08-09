@@ -35,4 +35,17 @@ final class MetricsTrackerTests: MonitoringTestCase {
             player.play()
         }
     }
+
+    func testNoStopWithoutStart() {
+        var player: Player? = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://localhost")!)) { _ in .test }
+            ]
+        ))
+        _ = player
+        expectNoHits(during: .milliseconds(500)) {
+            player = nil
+        }
+    }
 }
