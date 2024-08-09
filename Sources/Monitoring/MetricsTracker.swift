@@ -165,8 +165,8 @@ private extension MetricsTracker {
             timestamp: Self.timestamp(from: date),
             data: MetricEventData(
                 url: metrics?.uri,
-                bitrate: metrics?.indicatedBitrate?.toBytes,
-                bandwidth: metrics?.observedBitrate?.toBytes,
+                bitrate: metrics?.indicatedBitrate,
+                bandwidth: metrics?.observedBitrate,
                 bufferedDuration: Self.bufferedDuration(from: properties),
                 stall: .init(stallCount: metrics?.total.numberOfStalls, stallDuration: stallDuration.toMilliseconds),
                 playbackDuration: stopwatch.time().toMilliseconds,
