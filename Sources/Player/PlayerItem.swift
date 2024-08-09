@@ -136,7 +136,7 @@ public final class PlayerItem: Equatable {
     }
 }
 
-public extension PlayerItem {
+extension PlayerItem {
     /// The list of session identifiers associated with trackers of a specific type.
     func sessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {
         trackerAdapters.compactMap(\.registration)

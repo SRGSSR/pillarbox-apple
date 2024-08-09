@@ -5,6 +5,7 @@
 //
 
 import Charts
+import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
@@ -144,6 +145,7 @@ struct MetricsView: View {
     private func list() -> some View {
         List {
             startupTimesSection()
+            trackingSection()
             if !metricsCollector.metrics.isEmpty {
                 informationSection()
                 indicatedBitrateChartSection()
@@ -163,6 +165,20 @@ struct MetricsView: View {
             StartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
         } header: {
             Text("Startup times")
+        }
+    }
+
+    @ViewBuilder
+    private func trackingSection() -> some View {
+        let sessionIdentifiers = sessionIdentifiers()
+        if !sessionIdentifiers.isEmpty {
+            Section {
+                ForEach(sessionIdentifiers, id: \.self) { identifier in
+                    Text(identifier)
+                }
+            } header: {
+                Text("Tracking sessions")
+            }
         }
     }
 
@@ -239,6 +255,11 @@ struct MetricsView: View {
         } header: {
             Text("Event log")
         }
+    }
+
+    private func sessionIdentifiers() -> [String] {
+        guard let player = metricsCollector.player else { return [] }
+        return player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)
     }
 }
 
