@@ -6,6 +6,7 @@
 
 @testable import PillarboxMonitoring
 
+import Nimble
 import PillarboxCircumspect
 import PillarboxPlayer
 import PillarboxStreams
@@ -19,7 +20,12 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://localhost")!)) { _ in .test }
             ]
         ))
-        expectAtLeastHits(start(), stop()) {
+        expectAtLeastHits(
+            start(),
+            stop { payload in
+                expect(payload.data.playerPosition).to(beCloseTo(1000, within: 100))
+            }
+        ) {
             player.play()
         }
     }
@@ -61,7 +67,15 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 ) { _ in .test }
             ]
         ))
-        expectAtLeastHits(start(), heartbeat(), heartbeat()) {
+        expectAtLeastHits(
+            start(),
+            heartbeat { payload in
+                expect(payload.data.playerPosition).to(beCloseTo(1000, within: 100))
+            },
+            heartbeat { payload in
+                expect(payload.data.playerPosition).to(beCloseTo(2000, within: 100))
+            }
+        ) {
             player.play()
         }
     }

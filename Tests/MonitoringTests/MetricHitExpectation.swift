@@ -8,14 +8,14 @@
 
 private struct _MetricHitExpectation<Data>: MetricHitExpectation where Data: Encodable {
     let eventName: EventName
-    private let evaluate: (Data) -> Void
+    private let evaluate: (MetricPayload<Data>) -> Void
 
-    fileprivate init(eventName: EventName, evaluate: @escaping (Data) -> Void) {
+    fileprivate init(eventName: EventName, evaluate: @escaping (MetricPayload<Data>) -> Void) {
         self.eventName = eventName
         self.evaluate = evaluate
     }
 
-    func evaluate(_ data: Data) {
+    func evaluate(_ data: MetricPayload<Data>) {
         evaluate(data)
     }
 }
@@ -25,7 +25,7 @@ protocol MetricHitExpectation {
 
     var eventName: EventName { get }
 
-    func evaluate(_ data: Data)
+    func evaluate(_ data: MetricPayload<Data>)
 }
 
 private extension MetricHitExpectation {
@@ -33,7 +33,7 @@ private extension MetricHitExpectation {
         guard let payload = payload as? MetricPayload<Data>, payload.eventName == expectation.eventName else {
             return false
         }
-        evaluate(payload.data)
+        evaluate(payload)
         return true
     }
 }
@@ -43,19 +43,19 @@ func match(payload: any Encodable, with expectation: any MetricHitExpectation) -
 }
 
 extension MonitoringTestCase {
-    func error(evaluate: @escaping (MetricErrorData) -> Void = { _ in }) -> some MetricHitExpectation {
+    func error(evaluate: @escaping (MetricPayload<MetricErrorData>) -> Void = { _ in }) -> some MetricHitExpectation {
         _MetricHitExpectation(eventName: .error, evaluate: evaluate)
     }
 
-    func heartbeat(evaluate: @escaping (MetricEventData) -> Void = { _ in }) -> some MetricHitExpectation {
+    func heartbeat(evaluate: @escaping (MetricPayload<MetricEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
         _MetricHitExpectation(eventName: .heartbeat, evaluate: evaluate)
     }
 
-    func start(evaluate: @escaping (MetricStartData) -> Void = { _ in }) -> some MetricHitExpectation {
+    func start(evaluate: @escaping (MetricPayload<MetricStartData>) -> Void = { _ in }) -> some MetricHitExpectation {
         _MetricHitExpectation(eventName: .start, evaluate: evaluate)
     }
 
-    func stop(evaluate: @escaping (MetricEventData) -> Void = { _ in }) -> some MetricHitExpectation {
+    func stop(evaluate: @escaping (MetricPayload<MetricEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
         _MetricHitExpectation(eventName: .stop, evaluate: evaluate)
     }
 }
