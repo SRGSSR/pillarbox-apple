@@ -144,7 +144,7 @@ private extension MetricsTracker {
                 stallCount: metrics?.total.numberOfStalls,
                 stallDuration: stallDuration.toMilliseconds,
                 playbackDuration: stopwatch.time().toMilliseconds,
-                playerPosition: properties.time().toMilliseconds
+                playerPosition: Self.playerPosition(from: properties)
             )
         )
         return try? Self.jsonEncoder.encode(payload)
@@ -161,7 +161,7 @@ private extension MetricsTracker {
                 name: "\(error.domain)(\(error.code))",
                 message: error.localizedDescription,
                 url: URL(string: properties?.metrics()?.uri),
-                playerPosition: properties?.time().toMilliseconds
+                playerPosition: Self.playerPosition(from: properties)
             )
         )
         return try? Self.jsonEncoder.encode(payload)
@@ -232,6 +232,20 @@ private extension MetricsTracker {
 
     static func timestamp(from date: Date) -> Double {
         (date.timeIntervalSince1970 * 1000).rounded()
+    }
+
+    static func playerPosition(from properties: PlayerProperties?) -> Int? {
+        guard let properties else { return nil }
+        switch properties.streamType {
+        case .onDemand:
+            return properties.time().toMilliseconds
+        case .live:
+            return 0
+        case .dvr:
+            return properties.endOffset().toMilliseconds
+        default:
+            return nil
+        }
     }
 
     static func bufferedDuration(from properties: PlayerProperties?) -> Int? {
