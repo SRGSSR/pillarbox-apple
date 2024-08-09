@@ -17,7 +17,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         let player = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             trackerAdapters: [
-                MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://localhost")!)) { _ in .test }
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
             ]
         ))
         expectAtLeastHits(
@@ -34,7 +34,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         let player = Player(item: .simple(
             url: Stream.unavailable.url,
             trackerAdapters: [
-                MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://localhost")!)) { _ in .test }
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
             ]
         ))
         expectAtLeastHits(
@@ -55,7 +55,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             trackerAdapters: [
-                MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://localhost")!)) { _ in .test }
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
             ]
         ))
         _ = player
@@ -93,7 +93,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://localhost")!)) {
+                MetricsTracker.adapter(configuration: .test) {
                     .init(
                         identifier: "identifier",
                         metadataUrl: URL(string: "https://localhost/metadata.json"),
@@ -104,6 +104,8 @@ final class MetricsTrackerTests: MonitoringTestCase {
         ))
         expectAtLeastHits(
             start { payload in
+                expect(payload.version).to(equal("1.0.0"))
+
                 let data = payload.data
 
                 let device = data.device
