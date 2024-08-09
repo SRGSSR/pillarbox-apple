@@ -159,7 +159,8 @@ let package = Package(
             name: "MonitoringTests",
             dependencies: [
                 .target(name: "PillarboxCircumspect"),
-                .target(name: "PillarboxMonitoring")
+                .target(name: "PillarboxMonitoring"),
+                .target(name: "PillarboxStreams")
             ]
         ),
         .testTarget(

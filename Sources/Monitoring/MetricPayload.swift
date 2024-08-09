@@ -6,7 +6,7 @@
 
 import Foundation
 
-struct MetricPayload<Data: Encodable>: Encodable {
+struct MetricPayload<Data>: Encodable where Data: Encodable {
     let version = "1.0.0"
     let sessionId: String
     let eventName: EventName

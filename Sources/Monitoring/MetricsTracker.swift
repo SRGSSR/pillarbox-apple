@@ -202,6 +202,8 @@ private extension MetricsTracker {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = httpBody
         URLSession.shared.dataTask(with: request).resume()
+
+        MetricsListener.capture(payload)
     }
 }
 
