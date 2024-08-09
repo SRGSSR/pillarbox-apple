@@ -7,15 +7,9 @@
 import Foundation
 
 struct MetricPayload<Data: Encodable>: Encodable {
-    enum MetricName: String, Encodable {
-        case start = "START"
-        case error = "ERROR"
-        case stop = "STOP"
-    }
-
     let version = "1.0.0"
     let sessionId: String
-    let eventName: MetricName
+    let eventName: EventName
     let timestamp: TimeInterval
     let data: Data
 }

@@ -65,7 +65,7 @@ public final class MetricsTracker: PlayerItemTracker {
     }
 
     public func disable(with properties: PlayerProperties) {
-        send(payload: stopPayload(with: properties, at: Date()))
+        send(payload: eventPayload(for: .stop, with: properties, at: Date()))
         reset()
     }
 }
@@ -130,26 +130,6 @@ private extension MetricsTracker {
         return try? Self.jsonEncoder.encode(payload)
     }
 
-    func stopPayload(with properties: PlayerProperties, at date: Date) -> Data? {
-        let metrics = properties.metrics()
-        let payload = MetricPayload(
-            sessionId: sessionId,
-            eventName: .stop,
-            timestamp: Self.timestamp(from: date),
-            data: MetricEventData(
-                url: metrics?.uri,
-                bitrate: metrics?.indicatedBitrate?.toBytes,
-                bandwidth: metrics?.observedBitrate?.toBytes,
-                bufferedDuration: Self.bufferedDuration(from: properties),
-                stallCount: metrics?.total.numberOfStalls,
-                stallDuration: stallDuration.toMilliseconds,
-                playbackDuration: stopwatch.time().toMilliseconds,
-                playerPosition: Self.playerPosition(from: properties)
-            )
-        )
-        return try? Self.jsonEncoder.encode(payload)
-    }
-
     func errorPayload(error: Error, severity: MetricErrorData.Severity, at date: Date) -> Data? {
         let error = error as NSError
         let payload = MetricPayload(
@@ -161,6 +141,26 @@ private extension MetricsTracker {
                 name: "\(error.domain)(\(error.code))",
                 message: error.localizedDescription,
                 url: URL(string: properties?.metrics()?.uri),
+                playerPosition: Self.playerPosition(from: properties)
+            )
+        )
+        return try? Self.jsonEncoder.encode(payload)
+    }
+
+    func eventPayload(for eventName: EventName, with properties: PlayerProperties, at date: Date) -> Data? {
+        let metrics = properties.metrics()
+        let payload = MetricPayload(
+            sessionId: sessionId,
+            eventName: eventName,
+            timestamp: Self.timestamp(from: date),
+            data: MetricEventData(
+                url: metrics?.uri,
+                bitrate: metrics?.indicatedBitrate?.toBytes,
+                bandwidth: metrics?.observedBitrate?.toBytes,
+                bufferedDuration: Self.bufferedDuration(from: properties),
+                stallCount: metrics?.total.numberOfStalls,
+                stallDuration: stallDuration.toMilliseconds,
+                playbackDuration: stopwatch.time().toMilliseconds,
                 playerPosition: Self.playerPosition(from: properties)
             )
         )
