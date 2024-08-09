@@ -21,7 +21,7 @@ final class ComScoreTrackerPlaybackSpeedTests: ComScoreTestCase {
         player.setDesiredPlaybackSpeed(0.5)
 
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.ns_st_rt).to(equal(50))
             }
         ) {

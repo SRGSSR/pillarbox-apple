@@ -6,7 +6,7 @@
 
 @testable import PillarboxMonitoring
 
-protocol MonitoringHitExpectation {
+protocol MetricHitExpectation {
     associatedtype Data: Encodable
 
     var eventName: EventName { get }
@@ -14,8 +14,8 @@ protocol MonitoringHitExpectation {
     func evaluate(_ data: Data)
 }
 
-extension MonitoringHitExpectation {
-    func match(payload: any Encodable, with expectation: any MonitoringHitExpectation) -> Bool {
+extension MetricHitExpectation {
+    func match(payload: any Encodable, with expectation: any MetricHitExpectation) -> Bool {
         guard let payload = payload as? MetricPayload<Data>, payload.eventName == expectation.eventName else {
             return false
         }
@@ -24,6 +24,6 @@ extension MonitoringHitExpectation {
     }
 }
 
-func match(payload: any Encodable, with expectation: any MonitoringHitExpectation) -> Bool {
+func match(payload: any Encodable, with expectation: any MetricHitExpectation) -> Bool {
     expectation.match(payload: payload, with: expectation)
 }

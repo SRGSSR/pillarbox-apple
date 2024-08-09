@@ -11,40 +11,42 @@ struct ComScoreHitExpectation {
     private let name: ComScoreHit.Name
     private let evaluate: (ComScoreLabels) -> Void
 
+    fileprivate init(name: ComScoreHit.Name, evaluate: @escaping (ComScoreLabels) -> Void) {
+        self.name = name
+        self.evaluate = evaluate
+    }
+
     static func match(hit: ComScoreHit, with expectation: Self) -> Bool {
         guard hit.name == expectation.name else { return false }
         expectation.evaluate(hit.labels)
         return true
-    }
-
-    /// Play.
-    static func play(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
-        .init(name: .play, evaluate: evaluate)
-    }
-
-    /// Playback rate.
-    static func playrt(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
-        .init(name: .playrt, evaluate: evaluate)
-    }
-
-    /// Pause.
-    static func pause(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
-        .init(name: .pause, evaluate: evaluate)
-    }
-
-    /// End.
-    static func end(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
-        .init(name: .end, evaluate: evaluate)
-    }
-
-    /// View.
-    static func view(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
-        .init(name: .view, evaluate: evaluate)
     }
 }
 
 extension ComScoreHitExpectation: CustomDebugStringConvertible {
     var debugDescription: String {
         name.rawValue
+    }
+}
+
+extension ComScoreTestCase {
+    func play(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> ComScoreHitExpectation {
+        ComScoreHitExpectation(name: .play, evaluate: evaluate)
+    }
+
+    func playrt(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> ComScoreHitExpectation {
+        ComScoreHitExpectation(name: .playrt, evaluate: evaluate)
+    }
+
+    func pause(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> ComScoreHitExpectation {
+        ComScoreHitExpectation(name: .pause, evaluate: evaluate)
+    }
+
+    func end(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> ComScoreHitExpectation {
+        ComScoreHitExpectation(name: .end, evaluate: evaluate)
+    }
+
+    func view(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> ComScoreHitExpectation {
+        ComScoreHitExpectation(name: .view, evaluate: evaluate)
     }
 }

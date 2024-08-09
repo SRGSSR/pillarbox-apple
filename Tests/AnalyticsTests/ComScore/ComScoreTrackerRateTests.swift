@@ -20,7 +20,7 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
         ))
 
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.ns_st_rt).to(equal(200))
             }
         ) {
@@ -40,7 +40,7 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
         expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
-            .playrt { labels in
+            playrt { labels in
                 expect(labels.ns_st_rt).to(equal(200))
             }
         ) {

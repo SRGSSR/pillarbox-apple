@@ -15,7 +15,7 @@ class MonitoringTestCase: XCTestCase {}
 extension MonitoringTestCase {
     /// Collects metric hits during some time interval and matches them against expectations.
     func expectHits(
-        _ expectations: any MonitoringHitExpectation...,
+        _ expectations: any MetricHitExpectation...,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -36,7 +36,7 @@ extension MonitoringTestCase {
 
     /// Expects metric hits during some time interval and matches them against expectations.
     func expectAtLeastHits(
-        _ expectations: any MonitoringHitExpectation...,
+        _ expectations: any MetricHitExpectation...,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
