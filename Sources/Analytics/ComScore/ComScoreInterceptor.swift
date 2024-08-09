@@ -10,7 +10,6 @@ import Foundation
 private var kInterceptorEnabled = false
 
 private enum ComScoreRequestInfoKey: String {
-    case identifier = "ComScoreRequestIdentifier"
     case queryItems = "ComScoreRequestQueryItems"
 }
 

@@ -12,7 +12,7 @@ import UIKit
 
 /// A tracker gathering metrics.
 ///
-/// This tracker implements seamlessly integrates with Pillarbox monitoring platform.
+/// This tracker seamlessly integrates with Pillarbox monitoring platform.
 public final class MetricsTracker: PlayerItemTracker {
     private let configuration: Configuration
     private let stopwatch = Stopwatch()
