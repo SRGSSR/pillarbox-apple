@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Combine
 import PillarboxCore
 import PillarboxPlayer
 import UIKit
@@ -20,6 +21,8 @@ public final class MetricsTracker: PlayerItemTracker {
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
     private var isStarted = false
+
+    private var cancellables = Set<AnyCancellable>()
 
     public var description: String? {
         "Monitoring: \(sessionId)"
@@ -47,6 +50,7 @@ public final class MetricsTracker: PlayerItemTracker {
         case .resourceLoading:
             isStarted = true
             send(payload: startPayload(from: events, at: lastEvent.date))
+            startHeartbeat()
         case .stall:
             stallDate = Date()
         case .resumeAfterStall:
@@ -65,6 +69,7 @@ public final class MetricsTracker: PlayerItemTracker {
     }
 
     public func disable(with properties: PlayerProperties) {
+        stopHeartbeat()
         send(payload: eventPayload(for: .stop, with: properties, at: Date()))
         reset()
     }
@@ -192,6 +197,22 @@ private extension MetricsTracker {
         request.httpBody = payload
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         URLSession.shared.dataTask(with: request).resume()
+    }
+}
+
+private extension MetricsTracker {
+    func startHeartbeat() {
+        Timer.publish(every: 30, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self, let properties else { return }
+                send(payload: eventPayload(for: .heartbeat, with: properties, at: Date()))
+            }
+            .store(in: &cancellables)
+    }
+
+    func stopHeartbeat() {
+        cancellables = []
     }
 }
 
