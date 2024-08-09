@@ -14,7 +14,7 @@ struct MetricPayload<Data: Encodable>: Encodable {
     }
 
     let version = "1.0.0"
-    let sessionId: UUID
+    let sessionId: String
     let eventName: MetricName
     let timestamp: TimeInterval
     let data: Data

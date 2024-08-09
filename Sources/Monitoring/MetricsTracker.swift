@@ -17,11 +17,13 @@ public final class MetricsTracker: PlayerItemTracker {
     }()
 
     private let serverUrl: URL
-    private var sessionId = UUID()
-    private var stallDate: Date?
+    private var sessionId = createSessionId()
+    private let stopwatch = Stopwatch()
+
     private var metadata: Metadata?
     private var properties: PlayerProperties?
-    private let stopwatch = Stopwatch()
+
+    private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
     private var isStarted = false
 
@@ -92,10 +94,6 @@ public extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static func bufferDuration(properties: PlayerProperties?) -> Int? {
-        properties?.loadedTimeRange.duration.toMilliseconds
-    }
-
     func startPayload(from events: [MetricEvent]) -> Data? {
         let payload = MetricPayload(
             sessionId: sessionId,
@@ -103,7 +101,7 @@ private extension MetricsTracker {
             timestamp: Date().timeIntervalSince1970,
             data: MetricStartData(
                 device: .init(
-                    id: UIDevice.current.identifierForVendor?.uuidString,
+                    id: UIDevice.current.identifierForVendor?.uuidString.lowercased(),
                     model: Self.deviceModel,
                     type: Self.deviceType
                 ),
@@ -180,7 +178,7 @@ private extension MetricsTracker {
     }
 
     func reset() {
-        sessionId = UUID()
+        sessionId = Self.createSessionId()
         stallDuration = 0
         isStarted = false
         stopwatch.reset()
@@ -222,4 +220,12 @@ private extension MetricsTracker {
             String(cString: pointer)
         }
     }()
+
+    static func createSessionId() -> String {
+        UUID().uuidString.lowercased()
+    }
+
+    static func bufferDuration(properties: PlayerProperties?) -> Int? {
+        properties?.loadedTimeRange.duration.toMilliseconds
+    }
 }
