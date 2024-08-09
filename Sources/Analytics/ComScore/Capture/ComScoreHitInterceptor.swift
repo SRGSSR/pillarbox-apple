@@ -14,7 +14,7 @@ private enum ComScoreRequestInfoKey: String {
 }
 
 /// A tool that intercepts comScore requests and turns them into a hit stream.
-enum ComScoreInterceptor {
+enum ComScoreHitInterceptor {
     private static var started = false
     private static var cancellables = Set<AnyCancellable>()
 
@@ -40,7 +40,7 @@ enum ComScoreInterceptor {
             .eraseToAnyPublisher()
     }
 
-    static func hitPublisher(for identifier: String) -> AnyPublisher<ComScoreHit, Never> {
+    static func publisher(for identifier: String) -> AnyPublisher<ComScoreHit, Never> {
         labelsPublisher()
             .filter { $0.listener_session_id == identifier }
             .compactMap { .init(from: $0) }

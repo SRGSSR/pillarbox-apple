@@ -24,7 +24,7 @@ public enum AnalyticsListener {
     ///
     /// - Parameter completion: A completion called when the listener has been started.
     public static func start(completion: @escaping () -> Void) {
-        ComScoreInterceptor.start(completion: completion)
+        ComScoreHitInterceptor.start(completion: completion)
     }
 
     /// Captures comScore hits.
@@ -33,7 +33,7 @@ public enum AnalyticsListener {
     ///   which emits the associated hits.
     public static func captureComScoreHits(perform: (AnyPublisher<ComScoreHit, Never>) -> Void) {
         captureHits(perform: perform) { identifier in
-            ComScoreInterceptor.hitPublisher(for: identifier)
+            ComScoreHitInterceptor.publisher(for: identifier)
         }
     }
 
@@ -43,7 +43,7 @@ public enum AnalyticsListener {
     ///   which emits the associated hits.
     public static func captureCommandersActHits(perform: (AnyPublisher<CommandersActHit, Never>) -> Void) {
         captureHits(perform: perform) { identifier in
-            CommandersActInterceptor.hitPublisher(for: identifier)
+            CommandersActHitInterceptor.publisher(for: identifier)
         }
     }
 
