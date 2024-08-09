@@ -27,8 +27,8 @@ public final class MetricsTracker: PlayerItemTracker {
 
     private var cancellables = Set<AnyCancellable>()
 
-    public var description: String? {
-        "Monitoring: \(sessionId)"
+    public var sessionIdentifier: String? {
+        sessionId
     }
 
     public init(configuration: Configuration) {

@@ -20,8 +20,10 @@ public protocol PlayerItemTracker: AnyObject {
     /// Use `Void` if no metadata is required.
     associatedtype Metadata
 
-    /// An optional description of the tracker.
-    var description: String? { get }
+    /// An optional session identifier.
+    ///
+    /// None if omitted.
+    var sessionIdentifier: String? { get }
 
     /// Creates the tracker.
     ///
@@ -62,8 +64,10 @@ public protocol PlayerItemTracker: AnyObject {
 }
 
 public extension PlayerItemTracker {
-    /// The default description.
-    var description: String? { nil }
+    /// The default tracking identifier.
+    var sessionIdentifier: String? {
+        nil
+    }
 
     /// Creates an adapter for the receiver with the provided mapping to its metadata format.
     ///

@@ -9,7 +9,7 @@
 import AVFoundation
 import Combine
 
-final class TrackerLifeCycleMock: PlayerItemTracker {
+final class PlayerItemTrackerMock: PlayerItemTracker {
     typealias StatePublisher = PassthroughSubject<State, Never>
 
     enum State: Equatable {
@@ -52,7 +52,7 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
     }
 }
 
-extension TrackerLifeCycleMock {
+extension PlayerItemTrackerMock {
     static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<Void> {
         adapter(configuration: Configuration(statePublisher: statePublisher))
     }
