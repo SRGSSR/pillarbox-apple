@@ -139,7 +139,7 @@ private extension MetricsTracker {
                 url: metrics?.uri,
                 bitrate: metrics?.indicatedBitrate?.toBytes,
                 bandwidth: metrics?.observedBitrate?.toBytes,
-                bufferDuration: Self.bufferDuration(properties: properties),
+                bufferedDuration: Self.bufferedDuration(from: properties),
                 stallCount: metrics?.total.numberOfStalls,
                 stallDuration: stallDuration.toMilliseconds,
                 playbackDuration: stopwatch.time().toMilliseconds,
@@ -229,11 +229,11 @@ private extension MetricsTracker {
         UUID().uuidString.lowercased()
     }
 
-    static func bufferDuration(properties: PlayerProperties?) -> Int? {
-        properties?.loadedTimeRange.duration.toMilliseconds
-    }
-
     static func timestamp(from date: Date) -> Double {
         (date.timeIntervalSince1970 * 1000).rounded()
+    }
+
+    static func bufferedDuration(from properties: PlayerProperties?) -> Int? {
+        properties?.loadedTimeRange.duration.toMilliseconds
     }
 }
