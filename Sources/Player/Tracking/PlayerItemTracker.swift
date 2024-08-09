@@ -64,7 +64,7 @@ public protocol PlayerItemTracker: AnyObject {
 }
 
 public extension PlayerItemTracker {
-    /// The default tracking identifier.
+    /// The default session identifier.
     var sessionIdentifier: String? {
         nil
     }

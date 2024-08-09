@@ -35,7 +35,7 @@ public struct TrackerAdapter<M> {
 }
 
 extension TrackerAdapter: PlayerItemTracking {
-    var registration: TrackerRegistration? {
+    var registration: TrackingRegistration? {
         guard let sessionIdentifier = tracker.sessionIdentifier else {
             return nil
         }

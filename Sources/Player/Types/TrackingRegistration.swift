@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-struct TrackerRegistration {
+struct TrackingRegistration {
     let type: Any.Type
     let sessionIdentifier: String
 }
