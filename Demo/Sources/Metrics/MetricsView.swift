@@ -175,6 +175,9 @@ struct MetricsView: View {
             Section {
                 ForEach(sessionIdentifiers, id: \.self) { identifier in
                     Text(identifier)
+#if os(iOS)
+                        .textSelection(.enabled)
+#endif
                 }
             } header: {
                 Text("Tracking sessions")
