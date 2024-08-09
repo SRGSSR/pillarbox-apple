@@ -97,13 +97,13 @@ public extension MetricsTracker {
 
     /// Metadata associated with the tracker.
     struct Metadata {
-        let id: String?
+        let identifier: String?
         let metadataUrl: URL?
         let assetUrl: URL?
 
         /// Creates metadata.
-        public init(id: String?, metadataUrl: URL?, assetUrl: URL?) {
-            self.id = id
+        public init(identifier: String?, metadataUrl: URL?, assetUrl: URL?) {
+            self.identifier = identifier
             self.metadataUrl = metadataUrl
             self.assetUrl = assetUrl
         }
@@ -131,7 +131,7 @@ private extension MetricsTracker {
                 ),
                 player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
                 media: .init(
-                    id: metadata?.id,
+                    id: metadata?.identifier,
                     metadataUrl: metadata?.metadataUrl,
                     assetUrl: metadata?.assetUrl,
                     origin: Bundle.main.bundleIdentifier

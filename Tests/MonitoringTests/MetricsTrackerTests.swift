@@ -12,19 +12,26 @@ import PillarboxStreams
 import XCTest
 
 final class MetricsTrackerTests: MonitoringTestCase {
-    func testStart() {
+    func testEntirePlayback() {
         let player = Player(item: .simple(
-            url: Stream.onDemand.url,
+            url: Stream.shortOnDemand.url,
             trackerAdapters: [
-                MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://localhost")!)) {
-                    .init(id: "id", metadataUrl: nil, assetUrl: nil)
-                }
+                MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://localhost")!)) { _ in .test }
             ]
         ))
+        expectAtLeastHits(start(), stop()) {
+            player.play()
+        }
+    }
 
-        expectAtLeastHits(
-            start()
-        ) {
+    func testError() {
+        let player = Player(item: .simple(
+            url: Stream.unavailable.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://localhost")!)) { _ in .test }
+            ]
+        ))
+        expectAtLeastHits(start(), error()) {
             player.play()
         }
     }

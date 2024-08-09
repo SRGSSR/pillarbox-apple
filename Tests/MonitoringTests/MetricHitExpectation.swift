@@ -43,15 +43,19 @@ func match(payload: any Encodable, with expectation: any MetricHitExpectation) -
 }
 
 extension MonitoringTestCase {
-    func start(evaluate: @escaping (MetricStartData) -> Void = { _ in }) -> some MetricHitExpectation {
-        _MetricHitExpectation(eventName: .start, evaluate: evaluate)
-    }
-
     func error(evaluate: @escaping (MetricErrorData) -> Void = { _ in }) -> some MetricHitExpectation {
         _MetricHitExpectation(eventName: .error, evaluate: evaluate)
     }
 
-    func event(name: EventName, evaluate: @escaping (MetricEventData) -> Void = { _ in }) -> some MetricHitExpectation {
-        _MetricHitExpectation(eventName: name, evaluate: evaluate)
+    func heartbeat(evaluate: @escaping (MetricEventData) -> Void = { _ in }) -> some MetricHitExpectation {
+        _MetricHitExpectation(eventName: .heartbeat, evaluate: evaluate)
+    }
+
+    func start(evaluate: @escaping (MetricStartData) -> Void = { _ in }) -> some MetricHitExpectation {
+        _MetricHitExpectation(eventName: .start, evaluate: evaluate)
+    }
+
+    func stop(evaluate: @escaping (MetricEventData) -> Void = { _ in }) -> some MetricHitExpectation {
+        _MetricHitExpectation(eventName: .stop, evaluate: evaluate)
     }
 }

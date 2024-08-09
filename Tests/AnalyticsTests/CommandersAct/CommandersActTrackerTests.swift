@@ -18,7 +18,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
                 CommandersActTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
             play { labels in
                 expect(labels.media_position).to(equal(0))
@@ -35,7 +34,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
                 CommandersActTracker.adapter { _ in [:] }
             ]
         ))
-
         expectNoHits(during: .seconds(2)) {
             player.pause()
         }
@@ -68,7 +66,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
                 CommandersActTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
             play(),
             eof { labels in
@@ -144,7 +141,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
                 CommandersActTracker.adapter { _ in [:] }
             ]
         ))
-
         expectNoHits(during: .seconds(3)) {
             player.play()
         }

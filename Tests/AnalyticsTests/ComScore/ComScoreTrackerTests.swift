@@ -27,7 +27,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
             play { labels in
                 expect(labels.ns_st_mp).to(equal("Pillarbox"))
@@ -46,7 +45,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
             play { labels in
                 expect(labels.ns_st_po).to(beCloseTo(0, within: 2))
@@ -63,7 +61,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectNoHits(during: .seconds(2)) {
             player.pause()
         }
@@ -97,7 +94,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
             play(),
             end { labels in
@@ -115,7 +111,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
             play(),
             end { labels in
@@ -137,7 +132,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectNoHits(during: .seconds(3)) {
             player.play()
         }
@@ -150,7 +144,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(play(), end()) {
             // See 2. at the top of this file.
             player.play()
@@ -186,7 +179,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
             play { labels in
                 expect(labels.ns_st_rt).to(equal(200))
