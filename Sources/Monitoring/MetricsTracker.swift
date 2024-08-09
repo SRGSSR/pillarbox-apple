@@ -10,7 +10,7 @@ import PillarboxPlayer
 import UIKit
 
 public final class MetricsTracker: PlayerItemTracker {
-    private let serverUrl: URL
+    private let configuration: Configuration
     private let stopwatch = Stopwatch()
 
     private var metadata: Metadata?
@@ -25,8 +25,8 @@ public final class MetricsTracker: PlayerItemTracker {
         "Monitoring: \(sessionId)"
     }
 
-    public init(configuration: URL) {
-        serverUrl = configuration
+    public init(configuration: Configuration) {
+        self.configuration = configuration
     }
 
     public func enable(for player: AVPlayer) {}
@@ -82,6 +82,17 @@ public extension MetricsTracker {
             self.id = id
             self.metadataUrl = metadataUrl
             self.assetUrl = assetUrl
+        }
+    }
+
+    struct Configuration {
+        let serviceUrl: URL
+        
+        /// Creates the configuration.
+        ///
+        /// - Parameter serviceUrl: The URL service endpoint where data must be sent.
+        public init(serviceUrl: URL) {
+            self.serviceUrl = serviceUrl
         }
     }
 }
@@ -175,7 +186,7 @@ private extension MetricsTracker {
 private extension MetricsTracker {
     func send(payload: Data?) {
         guard let payload else { return }
-        var request = URLRequest(url: serverUrl)
+        var request = URLRequest(url: configuration.serviceUrl)
         request.httpMethod = "POST"
         request.httpBody = payload
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

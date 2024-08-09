@@ -90,7 +90,7 @@ struct Media: Hashable {
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.mediaComposition.mainChapter.title)
                     },
-                    MetricsTracker.adapter(configuration: URL(string: "https://echo.free.beeceptor.com")!) { metadata in
+                    MetricsTracker.adapter(configuration: .init(serviceUrl: URL(string: "https://echo.free.beeceptor.com")!)) { metadata in
                         .init(
                             id: metadata.mediaComposition.chapterUrn,
                             metadataUrl: metadata.mediaCompositionUrl,
