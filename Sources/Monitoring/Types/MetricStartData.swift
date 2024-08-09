@@ -17,20 +17,10 @@ struct MetricStartData: Encodable {
 }
 
 extension MetricStartData {
-    struct OperatingSystem: Encodable {
-        let name: String
-        let version: String
-    }
-
-    struct Player: Encodable {
-        let name: String
-        let platform: String
-        let version: String
-    }
-
-    struct Screen: Encodable {
-        let width: Int
-        let height: Int
+    struct Device: Encodable {
+        let id: String?
+        let model: String
+        let type: String
     }
 
     struct Media: Encodable {
@@ -40,10 +30,15 @@ extension MetricStartData {
         let origin: String?
     }
 
-    struct Device: Encodable {
-        let id: String?
-        let model: String
-        let type: String
+    struct OperatingSystem: Encodable {
+        let name: String
+        let version: String
+    }
+
+    struct Player: Encodable {
+        let name: String
+        let platform: String
+        let version: String
     }
 
     struct QoEMetrics: Encodable {
@@ -67,6 +62,11 @@ extension MetricStartData {
                 return nil
             }
         }
+    }
+
+    struct Screen: Encodable {
+        let width: Int
+        let height: Int
     }
 }
 
