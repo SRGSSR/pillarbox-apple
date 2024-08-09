@@ -48,10 +48,11 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next cyclomatic_complexity
     public func updateMetricEvents(to events: [MetricEvent]) {
-        switch events.last?.kind {
+        guard let lastEvent = events.last else { return }
+        switch lastEvent.kind {
         case .resourceLoading:
             isStarted = true
-            sendPayload(data: startPayload(from: events))
+            sendPayload(data: startPayload(from: events, at: lastEvent.date))
         case .stall:
             stallDate = Date()
         case .resumeAfterStall:
@@ -59,18 +60,18 @@ public final class MetricsTracker: PlayerItemTracker {
             stallDuration += Date().timeIntervalSince(stallDate)
         case let .failure(error):
             if !isStarted {
-                sendPayload(data: startPayload(from: events))
+                sendPayload(data: startPayload(from: events, at: lastEvent.date))
             }
-            sendPayload(data: errorPayload(error: error, severity: .fatal))
+            sendPayload(data: errorPayload(error: error, severity: .fatal, at: lastEvent.date))
         case let .warning(error):
-            sendPayload(data: errorPayload(error: error, severity: .warning))
+            sendPayload(data: errorPayload(error: error, severity: .warning, at: lastEvent.date))
         default:
             break
         }
     }
 
     public func disable(with properties: PlayerProperties) {
-        sendPayload(data: stopPayload(with: properties))
+        sendPayload(data: stopPayload(with: properties, at: Date()))
         reset()
     }
 }
@@ -92,11 +93,11 @@ public extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    func startPayload(from events: [MetricEvent]) -> Data? {
+    func startPayload(from events: [MetricEvent], at date: Date) -> Data? {
         let payload = MetricPayload(
             sessionId: sessionId,
             eventName: .start,
-            timestamp: Self.timestamp(),
+            timestamp: Self.timestamp(from: date),
             data: MetricStartData(
                 device: .init(
                     id: UIDevice.current.identifierForVendor?.uuidString.lowercased(),
@@ -129,12 +130,12 @@ private extension MetricsTracker {
         return try? Self.jsonEncoder.encode(payload)
     }
 
-    func stopPayload(with properties: PlayerProperties) -> Data? {
+    func stopPayload(with properties: PlayerProperties, at date: Date) -> Data? {
         let metrics = properties.metrics()
         let payload = MetricPayload(
             sessionId: sessionId,
             eventName: .stop,
-            timestamp: Self.timestamp(),
+            timestamp: Self.timestamp(from: date),
             data: MetricEventData(
                 url: metrics?.uri,
                 bitrate: metrics?.indicatedBitrate?.toBytes,
@@ -149,12 +150,12 @@ private extension MetricsTracker {
         return try? Self.jsonEncoder.encode(payload)
     }
 
-    func errorPayload(error: Error, severity: MetricErrorData.Severity) -> Data? {
+    func errorPayload(error: Error, severity: MetricErrorData.Severity, at date: Date) -> Data? {
         let error = error as NSError
         let payload = MetricPayload(
             sessionId: sessionId,
             eventName: .error,
-            timestamp: Self.timestamp(),
+            timestamp: Self.timestamp(from: date),
             data: MetricErrorData(
                 severity: severity,
                 name: "\(error.domain)(\(error.code))",
@@ -227,7 +228,7 @@ private extension MetricsTracker {
         properties?.loadedTimeRange.duration.toMilliseconds
     }
 
-    static func timestamp() -> Double {
-        (Date().timeIntervalSince1970 * 1000).rounded()
+    static func timestamp(from date: Date) -> Double {
+        (date.timeIntervalSince1970 * 1000).rounded()
     }
 }
