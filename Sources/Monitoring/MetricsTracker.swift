@@ -70,7 +70,9 @@ public final class MetricsTracker: PlayerItemTracker {
 
     public func disable(with properties: PlayerProperties) {
         stopHeartbeat()
-        send(payload: eventPayload(for: .stop, with: properties, at: Date()))
+        if isStarted {
+            send(payload: eventPayload(for: .stop, with: properties, at: Date()))
+        }
         reset()
     }
 }
