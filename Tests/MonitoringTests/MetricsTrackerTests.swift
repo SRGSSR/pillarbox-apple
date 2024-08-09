@@ -89,6 +89,33 @@ final class MetricsTrackerTests: MonitoringTestCase {
         }
     }
 
+    func testSessionIdentifierRenewal() {
+        let player = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
+            ]
+        ))
+        var sessionId: String?
+        expectAtLeastHits(
+            start { payload in
+                sessionId = payload.sessionId
+            },
+            stop { payload in
+                expect(payload.sessionId).to(equal(sessionId))
+            }
+        ) {
+            player.play()
+        }
+        expectAtLeastHits(
+            start { payload in
+                expect(payload.sessionId).notTo(equal(sessionId))
+            }
+        ) {
+            player.replay()
+        }
+    }
+
     func testStartPayload() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
