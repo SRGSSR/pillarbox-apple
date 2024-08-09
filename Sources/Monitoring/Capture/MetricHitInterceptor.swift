@@ -8,8 +8,8 @@ import Combine
 import Foundation
 
 /// A tool that intercepts metric requests and turns them into a hit stream.
-enum MetricsInterceptor {
-    static func hitPublisher(for identifier: String) -> AnyPublisher<Encodable, Never> {
+enum MetricHitInterceptor {
+    static func publisher(for identifier: String) -> AnyPublisher<Encodable, Never> {
         NotificationCenter.default.publisher(for: .didSendMetricRequest)
             .compactMap { payload(from: $0, for: identifier) }
             .eraseToAnyPublisher()

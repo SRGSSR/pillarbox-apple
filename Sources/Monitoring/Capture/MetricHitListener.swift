@@ -7,12 +7,12 @@
 import Combine
 import Foundation
 
-enum MetricsListener {
+enum MetricHitListener {
     private static var sessionIdentifier: String?
-    
+
     static func captureMetricHits(perform: (AnyPublisher<Encodable, Never>) -> Void) {
         captureHits(perform: perform) { identifier in
-            MetricsInterceptor.hitPublisher(for: identifier)
+            MetricHitInterceptor.publisher(for: identifier)
         }
     }
 

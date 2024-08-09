@@ -21,7 +21,7 @@ extension MonitoringTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        MetricsListener.captureMetricHits { publisher in
+        MetricHitListener.captureMetricHits { publisher in
             expectPublished(
                 values: expectations,
                 from: publisher,
@@ -42,7 +42,7 @@ extension MonitoringTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        MetricsListener.captureMetricHits { publisher in
+        MetricHitListener.captureMetricHits { publisher in
             expectAtLeastPublished(
                 values: expectations,
                 from: publisher,
@@ -62,7 +62,7 @@ extension MonitoringTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        MetricsListener.captureMetricHits { publisher in
+        MetricHitListener.captureMetricHits { publisher in
             expectNothingPublished(
                 from: publisher,
                 during: interval,

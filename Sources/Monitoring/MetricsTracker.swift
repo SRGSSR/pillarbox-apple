@@ -203,7 +203,7 @@ private extension MetricsTracker {
         request.httpBody = httpBody
         URLSession.shared.dataTask(with: request).resume()
 
-        MetricsListener.capture(payload)
+        MetricHitListener.capture(payload)
     }
 }
 
