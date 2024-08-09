@@ -13,6 +13,7 @@ struct MetricPayload<Data: Encodable>: Encodable {
         case stop = "STOP"
     }
 
+    let version = "1.0.0"
     let sessionId: UUID
     let eventName: MetricName
     let timestamp: TimeInterval
