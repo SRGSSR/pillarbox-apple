@@ -10,12 +10,6 @@ import PillarboxPlayer
 import UIKit
 
 public final class MetricsTracker: PlayerItemTracker {
-    private static let jsonEncoder: JSONEncoder = {
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        return encoder
-    }()
-
     private let serverUrl: URL
     private let stopwatch = Stopwatch()
 
@@ -52,7 +46,7 @@ public final class MetricsTracker: PlayerItemTracker {
         switch lastEvent.kind {
         case .resourceLoading:
             isStarted = true
-            sendPayload(data: startPayload(from: events, at: lastEvent.date))
+            send(payload: startPayload(from: events, at: lastEvent.date))
         case .stall:
             stallDate = Date()
         case .resumeAfterStall:
@@ -60,18 +54,18 @@ public final class MetricsTracker: PlayerItemTracker {
             stallDuration += Date().timeIntervalSince(stallDate)
         case let .failure(error):
             if !isStarted {
-                sendPayload(data: startPayload(from: events, at: lastEvent.date))
+                send(payload: startPayload(from: events, at: lastEvent.date))
             }
-            sendPayload(data: errorPayload(error: error, severity: .fatal, at: lastEvent.date))
+            send(payload: errorPayload(error: error, severity: .fatal, at: lastEvent.date))
         case let .warning(error):
-            sendPayload(data: errorPayload(error: error, severity: .warning, at: lastEvent.date))
+            send(payload: errorPayload(error: error, severity: .warning, at: lastEvent.date))
         default:
             break
         }
     }
 
     public func disable(with properties: PlayerProperties) {
-        sendPayload(data: stopPayload(with: properties, at: Date()))
+        send(payload: stopPayload(with: properties, at: Date()))
         reset()
     }
 }
@@ -93,30 +87,25 @@ public extension MetricsTracker {
 }
 
 private extension MetricsTracker {
+    private static let jsonEncoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        return encoder
+    }()
+
     func startPayload(from events: [MetricEvent], at date: Date) -> Data? {
         let payload = MetricPayload(
             sessionId: sessionId,
             eventName: .start,
             timestamp: Self.timestamp(from: date),
             data: MetricStartData(
-                device: .init(
-                    id: UIDevice.current.identifierForVendor?.uuidString.lowercased(),
-                    model: Self.deviceModel,
-                    type: Self.deviceType
-                ),
-                os: .init(
-                    name: UIDevice.current.systemName,
-                    version: UIDevice.current.systemVersion
-                ),
+                device: .init(id: Self.deviceId, model: Self.deviceModel, type: Self.deviceType),
+                os: .init(name: UIDevice.current.systemName, version: UIDevice.current.systemVersion),
                 screen: .init(
                     width: Int(UIScreen.main.nativeBounds.width),
                     height: Int(UIScreen.main.nativeBounds.height)
                 ),
-                player: .init(
-                    name: "Pillarbox",
-                    platform: "Apple",
-                    version: Player.version
-                ),
+                player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
                 media: .init(
                     id: metadata?.id,
                     metadataUrl: metadata?.metadataUrl,
@@ -126,7 +115,6 @@ private extension MetricsTracker {
                 timeMetrics: .init(events: events)
             )
         )
-
         return try? Self.jsonEncoder.encode(payload)
     }
 
@@ -185,17 +173,29 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    func sendPayload(data: Data?) {
-        guard let data else { return }
+    func send(payload: Data?) {
+        guard let payload else { return }
         var request = URLRequest(url: serverUrl)
         request.httpMethod = "POST"
-        request.httpBody = data
+        request.httpBody = payload
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         URLSession.shared.dataTask(with: request).resume()
     }
 }
 
 private extension MetricsTracker {
+    static let deviceId: String? = {
+        UIDevice.current.identifierForVendor?.uuidString.lowercased()
+    }()
+
+    static let deviceModel: String = {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        return withUnsafePointer(to: &systemInfo.machine.0) { pointer in
+            String(cString: pointer)
+        }
+    }()
+
     static let deviceType: String = {
         guard !ProcessInfo.processInfo.isRunningOnMac else { return "Computer" }
         switch UIDevice.current.userInterfaceIdiom {
@@ -211,15 +211,9 @@ private extension MetricsTracker {
             return "Phone"
         }
     }()
+}
 
-    static let deviceModel: String = {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        return withUnsafePointer(to: &systemInfo.machine.0) { pointer in
-            String(cString: pointer)
-        }
-    }()
-
+private extension MetricsTracker {
     static func createSessionId() -> String {
         UUID().uuidString.lowercased()
     }
