@@ -10,20 +10,6 @@ final class CommandersActService {
     private var serverSide: ServerSide?
     private var vendor: Vendor?
 
-    private static var device: String = {
-        guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop" }
-        switch UIDevice.current.userInterfaceIdiom {
-        case .phone:
-            return "phone"
-        case .pad:
-            return "tablet"
-        case .tv:
-            return "tvbox"
-        default:
-            return "phone"
-        }
-    }()
-
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
 
@@ -65,6 +51,22 @@ final class CommandersActService {
         AnalyticsListener.capture(customEvent)
         serverSide.execute(customEvent)
     }
+}
+
+extension CommandersActService {
+    private static var device: String = {
+        guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop" }
+        switch UIDevice.current.userInterfaceIdiom {
+        case .phone:
+            return "phone"
+        case .pad:
+            return "tablet"
+        case .tv:
+            return "tvbox"
+        default:
+            return "phone"
+        }
+    }()
 }
 
 extension TCAdditionalProperties {

@@ -71,6 +71,18 @@ public final class MetricsTracker: PlayerItemTracker {
 }
 
 public extension MetricsTracker {
+    /// Configuration associated with the tracker.
+    struct Configuration {
+        let serviceUrl: URL
+
+        /// Creates the configuration.
+        ///
+        /// - Parameter serviceUrl: The URL service endpoint where data must be sent.
+        public init(serviceUrl: URL) {
+            self.serviceUrl = serviceUrl
+        }
+    }
+
     /// Metadata associated with the tracker.
     struct Metadata {
         let id: String?
@@ -82,17 +94,6 @@ public extension MetricsTracker {
             self.id = id
             self.metadataUrl = metadataUrl
             self.assetUrl = assetUrl
-        }
-    }
-
-    struct Configuration {
-        let serviceUrl: URL
-        
-        /// Creates the configuration.
-        ///
-        /// - Parameter serviceUrl: The URL service endpoint where data must be sent.
-        public init(serviceUrl: URL) {
-            self.serviceUrl = serviceUrl
         }
     }
 }
