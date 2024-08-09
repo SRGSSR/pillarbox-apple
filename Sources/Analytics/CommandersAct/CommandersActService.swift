@@ -10,7 +10,7 @@ final class CommandersActService {
     private var serverSide: ServerSide?
     private var vendor: Vendor?
 
-    private static func device() -> String {
+    private static var device: String = {
         guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop" }
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
@@ -22,7 +22,7 @@ final class CommandersActService {
         default:
             return "phone"
         }
-    }
+    }()
 
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
@@ -30,7 +30,7 @@ final class CommandersActService {
         if let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) {
             serverSide.addPermanentData("app_library_version", withValue: Analytics.version)
             serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
-            serverSide.addPermanentData("navigation_device", withValue: Self.device())
+            serverSide.addPermanentData("navigation_device", withValue: Self.device)
             serverSide.enableRunningInBackground()
             serverSide.waitForUserAgent()
             self.serverSide = serverSide
