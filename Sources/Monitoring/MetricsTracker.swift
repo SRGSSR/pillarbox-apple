@@ -17,12 +17,12 @@ public final class MetricsTracker: PlayerItemTracker {
     }()
 
     private let serverUrl: URL
-    private var sessionId = createSessionId()
     private let stopwatch = Stopwatch()
 
     private var metadata: Metadata?
     private var properties: PlayerProperties?
 
+    private var sessionId = createSessionId()
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
     private var isStarted = false
@@ -70,10 +70,8 @@ public final class MetricsTracker: PlayerItemTracker {
     }
 
     public func disable(with properties: PlayerProperties) {
-        defer {
-            reset()
-        }
         sendPayload(data: stopPayload(with: properties))
+        reset()
     }
 }
 
@@ -98,7 +96,7 @@ private extension MetricsTracker {
         let payload = MetricPayload(
             sessionId: sessionId,
             eventName: .start,
-            timestamp: Date().timeIntervalSince1970,
+            timestamp: Self.timestamp(),
             data: MetricStartData(
                 device: .init(
                     id: UIDevice.current.identifierForVendor?.uuidString.lowercased(),
@@ -136,7 +134,7 @@ private extension MetricsTracker {
         let payload = MetricPayload(
             sessionId: sessionId,
             eventName: .stop,
-            timestamp: Date().timeIntervalSince1970,
+            timestamp: Self.timestamp(),
             data: MetricEventData(
                 url: metrics?.uri,
                 bitrate: metrics?.indicatedBitrate?.toBytes,
@@ -156,7 +154,7 @@ private extension MetricsTracker {
         let payload = MetricPayload(
             sessionId: sessionId,
             eventName: .error,
-            timestamp: Date().timeIntervalSince1970,
+            timestamp: Self.timestamp(),
             data: MetricErrorData(
                 severity: severity,
                 name: "\(error.domain)(\(error.code))",
@@ -227,5 +225,9 @@ private extension MetricsTracker {
 
     static func bufferDuration(properties: PlayerProperties?) -> Int? {
         properties?.loadedTimeRange.duration.toMilliseconds
+    }
+
+    static func timestamp() -> Double {
+        (Date().timeIntervalSince1970 * 1000).rounded()
     }
 }
