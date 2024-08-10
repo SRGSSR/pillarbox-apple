@@ -791,9 +791,9 @@ private struct ErrorView: View {
     @ObservedObject var player: Player
 
     private var subtitle: String? {
-        let sessions = player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)
-        guard !sessions.isEmpty else { return nil }
-        return  "Monitoring: \(sessions.joined(separator: ", "))"
+        let sessionIdentifiers = player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)
+        guard !sessionIdentifiers.isEmpty else { return nil }
+        return  "Monitoring: \(sessionIdentifiers.joined(separator: ", "))"
     }
 
     var body: some View {
