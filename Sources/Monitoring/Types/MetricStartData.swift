@@ -13,7 +13,7 @@ struct MetricStartData: Encodable {
     let screen: Screen
     let player: Player
     let media: Media
-    let qoeMetrics: QoEMetrics?
+    let qoeMetrics: QualityOfExperienceMetrics?
 }
 
 extension MetricStartData {
@@ -41,7 +41,7 @@ extension MetricStartData {
         let version: String
     }
 
-    struct QoEMetrics: Encodable {
+    struct QualityOfExperienceMetrics: Encodable {
         let mediaSource: Int?
         let asset: Int?
         let total: Int
@@ -70,7 +70,7 @@ extension MetricStartData {
     }
 }
 
-private extension MetricStartData.QoEMetrics {
+private extension MetricStartData.QualityOfExperienceMetrics {
     static func assetLoadingDateInterval(from event: MetricEvent) -> Int? {
         switch event.kind {
         case let .assetLoading(dateInterval):
