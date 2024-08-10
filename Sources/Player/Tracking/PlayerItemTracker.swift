@@ -22,7 +22,15 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// An optional session identifier.
     ///
-    /// None if omitted.
+    /// Session identifiers can be useful for tracker data inspection purposes. An example is a tracker collecting and
+    /// sending data to a server. By assigning a session identifier appearing in the data that is sent, you can use
+    /// ``Player/currentSessionIdentifiers(trackedBy:)`` to extract at any time the list of relevant session identifiers,
+    /// letting you locate the matching data server-side.
+    ///
+    /// This feature can be essential for customer support. In case of need you can namely have a customer send your
+    /// team their session identifier, obtained with ``Player/currentSessionIdentifiers(trackedBy:)``. This way your
+    /// customer support team can inspect the data associated with the user session and help the user understand the
+    /// issues they might experience.
     var sessionIdentifier: String? { get }
 
     /// Creates the tracker.
