@@ -137,16 +137,6 @@ public final class PlayerItem: Equatable {
 }
 
 extension PlayerItem {
-    /// The list of session identifiers associated with trackers of a specific type.
-    func sessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {
-        trackerAdapters.compactMap(\.registration)
-            .filter { $0.type == type }
-            .map(\.sessionIdentifier)
-            .sorted()
-    }
-}
-
-extension PlayerItem {
     func enableTrackers(for player: AVPlayer) {
         trackerAdapters.forEach { adapter in
             adapter.enable(for: player)
@@ -169,6 +159,13 @@ extension PlayerItem {
         trackerAdapters.forEach { adapter in
             adapter.disable(with: properties)
         }
+    }
+
+    func sessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {
+        trackerAdapters.compactMap(\.registration)
+            .filter { $0.type == type }
+            .map(\.sessionIdentifier)
+            .sorted()
     }
 }
 

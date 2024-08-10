@@ -251,6 +251,12 @@ public final class Player: ObservableObject, Equatable {
         Self.currentPlayer = nil
     }
 
+    /// The list of current session identifiers associated with trackers of a specific type.
+    public func currentSessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {
+        guard let currentItem else { return [] }
+        return currentItem.sessionIdentifiers(trackedBy: type)
+    }
+
     private func configurePlayer() {
         queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
