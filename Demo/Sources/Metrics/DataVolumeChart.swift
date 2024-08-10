@@ -9,7 +9,11 @@ import PillarboxPlayer
 import SwiftUI
 
 struct DataVolumeChart: View {
-    private static let megabytes = MeasurementFormatter().string(from: UnitInformationStorage.megabytes)
+    private static let megabytes: String = {
+        let formatter = MeasurementFormatter()
+        formatter.unitStyle = .short
+        return formatter.string(from: UnitInformationStorage.megabytes)
+    }()
 
     let metrics: [Metrics]
     let limit: Int
