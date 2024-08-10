@@ -10,7 +10,7 @@ private struct _MetricHitExpectation<Data>: MetricHitExpectation where Data: Enc
     let eventName: EventName
     private let evaluate: (MetricPayload<Data>) -> Void
 
-    fileprivate init(eventName: EventName, evaluate: @escaping (MetricPayload<Data>) -> Void) {
+    init(eventName: EventName, evaluate: @escaping (MetricPayload<Data>) -> Void) {
         self.eventName = eventName
         self.evaluate = evaluate
     }
