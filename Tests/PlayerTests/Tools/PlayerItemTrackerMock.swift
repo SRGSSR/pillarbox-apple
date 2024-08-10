@@ -22,9 +22,19 @@ final class PlayerItemTrackerMock: PlayerItemTracker {
 
     struct Configuration {
         let statePublisher: StatePublisher
+        let sessionIdentifier: String?
+
+        init(statePublisher: StatePublisher = .init(), sessionIdentifier: String? = nil) {
+            self.statePublisher = statePublisher
+            self.sessionIdentifier = sessionIdentifier
+        }
     }
 
     private let configuration: Configuration
+
+    var sessionIdentifier: String? {
+        configuration.sessionIdentifier
+    }
 
     init(configuration: Configuration) {
         self.configuration = configuration
