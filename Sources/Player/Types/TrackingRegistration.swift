@@ -5,6 +5,6 @@
 //
 
 struct TrackingRegistration {
-    let type: Any.Type
+    let type: any PlayerItemTracker.Type
     let sessionIdentifier: String
 }
