@@ -36,9 +36,7 @@ public struct TrackerAdapter<M> {
 
 extension TrackerAdapter: PlayerItemTracking {
     var registration: TrackingRegistration? {
-        guard let sessionIdentifier = tracker.sessionIdentifier else {
-            return nil
-        }
+        guard let sessionIdentifier = tracker.sessionIdentifier else { return nil }
         return .init(type: type(of: tracker), sessionIdentifier: sessionIdentifier)
     }
 
