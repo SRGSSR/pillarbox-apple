@@ -37,7 +37,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
 
     func testLabels() {
         expectAtLeastHits(
-            .page_view { labels in
+            page_view { labels in
                 expect(labels.page_type).to(equal("type"))
                 expect(labels.page_name).to(equal("name"))
                 expect(labels.navigation_level_0).to(beNil())
@@ -96,7 +96,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
 
     func testBlankLevels() {
         expectAtLeastHits(
-            .page_view { labels in
+            page_view { labels in
                 expect(labels.page_type).to(equal("type"))
                 expect(labels.page_name).to(equal("name"))
                 expect(labels.navigation_level_1).to(beNil())
@@ -131,7 +131,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
 
     func testCustomLabels() {
         expectAtLeastHits(
-            .page_view { labels in
+            page_view { labels in
                 // Use `media_player_display`, a media-only key, so that its value can be parsed.
                 expect(labels.media_player_display).to(equal("value"))
             }
@@ -149,7 +149,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
 
     func testGlobals() {
         expectAtLeastHits(
-            .page_view { labels in
+            page_view { labels in
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
             }
         ) {
@@ -162,7 +162,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
 
     func testLabelsForbiddenOverrides() {
         expectAtLeastHits(
-            .page_view { labels in
+            page_view { labels in
                 expect(labels.page_name).to(equal("name"))
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
             }

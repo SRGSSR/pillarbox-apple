@@ -4,8 +4,10 @@
 
 ### Initializers
 
-- ``init(publisher:trackerAdapters:)-3bxzd``
-- ``init(asset:trackerAdapters:)-6pn9c``
+- ``init(publisher:trackerAdapters:)-s5uo``
+- ``init(publisher:trackerAdapters:)-3ytuy``
+- ``init(asset:trackerAdapters:)-5eukb``
+- ``init(asset:trackerAdapters:)-1yx0f``
 
 ### Methods with metadata
 

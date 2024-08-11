@@ -41,14 +41,14 @@ final class CommandersActEventTests: CommandersActTestCase {
     }
 
     func testName() {
-        expectAtLeastHits(.custom(name: "name")) {
+        expectAtLeastHits(custom(name: "name")) {
             Analytics.shared.sendEvent(commandersAct: .init(name: "name"))
         }
     }
 
     func testCustomLabels() {
         expectAtLeastHits(
-            .custom(name: "name") { labels in
+            custom(name: "name") { labels in
                 // Use `media_player_display`, a media-only key, so that its value can be parsed.
                 expect(labels.media_player_display).to(equal("value"))
             }
@@ -63,7 +63,7 @@ final class CommandersActEventTests: CommandersActTestCase {
     func testUniqueIdentifier() {
         let identifier = TCPredefinedVariables.sharedInstance().uniqueIdentifier()
         expectAtLeastHits(
-            .custom(name: "name") { labels in
+            custom(name: "name") { labels in
                 expect(labels.context.device.sdk_id).to(equal(identifier))
                 expect(labels.user.consistent_anonymous_id).to(equal(identifier))
             }
@@ -74,7 +74,7 @@ final class CommandersActEventTests: CommandersActTestCase {
 
     func testGlobals() {
         expectAtLeastHits(
-            .custom(name: "name") { labels in
+            custom(name: "name") { labels in
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
             }
         ) {
@@ -84,7 +84,7 @@ final class CommandersActEventTests: CommandersActTestCase {
 
     func testCustomLabelsForbiddenOverrides() {
         expectAtLeastHits(
-            .custom(name: "name") { labels in
+            custom(name: "name") { labels in
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
             }
         ) {

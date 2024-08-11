@@ -13,10 +13,23 @@ struct MetricStartData: Encodable {
     let screen: Screen
     let player: Player
     let media: Media
-    let timeMetrics: TimeMetrics?
+    let qoeMetrics: QualityOfExperienceMetrics?
 }
 
 extension MetricStartData {
+    struct Device: Encodable {
+        let id: String?
+        let model: String
+        let type: String
+    }
+
+    struct Media: Encodable {
+        let id: String?
+        let metadataUrl: URL?
+        let assetUrl: URL?
+        let origin: String?
+    }
+
     struct OperatingSystem: Encodable {
         let name: String
         let version: String
@@ -28,25 +41,7 @@ extension MetricStartData {
         let version: String
     }
 
-    struct Screen: Encodable {
-        let width: Int
-        let height: Int
-    }
-
-    struct Media: Encodable {
-        let id: String?
-        let metadataUrl: URL?
-        let assetUrl: URL?
-        let origin: String?
-    }
-
-    struct Device: Encodable {
-        let id: String?
-        let model: String
-        let type: String
-    }
-
-    struct TimeMetrics: Encodable {
+    struct QualityOfExperienceMetrics: Encodable {
         let mediaSource: Int?
         let asset: Int?
         let total: Int
@@ -68,9 +63,14 @@ extension MetricStartData {
             }
         }
     }
+
+    struct Screen: Encodable {
+        let width: Int
+        let height: Int
+    }
 }
 
-private extension MetricStartData.TimeMetrics {
+private extension MetricStartData.QualityOfExperienceMetrics {
     static func assetLoadingDateInterval(from event: MetricEvent) -> Int? {
         switch event.kind {
         case let .assetLoading(dateInterval):

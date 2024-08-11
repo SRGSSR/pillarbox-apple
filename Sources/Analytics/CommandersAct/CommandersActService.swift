@@ -10,27 +10,13 @@ final class CommandersActService {
     private var serverSide: ServerSide?
     private var vendor: Vendor?
 
-    private static func device() -> String {
-        guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop" }
-        switch UIDevice.current.userInterfaceIdiom {
-        case .phone:
-            return "phone"
-        case .pad:
-            return "tablet"
-        case .tv:
-            return "tvbox"
-        default:
-            return "phone"
-        }
-    }
-
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
 
         if let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) {
             serverSide.addPermanentData("app_library_version", withValue: Analytics.version)
             serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
-            serverSide.addPermanentData("navigation_device", withValue: Self.device())
+            serverSide.addPermanentData("navigation_device", withValue: Self.device)
             serverSide.enableRunningInBackground()
             serverSide.waitForUserAgent()
             self.serverSide = serverSide
@@ -65,6 +51,22 @@ final class CommandersActService {
         AnalyticsListener.capture(customEvent)
         serverSide.execute(customEvent)
     }
+}
+
+extension CommandersActService {
+    private static var device: String = {
+        guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop" }
+        switch UIDevice.current.userInterfaceIdiom {
+        case .phone:
+            return "phone"
+        case .pad:
+            return "tablet"
+        case .tv:
+            return "tvbox"
+        default:
+            return "phone"
+        }
+    }()
 }
 
 extension TCAdditionalProperties {

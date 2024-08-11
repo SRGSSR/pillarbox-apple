@@ -27,9 +27,8 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.ns_st_mp).to(equal("Pillarbox"))
                 expect(labels.ns_st_mv).to(equal(PackageInfo.version))
                 expect(labels.cs_ucfr).to(beEmpty())
@@ -46,9 +45,8 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.ns_st_po).to(beCloseTo(0, within: 2))
             }
         ) {
@@ -63,7 +61,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectNoHits(during: .seconds(2)) {
             player.pause()
         }
@@ -81,7 +78,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         expect(player.time.seconds).toEventually(beGreaterThan(1))
 
         expectAtLeastHits(
-            .pause { labels in
+            pause { labels in
                 expect(labels.ns_st_po).to(beCloseTo(1, within: 0.5))
             }
         ) {
@@ -97,10 +94,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
-            .play(),
-            .end { labels in
+            play(),
+            end { labels in
                 expect(labels.ns_st_po).to(beCloseTo(Stream.mediumOnDemand.duration.seconds, within: 0.5))
             }
         ) {
@@ -115,10 +111,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
-            .play(),
-            .end { labels in
+            play(),
+            end { labels in
                 expect(labels.ns_st_po).to(beCloseTo(5, within: 0.5))
             }
         ) {
@@ -137,7 +132,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectNoHits(during: .seconds(3)) {
             player.play()
         }
@@ -150,8 +144,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
-        expectAtLeastHits(.play(), .end()) {
+        expectAtLeastHits(play(), end()) {
             // See 2. at the top of this file.
             player.play()
             // See 1. at the top of this file.
@@ -174,7 +167,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
 
-        expectAtLeastHits(.play()) {
+        expectAtLeastHits(play()) {
             player.isTrackingEnabled = true
         }
     }
@@ -186,9 +179,8 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.ns_st_rt).to(equal(200))
             }
         ) {
@@ -206,7 +198,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             configuration: .init(position: at(.init(value: 100, timescale: 1)))
         ))
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.ns_st_po).to(beCloseTo(100, within: 5))
             }
         ) {

@@ -4,29 +4,28 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import PillarboxAnalytics
+@testable import PillarboxMonitoring
 
 import Dispatch
 import PillarboxCircumspect
+import XCTest
 
-class ComScoreTestCase: TestCase {}
+class MonitoringTestCase: XCTestCase {}
 
-extension ComScoreTestCase {
-    /// Collects hits emitted by comScore during some time interval and matches them against expectations.
-    ///
-    /// A network connection is required by the comScore SDK to properly emit hits.
+extension MonitoringTestCase {
+    /// Collects metric hits during some time interval and matches them against expectations.
     func expectHits(
-        _ expectations: ComScoreHitExpectation...,
+        _ expectations: any MetricHitExpectation...,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsListener.captureComScoreHits { publisher in
+        MetricHitListener.captureMetricHits { publisher in
             expectPublished(
                 values: expectations,
                 from: publisher,
-                to: ComScoreHitExpectation.match,
+                to: match(payload:with:),
                 during: interval,
                 file: file,
                 line: line,
@@ -35,21 +34,19 @@ extension ComScoreTestCase {
         }
     }
 
-    /// Expects hits emitted by comScore during some time interval and matches them against expectations.
-    ///
-    /// A network connection is required by the comScore SDK to properly emit hits.
+    /// Expects metric hits during some time interval and matches them against expectations.
     func expectAtLeastHits(
-        _ expectations: ComScoreHitExpectation...,
+        _ expectations: any MetricHitExpectation...,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsListener.captureComScoreHits { publisher in
+        MetricHitListener.captureMetricHits { publisher in
             expectAtLeastPublished(
                 values: expectations,
                 from: publisher,
-                to: ComScoreHitExpectation.match,
+                to: match(payload:with:),
                 timeout: timeout,
                 file: file,
                 line: line,
@@ -58,14 +55,14 @@ extension ComScoreTestCase {
         }
     }
 
-    /// Expects no hits emitted by comScore during some time interval.
+    /// Expects no metric hits during some time interval.
     func expectNoHits(
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsListener.captureComScoreHits { publisher in
+        MetricHitListener.captureMetricHits { publisher in
             expectNothingPublished(
                 from: publisher,
                 during: interval,

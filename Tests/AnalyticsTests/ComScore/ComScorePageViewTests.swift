@@ -55,7 +55,7 @@ private class ManualMockViewController: UIViewController, PageViewTracking {
 final class ComScorePageViewTests: ComScoreTestCase {
     func testGlobals() {
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c2).to(equal("6036016"))
                 expect(labels.ns_ap_an).to(equal("xctest"))
                 expect(labels.c8).to(equal("name"))
@@ -83,7 +83,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
 
     func testCustomLabels() {
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels["key"]).to(equal("value"))
             }
         ) {
@@ -96,7 +96,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
 
     func testCustomLabelsForbiddenOverrides() {
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("name"))
                 expect(labels.cs_ucfr).to(beEmpty())
             }
@@ -138,7 +138,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testAutomaticTrackingWhenViewAppears() {
         let viewController = AutomaticMockViewController()
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("automatic"))
             }
         ) {
@@ -150,7 +150,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let viewController = AutomaticMockViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         expectHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("automatic"))
             },
             during: .seconds(2)
@@ -166,7 +166,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [viewController1, viewController2]
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("title1"))
             }
         ) {
@@ -193,7 +193,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             UINavigationController(rootViewController: viewController2)
         ]
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("title1"))
             }
         ) {
@@ -220,7 +220,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             viewController.simulateViewAppearance()
         }
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("manual"))
             }
         ) {
@@ -231,7 +231,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testRecursiveAutomaticTrackingOnViewController() {
         let viewController = AutomaticMockViewController()
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("automatic"))
             }
         ) {
@@ -243,7 +243,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let viewController = UINavigationController(rootViewController: AutomaticMockViewController(title: "root"))
         viewController.pushViewController(AutomaticMockViewController(title: "pushed"), animated: false)
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("pushed"))
             }
         ) {
@@ -255,7 +255,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let viewController = UIPageViewController()
         viewController.setViewControllers([AutomaticMockViewController()], direction: .forward, animated: false)
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("automatic"))
             }
         ) {
@@ -270,7 +270,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             AutomaticMockViewController(title: "title2")
         ]
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("title1"))
             }
         ) {
@@ -286,7 +286,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             AutomaticMockViewController(title: "title3")
         ]
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("title1"))
             }
         ) {
@@ -299,7 +299,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         window.makeKeyAndVisible()
         window.rootViewController = AutomaticMockViewController()
         expectAtLeastHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("automatic"))
             }
         ) {
@@ -314,7 +314,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         window.rootViewController = rootViewController
         rootViewController.present(AutomaticMockViewController(title: "modal"), animated: false)
         expectHits(
-            .view { labels in
+            view { labels in
                 expect(labels.c8).to(equal("modal"))
             },
             during: .seconds(2)

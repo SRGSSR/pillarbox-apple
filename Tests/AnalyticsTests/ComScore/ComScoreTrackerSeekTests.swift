@@ -24,10 +24,10 @@ final class ComScoreTrackerSeekTests: ComScoreTestCase {
         expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
-            .pause { labels in
+            pause { labels in
                 expect(labels.ns_st_po).to(beCloseTo(0, within: 0.5))
             },
-            .play { labels in
+            play { labels in
                 expect(labels.ns_st_po).to(beCloseTo(7, within: 0.5))
             }
         ) {
@@ -50,7 +50,7 @@ final class ComScoreTrackerSeekTests: ComScoreTestCase {
         }
 
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.ns_st_po).to(beCloseTo(7, within: 0.5))
             }
         ) {

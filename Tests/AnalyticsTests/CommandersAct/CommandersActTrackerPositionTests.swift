@@ -26,7 +26,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         wait(for: .seconds(2))
 
         expectAtLeastHits(
-            .pause { labels in
+            pause { labels in
                 expect(labels.media_position).to(equal(2))
             }
         ) {
@@ -47,7 +47,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         wait(for: .seconds(2))
 
         expectAtLeastHits(
-            .pause { labels in
+            pause { labels in
                 expect(labels.media_position).to(equal(2))
             }
         ) {
@@ -67,10 +67,10 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
-            .seek { labels in
+            seek { labels in
                 expect(labels.media_position).to(equal(0))
             },
-            .play { labels in
+            play { labels in
                 expect(labels.media_position).to(equal(0))
             }
         ) {
@@ -91,7 +91,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         wait(for: .seconds(2))
 
         expectAtLeastHits(
-            .stop { labels in
+            stop { labels in
                 expect(labels.media_position).to(equal(2))
             }
         ) {
@@ -112,7 +112,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         wait(for: .seconds(2))
 
         expectAtLeastHits(
-            .stop { labels in
+            stop { labels in
                 expect(labels.media_position).to(equal(2))
             }
         ) {
@@ -129,7 +129,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
             configuration: .init(position: at(.init(value: 100, timescale: 1)))
         ))
         expectAtLeastHits(
-            .play { labels in
+            play { labels in
                 expect(labels.media_position).to(equal(100))
             }
         ) {

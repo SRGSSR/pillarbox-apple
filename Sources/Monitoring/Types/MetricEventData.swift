@@ -6,11 +6,17 @@
 
 struct MetricEventData: Encodable {
     let url: String?
-    let bitrate: Int?
-    let bandwidth: Int?
-    let bufferDuration: Int?
-    let stallCount: Int?
-    let stallDuration: Int?
+    let bitrate: Double?
+    let bandwidth: Double?
+    let bufferedDuration: Int?
+    let stall: Stall
     let playbackDuration: Int?
     let playerPosition: Int?
+}
+
+extension MetricEventData {
+    struct Stall: Encodable {
+        let stallCount: Int?
+        let stallDuration: Int?
+    }
 }
