@@ -251,7 +251,7 @@ public final class Player: ObservableObject, Equatable {
         Self.currentPlayer = nil
     }
 
-    /// The list of current session managed by trackers of a specific type.
+    /// The list of current sessions managed by trackers of a specific type.
     ///
     /// Only trackers with an associated ``PlayerItemTracker/sessionIdentifier`` are returned.
     public func currentSessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {
