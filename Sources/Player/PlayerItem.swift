@@ -24,14 +24,9 @@ public final class PlayerItem: Equatable {
     private static let trigger = Trigger()
 
     @Published private(set) var content: AssetContent
-    private let trackerAdapters: [any TrackerLifeCycle]
+    private let trackerAdapters: [any PlayerItemTracking]
 
     let id = UUID()
-
-    /// The tracker descriptions.
-    public var trackerDescriptions: [String] {
-        trackerAdapters.compactMap(\.description)
-    }
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
@@ -164,6 +159,13 @@ extension PlayerItem {
         trackerAdapters.forEach { adapter in
             adapter.disable(with: properties)
         }
+    }
+
+    func sessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {
+        trackerAdapters.compactMap(\.registration)
+            .filter { $0.type == type }
+            .map(\.sessionIdentifier)
+            .sorted()
     }
 }
 

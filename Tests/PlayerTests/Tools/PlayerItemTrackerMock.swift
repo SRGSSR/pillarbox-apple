@@ -9,7 +9,7 @@
 import AVFoundation
 import Combine
 
-final class TrackerLifeCycleMock: PlayerItemTracker {
+final class PlayerItemTrackerMock: PlayerItemTracker {
     typealias StatePublisher = PassthroughSubject<State, Never>
 
     enum State: Equatable {
@@ -22,9 +22,19 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
 
     struct Configuration {
         let statePublisher: StatePublisher
+        let sessionIdentifier: String?
+
+        init(statePublisher: StatePublisher = .init(), sessionIdentifier: String? = nil) {
+            self.statePublisher = statePublisher
+            self.sessionIdentifier = sessionIdentifier
+        }
     }
 
     private let configuration: Configuration
+
+    var sessionIdentifier: String? {
+        configuration.sessionIdentifier
+    }
 
     init(configuration: Configuration) {
         self.configuration = configuration
@@ -52,7 +62,7 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
     }
 }
 
-extension TrackerLifeCycleMock {
+extension PlayerItemTrackerMock {
     static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<Void> {
         adapter(configuration: Configuration(statePublisher: statePublisher))
     }

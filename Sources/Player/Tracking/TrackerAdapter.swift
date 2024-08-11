@@ -34,9 +34,10 @@ public struct TrackerAdapter<M> {
     }
 }
 
-extension TrackerAdapter: TrackerLifeCycle {
-    var description: String? {
-        tracker.description
+extension TrackerAdapter: PlayerItemTracking {
+    var registration: TrackingRegistration? {
+        guard let sessionIdentifier = tracker.sessionIdentifier else { return nil }
+        return .init(type: type(of: tracker), sessionIdentifier: sessionIdentifier)
     }
 
     func enable(for player: AVPlayer) {

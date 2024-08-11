@@ -6,6 +6,7 @@
 
 import AVFoundation
 import CoreMedia
+import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
@@ -790,7 +791,9 @@ private struct ErrorView: View {
     @ObservedObject var player: Player
 
     private var subtitle: String? {
-        player.currentItem?.trackerDescriptions.joined(separator: ", ")
+        let sessionIdentifiers = player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)
+        guard !sessionIdentifiers.isEmpty else { return nil }
+        return  "Monitoring: \(sessionIdentifiers.joined(separator: ", "))"
     }
 
     var body: some View {
