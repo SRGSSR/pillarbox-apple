@@ -32,7 +32,7 @@ struct DataVolumeChart: View {
         Chart(Array(metrics.suffix(limit).enumerated()), id: \.offset) { metrics in
             BarMark(
                 x: .value("Index", metrics.offset),
-                y: .value("Data volume (\(Self.megabytes)", Double(metrics.element.increment.numberOfBytesTransferred) / 1024 * 1024),
+                y: .value("Data volume (\(Self.megabytes)", Double(metrics.element.increment.numberOfBytesTransferred) / 1024 / 1024),
                 width: .inset(1)
             )
             .foregroundStyle(.cyan)
