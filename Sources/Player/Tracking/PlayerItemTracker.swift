@@ -81,38 +81,45 @@ public extension PlayerItemTracker {
     ///
     /// - Parameters:
     ///   - configuration: The tracker configuration.
+    ///   - mandatory: Set to `true` to prevent the tracker from being disabled with with ``Player/isTrackingEnabled``.
     ///   - mapper: A closure that maps an item metadata to tracker metadata.
     /// - Returns: The tracker adapter.
-    static func adapter<M>(configuration: Configuration, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
-        .init(trackerType: Self.self, configuration: configuration, mapper: mapper)
+    static func adapter<M>(configuration: Configuration, mandatory: Bool = false, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
+        .init(trackerType: Self.self, mandatory: mandatory, configuration: configuration, mapper: mapper)
     }
 }
 
 public extension PlayerItemTracker where Configuration == Void {
     /// Creates an adapter for the receiver.
     /// 
-    /// - Parameter mapper: A closure that maps an item metadata to tracker metadata.
+    /// - Parameters:
+    ///   - mapper: A closure that maps an item metadata to tracker metadata.
+    ///   - mandatory: Set to `true` to prevent the tracker from being disabled with with ``Player/isTrackingEnabled``.
     /// - Returns: The tracker adapter.
-    static func adapter<M>(mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
-        .init(trackerType: Self.self, configuration: (), mapper: mapper)
+    static func adapter<M>(mapper: @escaping (M) -> Metadata, mandatory: Bool = false) -> TrackerAdapter<M> {
+        .init(trackerType: Self.self, mandatory: mandatory, configuration: (), mapper: mapper)
     }
 }
 
 public extension PlayerItemTracker where Metadata == Void {
     /// Creates an adapter for the receiver.
     ///
-    /// - Parameter configuration: The tracker configuration.
+    /// - Parameters:
+    ///   - configuration: The tracker configuration.
+    ///   - mandatory: Set to `true` to prevent the tracker from being disabled with with ``Player/isTrackingEnabled``.
     /// - Returns: The tracker adapter.
-    static func adapter<M>(configuration: Configuration) -> TrackerAdapter<M> {
-        .init(trackerType: Self.self, configuration: configuration) { _ in }
+    static func adapter<M>(configuration: Configuration, mandatory: Bool = false) -> TrackerAdapter<M> {
+        .init(trackerType: Self.self, mandatory: mandatory, configuration: configuration) { _ in }
     }
 }
 
 public extension PlayerItemTracker where Configuration == Void, Metadata == Void {
     /// Creates an adapter for the receiver.
     ///
+    /// - Parameter mandatory: Set to `true` to prevent the tracker from being disabled with with ``Player/isTrackingEnabled``.
+    ///
     /// - Returns: The tracker adapter.
-    static func adapter<M>() -> TrackerAdapter<M> {
-        .init(trackerType: Self.self, configuration: ()) { _ in }
+    static func adapter<M>(mandatory: Bool = false) -> TrackerAdapter<M> {
+        .init(trackerType: Self.self, mandatory: mandatory, configuration: ()) { _ in }
     }
 }
