@@ -22,8 +22,8 @@ final class Tracker {
             guard isEnabled != oldValue else { return }
             if isEnabled {
                 enableTrackers(matchingBehavior: .optional)
-                updateTrackersProperties(to: properties)
-                updateTrackersMetricEvents(to: metricEventCollector.metricEvents)
+                item.updateTrackersProperties(matchingBehavior: .optional, to: properties)
+                item.updateTrackersMetricEvents(matchingBehavior: .optional, to: metricEventCollector.metricEvents)
             }
             else {
                 disableTrackers(matchingBehavior: .optional)
