@@ -121,6 +121,9 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// A Boolean setting whether trackers must be enabled or not.
+    ///
+    /// Optional trackers only are affected by this setting, see ``TrackingBehavior``. This behavior can be
+    /// customized when creating an adapter using one of the available ``PlayerItemTracker`` methods.
     public var isTrackingEnabled = true {
         didSet {
             tracker?.isEnabled = isTrackingEnabled

@@ -10,11 +10,11 @@
 public enum TrackingBehavior {
     /// Optional tracking.
     ///
-    /// The ``TrackerAdapter`` can be disabled ``Player/isTrackingEnabled``.
+    /// The ``TrackerAdapter`` is affected by ``Player/isTrackingEnabled``.
     case optional
 
     /// Mandatory tracking.
     ///
-    /// The ``TrackerAdapter`` can never be disabled with  ``Player/isTrackingEnabled``.
+    /// The ``TrackerAdapter`` is not affected by  ``Player/isTrackingEnabled``.
     case mandatory
 }

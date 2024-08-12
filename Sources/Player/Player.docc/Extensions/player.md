@@ -126,6 +126,7 @@
 ### Tracking
 
 - ``isTrackingEnabled``
+- ``currentSessionIdentifiers(trackedBy:)``
 
 ### User Interface
 
