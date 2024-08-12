@@ -13,15 +13,8 @@ public struct TrackerAdapter<M> {
     private let tracker: any PlayerItemTracker
     private let mandatory: Bool
     private let update: (M) -> Void
-
-    /// Creates an adapter for a type of tracker with the provided mapper.
-    /// 
-    /// - Parameters:
-    ///   - trackerType: The type of the tracker to instantiate and manage.
-    ///   - mandatory: Set to `true` prevent ``Player/isTrackingEnabled``from disabling the tracker.
-    ///   - configuration: The tracker configuration.
-    ///   - mapper: The metadata mapper.
-    public init<T>(
+    
+    init<T>(
         trackerType: T.Type,
         mandatory: Bool = false,
         configuration: T.Configuration,
