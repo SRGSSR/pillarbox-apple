@@ -63,7 +63,7 @@ final class PlayerItemTrackerMock: PlayerItemTracker {
 }
 
 extension PlayerItemTrackerMock {
-    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<Void> {
-        adapter(configuration: Configuration(statePublisher: statePublisher))
+    static func adapter(statePublisher: StatePublisher, mandatory: Bool = false) -> TrackerAdapter<Void> {
+        adapter(configuration: Configuration(statePublisher: statePublisher), mandatory: mandatory)
     }
 }

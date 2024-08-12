@@ -13,7 +13,7 @@ public struct TrackerAdapter<M> {
     private let tracker: any PlayerItemTracker
     private let mandatory: Bool
     private let update: (M) -> Void
-    
+
     init<T>(
         trackerType: T.Type,
         mandatory: Bool = false,
