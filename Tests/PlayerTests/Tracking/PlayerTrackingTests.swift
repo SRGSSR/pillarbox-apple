@@ -102,7 +102,7 @@ final class PlayerTrackingTests: TestCase {
                 .simple(
                     url: Stream.shortOnDemand.url,
                     trackerAdapters: [
-                        PlayerItemTrackerMock.adapter(statePublisher: publisher, mandatory: true)
+                        PlayerItemTrackerMock.adapter(statePublisher: publisher, behavior: .mandatory)
                     ]
                 )
             )

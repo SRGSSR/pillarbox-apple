@@ -21,12 +21,12 @@ final class Tracker {
         didSet {
             guard isEnabled != oldValue else { return }
             if isEnabled {
-                enable(mandatory: false)
+                enable(behavior: .optional)
                 updateTrackersProperties(to: properties)
                 updateTrackersMetricEvents(to: metricEventCollector.metricEvents)
             }
             else {
-                disable(mandatory: false)
+                disable(behavior: .optional)
             }
         }
     }
@@ -47,32 +47,32 @@ final class Tracker {
         self.isEnabled = isEnabled
         self.metricEventCollector = MetricEventCollector(items: items)
 
-        enable(mandatory: true)
+        enable(behavior: .mandatory)
         if isEnabled {
-            enable(mandatory: false)
+            enable(behavior: .optional)
         }
         configurePublishers()
     }
 
-    private func enable(mandatory: Bool) {
-        item.enableTrackers(mandatory: mandatory, for: player)
+    private func enable(behavior: TrackingBehavior) {
+        item.enableTrackers(behavior: behavior, for: player)
     }
 
-    private func disable(mandatory: Bool) {
-        item.disableTrackers(mandatory: mandatory, with: properties)
+    private func disable(behavior: TrackingBehavior) {
+        item.disableTrackers(behavior: behavior, with: properties)
     }
 
     private func updateTrackersProperties(to properties: PlayerProperties) {
-        item.updateTrackersProperties(mandatory: true, to: properties)
+        item.updateTrackersProperties(behavior: .mandatory, to: properties)
         if isEnabled {
-            item.updateTrackersProperties(mandatory: false, to: properties)
+            item.updateTrackersProperties(behavior: .optional, to: properties)
         }
     }
 
     private func updateTrackersMetricEvents(to events: [MetricEvent]) {
-        item.updateTrackersMetricEvents(mandatory: true, to: events)
+        item.updateTrackersMetricEvents(behavior: .mandatory, to: events)
         if isEnabled {
-            item.updateTrackersMetricEvents(mandatory: false, to: events)
+            item.updateTrackersMetricEvents(behavior: .optional, to: events)
         }
     }
 
@@ -98,8 +98,8 @@ final class Tracker {
 
     deinit {
         if isEnabled {
-            disable(mandatory: false)
+            disable(behavior: .optional)
         }
-        disable(mandatory: true)
+        disable(behavior: .mandatory)
     }
 }

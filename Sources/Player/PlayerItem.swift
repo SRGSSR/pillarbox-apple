@@ -137,30 +137,30 @@ public final class PlayerItem: Equatable {
 }
 
 extension PlayerItem {
-    private func trackerAdapters(mandatory: Bool) -> [PlayerItemTracking] {
-        trackerAdapters.filter { $0.isMandatory == mandatory }
+    private func trackerAdapters(behavior: TrackingBehavior) -> [PlayerItemTracking] {
+        trackerAdapters.filter { $0.behavior == behavior }
     }
 
-    func enableTrackers(mandatory: Bool, for player: AVPlayer) {
-        trackerAdapters(mandatory: mandatory).forEach { adapter in
+    func enableTrackers(behavior: TrackingBehavior, for player: AVPlayer) {
+        trackerAdapters(behavior: behavior).forEach { adapter in
             adapter.enable(for: player)
         }
     }
 
-    func updateTrackersProperties(mandatory: Bool, to properties: PlayerProperties) {
-        trackerAdapters(mandatory: mandatory).forEach { adapter in
+    func updateTrackersProperties(behavior: TrackingBehavior, to properties: PlayerProperties) {
+        trackerAdapters(behavior: behavior).forEach { adapter in
             adapter.updateProperties(to: properties)
         }
     }
 
-    func updateTrackersMetricEvents(mandatory: Bool, to events: [MetricEvent]) {
-        trackerAdapters(mandatory: mandatory).forEach { adapter in
+    func updateTrackersMetricEvents(behavior: TrackingBehavior, to events: [MetricEvent]) {
+        trackerAdapters(behavior: behavior).forEach { adapter in
             adapter.updateMetricEvents(to: events)
         }
     }
 
-    func disableTrackers(mandatory: Bool, with properties: PlayerProperties) {
-        trackerAdapters(mandatory: mandatory).forEach { adapter in
+    func disableTrackers(behavior: TrackingBehavior, with properties: PlayerProperties) {
+        trackerAdapters(behavior: behavior).forEach { adapter in
             adapter.disable(with: properties)
         }
     }

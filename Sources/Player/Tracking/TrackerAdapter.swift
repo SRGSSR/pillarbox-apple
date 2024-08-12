@@ -10,14 +10,15 @@ import AVFoundation
 ///
 /// An adapter transforms metadata delivered by a player item into the metadata format required by the tracker.
 public struct TrackerAdapter<M> {
+    let behavior: TrackingBehavior
+
     private let tracker: any PlayerItemTracker
-    let isMandatory: Bool
     private let update: (M) -> Void
 
     init<T>(
         trackerType: T.Type,
-        mandatory: Bool = false,
         configuration: T.Configuration,
+        behavior: TrackingBehavior,
         mapper: ((M) -> T.Metadata)?
     ) where T: PlayerItemTracker {
         let tracker = trackerType.init(configuration: configuration)
@@ -27,7 +28,7 @@ public struct TrackerAdapter<M> {
             }
         }
         self.tracker = tracker
-        self.isMandatory = mandatory
+        self.behavior = behavior
     }
 
     func updateMetadata(to metadata: M) {
