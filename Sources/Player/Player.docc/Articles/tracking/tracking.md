@@ -41,7 +41,7 @@ Once you have a tracker you can attach it to any item. The only requirement is t
 
 > Tip: More information about <doc:metadata> is available from the dedicated article.
 
-This transformation requires the use of a dedicated adapter, simply created from your custom tracker type using the ``PlayerItemTracker/adapter(configuration:mapper:)`` method. The adapter is also where you can supply any configuration required by your tracker:
+This transformation requires the use of a dedicated adapter, simply created from your custom tracker type using the ``PlayerItemTracker/adapter(configuration:behavior:mapper:)`` method. The adapter is also where you can supply any configuration required by your tracker:
 
 ```swift
 let item = PlayerItem.simple(url: url, metadata: CustomMetadata(), trackerAdapters: [
@@ -52,3 +52,5 @@ let item = PlayerItem.simple(url: url, metadata: CustomMetadata(), trackerAdapte
 ```
 
 Note that alternative adapter creation methods are available if your tracker has `Void` configuration and / or metadata.
+
+> Tip: You can enable or disable trackers using ``Player/isTrackingEnabled``. This behavior can be disabled by setting the tracker behavior to ``TrackingBehavior/mandatory`` when calling ``PlayerItemTracker/adapter(configuration:behavior:mapper:)``.
