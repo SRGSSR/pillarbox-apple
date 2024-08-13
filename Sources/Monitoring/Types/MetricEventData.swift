@@ -16,7 +16,7 @@ struct MetricEventData: Encodable {
 
 extension MetricEventData {
     struct Stall: Encodable {
-        let stallCount: Int?
-        let stallDuration: Int?
+        let count: Int
+        let duration: Int
     }
 }

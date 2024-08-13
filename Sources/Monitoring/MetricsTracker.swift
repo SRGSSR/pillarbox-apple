@@ -173,7 +173,10 @@ private extension MetricsTracker {
                 bitrate: metrics?.indicatedBitrate,
                 bandwidth: metrics?.observedBitrate,
                 bufferedDuration: Self.bufferedDuration(from: properties),
-                stall: .init(stallCount: metrics?.total.numberOfStalls, stallDuration: stallDuration.toMilliseconds),
+                stall: .init(
+                    count: metrics?.total.numberOfStalls ?? 0,
+                    duration: stallDuration.toMilliseconds
+                ),
                 playbackDuration: stopwatch.time().toMilliseconds,
                 playerPosition: Self.playerPosition(from: properties)
             )
