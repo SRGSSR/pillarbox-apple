@@ -13,7 +13,6 @@ import SwiftUI
 #if os(iOS)
 
 // Behavior: h-exp, v-exp
-// swiftlint:disable:next type_body_length
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
@@ -179,7 +178,7 @@ private struct MainView: View {
     private func bottomButtons() -> some View {
         HStack(spacing: 20) {
             LiveButton(player: player, progressTracker: progressTracker)
-            settingsMenu()
+            SettingsMenu(player: player, isPresentingMetrics: $isPresentingMetrics)
             FullScreenButton(layout: $layout)
         }
         .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
@@ -213,28 +212,6 @@ private struct MainView: View {
             .tint(.white)
             .aspectRatio(contentMode: .fit)
             .frame(width: 20)
-    }
-
-    @ViewBuilder
-    private func settingsMenu() -> some View {
-        Menu {
-            player.standardSettingMenu()
-            metricsMenu()
-        } label: {
-            Image(systemName: "ellipsis.circle")
-                .font(.system(size: 20))
-                .tint(.white)
-        }
-        .menuOrder(.fixed)
-    }
-
-    @ViewBuilder
-    private func metricsMenu() -> some View {
-        if !isPresentingMetrics {
-            Button(action: showMetrics) {
-                Label("Metrics", systemImage: "chart.bar")
-            }
-        }
     }
 
     @ViewBuilder
@@ -296,10 +273,6 @@ private struct MainView: View {
             .contentShape(Rectangle())
             .foregroundColor(.white)
             .padding(60)
-    }
-
-    private func showMetrics() {
-        isPresentingMetrics = true
     }
 }
 
@@ -456,6 +429,36 @@ private struct VolumeButton: View {
 
     private func toggleMuted() {
         player.isMuted.toggle()
+    }
+}
+
+private struct SettingsMenu: View {
+    let player: Player
+    @Binding var isPresentingMetrics: Bool
+
+    var body: some View {
+        Menu {
+            player.standardSettingMenu()
+            metricsMenu()
+        } label: {
+            Image(systemName: "ellipsis.circle")
+                .font(.system(size: 20))
+                .tint(.white)
+        }
+        .menuOrder(.fixed)
+    }
+
+    @ViewBuilder
+    private func metricsMenu() -> some View {
+        if !isPresentingMetrics {
+            Button(action: showMetrics) {
+                Label("Metrics", systemImage: "chart.bar")
+            }
+        }
+    }
+
+    private func showMetrics() {
+        isPresentingMetrics = true
     }
 }
 
