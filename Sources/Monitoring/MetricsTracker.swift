@@ -178,6 +178,7 @@ private extension MetricsTracker {
                 bitrate: metrics?.indicatedBitrate,
                 bandwidth: metrics?.observedBitrate,
                 bufferedDuration: Self.bufferedDuration(from: properties),
+                airplay: properties.isExternalPlaybackActive,
                 stall: .init(
                     count: metrics?.total.numberOfStalls ?? 0,
                     duration: stallDuration.toMilliseconds
