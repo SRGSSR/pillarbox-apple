@@ -7,7 +7,7 @@
 import Foundation
 
 struct MetricPayload<Data>: Encodable where Data: Encodable {
-    let version = "1.0.0"
+    let version = 1
     let sessionId: String
     let eventName: EventName
     let timestamp: TimeInterval

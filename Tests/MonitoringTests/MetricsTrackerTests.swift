@@ -123,7 +123,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         ))
         expectAtLeastHits(
             start { payload in
-                expect(payload.version).to(equal("1.0.0"))
+                expect(payload.version).to(equal(1))
 
                 let data = payload.data
 
