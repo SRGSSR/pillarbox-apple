@@ -53,4 +53,4 @@ let item = PlayerItem.simple(url: url, metadata: CustomMetadata(), trackerAdapte
 
 Note that alternative adapter creation methods are available if your tracker has `Void` configuration and / or metadata.
 
-> Tip: You can enable or disable trackers using ``Player/isTrackingEnabled``. This behavior can be disabled by setting the tracker behavior to ``TrackingBehavior/mandatory`` when calling ``PlayerItemTracker/adapter(configuration:behavior:mapper:)``.
+> Tip: You can enable or disable trackers with the ``Player/isTrackingEnabled`` player property. Trackers ignore this setting if their behavior is set to to ``TrackingBehavior/mandatory`` when creating the associated adapter with ``PlayerItemTracker/adapter(configuration:behavior:mapper:)``.

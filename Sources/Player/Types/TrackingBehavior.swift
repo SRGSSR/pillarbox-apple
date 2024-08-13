@@ -6,15 +6,15 @@
 
 /// A tracking behavior.
 ///
-/// Determines how a ``TrackerAdapter`` is affected by ``Player/isTrackingEnabled``.
+/// Determines how a ``TrackerAdapter`` is affected by the ``Player/isTrackingEnabled`` player setting.
 public enum TrackingBehavior {
     /// Optional tracking.
     ///
-    /// The ``TrackerAdapter`` is affected by ``Player/isTrackingEnabled``.
+    /// The ``TrackerAdapter`` takes into account the ``Player/isTrackingEnabled`` player setting.
     case optional
 
     /// Mandatory tracking.
     ///
-    /// The ``TrackerAdapter`` is not affected by  ``Player/isTrackingEnabled``.
+    /// The ``TrackerAdapter`` ignores the ``Player/isTrackingEnabled`` player setting.
     case mandatory
 }

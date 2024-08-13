@@ -109,7 +109,7 @@ final class PlayerTrackingTests: TestCase {
         }
     }
 
-    func testEnablingTrackingMustNotEmitMandatoryTrackerMetricEvents() {
+    func testEnablingTrackingMustNotEmitMetricEventsAgainForMandatoryTracker() {
         let player = Player()
         player.isTrackingEnabled = false
 
