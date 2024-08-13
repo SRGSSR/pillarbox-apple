@@ -10,6 +10,6 @@ struct MetricPayload<Data>: Encodable where Data: Encodable {
     let version = 1
     let sessionId: String
     let eventName: EventName
-    let timestamp: TimeInterval
+    let timestamp: Int
     let data: Data
 }

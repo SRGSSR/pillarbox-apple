@@ -266,8 +266,15 @@ private extension MetricsTracker {
         UUID().uuidString.lowercased()
     }
 
-    static func timestamp(from date: Date) -> Double {
-        (date.timeIntervalSince1970 * 1000).rounded()
+    static func timestamp(from date: Date) -> Int {
+        Int((date.timeIntervalSince1970 * 1000).rounded())
+    }
+
+    static func timestamp(from properties: PlayerProperties) -> Int? {
+        let offset = properties.endOffset()
+        guard offset.isValid else { return nil }
+        let date = Date().addingTimeInterval(-offset.seconds)
+        return timestamp(from: date)
     }
 
     static func playerPosition(from properties: PlayerProperties?) -> Int? {
@@ -275,10 +282,8 @@ private extension MetricsTracker {
         switch properties.streamType {
         case .onDemand:
             return properties.time().toMilliseconds
-        case .live:
-            return 0
-        case .dvr:
-            return properties.endOffset().toMilliseconds
+        case .live, .dvr:
+            return timestamp(from: properties)
         default:
             return nil
         }
