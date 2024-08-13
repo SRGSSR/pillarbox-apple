@@ -128,7 +128,12 @@ private extension MetricsTracker {
             eventName: .start,
             timestamp: Self.timestamp(from: date),
             data: MetricStartData(
-                device: .init(id: Self.deviceId, model: Self.deviceModel, type: Self.deviceType),
+                device: .init(
+                    id: Self.deviceId,
+                    model: Self.deviceModel,
+                    type: Self.deviceType,
+                    vpn: Self.usesVirtualPrivateNetwork()
+                ),
                 os: .init(name: UIDevice.current.systemName, version: UIDevice.current.systemVersion),
                 screen: .init(
                     width: Int(UIScreen.main.nativeBounds.width),
@@ -291,5 +296,16 @@ private extension MetricsTracker {
 
     static func bufferedDuration(from properties: PlayerProperties?) -> Int? {
         properties?.loadedTimeRange.duration.toMilliseconds
+    }
+
+    static func usesVirtualPrivateNetwork() -> Bool {
+        // Source: https://blog.tarkalabs.com/the-ultimate-vpn-detection-guide-for-ios-and-android-313b521186cb
+        guard let proxySettings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
+              let scopedSettings = proxySettings["__SCOPED__"] as? [String: Any] else {
+            return false
+        }
+        return scopedSettings.keys.contains { key in
+            key == "tap" || key == "ppp" || key.contains("tun") || key.contains("ipsec")
+        }
     }
 }

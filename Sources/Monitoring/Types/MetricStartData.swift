@@ -21,6 +21,7 @@ extension MetricStartData {
         let id: String?
         let model: String
         let type: String
+        let vpn: Bool
     }
 
     struct Media: Encodable {
