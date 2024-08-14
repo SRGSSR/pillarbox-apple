@@ -81,8 +81,8 @@ public extension PlayerItemTracker {
     ///
     /// - Parameters:
     ///   - configuration: The tracker configuration.
-    ///   - mapper: A closure that maps an item metadata to tracker metadata.
     ///   - behavior: The tracking behavior.
+    ///   - mapper: A closure that maps an item metadata to tracker metadata.
     /// - Returns: The tracker adapter.
     static func adapter<M>(
         configuration: Configuration,
