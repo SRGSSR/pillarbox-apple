@@ -97,8 +97,8 @@ public extension PlayerItemTracker where Configuration == Void {
     /// Creates an adapter for the receiver.
     /// 
     /// - Parameters:
-    ///   - mapper: A closure that maps an item metadata to tracker metadata.
     ///   - behavior: The tracking behavior.
+    ///   - mapper: A closure that maps an item metadata to tracker metadata.
     /// - Returns: The tracker adapter.
     static func adapter<M>(behavior: TrackingBehavior = .optional, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
         .init(trackerType: Self.self, configuration: (), behavior: behavior, mapper: mapper)
