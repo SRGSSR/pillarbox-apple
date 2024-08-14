@@ -22,6 +22,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         ))
         expectAtLeastHits(
             start(),
+            heartbeat(),
             stop { payload in
                 expect(payload.data.position).to(beCloseTo(1000, within: 100))
             }
@@ -93,6 +94,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
             start { payload in
                 sessionId = payload.sessionId
             },
+            heartbeat(),
             stop { payload in
                 expect(payload.sessionId).to(equal(sessionId))
             }
