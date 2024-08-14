@@ -21,13 +21,12 @@ extension MetricStartData {
         let id: String?
         let model: String
         let type: String
-        let vpn: Bool
     }
 
     struct Media: Encodable {
+        let assetUrl: URL?
         let id: String?
         let metadataUrl: URL?
-        let assetUrl: URL?
         let origin: String?
     }
 

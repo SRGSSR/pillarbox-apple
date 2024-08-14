@@ -5,15 +5,16 @@
 //
 
 struct MetricEventData: Encodable {
-    let url: String?
-    let streamType: String?
-    let bitrate: Double?
-    let bandwidth: Double?
-    let bufferedDuration: Int?
     let airplay: Bool
-    let stall: Stall
+    let bandwidth: Double?
+    let bitrate: Double?
+    let bufferedDuration: Int?
     let playbackDuration: Int?
     let playerPosition: Int?
+    let stall: Stall
+    let streamType: String?
+    let url: String?
+    let vpn: Bool
 }
 
 extension MetricEventData {

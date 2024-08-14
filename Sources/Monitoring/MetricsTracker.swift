@@ -131,8 +131,7 @@ private extension MetricsTracker {
                 device: .init(
                     id: Self.deviceId,
                     model: Self.deviceModel,
-                    type: Self.deviceType,
-                    vpn: Self.usesVirtualPrivateNetwork()
+                    type: Self.deviceType
                 ),
                 os: .init(name: UIDevice.current.systemName, version: UIDevice.current.systemVersion),
                 screen: .init(
@@ -141,9 +140,9 @@ private extension MetricsTracker {
                 ),
                 player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
                 media: .init(
+                    assetUrl: metadata?.assetUrl,
                     id: metadata?.identifier,
                     metadataUrl: metadata?.metadataUrl,
-                    assetUrl: metadata?.assetUrl,
                     origin: Bundle.main.bundleIdentifier
                 ),
                 qoeMetrics: .init(events: events)
@@ -174,18 +173,19 @@ private extension MetricsTracker {
             eventName: eventName,
             timestamp: Self.timestamp(from: date),
             data: MetricEventData(
-                url: metrics?.uri,
-                streamType: Self.streamType(from: properties),
-                bitrate: metrics?.indicatedBitrate,
-                bandwidth: metrics?.observedBitrate,
-                bufferedDuration: Self.bufferedDuration(from: properties),
                 airplay: properties.isExternalPlaybackActive,
+                bandwidth: metrics?.observedBitrate,
+                bitrate: metrics?.indicatedBitrate,
+                bufferedDuration: Self.bufferedDuration(from: properties),
+                playbackDuration: stopwatch.time().toMilliseconds,
+                playerPosition: Self.playerPosition(from: properties),
                 stall: .init(
                     count: metrics?.total.numberOfStalls ?? 0,
                     duration: stallDuration.toMilliseconds
                 ),
-                playbackDuration: stopwatch.time().toMilliseconds,
-                playerPosition: Self.playerPosition(from: properties)
+                streamType: Self.streamType(from: properties),
+                url: metrics?.uri,
+                vpn: Self.isUsingVirtualPrivateNetwork()
             )
         )
     }
@@ -313,7 +313,7 @@ private extension MetricsTracker {
         properties?.loadedTimeRange.duration.toMilliseconds
     }
 
-    static func usesVirtualPrivateNetwork() -> Bool {
+    static func isUsingVirtualPrivateNetwork() -> Bool {
         // Source: https://blog.tarkalabs.com/the-ultimate-vpn-detection-guide-for-ios-and-android-313b521186cb
         guard let proxySettings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
               let scopedSettings = proxySettings["__SCOPED__"] as? [String: Any] else {
