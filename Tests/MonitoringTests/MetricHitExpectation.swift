@@ -47,7 +47,7 @@ extension MonitoringTestCase {
         _MetricHitExpectation(eventName: .error, evaluate: evaluate)
     }
 
-    func heartbeat(evaluate: @escaping (MetricPayload<MetricEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
+    func heartbeat(evaluate: @escaping (MetricPayload<MetricStatusEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
         _MetricHitExpectation(eventName: .heartbeat, evaluate: evaluate)
     }
 
@@ -55,7 +55,7 @@ extension MonitoringTestCase {
         _MetricHitExpectation(eventName: .start, evaluate: evaluate)
     }
 
-    func stop(evaluate: @escaping (MetricPayload<MetricEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
+    func stop(evaluate: @escaping (MetricPayload<MetricStatusEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
         _MetricHitExpectation(eventName: .stop, evaluate: evaluate)
     }
 }

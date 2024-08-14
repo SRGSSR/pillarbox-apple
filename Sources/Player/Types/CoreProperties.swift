@@ -39,6 +39,10 @@ extension CoreProperties {
         itemProperties.time()
     }
 
+    func date() -> Date? {
+        itemProperties.date()
+    }
+
     func metrics() -> Metrics? {
         itemProperties.metrics()
     }

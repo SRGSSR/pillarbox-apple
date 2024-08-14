@@ -77,7 +77,7 @@ public final class MetricsTracker: PlayerItemTracker {
         }
         stopHeartbeat()
         if isStarted {
-            send(payload: eventPayload(for: .stop, with: properties, at: Date()))
+            send(payload: statusEventPayload(for: .stop, with: properties, at: Date()))
         }
     }
 }
@@ -160,19 +160,20 @@ private extension MetricsTracker {
                 message: error.localizedDescription,
                 name: "\(error.domain)(\(error.code))",
                 position: Self.position(from: properties),
+                positionTimestamp: Self.positionTimestamp(from: properties),
                 severity: severity,
                 url: URL(string: properties?.metrics()?.uri)
             )
         )
     }
 
-    func eventPayload(for eventName: EventName, with properties: PlayerProperties, at date: Date) -> some Encodable {
+    func statusEventPayload(for eventName: EventName, with properties: PlayerProperties, at date: Date) -> some Encodable {
         let metrics = properties.metrics()
         return MetricPayload(
             sessionId: sessionId,
             eventName: eventName,
             timestamp: Self.timestamp(from: date),
-            data: MetricEventData(
+            data: MetricStatusEventData(
                 airplay: properties.isExternalPlaybackActive,
                 bandwidth: metrics?.observedBitrate,
                 bitrate: metrics?.indicatedBitrate,
@@ -180,6 +181,7 @@ private extension MetricsTracker {
                 duration: Self.duration(from: properties),
                 playbackDuration: stopwatch.time().toMilliseconds,
                 position: Self.position(from: properties),
+                positionTimestamp: Self.positionTimestamp(from: properties),
                 stall: .init(
                     count: metrics?.total.numberOfStalls ?? 0,
                     duration: stallDuration.toMilliseconds
@@ -231,7 +233,7 @@ private extension MetricsTracker {
             .prepend(())
             .sink { [weak self] _ in
                 guard let self, let properties else { return }
-                send(payload: eventPayload(for: .heartbeat, with: properties, at: Date()))
+                send(payload: statusEventPayload(for: .heartbeat, with: properties, at: Date()))
             }
             .store(in: &cancellables)
     }
@@ -303,6 +305,11 @@ private extension MetricsTracker {
         case .dvr:
             return (properties.time() - properties.seekableTimeRange.start).toMilliseconds
         }
+    }
+
+    static func positionTimestamp(from properties: PlayerProperties?) -> Int? {
+        guard let date = properties?.date() else { return nil }
+        return timestamp(from: date)
     }
 
     static func bufferedDuration(from properties: PlayerProperties?) -> Int? {

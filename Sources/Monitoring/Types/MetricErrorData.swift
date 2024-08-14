@@ -10,6 +10,7 @@ struct MetricErrorData: Encodable {
     let message: String
     let name: String
     let position: Int?
+    let positionTimestamp: Int?
     let severity: Severity
     let url: URL?
 }
