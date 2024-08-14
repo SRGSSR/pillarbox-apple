@@ -121,7 +121,7 @@ public extension PlayerProperties {
     func time() -> CMTime {
         coreProperties.time()
     }
-    
+
     /// The date corresponding to the player time.
     ///
     /// This date is only returned when available from the stream.

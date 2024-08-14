@@ -23,7 +23,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         expectAtLeastHits(
             start(),
             stop { payload in
-                expect(payload.data.playerPosition).to(beCloseTo(1000, within: 100))
+                expect(payload.data.position).to(beCloseTo(1000, within: 100))
             }
         ) {
             player.play()
@@ -44,7 +44,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 expect(data.severity).to(equal(.fatal))
                 expect(data.name).to(equal("NSURLErrorDomain(-1100)"))
                 expect(data.message).to(equal("The requested URL was not found on this server."))
-                expect(data.playerPosition).to(beNil())
+                expect(data.position).to(beNil())
             }
         ) {
             player.play()
@@ -152,6 +152,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 let data = payload.data
                 expect(data.airplay).to(beFalse())
                 expect(data.streamType).to(equal("on-demand"))
+                expect(data.vpn).to(beFalse())
             }
         ) {
             player.play()
