@@ -42,18 +42,18 @@ extension MetricStartData {
     }
 
     struct QualityOfExperienceMetrics: Encodable {
-        let mediaSource: Int?
+        let metadata: Int?
         let asset: Int?
         let total: Int
 
         init?(events: [MetricEvent]) {
-            mediaSource = events.compactMap(Self.assetLoadingDateInterval(from:)).last
+            metadata = events.compactMap(Self.assetLoadingDateInterval(from:)).last
             asset = events.compactMap(Self.resourceLoadingDateInterval(from:)).first
-            if let mediaSource, let asset {
-                total = mediaSource + asset
+            if let metadata, let asset {
+                total = metadata + asset
             }
-            else if let mediaSource {
-                total = mediaSource
+            else if let metadata {
+                total = metadata
             }
             else if let asset {
                 total = asset
