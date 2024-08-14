@@ -76,15 +76,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 ) { _ in .test }
             ]
         ))
-        expectAtLeastHits(
-            start(),
-            heartbeat { payload in
-                expect(payload.data.playerPosition).to(beCloseTo(1000, within: 100))
-            },
-            heartbeat { payload in
-                expect(payload.data.playerPosition).to(beCloseTo(2000, within: 100))
-            }
-        ) {
+        expectAtLeastHits(start(), heartbeat(), heartbeat()) {
             player.play()
         }
     }

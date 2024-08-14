@@ -180,4 +180,29 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             player.isTrackingEnabled = true
         }
     }
+
+    func testEnableTrackingAgainWhilePaused() {
+        let player = Player()
+        player.append(.simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in [:] }
+            ]
+        ))
+
+        expectAtLeastHits(play()) {
+            player.play()
+        }
+        expectAtLeastHits(stop()) {
+            player.isTrackingEnabled = false
+        }
+
+        player.pause()
+        expect(player.playbackState).toEventually(equal(.paused))
+
+        expectAtLeastHits(play()) {
+            player.isTrackingEnabled = true
+            player.play()
+        }
+    }
 }

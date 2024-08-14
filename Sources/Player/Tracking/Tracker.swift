@@ -21,10 +21,12 @@ final class Tracker {
         didSet {
             guard isEnabled != oldValue else { return }
             if isEnabled {
-                enable()
+                enableTrackers(matchingBehavior: .optional)
+                item.updateTrackersProperties(matchingBehavior: .optional, to: properties)
+                item.updateTrackersMetricEvents(matchingBehavior: .optional, to: metricEventCollector.metricEvents)
             }
             else {
-                disable()
+                disableTrackers(matchingBehavior: .optional)
             }
         }
     }
@@ -45,40 +47,59 @@ final class Tracker {
         self.isEnabled = isEnabled
         self.metricEventCollector = MetricEventCollector(items: items)
 
+        enableTrackers(matchingBehavior: .mandatory)
         if isEnabled {
-            enable()
+            enableTrackers(matchingBehavior: .optional)
+        }
+        configurePublishers()
+    }
+
+    private func enableTrackers(matchingBehavior behavior: TrackingBehavior) {
+        item.enableTrackers(matchingBehavior: behavior, for: player)
+    }
+
+    private func disableTrackers(matchingBehavior behavior: TrackingBehavior) {
+        item.disableTrackers(matchingBehavior: behavior, with: properties)
+    }
+
+    private func updateTrackersProperties(to properties: PlayerProperties) {
+        item.updateTrackersProperties(matchingBehavior: .mandatory, to: properties)
+        if isEnabled {
+            item.updateTrackersProperties(matchingBehavior: .optional, to: properties)
         }
     }
 
-    private func enable() {
-        item.enableTrackers(for: player)
-        metricEventCollector.$metricEvents
-            .filter { !$0.isEmpty }
-            .sink { [item] events in
-                item.updateTrackersMetricEvents(to: events)
-            }
-            .store(in: &cancellables)
+    private func updateTrackersMetricEvents(to events: [MetricEvent]) {
+        item.updateTrackersMetricEvents(matchingBehavior: .mandatory, to: events)
+        if isEnabled {
+            item.updateTrackersMetricEvents(matchingBehavior: .optional, to: events)
+        }
+    }
+
+    private func configurePublishers() {
         $playerItem
             .map { [player] playerItem in
                 playerItem.propertiesPublisher(with: player)
             }
             .switchToLatest()
-            .handleEvents(receiveOutput: { [item] properties in
+            .handleEvents(receiveOutput: { [weak self] properties in
                 // swiftlint:disable:previous trailing_closure
-                item.updateTrackersProperties(to: properties)
+                self?.updateTrackersProperties(to: properties)
             })
             .weakAssign(to: \.properties, on: self)
             .store(in: &cancellables)
-    }
-
-    private func disable() {
-        cancellables = []
-        item.disableTrackers(with: properties)
+        metricEventCollector.$metricEvents
+            .filter { !$0.isEmpty }
+            .sink { [weak self] events in
+                self?.updateTrackersMetricEvents(to: events)
+            }
+            .store(in: &cancellables)
     }
 
     deinit {
         if isEnabled {
-            disable()
+            disableTrackers(matchingBehavior: .optional)
         }
+        disableTrackers(matchingBehavior: .mandatory)
     }
 }

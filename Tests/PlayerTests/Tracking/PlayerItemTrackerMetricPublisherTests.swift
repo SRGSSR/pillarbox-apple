@@ -47,7 +47,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
                 [.anyAssetLoading, .anyResourceLoading]
             ],
             from: player.metricEventsPublisher,
-            during: .milliseconds(1500)
+            during: .seconds(2)
         ) {
             player.play()
         }

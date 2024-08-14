@@ -7,6 +7,7 @@
 import AVFoundation
 
 protocol PlayerItemTracking {
+    var behavior: TrackingBehavior { get }
     var registration: TrackingRegistration? { get }
 
     func enable(for player: AVPlayer)
