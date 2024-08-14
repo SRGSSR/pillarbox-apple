@@ -11,7 +11,7 @@ struct MetricEventData: Encodable {
     let bufferedDuration: Int?
     let duration: Int?
     let playbackDuration: Int?
-    let playerPosition: Int?
+    let position: Int?
     let stall: Stall
     let streamType: String?
     let url: String?

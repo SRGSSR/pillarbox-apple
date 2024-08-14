@@ -157,11 +157,11 @@ private extension MetricsTracker {
             eventName: .error,
             timestamp: Self.timestamp(from: date),
             data: MetricErrorData(
-                severity: severity,
-                name: "\(error.domain)(\(error.code))",
                 message: error.localizedDescription,
-                url: URL(string: properties?.metrics()?.uri),
-                playerPosition: Self.playerPosition(from: properties)
+                name: "\(error.domain)(\(error.code))",
+                position: Self.position(from: properties),
+                severity: severity,
+                url: URL(string: properties?.metrics()?.uri)
             )
         )
     }
@@ -179,7 +179,7 @@ private extension MetricsTracker {
                 bufferedDuration: Self.bufferedDuration(from: properties),
                 duration: Self.duration(from: properties),
                 playbackDuration: stopwatch.time().toMilliseconds,
-                playerPosition: Self.playerPosition(from: properties),
+                position: Self.position(from: properties),
                 stall: .init(
                     count: metrics?.total.numberOfStalls ?? 0,
                     duration: stallDuration.toMilliseconds
@@ -291,7 +291,7 @@ private extension MetricsTracker {
         Int((date.timeIntervalSince1970 * 1000).rounded())
     }
 
-    static func playerPosition(from properties: PlayerProperties?) -> Int? {
+    static func position(from properties: PlayerProperties?) -> Int? {
         guard let properties else { return nil }
         switch properties.streamType {
         case .unknown:
