@@ -175,6 +175,7 @@ private extension MetricsTracker {
             timestamp: Self.timestamp(from: date),
             data: MetricEventData(
                 url: metrics?.uri,
+                streamType: Self.streamType(from: properties),
                 bitrate: metrics?.indicatedBitrate,
                 bandwidth: metrics?.observedBitrate,
                 bufferedDuration: Self.bufferedDuration(from: properties),
@@ -272,6 +273,17 @@ private extension MetricsTracker {
 private extension MetricsTracker {
     static func createSessionId() -> String {
         UUID().uuidString.lowercased()
+    }
+
+    static func streamType(from properties: PlayerProperties) -> String? {
+        switch properties.streamType {
+        case .unknown:
+            return nil
+        case .onDemand:
+            return "on-demand"
+        case .live, .dvr:
+            return "live"
+        }
     }
 
     static func timestamp(from date: Date) -> Int {

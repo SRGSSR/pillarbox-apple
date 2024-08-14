@@ -108,7 +108,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         }
     }
 
-    func testStartPayload() {
+    func testPayloads() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -133,9 +133,9 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 expect(device.type).notTo(beNil())
 
                 let media = data.media
+                expect(media.assetUrl).to(equal(URL(string: "https://localhost/asset.m3u8")))
                 expect(media.id).to(equal("identifier"))
                 expect(media.metadataUrl).to(equal(URL(string: "https://localhost/metadata.json")))
-                expect(media.assetUrl).to(equal(URL(string: "https://localhost/asset.m3u8")))
                 expect(media.origin).notTo(beNil())
 
                 let os = data.os
@@ -145,6 +145,13 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 let player = data.player
                 expect(player.name).to(equal("Pillarbox"))
                 expect(player.version).to(equal(Player.version))
+            },
+            heartbeat { payload in
+                expect(payload.version).to(equal(1))
+
+                let data = payload.data
+                expect(data.airplay).to(beFalse())
+                expect(data.streamType).to(equal("on-demand"))
             }
         ) {
             player.play()
