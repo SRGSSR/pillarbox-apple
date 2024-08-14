@@ -9,6 +9,7 @@ struct MetricEventData: Encodable {
     let bandwidth: Double?
     let bitrate: Double?
     let bufferedDuration: Int?
+    let duration: Int?
     let playbackDuration: Int?
     let playerPosition: Int?
     let stall: Stall

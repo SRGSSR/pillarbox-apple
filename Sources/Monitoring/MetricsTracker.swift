@@ -177,6 +177,7 @@ private extension MetricsTracker {
                 bandwidth: metrics?.observedBitrate,
                 bitrate: metrics?.indicatedBitrate,
                 bufferedDuration: Self.bufferedDuration(from: properties),
+                duration: Self.duration(from: properties),
                 playbackDuration: stopwatch.time().toMilliseconds,
                 playerPosition: Self.playerPosition(from: properties),
                 stall: .init(
@@ -290,27 +291,26 @@ private extension MetricsTracker {
         Int((date.timeIntervalSince1970 * 1000).rounded())
     }
 
-    static func timestamp(from properties: PlayerProperties) -> Int? {
-        let offset = properties.endOffset()
-        guard offset.isValid else { return nil }
-        let date = Date().addingTimeInterval(-offset.seconds)
-        return timestamp(from: date)
-    }
-
     static func playerPosition(from properties: PlayerProperties?) -> Int? {
         guard let properties else { return nil }
         switch properties.streamType {
+        case .unknown:
+            return nil
         case .onDemand:
             return properties.time().toMilliseconds
-        case .live, .dvr:
-            return timestamp(from: properties)
-        default:
-            return nil
+        case .live:
+            return 0
+        case .dvr:
+            return (properties.time() - properties.seekableTimeRange.start).toMilliseconds
         }
     }
 
     static func bufferedDuration(from properties: PlayerProperties?) -> Int? {
         properties?.loadedTimeRange.duration.toMilliseconds
+    }
+
+    static func duration(from properties: PlayerProperties) -> Int? {
+        properties.seekableTimeRange.duration.toMilliseconds
     }
 
     static func isUsingVirtualPrivateNetwork() -> Bool {
