@@ -225,6 +225,8 @@ private extension MetricsTracker {
     func startHeartbeat() {
         Timer.publish(every: configuration.heartbeatInterval, on: .main, in: .common)
             .autoconnect()
+            .map { _ in }
+            .prepend(())
             .sink { [weak self] _ in
                 guard let self, let properties else { return }
                 send(payload: eventPayload(for: .heartbeat, with: properties, at: Date()))
