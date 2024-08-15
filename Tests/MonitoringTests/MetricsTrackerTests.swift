@@ -77,7 +77,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         }
     }
 
-    func testSessionIdentifierRenewedWhenReplayingAfterEnd() {
+    func testSessionIdentifierRenewalWhenReplayingAfterEnd() {
         let player = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             trackerAdapters: [
@@ -107,7 +107,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         }
     }
 
-    func testSessionIdentifierRenewedWhenReplayingAfterFatalError() {
+    func testSessionIdentifierRenewalWhenReplayingAfterFatalError() {
         let player = Player(item: .simple(
             url: Stream.unavailable.url,
             trackerAdapters: [
