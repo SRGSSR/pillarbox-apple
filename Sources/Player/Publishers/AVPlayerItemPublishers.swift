@@ -197,7 +197,7 @@ extension AVPlayerItem {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.newAccessLogEntryNotification, object: self)
             .compactMap { $0.object as? AVPlayerItem }
             .prepend(self)
-            .map { .init(from: $0) }
+            .compactMap { .init(from: $0) }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
