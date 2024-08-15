@@ -38,20 +38,23 @@ public extension Player {
     /// included ``Metrics/increment`` collates data since the entry that precedes it in the history. No updates are
     /// published if no metrics are provided for the item being played.
     func periodicMetricsPublisher(forInterval interval: CMTime, queue: DispatchQueue = .main, limit: Int = .max) -> AnyPublisher<[Metrics], Never> {
-        currentPlayerItemPublisher()
-            .map { [queuePlayer] item -> AnyPublisher<[Metrics], Never> in
-                guard let item else { return Just([]).eraseToAnyPublisher() }
-                return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
-                    .map { _ in MetricsState(from: item) }
-                    .withPrevious(MetricsState.empty)
-                    .map { $0.current.metrics(from: $0.previous) }
-                    .scan([]) { ($0 + [$1]).suffix(limit) }
-                    .prepend([])
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .receive(on: queue)
-            .eraseToAnyPublisher()
+        Publishers.CombineLatest(
+            currentPlayerItemPublisher(),
+            queuePlayer.publisher(for: \.isExternalPlaybackActive)
+        )
+        .map { [queuePlayer] item, _ -> AnyPublisher<[Metrics], Never> in
+            guard let item else { return Just([]).eraseToAnyPublisher() }
+            return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
+                .map { _ in MetricsState(from: item) }
+                .withPrevious(MetricsState.empty)
+                .map { $0.current.metrics(from: $0.previous) }
+                .scan([]) { ($0 + [$1]).suffix(limit) }
+                .prepend([])
+                .eraseToAnyPublisher()
+        }
+        .switchToLatest()
+        .removeDuplicates()
+        .receive(on: queue)
+        .eraseToAnyPublisher()
     }
 }
