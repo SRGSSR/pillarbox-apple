@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-struct MetricStatusEventData: Encodable {
+struct MetricStatusData: Encodable {
     let airplay: Bool
     let bandwidth: Double?
     let bitrate: Double?
@@ -19,7 +19,7 @@ struct MetricStatusEventData: Encodable {
     let vpn: Bool
 }
 
-extension MetricStatusEventData {
+extension MetricStatusData {
     struct Stall: Encodable {
         let count: Int
         let duration: Int

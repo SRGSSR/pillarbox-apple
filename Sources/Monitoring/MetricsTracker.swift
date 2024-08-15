@@ -77,7 +77,7 @@ public final class MetricsTracker: PlayerItemTracker {
         }
         stopHeartbeat()
         if session.isStarted {
-            send(eventName: .stop, data: statusEventData(from: properties))
+            send(eventName: .stop, data: statusData(from: properties))
         }
     }
 }
@@ -190,11 +190,10 @@ private extension MetricsTracker {
             url: URL(string: properties?.metrics()?.uri)
         )
     }
-
-    // TODO: Rename as StatusData
-    func statusEventData(from properties: PlayerProperties) -> MetricStatusEventData {
+    
+    func statusData(from properties: PlayerProperties) -> MetricStatusData {
         let metrics = properties.metrics()
-        return MetricStatusEventData(
+        return MetricStatusData(
             airplay: properties.isExternalPlaybackActive,
             bandwidth: metrics?.observedBitrate,
             bitrate: metrics?.indicatedBitrate,
@@ -260,7 +259,7 @@ private extension MetricsTracker {
             .prepend(())
             .sink { [weak self] _ in
                 guard let self, let properties else { return }
-                send(eventName: .heartbeat, data: statusEventData(from: properties))
+                send(eventName: .heartbeat, data: statusData(from: properties))
             }
             .store(in: &cancellables)
     }
