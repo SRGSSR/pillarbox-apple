@@ -23,7 +23,9 @@ public final class MetricsTracker: PlayerItemTracker {
     private var sessionId = createSessionId()
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
+
     private var isStarted = false
+    private var shouldRenewSessionId = false
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -49,6 +51,10 @@ public final class MetricsTracker: PlayerItemTracker {
     // swiftlint:disable:next cyclomatic_complexity
     public func updateMetricEvents(to events: [MetricEvent]) {
         guard let lastEvent = events.last else { return }
+        if shouldRenewSessionId {
+            sessionId = Self.createSessionId()
+            shouldRenewSessionId = true
+        }
         switch lastEvent.kind {
         case .resourceLoading:
             isStarted = true
@@ -64,7 +70,7 @@ public final class MetricsTracker: PlayerItemTracker {
                 send(payload: startPayload(from: events, at: lastEvent.date))
             }
             send(payload: errorPayload(error: error, severity: .fatal, at: lastEvent.date))
-            reset()
+            shouldRenewSessionId = true
         case let .warning(error):
             send(payload: errorPayload(error: error, severity: .warning, at: lastEvent.date))
         default:
