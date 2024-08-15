@@ -198,7 +198,7 @@ private extension MetricsTracker {
     func send<Data>(eventName: EventName, data: Data) where Data: Encodable {
         guard let sessionId = session.id else { return}
 
-        let payload = MetricPayload(sessionId: sessionId, eventName: eventName, timestamp: Self.timestamp(), data: data)
+        let payload = MetricPayload(sessionId: sessionId, eventName: eventName, data: data)
         guard let httpBody = try? Self.jsonEncoder.encode(payload) else { return }
 
         var request = URLRequest(url: configuration.serviceUrl)
@@ -271,10 +271,6 @@ private extension MetricsTracker {
         }
     }
 
-    static func timestamp(from date: Date = .init()) -> Int {
-        Int((date.timeIntervalSince1970 * 1000).rounded())
-    }
-
     static func position(from properties: PlayerProperties?) -> Int? {
         guard let properties else { return nil }
         switch properties.streamType {
@@ -291,7 +287,7 @@ private extension MetricsTracker {
 
     static func positionTimestamp(from properties: PlayerProperties?) -> Int? {
         guard let date = properties?.date() else { return nil }
-        return timestamp(from: date)
+        return date.timestamp
     }
 
     static func bufferedDuration(from properties: PlayerProperties?) -> Int? {
