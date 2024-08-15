@@ -20,28 +20,14 @@ public final class MetricsTracker: PlayerItemTracker {
     private var metadata: Metadata?
     private var properties: PlayerProperties?
 
-    private var sessionId: SessionId = .none
+    private var session: Session = .none
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
 
     private var cancellables = Set<AnyCancellable>()
 
     public var sessionIdentifier: String? {
-        switch sessionId {
-        case .none:
-            return nil
-        case let .valid(id), let .revoked(id):
-            return id
-        }
-    }
-
-    private var isStarted: Bool {
-        switch sessionId {
-        case .valid:
-            return true
-        default:
-            return false
-        }
+        session.id
     }
 
     public init(configuration: Configuration) {
@@ -63,6 +49,7 @@ public final class MetricsTracker: PlayerItemTracker {
     public func updateMetricEvents(to events: [MetricEvent]) {
         switch events.last?.kind {
         case .resourceLoading:
+            session.start()
             send(eventName: .start, data: startData(from: events))
             startHeartbeat()
         case .stall:
@@ -71,10 +58,12 @@ public final class MetricsTracker: PlayerItemTracker {
             guard let stallDate else { break }
             stallDuration += Date().timeIntervalSince(stallDate)
         case let .failure(error):
-            if !isStarted {
+            if !session.isStarted {
+                session.start()
                 send(eventName: .start, data: startData(from: events))
             }
             send(eventName: .error, data: errorData(error: error, severity: .fatal))
+            session.stop()
         case let .warning(error):
             send(eventName: .error, data: errorData(error: error, severity: .warning))
         default:
@@ -87,7 +76,7 @@ public final class MetricsTracker: PlayerItemTracker {
             reset()
         }
         stopHeartbeat()
-        if isStarted {
+        if session.isStarted {
             send(eventName: .stop, data: statusEventData(from: properties))
         }
     }
@@ -124,20 +113,41 @@ public extension MetricsTracker {
             self.assetUrl = assetUrl
         }
     }
+}
 
-    enum SessionId {
+private extension MetricsTracker {
+    // TODO: Simpler than enum
+    enum Session {
         case none
-        case valid(String)
-        case revoked(String)
+        case started(String)
+        case stopped(String)
 
-        static func new() -> Self {
-            .valid(UUID().uuidString.lowercased())
+        var id: String? {
+            switch self {
+            case .none:
+                return nil
+            case let .started(id), let .stopped(id):
+                return id
+            }
         }
 
-        mutating func revoke() {
+        var isStarted: Bool {
             switch self {
-            case let .valid(id):
-                self = .revoked(id)
+            case .started:
+                return true
+            default:
+                return false
+            }
+        }
+
+        mutating func start() {
+            self = .started(UUID().uuidString.lowercased())
+        }
+
+        mutating func stop() {
+            switch self {
+            case let .started(id):
+                self = .stopped(id)
             default:
                 break
             }
@@ -213,7 +223,7 @@ private extension MetricsTracker {
     }
 
     func reset() {
-        sessionId = .none
+        session = .none
         stallDuration = 0
         stopwatch.reset()
     }
@@ -227,22 +237,11 @@ private extension MetricsTracker {
     }()
 
     func send<Data>(eventName: EventName, data: Data) where Data: Encodable {
-        switch eventName {
-        case .start:
-            sessionId = .new()
-        case .error:
-            sessionId.revoke()
-        default:
-            break
-        }
+        guard let sessionId = session.id else { return}
 
-        guard let sessionIdentifier else {
-            return
-        }
-        let payload = MetricPayload(sessionId: sessionIdentifier, eventName: eventName, timestamp: Self.timestamp(), data: data)
-        guard let httpBody = try? Self.jsonEncoder.encode(payload) else {
-            return
-        }
+        let payload = MetricPayload(sessionId: sessionId, eventName: eventName, timestamp: Self.timestamp(), data: data)
+        guard let httpBody = try? Self.jsonEncoder.encode(payload) else { return }
+
         var request = URLRequest(url: configuration.serviceUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
