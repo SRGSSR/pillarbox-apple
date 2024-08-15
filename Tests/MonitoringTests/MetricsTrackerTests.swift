@@ -69,7 +69,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                MetricsTracker.adapter(configuration: .test) { _ in .test }
+                MetricsTracker.adapter(configuration: .heartbeatTest) { _ in .test }
             ]
         ))
         expectAtLeastHits(start(), heartbeat(), heartbeat()) {
@@ -109,13 +109,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                MetricsTracker.adapter(configuration: .test) {
-                    .init(
-                        identifier: "identifier",
-                        metadataUrl: URL(string: "https://localhost/metadata.json"),
-                        assetUrl: URL(string: "https://localhost/asset.m3u8")
-                    )
-                }
+                MetricsTracker.adapter(configuration: .test) { .test }
             ]
         ))
         expectAtLeastHits(
