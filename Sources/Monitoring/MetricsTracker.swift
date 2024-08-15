@@ -20,7 +20,7 @@ public final class MetricsTracker: PlayerItemTracker {
     private var metadata: Metadata?
     private var properties: PlayerProperties?
 
-    private var session: Session = .none
+    private var session = Session()
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
 
@@ -116,41 +116,22 @@ public extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    // TODO: Simpler than enum
-    enum Session {
-        case none
-        case started(String)
-        case stopped(String)
-
-        var id: String? {
-            switch self {
-            case .none:
-                return nil
-            case let .started(id), let .stopped(id):
-                return id
-            }
-        }
-
-        var isStarted: Bool {
-            switch self {
-            case .started:
-                return true
-            default:
-                return false
-            }
-        }
+    struct Session {
+        private(set) var id: String?
+        private(set) var isStarted = false
 
         mutating func start() {
-            self = .started(UUID().uuidString.lowercased())
+            id = UUID().uuidString.lowercased()
+            isStarted = true
         }
 
         mutating func stop() {
-            switch self {
-            case let .started(id):
-                self = .stopped(id)
-            default:
-                break
-            }
+            isStarted = false
+        }
+
+        mutating func reset() {
+            id = nil
+            isStarted = false
         }
     }
 }
@@ -190,7 +171,7 @@ private extension MetricsTracker {
             url: URL(string: properties?.metrics()?.uri)
         )
     }
-    
+
     func statusData(from properties: PlayerProperties) -> MetricStatusData {
         let metrics = properties.metrics()
         return MetricStatusData(
@@ -222,8 +203,8 @@ private extension MetricsTracker {
     }
 
     func reset() {
-        session = .none
         stallDuration = 0
+        session.reset()
         stopwatch.reset()
     }
 }
