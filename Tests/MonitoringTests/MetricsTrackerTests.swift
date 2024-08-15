@@ -142,7 +142,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
 
                 let data = payload.data
                 expect(data.airplay).to(beFalse())
-                expect(data.streamType).to(equal("on-demand"))
+                expect(data.streamType).to(equal("On-demand"))
                 expect(data.vpn).to(beFalse())
             }
         ) {

@@ -283,9 +283,9 @@ private extension MetricsTracker {
         case .unknown:
             return nil
         case .onDemand:
-            return "on-demand"
+            return "On-demand"
         case .live, .dvr:
-            return "live"
+            return "Live"
         }
     }
 
