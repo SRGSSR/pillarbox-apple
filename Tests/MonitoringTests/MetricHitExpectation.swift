@@ -38,6 +38,12 @@ private extension MetricHitExpectation {
     }
 }
 
+extension _MetricHitExpectation: CustomDebugStringConvertible {
+    var debugDescription: String {
+        eventName.rawValue
+    }
+}
+
 func match(payload: any Encodable, with expectation: any MetricHitExpectation) -> Bool {
     expectation.match(payload: payload, with: expectation)
 }
