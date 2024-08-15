@@ -20,7 +20,7 @@ public final class MetricsTracker: PlayerItemTracker {
     private var metadata: Metadata?
     private var properties: PlayerProperties?
 
-    private var session = Session()
+    private var session = TrackingSession()
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
 
@@ -111,27 +111,6 @@ public extension MetricsTracker {
             self.identifier = identifier
             self.metadataUrl = metadataUrl
             self.assetUrl = assetUrl
-        }
-    }
-}
-
-private extension MetricsTracker {
-    struct Session {
-        private(set) var id: String?
-        private(set) var isStarted = false
-
-        mutating func start() {
-            id = UUID().uuidString.lowercased()
-            isStarted = true
-        }
-
-        mutating func stop() {
-            isStarted = false
-        }
-
-        mutating func reset() {
-            id = nil
-            isStarted = false
         }
     }
 }
