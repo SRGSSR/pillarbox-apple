@@ -14,7 +14,6 @@ struct ItemProperties: Equatable {
         duration: .invalid,
         minimumTimeOffsetFromLive: .invalid,
         presentationSize: nil,
-        metricsState: .empty,
         isStalled: false
     )
 
@@ -25,7 +24,6 @@ struct ItemProperties: Equatable {
     let minimumTimeOffsetFromLive: CMTime
 
     let presentationSize: CGSize?
-    let metricsState: MetricsState
 
     let isStalled: Bool
 }
@@ -42,7 +40,6 @@ extension ItemProperties {
 
     func metrics() -> Metrics? {
         guard let item else { return nil }
-        let updatedState = metricsState.updated(with: item.accessLog(), at: item.currentTime())
-        return updatedState.metrics(from: metricsState)
+        return MetricsState(from: item).metrics(from: .empty)
     }
 }

@@ -7,22 +7,21 @@
 import AVFoundation
 
 struct MetricsState: Equatable {
-    static let empty = Self(time: .invalid, event: nil, total: .zero)
+    static let empty = Self(with: [], at: .invalid)
 
     private let time: CMTime
     private let event: AccessLogEvent?
     private let total: MetricsValues
 
-    func updated(with events: [AccessLogEvent], at time: CMTime) -> Self {
-        .init(time: time, event: events.last, total: events.reduce(.zero) { $0 + .values(from: $1) })
+    init(with events: [AccessLogEvent], at time: CMTime) {
+        self.time = time
+        self.event = events.last
+        self.total = events.reduce(.zero) { $0 + .values(from: $1) }
     }
 
-    func updated(with events: [AVPlayerItemAccessLogEvent], at time: CMTime) -> Self {
-        updated(with: events.map { .init($0) }, at: time)
-    }
-
-    func updated(with log: AVPlayerItemAccessLog?, at time: CMTime) -> Self {
-        updated(with: log?.events ?? [], at: time)
+    init(from item: AVPlayerItem) {
+        let events = item.accessLog()?.events.map { AccessLogEvent($0) } ?? []
+        self.init(with: events, at: item.currentTime())
     }
 
     func metrics(from state: Self) -> Metrics {
