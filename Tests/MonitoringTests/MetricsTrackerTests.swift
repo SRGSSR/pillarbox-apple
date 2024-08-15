@@ -132,6 +132,23 @@ final class MetricsTrackerTests: MonitoringTestCase {
         }
     }
 
+    func testSessionIdentifierClearedAfterPlaybackEnd() {
+        let player = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
+            ]
+        ))
+        expectAtLeastHits(
+            start(),
+            heartbeat(),
+            stop()
+        ) {
+            player.play()
+        }
+        expect(player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)).to(beEmpty())
+    }
+
     func testSessionIdentifierPersistenceAfterFatalError() {
         let player = Player(item: .simple(
             url: Stream.unavailable.url,
