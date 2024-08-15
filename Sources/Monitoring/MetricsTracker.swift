@@ -50,7 +50,7 @@ public final class MetricsTracker: PlayerItemTracker {
         switch events.last?.kind {
         case .resourceLoading:
             session.start()
-            send(eventName: .start, data: startData(from: events))
+            sendEvent(name: .start, data: startData(from: events))
             startHeartbeat()
         case .stall:
             stallDate = Date()
@@ -60,12 +60,12 @@ public final class MetricsTracker: PlayerItemTracker {
         case let .failure(error):
             if !session.isStarted {
                 session.start()
-                send(eventName: .start, data: startData(from: events))
+                sendEvent(name: .start, data: startData(from: events))
             }
-            send(eventName: .error, data: errorData(error: error, severity: .fatal))
+            sendEvent(name: .error, data: errorData(error: error, severity: .fatal))
             session.stop()
         case let .warning(error):
-            send(eventName: .error, data: errorData(error: error, severity: .warning))
+            sendEvent(name: .error, data: errorData(error: error, severity: .warning))
         default:
             break
         }
@@ -77,7 +77,7 @@ public final class MetricsTracker: PlayerItemTracker {
         }
         stopHeartbeat()
         if session.isStarted {
-            send(eventName: .stop, data: statusData(from: properties))
+            sendEvent(name: .stop, data: statusData(from: properties))
         }
     }
 }
@@ -195,10 +195,10 @@ private extension MetricsTracker {
         return encoder
     }()
 
-    func send<Data>(eventName: EventName, data: Data) where Data: Encodable {
+    func sendEvent<Data>(name: EventName, data: Data) where Data: Encodable {
         guard let sessionId = session.id else { return}
 
-        let payload = MetricPayload(sessionId: sessionId, eventName: eventName, data: data)
+        let payload = MetricPayload(sessionId: sessionId, eventName: name, data: data)
         guard let httpBody = try? Self.jsonEncoder.encode(payload) else { return }
 
         var request = URLRequest(url: configuration.serviceUrl)
@@ -219,7 +219,7 @@ private extension MetricsTracker {
             .prepend(())
             .sink { [weak self] _ in
                 guard let self, let properties else { return }
-                send(eventName: .heartbeat, data: statusData(from: properties))
+                sendEvent(name: .heartbeat, data: statusData(from: properties))
             }
             .store(in: &cancellables)
     }
