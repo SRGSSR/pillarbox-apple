@@ -89,7 +89,9 @@ final class MetricsTrackerTests: MonitoringTestCase {
             start { payload in
                 sessionId = payload.sessionId
             },
-            heartbeat(),
+            heartbeat { payload in
+                expect(payload.sessionId).to(equal(sessionId))
+            },
             stop { payload in
                 expect(payload.sessionId).to(equal(sessionId))
             }
@@ -117,7 +119,9 @@ final class MetricsTrackerTests: MonitoringTestCase {
             start { payload in
                 sessionId = payload.sessionId
             },
-            error()
+            error { payload in
+                expect(payload.sessionId).to(equal(sessionId))
+            }
         )
         expectAtLeastHits(
             start { payload in
