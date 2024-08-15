@@ -132,6 +132,23 @@ final class MetricsTrackerTests: MonitoringTestCase {
         }
     }
 
+    func testSessionIdentifierPersistenceAfterFatalError() {
+        let player = Player(item: .simple(
+            url: Stream.unavailable.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
+            ]
+        ))
+        var sessionId: String?
+        expectAtLeastHits(
+            start { payload in
+                sessionId = payload.sessionId
+            },
+            error()
+        )
+        expect(player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)).to(equalDiff([sessionId!]))
+    }
+
     func testPayloads() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
