@@ -77,7 +77,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         }
     }
 
-    func testSessionIdentifierRenewal() {
+    func testNewSessionIdentifierAfterReplay() {
         let player = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             trackerAdapters: [
@@ -96,6 +96,29 @@ final class MetricsTrackerTests: MonitoringTestCase {
         ) {
             player.play()
         }
+        expectAtLeastHits(
+            start { payload in
+                expect(payload.sessionId).notTo(equal(sessionId))
+            }
+        ) {
+            player.replay()
+        }
+    }
+
+    func testNewSessionIdentifierAfterFailure() {
+        let player = Player(item: .simple(
+            url: Stream.unavailable.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
+            ]
+        ))
+        var sessionId: String?
+        expectAtLeastHits(
+            start { payload in
+                sessionId = payload.sessionId
+            },
+            error()
+        )
         expectAtLeastHits(
             start { payload in
                 expect(payload.sessionId).notTo(equal(sessionId))

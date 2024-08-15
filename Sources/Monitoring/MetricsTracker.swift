@@ -64,6 +64,7 @@ public final class MetricsTracker: PlayerItemTracker {
                 send(payload: startPayload(from: events, at: lastEvent.date))
             }
             send(payload: errorPayload(error: error, severity: .fatal, at: lastEvent.date))
+            reset()
         case let .warning(error):
             send(payload: errorPayload(error: error, severity: .warning, at: lastEvent.date))
         default:
