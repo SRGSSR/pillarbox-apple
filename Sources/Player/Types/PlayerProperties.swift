@@ -122,6 +122,13 @@ public extension PlayerProperties {
         coreProperties.time()
     }
 
+    /// The date corresponding to the player time.
+    ///
+    /// This date is only returned when available from the stream.
+    func date() -> Date? {
+        coreProperties.date()
+    }
+
     /// The current player metrics, if available.
     ///
     /// Each call to this function might return different results reflecting the most recent metrics available. The

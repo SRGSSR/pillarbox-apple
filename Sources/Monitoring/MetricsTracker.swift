@@ -77,7 +77,7 @@ public final class MetricsTracker: PlayerItemTracker {
         }
         stopHeartbeat()
         if isStarted {
-            send(payload: eventPayload(for: .stop, with: properties, at: Date()))
+            send(payload: statusEventPayload(for: .stop, with: properties, at: Date()))
         }
     }
 }
@@ -128,7 +128,11 @@ private extension MetricsTracker {
             eventName: .start,
             timestamp: Self.timestamp(from: date),
             data: MetricStartData(
-                device: .init(id: Self.deviceId, model: Self.deviceModel, type: Self.deviceType),
+                device: .init(
+                    id: Self.deviceId,
+                    model: Self.deviceModel,
+                    type: Self.deviceType
+                ),
                 os: .init(name: UIDevice.current.systemName, version: UIDevice.current.systemVersion),
                 screen: .init(
                     width: Int(UIScreen.main.nativeBounds.width),
@@ -136,9 +140,9 @@ private extension MetricsTracker {
                 ),
                 player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
                 media: .init(
+                    assetUrl: metadata?.assetUrl,
                     id: metadata?.identifier,
                     metadataUrl: metadata?.metadataUrl,
-                    assetUrl: metadata?.assetUrl,
                     origin: Bundle.main.bundleIdentifier
                 ),
                 qoeMetrics: .init(events: events)
@@ -153,29 +157,38 @@ private extension MetricsTracker {
             eventName: .error,
             timestamp: Self.timestamp(from: date),
             data: MetricErrorData(
-                severity: severity,
-                name: "\(error.domain)(\(error.code))",
                 message: error.localizedDescription,
-                url: URL(string: properties?.metrics()?.uri),
-                playerPosition: Self.playerPosition(from: properties)
+                name: "\(error.domain)(\(error.code))",
+                position: Self.position(from: properties),
+                positionTimestamp: Self.positionTimestamp(from: properties),
+                severity: severity,
+                url: URL(string: properties?.metrics()?.uri)
             )
         )
     }
 
-    func eventPayload(for eventName: EventName, with properties: PlayerProperties, at date: Date) -> some Encodable {
+    func statusEventPayload(for eventName: EventName, with properties: PlayerProperties, at date: Date) -> some Encodable {
         let metrics = properties.metrics()
         return MetricPayload(
             sessionId: sessionId,
             eventName: eventName,
             timestamp: Self.timestamp(from: date),
-            data: MetricEventData(
-                url: metrics?.uri,
-                bitrate: metrics?.indicatedBitrate,
+            data: MetricStatusEventData(
+                airplay: properties.isExternalPlaybackActive,
                 bandwidth: metrics?.observedBitrate,
+                bitrate: metrics?.indicatedBitrate,
                 bufferedDuration: Self.bufferedDuration(from: properties),
-                stall: .init(stallCount: metrics?.total.numberOfStalls, stallDuration: stallDuration.toMilliseconds),
+                duration: Self.duration(from: properties),
                 playbackDuration: stopwatch.time().toMilliseconds,
-                playerPosition: Self.playerPosition(from: properties)
+                position: Self.position(from: properties),
+                positionTimestamp: Self.positionTimestamp(from: properties),
+                stall: .init(
+                    count: metrics?.total.numberOfStalls ?? 0,
+                    duration: stallDuration.toMilliseconds
+                ),
+                streamType: Self.streamType(from: properties),
+                url: metrics?.uri,
+                vpn: Self.isUsingVirtualPrivateNetwork()
             )
         )
     }
@@ -216,9 +229,11 @@ private extension MetricsTracker {
     func startHeartbeat() {
         Timer.publish(every: configuration.heartbeatInterval, on: .main, in: .common)
             .autoconnect()
+            .map { _ in }
+            .prepend(())
             .sink { [weak self] _ in
                 guard let self, let properties else { return }
-                send(payload: eventPayload(for: .heartbeat, with: properties, at: Date()))
+                send(payload: statusEventPayload(for: .heartbeat, with: properties, at: Date()))
             }
             .store(in: &cancellables)
     }
@@ -263,25 +278,56 @@ private extension MetricsTracker {
         UUID().uuidString.lowercased()
     }
 
-    static func timestamp(from date: Date) -> Double {
-        (date.timeIntervalSince1970 * 1000).rounded()
+    static func streamType(from properties: PlayerProperties) -> String? {
+        switch properties.streamType {
+        case .unknown:
+            return nil
+        case .onDemand:
+            return "on-demand"
+        case .live, .dvr:
+            return "live"
+        }
     }
 
-    static func playerPosition(from properties: PlayerProperties?) -> Int? {
+    static func timestamp(from date: Date) -> Int {
+        Int((date.timeIntervalSince1970 * 1000).rounded())
+    }
+
+    static func position(from properties: PlayerProperties?) -> Int? {
         guard let properties else { return nil }
         switch properties.streamType {
+        case .unknown:
+            return nil
         case .onDemand:
             return properties.time().toMilliseconds
         case .live:
             return 0
         case .dvr:
-            return properties.endOffset().toMilliseconds
-        default:
-            return nil
+            return (properties.time() - properties.seekableTimeRange.start).toMilliseconds
         }
+    }
+
+    static func positionTimestamp(from properties: PlayerProperties?) -> Int? {
+        guard let date = properties?.date() else { return nil }
+        return timestamp(from: date)
     }
 
     static func bufferedDuration(from properties: PlayerProperties?) -> Int? {
         properties?.loadedTimeRange.duration.toMilliseconds
+    }
+
+    static func duration(from properties: PlayerProperties) -> Int? {
+        properties.seekableTimeRange.duration.toMilliseconds
+    }
+
+    static func isUsingVirtualPrivateNetwork() -> Bool {
+        // Source: https://blog.tarkalabs.com/the-ultimate-vpn-detection-guide-for-ios-and-android-313b521186cb
+        guard let proxySettings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
+              let scopedSettings = proxySettings["__SCOPED__"] as? [String: Any] else {
+            return false
+        }
+        return scopedSettings.keys.contains { key in
+            key == "tap" || key == "ppp" || key.contains("tun") || key.contains("ipsec")
+        }
     }
 }

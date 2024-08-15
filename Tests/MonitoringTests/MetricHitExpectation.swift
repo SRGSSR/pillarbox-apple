@@ -38,6 +38,12 @@ private extension MetricHitExpectation {
     }
 }
 
+extension _MetricHitExpectation: CustomDebugStringConvertible {
+    var debugDescription: String {
+        eventName.rawValue
+    }
+}
+
 func match(payload: any Encodable, with expectation: any MetricHitExpectation) -> Bool {
     expectation.match(payload: payload, with: expectation)
 }
@@ -47,7 +53,7 @@ extension MonitoringTestCase {
         _MetricHitExpectation(eventName: .error, evaluate: evaluate)
     }
 
-    func heartbeat(evaluate: @escaping (MetricPayload<MetricEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
+    func heartbeat(evaluate: @escaping (MetricPayload<MetricStatusEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
         _MetricHitExpectation(eventName: .heartbeat, evaluate: evaluate)
     }
 
@@ -55,7 +61,7 @@ extension MonitoringTestCase {
         _MetricHitExpectation(eventName: .start, evaluate: evaluate)
     }
 
-    func stop(evaluate: @escaping (MetricPayload<MetricEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
+    func stop(evaluate: @escaping (MetricPayload<MetricStatusEventData>) -> Void = { _ in }) -> some MetricHitExpectation {
         _MetricHitExpectation(eventName: .stop, evaluate: evaluate)
     }
 }

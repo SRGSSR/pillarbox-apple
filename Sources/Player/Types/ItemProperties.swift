@@ -36,6 +36,10 @@ extension ItemProperties {
         return item.currentTime()
     }
 
+    func date() -> Date? {
+        item?.currentDate()
+    }
+
     func metrics() -> Metrics? {
         guard let item else { return nil }
         let updatedState = metricsState.updated(with: item.accessLog(), at: item.currentTime())

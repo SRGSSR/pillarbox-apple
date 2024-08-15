@@ -7,14 +7,17 @@
 import Foundation
 
 struct MetricErrorData: Encodable {
-    enum Severity: String, Encodable {
-        case warning = "WARNING"
-        case fatal = "FATAL"
-    }
-
-    let severity: Severity
-    let name: String
     let message: String
+    let name: String
+    let position: Int?
+    let positionTimestamp: Int?
+    let severity: Severity
     let url: URL?
-    let playerPosition: Int?
+}
+
+extension MetricErrorData {
+    enum Severity: String, Encodable {
+        case fatal = "FATAL"
+        case warning = "WARNING"
+    }
 }

@@ -22,8 +22,9 @@ final class MetricsTrackerTests: MonitoringTestCase {
         ))
         expectAtLeastHits(
             start(),
+            heartbeat(),
             stop { payload in
-                expect(payload.data.playerPosition).to(beCloseTo(1000, within: 100))
+                expect(payload.data.position).to(beCloseTo(1000, within: 100))
             }
         ) {
             player.play()
@@ -44,7 +45,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 expect(data.severity).to(equal(.fatal))
                 expect(data.name).to(equal("NSURLErrorDomain(-1100)"))
                 expect(data.message).to(equal("The requested URL was not found on this server."))
-                expect(data.playerPosition).to(beNil())
+                expect(data.position).to(beNil())
             }
         ) {
             player.play()
@@ -68,12 +69,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                MetricsTracker.adapter(
-                    configuration: .init(
-                        serviceUrl: URL(string: "https://localhost")!,
-                        heartbeatInterval: 1
-                    )
-                ) { _ in .test }
+                MetricsTracker.adapter(configuration: .heartbeatTest) { _ in .test }
             ]
         ))
         expectAtLeastHits(start(), heartbeat(), heartbeat()) {
@@ -93,6 +89,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
             start { payload in
                 sessionId = payload.sessionId
             },
+            heartbeat(),
             stop { payload in
                 expect(payload.sessionId).to(equal(sessionId))
             }
@@ -108,22 +105,16 @@ final class MetricsTrackerTests: MonitoringTestCase {
         }
     }
 
-    func testStartPayload() {
+    func testPayloads() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                MetricsTracker.adapter(configuration: .test) {
-                    .init(
-                        identifier: "identifier",
-                        metadataUrl: URL(string: "https://localhost/metadata.json"),
-                        assetUrl: URL(string: "https://localhost/asset.m3u8")
-                    )
-                }
+                MetricsTracker.adapter(configuration: .test) { .test }
             ]
         ))
         expectAtLeastHits(
             start { payload in
-                expect(payload.version).to(equal("1.0.0"))
+                expect(payload.version).to(equal(1))
 
                 let data = payload.data
 
@@ -133,9 +124,9 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 expect(device.type).notTo(beNil())
 
                 let media = data.media
+                expect(media.assetUrl).to(equal(URL(string: "https://localhost/asset.m3u8")))
                 expect(media.id).to(equal("identifier"))
                 expect(media.metadataUrl).to(equal(URL(string: "https://localhost/metadata.json")))
-                expect(media.assetUrl).to(equal(URL(string: "https://localhost/asset.m3u8")))
                 expect(media.origin).notTo(beNil())
 
                 let os = data.os
@@ -145,6 +136,14 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 let player = data.player
                 expect(player.name).to(equal("Pillarbox"))
                 expect(player.version).to(equal(Player.version))
+            },
+            heartbeat { payload in
+                expect(payload.version).to(equal(1))
+
+                let data = payload.data
+                expect(data.airplay).to(beFalse())
+                expect(data.streamType).to(equal("on-demand"))
+                expect(data.vpn).to(beFalse())
             }
         ) {
             player.play()
