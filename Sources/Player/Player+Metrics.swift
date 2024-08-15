@@ -37,6 +37,8 @@ public extension Player {
     /// Additional non-periodic updates will be published when time jumps or when playback starts or stops. Each
     /// included ``Metrics/increment`` collates data since the entry that precedes it in the history. No updates are
     /// published if no metrics are provided for the item being played.
+    ///
+    /// > Important: The metrics history is reset when toggling external playback.
     func periodicMetricsPublisher(forInterval interval: CMTime, queue: DispatchQueue = .main, limit: Int = .max) -> AnyPublisher<[Metrics], Never> {
         Publishers.CombineLatest(
             currentPlayerItemPublisher(),
