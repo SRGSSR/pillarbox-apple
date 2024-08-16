@@ -12,8 +12,7 @@ import Nimble
 final class MetricsStateTests: TestCase {
     // swiftlint:disable:next function_body_length
     func testMetrics() {
-        let initialState = MetricsState.empty
-        let state = initialState.updated(with: [
+        let state = MetricsState(with: [
             .init(
                 uri: "uri",
                 serverAddress: "serverAddress",
@@ -42,7 +41,7 @@ final class MetricsStateTests: TestCase {
             )
         ], at: .init(value: 12, timescale: 1))
 
-        let metrics = state.metrics(from: initialState)
+        let metrics = state.metrics(from: .empty)
         expect(metrics.playbackStartDate).to(equal(Date(timeIntervalSince1970: 1)))
         expect(metrics.time).to(equal(.init(value: 12, timescale: 1)))
         expect(metrics.uri).to(equal("uri"))

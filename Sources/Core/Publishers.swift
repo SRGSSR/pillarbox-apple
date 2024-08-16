@@ -85,14 +85,6 @@ public extension Publishers {
             .map { ($0.0, $0.1, $0.2, $0.3, $1, $2, $3) }
             .eraseToAnyPublisher()
     }
-
-    /// A publisher that receives and combines the latest elements from eight publishers.
-    static func CombineLatest8<A, B, C, D, E, F, G, H>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E, _ f: F, _ g: G, _ h: H) -> AnyPublisher<(A.Output, B.Output, C.Output, D.Output, E.Output, F.Output, G.Output, H.Output), A.Failure> where A: Publisher, B: Publisher, C: Publisher, D: Publisher, E: Publisher, F: Publisher, G: Publisher, H: Publisher, B.Failure == A.Failure, C.Failure == A.Failure, D.Failure == A.Failure, E.Failure == A.Failure, F.Failure == A.Failure, G.Failure == A.Failure, H.Failure == A.Failure {
-        // swiftlint:disable:previous large_tuple line_length
-        CombineLatest4(CombineLatest5(a, b, c, d, e), f, g, h)
-            .map { ($0.0, $0.1, $0.2, $0.3, $0.4, $1, $2, $3) }
-            .eraseToAnyPublisher()
-    }
 }
 
 public extension Publishers {

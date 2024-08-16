@@ -37,25 +37,26 @@ public extension Player {
     /// Additional non-periodic updates will be published when time jumps or when playback starts or stops. Each
     /// included ``Metrics/increment`` collates data since the entry that precedes it in the history. No updates are
     /// published if no metrics are provided for the item being played.
+    ///
+    /// > Important: The metrics history is reset when toggling external playback.
     func periodicMetricsPublisher(forInterval interval: CMTime, queue: DispatchQueue = .main, limit: Int = .max) -> AnyPublisher<[Metrics], Never> {
-        currentPlayerItemPublisher()
-            .map { [queuePlayer] item -> AnyPublisher<[Metrics], Never> in
-                guard let item else { return Just([]).eraseToAnyPublisher() }
-                return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
-                    .compactMap { _ in item.accessLog()?.events }
-                    .filter { !$0.isEmpty }
-                    .scan(MetricsState.empty) { state, events in
-                        state.updated(with: events, at: item.currentTime())
-                    }
-                    .withPrevious(MetricsState.empty)
-                    .map { $0.current.metrics(from: $0.previous) }
-                    .scan([]) { ($0 + [$1]).suffix(limit) }
-                    .prepend([])
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .receive(on: queue)
-            .eraseToAnyPublisher()
+        Publishers.CombineLatest(
+            currentPlayerItemPublisher(),
+            queuePlayer.publisher(for: \.isExternalPlaybackActive)
+        )
+        .map { [queuePlayer] item, _ -> AnyPublisher<[Metrics], Never> in
+            guard let item else { return Just([]).eraseToAnyPublisher() }
+            return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
+                .compactMap { _ in MetricsState(from: item) }
+                .withPrevious(MetricsState.empty)
+                .map { $0.current.metrics(from: $0.previous) }
+                .scan([]) { ($0 + [$1]).suffix(limit) }
+                .prepend([])
+                .eraseToAnyPublisher()
+        }
+        .switchToLatest()
+        .removeDuplicates()
+        .receive(on: queue)
+        .eraseToAnyPublisher()
     }
 }
