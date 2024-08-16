@@ -195,7 +195,7 @@ private extension MetricsTracker {
         return encoder
     }()
 
-    func sendEvent<Data>(name: EventName, data: Data) where Data: Encodable {
+    func sendEvent(name: EventName, data: some Encodable) {
         guard let sessionId = session.id else { return}
 
         let payload = MetricPayload(sessionId: sessionId, eventName: name, data: data)
