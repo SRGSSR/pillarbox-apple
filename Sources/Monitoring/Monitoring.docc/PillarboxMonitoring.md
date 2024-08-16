@@ -10,7 +10,7 @@ Monitor playback activity.
 
 The PillarboxMonitoring framework provides seamless integration with Pillarbox monitoring platform.
 
-> Important: PillarboxMonitoring exchanges metrics in a JSON format specific to the Pillarbox monitoring platform. To integrate another monitoring solution you must implement a dedicated `PlayerItemTracker`. Refer to PillarboxPlayer documentation for more information.
+> Important: PillarboxMonitoring sends metrics in a JSON format specific to the Pillarbox monitoring platform. To integrate another monitoring solution you must implement a dedicated `PlayerItemTracker`. Refer to PillarboxPlayer documentation for more information.
 
 ### Monitor content being played
 
@@ -22,21 +22,19 @@ A ``MetricsTracker`` is provided to gather relevant metrics and events during pl
 - How much bandwidth is available.
 - ... and many more.
 
-When instantiating a `PlayerItem` you have attach a ``MetricsTracker`` configured with the endpoint where data must be sent, for example:
+When instantiating a `PlayerItem` attach a ``MetricsTracker`` configured with the endpoint where data must be sent, for example:
 
 ```swift
-let item = PlayerItem.simple(url: url, trackerAdapters: [
+let item = PlayerItem.simple(url: URL(string: "https://your.domain.com/content.m3u8", trackerAdapters: [
     MetricsTracker.adapter(
-        configuration: .init(
-            serviceUrl: URL(string: "https://your.domain.com/monitoring")!
-        )
+        configuration: .init(serviceUrl: URL(string: "https://your.domain.com/monitoring")!)
     ) { metadata in
         .init(identifier: "your-content-identifier")
     }
 ])
 ```
 
-You can provide optional ``MetricsTracker/Metadata`` to better identify the content being played.
+The tracker supports ``MetricsTracker/Metadata`` that can be optionally provided to send additional information about the content being played.
 
 > Tip: Metadata is usually retrieved by the `PlayerItem` itself and provided to the adapter mapping closure. More information is available from PillarboxPlayer documentation.
 
