@@ -12,7 +12,7 @@ Create engaging audio and video playback experiences.
 
 The PillarboxPlayer framework provides a complete toolbox to add advanced audiovisual media capabilities to your app.
 
-Play content easily with a ``Player`` and display its content in the standard AVKit user interface with ``SystemVideoView``, or build an entirely custom user interface starting from a simple ``VideoView``. Play any kind of content from any source by implementing your own ``PlayerItem``s and ``Asset``s, no matter where your content comes from or how it must be played. Track playback with your own ``PlayerItemTracker``, whether for analytics purposes or Quality of Service (QoS) data collection.
+Play content easily with a ``Player`` and display its content in the standard AVKit user interface with ``SystemVideoView``, or build an entirely custom user interface starting from a simple ``VideoView``. Play any kind of content from any source by implementing your own ``PlayerItem``s and ``Asset``s, no matter where your content comes from or how it must be played. Track playback with your own ``PlayerItemTracker``, whether for analytics or monitoring purposes.
 
 @Image(source: player-intro, alt: "A screenshot of a player user interface")
 

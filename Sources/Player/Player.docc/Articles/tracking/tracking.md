@@ -9,7 +9,7 @@ Track player items during playback.
 
 ## Overview
 
-The PillarboxPlayer framework offers a way to track an item during playback. This mechanism is mostly useful to gather analytics, perform Quality of Service (QoS) monitoring or save the current playback position into a local history, for example.
+The PillarboxPlayer framework offers a way to track an item during playback. This mechanism is mostly useful to gather analytics, perform Quality of Experience (QoE) and Quality of Service (QoS) monitoring or save the current playback position into a local history, for example.
 
 You define which data is required by a tracker as well as its life cycle by creating a new class type and conforming it to the ``PlayerItemTracker`` protocol. This can be achieved in a few steps discussed below.
 
