@@ -12,7 +12,7 @@ Apple provides HLS [authoring specifications](https://developer.apple.com/docume
 
 For optimal playback experience with the PillarboxPlayer framework some of these specifications need to be followed rigorously. This article covers these specific requirements in more detail and provides more information about how streams can be tested for compatibility with PillarboxPlayer.
 
-> Note: More information about automatic media selection is available from <doc:subtitles-and-alternative-audio-tracks>.
+> Note: More information about automatic media selection is available from <doc:subtitles-and-alternative-audio-tracks-article>.
 
 ### Automatic media option selection
 

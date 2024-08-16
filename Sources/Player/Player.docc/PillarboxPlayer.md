@@ -21,36 +21,36 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 ### Featured
 
 @Links(visualStyle: detailedGrid) {
-    - <doc:playback>
-    - <doc:state-observation>
-    - <doc:metadata>
-    - <doc:tracking>
+    - <doc:playback-article>
+    - <doc:state-observation-article>
+    - <doc:metadata-article>
+    - <doc:tracking-article>
     - <doc:metrics-article>
 }
 
 ### Asset Loading
 
 @Links(visualStyle: detailedGrid) {
-    - <doc:resource-loading>
-    - <doc:fairplay-streaming>
+    - <doc:resource-loading-article>
+    - <doc:fairplay-streaming-article>
 }
 
 ### System Integration
 
 @Links(visualStyle: detailedGrid) {
-    - <doc:airplay>
-    - <doc:control-center>
-    - <doc:picture-in-picture>
+    - <doc:airplay-article>
+    - <doc:control-center-article>
+    - <doc:picture-in-picture-article>
 }
 
 ## Topics
 
 ### Essentials
 
-- <doc:playback>
-- <doc:playback-speed>
-- <doc:state-observation>
-- <doc:subtitles-and-alternative-audio-tracks>
+- <doc:playback-article>
+- <doc:playback-speed-article>
+- <doc:state-observation-article>
+- <doc:subtitles-and-alternative-audio-tracks-article>
 
 - ``Asset``
 - ``MediaSelectionOption``
@@ -66,16 +66,16 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 
 ### Metadata
 
-- <doc:metadata>
+- <doc:metadata-article>
 
 - ``AssetMetadata``
 - ``PlayerMetadata``
 
 ### System Integration
 
-- <doc:airplay>
-- <doc:control-center>
-- <doc:picture-in-picture>
+- <doc:airplay-article>
+- <doc:control-center-article>
+- <doc:picture-in-picture-article>
 
 - ``PictureInPicture``
 - ``PictureInPictureButton``
@@ -88,9 +88,9 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 
 ### Customization
 
-- <doc:fairplay-streaming>
-- <doc:resource-loading>
-- <doc:tracking>
+- <doc:fairplay-streaming-article>
+- <doc:resource-loading-article>
+- <doc:tracking-article>
 
 - ``PlayerItemTracker``
 - ``ProgressTracker``
@@ -122,4 +122,4 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 
 ### Technical Notes
 
-- <doc:stream-encoding-and-packaging-advice>
+- <doc:stream-encoding-and-packaging-advice-article>

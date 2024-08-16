@@ -14,7 +14,7 @@ A ``PlayerItem`` is responsible of delivering a playable ``Asset``, which can op
 Metadata serves two purposes:
 
 - A ``Player`` automatically retrieves and publishes standard ``PlayerMetadata`` about its current item. This possibly includes a title, a subtitle, an artwork image or chapters, for example. To provide standard player metadata an asset metadata must conform to the ``AssetMetadata`` protocol.
-- Metadata associated with an asset is provided as is to any ``TrackerAdapter`` associated with a ``PlayerItem``. This makes it possible to map metadata to the input expected from a concrete ``PlayerItemTracker`` implementation. For more information please refer to the <doc:tracking> article.
+- Metadata associated with an asset is provided as is to any ``TrackerAdapter`` associated with a ``PlayerItem``. This makes it possible to map metadata to the input expected from a concrete ``PlayerItemTracker`` implementation. For more information please refer to the <doc:tracking-article> article.
 
 Standard metadata can be used by player user interfaces. It is also used to consistently update information displayed in the Control Center.
 

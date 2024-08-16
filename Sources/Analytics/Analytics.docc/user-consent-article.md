@@ -36,7 +36,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 }
 ```
 
-See <doc:setup> for more information about tracking setup.
+See <doc:setup-article> for more information about tracking setup.
 
 ### Provide user content choices
 

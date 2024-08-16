@@ -11,7 +11,7 @@ import UIKit
 /// View controllers whose usage must be measured should conform to the `PageViewTracking` protocol, which describes
 /// the associated measurement data.
 ///
-/// For more information please read the <doc:page-views> article.
+/// For more information please read the <doc:page-views-article> article.
 public protocol PageViewTracking {
     /// The comScore page view data.
     var comScorePageView: ComScorePageView { get }
