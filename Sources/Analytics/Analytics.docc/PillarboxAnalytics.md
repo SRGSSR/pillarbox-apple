@@ -51,11 +51,44 @@ Your application should be validated before being submitted to production, at le
 - <doc:setup-article>
 - <doc:user-consent-article>
 
+- ``Analytics``
+
+### Configuration
+
+- ``AnalyticsDataSource``
+- ``CommandersActGlobals``
+- ``ComScoreGlobals``
+- ``ComScoreConsent``
+- ``Vendor``
+
 ### Page Views
 
 - <doc:page-views-article>
 - <doc:web-content-tracking-article>
 
+- ``CommandersActPageView``
+- ``ComScorePageView``
+- ``ContainerPageViewTracking``
+- ``PageViewTracking``
+
 ### Events
 
 - <doc:events-article>
+
+- ``CommandersActEvent``
+
+### Streaming
+
+- ``CommandersActTracker``
+- ``ComScoreTracker``
+
+### Development and Testing
+
+- ``AnalyticsListener``
+- ``CommandersActContext``
+- ``CommandersActDevice``
+- ``CommandersActHit``
+- ``CommandersActLabels``
+- ``CommandersActUser``
+- ``ComScoreHit``
+- ``ComScoreLabels``
