@@ -105,6 +105,11 @@ public extension MetricsTracker {
         let assetUrl: URL?
 
         /// Creates metadata.
+        ///
+        /// - Parameters:
+        ///   - identifier: An identifier for the content.
+        ///   - metadataUrl: The URL where metadata has been fetched.
+        ///   - assetUrl: The URL of the asset being played.
         public init(identifier: String? = nil, metadataUrl: URL? = nil, assetUrl: URL? = nil) {
             self.identifier = identifier
             self.metadataUrl = metadataUrl
