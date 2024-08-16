@@ -40,6 +40,8 @@ The tracker supports ``MetricsTracker/Metadata`` that can be optionally provided
 
 This is all that is required to monitor playback. Once the item is being played the tracker automatically gathers relevant metrics and sends them to the specified endpoint.
 
+> Important: The data collected by PillarboxMonitoring cannot be used to track users across apps and websites owned by other companies.
+
 ## Topics
 
 ### Essentials
