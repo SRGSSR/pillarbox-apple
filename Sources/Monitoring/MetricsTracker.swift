@@ -20,15 +20,14 @@ public final class MetricsTracker: PlayerItemTracker {
     private var metadata: Metadata?
     private var properties: PlayerProperties?
 
-    private var sessionId = createSessionId()
+    private var session = TrackingSession()
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
-    private var isStarted = false
 
     private var cancellables = Set<AnyCancellable>()
 
     public var sessionIdentifier: String? {
-        sessionId
+        session.id
     }
 
     public init(configuration: Configuration) {
@@ -48,11 +47,10 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next cyclomatic_complexity
     public func updateMetricEvents(to events: [MetricEvent]) {
-        guard let lastEvent = events.last else { return }
-        switch lastEvent.kind {
+        switch events.last?.kind {
         case .resourceLoading:
-            isStarted = true
-            send(payload: startPayload(from: events, at: lastEvent.date))
+            session.start()
+            sendEvent(name: .start, data: startData(from: events))
             startHeartbeat()
         case .stall:
             stallDate = Date()
@@ -60,12 +58,14 @@ public final class MetricsTracker: PlayerItemTracker {
             guard let stallDate else { break }
             stallDuration += Date().timeIntervalSince(stallDate)
         case let .failure(error):
-            if !isStarted {
-                send(payload: startPayload(from: events, at: lastEvent.date))
+            if !session.isStarted {
+                session.start()
+                sendEvent(name: .start, data: startData(from: events))
             }
-            send(payload: errorPayload(error: error, severity: .fatal, at: lastEvent.date))
+            sendEvent(name: .error, data: errorData(error: error, severity: .fatal))
+            session.stop()
         case let .warning(error):
-            send(payload: errorPayload(error: error, severity: .warning, at: lastEvent.date))
+            sendEvent(name: .error, data: errorData(error: error, severity: .warning))
         default:
             break
         }
@@ -76,8 +76,8 @@ public final class MetricsTracker: PlayerItemTracker {
             reset()
         }
         stopHeartbeat()
-        if isStarted {
-            send(payload: statusEventPayload(for: .stop, with: properties, at: Date()))
+        if session.isStarted {
+            sendEvent(name: .stop, data: statusData(from: properties))
         }
     }
 }
@@ -116,80 +116,59 @@ public extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    private static let jsonEncoder: JSONEncoder = {
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        return encoder
-    }()
-
-    func startPayload(from events: [MetricEvent], at date: Date) -> some Encodable {
-        MetricPayload(
-            sessionId: sessionId,
-            eventName: .start,
-            timestamp: Self.timestamp(from: date),
-            data: MetricStartData(
-                device: .init(
-                    id: Self.deviceId,
-                    model: Self.deviceModel,
-                    type: Self.deviceType
-                ),
-                os: .init(name: UIDevice.current.systemName, version: UIDevice.current.systemVersion),
-                screen: .init(
-                    width: Int(UIScreen.main.nativeBounds.width),
-                    height: Int(UIScreen.main.nativeBounds.height)
-                ),
-                player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
-                media: .init(
-                    assetUrl: metadata?.assetUrl,
-                    id: metadata?.identifier,
-                    metadataUrl: metadata?.metadataUrl,
-                    origin: Bundle.main.bundleIdentifier
-                ),
-                qoeMetrics: .init(events: events)
-            )
+    func startData(from events: [MetricEvent]) -> MetricStartData {
+        MetricStartData(
+            device: .init(
+                id: Self.deviceId,
+                model: Self.deviceModel,
+                type: Self.deviceType
+            ),
+            os: .init(name: UIDevice.current.systemName, version: UIDevice.current.systemVersion),
+            screen: .init(
+                width: Int(UIScreen.main.nativeBounds.width),
+                height: Int(UIScreen.main.nativeBounds.height)
+            ),
+            player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
+            media: .init(
+                assetUrl: metadata?.assetUrl,
+                id: metadata?.identifier,
+                metadataUrl: metadata?.metadataUrl,
+                origin: Bundle.main.bundleIdentifier
+            ),
+            qoeMetrics: .init(events: events)
         )
     }
 
-    func errorPayload(error: Error, severity: MetricErrorData.Severity, at date: Date) -> some Encodable {
+    func errorData(error: Error, severity: MetricErrorData.Severity) -> MetricErrorData {
         let error = error as NSError
-        return MetricPayload(
-            sessionId: sessionId,
-            eventName: .error,
-            timestamp: Self.timestamp(from: date),
-            data: MetricErrorData(
-                message: error.localizedDescription,
-                name: "\(error.domain)(\(error.code))",
-                position: Self.position(from: properties),
-                positionTimestamp: Self.positionTimestamp(from: properties),
-                severity: severity,
-                url: URL(string: properties?.metrics()?.uri)
-            )
+        return MetricErrorData(
+            message: error.localizedDescription,
+            name: "\(error.domain)(\(error.code))",
+            position: Self.position(from: properties),
+            positionTimestamp: Self.positionTimestamp(from: properties),
+            severity: severity,
+            url: URL(string: properties?.metrics()?.uri)
         )
     }
 
-    func statusEventPayload(for eventName: EventName, with properties: PlayerProperties, at date: Date) -> some Encodable {
+    func statusData(from properties: PlayerProperties) -> MetricStatusData {
         let metrics = properties.metrics()
-        return MetricPayload(
-            sessionId: sessionId,
-            eventName: eventName,
-            timestamp: Self.timestamp(from: date),
-            data: MetricStatusEventData(
-                airplay: properties.isExternalPlaybackActive,
-                bandwidth: metrics?.observedBitrate,
-                bitrate: metrics?.indicatedBitrate,
-                bufferedDuration: Self.bufferedDuration(from: properties),
-                duration: Self.duration(from: properties),
-                playbackDuration: stopwatch.time().toMilliseconds,
-                position: Self.position(from: properties),
-                positionTimestamp: Self.positionTimestamp(from: properties),
-                stall: .init(
-                    count: metrics?.total.numberOfStalls ?? 0,
-                    duration: stallDuration.toMilliseconds
-                ),
-                streamType: Self.streamType(from: properties),
-                url: metrics?.uri,
-                vpn: Self.isUsingVirtualPrivateNetwork()
-            )
+        return MetricStatusData(
+            airplay: properties.isExternalPlaybackActive,
+            bandwidth: metrics?.observedBitrate,
+            bitrate: metrics?.indicatedBitrate,
+            bufferedDuration: Self.bufferedDuration(from: properties),
+            duration: Self.duration(from: properties),
+            playbackDuration: stopwatch.time().toMilliseconds,
+            position: Self.position(from: properties),
+            positionTimestamp: Self.positionTimestamp(from: properties),
+            stall: .init(
+                count: metrics?.total.numberOfStalls ?? 0,
+                duration: stallDuration.toMilliseconds
+            ),
+            streamType: Self.streamType(from: properties),
+            url: metrics?.uri,
+            vpn: Self.isUsingVirtualPrivateNetwork()
         )
     }
 
@@ -203,18 +182,25 @@ private extension MetricsTracker {
     }
 
     func reset() {
-        sessionId = Self.createSessionId()
         stallDuration = 0
-        isStarted = false
+        session.reset()
         stopwatch.reset()
     }
 }
 
 private extension MetricsTracker {
-    func send(payload: Encodable) {
-        guard let httpBody = try? Self.jsonEncoder.encode(payload) else {
-            return
-        }
+    static let jsonEncoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        return encoder
+    }()
+
+    func sendEvent(name: EventName, data: some Encodable) {
+        guard let sessionId = session.id else { return}
+
+        let payload = MetricPayload(sessionId: sessionId, eventName: name, data: data)
+        guard let httpBody = try? Self.jsonEncoder.encode(payload) else { return }
+
         var request = URLRequest(url: configuration.serviceUrl)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -233,7 +219,7 @@ private extension MetricsTracker {
             .prepend(())
             .sink { [weak self] _ in
                 guard let self, let properties else { return }
-                send(payload: statusEventPayload(for: .heartbeat, with: properties, at: Date()))
+                sendEvent(name: .heartbeat, data: statusData(from: properties))
             }
             .store(in: &cancellables)
     }
@@ -274,23 +260,15 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static func createSessionId() -> String {
-        UUID().uuidString.lowercased()
-    }
-
     static func streamType(from properties: PlayerProperties) -> String? {
         switch properties.streamType {
         case .unknown:
             return nil
         case .onDemand:
-            return "on-demand"
+            return "On-demand"
         case .live, .dvr:
-            return "live"
+            return "Live"
         }
-    }
-
-    static func timestamp(from date: Date) -> Int {
-        Int((date.timeIntervalSince1970 * 1000).rounded())
     }
 
     static func position(from properties: PlayerProperties?) -> Int? {
@@ -309,7 +287,7 @@ private extension MetricsTracker {
 
     static func positionTimestamp(from properties: PlayerProperties?) -> Int? {
         guard let date = properties?.date() else { return nil }
-        return timestamp(from: date)
+        return date.timestamp
     }
 
     static func bufferedDuration(from properties: PlayerProperties?) -> Int? {

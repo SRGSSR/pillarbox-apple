@@ -77,7 +77,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         }
     }
 
-    func testSessionIdentifierRenewal() {
+    func testSessionIdentifierRenewalWhenReplayingAfterEnd() {
         let player = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             trackerAdapters: [
@@ -89,7 +89,9 @@ final class MetricsTrackerTests: MonitoringTestCase {
             start { payload in
                 sessionId = payload.sessionId
             },
-            heartbeat(),
+            heartbeat { payload in
+                expect(payload.sessionId).to(equal(sessionId))
+            },
             stop { payload in
                 expect(payload.sessionId).to(equal(sessionId))
             }
@@ -103,6 +105,65 @@ final class MetricsTrackerTests: MonitoringTestCase {
         ) {
             player.replay()
         }
+    }
+
+    func testSessionIdentifierRenewalWhenReplayingAfterFatalError() {
+        let player = Player(item: .simple(
+            url: Stream.unavailable.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
+            ]
+        ))
+        var sessionId: String?
+        expectAtLeastHits(
+            start { payload in
+                sessionId = payload.sessionId
+            },
+            error { payload in
+                expect(payload.sessionId).to(equal(sessionId))
+            }
+        )
+        expectAtLeastHits(
+            start { payload in
+                expect(payload.sessionId).notTo(equal(sessionId))
+            }
+        ) {
+            player.replay()
+        }
+    }
+
+    func testSessionIdentifierClearedAfterPlaybackEnd() {
+        let player = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
+            ]
+        ))
+        expectAtLeastHits(
+            start(),
+            heartbeat(),
+            stop()
+        ) {
+            player.play()
+        }
+        expect(player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)).to(beEmpty())
+    }
+
+    func testSessionIdentifierPersistenceAfterFatalError() {
+        let player = Player(item: .simple(
+            url: Stream.unavailable.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
+            ]
+        ))
+        var sessionId: String?
+        expectAtLeastHits(
+            start { payload in
+                sessionId = payload.sessionId
+            },
+            error()
+        )
+        expect(player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)).to(equalDiff([sessionId!]))
     }
 
     func testPayloads() {
@@ -142,7 +203,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
 
                 let data = payload.data
                 expect(data.airplay).to(beFalse())
-                expect(data.streamType).to(equal("on-demand"))
+                expect(data.streamType).to(equal("On-demand"))
                 expect(data.vpn).to(beFalse())
             }
         ) {

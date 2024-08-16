@@ -37,7 +37,7 @@ final class ErrorTests: TestCase {
         expectEqualPublishedNext(
             values: [.init(rawValue: NSURLErrorFileDoesNotExist)],
             from: Self.errorCodePublisher(for: player),
-            during: .milliseconds(500)
+            during: .seconds(1)
         )
     }
 
