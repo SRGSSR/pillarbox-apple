@@ -1,7 +1,43 @@
 # ``PillarboxMonitoring``
 
+@Metadata {
+    @PageColor(red)
+}
+
 Monitor playback activity.
 
 ## Overview
 
-TODO
+The PillarboxMonitoring framework provides seamless integration with Pillarbox monitoring platform.
+
+> Important: PillarboxMonitoring exchanges metrics in a JSON format specific to the Pillarbox monitoring platform. To integrate another monitoring solution you must implement a dedicated `PlayerItemTracker`. Refer to PillarboxPlayer documentation for more information.
+
+### Monitor content being played
+
+A ``MetricsTracker`` is provided to gather relevant metrics and events during playback, for example:
+
+- How much time is required to start playback from a user perspective.
+- Which fatal / non-fatal errors are encountered.
+- Which quality has been selected by the player.
+- How much bandwidth is available.
+- ... and many more.
+
+When instantiating a `PlayerItem` you have attach a ``MetricsTracker`` configured with the endpoint where data must be sent, for example:
+
+```swift
+let item = PlayerItem.simple(url: url, trackerAdapters: [
+    MetricsTracker.adapter(
+        configuration: .init(
+            serviceUrl: URL(string: "https://your.domain.com/monitoring")!
+        )
+    ) { metadata in
+        .init(identifier: "your-content-identifier")
+    }
+])
+```
+
+You can provide optional ``MetricsTracker/Metadata`` to better identify the content being played.
+
+> Tip: Metadata is usually retrieved by the `PlayerItem` itself and provided to the adapter mapping closure. More information is available from PillarboxPlayer documentation.
+
+This is all that is required to monitor playback. Once the item is being played the tracker will automatically gather relevant metrics and send them to the specified endpoint. 
