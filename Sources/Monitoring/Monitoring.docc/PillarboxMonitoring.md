@@ -39,3 +39,9 @@ The tracker supports ``MetricsTracker/Metadata`` that can be optionally provided
 > Tip: Information about the content is usually retrieved by the `PlayerItem` itself and provided automatically to the adapter mapping closure. Refer to PillarboxPlayer documentation for more information.
 
 This is all that is required to monitor playback. Once the item is being played the tracker automatically gathers relevant metrics and sends them to the specified endpoint.
+
+## Topics
+
+### Essentials
+
+- ``MetricsTracker``
