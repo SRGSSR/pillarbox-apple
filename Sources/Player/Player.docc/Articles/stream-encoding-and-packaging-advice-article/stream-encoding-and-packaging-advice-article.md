@@ -101,6 +101,13 @@ HLS streams can be tested with 3rd party players, mostly on the web. These inclu
 
 Any URL, including SRG SSR URLs protected with DRM or a token, can be played directly with Pillarbox demo. You can install the iOS and tvOS demo applications by registering [with TestFlight](https://testflight.apple.com/join/TS6ngLqf) (an Apple ID is required).
 
+The Pillarbox demo also offers two helpful tools for local inspection:
+
+- A Playback HUD, which can enabled in the applications settings, added to any video played in the demo.
+- A metrics debugging view, which can be enabled from the custom player settings menu.
+
+![Demo debugging views](stream-encoding-and-packaging-advice-debugging-views)
+
 ### Technical documentation
 
 Please refer to the official documentation for more information:
