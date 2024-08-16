@@ -105,7 +105,7 @@ public extension MetricsTracker {
         let assetUrl: URL?
 
         /// Creates metadata.
-        public init(identifier: String?, metadataUrl: URL?, assetUrl: URL?) {
+        public init(identifier: String? = nil, metadataUrl: URL? = nil, assetUrl: URL? = nil) {
             self.identifier = identifier
             self.metadataUrl = metadataUrl
             self.assetUrl = assetUrl
