@@ -55,11 +55,12 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 - ``Asset``
 - ``MediaSelectionOption``
 - ``MediaType``
+- ``NavigationMode``
+- ``PlaybackState``
 - ``Player``
 - ``PlayerConfiguration``
 - ``PlayerItem``
 - ``PlayerProperties``
-- ``PlaybackState``
 - ``Position``
 - ``SeekBehavior``
 - ``StreamType``
@@ -69,7 +70,11 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 - <doc:metadata-article>
 
 - ``AssetMetadata``
+- ``Chapter``
+- ``EpisodeInformation``
+- ``ImageSource``
 - ``PlayerMetadata``
+- ``TimeRange``
 
 ### System Integration
 
@@ -81,35 +86,24 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 - ``PictureInPictureButton``
 - ``PictureInPictureDelegate``
 - ``PictureInPicturePersistable``
-- ``ProgressTracker``
 - ``RoutePickerView``
-- ``TrackerAdapter``
-- ``VisibilityTracker``
 
-### Customization
+### Resource Loading
 
 - <doc:fairplay-streaming-article>
 - <doc:resource-loading-article>
+
+- ``Asset``
+- ``PlayerItem``
+- ``PlayerItemConfiguration``
+
+### Tracking
+
 - <doc:tracking-article>
 
 - ``PlayerItemTracker``
-- ``ProgressTracker``
 - ``TrackerAdapter``
-- ``VisibilityTracker``
-
-### User Interface
-
-- <doc:creating-basic-user-interface>
-
-- ``LayoutInfo``
-- ``SystemVideoView``
-- ``VideoView``
-
-### Monoscopic Video Support
-
-- ``SCNQuaternionForAttitude(_:)``
-- ``SCNQuaternionRotate(_:_:_:)``
-- ``SCNQuaternionWithAngleAndAxis(_:_:_:_:)``
+- ``TrackingBehavior``
 
 ### Metrics
 
@@ -119,6 +113,26 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 - ``MetricsCollector``
 - ``MetricEvent``
 - ``MetricsValues``
+
+### User Interface
+
+- <doc:creating-basic-user-interface>
+
+- ``ContextualAction``
+- ``LayoutInfo``
+- ``LazyImage``
+- ``LazyUIImage(source:)``
+- ``ProgressTracker``
+- ``SystemVideoView``
+- ``VideoView``
+- ``Viewport``
+- ``VisibilityTracker``
+
+### Monoscopic Video Support
+
+- ``SCNQuaternionForAttitude(_:)``
+- ``SCNQuaternionRotate(_:_:_:)``
+- ``SCNQuaternionWithAngleAndAxis(_:_:_:_:)``
 
 ### Technical Notes
 
