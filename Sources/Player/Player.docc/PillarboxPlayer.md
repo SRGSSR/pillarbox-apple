@@ -25,7 +25,7 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
     - <doc:state-observation>
     - <doc:metadata>
     - <doc:tracking>
-    - <doc:metrics>
+    - <doc:metrics-article>
 }
 
 ### Asset Loading
@@ -113,9 +113,11 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 
 ### Metrics
 
-- <doc:metrics>
+- <doc:metrics-article>
 
 - ``Metrics``
+- ``MetricsCollector``
+- ``MetricEvent``
 - ``MetricsValues``
 
 ### Technical Notes

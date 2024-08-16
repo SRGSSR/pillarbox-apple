@@ -18,7 +18,7 @@ import SwiftUI
 /// A metrics collector is used as follows:
 ///
 /// 1. Instantiate a `MetricsCollector` in your view hierarchy, setting up the refresh interval you need.
-/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)`` modifier.
+/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)-31gwp`` modifier.
 /// 3. Current metrics can be retrieved from the ``metrics`` property and displayed in any way you want, e.g. in a
 ///    textual form or with charts.
 public final class MetricsCollector: ObservableObject {
