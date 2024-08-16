@@ -29,7 +29,7 @@ import UIKit
 ///
 /// 1. Instantiate a ``VisibilityTracker`` in your view hierarchy. You can setup the initial visibility status as well
 ///    as the delay after which controls must be automatically hidden during playback.
-/// 2. Bind the visibility tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)-wthx`` modifier.
+/// 2. Bind the visibility tracker to a ``Player`` instance by applying the ``SwiftUICore/View/bind(_:to:)-wthx`` modifier.
 /// 3. Use ``isUserInterfaceHidden`` to adjust visibility of your user interface components based on the current
 ///    visibility tracker recommendation.
 /// 4. Introduce an interaction (e.g. a tap gesture) that lets your users toggle user interface visibility on or off.

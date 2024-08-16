@@ -54,7 +54,7 @@ Advanced integration is available both for ``VideoView`` as well as ``SystemVide
     - Update your player when a new content is being played.
     - Avoid updating your player when the same content is played so that playback can continue uninterrupted.
     - Remove all items currently in the player queue when content playback must stop.
-4. To ensure your player state is persisted during Picture in Picture playback apply the ``SwiftUI/View/enabledForInAppPictureInPicture(persisting:)`` modifier, passing it the persistable state prepared above.
+4. To ensure your player state is persisted during Picture in Picture playback apply the ``SwiftUICore/View/enabledForInAppPictureInPicture(persisting:)`` modifier, passing it the persistable state prepared above.
 5. Update your player view instantiation so that persisted state is recovered from ``PictureInPicturePersistable/persisted`` if available, otherwise create a new state.
 6. ``SystemVideoView`` provides a Picture in Picture button automatically. In ``VideoView``-based custom layouts add a ``PictureInPictureButton``.
 7. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the ``PictureInPicture/delegate`` property. A  generally good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start and restore it when it ends.

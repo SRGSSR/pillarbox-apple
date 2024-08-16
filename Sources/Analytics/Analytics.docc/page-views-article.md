@@ -31,7 +31,7 @@ For inspiration you should have a look at how [Play SRG products](https://conflu
 
 ### Track page views in SwiftUI
 
-To associate a page view with a SwiftUI view, simply apply the ``/SwiftUI/View/tracked(comScore:commandersAct:)`` modifier. You could for example track a home view as follows:
+To associate a page view with a SwiftUI view, simply apply the ``SwiftUICore/View/tracked(comScore:commandersAct:)`` modifier. You could for example track a home view as follows:
 
 ```swift
 struct HomeView: View {

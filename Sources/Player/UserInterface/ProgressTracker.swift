@@ -25,7 +25,7 @@ import SwiftUI
 /// 1. Instantiate a `ProgressTracker` in your view hierarchy, setting up the refresh interval you need. You should
 ///    instantiate a progress tracker in the narrowest possible view scope so that refreshes only affect a small
 ///    portion of your view hierarchy, especially if the applied refresh interval is small.
-/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)-8fqem`` modifier.
+/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUICore/View/bind(_:to:)-8fqem`` modifier.
 /// 3. The current progress can be retrieved from the ``progress`` property and displayed in any way you want. Use
 ///    the ``range`` property to determine the currently available range, and ``isProgressAvailable`` to know whether
 ///    progress should actually be displayed.

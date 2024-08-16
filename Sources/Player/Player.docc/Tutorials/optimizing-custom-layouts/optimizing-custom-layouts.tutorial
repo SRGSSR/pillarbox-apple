@@ -74,7 +74,7 @@
             }
             
             @Step {
-                Apply the ``SwiftUI/View/onReceive(player:assign:to:)`` modifier to listen to buffer changes. Store updates into a corresponding `Float` state.
+                Apply the ``SwiftUICore/View/onReceive(player:assign:to:)`` modifier to listen to buffer changes. Store updates into a corresponding `Float` state.
                 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-2.swift)
             }
@@ -96,7 +96,7 @@
             }
             
             @Step {
-                Apply the  ``SwiftUI/View/onReceive(player:assign:to:)`` modifier in `BufferingView`, which requires the player to be received as parameter. Since nothing directly depends on player updates in the `ProgressSlider` body simply add a regular (non-observed) property.
+                Apply the  ``SwiftUICore/View/onReceive(player:assign:to:)`` modifier in `BufferingView`, which requires the player to be received as parameter. Since nothing directly depends on player updates in the `ProgressSlider` body simply add a regular (non-observed) property.
                 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-5.swift)
             }

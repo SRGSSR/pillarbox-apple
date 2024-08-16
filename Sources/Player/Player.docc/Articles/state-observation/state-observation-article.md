@@ -53,7 +53,7 @@ When implementing a user interface, you should rather use ``ProgressTracker`` to
 
 As for time updates discussed above, any other non-essential player state is not published and requires explicit subscription. This includes states derived from time range information, for example the stream type, or states which might be frequently updated like the current buffer position. Code that needs to observe these properties can subscribe to ``Player/propertiesPublisher``.
 
-Instead of subscribing to ``Player/propertiesPublisher``, view implementations can apply the ``SwiftUI/View/onReceive(player:assign:to:)`` convenience modifier to locally observe a specific property key path and store associated values into a view state. For example, to display when a player is busy (i.e. seeking or buffering), subscribe to the corresponding change stream:
+Instead of subscribing to ``Player/propertiesPublisher``, view implementations can apply the ``SwiftUICore/View/onReceive(player:assign:to:)`` convenience modifier to locally observe a specific property key path and store associated values into a view state. For example, to display when a player is busy (i.e. seeking or buffering), subscribe to the corresponding change stream:
 
 ```swift
 struct PlaybackView: View {
@@ -147,7 +147,7 @@ Having your whole user interface refreshed every 1/10th of a second is not requi
 Here are a few tips to help you identify and fix superfluous refreshes in your layouts:
 
 - Use the `View/_debugBodyCounter()` modifier available from the PillarboxCore framework to identify which views are refreshed unnecessarily often.
-- Extract views that require higher refresh rates into subviews so that ``ProgressTracker`` or explicit subscriptions using ``SwiftUI/View/onReceive(player:assign:to:)`` only affect smaller subsets of your view hierarchy.
+- Extract views that require higher refresh rates into subviews so that ``ProgressTracker`` or explicit subscriptions using ``SwiftUICore/View/onReceive(player:assign:to:)`` only affect smaller subsets of your view hierarchy.
 - Use the `View/_debugBodyCounter()` modifier to check your layout again after optimization.
 
 > Note: For concrete optimization examples have a look at the <doc:optimizing-custom-layouts> tutorial.
