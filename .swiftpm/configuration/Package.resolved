@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
       "state" : {
-        "revision" : "c2f74c7cc02f8bb01b51c08297f7cbc486f3ca65",
-        "version" : "6.12.3"
+        "revision" : "2d1cd9c0cb52ca76702023b528a059fc0a7d5a4d",
+        "version" : "6.13.0"
       }
     },
     {
@@ -61,24 +61,6 @@
       "state" : {
         "revision" : "3d2dc41a01f9e49d84f0a3925fb858bed64f702d",
         "version" : "1.1.2"
-      }
-    },
-    {
-      "identity" : "timelanecombine",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/icanzilb/TimelaneCombine.git",
-      "state" : {
-        "revision" : "e6837bcbb19332866d5e37d501c05d68fbf985f2",
-        "version" : "2.0.0"
-      }
-    },
-    {
-      "identity" : "timelanecore",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/icanzilb/TimelaneCore",
-      "state" : {
-        "revision" : "c554d6d61be14bd7acb8b10161fe5d9dc20d7fbc",
-        "version" : "2.0.2"
       }
     }
   ],
