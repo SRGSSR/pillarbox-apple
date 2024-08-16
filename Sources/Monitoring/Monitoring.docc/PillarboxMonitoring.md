@@ -36,6 +36,6 @@ let item = PlayerItem.simple(url: URL(string: "https://your.domain.com/content.m
 
 The tracker supports ``MetricsTracker/Metadata`` that can be optionally provided to send additional information about the content being played.
 
-> Tip: Metadata is usually retrieved by the `PlayerItem` itself and provided to the adapter mapping closure. More information is available from PillarboxPlayer documentation.
+> Tip: Information about the content is usually retrieved by the `PlayerItem` itself and provided automatically to the adapter mapping closure. Refer to PillarboxPlayer documentation for more information.
 
-This is all that is required to monitor playback. Once the item is being played the tracker will automatically gather relevant metrics and send them to the specified endpoint.
+This is all that is required to monitor playback. Once the item is being played the tracker automatically gathers relevant metrics and sends them to the specified endpoint.
