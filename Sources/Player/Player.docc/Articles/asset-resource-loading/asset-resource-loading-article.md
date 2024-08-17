@@ -1,15 +1,15 @@
-# Resource Loading
+# Asset Resource Loading
 
 @Metadata {
     @PageColor(purple)
-    @PageImage(purpose: card, source: resource-loading-card, alt: "An image depicting a dashed circle.")
+    @PageImage(purpose: card, source: asset-resource-loading-card, alt: "An image depicting a dashed circle.")
 }
 
-Customize how assets are loaded.
+Customize how resources associated with an asset are loaded.
 
 ## Overview
 
-You can customize how an ``Asset`` delivered by a ``PlayerItem`` must be loaded. This involves implementing a custom [`AVAssetResourceLoaderDelegate`](https://developer.apple.com/documentation/avfoundation/avassetresourceloaderdelegate) which is provided to the asset at creation time.
+You can customize how resources associated with an ``Asset`` delivered by a ``PlayerItem`` must be loaded. This involves implementing a custom [`AVAssetResourceLoaderDelegate`](https://developer.apple.com/documentation/avfoundation/avassetresourceloaderdelegate) which is provided to the asset at creation time.
 
 ### Create a resource loader delegate
 

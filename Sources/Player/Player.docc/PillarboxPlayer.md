@@ -28,10 +28,10 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
     - <doc:metrics-article>
 }
 
-### Asset Loading
+### Asset Resource Loading
 
 @Links(visualStyle: detailedGrid) {
-    - <doc:resource-loading-article>
+    - <doc:asset-resource-loading-article>
     - <doc:fairplay-streaming-article>
 }
 
@@ -88,10 +88,10 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 - ``PictureInPicturePersistable``
 - ``RoutePickerView``
 
-### Resource Loading
+### Asset Resource Loading
 
 - <doc:fairplay-streaming-article>
-- <doc:resource-loading-article>
+- <doc:asset-resource-loading-article>
 
 - ``Asset``
 - ``PlayerItem``

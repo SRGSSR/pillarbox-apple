@@ -80,13 +80,13 @@ extension MetricEvent.Kind: CustomStringConvertible {
     public var description: String {
         switch self {
         case let .metadataReady(dateInterval):
-            return "Asset loaded in \(Self.duration(from: dateInterval.duration))"
+            return "Metadata ready in \(Self.duration(from: dateInterval.duration))"
         case let .assetReady(dateInterval):
-            return "Resource loaded in \(Self.duration(from: dateInterval.duration))"
+            return "Asset ready in \(Self.duration(from: dateInterval.duration))"
         case let .failure(error):
-            return "[FAILURE] \(error.localizedDescription)"
+            return "Failure: \(error.localizedDescription)"
         case let .warning(error):
-            return "[WARNING] \(error.localizedDescription)"
+            return "Warning: \(error.localizedDescription)"
         case .stall:
             return "Stall"
         case .resumeAfterStall:
