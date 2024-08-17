@@ -46,7 +46,7 @@ public final class MetricsTracker: PlayerItemTracker {
     // swiftlint:disable:next cyclomatic_complexity
     public func updateMetricEvents(to events: [MetricEvent]) {
         switch events.last?.kind {
-        case .resourceLoading:
+        case .assetReady:
             session.start()
             sendEvent(name: .start, data: startData(from: events))
             startHeartbeat()

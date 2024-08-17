@@ -61,7 +61,7 @@
     "Application" : {
 
     },
-    "Asset loading" : {
+    "Asset" : {
 
     },
     "Audiovisual background policy" : {
@@ -190,6 +190,9 @@
     "Media requests" : {
 
     },
+    "Metadata" : {
+
+    },
     "Metrics" : {
       "comment" : "Playback setting menu title"
     },
@@ -251,9 +254,6 @@
 
     },
     "Reset" : {
-
-    },
-    "Resource loading" : {
 
     },
     "Search" : {

@@ -12,7 +12,7 @@ final class PlayerItemMetricEventPublisherTests: TestCase {
     func testPlayableItemMetricEvent() {
         let item = PlayerItem.mock(url: Stream.onDemand.url, loadedAfter: 0.1)
         expectOnlySimilarPublished(
-            values: [.anyAssetLoading],
+            values: [.anyMetadataReady],
             from: item.metricEventPublisher()
         ) {
             PlayerItem.load(for: item.id)

@@ -11,15 +11,17 @@ import Foundation
 public struct MetricEvent: Hashable {
     /// A kind of metric event.
     public enum Kind {
-        /// Asset loading.
+        /// Metadata is ready.
         ///
-        /// Measures the time for a ``PlayerItem`` to load its associated asset.
-        case assetLoading(DateInterval)
+        /// The date interval corresponding to the process is provided as associated value. Note that this interval
+        /// measures the perceived user experience and might be empty in the event of preloading.
+        case metadataReady(DateInterval)
 
-        /// Resource loading.
+        /// The asset is ready.
         ///
-        /// Measures the time for the player to load the associated resource until playback is ready to start.
-        case resourceLoading(DateInterval)
+        /// The date interval corresponding to the process is provided as associated value. Note that this interval
+        /// measures the perceived user experience and might be empty in the event of preloading.
+        case assetReady(DateInterval)
 
         /// Failure.
         case failure(Error)
@@ -50,9 +52,9 @@ public struct MetricEvent: Hashable {
     /// The event duration.
     public var duration: TimeInterval {
         switch kind {
-        case let .assetLoading(dateInterval):
+        case let .metadataReady(dateInterval):
             return dateInterval.duration
-        case let .resourceLoading(dateInterval):
+        case let .assetReady(dateInterval):
             return dateInterval.duration
         default:
             return 0
@@ -77,9 +79,9 @@ public struct MetricEvent: Hashable {
 extension MetricEvent.Kind: CustomStringConvertible {
     public var description: String {
         switch self {
-        case let .assetLoading(dateInterval):
+        case let .metadataReady(dateInterval):
             return "Asset loaded in \(Self.duration(from: dateInterval.duration))"
-        case let .resourceLoading(dateInterval):
+        case let .assetReady(dateInterval):
             return "Resource loaded in \(Self.duration(from: dateInterval.duration))"
         case let .failure(error):
             return "[FAILURE] \(error.localizedDescription)"
