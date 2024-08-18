@@ -10,9 +10,7 @@ import PillarboxCore
 import PillarboxPlayer
 import UIKit
 
-/// A tracker gathering metrics.
-///
-/// This tracker seamlessly integrates with Pillarbox monitoring platform.
+/// A tracker gathering metrics for Pillarbox monitoring platform.
 public final class MetricsTracker: PlayerItemTracker {
     private let configuration: Configuration
     private let stopwatch = Stopwatch()
@@ -48,7 +46,7 @@ public final class MetricsTracker: PlayerItemTracker {
     // swiftlint:disable:next cyclomatic_complexity
     public func updateMetricEvents(to events: [MetricEvent]) {
         switch events.last?.kind {
-        case .resourceLoading:
+        case .assetReady:
             session.start()
             sendEvent(name: .start, data: startData(from: events))
             startHeartbeat()
@@ -107,7 +105,12 @@ public extension MetricsTracker {
         let assetUrl: URL?
 
         /// Creates metadata.
-        public init(identifier: String?, metadataUrl: URL?, assetUrl: URL?) {
+        ///
+        /// - Parameters:
+        ///   - identifier: An identifier for the content.
+        ///   - metadataUrl: The URL where metadata has been fetched.
+        ///   - assetUrl: The URL of the asset being played.
+        public init(identifier: String? = nil, metadataUrl: URL? = nil, assetUrl: URL? = nil) {
             self.identifier = identifier
             self.metadataUrl = metadataUrl
             self.assetUrl = assetUrl

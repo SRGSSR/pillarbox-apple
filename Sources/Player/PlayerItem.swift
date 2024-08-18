@@ -15,7 +15,7 @@ private enum TriggerId: Hashable {
 
 /// An item that can be inserted into a ``Player`` for playback.
 ///
-/// Convenience initialization methods are provided for different types of assets:
+/// Convenience initializers are provided for different types of assets:
 ///
 /// - Simple assets which can be played from a simple URL.
 /// - Custom assets which require custom resource loading.

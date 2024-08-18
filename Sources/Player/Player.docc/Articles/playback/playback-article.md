@@ -54,7 +54,7 @@ You create a player with or without associated items to be played. Since ``Playe
     }
 }
 
-> Tip: Please read <doc:state-observation> for more information about how player updates are published.
+> Tip: Please read <doc:state-observation-article> for more information about how player updates are published.
 
 ## Configure the player
 
@@ -67,7 +67,7 @@ The above examples use ``PlayerItem/simple(url:metadata:trackerAdapters:configur
 You can create a player item that loads content in a custom way as follows:
 
 1. Write a publisher which retrieves the URL to be played as well as any required metadata you might need. This publisher likely requires some external parameters to be provided, for example a content identifier.
-2. Map the result of your publisher to an ``Asset``. If you want to provide asset metadata, most notably for <doc:control-center> integration or custom <doc:tracking>, you must define a corresponding type and associate an instance with your asset. Please refer to the <doc:metadata> article for more information.
+2. Map the result of your publisher to an ``Asset``. If you want to provide asset metadata, most notably for <doc:control-center-article> integration or custom <doc:tracking-article>, you must define a corresponding type and associate an instance with your asset. Please refer to the <doc:metadata-article> article for more information.
 3. Create a ``PlayerItem`` with the corresponding initializer taking a publisher as argument. Your item initializer signature should likely reflect the external parameters required by your publisher.
 
 The resulting player item can then be played with ``Player`` instance, possibly mixed with content from other sources.
@@ -116,4 +116,4 @@ A player loaded with content starts in a paused state. To actually start playbac
 
 The ``PlayerConfiguration`` lets you customize how video playback behaves when the app goes into the background. The default [`audiovisualBackgroundPlaybackPolicy`](https://developer.apple.com/documentation/avfoundation/avplayer/3787548-audiovisualbackgroundplaybackpol) behavior pauses video playback in background but you can also choose to continue if possible.
 
-> Tip: If your app plays video content <doc:picture-in-picture> provides a better experience than background video playback and should generally be implemented instead. You can stick to the default background video policy in this case.
+> Tip: If your app plays video content <doc:picture-in-picture-article> provides a better experience than background video playback and should generally be implemented instead. You can stick to the default background video policy in this case.

@@ -12,7 +12,7 @@ Create engaging audio and video playback experiences.
 
 The PillarboxPlayer framework provides a complete toolbox to add advanced audiovisual media capabilities to your app.
 
-Play content easily with a ``Player`` and display its content in the standard AVKit user interface with ``SystemVideoView``, or build an entirely custom user interface starting from a simple ``VideoView``. Play any kind of content from any source by implementing your own ``PlayerItem``s and ``Asset``s, no matter where your content comes from or how it must be played. Track playback with your own ``PlayerItemTracker``, whether for analytics purposes or Quality of Service (QoS) data collection.
+Play content easily with a ``Player`` and display its content in the standard AVKit user interface with ``SystemVideoView``, or build an entirely custom user interface starting from a simple ``VideoView``. Play any kind of content from any source by implementing your own ``PlayerItem``s and ``Asset``s, no matter where your content comes from or how it must be played. Track playback with your own ``PlayerItemTracker``, whether for analytics or monitoring purposes.
 
 @Image(source: player-intro, alt: "A screenshot of a player user interface")
 
@@ -21,88 +21,112 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 ### Featured
 
 @Links(visualStyle: detailedGrid) {
-    - <doc:playback>
-    - <doc:state-observation>
-    - <doc:metadata>
-    - <doc:tracking>
+    - <doc:playback-article>
+    - <doc:state-observation-article>
+    - <doc:metadata-article>
+    - <doc:tracking-article>
+    - <doc:metrics-article>
 }
 
-### Asset Loading
+### Asset Resource Loading
 
 @Links(visualStyle: detailedGrid) {
-    - <doc:resource-loading>
-    - <doc:fairplay-streaming>
+    - <doc:asset-resource-loading-article>
+    - <doc:fairplay-streaming-article>
 }
 
 ### System Integration
 
 @Links(visualStyle: detailedGrid) {
-    - <doc:airplay>
-    - <doc:control-center>
-    - <doc:picture-in-picture>
+    - <doc:airplay-article>
+    - <doc:control-center-article>
+    - <doc:picture-in-picture-article>
 }
 
 ## Topics
 
 ### Essentials
 
-- <doc:playback>
-- <doc:playback-speed>
-- <doc:state-observation>
-- <doc:subtitles-and-alternative-audio-tracks>
+- <doc:playback-article>
+- <doc:playback-speed-article>
+- <doc:state-observation-article>
+- <doc:subtitles-and-alternative-audio-tracks-article>
 
 - ``Asset``
 - ``MediaSelectionOption``
 - ``MediaType``
+- ``NavigationMode``
+- ``PlaybackState``
 - ``Player``
 - ``PlayerConfiguration``
 - ``PlayerItem``
 - ``PlayerProperties``
-- ``PlaybackState``
 - ``Position``
 - ``SeekBehavior``
 - ``StreamType``
 
 ### Metadata
 
-- <doc:metadata>
+- <doc:metadata-article>
 
 - ``AssetMetadata``
+- ``Chapter``
+- ``EpisodeInformation``
+- ``ImageSource``
 - ``PlayerMetadata``
+- ``TimeRange``
 
 ### System Integration
 
-- <doc:airplay>
-- <doc:control-center>
-- <doc:picture-in-picture>
+- <doc:airplay-article>
+- <doc:control-center-article>
+- <doc:picture-in-picture-article>
 
 - ``PictureInPicture``
 - ``PictureInPictureButton``
 - ``PictureInPictureDelegate``
 - ``PictureInPicturePersistable``
-- ``ProgressTracker``
 - ``RoutePickerView``
-- ``TrackerAdapter``
-- ``VisibilityTracker``
 
-### Customization
+### Asset Resource Loading
 
-- <doc:fairplay-streaming>
-- <doc:resource-loading>
-- <doc:tracking>
+- <doc:fairplay-streaming-article>
+- <doc:asset-resource-loading-article>
+
+- ``Asset``
+- ``PlayerItem``
+- ``PlayerItemConfiguration``
+
+### Tracking
+
+- <doc:tracking-article>
 
 - ``PlayerItemTracker``
-- ``ProgressTracker``
 - ``TrackerAdapter``
-- ``VisibilityTracker``
+- ``TrackingBehavior``
+
+### Metrics
+
+- <doc:metrics-article>
+
+- ``Metrics``
+- ``MetricsCollector``
+- ``MetricEvent``
+- ``MetricsValues``
 
 ### User Interface
 
 - <doc:creating-basic-user-interface>
 
+- ``ContextualAction``
 - ``LayoutInfo``
+- ``LazyImage``
+- ``LazyUIImage(source:)``
+- ``ProgressTracker``
 - ``SystemVideoView``
 - ``VideoView``
+- ``Viewport``
+- ``VisibilityTracker``
 
 ### Monoscopic Video Support
 
@@ -110,11 +134,6 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 - ``SCNQuaternionRotate(_:_:_:)``
 - ``SCNQuaternionWithAngleAndAxis(_:_:_:_:)``
 
-### Metrics
-
-- ``Metrics``
-- ``MetricsValues``
-
 ### Technical Notes
 
-- <doc:stream-encoding-and-packaging-advice>
+- <doc:stream-encoding-and-packaging-advice-article>

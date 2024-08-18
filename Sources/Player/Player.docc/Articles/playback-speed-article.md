@@ -12,7 +12,7 @@ Some users prefer playing content at faster or slower speeds. You can adjust the
 
 ### Adjust the playback speed programmatically
 
-Playback speed information belongs to essential properties automatically published by a ``Player`` instance, as explained in <doc:state-observation>. SwiftUI views observing a player instance will therefore be automatically redrawn when playback speed changes.
+Playback speed information belongs to essential properties automatically published by a ``Player`` instance, as explained in <doc:state-observation-article>. SwiftUI views observing a player instance will therefore be automatically redrawn when playback speed changes.
 
 You can adjust the speed at which content is played using the ``Player/setDesiredPlaybackSpeed(_:)`` method. As its name suggests this method only sets a desired speed. The actual speed might be limited by the content being played. The current effective playback speed can be queried with ``Player/effectivePlaybackSpeed``, while the available speed range can be retrieved from ``Player/playbackSpeedRange``.
 

@@ -29,3 +29,18 @@ You can optionally change the server or add additional custom player item tracke
 comScore forbids video measurements without a video view being actually visible on screen.
 
 You must therefore never enable background video playback with `Player/audiovisualBackgroundPlaybackPolicy` when playing SRG SSR content. Implement proper Picture in Picture support instead.
+
+## Topics
+
+### Content
+
+- ``PillarboxPlayer/PlayerItem``
+- ``Server``
+
+### Metadata
+
+- ``DRM``
+- ``StreamingMethod``
+- ``MediaComposition``
+- ``MediaMetadata``
+- ``TokenType``

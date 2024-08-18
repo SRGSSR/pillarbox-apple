@@ -47,8 +47,8 @@ extension MetricStartData {
         let total: Int
 
         init?(events: [MetricEvent]) {
-            metadata = events.compactMap(Self.assetLoadingDateInterval(from:)).last
-            asset = events.compactMap(Self.resourceLoadingDateInterval(from:)).first
+            metadata = events.compactMap(Self.metadata(from:)).last
+            asset = events.compactMap(Self.asset(from:)).first
             if let metadata, let asset {
                 total = metadata + asset
             }
@@ -71,18 +71,18 @@ extension MetricStartData {
 }
 
 private extension MetricStartData.QualityOfExperienceMetrics {
-    static func assetLoadingDateInterval(from event: MetricEvent) -> Int? {
+    static func metadata(from event: MetricEvent) -> Int? {
         switch event.kind {
-        case let .assetLoading(dateInterval):
+        case let .metadataReady(dateInterval):
             return dateInterval.duration.toMilliseconds
         default:
             return nil
         }
     }
 
-    static func resourceLoadingDateInterval(from event: MetricEvent) -> Int? {
+    static func asset(from event: MetricEvent) -> Int? {
         switch event.kind {
-        case let .resourceLoading(dateInterval):
+        case let .assetReady(dateInterval):
             return dateInterval.duration.toMilliseconds
         default:
             return nil

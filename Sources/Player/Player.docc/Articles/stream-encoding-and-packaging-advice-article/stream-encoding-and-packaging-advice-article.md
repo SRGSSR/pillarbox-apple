@@ -12,7 +12,7 @@ Apple provides HLS [authoring specifications](https://developer.apple.com/docume
 
 For optimal playback experience with the PillarboxPlayer framework some of these specifications need to be followed rigorously. This article covers these specific requirements in more detail and provides more information about how streams can be tested for compatibility with PillarboxPlayer.
 
-> Note: More information about automatic media selection is available from <doc:subtitles-and-alternative-audio-tracks>.
+> Note: More information about automatic media selection is available from <doc:subtitles-and-alternative-audio-tracks-article>.
 
 ### Automatic media option selection
 
@@ -100,6 +100,13 @@ HLS streams can be tested with 3rd party players, mostly on the web. These inclu
 #### Pillarbox demo
 
 Any URL, including SRG SSR URLs protected with DRM or a token, can be played directly with Pillarbox demo. You can install the iOS and tvOS demo applications by registering [with TestFlight](https://testflight.apple.com/join/TS6ngLqf) (an Apple ID is required).
+
+The Pillarbox demo also offers two helpful tools for local inspection:
+
+- A Playback HUD, which can enabled in the applications settings, added to any video played in the demo.
+- A metrics debugging view, which can be enabled from the custom player settings menu.
+
+![Demo debugging views](stream-encoding-and-packaging-advice-debugging-views)
 
 ### Technical documentation
 

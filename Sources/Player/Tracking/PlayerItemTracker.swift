@@ -8,7 +8,7 @@ import AVFoundation
 
 /// A protocol for custom player item tracking implementation.
 ///
-/// For more information about implementing custom trackers please read <doc:tracking>.
+/// For more information about implementing custom trackers please read <doc:tracking-article>.
 public protocol PlayerItemTracker: AnyObject {
     /// A type describing the configuration required by the tracker.
     ///

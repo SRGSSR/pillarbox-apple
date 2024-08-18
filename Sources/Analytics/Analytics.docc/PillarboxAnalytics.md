@@ -19,14 +19,14 @@ The PillarboxAnalytics framework provides a toolbox to measure app usage accordi
 
 The PillarboxAnalytics framework lets you measure application usage in two ways:
 
-- <doc:page-views>
-- <doc:events>
+- <doc:page-views-article>
+- <doc:events-article>
 
-> Important: Streaming measurements are automatically collected when playing SRG SSR content using the PillarboxCoreBusiness framework. Just ensure that tracking has been properly setup first. Please refer to <doc:setup> for more information.
+> Important: Streaming measurements are automatically collected when playing SRG SSR content using the PillarboxCoreBusiness framework. Just ensure that tracking has been properly setup first. Please refer to <doc:setup-article> for more information.
 
 ### Transparency and data protection
 
-To comply with the Swiss [New Federal Act on Data Protection (nFADP)](https://www.kmu.admin.ch/kmu/en/home/facts-and-trends/digitization/data-protection/new-federal-act-on-data-protection-nfadp.html) apps must implement some form of user consent management. Please read <doc:user-consent> for more information about how you can provide user consent information to the PillarboxAnalytics framework.
+To comply with the Swiss [New Federal Act on Data Protection (nFADP)](https://www.kmu.admin.ch/kmu/en/home/facts-and-trends/digitization/data-protection/new-federal-act-on-data-protection-nfadp.html) apps must implement some form of user consent management. Please read <doc:user-consent-article> for more information about how you can provide user consent information to the PillarboxAnalytics framework.
 
 #### AdSupport and Identifier for advertisers (IDFA)
 
@@ -48,14 +48,47 @@ Your application should be validated before being submitted to production, at le
 
 ### Essentials
 
-- <doc:setup>
-- <doc:user-consent>
+- <doc:setup-article>
+- <doc:user-consent-article>
+
+- ``Analytics``
+
+### Configuration
+
+- ``AnalyticsDataSource``
+- ``CommandersActGlobals``
+- ``ComScoreGlobals``
+- ``ComScoreConsent``
+- ``Vendor``
 
 ### Page Views
 
-- <doc:page-views>
-- <doc:web-content-tracking>
+- <doc:page-views-article>
+- <doc:web-content-tracking-article>
+
+- ``CommandersActPageView``
+- ``ComScorePageView``
+- ``ContainerPageViewTracking``
+- ``PageViewTracking``
 
 ### Events
 
-- <doc:events>
+- <doc:events-article>
+
+- ``CommandersActEvent``
+
+### Streaming
+
+- ``CommandersActTracker``
+- ``ComScoreTracker``
+
+### Development and Testing
+
+- ``AnalyticsListener``
+- ``CommandersActContext``
+- ``CommandersActDevice``
+- ``CommandersActHit``
+- ``CommandersActLabels``
+- ``CommandersActUser``
+- ``ComScoreHit``
+- ``ComScoreLabels``

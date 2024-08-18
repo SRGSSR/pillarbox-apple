@@ -11,7 +11,7 @@ import UIKit
 /// Automatic page view tracking can be optionally adopted by view controllers, as described in `PageViewTracking`
 /// documentation.
 ///
-/// For more information please read the <doc:page-views> article.
+/// For more information please read the <doc:page-views-article> article.
 public protocol ContainerPageViewTracking: UIViewController {
     /// The list of currently active children in the view controller container.
     var activeChildren: [UIViewController] { get }

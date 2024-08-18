@@ -19,7 +19,7 @@ The main responsibility of a ``PlayerItem`` loaded into a ``Player`` is to deliv
 
 To associate Control Center metadata with a player item:
 
-1. Create a type which represents your asset metadata and have it conform to ``AssetMetadata``. More information is available from the <doc:metadata> article.
+1. Create a type which represents your asset metadata and have it conform to ``AssetMetadata``. More information is available from the <doc:metadata-article> article.
 2. Implement the ``AssetMetadata/playerMetadata`` method and return the ``PlayerMetadata`` which must be displayed in the Control Center when the item is currently being played.
 3. Implement a custom ``PlayerItem`` with a metadata publisher retrieving all metadata required before delivering an asset. Alternatively, and provided you have all metadata and the URL to be played readily available, you can simply use one of the available ``PlayerItem`` construction helpers, supplying the asset metadata at creation time.
 

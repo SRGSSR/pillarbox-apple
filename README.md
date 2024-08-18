@@ -5,11 +5,11 @@
 
 [![Releases](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FSRGSSR%2Fpillarbox-apple%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/SRGSSR/pillarbox-apple) [![Platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FSRGSSR%2Fpillarbox-apple%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/SRGSSR/pillarbox-apple) [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager) [![GitHub license](https://img.shields.io/github/license/SRGSSR/pillarbox-apple)](LICENSE) [![TestFlight](https://img.shields.io/badge/%EF%A3%BF-TestFlight-499ae4?link=https%3A%2F%2Ftestflight.apple.com%2Fjoin%2FTS6ngLqf)](https://testflight.apple.com/join/TS6ngLqf)
 
-Pillarbox is the iOS and tvOS modern reactive SRG SSR player ecosystem implemented on top of AVFoundation and AVKit. Pillarbox has been designed with robustness, efficiency and flexibilty in mind, with full customization of:
+Pillarbox is the iOS and tvOS modern reactive SRG SSR player ecosystem implemented on top of AVFoundation and AVKit. Pillarbox has been designed with robustness, efficiency and flexibility in mind, with full customization of:
 
 - Metadata and asset URL retrieval.
 - Asset resource loading, including support for FairPlay.
-- Analytics and QoS integration.
+- Analytics and monitoring integration.
 - User interface layout in SwiftUI.
 
 > [!IMPORTANT]
@@ -32,6 +32,7 @@ Pillarbox player provides all essential playback features you might expect:
 - Best-in-class Picture in Picture support.
 - The smoothest possible seek experience on Apple devices, with blazing-fast content navigation in streams enabled for trick play.
 - Playback speed controls.
+- Monitoring with Pillarbox Quality of Experience (QoE) and Quality of Service (QoS) platform.
 
 In addition Pillarbox provides the ability to play all SRG SSR content through a dedicated package.
 

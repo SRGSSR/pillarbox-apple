@@ -9,7 +9,7 @@
 ### Binding to a player
 
 - ``player``
-- ``SwiftUI/View/bind(_:to:)-wthx``
+- ``SwiftUICore/View/bind(_:to:)-wthx``
 
 ### Getting and updating user interface visibility
 

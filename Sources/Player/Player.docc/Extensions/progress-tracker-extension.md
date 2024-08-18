@@ -9,7 +9,7 @@
 ### Binding to a player
 
 - ``player``
-- ``SwiftUI/View/bind(_:to:)-8fqem``
+- ``SwiftUICore/View/bind(_:to:)-8fqem``
 
 ### Getting and updating progress
 

@@ -10,7 +10,7 @@ Identify where users navigate within your app.
 
 As a product team you need to better understand where users navigate within your app. The PillarboxAnalytics framework provides a way to track views as they are brought on screen. This makes it possible to improve on user journeys and make your content more discoverable.
 
-> Important: Tracking must be properly setup first. Please refer to <doc:setup> for more information.
+> Important: Tracking must be properly setup first. Please refer to <doc:setup-article> for more information.
 
 Helpers are available to record page views, whether your view hierarchy is managed with UIKit or SwiftUI.
 
@@ -31,7 +31,7 @@ For inspiration you should have a look at how [Play SRG products](https://conflu
 
 ### Track page views in SwiftUI
 
-To associate a page view with a SwiftUI view, simply apply the ``SwiftUI/View/tracked(comScore:commandersAct:)`` modifier. You could for example track a home view as follows:
+To associate a page view with a SwiftUI view, simply apply the ``SwiftUICore/View/tracked(comScore:commandersAct:)`` modifier. You could for example track a home view as follows:
 
 ```swift
 struct HomeView: View {

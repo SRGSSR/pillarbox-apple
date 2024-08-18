@@ -63,15 +63,15 @@ private struct StartupTimesSectionContent: View {
     let metricEvents: [MetricEvent]
 
     var body: some View {
-        cell("Asset loading", value: assetLoadingDuration)
-        cell("Resource loading", value: resourceLoadingDuration)
+        cell("Metadata", value: metadataDuration)
+        cell("Asset", value: assetDuration)
         cell("Total", value: totalDuration)
     }
 
-    private var assetLoadingInterval: TimeInterval? {
+    private var metadataInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .assetLoading(interval):
+            case let .metadataReady(interval):
                 return interval.duration
             default:
                 return nil
@@ -79,10 +79,10 @@ private struct StartupTimesSectionContent: View {
         }.last
     }
 
-    private var resourceLoadingInterval: TimeInterval? {
+    private var assetInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .resourceLoading(interval):
+            case let .assetReady(interval):
                 return interval.duration
             default:
                 return nil
@@ -91,19 +91,19 @@ private struct StartupTimesSectionContent: View {
     }
 
     private var totalDuration: String {
-        guard let resourceLoadingInterval, let assetLoadingInterval else { return "-" }
-        let totalInterval = resourceLoadingInterval + assetLoadingInterval
+        guard let assetInterval, let metadataInterval else { return "-" }
+        let totalInterval = assetInterval + metadataInterval
         return String(format: "%.6fs", totalInterval)
     }
 
-    private var assetLoadingDuration: String {
-        guard let assetLoadingInterval else { return "-" }
-        return String(format: "%.6fs", assetLoadingInterval)
+    private var metadataDuration: String {
+        guard let metadataInterval else { return "-" }
+        return String(format: "%.6fs", metadataInterval)
     }
 
-    private var resourceLoadingDuration: String {
-        guard let resourceLoadingInterval else { return "-" }
-        return String(format: "%.6fs", resourceLoadingInterval)
+    private var assetDuration: String {
+        guard let assetInterval else { return "-" }
+        return String(format: "%.6fs", assetInterval)
     }
 
     private func cell(_ name: LocalizedStringKey, value: String) -> some View {
