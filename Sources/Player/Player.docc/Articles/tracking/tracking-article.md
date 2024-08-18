@@ -31,7 +31,7 @@ Once types associated with an item tracker have been defined, start implementing
 3. ``PlayerItemTracker/updateMetadata(to:)`` is called when metadata is updated for the player item, following retrieval of a new ``Asset``. The method receives an instance of the metadata type you defined above.
 4. ``PlayerItemTracker/updateProperties(to:)`` is called when player properties change. Be careful that properties can change often and that your implementation should be as efficient as possible.
 5. ``PlayerItemTracker/updateMetricEvents(to:)`` is called when a new ``MetricEvent`` has been received.
-6. ``PlayerItemTracker/disable(with:)`` is called when the player item stops being the current one. Your implementation should cleanup resources acquired in ``PlayerItemTracker/enable(for:)``. The provided properties can be used to extract player state information at the end of playback.
+6. ``PlayerItemTracker/disable(with:)`` is called when the player item stops being the current one. Your implementation should clean up resources acquired in ``PlayerItemTracker/enable(for:)``. The provided properties can be used to extract player state information at the end of playback.
 7. Since item trackers are required to be classes you can use `deinit` to perform any necessary final cleanup when the tracker and its item are discarded.
 
 > Important: The tracker associated with an item is reused when the same item is played again. If the tracker stores any state, ensure that the state is properly initialized or cleaned up when the tracker is enabled or disabled.
