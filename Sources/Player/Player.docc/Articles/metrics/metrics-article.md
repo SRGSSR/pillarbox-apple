@@ -31,7 +31,7 @@ These metrics contain various instantaneous measurements, e.g. a bandwidth estim
 
 Subscribe to ``Player/metricEventsPublisher`` to receive a stream of ``MetricEvent``s related to the item currently being played.
 
-Events include timing events, most notably metadata and asset loading, as well as fatal and non-fatal errors. Please refer to the documentation to learn more about all ``MetricEvent/Kind-swift.enum``s of events that are currently supported.
+Events include timing events, most notably metadata and asset loading, as well as warnings and errors. Please refer to the documentation to learn more about all ``MetricEvent/Kind-swift.enum``s of events that are currently supported.
 
 ## Visualize metrics on-device
 
