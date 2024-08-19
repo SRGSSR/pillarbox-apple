@@ -23,7 +23,7 @@ final class AVMediaSelectionGroupTests: TestCase {
                 from: options,
                 withMediaCharacteristics: [.describesMusicAndSoundForAccessibility]
             )
-            .map { $0.displayName }
+            .map(\.displayName)
             .sorted()
         )
         .to(equal([
@@ -46,7 +46,7 @@ final class AVMediaSelectionGroupTests: TestCase {
                 from: options,
                 withoutMediaCharacteristics: [.describesMusicAndSoundForAccessibility]
             )
-            .map { $0.displayName }
+            .map(\.displayName)
             .sorted()
         )
         .to(equal([
