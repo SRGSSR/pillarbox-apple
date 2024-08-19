@@ -11,7 +11,7 @@ Inspect key metrics during playback.
 
 Providing the best playback experience to your users is crucial. This can prove to be challenging, especially since media playback involves many moving parts (stream encoding and packaging, metadata delivery, CDN, network quality), all possibly negatively impacting the end user experience in various ways.
 
-> Tip: More information about stream encoding and packaging please refer to <doc:stream-encoding-and-packaging-advice-article>.
+> Tip: For more information about stream encoding and packaging please refer to <doc:stream-encoding-and-packaging-advice-article>.
 
 To better understand how your playback experience is perceived by your users, you usually need to ask yourself:
 
