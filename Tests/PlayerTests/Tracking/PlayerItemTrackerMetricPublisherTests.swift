@@ -20,8 +20,8 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expectAtLeastSimilarPublished(values: [
             [],
-            [.anyMetadataReady],
-            [.anyMetadataReady, .anyAssetReady],
+            [.anyMetadata],
+            [.anyMetadata, .anyAsset],
             []
         ], from: player.metricEventsPublisher) {
             player.play()
@@ -32,8 +32,8 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expectAtLeastSimilarPublished(values: [
             [],
-            [.anyMetadataReady],
-            [.anyMetadataReady, .anyFailure]
+            [.anyMetadata],
+            [.anyMetadata, .anyFailure]
         ], from: player.metricEventsPublisher)
     }
 
@@ -42,9 +42,9 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         expectSimilarPublished(
             values: [
                 [],
-                [.anyMetadataReady],
-                [.anyMetadataReady, .anyAssetReady],
-                [.anyMetadataReady, .anyAssetReady]
+                [.anyMetadata],
+                [.anyMetadata, .anyAsset],
+                [.anyMetadata, .anyAsset]
             ],
             from: player.metricEventsPublisher,
             during: .seconds(2)

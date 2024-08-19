@@ -203,7 +203,7 @@ extension AVPlayerItem {
 extension AVPlayerItem {
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Publishers.Merge4(
-            assetReadyMetricEventPublisher(),
+            assetMetricEventPublisher(),
             failureMetricEventPublisher(),
             warningMetricEventPublisher(),
             stallEventPublisher()
@@ -211,14 +211,14 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func assetReadyMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+    func assetMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         publisher(for: \.isPlaybackLikelyToKeepUp)
             .first { $0 }
             .measureDateInterval()
             .weakCapture(self)
             .map { dateInterval, item in
                 MetricEvent(
-                    kind: .assetReady(dateInterval),
+                    kind: .asset(dateInterval),
                     date: dateInterval.end,
                     time: item.currentTime()
                 )

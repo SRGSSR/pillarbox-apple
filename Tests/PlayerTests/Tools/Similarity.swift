@@ -48,7 +48,7 @@ extension NowPlaying.Info: Similar {
 extension MetricEvent: Similar {
     public static func ~~ (lhs: MetricEvent, rhs: MetricEvent) -> Bool {
         switch (lhs.kind, rhs.kind) {
-        case (.metadataReady, .metadataReady), (.assetReady, .assetReady), (.failure, .failure), (.warning, .warning):
+        case (.metadata, .metadata), (.asset, .asset), (.failure, .failure), (.warning, .warning):
             return true
         default:
             return false

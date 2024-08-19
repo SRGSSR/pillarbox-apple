@@ -11,17 +11,17 @@ import Foundation
 public struct MetricEvent: Hashable {
     /// A kind of metric event.
     public enum Kind {
-        /// Metadata is ready.
+        /// Metadata is available.
         ///
         /// The date interval corresponding to the process is provided as associated value. Note that this interval
         /// measures the perceived user experience and might be empty in the event of preloading.
-        case metadataReady(DateInterval)
+        case metadata(DateInterval)
 
-        /// The asset is ready.
+        /// The asset is ready to play.
         ///
         /// The date interval corresponding to the process is provided as associated value. Note that this interval
         /// measures the perceived user experience and might be empty in the event of preloading.
-        case assetReady(DateInterval)
+        case asset(DateInterval)
 
         /// Failure.
         case failure(Error)
@@ -52,9 +52,9 @@ public struct MetricEvent: Hashable {
     /// The event duration.
     public var duration: TimeInterval {
         switch kind {
-        case let .metadataReady(dateInterval):
+        case let .metadata(dateInterval):
             return dateInterval.duration
-        case let .assetReady(dateInterval):
+        case let .asset(dateInterval):
             return dateInterval.duration
         default:
             return 0
@@ -79,10 +79,10 @@ public struct MetricEvent: Hashable {
 extension MetricEvent.Kind: CustomStringConvertible {
     public var description: String {
         switch self {
-        case let .metadataReady(dateInterval):
-            return "Metadata ready in \(Self.duration(from: dateInterval.duration))"
-        case let .assetReady(dateInterval):
-            return "Asset ready in \(Self.duration(from: dateInterval.duration))"
+        case let .metadata(dateInterval):
+            return "Metadata: \(Self.duration(from: dateInterval.duration))"
+        case let .asset(dateInterval):
+            return "Asset: \(Self.duration(from: dateInterval.duration))"
         case let .failure(error):
             return "Failure: \(error.localizedDescription)"
         case let .warning(error):

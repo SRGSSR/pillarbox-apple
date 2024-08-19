@@ -14,7 +14,7 @@ extension PlayerItem {
             .measureDateInterval()
             .map { dateInterval in
                 MetricEvent(
-                    kind: .metadataReady(dateInterval),
+                    kind: .metadata(dateInterval),
                     date: dateInterval.end
                 )
             }
