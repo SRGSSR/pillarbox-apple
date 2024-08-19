@@ -16,8 +16,7 @@ extension AVPlayerItem {
 
 extension AVPlayerItem: PlaybackResource {
     func contains(url: URL) -> Bool {
-        guard let urlAsset = asset as? AVURLAsset else { return false }
-        return urlAsset.url == url
+        (asset as? AVURLAsset)?.url == url
     }
 }
 
