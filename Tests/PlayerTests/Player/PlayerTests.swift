@@ -78,4 +78,9 @@ final class PlayerTests: TestCase {
         expect(player.items.map(\.content.resource)).toEventually(beSimilarTo(expectedResources))
         expect(player.items.map(\.content.resource)).toAlways(beSimilarTo(expectedResources), until: .seconds(1))
     }
+
+    func testNoMetricsWhenFailed() {
+        let player = Player(item: .failing(loadedAfter: 0.1))
+        expect(player.properties.metrics()).toAlways(beNil(), until: .seconds(1))
+    }
 }

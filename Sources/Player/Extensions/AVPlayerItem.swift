@@ -14,6 +14,12 @@ extension AVPlayerItem {
     }
 }
 
+extension AVPlayerItem: PlaybackResource {
+    func contains(url: URL) -> Bool {
+        (asset as? AVURLAsset)?.url == url
+    }
+}
+
 extension AVPlayerItem {
     /// Returns the list of `AVPlayerItems` to load into an `AVQueuePlayer` when a list of contents replaces a previous
     /// one.

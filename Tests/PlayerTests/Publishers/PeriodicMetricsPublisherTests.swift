@@ -13,11 +13,11 @@ import PillarboxStreams
 final class PeriodicMetricsPublisherTests: TestCase {
     func testEmpty() {
         let player = Player()
-            expectEqualPublished(
-                values: [0],
-                from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count),
-                during: .seconds(1)
-            )
+        expectEqualPublished(
+            values: [0],
+            from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count),
+            during: .seconds(1)
+        )
     }
 
     func testPlayback() {
@@ -58,5 +58,15 @@ final class PeriodicMetricsPublisherTests: TestCase {
         ) {
             player.play()
         }
+    }
+
+    func testFailure() {
+        let item = PlayerItem.failing(loadedAfter: 0.1)
+        let player = Player(item: item)
+        expectEqualPublished(
+            values: [0],
+            from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count),
+            during: .seconds(1)
+        )
     }
 }

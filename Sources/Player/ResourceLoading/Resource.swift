@@ -17,23 +17,6 @@ enum Resource {
 
     private static let logger = Logger(category: "Resource")
 
-    var isFailing: Bool {
-        containsUrl(Self.failingUrl)
-    }
-
-    var isLoading: Bool {
-        containsUrl(Self.loadingUrl)
-    }
-
-    private func containsUrl(_ containedUrl: URL) -> Bool {
-        switch self {
-        case let .custom(url: url, _) where url == containedUrl:
-            true
-        default:
-            false
-        }
-    }
-
     func playerItem() -> AVPlayerItem {
         switch self {
         case let .simple(url: url):
@@ -58,15 +41,22 @@ enum Resource {
     }
 }
 
-extension Resource {
-    // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-    static let loadingUrl = URL(string: "pillarbox://loading.m3u8")!
-    static let failingUrl = URL(string: "pillarbox://failing.m3u8")!
+extension Resource: PlaybackResource {
+    func contains(url: URL) -> Bool {
+        switch self {
+        case let .custom(url: customUrl, _) where customUrl == url:
+            true
+        default:
+            false
+        }
+    }
+}
 
-    static let loading = Self.custom(url: loadingUrl, delegate: LoadingResourceLoaderDelegate())
+extension Resource {
+    static let loading = Self.custom(url: .loading, delegate: LoadingResourceLoaderDelegate())
 
     static func failing(error: Error) -> Self {
-        .custom(url: failingUrl, delegate: FailedResourceLoaderDelegate(error: error))
+        .custom(url: .failing, delegate: FailedResourceLoaderDelegate(error: error))
     }
 }
 
