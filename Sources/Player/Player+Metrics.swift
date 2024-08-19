@@ -45,7 +45,7 @@ public extension Player {
             queuePlayer.publisher(for: \.isExternalPlaybackActive)
         )
         .map { [queuePlayer] item, _ -> AnyPublisher<[Metrics], Never> in
-            guard let item else { return Just([]).eraseToAnyPublisher() }
+            guard let item, item.isLoadable else { return Just([]).eraseToAnyPublisher() }
             return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
                 .compactMap { _ in MetricsState(from: item) }
                 .withPrevious(MetricsState.empty)

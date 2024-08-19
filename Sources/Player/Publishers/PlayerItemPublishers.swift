@@ -10,7 +10,7 @@ import PillarboxCore
 extension PlayerItem {
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         $content
-            .first(where: \.isLoaded)
+            .first(where: \.resource.isLoadable)
             .measureDateInterval()
             .map { dateInterval in
                 MetricEvent(
