@@ -34,14 +34,6 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    func mediaMetadataPublisher(forUrn urn: String) -> AnyPublisher<MediaMetadata, Error> {
-        mediaCompositionPublisher(forUrn: urn)
-            .tryMap { response in
-                try MediaMetadata(mediaCompositionResponse: response, dataProvider: self)
-            }
-            .eraseToAnyPublisher()
-    }
-
     func resizedImageUrl(_ url: URL, width: ImageWidth) -> URL {
         server.resizedImageUrl(url, width: width)
     }

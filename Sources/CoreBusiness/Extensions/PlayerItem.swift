@@ -94,17 +94,22 @@ public extension PlayerItem {
 private extension PlayerItem {
     static func publisher(forUrn urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
         let dataProvider = DataProvider(server: server)
-        return dataProvider.mediaMetadataPublisher(forUrn: urn)
-            .map { metadata in
-                asset(metadata: metadata, configuration: configuration)
+        return dataProvider.mediaCompositionPublisher(forUrn: urn)
+            .map { response in
+                let metadata = MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
+                return asset(metadata: metadata, configuration: configuration)
             }
             .eraseToAnyPublisher()
     }
 
     private static func asset(metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
-        let resource = metadata.resource
+        guard let resource = metadata.resource else {
+            return .unavailable(with: DataError.noResourceAvailable, metadata: metadata)
+        }
+        if let blockingReason = metadata.blockingReason {
+            return .unavailable(with: DataError.blocked(withMessage: blockingReason.description), metadata: metadata)
+        }
         let configuration = assetConfiguration(for: resource, configuration: configuration)
-
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
             return .encrypted(url: resource.url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration)
         }

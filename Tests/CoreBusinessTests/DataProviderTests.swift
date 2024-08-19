@@ -10,23 +10,16 @@ import PillarboxCircumspect
 import XCTest
 
 final class DataProviderTests: XCTestCase {
-    func testExistingMediaMetadata() {
+    func testExistingMediaComposition() {
         expectSuccess(
-            from: DataProvider().mediaMetadataPublisher(forUrn: "urn:rts:video:6820736")
+            from: DataProvider().mediaCompositionPublisher(forUrn: "urn:rts:video:6820736")
         )
     }
 
-    func testNonExistingMediaMetadata() {
+    func testNonExistingMediaComposition() {
         expectFailure(
             DataError.http(withStatusCode: 404),
-            from: DataProvider().mediaMetadataPublisher(forUrn: "urn:rts:video:unknown")
-        )
-    }
-
-    func testBlockedMediaMetadata() {
-        expectFailure(
-            DataError.blocked(withMessage: "Some message"),
-            from: DataProvider().mediaMetadataPublisher(forUrn: "urn:rts:video:13382911")
+            from: DataProvider().mediaCompositionPublisher(forUrn: "urn:rts:video:unknown")
         )
     }
 }
