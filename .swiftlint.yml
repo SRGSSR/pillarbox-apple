@@ -12,6 +12,7 @@ excluded:
 disabled_rules:
   - accessibility_label_for_image
   - conditional_returns_on_newline
+  - contrasted_opening_brace
   - discouraged_none_name
   - explicit_acl
   - explicit_enum_raw_value
@@ -28,6 +29,7 @@ disabled_rules:
   - multiple_closures_with_trailing_closure
   - nimble_operator
   - number_separator
+  - no_empty_block
   - no_extension_access_modifier
   - no_grouping_extension
   - no_magic_numbers
@@ -112,6 +114,7 @@ opt_in_rules:
   - override_in_extension
   - pattern_matching_keywords
   - period_spacing
+  - prefer_key_path
   - prefer_nimble
   - prefer_self_in_static_references
   - prefer_self_type_over_type_of_self
