@@ -9,8 +9,8 @@
 private struct AnyError: Error {}
 
 extension MetricEvent {
-    static let anyMetadataReady = Self(kind: .metadataReady(.init()))
-    static let anyAssetReady = Self(kind: .assetReady(.init()))
+    static let anyMetadata = Self(kind: .metadata(.init()))
+    static let anyAsset = Self(kind: .asset(.init()))
     static let anyFailure = Self(kind: .failure(AnyError()))
     static let anyWarning = Self(kind: .warning(AnyError()))
 }

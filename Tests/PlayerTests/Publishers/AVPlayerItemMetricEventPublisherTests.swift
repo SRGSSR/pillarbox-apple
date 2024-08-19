@@ -10,19 +10,19 @@ import AVFoundation
 import PillarboxStreams
 
 final class AVPlayerItemMetricEventPublisherTests: TestCase {
-    func testPlayableItemAssetReadyMetricEvent() {
+    func testPlayableItemAssetMetricEvent() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         _ = AVPlayer(playerItem: item)
         expectOnlySimilarPublished(
-            values: [.anyAssetReady],
-            from: item.assetReadyMetricEventPublisher()
+            values: [.anyAsset],
+            from: item.assetMetricEventPublisher()
         )
     }
 
-    func testFailingItemAssetReadyMetricEvent() {
+    func testFailingItemAssetMetricEvent() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         _ = AVPlayer(playerItem: item)
-        expectNothingPublished(from: item.assetReadyMetricEventPublisher(), during: .milliseconds(500))
+        expectNothingPublished(from: item.assetMetricEventPublisher(), during: .milliseconds(500))
     }
 
     func testPlayableItemFailureMetricEvent() {

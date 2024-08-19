@@ -71,7 +71,7 @@ private struct StartupTimesSectionContent: View {
     private var metadataInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .metadataReady(interval):
+            case let .metadata(interval):
                 return interval.duration
             default:
                 return nil
@@ -82,7 +82,7 @@ private struct StartupTimesSectionContent: View {
     private var assetInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .assetReady(interval):
+            case let .asset(interval):
                 return interval.duration
             default:
                 return nil
