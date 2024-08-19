@@ -80,8 +80,8 @@ public struct Asset<M> {
     ///   - metadata: The metadata associated with the asset.
     /// - Returns: The asset
     ///
-    /// Return an unavailable asset when a business reason prevents the content from being played but metadata is
-    /// nonetheless available.
+    /// Use an unavailable asset when a business reason prevents the content from being played but metadata is
+    /// nonetheless available (the business reason probably determined from the metadata itself).
     public static func unavailable(
         with error: Error,
         metadata: M
