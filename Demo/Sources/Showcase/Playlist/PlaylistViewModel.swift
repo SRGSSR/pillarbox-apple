@@ -12,14 +12,14 @@ import PillarboxPlayer
 final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     let player = Player(configuration: .standard)
 
-    private var medias: OrderedDictionary<PlayerItem, Media> = [:]
+    private var content: OrderedDictionary<PlayerItem, Media> = [:]
 
-    var templates: [Template] = [] {
+    var medias: [Media] = [] {
         didSet {
-            medias = Template.medias(from: templates).reduce(into: [:]) { medias, media in
-                medias.updateValue(media, forKey: media.playerItem())
+            content = medias.reduce(into: [:]) { initial, media in
+                initial.updateValue(media, forKey: media.playerItem())
             }
-            player.items = medias.keys.elements
+            player.items = content.keys.elements
         }
     }
 
@@ -28,7 +28,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     func media(for item: PlayerItem) -> Media? {
-        medias[item]
+        content[item]
     }
 
     func play() {

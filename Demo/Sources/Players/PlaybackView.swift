@@ -920,5 +920,5 @@ private extension Player {
 }
 
 #Preview {
-    PlaybackView(player: Player(item: Media(from: URLTemplate.onDemandVideoLocalHLS).playerItem()))
+    PlaybackView(player: Player(item: URLMedia.onDemandVideoLocalHLS.playerItem()))
 }

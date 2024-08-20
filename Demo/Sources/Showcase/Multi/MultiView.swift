@@ -72,7 +72,7 @@ extension MultiView: SourceCodeViewable {
 
 #Preview {
     MultiView(
-        media1: Media(from: URNTemplate.onDemandHorizontalVideo),
-        media2: Media(from: URNTemplate.onDemandVideo)
+        media1: URNMedia.onDemandHorizontalVideo,
+        media2: URNMedia.onDemandVideo
     )
 }

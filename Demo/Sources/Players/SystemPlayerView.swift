@@ -46,5 +46,5 @@ extension SystemPlayerView: SourceCodeViewable {
 }
 
 #Preview {
-    SystemPlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    SystemPlayerView(media: URLMedia.onDemandVideoLocalHLS)
 }

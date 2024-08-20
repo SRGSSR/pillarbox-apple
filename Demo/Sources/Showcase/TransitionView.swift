@@ -70,5 +70,5 @@ extension TransitionView: SourceCodeViewable {
 }
 
 #Preview {
-    TransitionView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    TransitionView(media: URLMedia.onDemandVideoLocalHLS)
 }

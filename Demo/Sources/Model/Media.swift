@@ -54,18 +54,6 @@ struct Media: Hashable {
         self.timeRanges = timeRanges
     }
 
-    init(from template: Template, startTime: CMTime = .zero) {
-        self.init(
-            title: template.title,
-            subtitle: template.subtitle,
-            imageUrl: template.imageUrl,
-            type: template.type,
-            isMonoscopic: template.isMonoscopic,
-            startTime: startTime,
-            timeRanges: template.timeRanges
-        )
-    }
-
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):
@@ -92,6 +80,20 @@ struct Media: Hashable {
                 ],
                 configuration: .init(position: at(startTime))
             )
+        }
+    }
+
+    func avPlayerItem() -> AVPlayerItem? {
+        switch type {
+        case let .url(url):
+            return AVPlayerItem(url: url)
+        case let .unbufferedUrl(url):
+            let item = AVPlayerItem(url: url)
+            item.automaticallyPreservesTimeOffsetFromLive = true
+            item.preferredForwardBufferDuration = 1
+            return item
+        default:
+            return nil
         }
     }
 }

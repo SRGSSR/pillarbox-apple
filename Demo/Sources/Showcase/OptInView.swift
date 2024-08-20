@@ -93,5 +93,5 @@ extension OptInView: SourceCodeViewable {
 }
 
 #Preview {
-    OptInView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    OptInView(media: URLMedia.onDemandVideoLocalHLS)
 }

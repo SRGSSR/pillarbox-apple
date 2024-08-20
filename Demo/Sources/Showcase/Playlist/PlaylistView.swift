@@ -34,7 +34,7 @@ private struct PlaylistItemsView: View {
 }
 
 struct PlaylistView: View {
-    let templates: [Template]
+    let medias: [Media]
 
     @StateObject private var model = PlaylistViewModel.persisted ?? PlaylistViewModel()
     @State private var layout: PlaybackView.Layout = .minimized
@@ -52,7 +52,7 @@ struct PlaylistView: View {
         }
         .animation(.defaultLinear, value: layout)
         .onAppear {
-            model.templates = templates
+            model.medias = medias
             model.play()
         }
         .enabledForInAppPictureInPicture(persisting: model)
@@ -65,9 +65,9 @@ extension PlaylistView: SourceCodeViewable {
 }
 
 #Preview {
-    PlaylistView(templates: [
-        URLTemplate.onDemandVideoLocalHLS,
-        URLTemplate.shortOnDemandVideoHLS,
-        URLTemplate.dvrVideoHLS
+    PlaylistView(medias: [
+        URLMedia.onDemandVideoLocalHLS,
+        URLMedia.shortOnDemandVideoHLS,
+        URLMedia.dvrVideoHLS
     ])
 }

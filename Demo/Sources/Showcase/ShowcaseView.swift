@@ -53,14 +53,14 @@ struct ShowcaseView: View {
             cell(
                 title: "Simple",
                 subtitle: "A basic video playback experience",
-                destination: .simplePlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+                destination: .simplePlayer(media: URLMedia.appleAdvanced_16_9_HEVC_h264_HLS)
             )
             .sourceCode(of: SimplePlayerView.self)
 
             cell(
                 title: "Blurred",
                 subtitle: "A video displayed onto a blurred clone of itself",
-                destination: .blurred(media: Media(from: URLTemplate.dvrVideoHLS))
+                destination: .blurred(media: URLMedia.dvrVideoHLS)
             )
             .sourceCode(of: BlurredView.self)
 
@@ -80,51 +80,51 @@ struct ShowcaseView: View {
         CustomSection("Playlists") {
             cell(
                 title: "Video URLs",
-                destination: .playlist(templates: Playlist.videoUrls)
+                destination: .playlist(medias: Playlist.videoUrls)
             )
             cell(
                 title: "Video URNs",
-                destination: .playlist(templates: Playlist.videoUrns)
+                destination: .playlist(medias: Playlist.videoUrns)
             )
             cell(
                 title: "Long video URNs",
-                destination: .playlist(templates: Playlist.longVideoUrns)
+                destination: .playlist(medias: Playlist.longVideoUrns)
             )
             cell(
                 title: "Videos with media selections",
-                destination: .playlist(templates: Playlist.videosWithMediaSelections)
+                destination: .playlist(medias: Playlist.videosWithMediaSelections)
             )
             cell(
                 title: "Audios",
-                destination: .playlist(templates: Playlist.audios)
+                destination: .playlist(medias: Playlist.audios)
             )
             cell(
                 title: "Videos (URLs, one failing)",
-                destination: .playlist(templates: Playlist.videosWithOneFailingUrl)
+                destination: .playlist(medias: Playlist.videosWithOneFailingUrl)
             )
             cell(
                 title: "Videos (URLs, one failing MP3)",
-                destination: .playlist(templates: Playlist.videosWithOneFailingMp3Url)
+                destination: .playlist(medias: Playlist.videosWithOneFailingMp3Url)
             )
             cell(
                 title: "Videos (URNs, one failing)",
-                destination: .playlist(templates: Playlist.videosWithOneFailingUrn)
+                destination: .playlist(medias: Playlist.videosWithOneFailingUrn)
             )
             cell(
                 title: "Videos (URLs, all failing)",
-                destination: .playlist(templates: Playlist.videosWithOnlyFailingUrls)
+                destination: .playlist(medias: Playlist.videosWithOnlyFailingUrls)
             )
             cell(
                 title: "Videos (URNs, all failing)",
-                destination: .playlist(templates: Playlist.videosWithOnlyFailingUrns)
+                destination: .playlist(medias: Playlist.videosWithOnlyFailingUrns)
             )
             cell(
                 title: "Videos (URLs and URNs, all failing)",
-                destination: .playlist(templates: Playlist.videosWithFailingUrlsAndUrns)
+                destination: .playlist(medias: Playlist.videosWithFailingUrlsAndUrns)
             )
             cell(
                 title: "Empty",
-                destination: .playlist(templates: [])
+                destination: .playlist(medias: [])
             )
         }
         .sourceCode(of: PlaylistView.self)
@@ -137,7 +137,7 @@ struct ShowcaseView: View {
             cell(
                 title: "Twins",
                 subtitle: "A video displayed twice",
-                destination: .twins(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+                destination: .twins(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             .sourceCode(of: TwinsView.self)
 
@@ -145,8 +145,8 @@ struct ShowcaseView: View {
                 title: "Multi-instance",
                 subtitle: "Two videos played at the same time",
                 destination: .multi(
-                    media1: Media(from: URNTemplate.onDemandHorizontalVideo),
-                    media2: Media(from: URNTemplate.onDemandVideo)
+                    media1: URNMedia.onDemandHorizontalVideo,
+                    media2: URNMedia.onDemandVideo
                 )
             )
             .sourceCode(of: MultiView.self)
@@ -155,8 +155,8 @@ struct ShowcaseView: View {
                 title: "Multi-instance with mixed content",
                 subtitle: "Two videos played at the same time",
                 destination: .multi(
-                    media1: Media(from: URNTemplate.onDemandHorizontalVideo),
-                    media2: Media(from: URNTemplate.gothard_360)
+                    media1: URNMedia.onDemandHorizontalVideo,
+                    media2: URNMedia.gothard_360
                 )
             )
             .sourceCode(of: MultiView.self)
@@ -164,21 +164,21 @@ struct ShowcaseView: View {
             cell(
                 title: "Link",
                 subtitle: "A player which can be linked to a view",
-                destination: .link(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
+                destination: .link(media: URLMedia.appleAdvanced_16_9_fMP4_HLS)
             )
             .sourceCode(of: LinkView.self)
 
             cell(
                 title: "Wrapped",
                 subtitle: "A view whose player can be removed",
-                destination: .wrapped(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+                destination: .wrapped(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             .sourceCode(of: WrappedView.self)
 
             cell(
                 title: "Transition",
                 subtitle: "A transition between two layouts sharing the same player",
-                destination: .transition(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+                destination: .transition(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             .sourceCode(of: TransitionView.self)
         }
@@ -189,31 +189,31 @@ struct ShowcaseView: View {
         CustomSection("System player (using Pillarbox)") {
             cell(
                 title: "Apple Basic 16:9",
-                destination: .systemPlayer(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+                destination: .systemPlayer(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             cell(
                 title: "Apple Advanced 16:9",
-                destination: .systemPlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
+                destination: .systemPlayer(media: URLMedia.appleAdvanced_16_9_fMP4_HLS)
             )
             cell(
                 title: "Trickplay",
-                destination: .systemPlayer(media: Media(from: URLTemplate.unifiedStreamingOnDemandTrickplay))
+                destination: .systemPlayer(media: URLMedia.unifiedStreamingOnDemandTrickplay)
             )
             cell(
                 title: "VOD - MP4",
-                destination: .systemPlayer(media: Media(from: URLTemplate.onDemandVideoMP4))
+                destination: .systemPlayer(media: URLMedia.onDemandVideoMP4)
             )
             cell(
                 title: "Video URN - On-demand",
-                destination: .systemPlayer(media: Media(from: URNTemplate.onDemandVideo))
+                destination: .systemPlayer(media: URNMedia.onDemandVideo)
             )
             cell(
                 title: "Video URN - Livestream with DRM",
-                destination: .systemPlayer(media: Media(from: URNTemplate.dvrVideo))
+                destination: .systemPlayer(media: URNMedia.dvrVideo)
             )
             cell(
                 title: "Unknown",
-                destination: .systemPlayer(media: Media(from: URNTemplate.unknown))
+                destination: .systemPlayer(media: URNMedia.unknown)
             )
         }
         .sourceCode(of: SystemPlayerView.self)
@@ -225,14 +225,14 @@ struct ShowcaseView: View {
             cell(
                 title: "Couleur 3 (DVR)",
                 subtitle: "Inline system playback view",
-                destination: .inlineSystemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
+                destination: .inlineSystemPlayer(media: URLMedia.dvrVideoHLS)
             )
             .sourceCode(of: InlineSystemPlayerView.self)
 
             cell(
                 title: "Apple Basic 16:9",
                 subtitle: "Playback start at 10 minutes",
-                destination: .player(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS, startTime: .init(value: 10 * 60, timescale: 1)))
+                destination: .player(media: URLMedia.startTimeVideo)
             )
             .sourceCode(of: PlayerView.self)
         }
@@ -245,21 +245,21 @@ struct ShowcaseView: View {
             cell(
                 title: "Couleur 3 (DVR)",
                 subtitle: "With PiP support",
-                destination: .player(media: Media(from: URLTemplate.dvrVideoHLS))
+                destination: .player(media: URLMedia.dvrVideoHLS)
             )
             .sourceCode(of: PlayerView.self)
 
             cell(
                 title: "Apple Advanced 16:9 (fMP4)",
                 subtitle: "With PiP support",
-                destination: .player(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
+                destination: .player(media: URLMedia.appleAdvanced_16_9_fMP4_HLS)
             )
             .sourceCode(of: PlayerView.self)
 
             cell(
                 title: "Gothard 360°",
                 subtitle: "With PiP support (but unavailable)",
-                destination: .player(media: Media(from: URNTemplate.gothard_360))
+                destination: .player(media: URNMedia.gothard_360)
             )
             .sourceCode(of: PlayerView.self)
 
@@ -267,7 +267,7 @@ struct ShowcaseView: View {
                 title: "Couleur 3 (DVR)",
                 subtitle: "Without PiP support",
                 destination: .player(
-                    media: Media(from: URLTemplate.dvrVideoHLS),
+                    media: URLMedia.dvrVideoHLS,
                     supportsPictureInPicture: false
                 )
             )
@@ -277,7 +277,7 @@ struct ShowcaseView: View {
                 title: "Apple Advanced 16:9 (fMP4)",
                 subtitle: "Without PiP support",
                 destination: .player(
-                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
+                    media: URLMedia.appleAdvanced_16_9_fMP4_HLS,
                     supportsPictureInPicture: false
                 )
             )
@@ -287,7 +287,7 @@ struct ShowcaseView: View {
                 title: "Gothard 360°",
                 subtitle: "Without PiP support",
                 destination: .player(
-                    media: Media(from: URNTemplate.gothard_360),
+                    media: URNMedia.gothard_360,
                     supportsPictureInPicture: false
                 )
             )
@@ -301,14 +301,14 @@ struct ShowcaseView: View {
             cell(
                 title: "Couleur 3 (DVR)",
                 subtitle: "With PiP support",
-                destination: .systemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
+                destination: .systemPlayer(media: URLMedia.dvrVideoHLS)
             )
             .sourceCode(of: SystemPlayerView.self)
 
             cell(
                 title: "Apple Advanced 16:9 (fMP4)",
                 subtitle: "With PiP support",
-                destination: .systemPlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
+                destination: .systemPlayer(media: URLMedia.appleAdvanced_16_9_fMP4_HLS)
             )
             .sourceCode(of: SystemPlayerView.self)
 
@@ -316,7 +316,7 @@ struct ShowcaseView: View {
                 title: "Couleur 3 (DVR)",
                 subtitle: "Without PiP support",
                 destination: .systemPlayer(
-                    media: Media(from: URLTemplate.dvrVideoHLS),
+                    media: URLMedia.dvrVideoHLS,
                     supportsPictureInPicture: false
                 )
             )
@@ -326,7 +326,7 @@ struct ShowcaseView: View {
                 title: "Apple Advanced 16:9 (fMP4)",
                 subtitle: "Without PiP support",
                 destination: .systemPlayer(
-                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
+                    media: URLMedia.appleAdvanced_16_9_fMP4_HLS,
                     supportsPictureInPicture: false
                 )
             )
@@ -339,23 +339,23 @@ struct ShowcaseView: View {
         CustomSection("System player (using AVPlayer)") {
             cell(
                 title: "Apple Basic 16:9",
-                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.appleBasic_16_9_TS_HLS)!)
+                destination: .vanillaPlayer(item: URLMedia.appleBasic_16_9_TS_HLS.avPlayerItem()!)
             )
             cell(
                 title: "Apple Advanced 16:9",
-                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS)!)
+                destination: .vanillaPlayer(item: URLMedia.appleAdvanced_16_9_fMP4_HLS.avPlayerItem()!)
             )
             cell(
                 title: "Trickplay",
-                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.unifiedStreamingOnDemandTrickplay)!)
+                destination: .vanillaPlayer(item: URLMedia.unifiedStreamingOnDemandTrickplay.avPlayerItem()!)
             )
             cell(
                 title: "VOD - MP4",
-                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.onDemandVideoMP4)!)
+                destination: .vanillaPlayer(item: URLMedia.onDemandVideoMP4.avPlayerItem()!)
             )
             cell(
                 title: "Unknown",
-                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.unknown)!)
+                destination: .vanillaPlayer(item: URLMedia.unknown.avPlayerItem()!)
             )
         }
         .sourceCode(of: VanillaPlayerView.self)
@@ -366,11 +366,11 @@ struct ShowcaseView: View {
         CustomSection("Opt-in features") {
             cell(
                 title: "Video URL",
-                destination: .optInPlayer(media: Media(from: URLTemplate.onDemandVideoMP4))
+                destination: .optInPlayer(media: URLMedia.onDemandVideoMP4)
             )
             cell(
                 title: "Video URN",
-                destination: .optInPlayer(media: Media(from: URNTemplate.onDemandVerticalVideo))
+                destination: .optInPlayer(media: URNMedia.onDemandVerticalVideo)
             )
         }
         .sourceCode(of: OptInView.self)

@@ -66,13 +66,13 @@ private struct MediaEntryView: View {
     private var media: Media {
         switch kind {
         case .url:
-            guard let url else { return .init(from: URLTemplate.unknown) }
+            guard let url else { return URLMedia.unknown }
             return .init(title: "URL", type: .url(url))
         case .tokenProtected:
-            guard let url else { return .init(from: URLTemplate.unknown) }
+            guard let url else { return URLMedia.unknown }
             return .init(title: "Token-protected", type: .tokenProtectedUrl(url))
         case .encrypted:
-            guard let url, let certificateUrl else { return .init(from: URLTemplate.unknown) }
+            guard let url, let certificateUrl else { return URLMedia.unknown }
             return .init(title: "Encrypted", type: .encryptedUrl(url, certificateUrl: certificateUrl))
         case .ilProductionUrn:
             return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .ilProduction))

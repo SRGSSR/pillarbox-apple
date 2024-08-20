@@ -51,5 +51,5 @@ extension LinkView: SourceCodeViewable {
 }
 
 #Preview {
-    LinkView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    LinkView(media: URLMedia.onDemandVideoLocalHLS)
 }

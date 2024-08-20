@@ -199,5 +199,5 @@ extension PlayerView: SourceCodeViewable {
 }
 
 #Preview {
-    PlayerView(media: Media(from: URNTemplate.onDemandHorizontalVideo))
+    PlayerView(media: URNMedia.onDemandHorizontalVideo)
 }

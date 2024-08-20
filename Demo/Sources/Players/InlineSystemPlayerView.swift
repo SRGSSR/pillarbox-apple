@@ -38,5 +38,5 @@ extension InlineSystemPlayerView: SourceCodeViewable {
 }
 
 #Preview {
-    InlineSystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_TS_HLS))
+    InlineSystemPlayerView(media: URLMedia.appleAdvanced_16_9_TS_HLS)
 }

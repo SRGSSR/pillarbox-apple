@@ -67,5 +67,5 @@ extension SimplePlayerView: SourceCodeViewable {
 }
 
 #Preview {
-    SimplePlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    SimplePlayerView(media: URLMedia.onDemandVideoLocalHLS)
 }

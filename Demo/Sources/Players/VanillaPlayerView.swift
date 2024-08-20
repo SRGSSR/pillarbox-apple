@@ -34,5 +34,5 @@ extension VanillaPlayerView: SourceCodeViewable {
 extension AVPlayer: ObservableObject {}
 
 #Preview {
-    VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
+    VanillaPlayerView(item: URLMedia.appleAdvanced_16_9_TS_HLS.avPlayerItem()!)
 }
