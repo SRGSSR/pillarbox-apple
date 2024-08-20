@@ -339,23 +339,23 @@ struct ShowcaseView: View {
         CustomSection("System player (using AVPlayer)") {
             cell(
                 title: "Apple Basic 16:9",
-                destination: .vanillaPlayer(item: URLMedia.appleBasic_16_9_TS_HLS.avPlayerItem()!)
+                destination: .vanillaPlayer(item: URLMedia.appleBasic_16_9_TS_HLS.playerItem()!)
             )
             cell(
                 title: "Apple Advanced 16:9",
-                destination: .vanillaPlayer(item: URLMedia.appleAdvanced_16_9_fMP4_HLS.avPlayerItem()!)
+                destination: .vanillaPlayer(item: URLMedia.appleAdvanced_16_9_fMP4_HLS.playerItem()!)
             )
             cell(
                 title: "Trickplay",
-                destination: .vanillaPlayer(item: URLMedia.unifiedStreamingOnDemandTrickplay.avPlayerItem()!)
+                destination: .vanillaPlayer(item: URLMedia.unifiedStreamingOnDemandTrickplay.playerItem()!)
             )
             cell(
                 title: "VOD - MP4",
-                destination: .vanillaPlayer(item: URLMedia.onDemandVideoMP4.avPlayerItem()!)
+                destination: .vanillaPlayer(item: URLMedia.onDemandVideoMP4.playerItem()!)
             )
             cell(
                 title: "Unknown",
-                destination: .vanillaPlayer(item: URLMedia.unknown.avPlayerItem()!)
+                destination: .vanillaPlayer(item: URLMedia.unknown.playerItem()!)
             )
         }
         .sourceCode(of: VanillaPlayerView.self)

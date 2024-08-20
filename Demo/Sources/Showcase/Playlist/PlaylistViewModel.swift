@@ -17,7 +17,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     var medias: [Media] = [] {
         didSet {
             content = medias.reduce(into: [:]) { initial, media in
-                initial.updateValue(media, forKey: media.playerItem())
+                initial.updateValue(media, forKey: media.item())
             }
             player.items = content.keys.elements
         }

@@ -37,7 +37,7 @@ struct LinkView: View {
     }
 
     private func play() {
-        player.append(media.playerItem())
+        player.append(media.item())
         player.play()
     }
 

@@ -54,7 +54,7 @@ struct Media: Hashable {
         self.timeRanges = timeRanges
     }
 
-    func playerItem() -> PlayerItem {
+    func item() -> PlayerItem {
         switch type {
         case let .url(url):
             return simplePlayerItem(for: url, configuration: .init(position: at(startTime)))
@@ -83,7 +83,7 @@ struct Media: Hashable {
         }
     }
 
-    func avPlayerItem() -> AVPlayerItem? {
+    func playerItem() -> AVPlayerItem? {
         switch type {
         case let .url(url):
             return AVPlayerItem(url: url)

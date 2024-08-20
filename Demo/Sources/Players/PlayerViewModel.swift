@@ -11,7 +11,7 @@ final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
-            if let playerItem = media?.playerItem() {
+            if let playerItem = media?.item() {
                 player.items = [playerItem]
             }
             else {
