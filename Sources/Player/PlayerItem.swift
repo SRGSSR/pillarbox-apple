@@ -20,13 +20,14 @@ private enum TriggerId: Hashable {
 /// - Simple assets which can be played from a simple URL.
 /// - Custom assets which require custom resource loading.
 /// - Encrypted assets which require a FairPlay content key session.
-public final class PlayerItem: Equatable {
+public final class PlayerItem: Hashable, Identifiable {
     private static let trigger = Trigger()
 
     @Published private(set) var content: AssetContent
     private let trackerAdapters: [any PlayerItemTracking]
 
-    let id = UUID()
+    /// A unique identifier for the item.
+    public let id = UUID()
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
@@ -129,6 +130,10 @@ public final class PlayerItem: Equatable {
     static func reload(for id: UUID) {
         trigger.activate(for: TriggerId.reset(id))
         trigger.activate(for: TriggerId.load(id))
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
