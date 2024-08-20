@@ -20,16 +20,27 @@ struct PlaylistView: View {
                 .supportsPictureInPicture()
 #if os(iOS)
             if layout != .maximized {
-                Color.red
+                PlaylistItemsView(player: model.player)
             }
 #endif
         }
         .animation(.defaultLinear, value: layout)
         .onAppear {
+            model.templates = templates
             model.play()
         }
         .enabledForInAppPictureInPicture(persisting: model)
         .tracked(name: "playlist")
+    }
+}
+
+struct PlaylistItemsView: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        List(player.items) { item in
+            Text(item.id.uuidString)
+        }
     }
 }
 

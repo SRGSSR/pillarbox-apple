@@ -16,6 +16,12 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         player.play()
     }
 
+    var templates: [Template] = [] {
+        didSet {
+            player.items = Template.medias(from: templates).map { $0.playerItem() }
+        }
+    }
+
     var isMonoscopic: Bool {
         false
     }
