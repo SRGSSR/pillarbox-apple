@@ -20,14 +20,13 @@ private enum TriggerId: Hashable {
 /// - Simple assets which can be played from a simple URL.
 /// - Custom assets which require custom resource loading.
 /// - Encrypted assets which require a FairPlay content key session.
-public final class PlayerItem: Hashable, Identifiable {
+public final class PlayerItem: Hashable {
     private static let trigger = Trigger()
 
     @Published private(set) var content: AssetContent
     private let trackerAdapters: [any PlayerItemTracking]
 
-    /// A unique identifier for the item.
-    public let id = UUID()
+    let id = UUID()
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
