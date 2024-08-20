@@ -25,7 +25,7 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     public func updateMetadata(to metadata: [String: String]) {
         self.metadata = metadata
-        addMetadata(metadata)
+        setMetadata(metadata)
     }
 
     public func updateProperties(to properties: PlayerProperties) {
@@ -61,9 +61,10 @@ private extension ComScoreTracker {
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(Player.version)
+        setMetadata(metadata)
     }
 
-    func addMetadata(_ metadata: [String: String]) {
+    func setMetadata(_ metadata: [String: String]) {
         let builder = SCORStreamingContentMetadataBuilder()
         if let globals = Analytics.shared.comScoreGlobals {
             builder.setCustomLabels(metadata.merging(globals.labels) { _, new in new })

@@ -205,4 +205,33 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
     }
+
+    func testReplay() {
+        let player = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in .test }
+            ]
+        ))
+        var ns_st_id: String?
+        expectAtLeastHits(
+            play { labels in
+                expect(labels["media_title"]).to(equal("name"))
+                expect(labels.ns_st_id).notTo(beNil())
+                ns_st_id = labels.ns_st_id
+            },
+            end()
+        ) {
+            player.play()
+        }
+        expectAtLeastHits(
+            play { labels in
+                expect(labels["media_title"]).to(equal("name"))
+                expect(labels.ns_st_id).notTo(beNil())
+                expect(labels.ns_st_id).notTo(equal(ns_st_id))
+            }
+        ) {
+            player.replay()
+        }
+    }
 }
