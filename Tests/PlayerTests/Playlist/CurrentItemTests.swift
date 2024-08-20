@@ -167,4 +167,13 @@ final class CurrentItemTests: TestCase {
         player.currentItem = item2
         expect(player.currentItem).toAlways(equal(item1), until: .seconds(1))
     }
+
+    func testSetCurrentItemToNil() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expect(player.currentItem).to(equal(item))
+        player.currentItem = nil
+        expect(player.currentItem).to(beNil())
+        expect(player.queuePlayer.items()).to(beEmpty())
+    }
 }
