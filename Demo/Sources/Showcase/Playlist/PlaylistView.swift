@@ -7,12 +7,28 @@
 import PillarboxPlayer
 import SwiftUI
 
-struct PlaylistItemsView: View {
+private struct MediaCell: View {
+    let media: Media?
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(media?.title ?? "-")
+            if let subtitle = media?.subtitle {
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+}
+
+private struct PlaylistItemsView: View {
     @ObservedObject var player: Player
+    let model: PlaylistViewModel
 
     var body: some View {
         List($player.items, id: \.self, editActions: .all, selection: $player.currentItem) { item in
-            Text(item.id.uuidString)
+            MediaCell(media: model.media(for: item.wrappedValue))
         }
     }
 }
@@ -30,7 +46,7 @@ struct PlaylistView: View {
                 .supportsPictureInPicture()
 #if os(iOS)
             if layout != .maximized {
-                PlaylistItemsView(player: model.player)
+                PlaylistItemsView(player: model.player, model: model)
             }
 #endif
         }
