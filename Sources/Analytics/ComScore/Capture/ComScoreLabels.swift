@@ -8,7 +8,8 @@
 ///
 /// Mainly used for development-oriented purposes (e.g. unit testing).
 public struct ComScoreLabels {
-    let dictionary: [String: String]
+    /// The raw label dictionary.
+    public let dictionary: [String: String]
 
     var listener_session_id: String? {
         extract()
