@@ -32,6 +32,10 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         return currentMedia.isMonoscopic
     }
 
+    func add(_ medias: [Media]) {
+        self.medias += medias
+    }
+
     func media(for item: PlayerItem) -> Media? {
         content[item]
     }

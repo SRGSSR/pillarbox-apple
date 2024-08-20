@@ -26,7 +26,7 @@ private struct Toolbar: View {
     @ObservedObject var player: Player
     @ObservedObject var model: PlaylistViewModel
 
-    @State private var isMediaSelectionPresented = false
+    @State private var isSelectionPresented = false
 
     var body: some View {
         HStack {
@@ -38,9 +38,8 @@ private struct Toolbar: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .sheet(isPresented: $isMediaSelectionPresented) {
-            Color.red
-            // MediaSelectionView(model: model)
+        .sheet(isPresented: $isSelectionPresented) {
+            PlaylistSelectionView(model: model)
         }
     }
 
@@ -78,10 +77,9 @@ private struct Toolbar: View {
     }
 
     private func add() {
-        isMediaSelectionPresented.toggle()
+        isSelectionPresented.toggle()
     }
 }
-
 
 private struct PlaylistItemsView: View {
     @ObservedObject var player: Player

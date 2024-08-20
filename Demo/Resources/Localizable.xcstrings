@@ -46,6 +46,12 @@
     "Active (AirPlay / Control Center)" : {
 
     },
+    "Add" : {
+
+    },
+    "Add content" : {
+
+    },
     "Advance" : {
 
     },
@@ -74,6 +80,9 @@
 
     },
     "Buffering" : {
+
+    },
+    "Cancel" : {
 
     },
     "Clear URL cache" : {
