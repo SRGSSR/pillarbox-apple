@@ -22,6 +22,67 @@ private struct MediaCell: View {
     }
 }
 
+private struct Toolbar: View {
+    @ObservedObject var player: Player
+    @ObservedObject var model: PlaylistViewModel
+
+    @State private var isMediaSelectionPresented = false
+
+    var body: some View {
+        HStack {
+            previousButton()
+            Spacer()
+            managementButtons()
+            Spacer()
+            nextButton()
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .sheet(isPresented: $isMediaSelectionPresented) {
+            Color.red
+            // MediaSelectionView(model: model)
+        }
+    }
+
+    @ViewBuilder
+    private func previousButton() -> some View {
+        Button(action: player.returnToPrevious) {
+            Image(systemName: "arrow.left")
+        }
+        .disabled(!player.canReturnToPrevious())
+    }
+
+    @ViewBuilder
+    private func managementButtons() -> some View {
+        HStack(spacing: 30) {
+            Button(action: model.shuffle) {
+                Image(systemName: "shuffle")
+            }
+            .disabled(model.isEmpty)
+            Button(action: add) {
+                Image(systemName: "plus")
+            }
+            Button(action: model.trash) {
+                Image(systemName: "trash")
+            }
+            .disabled(model.isEmpty)
+        }
+    }
+
+    @ViewBuilder
+    private func nextButton() -> some View {
+        Button(action: player.advanceToNext) {
+            Image(systemName: "arrow.right")
+        }
+        .disabled(!player.canAdvanceToNext())
+    }
+
+    private func add() {
+        isMediaSelectionPresented.toggle()
+    }
+}
+
+
 private struct PlaylistItemsView: View {
     @ObservedObject var player: Player
     let model: PlaylistViewModel
@@ -46,6 +107,7 @@ struct PlaylistView: View {
                 .supportsPictureInPicture()
 #if os(iOS)
             if layout != .maximized {
+                Toolbar(player: model.player, model: model)
                 PlaylistItemsView(player: model.player, model: model)
             }
 #endif

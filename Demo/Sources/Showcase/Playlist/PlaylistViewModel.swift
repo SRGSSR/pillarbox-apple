@@ -6,25 +6,30 @@
 
 import Combine
 import Foundation
-import OrderedCollections
 import PillarboxPlayer
 
 final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     let player = Player(configuration: .standard)
 
-    private var content: OrderedDictionary<PlayerItem, Media> = [:]
+    private var content: [PlayerItem: Media] = [:]
 
     var medias: [Media] = [] {
         didSet {
-            content = medias.reduce(into: [:]) { initial, media in
-                initial.updateValue(media, forKey: media.item())
+            let items = medias.map { $0.item() }
+            content = zip(items, medias).reduce(into: [:]) { initial, element in
+                initial.updateValue(element.1, forKey: element.0)
             }
-            player.items = content.keys.elements
+            player.items = items
         }
     }
 
+    var isEmpty: Bool {
+        medias.isEmpty
+    }
+
     var isMonoscopic: Bool {
-        false
+        guard let currentItem = player.currentItem, let currentMedia = content[currentItem] else { return false }
+        return currentMedia.isMonoscopic
     }
 
     func media(for item: PlayerItem) -> Media? {
@@ -34,5 +39,13 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     func play() {
         player.becomeActive()
         player.play()
+    }
+
+    func shuffle() {
+        player.items = player.items.shuffled()
+    }
+
+    func trash() {
+        medias = []
     }
 }
