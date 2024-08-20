@@ -10,7 +10,7 @@
 ### Items
 
 - ``append(_:)``
-- ``currentIndex``
+- ``currentItem``
 - ``insert(_:after:)``
 - ``insert(_:before:)``
 - ``items``
@@ -43,7 +43,7 @@
 - ``canAdvanceToNextItem()``
 - ``canReturnToPreviousItem()``
 - ``returnToPreviousItem()``
-- ``setCurrentIndex(_:)``
+- ``currentItem``
 
 ### Playback
 

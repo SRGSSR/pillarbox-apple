@@ -11,11 +11,6 @@ import PillarboxPlayer
 final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     let player = Player(configuration: .standard)
 
-    func play() {
-        player.becomeActive()
-        player.play()
-    }
-
     var templates: [Template] = [] {
         didSet {
             player.items = Template.medias(from: templates).map { $0.playerItem() }
@@ -24,5 +19,10 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     var isMonoscopic: Bool {
         false
+    }
+
+    func play() {
+        player.becomeActive()
+        player.play()
     }
 }

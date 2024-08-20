@@ -16,7 +16,7 @@ final class NavigationForwardTests: TestCase {
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.onDemand))
         player.advanceToNext()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testAdvanceForOnDemandWithoutNextItem() {
@@ -24,7 +24,7 @@ final class NavigationForwardTests: TestCase {
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
         player.advanceToNext()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testAdvanceForLiveWithNextItem() {
@@ -33,7 +33,7 @@ final class NavigationForwardTests: TestCase {
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.live))
         player.advanceToNext()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testAdvanceForLiveWithoutNextItem() {
@@ -41,7 +41,7 @@ final class NavigationForwardTests: TestCase {
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
         player.advanceToNext()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testAdvanceForDvrWithNextItem() {
@@ -50,7 +50,7 @@ final class NavigationForwardTests: TestCase {
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.dvr))
         player.advanceToNext()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testAdvanceForDvrWithoutNextItem() {
@@ -58,7 +58,7 @@ final class NavigationForwardTests: TestCase {
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
         player.advanceToNext()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testAdvanceForUnknownWithNextItem() {
@@ -67,7 +67,7 @@ final class NavigationForwardTests: TestCase {
         let player = Player(items: [item1, item2])
         expect(player.streamType).to(equal(.unknown))
         player.advanceToNext()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testAdvanceForUnknownWithoutNextItem() {
@@ -75,6 +75,6 @@ final class NavigationForwardTests: TestCase {
         let player = Player(item: item)
         expect(player.streamType).to(equal(.unknown))
         player.advanceToNext()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 }

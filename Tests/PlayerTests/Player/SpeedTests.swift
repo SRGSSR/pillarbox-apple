@@ -128,7 +128,7 @@ final class SpeedTests: TestCase {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.setDesiredPlaybackSpeed(2)
         player.play()
-        expect(player.currentIndex).toEventually(beNil())
+        expect(player.currentItem).toEventually(beNil())
 
         expect(player.effectivePlaybackSpeed).toEventually(equal(1))
         expect(player.playbackSpeedRange).toEventually(equal(1...1))

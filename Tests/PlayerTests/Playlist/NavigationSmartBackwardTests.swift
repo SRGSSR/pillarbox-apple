@@ -16,7 +16,7 @@ final class NavigationSmartBackwardTests: TestCase {
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
         player.returnToPrevious()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testReturnForOnDemandNearBeginningWithoutPreviousItem() {
@@ -31,7 +31,7 @@ final class NavigationSmartBackwardTests: TestCase {
         }
 
         player.returnToPrevious()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
         expect(player.time).toEventually(equal(.zero))
     }
 
@@ -42,7 +42,7 @@ final class NavigationSmartBackwardTests: TestCase {
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
         player.returnToPrevious()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testReturnForOnDemandNotAtBeginning() {
@@ -58,7 +58,7 @@ final class NavigationSmartBackwardTests: TestCase {
             }
         }
         player.returnToPrevious()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
         expect(player.time).toEventually(equal(.zero))
     }
 
@@ -69,7 +69,7 @@ final class NavigationSmartBackwardTests: TestCase {
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.live))
         player.returnToPreviousItem()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testReturnForLiveWithoutPreviousItem() {
@@ -77,7 +77,7 @@ final class NavigationSmartBackwardTests: TestCase {
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
         player.returnToPreviousItem()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testReturnForDvrWithPreviousItem() {
@@ -87,7 +87,7 @@ final class NavigationSmartBackwardTests: TestCase {
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.dvr))
         player.returnToPreviousItem()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testReturnForDvrWithoutPreviousItem() {
@@ -95,7 +95,7 @@ final class NavigationSmartBackwardTests: TestCase {
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
         player.returnToPreviousItem()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testReturnForUnknownWithPreviousItem() {
@@ -105,7 +105,7 @@ final class NavigationSmartBackwardTests: TestCase {
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.unknown))
         player.returnToPreviousItem()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testReturnForUnknownWithoutPreviousItem() {
@@ -113,6 +113,6 @@ final class NavigationSmartBackwardTests: TestCase {
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.unknown))
         player.returnToPreviousItem()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 }

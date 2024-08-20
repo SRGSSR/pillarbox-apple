@@ -8,7 +8,6 @@ import Foundation
 
 enum PlaybackError: Error {
     case unknown
-    case itemOutOfBounds
 }
 
 extension NSError {

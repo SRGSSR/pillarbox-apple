@@ -11,66 +11,67 @@ import PillarboxStreams
 
 final class ReplayTests: TestCase {
     func testWithOneGoodItem() {
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
         player.replay()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testWithOneGoodItemPlayedEntirely() {
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
         player.play()
-        expect(player.currentIndex).toEventually(beNil())
+        expect(player.currentItem).toEventually(beNil())
         player.replay()
-        expect(player.currentIndex).toEventually(equal(0))
+        expect(player.currentItem).toEventually(equal(item))
     }
 
     func testWithOneBadItem() {
-        let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
+        let item = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(item: item)
+        expect(player.currentItem).toAlways(equal(item), until: .milliseconds(500))
         player.replay()
-        expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
+        expect(player.currentItem).toAlways(equal(item), until: .milliseconds(500))
     }
 
     func testWithManyGoodItems() {
-        let player = Player(items: [
-            .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.shortOnDemand.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(items: [item1, item2])
         player.play()
-        expect(player.currentIndex).toEventually(equal(1))
+        expect(player.currentItem).toEventually(equal(item2))
         player.replay()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testWithManyBadItems() {
-        let player = Player(items: [
-            .simple(url: Stream.unavailable.url),
-            .simple(url: Stream.unavailable.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.unavailable.url)
+        let item2 = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(items: [item1, item2])
         player.play()
-        expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
+        expect(player.currentItem).toAlways(equal(item1), until: .milliseconds(500))
         player.replay()
-        expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
+        expect(player.currentItem).toAlways(equal(item1), until: .milliseconds(500))
     }
 
     func testWithOneGoodItemAndOneBadItem() {
-        let player = Player(items: [
-            .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.unavailable.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(items: [item1, item2])
         player.play()
-        expect(player.currentIndex).toEventually(equal(1))
+        expect(player.currentItem).toEventually(equal(item2))
         player.replay()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testResumePlaybackIfNeeded() {
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
         player.play()
-        expect(player.currentIndex).toEventually(beNil())
+        expect(player.currentItem).toEventually(beNil())
         player.pause()
         player.replay()
-        expect(player.currentIndex).toEventually(equal(0))
+        expect(player.currentItem).toEventually(equal(item))
         expect(player.playbackState).toEventually(equal(.playing))
     }
 }

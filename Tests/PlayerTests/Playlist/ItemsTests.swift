@@ -46,23 +46,25 @@ final class ItemsTests: TestCase {
 
     func testEmpty() {
         let player = Player()
-        expect(player.currentIndex).to(beNil())
+        expect(player.currentItem).to(beNil())
         expect(player.items).to(beEmpty())
         expect(player.nextItems).to(beEmpty())
         expect(player.previousItems).to(beEmpty())
     }
 
     func testRemoveAll() {
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
-        expect(player.currentIndex).to(equal(0))
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
+        expect(player.currentItem).to(equal(item))
         player.removeAllItems()
-        expect(player.currentIndex).to(beNil())
+        expect(player.currentItem).to(beNil())
     }
 
     func testAppendAfterRemoveAll() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.removeAllItems()
-        player.append(.simple(url: Stream.onDemand.url))
-        expect(player.currentIndex).to(equal(0))
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        player.append(item)
+        expect(player.currentItem).to(equal(item))
     }
 }

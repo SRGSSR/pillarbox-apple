@@ -13,191 +13,177 @@ final class QueueTests: TestCase {
     func testWhenEmpty() {
         let player = Player()
         expect(player.urls).to(beEmpty())
-        expect(player.currentIndex).to(beNil())
+        expect(player.currentItem).to(beNil())
     }
 
     func testPlayableItem() {
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
         expect(player.urls).toEventually(equal([
             Stream.shortOnDemand.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testEntirePlayback() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.play()
         expect(player.urls).toEventually(beEmpty())
-        expect(player.currentIndex).to(beNil())
+        expect(player.currentItem).to(beNil())
     }
 
     func testFailingUnavailableItem() {
-        let player = Player(items: [
-            .simple(url: Stream.unavailable.url)
-        ])
+        let item = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(item: item)
         // Item is consumed by `AVQueuePlayer` for some reason.
         expect(player.urls).toEventually(beEmpty())
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testFailingUnauthorizedItem() {
-        let player = Player(items: [
-            .simple(url: Stream.unauthorized.url)
-        ])
+        let item = PlayerItem.simple(url: Stream.unauthorized.url)
+        let player = Player(item: item)
         expect(player.urls).toEventually(equal([
             Stream.unauthorized.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testFailingMp3Item() {
-        let player = Player(items: [
-            .simple(url: Stream.unavailableMp3.url)
-        ])
+        let item = PlayerItem.simple(url: Stream.unavailableMp3.url)
+        let player = Player(item: item)
         expect(player.urls).toEventually(equal([
             Stream.unavailableMp3.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testBetweenPlayableItems() {
-        let player = Player(items: [
-            .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.onDemand.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
         player.play()
 
         expect(player.urls).toEventually(equal([
             Stream.shortOnDemand.url,
             Stream.onDemand.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
 
         expect(player.urls).toEventually(equal([
             Stream.onDemand.url
         ]))
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testFailingUnavailableItemFollowedByPlayableItem() {
-        let player = Player(items: [
-            .simple(url: Stream.unavailable.url),
-            .simple(url: Stream.onDemand.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.unavailable.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
         // Item is consumed by `AVQueuePlayer` for some reason.
         expect(player.urls).toEventually(beEmpty())
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testFailingUnauthorizedItemFollowedByPlayableItem() {
-        let player = Player(items: [
-            .simple(url: Stream.unauthorized.url),
-            .simple(url: Stream.onDemand.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.unauthorized.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
         expect(player.urls).toEventually(equal([
             Stream.unauthorized.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testFailingMp3ItemFollowedByPlayableItem() {
-        let player = Player(items: [
-            .simple(url: Stream.unavailableMp3.url),
-            .simple(url: Stream.onDemand.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.unavailableMp3.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
         expect(player.urls).toEventually(equal([
             Stream.unavailableMp3.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testFailingItemUnavailableBetweenPlayableItems() {
-        let player = Player(items: [
-            .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.unavailable.url),
-            .simple(url: Stream.onDemand.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.unavailable.url)
+        let item3 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2, item3])
         player.play()
         expect(player.urls).toEventually(beEmpty())
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testFailingUnauthorizedItemBetweenPlayableItems() {
-        let player = Player(items: [
-            .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.unauthorized.url),
-            .simple(url: Stream.onDemand.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.unauthorized.url)
+        let item3 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2, item3])
         player.play()
         expect(player.urls).toEventually(beEmpty())
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testFailingMp3ItemBetweenPlayableItems() {
-        let player = Player(items: [
-            .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.unavailableMp3.url),
-            .simple(url: Stream.onDemand.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.unavailableMp3.url)
+        let item3 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2, item3])
         player.play()
         expect(player.urls).toEventually(beEmpty())
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testPlayableItemReplacingFailingUnavailableItem() {
-        let player = Player(items: [
-            .simple(url: Stream.unavailable.url)
-        ])
-        player.items = [.simple(url: Stream.onDemand.url)]
+        let player = Player(item: .simple(url: Stream.unavailable.url))
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        player.items = [item]
         expect(player.urls).toEventually(equal([
             Stream.onDemand.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testPlayableItemReplacingFailingUnauthorizedItem() {
-        let player = Player(items: [
-            .simple(url: Stream.unauthorized.url)
-        ])
-        player.items = [.simple(url: Stream.onDemand.url)]
+        let player = Player(item: .simple(url: Stream.unauthorized.url))
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        player.items = [item]
         expect(player.urls).toEventually(equal([
             Stream.onDemand.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testPlayableItemReplacingFailingMp3Item() {
-        let player = Player(items: [
-            .simple(url: Stream.unavailableMp3.url)
-        ])
-        player.items = [.simple(url: Stream.onDemand.url)]
+        let player = Player(item: .simple(url: Stream.unavailableMp3.url))
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        player.items = [item]
         expect(player.urls).toEventually(equal([
             Stream.onDemand.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testReplaceCurrentItem() {
-        let player = Player(items: [
-            .simple(url: Stream.shortOnDemand.url)
-        ])
-        player.items = [.simple(url: Stream.onDemand.url)]
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        player.items = [item]
         expect(player.urls).toEventually(equal([
             Stream.onDemand.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item))
     }
 
     func testRemoveCurrentItemFollowedByPlayableItem() {
-        let player = Player(items: [
-            .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.onDemand.url)
-        ])
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
         player.remove(player.items.first!)
         expect(player.urls).toEventually(equal([
             Stream.onDemand.url
         ]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testRemoveAllItems() {

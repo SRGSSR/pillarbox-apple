@@ -15,7 +15,7 @@ final class ItemNavigationForwardTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         player.advanceToNextItem()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testAdvanceToNextItemAtBack() {
@@ -24,7 +24,7 @@ final class ItemNavigationForwardTests: TestCase {
         let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         player.advanceToNextItem()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testAdvanceToNextItemOnFailedItem() {
@@ -34,7 +34,7 @@ final class ItemNavigationForwardTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         player.advanceToNextItem()
-        expect(player.currentIndex).to(equal(2))
+        expect(player.currentItem).to(equal(item3))
     }
 
     func testPlayerPreloadedItemCount() {

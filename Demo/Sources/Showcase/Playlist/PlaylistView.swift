@@ -7,6 +7,16 @@
 import PillarboxPlayer
 import SwiftUI
 
+struct PlaylistItemsView: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        List($player.items, id: \.self, editActions: .all, selection: $player.currentItem) { item in
+            Text(item.id.uuidString)
+        }
+    }
+}
+
 struct PlaylistView: View {
     let templates: [Template]
 
@@ -31,16 +41,6 @@ struct PlaylistView: View {
         }
         .enabledForInAppPictureInPicture(persisting: model)
         .tracked(name: "playlist")
-    }
-}
-
-struct PlaylistItemsView: View {
-    @ObservedObject var player: Player
-
-    var body: some View {
-        List(player.items) { item in
-            Text(item.id.uuidString)
-        }
     }
 }
 

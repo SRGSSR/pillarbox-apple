@@ -20,7 +20,7 @@ final class ItemsUpdateTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         player.items = [item4, item3, item1]
         expect(player.items).to(equalDiff([item4, item3, item1]))
-        expect(player.currentIndex).to(equal(2))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testUpdateWithCurrentItemMustNotInterruptPlayback() {
@@ -44,6 +44,6 @@ final class ItemsUpdateTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         player.items = [item4, item5, item6]
         expect(player.items).to(equalDiff([item4, item5, item6]))
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item4))
     }
 }
