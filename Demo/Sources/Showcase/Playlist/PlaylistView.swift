@@ -7,21 +7,6 @@
 import PillarboxPlayer
 import SwiftUI
 
-private struct MediaCell: View {
-    let media: Media?
-
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(media?.title ?? "-")
-            if let subtitle = media?.subtitle {
-                Text(subtitle)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-        }
-    }
-}
-
 private struct Toolbar: View {
     @ObservedObject var player: Player
     @ObservedObject var model: PlaylistViewModel
@@ -87,7 +72,7 @@ private struct PlaylistItemsView: View {
 
     var body: some View {
         List($player.items, id: \.self, editActions: .all, selection: $player.currentItem) { item in
-            MediaCell(media: model.media(for: item.wrappedValue))
+            Text(item.wrappedValue.debugDescription)
         }
     }
 }
@@ -96,21 +81,20 @@ struct PlaylistView: View {
     let medias: [Media]
 
     @StateObject private var model = PlaylistViewModel.persisted ?? PlaylistViewModel()
-    @State private var layout: PlaybackView.Layout = .minimized
 
     var body: some View {
         VStack(spacing: 0) {
-            PlaybackView(player: model.player, layout: $layout)
+            PlaybackView(player: model.player, layout: $model.layout)
                 .monoscopic(model.isMonoscopic)
                 .supportsPictureInPicture()
 #if os(iOS)
-            if layout != .maximized {
+            if model.layout != .maximized {
                 Toolbar(player: model.player, model: model)
                 PlaylistItemsView(player: model.player, model: model)
             }
 #endif
         }
-        .animation(.defaultLinear, value: layout)
+        .animation(.defaultLinear, value: model.layout)
         .onAppear {
             model.medias = medias
             model.play()

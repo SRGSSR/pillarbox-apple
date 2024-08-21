@@ -11,15 +11,12 @@ import PillarboxPlayer
 final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     let player = Player(configuration: .standard)
 
-    private var content: [PlayerItem: Media] = [:]
+    @Published var layout: PlaybackView.Layout = .minimized
 
     var medias: [Media] = [] {
         didSet {
-            let items = medias.map { $0.item() }
-            content = zip(items, medias).reduce(into: [:]) { initial, element in
-                initial.updateValue(element.1, forKey: element.0)
-            }
-            player.items = items
+            // TODO: Skip if identical for correct PIP restoration
+            player.items = medias.map { $0.item() }
         }
     }
 
@@ -28,16 +25,12 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     var isMonoscopic: Bool {
-        guard let currentItem = player.currentItem, let currentMedia = content[currentItem] else { return false }
-        return currentMedia.isMonoscopic
+        // FIXME:
+        false
     }
 
     func add(_ medias: [Media]) {
         self.medias += medias
-    }
-
-    func media(for item: PlayerItem) -> Media? {
-        content[item]
     }
 
     func play() {
