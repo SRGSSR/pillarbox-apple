@@ -81,22 +81,6 @@ private struct Toolbar: View {
     }
 }
 
-private struct PlaylistItemsView: View {
-    @ObservedObject var player: Player
-    let model: PlaylistViewModel
-
-    var body: some View {
-        List($player.items, id: \.self, editActions: .all, selection: $player.currentItem) { item in
-            if let media = item.wrappedValue.source as? Media {
-                MediaCell(media: media)
-            }
-            else {
-                Text("-")
-            }
-        }
-    }
-}
-
 struct PlaylistView: View {
     let medias: [Media]
 
@@ -110,7 +94,9 @@ struct PlaylistView: View {
 #if os(iOS)
             if model.layout != .maximized {
                 Toolbar(player: model.player, model: model)
-                PlaylistItemsView(player: model.player, model: model)
+                Playlist(player: model.player, type: Media.self, editActions: .all) { media in
+                    MediaCell(media: media)
+                }
             }
 #endif
         }

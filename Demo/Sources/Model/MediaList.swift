@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-enum Playlist {
+enum MediaList {
     static let videoUrls = [
         Media(
             title: "Le R. - Légumes trop chers",

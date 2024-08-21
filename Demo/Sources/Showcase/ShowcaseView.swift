@@ -80,47 +80,47 @@ struct ShowcaseView: View {
         CustomSection("Playlists") {
             cell(
                 title: "Video URLs",
-                destination: .playlist(medias: Playlist.videoUrls)
+                destination: .playlist(medias: MediaList.videoUrls)
             )
             cell(
                 title: "Video URNs",
-                destination: .playlist(medias: Playlist.videoUrns)
+                destination: .playlist(medias: MediaList.videoUrns)
             )
             cell(
                 title: "Long video URNs",
-                destination: .playlist(medias: Playlist.longVideoUrns)
+                destination: .playlist(medias: MediaList.longVideoUrns)
             )
             cell(
                 title: "Videos with media selections",
-                destination: .playlist(medias: Playlist.videosWithMediaSelections)
+                destination: .playlist(medias: MediaList.videosWithMediaSelections)
             )
             cell(
                 title: "Audios",
-                destination: .playlist(medias: Playlist.audios)
+                destination: .playlist(medias: MediaList.audios)
             )
             cell(
                 title: "Videos (URLs, one failing)",
-                destination: .playlist(medias: Playlist.videosWithOneFailingUrl)
+                destination: .playlist(medias: MediaList.videosWithOneFailingUrl)
             )
             cell(
                 title: "Videos (URLs, one failing MP3)",
-                destination: .playlist(medias: Playlist.videosWithOneFailingMp3Url)
+                destination: .playlist(medias: MediaList.videosWithOneFailingMp3Url)
             )
             cell(
                 title: "Videos (URNs, one failing)",
-                destination: .playlist(medias: Playlist.videosWithOneFailingUrn)
+                destination: .playlist(medias: MediaList.videosWithOneFailingUrn)
             )
             cell(
                 title: "Videos (URLs, all failing)",
-                destination: .playlist(medias: Playlist.videosWithOnlyFailingUrls)
+                destination: .playlist(medias: MediaList.videosWithOnlyFailingUrls)
             )
             cell(
                 title: "Videos (URNs, all failing)",
-                destination: .playlist(medias: Playlist.videosWithOnlyFailingUrns)
+                destination: .playlist(medias: MediaList.videosWithOnlyFailingUrns)
             )
             cell(
                 title: "Videos (URLs and URNs, all failing)",
-                destination: .playlist(medias: Playlist.videosWithFailingUrlsAndUrns)
+                destination: .playlist(medias: MediaList.videosWithFailingUrlsAndUrns)
             )
             cell(
                 title: "Empty",

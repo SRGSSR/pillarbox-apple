@@ -45,7 +45,7 @@
 		6F59E87E29CF31E10093E6FB /* ServerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84729CF31E10093E6FB /* ServerSetting.swift */; };
 		6F59E87F29CF31E10093E6FB /* URLMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84829CF31E10093E6FB /* URLMedia.swift */; };
 		6F59E88029CF31E10093E6FB /* RadioChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84929CF31E10093E6FB /* RadioChannel.swift */; };
-		6F59E88129CF31E10093E6FB /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84A29CF31E10093E6FB /* Playlist.swift */; };
+		6F59E88129CF31E10093E6FB /* MediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84A29CF31E10093E6FB /* MediaList.swift */; };
 		6F59E88229CF31E10093E6FB /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84B29CF31E10093E6FB /* Media.swift */; };
 		6F59E88329CF31E20093E6FB /* MediaDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84C29CF31E10093E6FB /* MediaDescription.swift */; };
 		6F59E88429CF31E20093E6FB /* ContentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84E29CF31E10093E6FB /* ContentListViewModel.swift */; };
@@ -154,7 +154,7 @@
 		6F59E84729CF31E10093E6FB /* ServerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSetting.swift; sourceTree = "<group>"; };
 		6F59E84829CF31E10093E6FB /* URLMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLMedia.swift; sourceTree = "<group>"; };
 		6F59E84929CF31E10093E6FB /* RadioChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioChannel.swift; sourceTree = "<group>"; };
-		6F59E84A29CF31E10093E6FB /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		6F59E84A29CF31E10093E6FB /* MediaList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaList.swift; sourceTree = "<group>"; };
 		6F59E84B29CF31E10093E6FB /* Media.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		6F59E84C29CF31E10093E6FB /* MediaDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDescription.swift; sourceTree = "<group>"; };
 		6F59E84E29CF31E10093E6FB /* ContentListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentListViewModel.swift; sourceTree = "<group>"; };
@@ -343,7 +343,7 @@
 				6F59E84C29CF31E10093E6FB /* MediaDescription.swift */,
 				6FF7C9842C0084CE00FBDADB /* PlaybackHudColor.swift */,
 				6FF7C9822C0084BC00FBDADB /* PlaybackHudFontSize.swift */,
-				6F59E84A29CF31E10093E6FB /* Playlist.swift */,
+				6F59E84A29CF31E10093E6FB /* MediaList.swift */,
 				6F59E84929CF31E10093E6FB /* RadioChannel.swift */,
 				6FF7C9862C0084DD00FBDADB /* SeekBehaviorSetting.swift */,
 				6F59E84729CF31E10093E6FB /* ServerSetting.swift */,
@@ -694,7 +694,7 @@
 				6FBF19902B1A2E1C00B16BD5 /* OptimizingCustomLayouts1~ios.swift in Sources */,
 				6F59E89429CF31E20093E6FB /* DemoTracker.swift in Sources */,
 				6F59E88F29CF31E20093E6FB /* StoriesView.swift in Sources */,
-				6F59E88129CF31E10093E6FB /* Playlist.swift in Sources */,
+				6F59E88129CF31E10093E6FB /* MediaList.swift in Sources */,
 				6F59E87D29CF31E10093E6FB /* Vendor.swift in Sources */,
 				6F26F35E2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift in Sources */,
 				0E4128BF2AFB959B00D67759 /* PlayerViewModel.swift in Sources */,
