@@ -22,13 +22,13 @@ public struct MetricEvent: Hashable {
         /// An associated duration is provided, measuring asset retrieval from an end-user perspective.
         case asset(experience: Duration)
 
-        /// Clear key loading.
+        /// Clear key.
         case clearKeyLoading(service: Duration)
 
-        /// Authorization token loading.
+        /// Authorization token.
         case authorizationTokenLoading(service: Duration)
 
-        /// FairPlay key loading.
+        /// FairPlay key.
         case fairPlayKeyLoading(service: Duration)
 
         /// Failure.
