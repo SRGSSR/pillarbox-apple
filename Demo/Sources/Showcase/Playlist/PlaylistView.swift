@@ -7,6 +7,21 @@
 import PillarboxPlayer
 import SwiftUI
 
+private struct MediaCell: View {
+    let media: Media
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(media.title)
+            if let subtitle = media.subtitle {
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+}
+
 private struct Toolbar: View {
     @ObservedObject var player: Player
     @ObservedObject var model: PlaylistViewModel
@@ -72,7 +87,12 @@ private struct PlaylistItemsView: View {
 
     var body: some View {
         List($player.items, id: \.self, editActions: .all, selection: $player.currentItem) { item in
-            Text(item.wrappedValue.debugDescription)
+            if let media = item.wrappedValue.source as? Media {
+                MediaCell(media: media)
+            }
+            else {
+                Text("-")
+            }
         }
     }
 }

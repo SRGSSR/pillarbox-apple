@@ -25,7 +25,7 @@ public extension PlayerItem {
         server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: PlayerItemConfiguration = .default,
-        context: some Hashable
+        source: Any? = nil
     ) -> Self {
         .init(
             publisher: publisher(forUrn: urn, server: server, configuration: configuration),
@@ -33,17 +33,8 @@ public extension PlayerItem {
                 ComScoreTracker.adapter { $0.analyticsData },
                 CommandersActTracker.adapter { $0.analyticsMetadata }
             ] + trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    static func urn(
-        _ urn: String,
-        server: Server = .production,
-        trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
-        configuration: PlayerItemConfiguration = .default
-    ) -> Self {
-        self.urn(urn, server: server, trackerAdapters: trackerAdapters, configuration: configuration, context: 0)
     }
 
     /// Creates a player item from a URL, loaded with standard SRG SSR token protection.
@@ -61,22 +52,13 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: PlayerItemConfiguration = .default,
-        context: some Hashable
+        source: Any? = nil
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .tokenProtected(url: url, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    static func tokenProtected<M>(
-        url: URL,
-        metadata: M,
-        trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
-    ) -> Self where M: AssetMetadata {
-        self.tokenProtected(url: url, metadata: metadata, trackerAdapters: trackerAdapters, configuration: configuration, context: 0)
     }
 
     /// Creates a player item from a URL, loaded with standard SRG SSR DRM protection.
@@ -96,23 +78,13 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: PlayerItemConfiguration = .default,
-        context: some Hashable
+        source: Any? = nil
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    static func encrypted<M>(
-        url: URL,
-        certificateUrl: URL,
-        metadata: M,
-        trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
-    ) -> Self where M: AssetMetadata {
-        self.encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, trackerAdapters: trackerAdapters, configuration: configuration, context: 0)
     }
 }
 

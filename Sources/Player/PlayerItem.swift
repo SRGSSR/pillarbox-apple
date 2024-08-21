@@ -25,9 +25,11 @@ public final class PlayerItem: Hashable {
 
     @Published private(set) var content: AssetContent
     private let trackerAdapters: [any PlayerItemTracking]
-    private let context: any Hashable
 
     let id = UUID()
+
+    /// The source of the item, if any has been attached.
+    public let source: Any?
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
@@ -37,21 +39,14 @@ public final class PlayerItem: Hashable {
     public convenience init<P, M>(
         publisher: P,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        context: some Hashable
+        source: Any? = nil
     ) where P: Publisher, P.Output == Asset<M>, M: AssetMetadata {
         self.init(
             publisher: publisher,
             metadataMapper: { $0.playerMetadata },
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    public convenience init<P, M>(
-        publisher: P,
-        trackerAdapters: [TrackerAdapter<M>] = []
-    ) where P: Publisher, P.Output == Asset<M>, M: AssetMetadata {
-        self.init(publisher: publisher, trackerAdapters: trackerAdapters, context: 0)
     }
 
     /// Creates a player item from an ``Asset``.
@@ -62,16 +57,9 @@ public final class PlayerItem: Hashable {
     public convenience init<M>(
         asset: Asset<M>,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        context: some Hashable
+        source: Any? = nil
     ) where M: AssetMetadata {
-        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters, context: context)
-    }
-
-    public convenience init<M>(
-        asset: Asset<M>,
-        trackerAdapters: [TrackerAdapter<M>] = []
-    ) where M: AssetMetadata {
-        self.init(asset: asset, trackerAdapters: trackerAdapters, context: 0)
+        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters, source: source)
     }
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
@@ -82,21 +70,14 @@ public final class PlayerItem: Hashable {
     public convenience init<P>(
         publisher: P,
         trackerAdapters: [TrackerAdapter<Void>] = [],
-        context: some Hashable
+        source: Any? = nil
     ) where P: Publisher, P.Output == Asset<Void> {
         self.init(
             publisher: publisher,
             metadataMapper: { _ in .empty },
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    public convenience init<P>(
-        publisher: P,
-        trackerAdapters: [TrackerAdapter<Void>] = []
-    ) where P: Publisher, P.Output == Asset<Void> {
-        self.init(publisher: publisher, trackerAdapters: trackerAdapters, context: 0)
     }
 
     /// Creates a player item from an ``Asset``.
@@ -107,26 +88,19 @@ public final class PlayerItem: Hashable {
     public convenience init(
         asset: Asset<Void>,
         trackerAdapters: [TrackerAdapter<Void>] = [],
-        context: some Hashable
+        source: Any? = nil
     ) {
-        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters, context: context)
-    }
-
-    public convenience init(
-        asset: Asset<Void>,
-        trackerAdapters: [TrackerAdapter<Void>] = []
-    ) {
-        self.init(asset: asset, trackerAdapters: trackerAdapters, context: 0)
+        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters, source: source)
     }
 
     private init<P, M>(
         publisher: P,
         metadataMapper: @escaping (M) -> PlayerMetadata,
         trackerAdapters: [TrackerAdapter<M>],
-        context: some Hashable
+        source: Any? = nil
     ) where P: Publisher, P.Output == Asset<M> {
         self.trackerAdapters = trackerAdapters
-        self.context = context
+        self.source = source
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             publisher
@@ -228,22 +202,13 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: PlayerItemConfiguration = .default,
-        context: some Hashable
+        source: Any? = nil
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .simple(url: url, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    static func simple<M>(
-        url: URL,
-        metadata: M,
-        trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
-    ) -> Self where M: AssetMetadata {
-        simple(url: url, metadata: metadata, trackerAdapters: trackerAdapters, configuration: configuration, context: 0)
     }
 
     /// Returns an item loaded with custom resource loading.
@@ -263,23 +228,13 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: PlayerItemConfiguration = .default,
-        context: some Hashable
+        source: Any? = nil
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    static func custom<M>(
-        url: URL,
-        delegate: AVAssetResourceLoaderDelegate,
-        metadata: M,
-        trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
-    ) -> Self where M: AssetMetadata {
-        custom(url: url, delegate: delegate, metadata: metadata, trackerAdapters: trackerAdapters, configuration: configuration, context: 0)
     }
 
     /// Returns an encrypted item loaded with a content key session.
@@ -297,23 +252,13 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: PlayerItemConfiguration = .default,
-        context: some Hashable
+        source: Any? = nil
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    static func encrypted<M>(
-        url: URL,
-        delegate: AVContentKeySessionDelegate,
-        metadata: M,
-        trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
-    ) -> Self where M: AssetMetadata {
-        encrypted(url: url, delegate: delegate, metadata: metadata, trackerAdapters: trackerAdapters, configuration: configuration, context: 0)
     }
 }
 
@@ -329,21 +274,13 @@ public extension PlayerItem {
         url: URL,
         trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: PlayerItemConfiguration = .default,
-        context: some Hashable
+        source: Any? = nil
     ) -> Self {
         .init(
             asset: .simple(url: url, configuration: configuration),
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    static func simple(
-        url: URL,
-        trackerAdapters: [TrackerAdapter<Void>] = [],
-        configuration: PlayerItemConfiguration = .default
-    ) -> Self {
-        simple(url: url, trackerAdapters: trackerAdapters, configuration: configuration, context: 0)
     }
 
     /// Returns an item loaded with custom resource loading.
@@ -361,22 +298,13 @@ public extension PlayerItem {
         delegate: AVAssetResourceLoaderDelegate,
         trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: PlayerItemConfiguration = .default,
-        context: some Hashable
+        source: Any? = nil
     ) -> Self {
         .init(
             asset: .custom(url: url, delegate: delegate, configuration: configuration),
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    static func custom(
-        url: URL,
-        delegate: AVAssetResourceLoaderDelegate,
-        trackerAdapters: [TrackerAdapter<Void>] = [],
-        configuration: PlayerItemConfiguration = .default
-    ) -> Self {
-        custom(url: url, delegate: delegate, trackerAdapters: trackerAdapters, configuration: configuration, context: 0)
     }
 
     /// Returns an encrypted item loaded with a content key session.
@@ -392,22 +320,13 @@ public extension PlayerItem {
         delegate: AVContentKeySessionDelegate,
         trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: PlayerItemConfiguration = .default,
-        context: some Hashable
+        source: Any? = nil
     ) -> Self {
         .init(
             asset: .encrypted(url: url, delegate: delegate, configuration: configuration),
             trackerAdapters: trackerAdapters,
-            context: context
+            source: source
         )
-    }
-
-    static func encrypted(
-        url: URL,
-        delegate: AVContentKeySessionDelegate,
-        trackerAdapters: [TrackerAdapter<Void>] = [],
-        configuration: PlayerItemConfiguration = .default
-    ) -> Self {
-        encrypted(url: url, delegate: delegate, trackerAdapters: trackerAdapters, configuration: configuration, context: 0)
     }
 }
 

@@ -29,6 +29,9 @@
         }
       }
     },
+    "-" : {
+
+    },
     "%g× %@" : {
       "extractionState" : "manual",
       "localizations" : {
