@@ -15,7 +15,8 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     var medias: [Media] = [] {
         didSet {
-            // TODO: Skip if identical for correct PIP restoration
+            // FIXME: Skip if identical for correct PIP restoration; also be smart when adding items to avoid interrupting
+            //        playback
             player.items = medias.map { $0.item() }
         }
     }
