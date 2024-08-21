@@ -130,11 +130,10 @@ private struct ChaptersList: View {
 
 private struct MainView: View {
     @ObservedObject var player: Player
+    @Binding var layout: PlaybackView.Layout
 
     let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
-
-    @State private var layout: PlaybackView.Layout = .minimized
 
     private var chapters: [Chapter] {
         player.metadata.chapters
@@ -169,11 +168,16 @@ struct PlayerView: View {
     private var supportsPictureInPicture = false
 
     var body: some View {
-        MainView(player: model.player, isMonoscopic: media.isMonoscopic, supportsPictureInPicture: supportsPictureInPicture)
-            .enabledForInAppPictureInPicture(persisting: model)
-            .background(.black)
-            .onAppear(perform: play)
-            .tracked(name: "player")
+        MainView(
+            player: model.player,
+            layout: $model.layout,
+            isMonoscopic: media.isMonoscopic,
+            supportsPictureInPicture: supportsPictureInPicture
+        )
+        .enabledForInAppPictureInPicture(persisting: model)
+        .background(.black)
+        .onAppear(perform: play)
+        .tracked(name: "player")
     }
 
     init(media: Media) {

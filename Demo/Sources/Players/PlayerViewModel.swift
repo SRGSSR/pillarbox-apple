@@ -20,6 +20,8 @@ final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
         }
     }
 
+    @Published var layout: PlaybackView.Layout = .minimized
+
     let player = Player(configuration: .standard)
 
     func play() {
