@@ -94,8 +94,13 @@ struct PlaylistView: View {
 #if os(iOS)
             if model.layout != .maximized {
                 Toolbar(player: model.player, model: model)
-                Playlist(player: model.player, type: Media.self, editActions: .all) { media in
-                    MediaCell(media: media)
+                Playlist(player: model.player, editActions: .all) { source in
+                    switch source {
+                    case let media as Media:
+                        MediaCell(media: media)
+                    default:
+                        Color.clear
+                    }
                 }
             }
 #endif
