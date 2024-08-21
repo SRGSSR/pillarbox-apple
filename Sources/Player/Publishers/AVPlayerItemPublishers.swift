@@ -296,11 +296,11 @@ extension AVPlayerItem {
         let dateInterval = DateInterval(start: resourceRequestEvent.requestStartTime, end: resourceRequestEvent.responseEndTime)
         switch event.contentKeySpecifier.keySystem {
         case .fairPlayStreaming:
-            return .fairPlayKeyLoading(service: dateInterval)
+            return .fairPlayKey(service: dateInterval)
         case .clearKey:
-            return .clearKeyLoading(service: dateInterval)
+            return .clearKey(service: dateInterval)
         case .authorizationToken:
-            return .authorizationTokenLoading(service: dateInterval)
+            return .authorizationToken(service: dateInterval)
         default:
             return nil
         }
@@ -335,7 +335,6 @@ extension AVPlayerItem {
             }
             .compactMap { event in
                 guard let kind = Self.metricEventKind(from: event) else { return nil }
-                // TODO: These times are currently missing
                 return MetricEvent(kind: kind, date: event.date, time: event.mediaTime)
             }
             .eraseToAnyPublisher()

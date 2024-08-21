@@ -23,14 +23,14 @@ public struct MetricEvent: Hashable {
         /// perspective.
         case asset(experience: DateInterval)
 
-        /// Clear key loading.
-        case clearKeyLoading(service: DateInterval)
+        /// Clear key.
+        case clearKey(service: DateInterval)
 
-        /// Authorization token loading.
-        case authorizationTokenLoading(service: DateInterval)
+        /// Authorization token.
+        case authorizationToken(service: DateInterval)
 
-        /// FairPlay key loading.
-        case fairPlayKeyLoading(service: DateInterval)
+        /// FairPlay key.
+        case fairPlayKey(service: DateInterval)
 
         /// Failure.
         case failure(Error)
@@ -80,12 +80,12 @@ extension MetricEvent.Kind: CustomStringConvertible {
             return "Metadata: \(Self.duration(from: experience.duration)) (experience), \(Self.duration(from: service.duration)) (service)"
         case let .asset(experience: experience):
             return "Asset: \(Self.duration(from: experience.duration)) (experience)"
-        case let .fairPlayKeyLoading(service: service):
-            return "FairPlay key loading: \(Self.duration(from: service.duration)) (service)"
-        case let .clearKeyLoading(service: service):
-            return "Clear key loading: \(Self.duration(from: service.duration)) (service)"
-        case let .authorizationTokenLoading(service: service):
-            return "Authorization token loading: \(Self.duration(from: service.duration)) (service)"
+        case let .fairPlayKey(service: service):
+            return "FairPlay key: \(Self.duration(from: service.duration)) (service)"
+        case let .clearKey(service: service):
+            return "Clear key: \(Self.duration(from: service.duration)) (service)"
+        case let .authorizationToken(service: service):
+            return "Authorization token: \(Self.duration(from: service.duration)) (service)"
         case let .failure(error):
             return "Failure: \(error.localizedDescription)"
         case let .warning(error):
