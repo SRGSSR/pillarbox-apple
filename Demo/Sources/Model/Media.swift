@@ -52,6 +52,7 @@ struct Media: Hashable {
         self.timeRanges = timeRanges
     }
 
+    // swiftlint:disable:next function_body_length
     func item() -> PlayerItem {
         switch type {
         case let .url(url), let .monoscopicUrl(url):
