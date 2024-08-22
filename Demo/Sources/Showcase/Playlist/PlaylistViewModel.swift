@@ -18,7 +18,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
             player.items.compactMap { $0.source as? Media }
         }
         set {
-            guard medias != newValue else { return }
+            guard Set(medias) != Set(newValue) else { return }
             player.items = newValue.map { $0.item() }
         }
     }
