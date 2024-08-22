@@ -83,8 +83,8 @@ final class MultiViewModel: ObservableObject {
     }
 
     private static func update(player: Player, with media: Media?) {
-        if let playerItem = media?.item() {
-            player.items = [playerItem]
+        if let item = media?.item() {
+            player.items = [item]
         }
         else {
             player.removeAllItems()
