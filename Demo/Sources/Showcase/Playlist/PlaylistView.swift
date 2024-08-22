@@ -23,9 +23,8 @@ private struct MediaCell: View {
 }
 
 private struct Toolbar: View {
-    @ObservedObject var player: Player
-    @ObservedObject var model: PlaylistViewModel
-
+    @ObservedObject private var player: Player
+    @ObservedObject private var model: PlaylistViewModel
     @State private var isSelectionPresented = false
 
     var body: some View {
@@ -41,6 +40,11 @@ private struct Toolbar: View {
         .sheet(isPresented: $isSelectionPresented) {
             PlaylistSelectionView(model: model)
         }
+    }
+
+    init(model: PlaylistViewModel) {
+        self.player = model.player
+        self.model = model
     }
 
     @ViewBuilder
@@ -81,6 +85,43 @@ private struct Toolbar: View {
     }
 }
 
+private struct PlaylistPlaybackView: View {
+    @ObservedObject private var model: PlaylistViewModel
+    @ObservedObject private var player: Player
+
+    var body: some View {
+        PlaybackView(player: player, layout: $model.layout)
+            .monoscopic(isMonoscopic)
+            .supportsPictureInPicture()
+    }
+
+    private var isMonoscopic: Bool {
+        guard let media = player.currentItem?.source as? Media else { return false }
+        return media.isMonoscopic
+    }
+
+    init(model: PlaylistViewModel) {
+        self.model = model
+        self.player = model.player
+    }
+}
+
+private struct BottomView: View {
+    let model: PlaylistViewModel
+
+    var body: some View {
+        Toolbar(model: model)
+        Playlist(player: model.player, editActions: .all) { source in
+            switch source {
+            case let media as Media:
+                MediaCell(media: media)
+            default:
+                Color.clear
+            }
+        }
+    }
+}
+
 struct PlaylistView: View {
     let medias: [Media]
 
@@ -88,20 +129,10 @@ struct PlaylistView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            PlaybackView(player: model.player, layout: $model.layout)
-                .monoscopic(model.isMonoscopic)
-                .supportsPictureInPicture()
+            PlaylistPlaybackView(model: model)
 #if os(iOS)
             if model.layout != .maximized {
-                Toolbar(player: model.player, model: model)
-                Playlist(player: model.player, editActions: .all) { source in
-                    switch source {
-                    case let media as Media:
-                        MediaCell(media: media)
-                    default:
-                        Color.clear
-                    }
-                }
+                BottomView(model: model)
             }
 #endif
         }

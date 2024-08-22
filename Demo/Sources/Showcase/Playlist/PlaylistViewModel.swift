@@ -25,11 +25,6 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         medias.isEmpty
     }
 
-    var isMonoscopic: Bool {
-        // FIXME:
-        false
-    }
-
     func add(_ medias: [Media]) {
         self.medias += medias
     }
