@@ -29,6 +29,10 @@ public final class PlayerItem: Hashable {
     let id = UUID()
 
     /// The source attached to the item, if any.
+    ///
+    /// You can optionally attach information about the source that the item was created from at construction time
+    /// so that you can access it at a later time if needed. Some APIs, e.g. ``Playlist``, will also automatically
+    /// resurface attached source information in cases it can be helpful.
     public let source: Any?
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
@@ -36,7 +40,7 @@ public final class PlayerItem: Hashable {
     /// - Parameters:
     ///   - publisher: The asset publisher.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - source: Any useful information that describes the source of the content.
+    ///   - source: Any useful information that describes the source of the content. See ``PlayerItem/source``.
     public convenience init<P, M>(
         publisher: P,
         trackerAdapters: [TrackerAdapter<M>] = [],
@@ -55,7 +59,7 @@ public final class PlayerItem: Hashable {
     /// - Parameters:
     ///   - asset: The asset to play.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - source: Any useful information that describes the source of the content.
+    ///   - source: Any useful information that describes the source of the content. See ``PlayerItem/source``.
     public convenience init<M>(
         asset: Asset<M>,
         trackerAdapters: [TrackerAdapter<M>] = [],
@@ -69,7 +73,7 @@ public final class PlayerItem: Hashable {
     /// - Parameters:
     ///   - publisher: The asset publisher.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - source: Any useful information that describes the source of the content.
+    ///   - source: Any useful information that describes the source of the content. See ``PlayerItem/source``.
     public convenience init<P>(
         publisher: P,
         trackerAdapters: [TrackerAdapter<Void>] = [],
@@ -88,7 +92,7 @@ public final class PlayerItem: Hashable {
     /// - Parameters:
     ///   - asset: The asset to play.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - source: Any useful information that describes the source of the content.
+    ///   - source: Any useful information that describes the source of the content. See ``PlayerItem/source``.
     public convenience init(
         asset: Asset<Void>,
         trackerAdapters: [TrackerAdapter<Void>] = [],
@@ -199,7 +203,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - source: Any useful information that describes the source of the content.
+    ///   - source: Any useful information that describes the source of the content. See ``PlayerItem/source``.
     ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     static func simple<M>(
@@ -223,7 +227,7 @@ public extension PlayerItem {
     ///   - delegate: The custom resource loader to use.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - source: Any useful information that describes the source of the content.
+    ///   - source: Any useful information that describes the source of the content. See ``PlayerItem/source``.
     ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     ///
@@ -250,7 +254,7 @@ public extension PlayerItem {
     ///   - delegate: The content key session delegate to use.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - source: Any useful information that describes the source of the content.
+    ///   - source: Any useful information that describes the source of the content. See ``PlayerItem/source``.
     ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     static func encrypted<M>(
@@ -275,7 +279,7 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - source: Any useful information that describes the source of the content.
+    ///   - source: Any useful information that describes the source of the content. See ``PlayerItem/source``.
     ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     static func simple(
