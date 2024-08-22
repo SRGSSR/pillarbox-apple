@@ -87,21 +87,6 @@ private struct Toolbar: View {
     }
 }
 
-private struct PlaylistPlaybackView: View {
-    @ObservedObject private var model: PlaylistViewModel
-    @ObservedObject private var player: Player
-
-    var body: some View {
-        PlaybackView(player: player, layout: $model.layout)
-            .supportsPictureInPicture()
-    }
-
-    init(model: PlaylistViewModel) {
-        self.model = model
-        self.player = model.player
-    }
-}
-
 private struct BottomView: View {
     let model: PlaylistViewModel
 
@@ -125,7 +110,8 @@ struct PlaylistView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            PlaylistPlaybackView(model: model)
+            PlaybackView(player: model.player, layout: $model.layout)
+                .supportsPictureInPicture()
 #if os(iOS)
             if model.layout != .maximized {
                 BottomView(model: model)

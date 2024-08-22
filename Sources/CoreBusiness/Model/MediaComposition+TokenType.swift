@@ -9,7 +9,7 @@ public extension MediaComposition {
     enum TokenType: String, Decodable {
         /// No token.
         case none = "NONE"
-        
+
         /// Akamai token.
         case akamai = "AKAMAI"
     }
