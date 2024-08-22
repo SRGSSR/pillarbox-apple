@@ -13,17 +13,17 @@ public extension MediaComposition {
         public enum `Type`: String, Decodable {
             /// FairPlay.
             case fairPlay = "FAIRPLAY"
-            
+
             /// PlayReady.
             case playReady = "PLAYREADY"
-            
+
             /// Widevine.
             case widevine = "WIDEVINE"
         }
-        
+
         /// The DRM type.
         let type: `Type`
-        
+
         /// The certificate URL.
         let certificateUrl: URL?
     }
