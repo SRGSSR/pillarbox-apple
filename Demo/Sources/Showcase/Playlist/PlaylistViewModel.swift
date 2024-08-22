@@ -13,14 +13,18 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     @Published var layout: PlaybackView.Layout = .minimized
 
-    var medias: [Media] = [] {
-        didSet {
-            player.items = medias.map { $0.item() }
+    var medias: [Media] {
+        get {
+            player.items.compactMap { $0.source as? Media }
+        }
+        set {
+            guard medias != newValue else { return }
+            player.items = newValue.map { $0.item() }
         }
     }
 
     var isEmpty: Bool {
-        medias.isEmpty
+        player.items.isEmpty
     }
 
     func add(_ medias: [Media]) {
@@ -39,6 +43,6 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     func trash() {
-        medias = []
+        player.removeAllItems()
     }
 }
