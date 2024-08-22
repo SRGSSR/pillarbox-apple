@@ -6,12 +6,12 @@
 
 import SwiftUI
 
-/// A view displaying the items of a player as a playlist.
+/// A `List` to display and edit the items associated with a player.
 ///
-/// Customization is performed using `List` APIs. The source associated with each item is provided to the row content
-/// view builder.
+/// `List` APIs can be used to customize the list appearance and behavior.
 public struct Playlist<RowContent>: View where RowContent: View {
     @ObservedObject private var player: Player
+
     private let editActions: EditActions<[PlayerItem]>
     private let rowContent: (Any?) -> RowContent
 
@@ -26,7 +26,8 @@ public struct Playlist<RowContent>: View where RowContent: View {
     /// - Parameters:
     ///   - player: The player whose items must be displayed.
     ///   - editActions: The available edit actions.
-    ///   - rowContent: A view builder that creates the view for a single row of the playlist.
+    ///   - rowContent: A view builder that creates the view for a single row of the playlist. The source associated
+    ///     with a ``PlayerItem``, if any, is provided as parameter to the closure.
     public init(player: Player, editActions: EditActions<[PlayerItem]>, @ViewBuilder rowContent: @escaping (Any?) -> RowContent) {
         self.player = player
         self.editActions = editActions

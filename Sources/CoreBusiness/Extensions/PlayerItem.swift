@@ -16,6 +16,7 @@ public extension PlayerItem {
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - source: A description of the source of the content.
     ///   - configuration: The configuration to apply to the player item.
     ///
     /// Metadata is automatically associated with the item. In addition to trackers you provide, tracking is performed
@@ -24,8 +25,8 @@ public extension PlayerItem {
         _ urn: String,
         server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
-        configuration: PlayerItemConfiguration = .default,
-        source: Any? = nil
+        source: Any? = nil,
+        configuration: PlayerItemConfiguration = .default
     ) -> Self {
         .init(
             publisher: publisher(forUrn: urn, server: server, configuration: configuration),
@@ -43,6 +44,7 @@ public extension PlayerItem {
     ///   - url: The URL to play.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - source: A description of the source of the content.
     ///   - configuration: The configuration to apply to the player item.
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
@@ -51,8 +53,8 @@ public extension PlayerItem {
         url: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default,
-        source: Any? = nil
+        source: Any? = nil,
+        configuration: PlayerItemConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .tokenProtected(url: url, metadata: metadata, configuration: configuration),
@@ -77,8 +79,8 @@ public extension PlayerItem {
         certificateUrl: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default,
-        source: Any? = nil
+        source: Any? = nil,
+        configuration: PlayerItemConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration),

@@ -78,8 +78,8 @@ struct Media: Hashable {
                         DemoTracker.Metadata(title: metadata.mediaComposition.mainChapter.title)
                     }
                 ],
-                configuration: .init(position: at(startTime)),
-                source: self
+                source: self,
+                configuration: .init(position: at(startTime))
             )
         }
     }
@@ -118,8 +118,8 @@ extension Media {
         .tokenProtected(
             url: url,
             metadata: Media(title: title, subtitle: subtitle, imageUrl: imageUrl, image: image, type: type, timeRanges: timeRanges),
-            configuration: configuration,
-            source: self
+            source: self,
+            configuration: configuration
         )
     }
 
@@ -128,8 +128,8 @@ extension Media {
             url: url,
             certificateUrl: certificateUrl,
             metadata: Media(title: title, subtitle: subtitle, imageUrl: imageUrl, image: image, type: type, timeRanges: timeRanges),
-            configuration: configuration,
-            source: self
+            source: self,
+            configuration: configuration
         )
     }
 }
