@@ -93,13 +93,7 @@ private struct PlaylistPlaybackView: View {
 
     var body: some View {
         PlaybackView(player: player, layout: $model.layout)
-            .monoscopic(isMonoscopic)
             .supportsPictureInPicture()
-    }
-
-    private var isMonoscopic: Bool {
-        guard let media = player.currentItem?.source as? Media else { return false }
-        return media.isMonoscopic
     }
 
     init(model: PlaylistViewModel) {

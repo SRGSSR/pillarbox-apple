@@ -132,7 +132,6 @@ private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
 
-    let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
 
     private var chapters: [Chapter] {
@@ -146,7 +145,6 @@ private struct MainView: View {
     var body: some View {
         VStack {
             PlaybackView(player: player, layout: currentLayout)
-                .monoscopic(isMonoscopic)
                 .supportsPictureInPicture(supportsPictureInPicture)
 #if os(iOS)
             if layout != .maximized, !chapters.isEmpty {
@@ -171,7 +169,6 @@ struct PlayerView: View {
         MainView(
             player: model.player,
             layout: $model.layout,
-            isMonoscopic: media.isMonoscopic,
             supportsPictureInPicture: supportsPictureInPicture
         )
         .enabledForInAppPictureInPicture(persisting: model)

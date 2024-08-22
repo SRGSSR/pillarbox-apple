@@ -434,7 +434,6 @@ enum URLMedia {
     static let bitmovin_360 = Media(
         title: "Bitmovin 360°",
         imageUrl: "https://www.rts.ch/2017/02/24/11/43/8414076.image/16x9",
-        type: .url("https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8"),
-        isMonoscopic: true
+        type: .monoscopicUrl("https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8")
     )
 }

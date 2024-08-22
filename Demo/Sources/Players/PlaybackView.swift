@@ -16,7 +16,6 @@ import SwiftUI
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
-    let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
     let progressTracker: ProgressTracker
 
@@ -82,6 +81,10 @@ private struct MainView: View {
 
     private var subtitle: String? {
         player.metadata.subtitle
+    }
+
+    private var isMonoscopic: Bool {
+        player.metadata.viewport == .monoscopic
     }
 
     private func toggleGesture() -> some Gesture {
@@ -825,7 +828,6 @@ struct PlaybackView: View {
     @Binding private var layout: Layout
     @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
-    private var isMonoscopic = false
     private var supportsPictureInPicture = false
 
     var body: some View {
@@ -862,14 +864,12 @@ struct PlaybackView: View {
             MainView(
                 player: player,
                 layout: $layout,
-                isMonoscopic: isMonoscopic,
                 supportsPictureInPicture: supportsPictureInPicture,
                 progressTracker: progressTracker
             )
 #else
             if isMonoscopic {
                 VideoView(player: player)
-                    .viewport(.monoscopic(orientation: .monoscopicDefault))
                     .ignoresSafeArea()
             }
             else {
@@ -886,12 +886,6 @@ struct PlaybackView: View {
 }
 
 extension PlaybackView {
-    func monoscopic(_ isMonoscopic: Bool = true) -> PlaybackView {
-        var view = self
-        view.isMonoscopic = isMonoscopic
-        return view
-    }
-
     func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> PlaybackView {
         var view = self
         view.supportsPictureInPicture = supportsPictureInPicture

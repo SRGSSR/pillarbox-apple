@@ -167,8 +167,7 @@ final class ExamplesViewModel: ObservableObject {
                         title: title(of: media),
                         subtitle: "DRM-protected video",
                         imageUrl: SRGDataProvider.current!.url(for: media.show?.image, size: .large),
-                        type: .urn(media.urn),
-                        isMonoscopic: media.isMonoscopic
+                        type: .urn(media.urn)
                     )
                 }
             }
@@ -185,8 +184,7 @@ final class ExamplesViewModel: ObservableObject {
                         title: media.title,
                         subtitle: "Token-protected video",
                         imageUrl: SRGDataProvider.current!.url(for: media.image, size: .large),
-                        type: .urn(media.urn),
-                        isMonoscopic: media.isMonoscopic
+                        type: .urn(media.urn)
                     )
                 }
             }

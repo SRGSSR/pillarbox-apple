@@ -52,8 +52,7 @@ enum URNMedia {
     static let gothard_360 = Media(
         title: "Gothard 360°",
         imageUrl: "https://www.rts.ch/2017/02/24/11/43/8414076.image/16x9",
-        type: .urn("urn:rts:video:8414077"),
-        isMonoscopic: true
+        type: .urn("urn:rts:video:8414077")
     )
     static let expired = Media(
         title: "Expired URN",

@@ -15,6 +15,7 @@ import UIKit
 struct Media: Hashable {
     enum `Type`: Hashable {
         case url(URL)
+        case monoscopicUrl(URL)
         case tokenProtectedUrl(URL)
         case encryptedUrl(URL, certificateUrl: URL)
         case unbufferedUrl(URL)
@@ -30,7 +31,6 @@ struct Media: Hashable {
     let imageUrl: URL?
     let image: UIImage?
     let type: `Type`
-    let isMonoscopic: Bool
     let startTime: CMTime
     let timeRanges: [TimeRange]
 
@@ -40,7 +40,6 @@ struct Media: Hashable {
         imageUrl: URL? = nil,
         image: UIImage? = nil,
         type: `Type`,
-        isMonoscopic: Bool = false,
         startTime: CMTime = .zero,
         timeRanges: [TimeRange] = []
     ) {
@@ -49,26 +48,66 @@ struct Media: Hashable {
         self.imageUrl = imageUrl
         self.image = image
         self.type = type
-        self.isMonoscopic = isMonoscopic
         self.startTime = startTime
         self.timeRanges = timeRanges
     }
 
     func item() -> PlayerItem {
         switch type {
-        case let .url(url):
-            return simplePlayerItem(for: url, configuration: .init(position: at(startTime)))
+        case let .url(url), let .monoscopicUrl(url):
+            return .simple(
+                url: url,
+                metadata: self,
+                trackerAdapters: [
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.title)
+                    }
+                ],
+                source: self,
+                configuration: .init(position: at(startTime))
+            )
         case let .tokenProtectedUrl(url):
-            return tokenProtectedPlayerItem(for: url, configuration: .init(position: at(startTime)))
+            return .tokenProtected(
+                url: url,
+                metadata: self,
+                trackerAdapters: [
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.title)
+                    }
+                ],
+                source: self,
+                configuration: .init(position: at(startTime))
+            )
         case let .encryptedUrl(url, certificateUrl: certificateUrl):
-            return encryptedPlayerItem(for: url, certificateUrl: certificateUrl, configuration: .init(position: at(startTime)))
+            return .encrypted(
+                url: url,
+                certificateUrl: certificateUrl,
+                metadata: self,
+                trackerAdapters: [
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.title)
+                    }
+                ],
+                source: self,
+                configuration: .init(position: at(startTime))
+            )
         case let .unbufferedUrl(url):
             let configuration = PlayerItemConfiguration(
                 position: at(startTime),
                 automaticallyPreservesTimeOffsetFromLive: true,
                 preferredForwardBufferDuration: 1
             )
-            return simplePlayerItem(for: url, configuration: configuration)
+            return .simple(
+                url: url,
+                metadata: self,
+                trackerAdapters: [
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.title)
+                    }
+                ],
+                source: self,
+                configuration: .init(position: at(startTime))
+            )
         case let .urn(urn, serverSetting: serverSetting):
             return .urn(
                 urn,
@@ -86,7 +125,7 @@ struct Media: Hashable {
 
     func playerItem() -> AVPlayerItem? {
         switch type {
-        case let .url(url):
+        case let .url(url), let .monoscopicUrl(url):
             return AVPlayerItem(url: url)
         case let .unbufferedUrl(url):
             let item = AVPlayerItem(url: url)
@@ -99,44 +138,9 @@ struct Media: Hashable {
     }
 }
 
-extension Media {
-    private func simplePlayerItem(for url: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
-        .simple(
-            url: url,
-            metadata: Media(title: title, subtitle: subtitle, imageUrl: imageUrl, image: image, type: type, timeRanges: timeRanges),
-            trackerAdapters: [
-                DemoTracker.adapter { metadata in
-                    DemoTracker.Metadata(title: metadata.title)
-                }
-            ],
-            source: self,
-            configuration: configuration
-        )
-    }
-
-    private func tokenProtectedPlayerItem(for url: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
-        .tokenProtected(
-            url: url,
-            metadata: Media(title: title, subtitle: subtitle, imageUrl: imageUrl, image: image, type: type, timeRanges: timeRanges),
-            source: self,
-            configuration: configuration
-        )
-    }
-
-    private func encryptedPlayerItem(for url: URL, certificateUrl: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
-        .encrypted(
-            url: url,
-            certificateUrl: certificateUrl,
-            metadata: Media(title: title, subtitle: subtitle, imageUrl: imageUrl, image: image, type: type, timeRanges: timeRanges),
-            source: self,
-            configuration: configuration
-        )
-    }
-}
-
 extension Media: AssetMetadata {
     var playerMetadata: PlayerMetadata {
-        .init(title: title, subtitle: subtitle, imageSource: imageSource, timeRanges: timeRanges)
+        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
     }
 
     private var imageSource: ImageSource {
@@ -148,6 +152,15 @@ extension Media: AssetMetadata {
         }
         else {
             return .none
+        }
+    }
+
+    private var viewport: Viewport {
+        switch type {
+        case .monoscopicUrl:
+            return .monoscopic
+        default:
+            return .standard
         }
     }
 }

@@ -85,7 +85,6 @@
 		6F7DDB632C20395100B48A67 /* DataVolumeChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7DDB622C20394600B48A67 /* DataVolumeChart.swift */; };
 		6F7EAA552B17755C00194D03 /* TrackingProgressTutorial~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7EAA542B17755C00194D03 /* TrackingProgressTutorial~ios.swift */; };
 		6F8459F22A38543400A7B5F2 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8459F12A38543400A7B5F2 /* Signal.swift */; };
-		6F8600FC2B358BC0005CBCC5 /* SRGMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8600FB2B358BC0005CBCC5 /* SRGMedia.swift */; };
 		6F917C0E2887EA8E004113BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C082887EA8E004113BA /* Assets.xcassets */; };
 		6F917C112887EA8E004113BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */; };
 		6F985D792B18CCC9000A1483 /* PinchToZoomTutorial~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F985D782B18CCC9000A1483 /* PinchToZoomTutorial~ios.swift */; };
@@ -194,7 +193,6 @@
 		6F7DDB622C20394600B48A67 /* DataVolumeChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataVolumeChart.swift; sourceTree = "<group>"; };
 		6F7EAA542B17755C00194D03 /* TrackingProgressTutorial~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackingProgressTutorial~ios.swift"; sourceTree = "<group>"; };
 		6F8459F12A38543400A7B5F2 /* Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
-		6F8600FB2B358BC0005CBCC5 /* SRGMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRGMedia.swift; sourceTree = "<group>"; };
 		6F917C082887EA8E004113BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6F985D782B18CCC9000A1483 /* PinchToZoomTutorial~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PinchToZoomTutorial~ios.swift"; sourceTree = "<group>"; };
@@ -490,7 +488,6 @@
 		6F6643D72A6113F300BFD644 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				6F8600FB2B358BC0005CBCC5 /* SRGMedia.swift */,
 				6F6643D82A61140600BFD644 /* URL.swift */,
 			);
 			path = Extensions;
@@ -729,7 +726,6 @@
 				6F0E5CD52B33A41F0031E313 /* MonoscopicVideoView~ios.swift in Sources */,
 				6F59E88A29CF31E20093E6FB /* PlaylistView.swift in Sources */,
 				6FE324B329E4657D007501CF /* View.swift in Sources */,
-				6F8600FC2B358BC0005CBCC5 /* SRGMedia.swift in Sources */,
 				6F59E88429CF31E20093E6FB /* ContentListViewModel.swift in Sources */,
 				6F59E88329CF31E20093E6FB /* MediaDescription.swift in Sources */,
 				6F56F9272C1D8A2E00495E20 /* MediaRequestChart.swift in Sources */,

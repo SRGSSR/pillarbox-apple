@@ -20,7 +20,7 @@ struct MonoscopicVideoView: View {
     var body: some View {
         GeometryReader { geometry in
             VideoView(player: player)
-                .viewport(.monoscopic(orientation: orientation(from: translation, in: geometry)))
+                .orientation(orientation(from: translation, in: geometry))
                 .gesture(
                     // Use non-zero minimum distance to avoid conflicts with single taps.
                     DragGesture(minimumDistance: 1)

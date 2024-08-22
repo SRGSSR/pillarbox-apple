@@ -32,6 +32,9 @@ public struct PlayerMetadata: Equatable {
     /// The source of the image associated with the content.
     public let imageSource: ImageSource
 
+    /// The content viewport.
+    public let viewport: Viewport
+
     /// Episode information associated with the content.
     public let episodeInformation: EpisodeInformation?
 
@@ -95,6 +98,7 @@ public struct PlayerMetadata: Equatable {
     ///   - subtitle: A subtitle for the content.
     ///   - description: A description of the content.
     ///   - imageSource: The source of the image associated with the content.
+    ///   - viewport: The content viewport.
     ///   - episodeInformation: Episode information associated with the content.
     ///   - chapters: Chapter associated with the content.
     ///   - timeRanges: Time ranges associated with the content.
@@ -106,6 +110,7 @@ public struct PlayerMetadata: Equatable {
         subtitle: String? = nil,
         description: String? = nil,
         imageSource: ImageSource = .none,
+        viewport: Viewport = .standard,
         episodeInformation: EpisodeInformation? = nil,
         chapters: [Chapter] = [],
         timeRanges: [TimeRange] = []
@@ -115,6 +120,7 @@ public struct PlayerMetadata: Equatable {
         self.subtitle = subtitle
         self.description = description
         self.imageSource = imageSource
+        self.viewport = viewport
         self.episodeInformation = episodeInformation
         self.chapters = chapters
         self.timeRanges = timeRanges
@@ -147,6 +153,7 @@ extension PlayerMetadata {
             subtitle: subtitle,
             description: description,
             imageSource: imageSource,
+            viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
             timeRanges: timeRanges

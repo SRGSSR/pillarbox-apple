@@ -27,9 +27,7 @@ public final class PlayerItem: Hashable {
     private let trackerAdapters: [any PlayerItemTracking]
 
     let id = UUID()
-
-    /// The source associated with the item, if any.
-    public let source: Any?
+    let source: Any?
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///

@@ -16,6 +16,7 @@ public extension MediaComposition {
             case _drms = "drmList"
             case isDvr = "dvr"
             case isLive = "live"
+            case presentation
             case streamingMethod = "streaming"
             case tokenType
             case url
@@ -26,6 +27,9 @@ public extension MediaComposition {
 
         /// The streaming method.
         public let streamingMethod: StreamingMethod
+
+        /// The content presentation.
+        public let presentation: Presentation
 
         /// comScore analytics data.
         public var analyticsData: [String: String] {
