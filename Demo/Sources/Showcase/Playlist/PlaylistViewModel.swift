@@ -15,7 +15,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     var medias: [Media] = [] {
         didSet {
-            Self.updated(items: &player.items, from: oldValue, to: medias)
+            player.items = medias.map { $0.item() }
         }
     }
 
@@ -23,25 +23,10 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         medias.isEmpty
     }
 
-    static func updated(items: inout [PlayerItem], from previousMedias: [Media], to currentMedias: [Media]) {
-        let changes = currentMedias.difference(from: previousMedias).inferringMoves()
-        changes.forEach { change in
-            switch change {
-            case let .insert(offset: offset, element: element, associatedWith: associatedWith):
-                if let associatedWith {
-                    items.move(from: associatedWith, to: offset)
-                }
-                else {
-                    items.insert(element.item(), at: offset)
-                }
-            case let .remove(offset: offset, element: _, associatedWith: _):
-                items.remove(at: offset)
-            }
-        }
-    }
-
     func add(_ medias: [Media]) {
-        self.medias += medias
+        medias.forEach { media in
+            player.append(media.item())
+        }
     }
 
     func play() {
