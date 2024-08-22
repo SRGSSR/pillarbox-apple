@@ -109,8 +109,8 @@ extension Media {
                     DemoTracker.Metadata(title: metadata.title)
                 }
             ],
-            configuration: configuration,
-            source: self
+            source: self,
+            configuration: configuration
         )
     }
 

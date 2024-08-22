@@ -197,15 +197,15 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
     ///   - source: Any useful information that describes the source of the content.
+    ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     static func simple<M>(
         url: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default,
-        source: Any? = nil
+        source: Any? = nil,
+        configuration: PlayerItemConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .simple(url: url, metadata: metadata, configuration: configuration),

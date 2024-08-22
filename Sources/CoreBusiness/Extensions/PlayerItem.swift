@@ -70,6 +70,7 @@ public extension PlayerItem {
     ///   - certificateUrl: The URL of the certificate to use.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - source: A description of the source of the content.
     ///   - configuration: The configuration to apply to the player item.
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
