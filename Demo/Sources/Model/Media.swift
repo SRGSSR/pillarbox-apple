@@ -106,7 +106,7 @@ struct Media: Hashable {
                     }
                 ],
                 source: self,
-                configuration: .init(position: at(startTime))
+                configuration: configuration
             )
         case let .urn(urn, serverSetting: serverSetting):
             return .urn(
