@@ -59,24 +59,24 @@ struct Media: Hashable {
             return .simple(
                 url: url,
                 metadata: self,
+                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
-                source: self,
                 configuration: .init(position: at(startTime))
             )
         case let .tokenProtectedUrl(url):
             return .tokenProtected(
                 url: url,
                 metadata: self,
+                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
-                source: self,
                 configuration: .init(position: at(startTime))
             )
         case let .encryptedUrl(url, certificateUrl: certificateUrl):
@@ -84,12 +84,12 @@ struct Media: Hashable {
                 url: url,
                 certificateUrl: certificateUrl,
                 metadata: self,
+                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
-                source: self,
                 configuration: .init(position: at(startTime))
             )
         case let .unbufferedUrl(url):
@@ -101,24 +101,24 @@ struct Media: Hashable {
             return .simple(
                 url: url,
                 metadata: self,
+                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
-                source: self,
                 configuration: configuration
             )
         case let .urn(urn, serverSetting: serverSetting):
             return .urn(
                 urn,
                 server: serverSetting.server,
+                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.mediaComposition.mainChapter.title)
                     }
                 ],
-                source: self,
                 configuration: .init(position: at(startTime))
             )
         }
