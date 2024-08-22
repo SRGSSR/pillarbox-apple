@@ -62,9 +62,11 @@ private struct Toolbar: View {
                 Image(systemName: "shuffle")
             }
             .disabled(model.isEmpty)
+
             Button(action: add) {
                 Image(systemName: "plus")
             }
+
             Button(action: model.trash) {
                 Image(systemName: "trash")
             }
