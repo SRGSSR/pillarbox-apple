@@ -11,7 +11,7 @@ import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
-final class AVPlayerItemAssetContentUpdateTests: TestCase {
+final class AVPlayerItemUpdateTests: TestCase {
     func testPlayerItemsWithoutCurrentItem() {
         let previousContents: [AssetContent] = [
             .test(id: "1"),
