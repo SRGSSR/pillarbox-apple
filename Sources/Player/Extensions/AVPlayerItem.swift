@@ -38,22 +38,61 @@ extension AVPlayerItem {
         repeatMode: RepeatMode,
         length: Int
     ) -> [AVPlayerItem] {
-        guard let currentItem else { return playerItems(from: Array(currentContents), repeatMode: repeatMode, length: length) }
+        itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem, repeatMode: repeatMode).prefix(length).map { source in
+            if let item = source.item {
+                // TODO: Turn into `AVPlayer.updated(with:)` method
+                source.content.update(item: item)
+                return item
+            }
+            else {
+                return source.content.playerItem(reload: false)
+            }
+        }
+    }
+
+    private static func itemSources(
+        for currentContents: [AssetContent],
+        replacing previousContents: [AssetContent],
+        currentItem: AVPlayerItem?,
+        repeatMode: RepeatMode
+    ) -> [ItemSource] {
+        let sources = itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem)
+        switch repeatMode {
+        case .off:
+            return sources
+        case .one:
+            guard let firstSource = sources.first else { return sources }
+            var updatedSources = sources
+            updatedSources.insert(.init(content: firstSource.content, item: nil), at: 1)
+            return updatedSources
+        case .all:
+            guard let firstContent = currentContents.first else { return sources }
+            var updatedSources = sources
+            updatedSources.append(.init(content: firstContent, item: nil))
+            return updatedSources
+        }
+    }
+
+    private static func itemSources(
+        for currentContents: [AssetContent],
+        replacing previousContents: [AssetContent],
+        currentItem: AVPlayerItem?
+    ) -> [ItemSource] {
+        guard let currentItem else { return newItemSources(from: Array(currentContents)) }
         if let currentIndex = matchingIndex(for: currentItem, in: currentContents) {
             let currentContent = currentContents[currentIndex]
             if findContent(currentContent, in: previousContents) {
-                currentContent.update(item: currentItem)
-                return [currentItem] + playerItems(from: Array(currentContents.suffix(from: currentIndex + 1)), repeatMode: repeatMode, length: length - 1)
+                return [.init(content: currentContent, item: currentItem)] + newItemSources(from: Array(currentContents.suffix(from: currentIndex + 1)))
             }
             else {
-                return playerItems(from: Array(currentContents.suffix(from: currentIndex)), repeatMode: repeatMode, length: length)
+                return newItemSources(from: Array(currentContents.suffix(from: currentIndex)))
             }
         }
         else if let commonIndex = firstCommonIndex(in: currentContents, matching: previousContents, after: currentItem) {
-            return playerItems(from: Array(currentContents.suffix(from: commonIndex)), repeatMode: repeatMode, length: length)
+            return newItemSources(from: Array(currentContents.suffix(from: commonIndex)))
         }
         else {
-            return playerItems(from: Array(currentContents), repeatMode: repeatMode, length: length)
+            return newItemSources(from: Array(currentContents))
         }
     }
 
@@ -63,6 +102,10 @@ extension AVPlayerItem {
 
     private static func playerItems(from contents: [AssetContent], repeatMode: RepeatMode, length: Int, reload: Bool = false) -> [AVPlayerItem] {
         contents.map { $0.playerItem(reload: reload) }
+    }
+
+    private static func newItemSources(from contents: [AssetContent]) -> [ItemSource] {
+        contents.map { .init(content: $0, item: nil) }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in contents: [AssetContent]) -> Int? {
