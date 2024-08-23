@@ -28,7 +28,14 @@ public extension Player {
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func returnToPreviousItem() {
         guard canReturnToPreviousItem() else { return }
-        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems, length: configuration.preloadedItems, reload: true))
+        queuePlayer.replaceItems(
+            with: AVPlayerItem.playerItems(
+                from: returningItems,
+                repeatMode: repeatMode,
+                length: configuration.preloadedItems,
+                reload: true
+            )
+        )
     }
 
     /// Checks whether moving to the next item in the queue is possible.
@@ -51,7 +58,14 @@ public extension Player {
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func advanceToNextItem() {
         guard canAdvanceToNextItem() else { return }
-        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems, length: configuration.preloadedItems, reload: true))
+        queuePlayer.replaceItems(
+            with: AVPlayerItem.playerItems(
+                from: advancingItems,
+                repeatMode: repeatMode,
+                length: configuration.preloadedItems,
+                reload: true
+            )
+        )
     }
 }
 
@@ -67,7 +81,7 @@ extension Player {
     func replaceCurrentItemWithItem(_ item: PlayerItem?) {
         if let item {
             guard storedItems.contains(item), let index = storedItems.firstIndex(of: item) else { return }
-            let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)), length: configuration.preloadedItems, reload: true)
+            let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)), repeatMode: repeatMode, length: configuration.preloadedItems, reload: true)
             queuePlayer.replaceItems(with: playerItems)
         }
         else {

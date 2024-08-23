@@ -22,19 +22,53 @@ final class AVPlayerItemTests: TestCase {
         expect(item.timeRange).toEventuallyNot(equal(.invalid))
     }
 
-    func testPlayerItems() {
+    func testPlayerItemsWithRepeatOff() {
         let items = [
             PlayerItem.simple(url: Stream.onDemand.url),
             PlayerItem.simple(url: Stream.shortOnDemand.url),
             PlayerItem.simple(url: Stream.live.url)
         ]
         expect {
-            AVPlayerItem.playerItems(from: items, length: 3, reload: false).compactMap(\.url)
+            AVPlayerItem.playerItems(from: items, repeatMode: .off, length: .max, reload: false).compactMap(\.url)
         }
         .toEventually(equal([
             Stream.onDemand.url,
             Stream.shortOnDemand.url,
             Stream.live.url
+        ]))
+    }
+
+    func testPlayerItemsWithRepeatOne() {
+        let items = [
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.shortOnDemand.url),
+            PlayerItem.simple(url: Stream.live.url)
+        ]
+        expect {
+            AVPlayerItem.playerItems(from: items, repeatMode: .one, length: .max, reload: false).compactMap(\.url)
+        }
+        .toEventually(equal([
+            Stream.onDemand.url,
+            Stream.onDemand.url,
+            Stream.shortOnDemand.url,
+            Stream.live.url
+        ]))
+    }
+
+    func testPlayerItemsWithRepeatAll() {
+        let items = [
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.shortOnDemand.url),
+            PlayerItem.simple(url: Stream.live.url)
+        ]
+        expect {
+            AVPlayerItem.playerItems(from: items, repeatMode: .all, length: .max, reload: false).compactMap(\.url)
+        }
+        .toEventually(equal([
+            Stream.onDemand.url,
+            Stream.shortOnDemand.url,
+            Stream.live.url,
+            Stream.onDemand.url
         ]))
     }
 }

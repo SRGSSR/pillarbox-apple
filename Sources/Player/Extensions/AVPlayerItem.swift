@@ -38,30 +38,30 @@ extension AVPlayerItem {
         repeatMode: RepeatMode,
         length: Int
     ) -> [AVPlayerItem] {
-        guard let currentItem else { return playerItems(from: Array(currentContents.prefix(length))) }
+        guard let currentItem else { return playerItems(from: Array(currentContents), repeatMode: repeatMode, length: length) }
         if let currentIndex = matchingIndex(for: currentItem, in: currentContents) {
             let currentContent = currentContents[currentIndex]
             if findContent(currentContent, in: previousContents) {
                 currentContent.update(item: currentItem)
-                return [currentItem] + playerItems(from: Array(currentContents.suffix(from: currentIndex + 1).prefix(length - 1)))
+                return [currentItem] + playerItems(from: Array(currentContents.suffix(from: currentIndex + 1)), repeatMode: repeatMode, length: length - 1)
             }
             else {
-                return playerItems(from: Array(currentContents.suffix(from: currentIndex).prefix(length)))
+                return playerItems(from: Array(currentContents.suffix(from: currentIndex)), repeatMode: repeatMode, length: length)
             }
         }
         else if let commonIndex = firstCommonIndex(in: currentContents, matching: previousContents, after: currentItem) {
-            return playerItems(from: Array(currentContents.suffix(from: commonIndex).prefix(length)))
+            return playerItems(from: Array(currentContents.suffix(from: commonIndex)), repeatMode: repeatMode, length: length)
         }
         else {
-            return playerItems(from: Array(currentContents.prefix(length)))
+            return playerItems(from: Array(currentContents), repeatMode: repeatMode, length: length)
         }
     }
 
-    static func playerItems(from items: [PlayerItem], length: Int, reload: Bool) -> [AVPlayerItem] {
-        playerItems(from: items.prefix(length).map(\.content), reload: reload)
+    static func playerItems(from items: [PlayerItem], repeatMode: RepeatMode, length: Int, reload: Bool) -> [AVPlayerItem] {
+        playerItems(from: items.map(\.content), repeatMode: repeatMode, length: length, reload: reload)
     }
 
-    private static func playerItems(from contents: [AssetContent], reload: Bool = false) -> [AVPlayerItem] {
+    private static func playerItems(from contents: [AssetContent], repeatMode: RepeatMode, length: Int, reload: Bool = false) -> [AVPlayerItem] {
         contents.map { $0.playerItem(reload: reload) }
     }
 
