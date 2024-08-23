@@ -30,7 +30,7 @@ final class AVPlayerItemUpdateTests: TestCase {
             replacing: previousContents,
             currentItem: nil,
             repeatMode: .off,
-            length: currentContents.count
+            length: .max
         )
         expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("C")]))
     }
@@ -56,7 +56,7 @@ final class AVPlayerItemUpdateTests: TestCase {
             replacing: previousContents,
             currentItem: currentItem,
             repeatMode: .off,
-            length: currentContents.count
+            length: .max
         )
         expect(items.map(\.id)).to(equalDiff([UUID("3"), UUID("B"), UUID("C")]))
         expect(items.first).to(equal(currentItem))
@@ -83,7 +83,7 @@ final class AVPlayerItemUpdateTests: TestCase {
             replacing: previousContents,
             currentItem: currentItem,
             repeatMode: .off,
-            length: currentContents.count
+            length: .max
         )
         expect(items.map(\.id)).to(equalDiff([UUID("3")]))
         expect(items.first).to(equal(currentItem))
@@ -104,7 +104,7 @@ final class AVPlayerItemUpdateTests: TestCase {
             replacing: previousContents,
             currentItem: unknownItem,
             repeatMode: .off,
-            length: currentContents.count
+            length: .max
         )
         expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
     }
@@ -128,7 +128,7 @@ final class AVPlayerItemUpdateTests: TestCase {
             replacing: previousContents,
             currentItem: currentItem,
             repeatMode: .off,
-            length: currentContents.count
+            length: .max
         )
         expect(items.map(\.id)).to(equalDiff([UUID("2"), UUID("C")]))
     }
@@ -151,7 +151,7 @@ final class AVPlayerItemUpdateTests: TestCase {
             replacing: previousContents,
             currentItem: currentItem,
             repeatMode: .off,
-            length: currentContents.count
+            length: .max
         )
         expect(items.map(\.id)).to(equalDiff([UUID("1"), UUID("2"), UUID("3")]))
         expect(items.first).to(equal(currentItem))
