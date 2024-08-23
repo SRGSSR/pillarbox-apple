@@ -121,6 +121,9 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    /// The mode with which the player repeats playback of items in its queue.
+    public var repeatMode: RepeatMode = .off
+
     /// A Boolean setting whether trackers must be enabled or not.
     ///
     /// This property only affects trackers having optional ``TrackingBehavior``, set when creating a corresponding
