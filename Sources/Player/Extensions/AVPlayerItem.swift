@@ -28,11 +28,14 @@ extension AVPlayerItem {
     ///   - currentContents: The current list of contents.
     ///   - previousContents: The previous list of contents.
     ///   - currentItem: The item currently being played by the player.
+    ///   - repeatMode: The current repeat mode setting.
+    ///   - length: The maximum number of items to return.
     /// - Returns: The list of player items to load into the player.
     static func playerItems(
         for currentContents: [AssetContent],
         replacing previousContents: [AssetContent],
         currentItem: AVPlayerItem?,
+        repeatMode: RepeatMode,
         length: Int
     ) -> [AVPlayerItem] {
         guard let currentItem else { return playerItems(from: Array(currentContents.prefix(length))) }

@@ -24,7 +24,13 @@ final class AVPlayerItemAssetContentUpdateTests: TestCase {
             .test(id: "B"),
             .test(id: "C")
         ]
-        let result = AVPlayerItem.playerItems(for: currentContents, replacing: previousContents, currentItem: nil, length: currentContents.count)
+        let result = AVPlayerItem.playerItems(
+            for: currentContents,
+            replacing: previousContents,
+            currentItem: nil,
+            repeatMode: .off,
+            length: currentContents.count
+        )
         expect(result.count).to(equal(currentContents.count))
         expect(zip(result, currentContents)).to(allPass { item, content in
             content.id == item.id
@@ -47,7 +53,13 @@ final class AVPlayerItemAssetContentUpdateTests: TestCase {
             .test(id: "C")
         ]
         let currentItem = currentItemContent.playerItem()
-        let result = AVPlayerItem.playerItems(for: currentContents, replacing: previousContents, currentItem: currentItem, length: currentContents.count)
+        let result = AVPlayerItem.playerItems(
+            for: currentContents,
+            replacing: previousContents,
+            currentItem: currentItem,
+            repeatMode: .off,
+            length: currentContents.count
+        )
         let expected = [
             currentItemContent,
             .test(id: "B"),
@@ -76,7 +88,13 @@ final class AVPlayerItemAssetContentUpdateTests: TestCase {
             currentItemContent
         ]
         let currentItem = currentItemContent.playerItem()
-        let result = AVPlayerItem.playerItems(for: currentContents, replacing: previousContents, currentItem: currentItem, length: currentContents.count)
+        let result = AVPlayerItem.playerItems(
+            for: currentContents,
+            replacing: previousContents,
+            currentItem: currentItem,
+            repeatMode: .off,
+            length: currentContents.count
+        )
         let expected = [
             currentItemContent
         ]
@@ -97,7 +115,13 @@ final class AVPlayerItemAssetContentUpdateTests: TestCase {
             .test(id: "B")
         ]
         let unknownItem = AssetContent.test(id: "1").playerItem()
-        let result = AVPlayerItem.playerItems(for: currentContents, replacing: previousContents, currentItem: unknownItem, length: currentContents.count)
+        let result = AVPlayerItem.playerItems(
+            for: currentContents,
+            replacing: previousContents,
+            currentItem: unknownItem,
+            repeatMode: .off,
+            length: currentContents.count
+        )
         expect(result.count).to(equal(currentContents.count))
         expect(zip(result, currentContents)).to(allPass { item, content in
             content.id == item.id
@@ -118,7 +142,13 @@ final class AVPlayerItemAssetContentUpdateTests: TestCase {
             .test(id: "C")
         ]
         let currentItem = currentItemContent.playerItem()
-        let result = AVPlayerItem.playerItems(for: currentContents, replacing: previousContents, currentItem: currentItem, length: currentContents.count)
+        let result = AVPlayerItem.playerItems(
+            for: currentContents,
+            replacing: previousContents,
+            currentItem: currentItem,
+            repeatMode: .off,
+            length: currentContents.count
+        )
         let expected = [
             otherContent,
             .test(id: "C")
@@ -142,7 +172,13 @@ final class AVPlayerItemAssetContentUpdateTests: TestCase {
             .test(id: "3")
         ]
         let currentItem = currentItemContent.playerItem()
-        let result = AVPlayerItem.playerItems(for: currentContents, replacing: previousContents, currentItem: currentItem, length: currentContents.count)
+        let result = AVPlayerItem.playerItems(
+            for: currentContents,
+            replacing: previousContents,
+            currentItem: currentItem,
+            repeatMode: .off,
+            length: currentContents.count
+        )
         expect(result.count).to(equal(currentContents.count))
         expect(zip(result, currentContents)).to(allPass { item, content in
             content.id == item.id
@@ -160,7 +196,13 @@ final class AVPlayerItemAssetContentUpdateTests: TestCase {
             .test(id: "A"),
             .test(id: "B")
         ]
-        let result = AVPlayerItem.playerItems(for: currentContents, replacing: previousContents, currentItem: nil, length: 2)
+        let result = AVPlayerItem.playerItems(
+            for: currentContents,
+            replacing: previousContents,
+            currentItem: nil,
+            repeatMode: .off,
+            length: 2
+        )
         expect(result.count).to(equal(2))
     }
 }
