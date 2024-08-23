@@ -158,22 +158,19 @@ final class AVPlayerItemUpdateTests: TestCase {
     }
 
     func testPlayerItemsLength() {
-        let previousContents: [AssetContent] = [
-            .test(id: "1"),
-            .test(id: "2"),
-            .test(id: "3")
-        ]
         let currentContents: [AssetContent] = [
             .test(id: "A"),
-            .test(id: "B")
+            .test(id: "B"),
+            .test(id: "C"),
+            .test(id: "D")
         ]
         let items = AVPlayerItem.playerItems(
             for: currentContents,
-            replacing: previousContents,
+            replacing: [],
             currentItem: nil,
             repeatMode: .off,
             length: 2
         )
-        expect(items.count).to(equal(2))
+        expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
     }
 }
