@@ -21,7 +21,5 @@ final class RepeatModeTests: TestCase {
         expect(player.currentItem).toEventually(equal(item2))
     }
 
-    func testRepeatAll() {
-
-    }
+    func testRepeatAll() {}
 }

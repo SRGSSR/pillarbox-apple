@@ -177,29 +177,3 @@ final class AVPlayerItemAssetContentUpdateTests: TestCase {
         expect(items.count).to(equal(2))
     }
 }
-
-private extension AssetContent {
-    static func test(id: Character) -> Self {
-        AssetContent(
-            id: UUID(id),
-            resource: .simple(url: Stream.onDemand.url),
-            metadata: .empty,
-            configuration: .default,
-            dateInterval: nil
-        )
-    }
-}
-
-private extension UUID {
-    init(_ char: Character) {
-        self.init(
-            uuidString: """
-                \(String(repeating: char, count: 8))\
-                -\(String(repeating: char, count: 4))\
-                -\(String(repeating: char, count: 4))\
-                -\(String(repeating: char, count: 4))\
-                -\(String(repeating: char, count: 12))
-                """
-        )!
-    }
-}
