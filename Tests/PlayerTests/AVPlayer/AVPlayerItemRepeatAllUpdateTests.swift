@@ -11,7 +11,7 @@ import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
-final class AVPlayerItemUpdateTests: TestCase {
+final class AVPlayerItemRepeatAllUpdateTests: TestCase {
     func testPlayerItemsWithoutCurrentItem() {
         let previousContents: [AssetContent] = [
             .test(id: "1"),
@@ -29,10 +29,10 @@ final class AVPlayerItemUpdateTests: TestCase {
             for: currentContents,
             replacing: previousContents,
             currentItem: nil,
-            repeatMode: .off,
+            repeatMode: .all,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("C")]))
+        expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("C"), UUID("A")]))
     }
 
     func testPlayerItemsWithPreservedCurrentItem() {
@@ -55,10 +55,10 @@ final class AVPlayerItemUpdateTests: TestCase {
             for: currentContents,
             replacing: previousContents,
             currentItem: currentItem,
-            repeatMode: .off,
+            repeatMode: .all,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("3"), UUID("B"), UUID("C")]))
+        expect(items.map(\.id)).to(equalDiff([UUID("3"), UUID("B"), UUID("C"), UUID("A")]))
         expect(items.first).to(equal(currentItem))
     }
 
@@ -82,10 +82,10 @@ final class AVPlayerItemUpdateTests: TestCase {
             for: currentContents,
             replacing: previousContents,
             currentItem: currentItem,
-            repeatMode: .off,
+            repeatMode: .all,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("3")]))
+        expect(items.map(\.id)).to(equalDiff([UUID("3"), UUID("A")]))
         expect(items.first).to(equal(currentItem))
     }
 
@@ -103,10 +103,10 @@ final class AVPlayerItemUpdateTests: TestCase {
             for: currentContents,
             replacing: previousContents,
             currentItem: unknownItem,
-            repeatMode: .off,
+            repeatMode: .all,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
+        expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("A")]))
     }
 
     func testPlayerItemsWithCurrentItemReplacedByAnotherItem() {
@@ -127,10 +127,10 @@ final class AVPlayerItemUpdateTests: TestCase {
             for: currentContents,
             replacing: previousContents,
             currentItem: currentItem,
-            repeatMode: .off,
+            repeatMode: .all,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("2"), UUID("C")]))
+        expect(items.map(\.id)).to(equalDiff([UUID("2"), UUID("C"), UUID("3")]))
     }
 
     func testPlayerItemsWithUpdatedCurrentItem() {
@@ -150,10 +150,10 @@ final class AVPlayerItemUpdateTests: TestCase {
             for: currentContents,
             replacing: previousContents,
             currentItem: currentItem,
-            repeatMode: .off,
+            repeatMode: .all,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("1"), UUID("2"), UUID("3")]))
+        expect(items.map(\.id)).to(equalDiff([UUID("1"), UUID("2"), UUID("3"), UUID("1")]))
         expect(items.first).to(equal(currentItem))
     }
 
@@ -168,7 +168,7 @@ final class AVPlayerItemUpdateTests: TestCase {
             for: currentContents,
             replacing: [],
             currentItem: nil,
-            repeatMode: .off,
+            repeatMode: .all,
             length: 2
         )
         expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
