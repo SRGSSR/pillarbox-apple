@@ -22,30 +22,16 @@ struct AssetContent {
         .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
-    func update(item: AVPlayerItem) {
-        item.externalMetadata = metadata.externalMetadata
-#if os(tvOS)
-        item.interstitialTimeRanges = metadata.blockedTimeRanges.map { timeRange in
-            .init(timeRange: timeRange)
-        }
-        item.navigationMarkerGroups = [
-            AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: metadata.timedNavigationMarkers)
-        ]
-#endif
-    }
-
     func playerItem(reload: Bool = false) -> AVPlayerItem {
         if reload, resource.isFailing {
-            let item = Resource.loading.playerItem().withId(id)
+            let item = Resource.loading.playerItem().withId(id).updated(with: self)
             configure(item: item)
-            update(item: item)
             PlayerItem.reload(for: id)
             return item
         }
         else {
-            let item = resource.playerItem().withId(id)
+            let item = resource.playerItem().withId(id).updated(with: self)
             configure(item: item)
-            update(item: item)
             PlayerItem.load(for: id)
             return item
         }

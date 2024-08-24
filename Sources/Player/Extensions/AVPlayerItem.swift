@@ -40,9 +40,7 @@ extension AVPlayerItem {
     ) -> [AVPlayerItem] {
         itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem, repeatMode: repeatMode).prefix(length).map { source in
             if let item = source.item {
-                // TODO: Turn into `AVPlayer.updated(with:)` method
-                source.content.update(item: item)
-                return item
+                return item.updated(with: source.content)
             }
             else {
                 return source.content.playerItem(reload: false)
@@ -153,6 +151,19 @@ extension AVPlayerItem {
     /// - Returns: The receiver with the id assigned to it.
     func withId(_ id: UUID) -> AVPlayerItem {
         self.id = id
+        return self
+    }
+
+    func updated(with content: AssetContent) -> AVPlayerItem {
+        externalMetadata = content.metadata.externalMetadata
+#if os(tvOS)
+        interstitialTimeRanges = content.metadata.blockedTimeRanges.map { timeRange in
+            .init(timeRange: timeRange)
+        }
+        navigationMarkerGroups = [
+            AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: content.metadata.timedNavigationMarkers)
+        ]
+#endif
         return self
     }
 }
