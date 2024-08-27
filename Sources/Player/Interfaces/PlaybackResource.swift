@@ -11,7 +11,7 @@ protocol PlaybackResource {
 }
 
 extension PlaybackResource {
-    var isLoadable: Bool {
+    var isLoaded: Bool {
         !isLoading && !isFailing
     }
 
