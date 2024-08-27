@@ -9,9 +9,9 @@ import Foundation
 import PillarboxCore
 
 extension PlayerItem {
-    static func qoeDateInterval(forQosDateInterval qosDateInterval: DateInterval, startDate: Date) -> DateInterval {
-        if startDate < qosDateInterval.end {
-            return .init(start: startDate, end: qosDateInterval.end)
+    private static func experience(forService service: DateInterval, startDate: Date) -> DateInterval {
+        if startDate < service.end {
+            return .init(start: startDate, end: service.end)
         }
         else {
             return .init(start: startDate, duration: 0)
@@ -28,8 +28,8 @@ extension PlayerItem {
         .map { dateInterval, startDate in
             return MetricEvent(
                 kind: .metadata(
-                    qoe: Self.qoeDateInterval(forQosDateInterval: dateInterval, startDate: startDate),
-                    qos: dateInterval
+                    experience: Self.experience(forService: dateInterval, startDate: startDate),
+                    service: dateInterval
                 ),
                 date: dateInterval.end
             )

@@ -59,7 +59,7 @@ private struct InformationSectionContent: View {
     }
 }
 
-private struct StartupTimesQoeSectionContent: View {
+private struct ExperienceStartupTimesSectionContent: View {
     let metricEvents: [MetricEvent]
 
     var body: some View {
@@ -71,8 +71,8 @@ private struct StartupTimesQoeSectionContent: View {
     private var metadataInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .metadata(qoe: qoe, qos: _):
-                return qoe.duration
+            case let .metadata(experience: experience, service: _):
+                return experience.duration
             default:
                 return nil
             }
@@ -82,7 +82,7 @@ private struct StartupTimesQoeSectionContent: View {
     private var assetInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .asset(qoe: qoe):
+            case let .asset(experience: qoe):
                 return qoe.duration
             default:
                 return nil
@@ -118,7 +118,7 @@ private struct StartupTimesQoeSectionContent: View {
     }
 }
 
-private struct StartupTimesQosSectionContent: View {
+private struct ServiceStartupTimesSectionContent: View {
     let metricEvents: [MetricEvent]
 
     var body: some View {
@@ -128,8 +128,8 @@ private struct StartupTimesQosSectionContent: View {
     private var metadataInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .metadata(qoe: _, qos: qos):
-                return qos.duration
+            case let .metadata(experience: _, service: service):
+                return service.duration
             default:
                 return nil
             }
@@ -179,8 +179,8 @@ struct MetricsView: View {
 
     private func list() -> some View {
         List {
-            startupTimesQoeSection()
-            startupTimesQosSection()
+            experienceStartupTimesSection()
+            serviceStartupTimesSection()
             trackingSection()
             if !metricsCollector.metrics.isEmpty {
                 informationSection()
@@ -196,18 +196,18 @@ struct MetricsView: View {
     }
 
     @ViewBuilder
-    private func startupTimesQoeSection() -> some View {
+    private func experienceStartupTimesSection() -> some View {
         Section {
-            StartupTimesQoeSectionContent(metricEvents: metricsCollector.metricEvents)
+            ExperienceStartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
         } header: {
             Text("Startup times (QoE)")
         }
     }
 
     @ViewBuilder
-    private func startupTimesQosSection() -> some View {
+    private func serviceStartupTimesSection() -> some View {
         Section {
-            StartupTimesQosSectionContent(metricEvents: metricsCollector.metricEvents)
+            ServiceStartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
         } header: {
             Text("Startup times (QoS)")
         }

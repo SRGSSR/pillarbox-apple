@@ -73,7 +73,7 @@ extension MetricStartData {
 private extension MetricStartData.QualityOfExperienceMetrics {
     static func metadata(from event: MetricEvent) -> Int? {
         switch event.kind {
-        case let .metadata(qoe: qoe, qos: _):
+        case let .metadata(experience: qoe, service: _):
             return qoe.duration.toMilliseconds
         default:
             return nil
@@ -82,8 +82,8 @@ private extension MetricStartData.QualityOfExperienceMetrics {
 
     static func asset(from event: MetricEvent) -> Int? {
         switch event.kind {
-        case let .asset(qoe: qoe):
-            return qoe.duration.toMilliseconds
+        case let .asset(experience: experience):
+            return experience.duration.toMilliseconds
         default:
             return nil
         }

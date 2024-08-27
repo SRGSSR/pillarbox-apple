@@ -12,16 +12,10 @@ public struct MetricEvent: Hashable {
     /// A kind of metric event.
     public enum Kind {
         /// Metadata is available.
-        ///
-        /// The date interval corresponding to the process is provided as associated value. Note that this interval
-        /// measures the perceived user experience and might be empty in the event of preloading.
-        case metadata(qoe: DateInterval, qos: DateInterval)
+        case metadata(experience: DateInterval, service: DateInterval)
 
         /// The asset is ready to play.
-        ///
-        /// The date interval corresponding to the process is provided as associated value. Note that this interval
-        /// measures the perceived user experience and might be empty in the event of preloading.
-        case asset(qoe: DateInterval)
+        case asset(experience: DateInterval)
 
         /// Failure.
         case failure(Error)
@@ -67,10 +61,10 @@ public struct MetricEvent: Hashable {
 extension MetricEvent.Kind: CustomStringConvertible {
     public var description: String {
         switch self {
-        case let .metadata(qoe: qoe, qos: qos):
-            return "Metadata: qoe = \(Self.duration(from: qoe.duration)), qos = \(Self.duration(from: qos.duration))"
-        case let .asset(qoe: dateInterval):
-            return "Asset: \(Self.duration(from: dateInterval.duration))"
+        case let .metadata(experience: experience, service: service):
+            return "Metadata: \(Self.duration(from: experience.duration)) (experience), \(Self.duration(from: service.duration)) (service)"
+        case let .asset(experience: experience):
+            return "Asset: \(Self.duration(from: experience.duration)) (experience)"
         case let .failure(error):
             return "Failure: \(error.localizedDescription)"
         case let .warning(error):
