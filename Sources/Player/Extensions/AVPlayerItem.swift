@@ -38,14 +38,16 @@ extension AVPlayerItem {
         repeatMode: RepeatMode,
         length: Int
     ) -> [AVPlayerItem] {
-        itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem, repeatMode: repeatMode).prefix(length).map { source in
-            if let item = source.item {
-                return item.updated(with: source.content)
+        itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem, repeatMode: repeatMode)
+            .prefix(length)
+            .map { source in
+                if let item = source.item {
+                    return item.updated(with: source.content)
+                }
+                else {
+                    return source.content.playerItem(reload: false)
+                }
             }
-            else {
-                return source.content.playerItem(reload: false)
-            }
-        }
     }
 
     private static func itemSources(
