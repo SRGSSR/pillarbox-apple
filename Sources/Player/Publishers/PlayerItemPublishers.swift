@@ -26,7 +26,7 @@ extension PlayerItem {
             Just(Date())
         )
         .map { dateInterval, startDate in
-            return MetricEvent(
+            MetricEvent(
                 kind: .metadata(
                     experience: Self.experience(forService: dateInterval, startDate: startDate),
                     service: dateInterval

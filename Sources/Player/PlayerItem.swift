@@ -130,7 +130,7 @@ public final class PlayerItem: Hashable {
             }
             .switchToLatest()
             .map { asset, metadata, dateInterval in
-                return AssetContent(
+                AssetContent(
                     id: id,
                     resource: asset.resource,
                     metadata: metadata,
