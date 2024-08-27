@@ -82,8 +82,8 @@ private struct StartupTimesQoeSectionContent: View {
     private var assetInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .asset(interval):
-                return interval.duration
+            case let .asset(qoe: qoe):
+                return qoe.duration
             default:
                 return nil
             }

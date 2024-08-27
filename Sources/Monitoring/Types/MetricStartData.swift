@@ -82,8 +82,8 @@ private extension MetricStartData.QualityOfExperienceMetrics {
 
     static func asset(from event: MetricEvent) -> Int? {
         switch event.kind {
-        case let .asset(dateInterval):
-            return dateInterval.duration.toMilliseconds
+        case let .asset(qoe: qoe):
+            return qoe.duration.toMilliseconds
         default:
             return nil
         }

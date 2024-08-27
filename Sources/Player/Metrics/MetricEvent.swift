@@ -21,7 +21,7 @@ public struct MetricEvent: Hashable {
         ///
         /// The date interval corresponding to the process is provided as associated value. Note that this interval
         /// measures the perceived user experience and might be empty in the event of preloading.
-        case asset(DateInterval)
+        case asset(qoe: DateInterval)
 
         /// Failure.
         case failure(Error)
@@ -69,7 +69,7 @@ extension MetricEvent.Kind: CustomStringConvertible {
         switch self {
         case let .metadata(qoe: qoe, qos: qos):
             return "Metadata: qoe = \(Self.duration(from: qoe.duration)), qos = \(Self.duration(from: qos.duration))"
-        case let .asset(dateInterval):
+        case let .asset(qoe: dateInterval):
             return "Asset: \(Self.duration(from: dateInterval.duration))"
         case let .failure(error):
             return "Failure: \(error.localizedDescription)"
