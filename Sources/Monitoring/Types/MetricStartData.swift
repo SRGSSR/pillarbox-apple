@@ -13,7 +13,8 @@ struct MetricStartData: Encodable {
     let screen: Screen
     let player: Player
     let media: Media
-    let qoeMetrics: QualityOfExperienceMetrics?
+    let qoeMetrics: ExperienceMetrics?
+    let qosMetrics: ServiceMetrics?
 }
 
 extension MetricStartData {
@@ -41,7 +42,7 @@ extension MetricStartData {
         let version: String
     }
 
-    struct QualityOfExperienceMetrics: Encodable {
+    struct ExperienceMetrics: Encodable {
         let metadata: Int?
         let asset: Int?
         let total: Int
@@ -62,30 +63,45 @@ extension MetricStartData {
                 return nil
             }
         }
+
+        private static func metadata(from event: MetricEvent) -> Int? {
+            switch event.kind {
+            case let .metadata(experience: experience, service: _):
+                return experience.duration.toMilliseconds
+            default:
+                return nil
+            }
+        }
+
+        private static func asset(from event: MetricEvent) -> Int? {
+            switch event.kind {
+            case let .asset(experience: experience):
+                return experience.duration.toMilliseconds
+            default:
+                return nil
+            }
+        }
+    }
+
+    struct ServiceMetrics: Encodable {
+        let metadata: Int?
+
+        init?(events: [MetricEvent]) {
+            metadata = events.compactMap(Self.metadata(from:)).last
+        }
+
+        private static func metadata(from event: MetricEvent) -> Int? {
+            switch event.kind {
+            case let .metadata(experience: _, service: service):
+                return service.duration.toMilliseconds
+            default:
+                return nil
+            }
+        }
     }
 
     struct Screen: Encodable {
         let width: Int
         let height: Int
-    }
-}
-
-private extension MetricStartData.QualityOfExperienceMetrics {
-    static func metadata(from event: MetricEvent) -> Int? {
-        switch event.kind {
-        case let .metadata(experience: qoe, service: _):
-            return qoe.duration.toMilliseconds
-        default:
-            return nil
-        }
-    }
-
-    static func asset(from event: MetricEvent) -> Int? {
-        switch event.kind {
-        case let .asset(experience: experience):
-            return experience.duration.toMilliseconds
-        default:
-            return nil
-        }
     }
 }
