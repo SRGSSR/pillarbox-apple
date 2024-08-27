@@ -71,8 +71,9 @@ private struct StartupTimesSectionContent: View {
     private var metadataInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .metadata(interval):
-                return interval.duration
+            case let .metadata(qoe: qoe, qos: qos):
+                // FIXME:
+                return qos.duration
             default:
                 return nil
             }

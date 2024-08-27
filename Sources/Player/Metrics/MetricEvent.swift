@@ -15,7 +15,7 @@ public struct MetricEvent: Hashable {
         ///
         /// The date interval corresponding to the process is provided as associated value. Note that this interval
         /// measures the perceived user experience and might be empty in the event of preloading.
-        case metadata(DateInterval)
+        case metadata(qoe: DateInterval, qos: DateInterval)
 
         /// The asset is ready to play.
         ///
@@ -49,18 +49,6 @@ public struct MetricEvent: Hashable {
     /// Might be `.invalid`.
     public let time: CMTime
 
-    /// The event duration.
-    public var duration: TimeInterval {
-        switch kind {
-        case let .metadata(dateInterval):
-            return dateInterval.duration
-        case let .asset(dateInterval):
-            return dateInterval.duration
-        default:
-            return 0
-        }
-    }
-
     init(kind: Kind, date: Date = .init(), time: CMTime = .invalid) {
         self.kind = kind
         self.date = date
@@ -79,8 +67,8 @@ public struct MetricEvent: Hashable {
 extension MetricEvent.Kind: CustomStringConvertible {
     public var description: String {
         switch self {
-        case let .metadata(dateInterval):
-            return "Metadata: \(Self.duration(from: dateInterval.duration))"
+        case let .metadata(qoe: qoe, qos: qos):
+            return "Metadata: qoe = \(Self.duration(from: qoe.duration)), qos = \(Self.duration(from: qos.duration))"
         case let .asset(dateInterval):
             return "Asset: \(Self.duration(from: dateInterval.duration))"
         case let .failure(error):
