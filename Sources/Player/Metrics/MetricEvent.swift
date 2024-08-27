@@ -12,9 +12,15 @@ public struct MetricEvent: Hashable {
     /// A kind of metric event.
     public enum Kind {
         /// Metadata is available.
+        ///
+        /// Two associated date intervals are provided, respectively measuring when metadata retrieval started / ended from
+        /// an end-user or from a technical perspective.
         case metadata(experience: DateInterval, service: DateInterval)
 
         /// The asset is ready to play.
+        ///
+        /// An associated date interval is provided, measuring when asset retrieval started / ended from an end-user
+        /// perspective.
         case asset(experience: DateInterval)
 
         /// Failure.
