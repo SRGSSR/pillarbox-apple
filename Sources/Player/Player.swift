@@ -19,14 +19,16 @@ public final class Player: ObservableObject, Equatable {
 
     /// The current item.
     public var currentItem: PlayerItem? {
-        tracker?.item
+        get {
+            tracker?.item
+        }
+        set {
+            replaceCurrentItemWithItem(newValue)
+        }
     }
 
     /// The last error received by the player.
     @Published public private(set) var error: Error?
-
-    /// The index of the current item in the queue.
-    @Published public private(set) var currentIndex: Int?
 
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
@@ -281,7 +283,6 @@ private extension Player {
     func configurePublishedPropertyPublishers() {
         configurePropertiesPublisher()
         configureErrorPublisher()
-        configureCurrentIndexPublisher()
         configurePlaybackSpeedPublisher()
     }
 
@@ -355,13 +356,6 @@ private extension Player {
             .assign(to: &$error)
     }
 
-    func configureCurrentIndexPublisher() {
-        queuePublisher
-            .slice(at: \.index)
-            .receiveOnMainThread()
-            .assign(to: &$currentIndex)
-    }
-
     func configurePlaybackSpeedPublisher() {
         playbackSpeedPublisher()
             .receiveOnMainThread()
@@ -426,10 +420,9 @@ private extension Player {
             nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled && !hasError && canSkipBackward()
             nowPlayingSession.remoteCommandCenter.changePlaybackPositionCommand.isEnabled = !hasError
 
-            let index = queue.index
             let items = Deque(queue.elements.map(\.item))
-            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: properties.streamType)
-            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
+            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: queue.item, in: items, streamType: properties.streamType)
+            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: queue.item, in: items)
         }
         .store(in: &cancellables)
     }

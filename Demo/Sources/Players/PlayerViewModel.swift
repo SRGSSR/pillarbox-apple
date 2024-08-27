@@ -11,14 +11,16 @@ final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
-            if let playerItem = media?.playerItem() {
-                player.items = [playerItem]
+            if let item = media?.item() {
+                player.items = [item]
             }
             else {
                 player.removeAllItems()
             }
         }
     }
+
+    @Published var layout: PlaybackView.Layout = .minimized
 
     let player = Player(configuration: .standard)
 

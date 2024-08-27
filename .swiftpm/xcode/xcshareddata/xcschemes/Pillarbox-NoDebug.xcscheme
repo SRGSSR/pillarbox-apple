@@ -84,6 +84,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PillarboxMonitoring"
+               BuildableName = "PillarboxMonitoring"
+               BlueprintName = "PillarboxMonitoring"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "AnalyticsTests"
                BuildableName = "AnalyticsTests"
                BlueprintName = "AnalyticsTests"
@@ -143,6 +157,20 @@
                BlueprintIdentifier = "PlayerTests"
                BuildableName = "PlayerTests"
                BlueprintName = "PlayerTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "MonitoringTests"
+               BuildableName = "MonitoringTests"
+               BlueprintName = "MonitoringTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>

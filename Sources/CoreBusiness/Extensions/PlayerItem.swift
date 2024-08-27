@@ -15,6 +15,7 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
+    ///   - source: Arbitrary information that describes the source which the item was created from.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: The configuration to apply to the player item.
     ///
@@ -23,11 +24,13 @@ public extension PlayerItem {
     static func urn(
         _ urn: String,
         server: Server = .production,
+        source: Any? = nil,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: PlayerItemConfiguration = .default
     ) -> Self {
         .init(
             publisher: publisher(forUrn: urn, server: server, configuration: configuration),
+            source: source,
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
                 CommandersActTracker.adapter { $0.analyticsMetadata }
@@ -40,6 +43,7 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - metadata: The metadata associated with the item.
+    ///   - source: Arbitrary information that describes the source which the item was created from.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: The configuration to apply to the player item.
     ///
@@ -48,11 +52,13 @@ public extension PlayerItem {
     static func tokenProtected<M>(
         url: URL,
         metadata: M,
+        source: Any? = nil,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: PlayerItemConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .tokenProtected(url: url, metadata: metadata, configuration: configuration),
+            source: source,
             trackerAdapters: trackerAdapters
         )
     }
@@ -63,6 +69,7 @@ public extension PlayerItem {
     ///   - url: The URL to play.
     ///   - certificateUrl: The URL of the certificate to use.
     ///   - metadata: The metadata associated with the item.
+    ///   - source: Arbitrary information that describes the source which the item was created from.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: The configuration to apply to the player item.
     ///
@@ -72,11 +79,13 @@ public extension PlayerItem {
         url: URL,
         certificateUrl: URL,
         metadata: M,
+        source: Any? = nil,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: PlayerItemConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration),
+            source: source,
             trackerAdapters: trackerAdapters
         )
     }

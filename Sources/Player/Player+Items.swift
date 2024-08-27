@@ -20,13 +20,13 @@ public extension Player {
 
     /// The items located before the current item (not included).
     var previousItems: [PlayerItem] {
-        guard let currentIndex else { return [] }
+        guard let currentItem, let currentIndex = items.firstIndex(of: currentItem) else { return [] }
         return Array(storedItems.prefix(upTo: currentIndex))
     }
 
     /// The items located after the current item (not included).
     var nextItems: [PlayerItem] {
-        guard let currentIndex else { return Array(storedItems) }
+        guard let currentItem, let currentIndex = items.firstIndex(of: currentItem) else { return Array(storedItems) }
         return Array(storedItems.suffix(from: currentIndex).dropFirst())
     }
 

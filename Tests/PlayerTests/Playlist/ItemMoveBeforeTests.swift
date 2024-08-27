@@ -49,7 +49,6 @@ final class ItemMoveBeforeTests: TestCase {
         let item3 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2, item3])
         expect(player.move(item1, before: item3)).to(beTrue())
-        expect(player.currentIndex).to(equal(1))
         expect(player.items).to(equalDiff([item2, item1, item3]))
     }
 
@@ -60,7 +59,6 @@ final class ItemMoveBeforeTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         expect(player.move(item2, before: item1)).to(beTrue())
-        expect(player.currentIndex).to(equal(0))
         expect(player.items).to(equalDiff([item2, item1, item3]))
     }
 

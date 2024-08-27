@@ -37,7 +37,7 @@ struct WrappedView: View {
     }
 
     private func play() {
-        let player = Player(item: media.playerItem(), configuration: .externalPlaybackDisabled)
+        let player = Player(item: media.item(), configuration: .externalPlaybackDisabled)
         model.player = player
         player.play()
     }
@@ -56,5 +56,5 @@ extension WrappedView: SourceCodeViewable {
 }
 
 #Preview {
-    WrappedView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    WrappedView(media: URLMedia.onDemandVideoLocalHLS)
 }

@@ -49,7 +49,7 @@ struct TwinsView: View {
     }
 
     private func play() {
-        player.append(media.playerItem())
+        player.append(media.item())
         player.play()
     }
 
@@ -71,5 +71,5 @@ extension TwinsView: SourceCodeViewable {
 }
 
 #Preview {
-    TwinsView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    TwinsView(media: URLMedia.onDemandVideoLocalHLS)
 }

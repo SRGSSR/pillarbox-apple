@@ -37,7 +37,7 @@ struct BlurredView: View {
     }
 
     private func play() {
-        player.append(media.playerItem())
+        player.append(media.item())
         player.play()
     }
 }
@@ -47,5 +47,5 @@ extension BlurredView: SourceCodeViewable {
 }
 
 #Preview {
-    BlurredView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    BlurredView(media: URLMedia.onDemandVideoLocalHLS)
 }

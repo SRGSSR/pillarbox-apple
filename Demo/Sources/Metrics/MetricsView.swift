@@ -268,7 +268,7 @@ struct MetricsView: View {
 
 struct MetricsView_Previews: PreviewProvider {
     private struct MetricsPreview: View {
-        @State private var player = Player(item: Media(from: URLTemplate.appleAdvanced_16_9_TS_HLS).playerItem())
+        @State private var player = Player(item: URLMedia.appleAdvanced_16_9_TS_HLS.item())
         @StateObject private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
 
         var body: some View {

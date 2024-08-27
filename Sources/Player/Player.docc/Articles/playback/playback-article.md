@@ -62,7 +62,7 @@ The player can be customized during the instantiation phase by providing a dedic
 
 ## Load custom content
 
-The above examples use ``PlayerItem/simple(url:metadata:trackerAdapters:configuration:)`` player items that simply play the provided URLs. In general, though, the URL of the content to be played is not known beforehand and likely retrieved from some kind of web service.
+The above examples use ``PlayerItem/simple(url:metadata:source:trackerAdapters:configuration:)`` player items that simply play the provided URLs. In general, though, the URL of the content to be played is not known beforehand and likely retrieved from some kind of web service.
 
 You can create a player item that loads content in a custom way as follows:
 

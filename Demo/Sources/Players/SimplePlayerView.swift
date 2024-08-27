@@ -57,7 +57,7 @@ struct SimplePlayerView: View {
     }
 
     private func play() {
-        player.append(media.playerItem())
+        player.append(media.item())
         player.play()
     }
 }
@@ -67,5 +67,5 @@ extension SimplePlayerView: SourceCodeViewable {
 }
 
 #Preview {
-    SimplePlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    SimplePlayerView(media: URLMedia.onDemandVideoLocalHLS)
 }

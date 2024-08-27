@@ -83,7 +83,7 @@ struct OptInView: View {
     }
 
     private func play() {
-        player.append(media.playerItem())
+        player.append(media.item())
         player.play()
     }
 }
@@ -93,5 +93,5 @@ extension OptInView: SourceCodeViewable {
 }
 
 #Preview {
-    OptInView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    OptInView(media: URLMedia.onDemandVideoLocalHLS)
 }

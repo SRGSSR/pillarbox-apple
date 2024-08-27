@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import SceneKit
 import SwiftUI
 
 /// A view displaying video content provided by an associated player.
@@ -15,11 +16,11 @@ public struct VideoView: View {
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
-    private var viewport: Viewport = .standard
+    private var orientation: SCNQuaternion = .monoscopicDefault
 
     public var body: some View {
         ZStack {
-            switch viewport {
+            switch player.metadata.viewport {
             case .standard:
                 ZStack {
                     if supportsPictureInPicture {
@@ -34,7 +35,7 @@ public struct VideoView: View {
                         BasicVideoView(player: player, gravity: gravity)
                     }
                 }
-            case let .monoscopic(orientation):
+            case .monoscopic:
                 MonoscopicVideoView(player: player, orientation: orientation)
             }
         }
@@ -49,7 +50,7 @@ public struct VideoView: View {
     }
 
     private var isPictureInPictureEffectivelySupported: Bool {
-        switch viewport {
+        switch player.metadata.viewport {
         case .standard:
             return supportsPictureInPicture
         case .monoscopic:
@@ -87,12 +88,15 @@ public extension VideoView {
         return view
     }
 
-    /// Configures the viewport of the video view.
+    /// Configures the orientation of the video view.
     ///
-    /// - Parameter viewport: The viewport.
-    func viewport(_ viewport: Viewport) -> VideoView {
+    /// - Parameter orientation: The orientation.
+    ///
+    /// Only meaningful when watching content with ``Viewport/monoscopic`` viewport. Use `.monoscopicDefault` for a
+    /// camera pointing forward without head-tilting.
+    func orientation(_ orientation: SCNQuaternion) -> VideoView {
         var view = self
-        view.viewport = viewport
+        view.orientation = orientation
         return view
     }
 }

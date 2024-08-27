@@ -37,17 +37,16 @@ private struct LoadedView: View {
     }
 
     private func openPlaylist() {
-        router.presented = .playlist(templates: templates())
+        router.presented = .playlist(medias: medias())
     }
 
-    private func templates() -> [Template] {
-        contents.compactMap { content -> Template? in
+    private func medias() -> [Media] {
+        contents.compactMap { content -> Media? in
             guard case let .media(media) = content else { return nil }
-            return Template(
+            return Media(
                 title: media.title,
                 subtitle: MediaDescription.subtitle(for: media),
-                type: .urn(media.urn, serverSetting: serverSetting),
-                isMonoscopic: media.isMonoscopic
+                type: .urn(media.urn, serverSetting: serverSetting)
             )
         }
     }
@@ -57,7 +56,7 @@ private struct LoadedView: View {
         Button(action: openPlaylist) {
             Image(systemName: "rectangle.stack.badge.play")
         }
-        .opacity(templates().isEmpty ? 0 : 1)
+        .opacity(medias().isEmpty ? 0 : 1)
     }
 }
 
@@ -99,11 +98,7 @@ private struct ContentCell: View {
                 date: MediaDescription.date(for: media),
                 style: MediaDescription.style(for: media)
             ) {
-                let media = Media(
-                    title: title,
-                    type: .urn(media.urn, serverSetting: serverSetting),
-                    isMonoscopic: media.isMonoscopic
-                )
+                let media = Media(title: title, type: .urn(media.urn, serverSetting: serverSetting))
                 router.presented = .player(media: media)
             }
 #if os(iOS)

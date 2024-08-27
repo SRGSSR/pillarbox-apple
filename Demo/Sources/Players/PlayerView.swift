@@ -130,11 +130,9 @@ private struct ChaptersList: View {
 
 private struct MainView: View {
     @ObservedObject var player: Player
+    @Binding var layout: PlaybackView.Layout
 
-    let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
-
-    @State private var layout: PlaybackView.Layout = .minimized
 
     private var chapters: [Chapter] {
         player.metadata.chapters
@@ -147,7 +145,6 @@ private struct MainView: View {
     var body: some View {
         VStack {
             PlaybackView(player: player, layout: currentLayout)
-                .monoscopic(isMonoscopic)
                 .supportsPictureInPicture(supportsPictureInPicture)
 #if os(iOS)
             if layout != .maximized, !chapters.isEmpty {
@@ -169,11 +166,15 @@ struct PlayerView: View {
     private var supportsPictureInPicture = false
 
     var body: some View {
-        MainView(player: model.player, isMonoscopic: media.isMonoscopic, supportsPictureInPicture: supportsPictureInPicture)
-            .enabledForInAppPictureInPicture(persisting: model)
-            .background(.black)
-            .onAppear(perform: play)
-            .tracked(name: "player")
+        MainView(
+            player: model.player,
+            layout: $model.layout,
+            supportsPictureInPicture: supportsPictureInPicture
+        )
+        .enabledForInAppPictureInPicture(persisting: model)
+        .background(.black)
+        .onAppear(perform: play)
+        .tracked(name: "player")
     }
 
     init(media: Media) {
@@ -199,5 +200,5 @@ extension PlayerView: SourceCodeViewable {
 }
 
 #Preview {
-    PlayerView(media: Media(from: URNTemplate.onDemandHorizontalVideo))
+    PlayerView(media: URNMedia.onDemandHorizontalVideo)
 }

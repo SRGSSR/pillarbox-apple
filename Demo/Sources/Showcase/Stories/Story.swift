@@ -6,9 +6,9 @@
 
 struct Story: Identifiable, Hashable {
     let id: Int
-    let template: Template
+    let media: Media
 
-    static func stories(from templates: [Template]) -> [Self] {
-        templates.enumerated().map { .init(id: $0, template: $1) }
+    static func stories(from medias: [Media]) -> [Self] {
+        medias.enumerated().map { .init(id: $0, media: $1) }
     }
 }

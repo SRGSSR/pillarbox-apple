@@ -24,7 +24,7 @@ enum RouterDestination: Identifiable, Hashable {
     case transition(media: Media)
 
     case stories
-    case playlist(templates: [Template])
+    case playlist(medias: [Media])
 
     case contentList(configuration: ContentList.Configuration)
 
@@ -108,8 +108,8 @@ enum RouterDestination: Identifiable, Hashable {
             TransitionView(media: media)
         case .stories:
             StoriesView()
-        case let .playlist(templates: templates):
-            PlaylistView(templates: templates)
+        case let .playlist(medias: medias):
+            PlaylistView(medias: medias)
         case let .contentList(configuration: configuration):
             ContentListView(configuration: configuration)
 #if os(iOS)

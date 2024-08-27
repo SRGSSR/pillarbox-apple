@@ -16,7 +16,7 @@ final class ItemNavigationBackwardTests: TestCase {
         let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         player.returnToPreviousItem()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testReturnToPreviousItemAtFront() {
@@ -24,7 +24,7 @@ final class ItemNavigationBackwardTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         player.returnToPreviousItem()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testReturnToPreviousItemOnFailedItem() {
@@ -34,6 +34,6 @@ final class ItemNavigationBackwardTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         player.returnToPreviousItem()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentItem).to(equal(item1))
     }
 }

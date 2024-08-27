@@ -80,6 +80,7 @@ extension MediaMetadata: AssetMetadata {
             subtitle: subtitle,
             description: description,
             imageSource: .url(imageUrl(for: mediaComposition.mainChapter)),
+            viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
             timeRanges: timeRanges
@@ -124,6 +125,15 @@ extension MediaMetadata: AssetMetadata {
         }
         else {
             return .short(episode: episodeNumber)
+        }
+    }
+
+    var viewport: Viewport {
+        switch resource.presentation {
+        case .default:
+            return .standard
+        case .video360:
+            return .monoscopic
         }
     }
 

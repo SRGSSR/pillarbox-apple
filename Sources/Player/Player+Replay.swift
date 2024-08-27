@@ -20,6 +20,6 @@ public extension Player {
     func replay() {
         guard canReplay() else { return }
         play()
-        try? setCurrentIndex(currentIndex ?? 0)
+        replaceCurrentItemWithItem(currentItem ?? items.first)
     }
 }

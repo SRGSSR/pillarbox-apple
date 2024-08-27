@@ -25,10 +25,6 @@ struct SingleView: View {
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)
     }
 
-    private var viewport: Viewport {
-        isMonoscopic ? .monoscopic(orientation: .monoscopicDefault) : .standard
-    }
-
     init(player: Player) {
         self.player = player
     }
@@ -36,7 +32,6 @@ struct SingleView: View {
     @ViewBuilder
     private func videoView(player: Player) -> some View {
         VideoView(player: player)
-            .viewport(viewport)
             .supportsPictureInPicture(supportsPictureInPicture)
             .accessibilityAddTraits(.isButton)
     }
@@ -56,12 +51,6 @@ struct SingleView: View {
 }
 
 extension SingleView {
-    func monoscopic(_ isMonoscopic: Bool = true) -> SingleView {
-        var view = self
-        view.isMonoscopic = isMonoscopic
-        return view
-    }
-
     func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> SingleView {
         var view = self
         view.supportsPictureInPicture = supportsPictureInPicture

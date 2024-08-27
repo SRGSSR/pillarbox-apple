@@ -7,7 +7,6 @@
 import PillarboxPlayer
 import SwiftUI
 
-// Behavior: h-exp, v-exp
 private struct MediaCell: View {
     let media: Media
 
@@ -23,63 +22,10 @@ private struct MediaCell: View {
     }
 }
 
-// Behavior: h-exp, v-exp
-private struct PlaylistSelectionView: View {
-    let model: PlaylistViewModel
-    @State private var selectedTemplates: Set<Template> = []
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationView {
-            List(selection: $selectedTemplates) {
-                section(title: "Original items", templates: model.templates)
-                section(title: "Standard items", templates: model.otherStandardTemplates)
-            }
-            .environment(\.editMode, .constant(.active))
-            .navigationBarTitle("Add a stream to the playlist")
-#if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-#endif
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel", action: cancel)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Add", action: add)
-                        .disabled(selectedTemplates.isEmpty)
-                }
-            }
-        }
-        .tracked(name: "selection", levels: ["playlist"])
-    }
-
-    @ViewBuilder
-    private func section(title: String, templates: [Template]) -> some View {
-        if !templates.isEmpty {
-            Section(title) {
-                ForEach(templates, id: \.self) { template in
-                    Text(template.title)
-                }
-            }
-        }
-    }
-
-    private func cancel() {
-        dismiss()
-    }
-
-    private func add() {
-        model.add(from: Array(selectedTemplates))
-        dismiss()
-    }
-}
-
-// Behavior: h-exp, v-hug
 private struct Toolbar: View {
-    @ObservedObject var player: Player
-    @ObservedObject var model: PlaylistViewModel
-
-    @State private var isSelectionPlaylistPresented = false
+    @ObservedObject private var player: Player
+    @ObservedObject private var model: PlaylistViewModel
+    @State private var isSelectionPresented = false
 
     var body: some View {
         HStack {
@@ -91,9 +37,14 @@ private struct Toolbar: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .sheet(isPresented: $isSelectionPlaylistPresented) {
+        .sheet(isPresented: $isSelectionPresented) {
             PlaylistSelectionView(model: model)
         }
+    }
+
+    init(model: PlaylistViewModel) {
+        self.player = model.player
+        self.model = model
     }
 
     @ViewBuilder
@@ -111,13 +62,11 @@ private struct Toolbar: View {
                 Image(systemName: "shuffle")
             }
             .disabled(model.isEmpty)
+
             Button(action: add) {
                 Image(systemName: "plus")
             }
-            Button(action: model.reload) {
-                Image(systemName: "arrow.triangle.2.circlepath")
-            }
-            .disabled(!model.canReload)
+
             Button(action: model.trash) {
                 Image(systemName: "trash")
             }
@@ -134,34 +83,44 @@ private struct Toolbar: View {
     }
 
     private func add() {
-        isSelectionPlaylistPresented.toggle()
+        isSelectionPresented.toggle()
     }
 }
 
-// Behavior: h-exp, v-exp
+private struct BottomView: View {
+    let model: PlaylistViewModel
+
+    var body: some View {
+        Toolbar(model: model)
+        Playlist(player: model.player, editActions: .all) { source in
+            switch source {
+            case let media as Media:
+                MediaCell(media: media)
+            default:
+                Color.clear
+            }
+        }
+    }
+}
+
 struct PlaylistView: View {
-    let templates: [Template]
+    let medias: [Media]
 
     @StateObject private var model = PlaylistViewModel.persisted ?? PlaylistViewModel()
-    @State private var layout: PlaybackView.Layout = .minimized
 
     var body: some View {
         VStack(spacing: 0) {
-            PlaybackView(player: model.player, layout: $layout)
-                .monoscopic(model.isMonoscopic)
+            PlaybackView(player: model.player, layout: $model.layout)
                 .supportsPictureInPicture()
 #if os(iOS)
-            if layout != .maximized {
-                Toolbar(player: model.player, model: model)
-                List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
-                    MediaCell(media: media)
-                }
+            if model.layout != .maximized {
+                BottomView(model: model)
             }
 #endif
         }
-        .animation(.defaultLinear, value: layout)
+        .animation(.defaultLinear, value: model.layout)
         .onAppear {
-            model.templates = templates
+            model.medias = medias
             model.play()
         }
         .enabledForInAppPictureInPicture(persisting: model)
@@ -174,9 +133,9 @@ extension PlaylistView: SourceCodeViewable {
 }
 
 #Preview {
-    PlaylistView(templates: [
-        URLTemplate.onDemandVideoLocalHLS,
-        URLTemplate.shortOnDemandVideoHLS,
-        URLTemplate.dvrVideoHLS
+    PlaylistView(medias: [
+        URLMedia.onDemandVideoLocalHLS,
+        URLMedia.shortOnDemandVideoHLS,
+        URLMedia.dvrVideoHLS
     ])
 }

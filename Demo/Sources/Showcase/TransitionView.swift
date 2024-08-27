@@ -42,7 +42,7 @@ struct TransitionView: View {
 
     private func play() {
         player.enableSilentPlayback(withLanguage: "fr")
-        player.append(media.playerItem())
+        player.append(media.item())
         player.play()
     }
 }
@@ -70,5 +70,5 @@ extension TransitionView: SourceCodeViewable {
 }
 
 #Preview {
-    TransitionView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+    TransitionView(media: URLMedia.onDemandVideoLocalHLS)
 }
