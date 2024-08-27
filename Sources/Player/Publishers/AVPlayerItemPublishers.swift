@@ -218,7 +218,7 @@ extension AVPlayerItem {
             .weakCapture(self)
             .map { dateInterval, item in
                 MetricEvent(
-                    kind: .asset(dateInterval),
+                    kind: .asset(experience: dateInterval),
                     date: dateInterval.end,
                     time: item.currentTime()
                 )

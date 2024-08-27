@@ -59,7 +59,7 @@ private struct InformationSectionContent: View {
     }
 }
 
-private struct StartupTimesSectionContent: View {
+private struct ExperienceStartupTimesSectionContent: View {
     let metricEvents: [MetricEvent]
 
     var body: some View {
@@ -71,8 +71,8 @@ private struct StartupTimesSectionContent: View {
     private var metadataInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .metadata(interval):
-                return interval.duration
+            case let .metadata(experience: experience, service: _):
+                return experience.duration
             default:
                 return nil
             }
@@ -82,8 +82,8 @@ private struct StartupTimesSectionContent: View {
     private var assetInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .asset(interval):
-                return interval.duration
+            case let .asset(experience: experience):
+                return experience.duration
             default:
                 return nil
             }
@@ -104,6 +104,41 @@ private struct StartupTimesSectionContent: View {
     private var assetDuration: String {
         guard let assetInterval else { return "-" }
         return String(format: "%.6fs", assetInterval)
+    }
+
+    private func cell(_ name: LocalizedStringKey, value: String) -> some View {
+        HStack {
+            Text(name)
+            Spacer()
+            Text(value)
+                .monospacedDigit()
+                .lineLimit(1)
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
+private struct ServiceStartupTimesSectionContent: View {
+    let metricEvents: [MetricEvent]
+
+    var body: some View {
+        cell("Metadata", value: metadataDuration)
+    }
+
+    private var metadataInterval: TimeInterval? {
+        metricEvents.compactMap { event in
+            switch event.kind {
+            case let .metadata(experience: _, service: service):
+                return service.duration
+            default:
+                return nil
+            }
+        }.last
+    }
+
+    private var metadataDuration: String {
+        guard let metadataInterval else { return "-" }
+        return String(format: "%.6fs", metadataInterval)
     }
 
     private func cell(_ name: LocalizedStringKey, value: String) -> some View {
@@ -144,7 +179,8 @@ struct MetricsView: View {
 
     private func list() -> some View {
         List {
-            startupTimesSection()
+            experienceStartupTimesSection()
+            serviceStartupTimesSection()
             trackingSection()
             if !metricsCollector.metrics.isEmpty {
                 informationSection()
@@ -160,11 +196,20 @@ struct MetricsView: View {
     }
 
     @ViewBuilder
-    private func startupTimesSection() -> some View {
+    private func experienceStartupTimesSection() -> some View {
         Section {
-            StartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
+            ExperienceStartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
         } header: {
-            Text("Startup times")
+            Text("Startup times (QoE)")
+        }
+    }
+
+    @ViewBuilder
+    private func serviceStartupTimesSection() -> some View {
+        Section {
+            ServiceStartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
+        } header: {
+            Text("Startup times (QoS)")
         }
     }
 

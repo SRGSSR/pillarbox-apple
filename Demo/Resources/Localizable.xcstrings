@@ -267,7 +267,10 @@
     "Stalls" : {
 
     },
-    "Startup times" : {
+    "Startup times (QoE)" : {
+
+    },
+    "Startup times (QoS)" : {
 
     },
     "Stop" : {

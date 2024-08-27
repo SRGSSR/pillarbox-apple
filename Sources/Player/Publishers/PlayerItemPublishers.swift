@@ -5,19 +5,35 @@
 //
 
 import Combine
+import Foundation
 import PillarboxCore
 
 extension PlayerItem {
+    private static func experience(forService service: DateInterval, startDate: Date) -> DateInterval {
+        if startDate < service.end {
+            return .init(start: startDate, end: service.end)
+        }
+        else {
+            return .init(start: startDate, duration: 0)
+        }
+    }
+
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        $content
-            .first(where: \.resource.isLoadable)
-            .measureDateInterval()
-            .map { dateInterval in
-                MetricEvent(
-                    kind: .metadata(dateInterval),
-                    date: dateInterval.end
-                )
-            }
-            .eraseToAnyPublisher()
+        Publishers.CombineLatest(
+            $content
+                .compactMap(\.dateInterval)
+                .removeDuplicates(),
+            Just(Date())
+        )
+        .map { dateInterval, startDate in
+            MetricEvent(
+                kind: .metadata(
+                    experience: Self.experience(forService: dateInterval, startDate: startDate),
+                    service: dateInterval
+                ),
+                date: dateInterval.end
+            )
+        }
+        .eraseToAnyPublisher()
     }
 }

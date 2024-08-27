@@ -164,7 +164,7 @@ public extension XCTestCase {
             line: line,
             while: executing
         ) else {
-            XCTFail("No values were produced", file: file, line: line)
+            XCTFail("The publisher never completed", file: file, line: line)
             return
         }
 

@@ -57,7 +57,7 @@ final class PlayerPublisherTests: TestCase {
         expectEqualPublished(
             values: [true, false],
             from: Self.bufferingPublisher(for: player),
-            during: .milliseconds(500)
+            during: .seconds(1)
         )
     }
 

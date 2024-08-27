@@ -39,7 +39,7 @@ extension ItemProperties {
     }
 
     func metrics() -> Metrics? {
-        guard let item, item.isLoadable, let state = MetricsState(from: item) else { return nil }
+        guard let item, item.isLoaded, let state = MetricsState(from: item) else { return nil }
         return state.metrics(from: .empty)
     }
 }
