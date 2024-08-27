@@ -59,7 +59,7 @@ private struct InformationSectionContent: View {
     }
 }
 
-private struct StartupTimesSectionContent: View {
+private struct StartupTimesQoeSectionContent: View {
     let metricEvents: [MetricEvent]
 
     var body: some View {
@@ -71,9 +71,8 @@ private struct StartupTimesSectionContent: View {
     private var metadataInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .metadata(qoe: qoe, qos: qos):
-                // FIXME:
-                return qos.duration
+            case let .metadata(qoe: qoe, qos: _):
+                return qoe.duration
             default:
                 return nil
             }
@@ -119,6 +118,41 @@ private struct StartupTimesSectionContent: View {
     }
 }
 
+private struct StartupTimesQosSectionContent: View {
+    let metricEvents: [MetricEvent]
+
+    var body: some View {
+        cell("Metadata", value: metadataDuration)
+    }
+
+    private var metadataInterval: TimeInterval? {
+        metricEvents.compactMap { event in
+            switch event.kind {
+            case let .metadata(qoe: _, qos: qos):
+                return qos.duration
+            default:
+                return nil
+            }
+        }.last
+    }
+
+    private var metadataDuration: String {
+        guard let metadataInterval else { return "-" }
+        return String(format: "%.6fs", metadataInterval)
+    }
+
+    private func cell(_ name: LocalizedStringKey, value: String) -> some View {
+        HStack {
+            Text(name)
+            Spacer()
+            Text(value)
+                .monospacedDigit()
+                .lineLimit(1)
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
 struct MetricsView: View {
     @ObservedObject var metricsCollector: MetricsCollector
 
@@ -145,7 +179,8 @@ struct MetricsView: View {
 
     private func list() -> some View {
         List {
-            startupTimesSection()
+            startupTimesQoeSection()
+            startupTimesQosSection()
             trackingSection()
             if !metricsCollector.metrics.isEmpty {
                 informationSection()
@@ -161,11 +196,20 @@ struct MetricsView: View {
     }
 
     @ViewBuilder
-    private func startupTimesSection() -> some View {
+    private func startupTimesQoeSection() -> some View {
         Section {
-            StartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
+            StartupTimesQoeSectionContent(metricEvents: metricsCollector.metricEvents)
         } header: {
-            Text("Startup times")
+            Text("Startup times (QoE)")
+        }
+    }
+
+    @ViewBuilder
+    private func startupTimesQosSection() -> some View {
+        Section {
+            StartupTimesQosSectionContent(metricEvents: metricsCollector.metricEvents)
+        } header: {
+            Text("Startup times (QoS)")
         }
     }
 
