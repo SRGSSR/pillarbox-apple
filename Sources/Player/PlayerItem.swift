@@ -111,26 +111,36 @@ public final class PlayerItem: Hashable {
         self.source = source
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
-            publisher
-                .handleEvents(receiveOutput: { asset in
-                    // swiftlint:disable:previous trailing_closure
-                    trackerAdapters.forEach { adapter in
-                        adapter.updateMetadata(to: asset.metadata)
-                    }
-                })
-                .map { asset in
-                    Publishers.CombineLatest(
-                        Just(asset),
-                        metadataMapper(asset.metadata).playerMetadataPublisher()
-                    )
+            Publishers.CombineLatest(
+                publisher,
+                Just(Date()).setFailureType(to: P.Failure.self)
+            )
+            .handleEvents(receiveOutput: { asset, _ in
+                // swiftlint:disable:previous trailing_closure
+                trackerAdapters.forEach { adapter in
+                    adapter.updateMetadata(to: asset.metadata)
                 }
-                .switchToLatest()
-                .map { asset, metadata in
-                    AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration)
-                }
-                .catch { error in
-                    Just(.failing(id: id, error: error))
-                }
+            })
+            .map { asset, startDate in
+                Publishers.CombineLatest3(
+                    Just(asset),
+                    metadataMapper(asset.metadata).playerMetadataPublisher(),
+                    Just(DateInterval(start: startDate, end: Date()))
+                )
+            }
+            .switchToLatest()
+            .map { asset, metadata, dateInterval in
+                return AssetContent(
+                    id: id,
+                    resource: asset.resource,
+                    metadata: metadata,
+                    configuration: asset.configuration,
+                    dateInterval: dateInterval
+                )
+            }
+            .catch { error in
+                Just(.failing(id: id, error: error))
+            }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)

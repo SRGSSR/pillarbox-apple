@@ -12,13 +12,14 @@ struct AssetContent {
     let resource: Resource
     let metadata: PlayerMetadata
     let configuration: PlayerItemConfiguration
+    let dateInterval: DateInterval?
 
     static func loading(id: UUID) -> Self {
-        .init(id: id, resource: .loading, metadata: .empty, configuration: .default)
+        .init(id: id, resource: .loading, metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
     static func failing(id: UUID, error: Error) -> Self {
-        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default)
+        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
     func update(item: AVPlayerItem) {
