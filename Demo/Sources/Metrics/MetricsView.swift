@@ -82,8 +82,8 @@ private struct ExperienceStartupTimesSectionContent: View {
     private var assetInterval: TimeInterval? {
         metricEvents.compactMap { event in
             switch event.kind {
-            case let .asset(experience: qoe):
-                return qoe.duration
+            case let .asset(experience: experience):
+                return experience.duration
             default:
                 return nil
             }
