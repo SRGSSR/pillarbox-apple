@@ -38,25 +38,12 @@ extension AVPlayerItem {
         repeatMode: RepeatMode,
         length: Int
     ) -> [AVPlayerItem] {
-        itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem, repeatMode: repeatMode)
-            .prefix(length)
-            .map { source in
-                if let item = source.item {
-                    return item.updated(with: source.content)
-                }
-                else {
-                    return source.content.playerItem(reload: false)
-                }
-            }
+        let _sources = itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem)
+        let sources = itemSources(_sources, firstContent: currentContents.first, repeatMode: repeatMode)
+        return playerItems(from: sources, length: length, reload: false)
     }
 
-    private static func itemSources(
-        for currentContents: [AssetContent],
-        replacing previousContents: [AssetContent],
-        currentItem: AVPlayerItem?,
-        repeatMode: RepeatMode
-    ) -> [ItemSource] {
-        let sources = itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem)
+    private static func itemSources(_ sources: [ItemSource], firstContent: AssetContent?, repeatMode: RepeatMode) -> [ItemSource] {
         switch repeatMode {
         case .off:
             return sources
@@ -66,7 +53,7 @@ extension AVPlayerItem {
             updatedSources.insert(.init(content: firstSource.content, item: nil), at: 1)
             return updatedSources
         case .all:
-            guard let firstContent = currentContents.first else { return sources }
+            guard let firstContent else { return sources }
             var updatedSources = sources
             updatedSources.append(.init(content: firstContent, item: nil))
             return updatedSources
@@ -96,12 +83,23 @@ extension AVPlayerItem {
         }
     }
 
-    static func playerItems(from items: [PlayerItem], repeatMode: RepeatMode, length: Int, reload: Bool) -> [AVPlayerItem] {
-        playerItems(from: items.map(\.content), repeatMode: repeatMode, length: length, reload: reload)
+    static func playerItems(from items: [PlayerItem], after index: Int, repeatMode: RepeatMode, length: Int, reload: Bool) -> [AVPlayerItem] {
+        let afterContents = items.suffix(from: index).map(\.content)
+        let sources = itemSources(newItemSources(from: afterContents), firstContent: items.first?.content, repeatMode: repeatMode)
+        return playerItems(from: sources, length: length, reload: reload)
     }
 
-    private static func playerItems(from contents: [AssetContent], repeatMode: RepeatMode, length: Int, reload: Bool = false) -> [AVPlayerItem] {
-        contents.map { $0.playerItem(reload: reload) }
+    private static func playerItems(from sources: [ItemSource], length: Int, reload: Bool) -> [AVPlayerItem] {
+        sources
+            .prefix(length)
+            .map { source in
+                if let item = source.item {
+                    return item.updated(with: source.content)
+                }
+                else {
+                    return source.content.playerItem(reload: reload)
+                }
+            }
     }
 
     private static func newItemSources(from contents: [AssetContent]) -> [ItemSource] {

@@ -29,7 +29,7 @@ final class AVPlayerItemTests: TestCase {
             PlayerItem.simple(url: Stream.live.url)
         ]
         expect {
-            AVPlayerItem.playerItems(from: items, repeatMode: .off, length: .max, reload: false).compactMap(\.url)
+            AVPlayerItem.playerItems(from: items, after: 0, repeatMode: .off, length: .max, reload: false).compactMap(\.url)
         }
         .toEventually(equal([
             Stream.onDemand.url,
@@ -45,7 +45,7 @@ final class AVPlayerItemTests: TestCase {
             PlayerItem.simple(url: Stream.live.url)
         ]
         expect {
-            AVPlayerItem.playerItems(from: items, repeatMode: .one, length: .max, reload: false).compactMap(\.url)
+            AVPlayerItem.playerItems(from: items, after: 0, repeatMode: .one, length: .max, reload: false).compactMap(\.url)
         }
         .toEventually(equal([
             Stream.onDemand.url,
@@ -62,7 +62,7 @@ final class AVPlayerItemTests: TestCase {
             PlayerItem.simple(url: Stream.live.url)
         ]
         expect {
-            AVPlayerItem.playerItems(from: items, repeatMode: .all, length: .max, reload: false).compactMap(\.url)
+            AVPlayerItem.playerItems(from: items, after: 0, repeatMode: .all, length: .max, reload: false).compactMap(\.url)
         }
         .toEventually(equal([
             Stream.onDemand.url,
