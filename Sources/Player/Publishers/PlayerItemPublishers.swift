@@ -9,8 +9,11 @@ import Foundation
 import PillarboxCore
 
 extension PlayerItem {
-    private static func experience(forService service: DateInterval, startDate: Date) -> DateInterval {
-        if startDate < service.end {
+    private static func experience(fromService service: DateInterval, startDate: Date) -> DateInterval {
+        if startDate < service.start {
+            return service
+        }
+        else if startDate < service.end {
             return .init(start: startDate, end: service.end)
         }
         else {
@@ -28,7 +31,7 @@ extension PlayerItem {
         .map { dateInterval, startDate in
             MetricEvent(
                 kind: .metadata(
-                    experience: Self.experience(forService: dateInterval, startDate: startDate),
+                    experience: Self.experience(fromService: dateInterval, startDate: startDate),
                     service: dateInterval
                 ),
                 date: dateInterval.end
