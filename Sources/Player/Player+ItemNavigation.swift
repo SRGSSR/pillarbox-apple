@@ -27,7 +27,7 @@ public extension Player {
     ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func returnToPreviousItem() {
-        guard let index = Self.index(before: currentItem, in: storedItems) else { return }
+        guard let index = index(before: currentItem, in: storedItems) else { return }
         queuePlayer.replaceItems(
             with: AVPlayerItem.playerItems(
                 from: Array(storedItems),
@@ -58,7 +58,7 @@ public extension Player {
     ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func advanceToNextItem() {
-        guard let index = Self.index(after: currentItem, in: storedItems) else { return }
+        guard let index = index(after: currentItem, in: storedItems) else { return }
         queuePlayer.replaceItems(
             with: AVPlayerItem.playerItems(
                 from: Array(storedItems),
@@ -73,11 +73,11 @@ public extension Player {
 
 extension Player {
     func canReturnToItem(before item: PlayerItem?, in items: Deque<PlayerItem>) -> Bool {
-        Self.index(before: item, in: items) != nil
+        index(before: item, in: items) != nil
     }
 
     func canAdvanceToItem(after item: PlayerItem?, in items: Deque<PlayerItem>) -> Bool {
-        Self.index(after: item, in: items) != nil
+        index(after: item, in: items) != nil
     }
 
     func replaceCurrentItemWithItem(_ item: PlayerItem?) {
@@ -99,15 +99,25 @@ extension Player {
 }
 
 private extension Player {
-    static func index(before item: PlayerItem?, in items: Deque<PlayerItem>) -> Int? {
+    func index(before item: PlayerItem?, in items: Deque<PlayerItem>) -> Int? {
         guard let item, let index = items.firstIndex(of: item) else { return nil }
         let previousIndex = items.index(before: index)
-        return previousIndex >= 0 ? previousIndex : nil
+        switch repeatMode {
+        case .off, .one:
+            return previousIndex >= 0 ? previousIndex : nil
+        case .all:
+            return previousIndex >= 0 ? previousIndex : items.index(before: items.endIndex)
+        }
     }
 
-    static func index(after item: PlayerItem?, in items: Deque<PlayerItem>) -> Int? {
+    func index(after item: PlayerItem?, in items: Deque<PlayerItem>) -> Int? {
         guard let item, let index = items.firstIndex(of: item) else { return nil }
         let nextIndex = items.index(after: index)
-        return nextIndex < items.count ? nextIndex : nil
+        switch repeatMode {
+        case .off, .one:
+            return nextIndex < items.count ? nextIndex : nil
+        case .all:
+            return nextIndex < items.count ? nextIndex : 0
+        }
     }
 }
