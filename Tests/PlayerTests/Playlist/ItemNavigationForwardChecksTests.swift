@@ -30,7 +30,7 @@ final class ItemNavigationForwardChecksTests: TestCase {
         expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 
-    func testRepeatAll() {
+    func testWrapAtBackWithRepeatAll() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         player.repeatMode = .all
         expect(player.canAdvanceToNextItem()).to(beTrue())
