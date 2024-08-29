@@ -27,6 +27,17 @@ private struct Toolbar: View {
     @ObservedObject private var model: PlaylistViewModel
     @State private var isSelectionPresented = false
 
+    private var repeatModeImageName: String {
+        switch player.repeatMode {
+        case .off:
+            "repeat.circle"
+        case .one:
+            "repeat.1.circle.fill"
+        case .all:
+            "repeat.circle.fill"
+        }
+    }
+
     var body: some View {
         HStack {
             previousButton()
@@ -59,7 +70,7 @@ private struct Toolbar: View {
     private func managementButtons() -> some View {
         HStack(spacing: 30) {
             Button(action: toggleRepeatMode) {
-                Image(systemName: repeatModeImageName())
+                Image(systemName: repeatModeImageName)
             }
 
             Button(action: model.shuffle) {
@@ -94,17 +105,6 @@ private struct Toolbar: View {
             player.repeatMode = .off
         case .all:
             player.repeatMode = .one
-        }
-    }
-
-    private func repeatModeImageName() -> String {
-        switch player.repeatMode {
-        case .off:
-            "repeat.circle"
-        case .one:
-            "repeat.1.circle.fill"
-        case .all:
-            "repeat.circle.fill"
         }
     }
 
