@@ -14,7 +14,7 @@ public extension Player {
     /// - Returns: `true` if possible.
     ///
     /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``, provided the queue contains more than one item.
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Observes the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func canReturnToPrevious() -> Bool {
@@ -24,7 +24,7 @@ public extension Player {
     /// Returns to the previous content.
     ///
     /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``, provided the queue contains more than one item.
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Observes the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func returnToPrevious() {
@@ -41,7 +41,7 @@ public extension Player {
     /// - Returns: `true` if possible.
     ///
     /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``, provided the queue contains more than one item.
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Observes the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func canAdvanceToNext() -> Bool {
@@ -51,7 +51,7 @@ public extension Player {
     /// Moves to the next content.
     ///
     /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``, provided the queue contains more than one item.
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Observes the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func advanceToNext() {

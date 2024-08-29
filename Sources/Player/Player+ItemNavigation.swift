@@ -13,7 +13,7 @@ public extension Player {
     /// - Returns: `true` if possible.
     ///
     /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``, provided the queue contains more than one item.
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func canReturnToPreviousItem() -> Bool {
@@ -23,7 +23,7 @@ public extension Player {
     /// Returns to the previous item in the queue.
     ///
     /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``, provided the queue contains more than one item.
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func returnToPreviousItem() {
@@ -44,7 +44,7 @@ public extension Player {
     /// - Returns: `true` if possible.
     ///
     /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``, provided the queue contains more than one item.
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func canAdvanceToNextItem() -> Bool {
@@ -54,7 +54,7 @@ public extension Player {
     /// Moves to the next item in the queue.
     ///
     /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``, provided the queue contains more than one item.
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func advanceToNextItem() {
