@@ -50,12 +50,12 @@ extension AVPlayerItem {
         case .one:
             guard let firstSource = sources.first else { return sources }
             var updatedSources = sources
-            updatedSources.insert(.init(content: firstSource.content, item: nil), at: 1)
+            updatedSources.insert(.new(content: firstSource.content), at: 1)
             return updatedSources
         case .all:
             guard let firstContent else { return sources }
             var updatedSources = sources
-            updatedSources.append(.init(content: firstContent, item: nil))
+            updatedSources.append(.new(content: firstContent))
             return updatedSources
         }
     }
@@ -69,7 +69,7 @@ extension AVPlayerItem {
         if let currentIndex = matchingIndex(for: currentItem, in: currentContents) {
             let currentContent = currentContents[currentIndex]
             if findContent(currentContent, in: previousContents) {
-                return [.init(content: currentContent, item: currentItem)] + newItemSources(from: Array(currentContents.suffix(from: currentIndex + 1)))
+                return [.reused(content: currentContent, item: currentItem)] + newItemSources(from: Array(currentContents.suffix(from: currentIndex + 1)))
             }
             else {
                 return newItemSources(from: Array(currentContents.suffix(from: currentIndex)))
@@ -103,7 +103,7 @@ extension AVPlayerItem {
     }
 
     private static func newItemSources(from contents: [AssetContent]) -> [ItemSource] {
-        contents.map { .init(content: $0, item: nil) }
+        contents.map { .new(content: $0) }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in contents: [AssetContent]) -> Int? {
