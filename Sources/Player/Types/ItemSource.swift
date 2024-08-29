@@ -22,4 +22,13 @@ struct ItemSource {
     static func reused(content: AssetContent, item: AVPlayerItem) -> Self {
         .init(content: content, item: item)
     }
+
+    func playerItem(reload: Bool) -> AVPlayerItem {
+        if let item {
+            return item.updated(with: content)
+        }
+        else {
+            return content.playerItem(reload: reload)
+        }
+    }
 }

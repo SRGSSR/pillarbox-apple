@@ -92,14 +92,7 @@ extension AVPlayerItem {
     private static func playerItems(from sources: [ItemSource], length: Int, reload: Bool) -> [AVPlayerItem] {
         sources
             .prefix(length)
-            .map { source in
-                if let item = source.item {
-                    return item.updated(with: source.content)
-                }
-                else {
-                    return source.content.playerItem(reload: reload)
-                }
-            }
+            .map { $0.playerItem(reload: reload) }
     }
 
     private static func newItemSources(from contents: [AssetContent]) -> [ItemSource] {
