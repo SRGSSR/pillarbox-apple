@@ -210,4 +210,17 @@ final class MetricsTrackerTests: MonitoringTestCase {
             player.play()
         }
     }
+
+    func testRepeatOne() {
+        let player = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
+            ]
+        ))
+        player.repeatMode = .one
+        expectAtLeastHits(start(), heartbeat(), stop(), start(), heartbeat(), stop()) {
+            player.play()
+        }
+    }
 }

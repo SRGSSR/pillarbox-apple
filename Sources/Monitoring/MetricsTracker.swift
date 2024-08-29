@@ -47,6 +47,7 @@ public final class MetricsTracker: PlayerItemTracker {
     public func updateMetricEvents(to events: [MetricEvent]) {
         switch events.last?.kind {
         case .asset:
+            reset(with: properties)
             session.start()
             sendEvent(name: .start, data: startData(from: events))
             startHeartbeat()
@@ -70,13 +71,7 @@ public final class MetricsTracker: PlayerItemTracker {
     }
 
     public func disable(with properties: PlayerProperties) {
-        defer {
-            reset()
-        }
-        stopHeartbeat()
-        if session.isStarted {
-            sendEvent(name: .stop, data: statusData(from: properties))
-        }
+        reset(with: properties)
     }
 }
 
@@ -185,10 +180,16 @@ private extension MetricsTracker {
         }
     }
 
-    func reset() {
-        stallDuration = 0
-        session.reset()
-        stopwatch.reset()
+    func reset(with properties: PlayerProperties?) {
+        defer {
+            stallDuration = 0
+            session.reset()
+            stopwatch.reset()
+        }
+        stopHeartbeat()
+        if let properties, session.isStarted {
+            sendEvent(name: .stop, data: statusData(from: properties))
+        }
     }
 }
 
@@ -200,7 +201,7 @@ private extension MetricsTracker {
     }()
 
     func sendEvent(name: EventName, data: some Encodable) {
-        guard let sessionId = session.id else { return}
+        guard let sessionId = session.id else { return }
 
         let payload = MetricPayload(sessionId: sessionId, eventName: name, data: data)
         guard let httpBody = try? Self.jsonEncoder.encode(payload) else { return }
