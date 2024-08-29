@@ -96,6 +96,17 @@ extension Player {
             queuePlayer.removeAllItems()
         }
     }
+
+    func reloadItems() {
+        let items = AVPlayerItem.playerItems(
+            for: Array(storedItems).map(\.content),
+            replacing: Array(storedItems).map(\.content),
+            currentItem: queuePlayer.currentItem,
+            repeatMode: repeatMode,
+            length: configuration.preloadedItems
+        )
+        queuePlayer.replaceItems(with: items)
+    }
 }
 
 private extension Player {

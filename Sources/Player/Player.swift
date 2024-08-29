@@ -36,14 +36,7 @@ public final class Player: ObservableObject, Equatable {
     /// The mode with which the player repeats playback of items in its queue.
     @Published public var repeatMode: RepeatMode = .off {
         didSet {
-            let items = AVPlayerItem.playerItems(
-                for: Array(storedItems).map(\.content),
-                replacing: Array(storedItems).map(\.content),
-                currentItem: queuePlayer.currentItem,
-                repeatMode: repeatMode,
-                length: configuration.preloadedItems
-            )
-            queuePlayer.replaceItems(with: items)
+            reloadItems()
         }
     }
 
