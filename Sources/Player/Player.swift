@@ -36,6 +36,7 @@ public final class Player: ObservableObject, Equatable {
     /// The mode with which the player repeats playback of items in its queue.
     @Published public var repeatMode: RepeatMode = .off {
         didSet {
+            guard !canReplay() else { return }
             reloadItems()
         }
     }
