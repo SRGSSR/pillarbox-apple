@@ -32,6 +32,6 @@ final class RepeatModeTests: TestCase {
         expect(player.currentItem).toEventually(equal(item1))
         player.repeatMode = .off
         expect(player.currentItem).toEventually(equal(item2))
-        expect(player.currentItem).toNever(equal(item1), until: .seconds(2))
+        expect(player.currentItem).toEventually(beNil())
     }
 }
