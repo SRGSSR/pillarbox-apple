@@ -38,12 +38,12 @@ extension AVPlayerItem {
         repeatMode: RepeatMode,
         length: Int
     ) -> [AVPlayerItem] {
-        let _sources = itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem)
-        let sources = itemSources(_sources, firstContent: currentContents.first, repeatMode: repeatMode)
-        return playerItems(from: sources, length: length, reload: false)
+        let sources = itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem)
+        let updatedSources = updatedItemSources(sources, repeatMode: repeatMode, firstContent: currentContents.first)
+        return playerItems(from: updatedSources, length: length, reload: false)
     }
 
-    private static func itemSources(_ sources: [ItemSource], firstContent: AssetContent?, repeatMode: RepeatMode) -> [ItemSource] {
+    private static func updatedItemSources(_ sources: [ItemSource], repeatMode: RepeatMode, firstContent: AssetContent?) -> [ItemSource] {
         switch repeatMode {
         case .off:
             return sources
@@ -85,7 +85,7 @@ extension AVPlayerItem {
 
     static func playerItems(from items: [PlayerItem], after index: Int, repeatMode: RepeatMode, length: Int, reload: Bool) -> [AVPlayerItem] {
         let afterContents = items.suffix(from: index).map(\.content)
-        let sources = itemSources(newItemSources(from: afterContents), firstContent: items.first?.content, repeatMode: repeatMode)
+        let sources = updatedItemSources(newItemSources(from: afterContents), repeatMode: repeatMode, firstContent: items.first?.content)
         return playerItems(from: sources, length: length, reload: reload)
     }
 
