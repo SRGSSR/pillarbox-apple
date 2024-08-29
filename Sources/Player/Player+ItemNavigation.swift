@@ -113,22 +113,30 @@ private extension Player {
     func index(before item: PlayerItem?, in items: Deque<PlayerItem>) -> Int? {
         guard let item, let index = items.firstIndex(of: item) else { return nil }
         let previousIndex = items.index(before: index)
-        switch repeatMode {
-        case .off, .one:
-            return previousIndex >= 0 ? previousIndex : nil
-        case .all:
-            return previousIndex >= 0 ? previousIndex : items.index(before: items.endIndex)
-        }
+        return previousIndex >= items.startIndex ? previousIndex : beforeIndex()
     }
 
     func index(after item: PlayerItem?, in items: Deque<PlayerItem>) -> Int? {
         guard let item, let index = items.firstIndex(of: item) else { return nil }
         let nextIndex = items.index(after: index)
+        return nextIndex < items.endIndex ? nextIndex : afterIndex()
+    }
+
+    func afterIndex() -> Int? {
         switch repeatMode {
         case .off, .one:
-            return nextIndex < items.count ? nextIndex : nil
+            return nil
         case .all:
-            return nextIndex < items.count ? nextIndex : 0
+            return items.startIndex
+        }
+    }
+
+    func beforeIndex() -> Int? {
+        switch repeatMode {
+        case .off, .one:
+            return nil
+        case .all:
+            return items.index(before: items.endIndex)
         }
     }
 }
