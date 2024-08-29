@@ -34,4 +34,12 @@ final class RepeatModeTests: TestCase {
         expect(player.currentItem).toEventually(equal(item2))
         expect(player.currentItem).toEventually(beNil())
     }
+
+    func testStreamTypeNotUpdated() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        player.play()
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.repeatMode = .one
+        expect(player.streamType).toNever(equal(.unknown), until: .milliseconds(100))
+    }
 }
