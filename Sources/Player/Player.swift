@@ -33,6 +33,20 @@ public final class Player: ObservableObject, Equatable {
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
 
+    /// The mode with which the player repeats playback of items in its queue.
+    @Published public var repeatMode: RepeatMode = .off {
+        didSet {
+            let items = AVPlayerItem.playerItems(
+                for: Array(storedItems).map(\.content),
+                replacing: Array(storedItems).map(\.content),
+                currentItem: queuePlayer.currentItem,
+                repeatMode: repeatMode,
+                length: configuration.preloadedItems
+            )
+            queuePlayer.replaceItems(with: items)
+        }
+    }
+
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
@@ -120,9 +134,6 @@ public final class Player: ObservableObject, Equatable {
             queuePlayer.isMuted = newValue
         }
     }
-
-    /// The mode with which the player repeats playback of items in its queue.
-    public var repeatMode: RepeatMode = .off
 
     /// A Boolean setting whether trackers must be enabled or not.
     ///
