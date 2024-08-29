@@ -42,4 +42,12 @@ final class RepeatModeTests: TestCase {
         player.repeatMode = .one
         expect(player.streamType).toNever(equal(.unknown), until: .milliseconds(100))
     }
+
+    func testRepeatModeUpdateDoesNotReplay() {
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        player.play()
+        expect(player.currentItem).toEventually(beNil())
+        player.repeatMode = .one
+        expect(player.currentItem).toAlways(beNil(), until: .milliseconds(100))
+    }
 }
