@@ -177,6 +177,15 @@ public final class ProgressTracker: ObservableObject {
         return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
     }
 
+    /// The date corresponding to the current progress.
+    ///
+    /// The date is `nil` when no date information is available from the stream.
+    public func date() -> Date? {
+        guard let player, let playerDate = player.date() else { return nil }
+        let playerTime = player.time()
+        return playerDate.addingTimeInterval((time - playerTime).seconds)
+    }
+
     private func seek(to progress: Float, optimal: Bool) {
         guard let player else { return }
         let time = Self.time(forProgress: progress, in: timeRange)
