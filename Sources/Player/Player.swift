@@ -140,13 +140,6 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// The current time.
-    ///
-    /// Returns `.invalid` when the time is unknown.
-    public var time: CMTime {
-        queuePlayer.currentTime().clamped(to: seekableTimeRange)
-    }
-
     /// The low-level system player.
     ///
     /// Exposed for specific read-only needs like interfacing with `AVPlayer`-based 3rd party APIs. Mutating the state
@@ -284,6 +277,22 @@ public final class Player: ObservableObject, Equatable {
         // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 
         // see https://github.com/SRGSSR/pillarbox-apple/issues/520
         queuePlayer.volume = 0
+    }
+}
+
+public extension Player {
+    /// The current time.
+    ///
+    /// Returns `.invalid` when the time is unknown.
+    func time() -> CMTime {
+        queuePlayer.currentTime().clamped(to: seekableTimeRange)
+    }
+
+    /// The current date.
+    ///
+    /// This date is only returned when available from the stream.
+    func date() -> Date? {
+        queuePlayer.currentItem?.currentDate()
     }
 }
 

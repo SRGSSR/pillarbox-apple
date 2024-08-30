@@ -87,7 +87,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
                 expect(labels.ns_st_ldw).to(equal(Stream.dvr.duration.seconds))
             }
         ) {
-            player.seek(at(player.time - CMTime(value: 10, timescale: 1)))
+            player.seek(at(player.time() - CMTime(value: 10, timescale: 1)))
         }
     }
 }

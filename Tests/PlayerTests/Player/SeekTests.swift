@@ -80,7 +80,7 @@ final class SeekTests: TestCase {
         waitUntil { done in
             player.seek(near(CMTime(value: -10, timescale: 1))) { finished in
                 expect(finished).to(beTrue())
-                expect(player.time).to(equal(.zero))
+                expect(player.time()).to(equal(.zero))
                 done()
             }
         }
@@ -92,7 +92,7 @@ final class SeekTests: TestCase {
         waitUntil { done in
             player.seek(near(player.seekableTimeRange.end + CMTime(value: 10, timescale: 1))) { finished in
                 expect(finished).to(beTrue())
-                expect(player.time).to(equal(player.seekableTimeRange.end, by: beClose(within: 1)))
+                expect(player.time()).to(equal(player.seekableTimeRange.end, by: beClose(within: 1)))
                 done()
             }
         }
@@ -103,18 +103,18 @@ final class SeekTests: TestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         player.play()
         player.seek(near(CMTime(value: -10, timescale: 1)))
-        expect(player.time).toAlways(beGreaterThanOrEqualTo(player.seekableTimeRange.start), until: .seconds(1))
+        expect(player.time()).toAlways(beGreaterThanOrEqualTo(player.seekableTimeRange.start), until: .seconds(1))
     }
 
     func testOnDemandStartAtTime() {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 10, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, configuration: configuration))
-        expect(player.time.seconds).toEventually(equal(10))
+        expect(player.time().seconds).toEventually(equal(10))
     }
 
     func testDvrStartAtTime() {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 10, timescale: 1)))
         let player = Player(item: .simple(url: Stream.dvr.url, configuration: configuration))
-        expect(player.time.seconds).toEventually(equal(10))
+        expect(player.time().seconds).toEventually(equal(10))
     }
 }

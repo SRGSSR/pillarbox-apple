@@ -45,36 +45,36 @@ final class BlockedTimeRangeTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithBlockedTimeRange()))
         expect(player.streamType).toEventually(equal(.onDemand))
         player.seek(at(.init(value: 30, timescale: 1)))
-        expect(kBlockedTimeRange.containsTime(player.time)).toNever(beTrue(), until: .seconds(2))
-        expect(player.time).to(equal(kBlockedTimeRange.end))
+        expect(kBlockedTimeRange.containsTime(player.time())).toNever(beTrue(), until: .seconds(2))
+        expect(player.time()).to(equal(kBlockedTimeRange.end))
     }
 
     func testSeekInOverlappingBlockedTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithOverlappingBlockedTimeRanges()))
         expect(player.streamType).toEventually(equal(.onDemand))
         player.seek(at(.init(value: 30, timescale: 1)))
-        expect(kOverlappingBlockedTimeRange.containsTime(player.time)).toNever(beTrue(), until: .seconds(2))
-        expect(player.time).to(equal(kOverlappingBlockedTimeRange.end))
+        expect(kOverlappingBlockedTimeRange.containsTime(player.time())).toNever(beTrue(), until: .seconds(2))
+        expect(player.time()).to(equal(kOverlappingBlockedTimeRange.end))
     }
 
     func testSeekInNestedBlockedTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithNestedBlockedTimeRanges()))
         expect(player.streamType).toEventually(equal(.onDemand))
         player.seek(at(.init(value: 40, timescale: 1)))
-        expect(kNestedBlockedTimeRange.containsTime(player.time)).toNever(beTrue(), until: .seconds(2))
-        expect(player.time).to(equal(kBlockedTimeRange.end))
+        expect(kNestedBlockedTimeRange.containsTime(player.time())).toNever(beTrue(), until: .seconds(2))
+        expect(player.time()).to(equal(kBlockedTimeRange.end))
     }
 
     func testBlockedTimeRangeTraversal() {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 29, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithBlockedTimeRange(), configuration: configuration))
         player.play()
-        expect(player.time).toEventually(beGreaterThan(kBlockedTimeRange.end))
+        expect(player.time()).toEventually(beGreaterThan(kBlockedTimeRange.end))
     }
 
     func testOnDemandStartInBlockedTimeRange() {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 30, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithBlockedTimeRange(), configuration: configuration))
-        expect(player.time).toEventually(equal(kBlockedTimeRange.end))
+        expect(player.time()).toEventually(equal(kBlockedTimeRange.end))
     }
 }

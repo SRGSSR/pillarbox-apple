@@ -32,11 +32,11 @@ final class SkipForwardTests: TestCase {
     func testSkipForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.time).to(equal(.zero))
+        expect(player.time()).to(equal(.zero))
 
         waitUntil { done in
             player.skipForward { _ in
-                expect(player.time).to(equal(player.forwardSkipTime, by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time()).to(equal(player.forwardSkipTime, by: beClose(within: player.chunkDuration.seconds)))
                 done()
             }
         }
@@ -45,7 +45,7 @@ final class SkipForwardTests: TestCase {
     func testMultipleSkipsForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.time).to(equal(.zero))
+        expect(player.time()).to(equal(.zero))
 
         waitUntil { done in
             player.skipForward { finished in
@@ -53,7 +53,7 @@ final class SkipForwardTests: TestCase {
             }
 
             player.skipForward { finished in
-                expect(player.time).to(equal(CMTimeMultiply(player.forwardSkipTime, multiplier: 2), by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time()).to(equal(CMTimeMultiply(player.forwardSkipTime, multiplier: 2), by: beClose(within: player.chunkDuration.seconds)))
                 expect(finished).to(beTrue())
                 done()
             }
@@ -74,10 +74,10 @@ final class SkipForwardTests: TestCase {
     func testSkipForDvr() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
-        let headTime = player.time
+        let headTime = player.time()
         waitUntil { done in
             player.skipForward { finished in
-                expect(player.time).to(equal(headTime, by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time()).to(equal(headTime, by: beClose(within: player.chunkDuration.seconds)))
                 expect(finished).to(beTrue())
                 done()
             }
@@ -87,7 +87,7 @@ final class SkipForwardTests: TestCase {
     func testSkipNearEndDoesNotSeekAnymore() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.time).to(equal(.zero))
+        expect(player.time()).to(equal(.zero))
         let seekTo = Stream.onDemand.duration - CMTime(value: 1, timescale: 1)
 
         waitUntil { done in
@@ -105,7 +105,7 @@ final class SkipForwardTests: TestCase {
     func testSkipNearEndCompletion() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.time).to(equal(.zero))
+        expect(player.time()).to(equal(.zero))
         let seekTo = Stream.onDemand.duration - CMTime(value: 1, timescale: 1)
 
         waitUntil { done in
@@ -118,7 +118,7 @@ final class SkipForwardTests: TestCase {
         waitUntil { done in
             player.skipForward { finished in
                 expect(finished).to(beTrue())
-                expect(player.time).to(equal(seekTo, by: beClose(within: 0.5)))
+                expect(player.time()).to(equal(seekTo, by: beClose(within: 0.5)))
                 done()
             }
         }

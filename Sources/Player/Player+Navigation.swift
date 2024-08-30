@@ -76,7 +76,8 @@ extension Player {
 
 private extension Player {
     func isAwayFromStartTime(withInterval interval: TimeInterval) -> Bool {
-        time.isValid && seekableTimeRange.isValid && (time - seekableTimeRange.start).seconds >= interval
+        let time = time()
+        return time.isValid && seekableTimeRange.isValid && (time - seekableTimeRange.start).seconds >= interval
     }
 
     func shouldSeekToStartTime() -> Bool {

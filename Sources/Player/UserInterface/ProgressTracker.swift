@@ -139,7 +139,7 @@ public final class ProgressTracker: ObservableObject {
                 .map { time, seekableTimeRange in
                     Self.progress(for: time, in: seekableTimeRange)
                 }
-                .prepend(Self.progress(for: player.time, in: player.seekableTimeRange))
+                .prepend(Self.progress(for: player.time(), in: player.seekableTimeRange))
                 .eraseToAnyPublisher()
             }
             .switchToLatest()

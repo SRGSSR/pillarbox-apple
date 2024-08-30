@@ -75,7 +75,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         ))
 
         player.play()
-        expect(player.time.seconds).toEventually(beGreaterThan(1))
+        expect(player.time().seconds).toEventually(beGreaterThan(1))
 
         expectAtLeastHits(
             pause { labels in
@@ -120,7 +120,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             // See 2. at the top of this file.
             player?.play()
             // See 1. at the top of this file.
-            expect(player?.time.seconds).toEventually(beGreaterThan(5))
+            expect(player?.time().seconds).toEventually(beGreaterThan(5))
             player = nil
         }
     }
@@ -148,7 +148,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             // See 2. at the top of this file.
             player.play()
             // See 1. at the top of this file.
-            expect(player.time.seconds).toEventually(beGreaterThan(5))
+            expect(player.time().seconds).toEventually(beGreaterThan(5))
             player.isTrackingEnabled = false
         }
     }
