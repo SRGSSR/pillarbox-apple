@@ -51,7 +51,7 @@ extension AVPlayerItem {
         case .one:
             guard let firstSource = sources.first else { return sources }
             var updatedSources = sources
-            updatedSources.insert(.new(content: firstSource.content), at: 1)
+            updatedSources.insert(firstSource.copy(), at: 1)
             return updatedSources
         case .all:
             guard let firstContent else { return sources }

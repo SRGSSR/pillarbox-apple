@@ -7,13 +7,8 @@
 import AVFoundation
 
 struct ItemSource {
-    let content: AssetContent
-    let item: AVPlayerItem?
-
-    private init(content: AssetContent, item: AVPlayerItem?) {
-        self.content = content
-        self.item = item
-    }
+    private let content: AssetContent
+    private let item: AVPlayerItem?
 
     static func new(content: AssetContent) -> Self {
         .init(content: content, item: nil)
@@ -21,6 +16,10 @@ struct ItemSource {
 
     static func reused(content: AssetContent, item: AVPlayerItem) -> Self {
         .init(content: content, item: item)
+    }
+
+    func copy() -> Self {
+        .init(content: content, item: nil)
     }
 
     func playerItem(reload: Bool) -> AVPlayerItem {
