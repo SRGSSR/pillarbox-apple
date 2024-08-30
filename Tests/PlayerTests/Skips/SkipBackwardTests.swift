@@ -25,11 +25,11 @@ final class SkipBackwardTests: TestCase {
     func testSkipForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.time).to(equal(.zero))
+        expect(player.time()).to(equal(.zero))
 
         waitUntil { done in
             player.skipBackward { _ in
-                expect(player.time).to(equal(.zero))
+                expect(player.time()).to(equal(.zero))
                 done()
             }
         }
@@ -38,7 +38,7 @@ final class SkipBackwardTests: TestCase {
     func testMultipleSkipsForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.time).to(equal(.zero))
+        expect(player.time()).to(equal(.zero))
 
         waitUntil { done in
             player.skipBackward { finished in
@@ -46,7 +46,7 @@ final class SkipBackwardTests: TestCase {
             }
 
             player.skipBackward { finished in
-                expect(player.time).to(equal(.zero))
+                expect(player.time()).to(equal(.zero))
                 expect(finished).to(beTrue())
                 done()
             }
@@ -67,10 +67,10 @@ final class SkipBackwardTests: TestCase {
     func testSkipForDvr() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
-        let headTime = player.time
+        let headTime = player.time()
         waitUntil { done in
             player.skipBackward { finished in
-                expect(player.time).to(equal(headTime + player.backwardSkipTime, by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time()).to(equal(headTime + player.backwardSkipTime, by: beClose(within: player.chunkDuration.seconds)))
                 expect(finished).to(beTrue())
                 done()
             }

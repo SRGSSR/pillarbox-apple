@@ -571,14 +571,28 @@ private struct TimeSlider: View {
         return formatter
     }()
 
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .medium
+        return formatter
+    }()
+
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
     @ObservedObject var visibilityTracker: VisibilityTracker
     @State private var streamType: StreamType = .unknown
 
     private var formattedElapsedTime: String? {
-        guard streamType == .onDemand else { return nil }
-        return Self.formattedTime((progressTracker.time - progressTracker.timeRange.start), duration: progressTracker.timeRange.duration)
+        if streamType == .onDemand {
+            return Self.formattedTime((progressTracker.time - progressTracker.timeRange.start), duration: progressTracker.timeRange.duration)
+        }
+        else if let date = progressTracker.date() {
+            return Self.timeFormatter.string(from: date)
+        }
+        else {
+            return nil
+        }
     }
 
     private var formattedTotalTime: String? {

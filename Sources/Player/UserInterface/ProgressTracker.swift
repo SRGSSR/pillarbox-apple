@@ -139,7 +139,7 @@ public final class ProgressTracker: ObservableObject {
                 .map { time, seekableTimeRange in
                     Self.progress(for: time, in: seekableTimeRange)
                 }
-                .prepend(Self.progress(for: player.time, in: player.seekableTimeRange))
+                .prepend(Self.progress(for: player.time(), in: player.seekableTimeRange))
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
@@ -175,6 +175,14 @@ public final class ProgressTracker: ObservableObject {
     static func time(forProgress progress: Float?, in timeRange: CMTimeRange) -> CMTime {
         guard let progress else { return .invalid }
         return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
+    }
+
+    /// The date corresponding to the current progress.
+    ///
+    /// The date is `nil` when no date information is available from the stream.
+    public func date() -> Date? {
+        guard let player, let playerDate = player.date() else { return nil }
+        return playerDate.addingTimeInterval((time - player.time()).seconds)
     }
 
     private func seek(to progress: Float, optimal: Bool) {

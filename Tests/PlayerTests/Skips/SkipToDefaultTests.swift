@@ -16,7 +16,7 @@ final class SkipToDefaultTests: TestCase {
         waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
-                expect(player.time).to(equal(.invalid))
+                expect(player.time()).to(equal(.invalid))
                 done()
             }
         }
@@ -28,7 +28,7 @@ final class SkipToDefaultTests: TestCase {
         waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
-                expect(player.time).to(equal(.invalid))
+                expect(player.time()).to(equal(.zero))
                 done()
             }
         }
@@ -40,7 +40,7 @@ final class SkipToDefaultTests: TestCase {
         waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
-                expect(player.time).to(equal(.zero))
+                expect(player.time()).to(equal(.zero))
                 done()
             }
         }

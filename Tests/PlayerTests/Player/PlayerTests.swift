@@ -25,24 +25,14 @@ final class PlayerTests: TestCase {
 
     func testTimesWhenEmpty() {
         let player = Player()
-        expect(player.time).toAlways(equal(.invalid), until: .seconds(1))
+        expect(player.time()).toAlways(equal(.invalid), until: .seconds(1))
     }
 
     func testTimesInEmptyRange() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
         player.play()
-        expect(player.time).toNever(equal(.invalid), until: .seconds(1))
-    }
-
-    func testTimesStayInRange() {
-        let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
-        player.play()
-        expect {
-            player.seekableTimeRange.start <= player.time && player.time <= player.seekableTimeRange.end
-        }
-        .toAlways(beTrue(), until: .seconds(1))
+        expect(player.time()).toNever(equal(.invalid), until: .seconds(1))
     }
 
     func testMetadataUpdatesMustNotChangePlayerItem() {

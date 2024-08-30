@@ -32,6 +32,7 @@ Pillarbox player provides all essential playback features you might expect:
 - Best-in-class Picture in Picture support.
 - The smoothest possible seek experience on Apple devices, with blazing-fast content navigation in streams enabled for trick play.
 - Playback speed controls.
+- Looping playback.
 - Monitoring with Pillarbox Quality of Experience (QoE) and Quality of Service (QoS) platform.
 
 In addition Pillarbox provides the ability to play all SRG SSR content through a dedicated package.

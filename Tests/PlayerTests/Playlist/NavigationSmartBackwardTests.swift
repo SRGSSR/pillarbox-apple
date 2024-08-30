@@ -32,7 +32,7 @@ final class NavigationSmartBackwardTests: TestCase {
 
         player.returnToPrevious()
         expect(player.currentItem).to(equal(item))
-        expect(player.time).toEventually(equal(.zero))
+        expect(player.time()).toEventually(equal(.zero))
     }
 
     func testReturnForOnDemandAtBeginningWithPreviousItem() {
@@ -59,7 +59,7 @@ final class NavigationSmartBackwardTests: TestCase {
         }
         player.returnToPrevious()
         expect(player.currentItem).to(equal(item2))
-        expect(player.time).toEventually(equal(.zero))
+        expect(player.time()).toEventually(equal(.zero))
     }
 
     func testReturnForLiveWithPreviousItem() {

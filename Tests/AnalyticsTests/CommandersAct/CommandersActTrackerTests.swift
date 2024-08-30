@@ -48,7 +48,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.time.seconds).toEventually(beGreaterThan(1))
+        expect(player.time().seconds).toEventually(beGreaterThan(1))
 
         expectAtLeastHits(
             pause { labels in
@@ -85,7 +85,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         player?.play()
-        expect(player?.time.seconds).toEventually(beGreaterThan(5))
+        expect(player?.time().seconds).toEventually(beGreaterThan(5))
 
         expectAtLeastHits(
             stop { labels in
@@ -106,7 +106,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         player?.setDesiredPlaybackSpeed(2)
 
         player?.play()
-        expect(player?.time.seconds).toEventually(beGreaterThan(2))
+        expect(player?.time().seconds).toEventually(beGreaterThan(2))
 
         expectAtLeastHits(
             stop { labels in
@@ -155,7 +155,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.time.seconds).toEventually(beGreaterThan(5))
+        expect(player.time().seconds).toEventually(beGreaterThan(5))
 
         expectAtLeastHits(stop()) {
             player.isTrackingEnabled = false

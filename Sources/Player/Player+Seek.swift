@@ -79,15 +79,26 @@ public extension Player {
 
     /// Performs an optimal seek to a given time, providing the best possible interactive user experience in all cases.
     ///
-    /// For the best result the player should be paused during the whole interaction.
-    ///
     /// - Parameters:
     ///   - time: The time to reach.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
     ///     finish without being cancelled.
+    ///
+    /// If a user interaction is causing this seek method to be called several times in a row, the player should be paused
+    /// during the interaction to achieve the best possible result.
     func seek(to time: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
         let position = Self.optimalPosition(reaching: time, for: queuePlayer.currentItem)
         seek(position, smooth: true, completion: completion)
+    }
+
+    /// Requests that the player seek to a specified date, and to notify you when the seek is complete.
+    ///
+    /// - Parameters:
+    ///   - date: The date to reach.
+    ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
+    ///     finish without being cancelled.
+    func seek(to date: Date, completion: @escaping (Bool) -> Void = { _ in }) {
+        queuePlayer.seek(to: date, completionHandler: completion)
     }
 
     /// Performs a precise seek to a chapter.
