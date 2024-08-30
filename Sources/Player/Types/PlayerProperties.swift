@@ -119,7 +119,7 @@ public extension PlayerProperties {
 public extension PlayerProperties {
     /// The current time.
     func time() -> CMTime {
-        coreProperties.time()
+        coreProperties.time().clamped(to: timeProperties.seekableTimeRange)
     }
 
     /// The current date.

@@ -285,14 +285,25 @@ public extension Player {
     ///
     /// Returns `.invalid` when the time is unknown.
     func time() -> CMTime {
-        queuePlayer.currentTime().clamped(to: seekableTimeRange)
+        properties.time()
     }
 
     /// The current date.
     ///
     /// This date is only returned when available from the stream.
     func date() -> Date? {
-        queuePlayer.currentItem?.currentDate()
+        properties.date()
+    }
+
+    /// The current player metrics, if available.
+    ///
+    /// Each call to this function might return different results reflecting the most recent metrics available. The
+    /// included ``Metrics/increment`` collates data from the entire playback session and is therefore always equal
+    /// to ``Metrics/total``.
+    ///
+    /// > Important: Metrics are reset when toggling external playback.
+    func metrics() -> Metrics? {
+        properties.metrics()
     }
 }
 
