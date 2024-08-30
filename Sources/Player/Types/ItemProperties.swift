@@ -35,7 +35,9 @@ extension ItemProperties {
     }
 
     func date() -> Date? {
-        item?.currentDate()
+        // Check cached duration validity first. This avoids potentially costly date retrieval when playing some
+        // content (e.g. MP3).
+        duration.isValid ? item?.currentDate() : nil
     }
 
     func metrics() -> Metrics? {
