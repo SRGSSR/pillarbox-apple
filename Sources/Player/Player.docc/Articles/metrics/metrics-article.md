@@ -21,7 +21,11 @@ To better understand how your playback experience is perceived by your users, yo
 
 Pillarbox ``Player`` provides extensive metrics which can help you provide answer to these questions.
 
-## Obtain metrics periodically
+### Receive metrics when needed
+
+You can receive metrics when needed by calling the ``Player/metrics()`` function at any time.
+
+## Receive metrics periodically
 
 Subscribe to ``Player/periodicMetricsPublisher(forInterval:queue:limit:)`` to receive a stream of ``Metrics`` related to the item currently being played.
 
