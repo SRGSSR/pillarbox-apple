@@ -23,7 +23,7 @@ Pillarbox ``Player`` provides extensive metrics which can help you provide answe
 
 ### Receive metrics when needed
 
-You can receive metrics when needed by calling the ``Player/metrics()`` function at any time.
+You can receive current metrics at any time by calling the ``Player/metrics()`` player method. The same metrics are also available from ``PlayerProperties``.
 
 ## Receive metrics periodically
 
