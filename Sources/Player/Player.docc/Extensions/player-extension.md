@@ -33,8 +33,12 @@
 - ``selectedMediaOption(for:)``
 - ``setMediaSelection(preferredLanguages:for:)``
 
-#### Style
+#### Behavior
 
+- ``actionAtItemEnd``
+- ``configuration``
+- ``repeatMode``
+- ``shouldPlay``
 - ``textStyleRules``
 
 ### Navigation
@@ -73,8 +77,13 @@
 - ``propertiesPublisher``
 - ``rate``
 - ``systemPlayer``
-- ``time``
 - ``version``
+
+### Current State
+
+- ``date()``
+- ``metrics()``
+- ``time()``
 
 ### Replay
 
@@ -87,17 +96,12 @@
 - ``seek(_:smooth:completion:)``
 - ``seek(to:completion:)-9bknb``
 - ``seek(to:completion:)-2ypz8``
+- ``seek(to:completion:)-1tbeq``
 - ``after(_:)``
 - ``at(_:)``
 - ``before(_:)``
 - ``near(_:)``
 - ``to(_:toleranceBefore:toleranceAfter:)``
-
-### Setup
-
-- ``becomeActive()``
-- ``configuration``
-- ``resignActive()``
 
 ### Skip
 
@@ -118,6 +122,11 @@
 - ``canReturnToPrevious()``
 - ``returnToPrevious()``
 
+### System Integration
+
+- ``becomeActive()``
+- ``resignActive()``
+
 ### Time Publisher
 
 - ``boundaryTimePublisher(for:queue:)``
@@ -127,6 +136,11 @@
 
 - ``isTrackingEnabled``
 - ``currentSessionIdentifiers(trackedBy:)``
+
+### Metrics
+
+- ``metricEventsPublisher``
+- ``periodicMetricsPublisher(forInterval:queue:limit:)``
 
 ### User Interface
 
