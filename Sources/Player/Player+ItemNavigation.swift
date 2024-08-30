@@ -98,9 +98,10 @@ extension Player {
     }
 
     func reloadItems() {
+        let contents = Array(storedItems).map(\.content)
         let items = AVPlayerItem.playerItems(
-            for: Array(storedItems).map(\.content),
-            replacing: Array(storedItems).map(\.content),
+            for: contents,
+            replacing: contents,
             currentItem: queuePlayer.currentItem,
             repeatMode: repeatMode,
             length: configuration.preloadedItems
