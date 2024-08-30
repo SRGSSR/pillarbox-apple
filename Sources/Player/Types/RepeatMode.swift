@@ -17,6 +17,6 @@ public enum RepeatMode {
     /// Repeat all items.
     ///
     /// The behavior of player advance and return navigation methods is adjusted to wrap around both ends of the item
-    /// queue..
+    /// queue.
     case all
 }
