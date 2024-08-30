@@ -44,7 +44,7 @@ private struct TimeProgress: View {
 
 // Behavior: h-exp, v-exp
 struct StoriesView: View {
-    @StateObject private var model = StoriesViewModel(stories: Story.stories(from: MediaList.videoUrls))
+    @StateObject private var model = StoriesViewModel(stories: Story.stories(from: MediaList.storyUrns))
 
     var body: some View {
         TabView(selection: $model.currentStory) {

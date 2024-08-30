@@ -31,14 +31,15 @@ extension Player {
     func queuePlayerItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
         queuePublisher
             .withPrevious(.empty)
-            .compactMap { [configuration] previous, current in
-                guard let buffer = Queue.buffer(from: previous, to: current, length: configuration.preloadedItems) else {
+            .compactMap { [weak self, configuration] previous, current in
+                guard let self, let buffer = Queue.buffer(from: previous, to: current, length: configuration.preloadedItems) else {
                     return nil
                 }
                 return AVPlayerItem.playerItems(
                     for: current.elements.map(\.content),
                     replacing: previous.elements.map(\.content),
                     currentItem: buffer.item,
+                    repeatMode: repeatMode,
                     length: buffer.length
                 )
             }

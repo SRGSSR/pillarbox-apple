@@ -33,6 +33,14 @@ public final class Player: ObservableObject, Equatable {
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
 
+    /// The mode with which the player repeats playback of items in its queue.
+    @Published public var repeatMode: RepeatMode = .off {
+        didSet {
+            guard !canReplay() else { return }
+            reloadItems()
+        }
+    }
+
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 

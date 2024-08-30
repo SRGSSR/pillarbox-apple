@@ -7,6 +7,8 @@
 import Foundation
 
 /// A player configuration.
+///
+/// The configuration controls behaviors set at player creation time and that cannot be changed afterwards.
 public struct PlayerConfiguration {
     /// The default configuration.
     public static let `default` = Self()

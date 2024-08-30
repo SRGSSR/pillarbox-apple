@@ -12,6 +12,9 @@ public extension Player {
     ///
     /// - Returns: `true` if possible.
     ///
+    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
+    /// has been set to ``RepeatMode/all``.
+    ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func canReturnToPreviousItem() -> Bool {
         canReturnToItem(before: currentItem, in: storedItems)
@@ -19,15 +22,29 @@ public extension Player {
 
     /// Returns to the previous item in the queue.
     ///
+    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
+    /// has been set to ``RepeatMode/all``.
+    ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func returnToPreviousItem() {
-        guard canReturnToPreviousItem() else { return }
-        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems, length: configuration.preloadedItems, reload: true))
+        guard let index = index(before: currentItem, in: storedItems) else { return }
+        queuePlayer.replaceItems(
+            with: AVPlayerItem.playerItems(
+                from: Array(storedItems),
+                after: index,
+                repeatMode: repeatMode,
+                length: configuration.preloadedItems,
+                reload: true
+            )
+        )
     }
 
     /// Checks whether moving to the next item in the queue is possible.
     ///
     /// - Returns: `true` if possible.
+    ///
+    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func canAdvanceToNextItem() -> Bool {
@@ -36,56 +53,91 @@ public extension Player {
 
     /// Moves to the next item in the queue.
     ///
+    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
+    /// has been set to ``RepeatMode/all``.
+    ///
     /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func advanceToNextItem() {
-        guard canAdvanceToNextItem() else { return }
-        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems, length: configuration.preloadedItems, reload: true))
+        guard let index = index(after: currentItem, in: storedItems) else { return }
+        queuePlayer.replaceItems(
+            with: AVPlayerItem.playerItems(
+                from: Array(storedItems),
+                after: index,
+                repeatMode: repeatMode,
+                length: configuration.preloadedItems,
+                reload: true
+            )
+        )
     }
 }
 
 extension Player {
     func canReturnToItem(before item: PlayerItem?, in items: Deque<PlayerItem>) -> Bool {
-        !Self.items(before: item, in: items).isEmpty
+        index(before: item, in: items) != nil
     }
 
     func canAdvanceToItem(after item: PlayerItem?, in items: Deque<PlayerItem>) -> Bool {
-        !Self.items(after: item, in: items).isEmpty
+        index(after: item, in: items) != nil
     }
 
     func replaceCurrentItemWithItem(_ item: PlayerItem?) {
         if let item {
             guard storedItems.contains(item), let index = storedItems.firstIndex(of: item) else { return }
-            let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)), length: configuration.preloadedItems, reload: true)
+            let playerItems = AVPlayerItem.playerItems(
+                from: Array(storedItems),
+                after: index,
+                repeatMode: repeatMode,
+                length: configuration.preloadedItems,
+                reload: true
+            )
             queuePlayer.replaceItems(with: playerItems)
         }
         else {
             queuePlayer.removeAllItems()
         }
     }
+
+    func reloadItems() {
+        let contents = Array(storedItems).map(\.content)
+        let items = AVPlayerItem.playerItems(
+            for: contents,
+            replacing: contents,
+            currentItem: queuePlayer.currentItem,
+            repeatMode: repeatMode,
+            length: configuration.preloadedItems
+        )
+        queuePlayer.replaceItems(with: items)
+    }
 }
 
 private extension Player {
-    /// Returns the list of items to be loaded to return to the previous (playable) item.
-    var returningItems: [PlayerItem] {
-        Self.items(before: currentItem, in: storedItems)
-    }
-
-    /// Returns the list of items to be loaded to advance to the next (playable) item.
-    var advancingItems: [PlayerItem] {
-        Self.items(after: currentItem, in: storedItems)
-    }
-
-    static func items(before item: PlayerItem?, in items: Deque<PlayerItem>) -> [PlayerItem] {
-        guard let item, let index = items.firstIndex(of: item) else { return [] }
+    func index(before item: PlayerItem?, in items: Deque<PlayerItem>) -> Int? {
+        guard let item, let index = items.firstIndex(of: item) else { return nil }
         let previousIndex = items.index(before: index)
-        guard previousIndex >= 0 else { return [] }
-        return Array(items.suffix(from: previousIndex))
+        return previousIndex >= items.startIndex ? previousIndex : beforeIndex()
     }
 
-    static func items(after item: PlayerItem?, in items: Deque<PlayerItem>) -> [PlayerItem] {
-        guard let item, let index = items.firstIndex(of: item) else { return [] }
+    func index(after item: PlayerItem?, in items: Deque<PlayerItem>) -> Int? {
+        guard let item, let index = items.firstIndex(of: item) else { return nil }
         let nextIndex = items.index(after: index)
-        guard nextIndex < items.count else { return [] }
-        return Array(items.suffix(from: nextIndex))
+        return nextIndex < items.endIndex ? nextIndex : afterIndex()
+    }
+
+    func afterIndex() -> Int? {
+        switch repeatMode {
+        case .off, .one:
+            return nil
+        case .all:
+            return items.startIndex
+        }
+    }
+
+    func beforeIndex() -> Int? {
+        switch repeatMode {
+        case .off, .one:
+            return nil
+        case .all:
+            return items.index(before: items.endIndex)
+        }
     }
 }

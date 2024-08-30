@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import AVKit
 
 private var kIdKey: Void?
 
@@ -28,38 +29,75 @@ extension AVPlayerItem {
     ///   - currentContents: The current list of contents.
     ///   - previousContents: The previous list of contents.
     ///   - currentItem: The item currently being played by the player.
+    ///   - repeatMode: The current repeat mode setting.
+    ///   - length: The maximum number of items to return.
     /// - Returns: The list of player items to load into the player.
     static func playerItems(
         for currentContents: [AssetContent],
         replacing previousContents: [AssetContent],
         currentItem: AVPlayerItem?,
+        repeatMode: RepeatMode,
         length: Int
     ) -> [AVPlayerItem] {
-        guard let currentItem else { return playerItems(from: Array(currentContents.prefix(length))) }
+        let sources = itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem)
+        let updatedSources = updatedItemSources(sources, repeatMode: repeatMode, firstContent: currentContents.first)
+        return playerItems(from: updatedSources, length: length, reload: false)
+    }
+
+    private static func updatedItemSources(_ sources: [ItemSource], repeatMode: RepeatMode, firstContent: AssetContent?) -> [ItemSource] {
+        switch repeatMode {
+        case .off:
+            return sources
+        case .one:
+            guard let firstSource = sources.first else { return sources }
+            var updatedSources = sources
+            updatedSources.insert(firstSource.copy(), at: 1)
+            return updatedSources
+        case .all:
+            guard let firstContent else { return sources }
+            var updatedSources = sources
+            updatedSources.append(.new(content: firstContent))
+            return updatedSources
+        }
+    }
+
+    private static func itemSources(
+        for currentContents: [AssetContent],
+        replacing previousContents: [AssetContent],
+        currentItem: AVPlayerItem?
+    ) -> [ItemSource] {
+        guard let currentItem else { return newItemSources(from: Array(currentContents)) }
         if let currentIndex = matchingIndex(for: currentItem, in: currentContents) {
             let currentContent = currentContents[currentIndex]
             if findContent(currentContent, in: previousContents) {
-                currentContent.update(item: currentItem)
-                return [currentItem] + playerItems(from: Array(currentContents.suffix(from: currentIndex + 1).prefix(length - 1)))
+                return [.reused(content: currentContent, item: currentItem)] + newItemSources(from: Array(currentContents.suffix(from: currentIndex + 1)))
             }
             else {
-                return playerItems(from: Array(currentContents.suffix(from: currentIndex).prefix(length)))
+                return newItemSources(from: Array(currentContents.suffix(from: currentIndex)))
             }
         }
         else if let commonIndex = firstCommonIndex(in: currentContents, matching: previousContents, after: currentItem) {
-            return playerItems(from: Array(currentContents.suffix(from: commonIndex).prefix(length)))
+            return newItemSources(from: Array(currentContents.suffix(from: commonIndex)))
         }
         else {
-            return playerItems(from: Array(currentContents.prefix(length)))
+            return newItemSources(from: Array(currentContents))
         }
     }
 
-    static func playerItems(from items: [PlayerItem], length: Int, reload: Bool) -> [AVPlayerItem] {
-        playerItems(from: items.prefix(length).map(\.content), reload: reload)
+    static func playerItems(from items: [PlayerItem], after index: Int, repeatMode: RepeatMode, length: Int, reload: Bool) -> [AVPlayerItem] {
+        let afterContents = items.suffix(from: index).map(\.content)
+        let sources = updatedItemSources(newItemSources(from: afterContents), repeatMode: repeatMode, firstContent: items.first?.content)
+        return playerItems(from: sources, length: length, reload: reload)
     }
 
-    private static func playerItems(from contents: [AssetContent], reload: Bool = false) -> [AVPlayerItem] {
-        contents.map { $0.playerItem(reload: reload) }
+    private static func playerItems(from sources: [ItemSource], length: Int, reload: Bool) -> [AVPlayerItem] {
+        sources
+            .prefix(length)
+            .map { $0.playerItem(reload: reload) }
+    }
+
+    private static func newItemSources(from contents: [AssetContent]) -> [ItemSource] {
+        contents.map { .new(content: $0) }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in contents: [AssetContent]) -> Int? {
@@ -107,6 +145,19 @@ extension AVPlayerItem {
     /// - Returns: The receiver with the id assigned to it.
     func withId(_ id: UUID) -> AVPlayerItem {
         self.id = id
+        return self
+    }
+
+    func updated(with content: AssetContent) -> AVPlayerItem {
+        externalMetadata = content.metadata.externalMetadata
+#if os(tvOS)
+        interstitialTimeRanges = content.metadata.blockedTimeRanges.map { timeRange in
+            .init(timeRange: timeRange)
+        }
+        navigationMarkerGroups = [
+            AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: content.metadata.timedNavigationMarkers)
+        ]
+#endif
         return self
     }
 }

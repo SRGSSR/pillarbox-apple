@@ -29,4 +29,10 @@ final class ItemNavigationForwardChecksTests: TestCase {
         let player = Player()
         expect(player.canAdvanceToNextItem()).to(beFalse())
     }
+
+    func testWrapAtBackWithRepeatAll() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        player.repeatMode = .all
+        expect(player.canAdvanceToNextItem()).to(beTrue())
+    }
 }

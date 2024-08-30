@@ -13,12 +13,18 @@ public extension Player {
     ///
     /// - Returns: `true` if possible.
     ///
+    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
+    /// has been set to ``RepeatMode/all``.
+    ///
     /// > Important: Observes the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func canReturnToPrevious() -> Bool {
         canReturn(before: currentItem, in: storedItems, streamType: streamType)
     }
 
     /// Returns to the previous content.
+    ///
+    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Observes the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func returnToPrevious() {
@@ -34,12 +40,18 @@ public extension Player {
     ///
     /// - Returns: `true` if possible.
     ///
+    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
+    /// has been set to ``RepeatMode/all``.
+    ///
     /// > Important: Observes the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func canAdvanceToNext() -> Bool {
         canAdvanceToNextItem()
     }
 
     /// Moves to the next content.
+    ///
+    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
+    /// has been set to ``RepeatMode/all``.
     ///
     /// > Important: Observes the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func advanceToNext() {

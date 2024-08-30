@@ -50,4 +50,14 @@ final class ItemNavigationForwardTests: TestCase {
         let items = player.queuePlayer.items()
         expect(items.count).to(equal(player.configuration.preloadedItems))
     }
+
+    func testWrapAtBackWithRepeatAll() {
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        player.repeatMode = .all
+        player.advanceToNextItem()
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item1))
+    }
 }
