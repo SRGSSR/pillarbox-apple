@@ -107,6 +107,39 @@ enum MediaList {
         )
     ]
 
+    static let storyUrns = [
+        Media(
+            title: "Mario vs Sonic",
+            subtitle: "Tataki 1",
+            type: .urn("urn:rts:video:13950405")
+        ),
+        Media(
+            title: "Pourquoi Beyoncé fait de la country",
+            subtitle: "Tataki 2",
+            type: .urn("urn:rts:video:14815579")
+        ),
+        Media(
+            title: "L'île North Sentinel",
+            subtitle: "Tataki 3",
+            type: .urn("urn:rts:video:13795051")
+        ),
+        Media(
+            title: "Mourir pour ressembler à une idole",
+            subtitle: "Tataki 4",
+            type: .urn("urn:rts:video:14020134")
+        ),
+        Media(
+            title: "Pourquoi les gens mangent des insectes ?",
+            subtitle: "Tataki 5",
+            type: .urn("urn:rts:video:12631996")
+        ),
+        Media(
+            title: "Le concert de Beyoncé à Dubai",
+            subtitle: "Tataki 6",
+            type: .urn("urn:rts:video:13752646")
+        )
+    ]
+
     static let longVideoUrns = [
         Media(
             title: "J'ai pas l'air malade mais… (#1)",
