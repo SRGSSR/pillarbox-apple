@@ -182,8 +182,7 @@ public final class ProgressTracker: ObservableObject {
     /// The date is `nil` when no date information is available from the stream.
     public func date() -> Date? {
         guard let player, let playerDate = player.date() else { return nil }
-        let playerTime = player.time()
-        return playerDate.addingTimeInterval((time - playerTime).seconds)
+        return playerDate.addingTimeInterval((time - player.time()).seconds)
     }
 
     private func seek(to progress: Float, optimal: Bool) {
