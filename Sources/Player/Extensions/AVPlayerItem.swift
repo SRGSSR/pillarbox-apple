@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import AVKit
 
 private var kIdKey: Void?
 

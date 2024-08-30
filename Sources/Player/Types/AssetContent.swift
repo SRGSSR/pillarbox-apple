@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import AVKit
 
 struct AssetContent {
     let id: UUID
