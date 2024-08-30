@@ -124,7 +124,7 @@ public extension PlayerProperties {
 
     /// The current date.
     ///
-    /// This date is only returned when available from the stream.
+    /// The date is `nil` when no date information is available from the stream.
     func date() -> Date? {
         coreProperties.date()
     }
