@@ -35,7 +35,7 @@ extension ItemProperties {
     }
 
     func date() -> Date? {
-        item?.currentDate()
+        duration.isValid ? item?.currentDate() : nil
     }
 
     func metrics() -> Metrics? {
