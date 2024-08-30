@@ -35,17 +35,6 @@ final class PlayerTests: TestCase {
         expect(player.time()).toNever(equal(.invalid), until: .seconds(1))
     }
 
-    func testTimesStayInRange() {
-        let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
-        player.play()
-        expect {
-            let time = player.time()
-            return player.seekableTimeRange.start <= time && time <= player.seekableTimeRange.end
-        }
-        .toAlways(beTrue(), until: .seconds(1))
-    }
-
     func testMetadataUpdatesMustNotChangePlayerItem() {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
         expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
