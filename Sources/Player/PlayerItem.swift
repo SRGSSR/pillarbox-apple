@@ -116,11 +116,10 @@ public final class PlayerItem: Hashable {
                 Just(Date()).setFailureType(to: P.Failure.self)
             )
             .handleEvents(receiveOutput: { asset, _ in
-                // swiftlint:disable:previous trailing_closure
                 trackerAdapters.forEach { adapter in
                     adapter.updateMetadata(to: asset.metadata)
                 }
-            })
+            }, receiveCompletion: nil)
             .map { asset, startDate in
                 Publishers.CombineLatest3(
                     Just(asset),
