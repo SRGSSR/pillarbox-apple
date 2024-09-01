@@ -44,6 +44,16 @@ private struct InfoCell: View {
     let value: String
 
     var body: some View {
+#if os(tvOS)
+        Button(action: {}) {
+            content()
+        }
+#else
+        content()
+#endif
+    }
+
+    private func content() -> some View {
         HStack {
             Text(title)
             Spacer()
