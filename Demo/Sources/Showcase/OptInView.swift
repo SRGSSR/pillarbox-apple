@@ -27,7 +27,7 @@ struct OptInView: View {
             PlaybackView(player: player)
                 .supportsPictureInPicture(supportsPictureInPicture)
                 .background(.black)
-            List {
+            Form {
                 Toggle(isOn: $isActive) {
                     Text("Active (AirPlay / Control Center)")
                 }
@@ -45,6 +45,7 @@ struct OptInView: View {
                     Text("Use a proxy tool to observe events.")
                 }
             }
+            .padding(.horizontal, constant(iOS: 0, tvOS: 40))
         }
         .onChange(of: isActive) { isActive in
             if isActive {
