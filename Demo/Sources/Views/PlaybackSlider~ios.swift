@@ -10,9 +10,9 @@ import SwiftUI
 struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
 
+    let timeRanges: [TimeRange]
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
-    let timeRanges: [TimeRange]
     let onEditingChanged: (Bool) -> Void
     let onDragging: () -> Void
 
@@ -50,16 +50,16 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
 
     init(
         progressTracker: ProgressTracker,
+        timeRanges: [TimeRange],
         @ViewBuilder minimumValueLabel: @escaping () -> ValueLabel,
         @ViewBuilder maximumValueLabel: @escaping () -> ValueLabel,
-        timeRanges: [TimeRange],
         onEditingChanged: @escaping (Bool) -> Void = { _ in },
         onDragging: @escaping () -> Void = {}
     ) {
         self.progressTracker = progressTracker
+        self.timeRanges = timeRanges
         self.minimumValueLabel = minimumValueLabel
         self.maximumValueLabel = maximumValueLabel
-        self.timeRanges = timeRanges
         self.onEditingChanged = onEditingChanged
         self.onDragging = onDragging
     }
@@ -135,7 +135,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
 
 extension PlaybackSlider where ValueLabel == EmptyView {
     init(progressTracker: ProgressTracker) {
-        self.init(progressTracker: progressTracker, minimumValueLabel: { EmptyView() }, maximumValueLabel: { EmptyView() }, timeRanges: [])
+        self.init(progressTracker: progressTracker, timeRanges: [], minimumValueLabel: { EmptyView() }, maximumValueLabel: { EmptyView() })
     }
 }
 
