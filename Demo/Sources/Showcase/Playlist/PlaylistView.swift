@@ -118,10 +118,11 @@ private struct BottomView: View {
 
     var body: some View {
         Toolbar(model: model)
-        Playlist(player: model.player, editActions: .all) { source in
+        Playlist(player: model.player, editActions: .all) { source, isCurrent in
             switch source {
             case let media as Media:
                 MediaCell(media: media)
+                    .fontWeight(isCurrent ? .semibold : .regular)
             default:
                 Color.clear
             }
