@@ -45,9 +45,7 @@ private struct InfoCell: View {
 
     var body: some View {
 #if os(tvOS)
-        Button(action: {}) {
-            content()
-        }
+        Button(action: {}, label: content)
 #else
         content()
 #endif
