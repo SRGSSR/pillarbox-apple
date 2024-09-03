@@ -29,7 +29,7 @@ public struct Playlist<RowContent>: View where RowContent: View {
     ///   - rowContent: A view builder that creates the view for a single row of the playlist.
     ///   The closure receives two parameters:
     ///     - The source associated with a PlayerItem, if any.
-    ///     - A boolean indicating whether this source is currently being played.
+    ///     - A boolean indicating whether this source is associated with the current item.
     public init(player: Player, editActions: EditActions<[PlayerItem]>, @ViewBuilder rowContent: @escaping (_ source: Any?, _ isCurrent: Bool) -> RowContent) {
         self.player = player
         self.editActions = editActions
