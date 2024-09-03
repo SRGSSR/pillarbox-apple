@@ -13,11 +13,11 @@ public struct Playlist<RowContent>: View where RowContent: View {
     @ObservedObject private var player: Player
 
     private let editActions: EditActions<[PlayerItem]>
-    private let rowContent: (Any?) -> RowContent
+    private let rowContent: (_ source: Any?, _ isCurrent: Bool) -> RowContent
 
     public var body: some View {
         List($player.items, id: \.self, editActions: editActions, selection: $player.currentItem) { item in
-            rowContent(item.wrappedValue.source)
+            rowContent(item.wrappedValue.source, item.wrappedValue == player.currentItem)
         }
     }
 
@@ -26,9 +26,11 @@ public struct Playlist<RowContent>: View where RowContent: View {
     /// - Parameters:
     ///   - player: The player whose items must be displayed.
     ///   - editActions: The available edit actions.
-    ///   - rowContent: A view builder that creates the view for a single row of the playlist. The source associated
-    ///     with a ``PlayerItem``, if any, is provided as parameter to the closure.
-    public init(player: Player, editActions: EditActions<[PlayerItem]>, @ViewBuilder rowContent: @escaping (Any?) -> RowContent) {
+    ///   - rowContent: A view builder that creates the view for a single row of the playlist.
+    ///   The closure receives two parameters:
+    ///     - The source associated with a PlayerItem, if any.
+    ///     - A boolean indicating whether this source is currently being played.
+    public init(player: Player, editActions: EditActions<[PlayerItem]>, @ViewBuilder rowContent: @escaping (_ source: Any?, _ isCurrent: Bool) -> RowContent) {
         self.player = player
         self.editActions = editActions
         self.rowContent = rowContent
