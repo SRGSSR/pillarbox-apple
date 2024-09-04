@@ -14,7 +14,8 @@ struct CustomList<Content, Data>: View where Content: View, Data: Hashable {
 #if os(iOS)
         if !data.isEmpty {
             List(data, id: \.self, rowContent: content)
-        } else {
+        }
+        else {
             List { content(nil) }
         }
 #else
@@ -24,7 +25,8 @@ struct CustomList<Content, Data>: View where Content: View, Data: Hashable {
                     ForEach(data, id: \.self, content: content)
                 }
                 .padding(.horizontal, 50)
-            } else {
+            }
+            else {
                 VStack(alignment: .leading) {
                     content(nil)
                 }

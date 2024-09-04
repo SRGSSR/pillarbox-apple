@@ -27,7 +27,7 @@ struct OptInView: View {
             PlaybackView(player: player)
                 .supportsPictureInPicture(supportsPictureInPicture)
                 .background(.black)
-            List {
+            Form {
                 Toggle(isOn: $isActive) {
                     Text("Active (AirPlay / Control Center)")
                 }

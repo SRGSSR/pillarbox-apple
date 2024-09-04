@@ -83,9 +83,8 @@ final class Tracker {
             }
             .switchToLatest()
             .handleEvents(receiveOutput: { [weak self] properties in
-                // swiftlint:disable:previous trailing_closure
                 self?.updateTrackersProperties(to: properties)
-            })
+            }, receiveCompletion: nil)
             .weakAssign(to: \.properties, on: self)
             .store(in: &cancellables)
         metricEventCollector.$metricEvents

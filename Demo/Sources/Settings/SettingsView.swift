@@ -44,6 +44,14 @@ private struct InfoCell: View {
     let value: String
 
     var body: some View {
+#if os(tvOS)
+        Button(action: {}, label: content)
+#else
+        content()
+#endif
+    }
+
+    private func content() -> some View {
         HStack {
             Text(title)
             Spacer()
@@ -94,10 +102,10 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        CustomList {
+        Form {
             content()
-                .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
+        .padding(.horizontal, constant(iOS: 0, tvOS: 40))
         .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: playbackHudEnabled)
         .tracked(name: "settings")
