@@ -26,10 +26,10 @@ public struct Playlist<RowContent>: View where RowContent: View {
     /// - Parameters:
     ///   - player: The player whose items must be displayed.
     ///   - editActions: The available edit actions.
-    ///   - rowContent: A view builder that creates the view for a single row of the playlist.
-    ///   The closure receives two parameters:
-    ///     - The source associated with a PlayerItem, if any.
-    ///     - A boolean indicating whether this source is associated with the current item.
+    ///   - rowContent: A view builder that creates a row for a single item of the playlist. The closure receives two
+    ///     parameters:
+    ///       - The ``PlayerItem/source`` associated with the item, if any.
+    ///       - A Boolean indicating whether this source is associated with the current item.
     public init(player: Player, editActions: EditActions<[PlayerItem]>, @ViewBuilder rowContent: @escaping (_ source: Any?, _ isCurrent: Bool) -> RowContent) {
         self.player = player
         self.editActions = editActions
