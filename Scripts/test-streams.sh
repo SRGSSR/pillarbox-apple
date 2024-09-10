@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SCRIPT_NAME=$(basename "$0")
 SCRIPT_DIR=$(dirname "$0")
 
