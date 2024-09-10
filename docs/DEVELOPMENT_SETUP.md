@@ -19,6 +19,7 @@ The following tools are required for the best possible development experience:
 - [shellcheck](https://www.shellcheck.net)
 - [xcodes](https://github.com/RobotsAndPencils/xcodes)
 - [yamllint](https://github.com/adrienverge/yamllint)
+- [Shaka Packager](https://github.com/shaka-project/shaka-packager).
 
 Most of these tools can easily be installed with [Homebrew](https://brew.sh).
 
