@@ -30,7 +30,11 @@ public struct Playlist<RowContent>: View where RowContent: View {
     ///     parameters:
     ///       - The ``PlayerItem/source`` associated with the item, if any.
     ///       - A Boolean indicating whether this source is associated with the current item.
-    public init(player: Player, editActions: EditActions<[PlayerItem]>, @ViewBuilder rowContent: @escaping (_ source: Any?, _ isCurrent: Bool) -> RowContent) {
+    public init(
+        player: Player,
+        editActions: EditActions<[PlayerItem]> = [],
+        @ViewBuilder rowContent: @escaping (_ source: Any?, _ isCurrent: Bool) -> RowContent
+    ) {
         self.player = player
         self.editActions = editActions
         self.rowContent = rowContent
