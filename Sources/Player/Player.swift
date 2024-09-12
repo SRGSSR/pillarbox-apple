@@ -215,7 +215,7 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
-
+        configureAudioSessionPublisher()
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureTrackerPublisher()
@@ -351,6 +351,14 @@ private extension Player {
         metadataPublisher.slice(at: \.blockedTimeRanges)
             .assign(to: \.blockedTimeRanges, on: queuePlayer)
             .store(in: &cancellables)
+    }
+
+    func configureAudioSessionPublisher() {
+        AVAudioSession.enableSetCategoryNotifications()
+        NotificationCenter.default.publisher(for: .didSetAudioSessionCategory)
+            .map { _ in false }
+            .receiveOnMainThread()
+            .assign(to: &$isActive)
     }
 
     func updateTracker(with items: QueueItems?) {
