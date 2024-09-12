@@ -8,6 +8,7 @@
 
 import Combine
 import MediaPlayer
+import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
@@ -43,5 +44,12 @@ final class NowPlayingInfoPublisherTests: TestCase {
         ) {
             player.isActive = false
         }
+    }
+
+    func testInactiveWhenAudioSessionCategoryChanges() {
+        let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
+        player.becomeActive()
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .mixWithOthers)
+        expect(player.isActive).toEventually(beFalse(), timeout: .seconds(2))
     }
 }
