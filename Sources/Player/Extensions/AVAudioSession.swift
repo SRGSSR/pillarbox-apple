@@ -24,7 +24,7 @@ extension AVAudioSession {
     @objc
     private func swizzled_setCategory(_ category: Category, mode: Mode, options: CategoryOptions = []) throws {
         try swizzled_setCategory(category, mode: mode, options: options)
-        NotificationCenter.default.post(name: .didSetAudioSessionCategory, object: nil)
+        NotificationCenter.default.post(name: .didSetAudioSessionCategory, object: self)
     }
 }
 
