@@ -9,25 +9,42 @@ import AVFAudio
 extension AVAudioSession {
     private static var swizzled = false
 
-    static func enableSetCategoryNotifications() {
+    static func enableUpdateNotifications() {
         guard !swizzled else { return }
+        swizzleSetCategoryModePolicyOptions()
+        swizzleSetCategoryModeOptions()
         swizzled = true
-        let originalSelector = #selector(AVAudioSession.setCategory(_:mode:options:))
-        let swizzledSelector = #selector(AVAudioSession.swizzled_setCategory(_:mode:options:))
+    }
 
-        if let originalMethod = class_getInstanceMethod(Self.self, originalSelector),
-           let swizzledMethod = class_getInstanceMethod(Self.self, swizzledSelector) {
-            method_exchangeImplementations(originalMethod, swizzledMethod)
+    private static func swizzleSetCategoryModePolicyOptions() {
+        guard let method = class_getInstanceMethod(Self.self, #selector(setCategory(_:mode:policy:options:))),
+              let swizzledMethod = class_getInstanceMethod(Self.self, #selector(swizzled_setCategory(_:mode:policy:options:))) else {
+            return
         }
+        method_exchangeImplementations(method, swizzledMethod)
+    }
+
+    private static func swizzleSetCategoryModeOptions() {
+        guard let method = class_getInstanceMethod(Self.self, #selector(setCategory(_:mode:options:))),
+              let swizzledMethod = class_getInstanceMethod(Self.self, #selector(swizzled_setCategory(_:mode:options:))) else {
+            return
+        }
+        method_exchangeImplementations(method, swizzledMethod)
     }
 
     @objc
-    private func swizzled_setCategory(_ category: Category, mode: Mode, options: CategoryOptions = []) throws {
+    private func swizzled_setCategory(_ category: Category, mode: Mode, policy: RouteSharingPolicy, options: CategoryOptions) throws {
+        try swizzled_setCategory(category, mode: mode, policy: policy, options: options)
+        NotificationCenter.default.post(name: .didUpdateAudioSessionOptions, object: self)
+    }
+
+    @objc
+    private func swizzled_setCategory(_ category: Category, mode: Mode, options: CategoryOptions) throws {
         try swizzled_setCategory(category, mode: mode, options: options)
-        NotificationCenter.default.post(name: .didSetAudioSessionCategory, object: self)
+        NotificationCenter.default.post(name: .didUpdateAudioSessionOptions, object: self)
     }
 }
 
 extension Notification.Name {
-    static let didSetAudioSessionCategory = Notification.Name("PillarboxPlayerAVAudioSessionSetCategoryNotification")
+    static let didUpdateAudioSessionOptions = Notification.Name("PillarboxPlayerAVAudioSessionDidUpdateAudioSessionOptionsNotification")
 }

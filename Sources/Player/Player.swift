@@ -354,8 +354,8 @@ private extension Player {
     }
 
     func configureAudioSessionPublisher() {
-        AVAudioSession.enableSetCategoryNotifications()
-        NotificationCenter.default.publisher(for: .didSetAudioSessionCategory)
+        AVAudioSession.enableUpdateNotifications()
+        NotificationCenter.default.publisher(for: .didUpdateAudioSessionOptions)
             .map { _ in false }
             .receiveOnMainThread()
             .assign(to: &$isActive)
