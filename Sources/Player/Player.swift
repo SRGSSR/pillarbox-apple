@@ -354,8 +354,7 @@ private extension Player {
     }
 
     func configureAudioSessionPublisher() {
-        if #available(iOS 18, tvOS 18, *) {}
-        else {
+        if #unavailable(iOS 18, tvOS 18) {
             AVAudioSession.enableUpdateNotifications()
             NotificationCenter.default.publisher(for: .didUpdateAudioSessionOptions)
                 .sink { [queuePlayer] _ in
