@@ -359,6 +359,7 @@ private extension Player {
             NotificationCenter.default.publisher(for: .didUpdateAudioSessionOptions)
                 .sink { [queuePlayer] _ in
                     guard queuePlayer.rate != 0 else { return }
+                    // Forces the system to assess the situation and update Control Center availability accordingly.
                     queuePlayer.pause()
                     queuePlayer.play()
                 }
