@@ -7,11 +7,11 @@
 import AVFAudio
 
 extension AVAudioSession {
-    private static var kAlreadySwizzled = false
+    private static var swizzled = false
 
     static func enableSetCategoryNotifications() {
-        guard !kAlreadySwizzled else { return }
-        kAlreadySwizzled = true
+        guard !swizzled else { return }
+        swizzled = true
         let originalSelector = #selector(AVAudioSession.setCategory(_:mode:options:))
         let swizzledSelector = #selector(AVAudioSession.swizzled_setCategory(_:mode:options:))
 
