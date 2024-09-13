@@ -215,13 +215,13 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
-        configureAudioSessionPublisher()
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureTrackerPublisher()
         configureControlCenterPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
+        configureAudioSessionPublisher()
     }
 
     /// Creates a player with a single item in its queue.
@@ -354,11 +354,18 @@ private extension Player {
     }
 
     func configureAudioSessionPublisher() {
-        AVAudioSession.enableUpdateNotifications()
-        NotificationCenter.default.publisher(for: .didUpdateAudioSessionOptions)
-            .map { _ in false }
-            .receiveOnMainThread()
-            .assign(to: &$isActive)
+        if #available(iOS 18, tvOS 18, *) {}
+        else {
+            AVAudioSession.enableUpdateNotifications()
+            NotificationCenter.default.publisher(for: .didUpdateAudioSessionOptions)
+                .receiveOnMainThread()
+                .sink { [queuePlayer] _ in
+                    guard queuePlayer.rate != 0 else { return }
+                    queuePlayer.pause()
+                    queuePlayer.play()
+                }
+                .store(in: &cancellables)
+        }
     }
 
     func updateTracker(with items: QueueItems?) {

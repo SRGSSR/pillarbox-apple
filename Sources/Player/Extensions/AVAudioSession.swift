@@ -13,6 +13,7 @@ extension AVAudioSession {
         guard !swizzled else { return }
         swizzleSetCategoryModePolicyOptions()
         swizzleSetCategoryModeOptions()
+        swizzleSetCategoryOptions()
         swizzled = true
     }
 
@@ -32,6 +33,14 @@ extension AVAudioSession {
         method_exchangeImplementations(method, swizzledMethod)
     }
 
+    private static func swizzleSetCategoryOptions() {
+        guard let method = class_getInstanceMethod(Self.self, #selector(setCategory(_:options:))),
+              let swizzledMethod = class_getInstanceMethod(Self.self, #selector(swizzled_setCategory(_:options:))) else {
+            return
+        }
+        method_exchangeImplementations(method, swizzledMethod)
+    }
+
     @objc
     private func swizzled_setCategory(_ category: Category, mode: Mode, policy: RouteSharingPolicy, options: CategoryOptions) throws {
         let previousOptions = categoryOptions
@@ -45,6 +54,15 @@ extension AVAudioSession {
     private func swizzled_setCategory(_ category: Category, mode: Mode, options: CategoryOptions) throws {
         let previousOptions = categoryOptions
         try swizzled_setCategory(category, mode: mode, options: options)
+        if categoryOptions != previousOptions {
+            NotificationCenter.default.post(name: .didUpdateAudioSessionOptions, object: self)
+        }
+    }
+
+    @objc
+    private func swizzled_setCategory(_ category: Category, options: CategoryOptions) throws {
+        let previousOptions = categoryOptions
+        try swizzled_setCategory(category, options: options)
         if categoryOptions != previousOptions {
             NotificationCenter.default.post(name: .didUpdateAudioSessionOptions, object: self)
         }
