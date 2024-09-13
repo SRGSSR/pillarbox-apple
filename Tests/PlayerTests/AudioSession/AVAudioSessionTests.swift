@@ -12,9 +12,10 @@ import Nimble
 final class AVAudioSessionTests: TestCase {
     override func setUp() {
         AVAudioSession.enableUpdateNotifications()
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, policy: .default, options: [])
     }
 
-    func testCategoryNotificationWithCategoryModePolicyOptionsUpdate() throws {
+    func testUpdateNotificationWithSetCategoryModePolicyOptions() throws {
         let audioSession = AVAudioSession.sharedInstance()
         expect {
             try audioSession.setCategory(.playback, mode: .default, policy: .default, options: [.duckOthers])
@@ -23,11 +24,29 @@ final class AVAudioSessionTests: TestCase {
         ])))
     }
 
-    func testCategoryNotificationWithCategoryModeOptionsUpdate() throws {
+    func testNoUpdateNotificationWithSetCategoryModePolicyOptions() throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        expect {
+            try audioSession.setCategory(.playback, mode: .default, policy: .default, options: [])
+        }.notTo(postNotifications(equal([
+            Notification(name: .didUpdateAudioSessionOptions, object: audioSession)
+        ])))
+    }
+
+    func testUpdateNotificationWithSetCategoryModeOptions() throws {
         let audioSession = AVAudioSession.sharedInstance()
         expect {
             try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers])
         }.to(postNotifications(equal([
+            Notification(name: .didUpdateAudioSessionOptions, object: audioSession)
+        ])))
+    }
+
+    func testNoUpdateNotificationWithSetCategoryModeOptions() throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        expect {
+            try audioSession.setCategory(.playback, mode: .default, options: [])
+        }.notTo(postNotifications(equal([
             Notification(name: .didUpdateAudioSessionOptions, object: audioSession)
         ])))
     }

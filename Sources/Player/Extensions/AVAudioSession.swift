@@ -34,14 +34,20 @@ extension AVAudioSession {
 
     @objc
     private func swizzled_setCategory(_ category: Category, mode: Mode, policy: RouteSharingPolicy, options: CategoryOptions) throws {
+        let previousOptions = categoryOptions
         try swizzled_setCategory(category, mode: mode, policy: policy, options: options)
-        NotificationCenter.default.post(name: .didUpdateAudioSessionOptions, object: self)
+        if categoryOptions != previousOptions {
+            NotificationCenter.default.post(name: .didUpdateAudioSessionOptions, object: self)
+        }
     }
 
     @objc
     private func swizzled_setCategory(_ category: Category, mode: Mode, options: CategoryOptions) throws {
+        let previousOptions = categoryOptions
         try swizzled_setCategory(category, mode: mode, options: options)
-        NotificationCenter.default.post(name: .didUpdateAudioSessionOptions, object: self)
+        if categoryOptions != previousOptions {
+            NotificationCenter.default.post(name: .didUpdateAudioSessionOptions, object: self)
+        }
     }
 }
 
