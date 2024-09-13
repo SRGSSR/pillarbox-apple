@@ -9,7 +9,7 @@
 import AVFAudio
 import Nimble
 
-final class AVAudioSessionTests: TestCase {
+final class AVAudioSessionOptionsUpdateNotificationTests: TestCase {
     override func setUp() {
         AVAudioSession.enableUpdateNotifications()
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, policy: .default, options: [])
