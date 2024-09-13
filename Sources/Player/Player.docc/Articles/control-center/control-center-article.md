@@ -9,9 +9,11 @@ Enable playback steering from the Control Center.
 
 ## Overview
 
+> Note: For an example of use have a look at the <doc:integrating-with-control-center> tutorial.
+
 ``Player`` natively integrates with the Control Center. Most of this integration happens automatically but your app is still responsible of activating the player instance which must be associated with the Control Center. It must also provide the metadata (title, artwork image) associated with the ``PlayerItem`` currently being played.
 
-> Note: For an example of use have a look at the <doc:integrating-with-control-center> tutorial.
+> Important: The system uses some heuristics to determine whether an app is eligible for Control Center integration. In particular the [audio session](https://developer.apple.com/documentation/avfaudio/avaudiosession) must be configured with a non-mixable category option. More information is available from the [_Explore media metadata publishing and playback interactions_ WWDC session](https://developer.apple.com/videos/play/wwdc2022/110338/).
 
 ### Provide player item metadata
 
