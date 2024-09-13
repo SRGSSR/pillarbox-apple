@@ -50,4 +50,22 @@ final class AVAudioSessionNotificationTests: TestCase {
             Notification(name: .didUpdateAudioSessionOptions, object: audioSession)
         ])))
     }
+
+    func testUpdateWithSetCategoryOptions() throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        expect {
+            try audioSession.setCategory(.playback, options: [.duckOthers])
+        }.to(postNotifications(equal([
+            Notification(name: .didUpdateAudioSessionOptions, object: audioSession)
+        ])))
+    }
+
+    func testNoUpdateWithSetCategoryOptions() throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        expect {
+            try audioSession.setCategory(.playback, options: [])
+        }.notTo(postNotifications(equal([
+            Notification(name: .didUpdateAudioSessionOptions, object: audioSession)
+        ])))
+    }
 }
