@@ -35,8 +35,6 @@ You can manually call ``Player/resignActive()`` to have a player resign. Note th
 
 ### Extend support to tvOS
 
-Control Center integration on tvOS requires the use of ``SystemVideoView``, which automatically displays metadata provided for the item currently being played.
+Control Center integration on tvOS is achieved using a  ``SystemVideoView`` covering the whole screen. Making a player instance active is still required since this ensures that iOS devices used as remotes can also display current item information in their own Control Center.
 
-Making a player instance active is still required since this ensures that iOS devices used as remotes can display current item information in their own Control Center.
-
-> Note: The tvOS Control Center only displays information about audio content being played.
+> Note: The tvOS Control Center only displays information about audio content.
