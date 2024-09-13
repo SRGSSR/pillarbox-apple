@@ -358,7 +358,6 @@ private extension Player {
         else {
             AVAudioSession.enableUpdateNotifications()
             NotificationCenter.default.publisher(for: .didUpdateAudioSessionOptions)
-                .receiveOnMainThread()
                 .sink { [queuePlayer] _ in
                     guard queuePlayer.rate != 0 else { return }
                     queuePlayer.pause()
