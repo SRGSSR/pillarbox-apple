@@ -29,5 +29,5 @@ extension AVAudioSession {
 }
 
 extension Notification.Name {
-    static let didSetAudioSessionCategory = Notification.Name("AVAudioSessionSetCategoryNotification")
+    static let didSetAudioSessionCategory = Notification.Name("PillarboxPlayerAVAudioSessionSetCategoryNotification")
 }
