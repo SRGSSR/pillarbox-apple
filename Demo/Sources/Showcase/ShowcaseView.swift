@@ -199,6 +199,13 @@ struct ShowcaseView: View {
                 destination: .transition(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             .sourceCode(of: TransitionView.self)
+
+            cell(
+                title: "Simple transition",
+                subtitle: "A transition between two layouts sharing the same player",
+                destination: .simpleTransition(media: URLMedia.appleBasic_16_9_TS_HLS)
+            )
+            .sourceCode(of: SimpleTransitionView.self)
         }
     }
 

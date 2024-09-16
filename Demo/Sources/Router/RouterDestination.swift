@@ -24,6 +24,7 @@ enum RouterDestination: Identifiable, Hashable {
     case link(media: Media)
     case wrapped(media: Media)
     case transition(media: Media)
+    case simpleTransition(media: Media)
 
     case stories
     case playlist(medias: [Media])
@@ -61,6 +62,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "wrapped"
         case .transition:
             return "transition"
+        case .simpleTransition:
+            return "simpleTransition"
         case .stories:
             return "stories"
         case .playlist:
@@ -116,6 +119,8 @@ enum RouterDestination: Identifiable, Hashable {
             WrappedView(media: media)
         case let .transition(media: media):
             TransitionView(media: media)
+        case let .simpleTransition(media: media):
+            SimpleTransitionView(media: media)
         case .stories:
             StoriesView()
         case let .playlist(medias: medias):
