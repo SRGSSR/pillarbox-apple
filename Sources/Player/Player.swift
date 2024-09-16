@@ -215,13 +215,13 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
-
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureTrackerPublisher()
         configureControlCenterPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
+        configureAudioSessionPublisher()
     }
 
     /// Creates a player with a single item in its queue.
@@ -351,6 +351,20 @@ private extension Player {
         metadataPublisher.slice(at: \.blockedTimeRanges)
             .assign(to: \.blockedTimeRanges, on: queuePlayer)
             .store(in: &cancellables)
+    }
+
+    func configureAudioSessionPublisher() {
+        if #unavailable(iOS 18, tvOS 18) {
+            AVAudioSession.enableUpdateNotifications()
+            NotificationCenter.default.publisher(for: .didUpdateAudioSessionOptions)
+                .sink { [queuePlayer] _ in
+                    guard queuePlayer.rate != 0 else { return }
+                    // Forces the system to assess the situation and update Control Center availability accordingly.
+                    queuePlayer.pause()
+                    queuePlayer.play()
+                }
+                .store(in: &cancellables)
+        }
     }
 
     func updateTracker(with items: QueueItems?) {
