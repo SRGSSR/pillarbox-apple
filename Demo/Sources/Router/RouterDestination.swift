@@ -18,6 +18,7 @@ enum RouterDestination: Identifiable, Hashable {
 
     case blurred(media: Media)
     case twins(media: Media)
+    case simpleTwins(media: Media)
     case multi(media1: Media, media2: Media)
     case link(media: Media)
     case wrapped(media: Media)
@@ -47,6 +48,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "blurred"
         case .twins:
             return "twins"
+        case .simpleTwins:
+            return "simpleTwins"
         case .multi:
             return "multi"
         case .link:
@@ -98,6 +101,8 @@ enum RouterDestination: Identifiable, Hashable {
             BlurredView(media: media)
         case let .twins(media: media):
             TwinsView(media: media)
+        case let .simpleTwins(media: media):
+            SimpleTwinsView(media: media)
         case let .multi(media1: media1, media2: media2):
             MultiView(media1: media1, media2: media2)
         case let .link(media: media):

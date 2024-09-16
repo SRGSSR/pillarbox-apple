@@ -142,6 +142,13 @@ struct ShowcaseView: View {
             .sourceCode(of: TwinsView.self)
 
             cell(
+                title: "Simple twins",
+                subtitle: "A video displayed twice",
+                destination: .simpleTwins(media: URLMedia.appleBasic_16_9_TS_HLS)
+            )
+            .sourceCode(of: SimpleTwinsView.self)
+
+            cell(
                 title: "Multi-instance",
                 subtitle: "Two videos played at the same time",
                 destination: .multi(
