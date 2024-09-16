@@ -16,9 +16,15 @@ struct PictureInPictureSupportingVideoView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> VideoLayerView {
-        let view = PictureInPicture.shared.custom.view ?? VideoLayerView()
-        PictureInPicture.shared.custom.acquire(for: view)
-        return view
+        if let availableView = PictureInPicture.shared.custom.view, availableView.superview == nil {
+            PictureInPicture.shared.custom.acquire(for: availableView)
+            return availableView
+        }
+        else {
+            let view = VideoLayerView()
+            PictureInPicture.shared.custom.acquire(for: view)
+            return view
+        }
     }
 
     func updateUIView(_ uiView: VideoLayerView, context: Context) {
