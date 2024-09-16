@@ -132,6 +132,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func embeddingsSection() -> some View {
+        // swiftlint:disable:previous function_body_length
         // swiftlint:disable:next closure_body_length
         CustomSection("Embeddings") {
             cell(
@@ -167,6 +168,16 @@ struct ShowcaseView: View {
                 )
             )
             .sourceCode(of: MultiView.self)
+
+            cell(
+                title: "Simple multi-instance",
+                subtitle: "Two videos played at the same time",
+                destination: .simpleMulti(
+                    media1: URNMedia.onDemandHorizontalVideo,
+                    media2: URNMedia.onDemandVideo
+                )
+            )
+            .sourceCode(of: SimpleMultiView.self)
 
             cell(
                 title: "Link",
