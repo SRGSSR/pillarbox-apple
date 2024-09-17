@@ -62,14 +62,14 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func relinquish(for view: VideoLayerView) {
-        guard let ref = refs.first(where: { $0.view === view }) else { return }
+        guard let ref = refs.last, ref.view === view else { return }
         ref.count -= 1
         if ref.count == 0 {
-            refs.removeAll(where: { $0.view === view })
+            refs.removeAll(where: { $0 === ref })
             if let ref = refs.last(where: { $0.count > 0 }) {
                 controller = AVPictureInPictureController(playerLayer: ref.view.playerLayer)
                 controller?.delegate = self
-                ref.count += 1
+                ref.count = 1
             }
             else {
                 controller = nil
