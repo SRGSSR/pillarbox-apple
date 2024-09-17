@@ -31,6 +31,16 @@ public final class PictureInPicture {
         custom.delegate = self
         system.delegate = self
     }
+
+    /// Attempts to start Picture in Picture if possible.
+    ///
+    /// Only `VideoView` is currently supported. The method does nothing if no video view is currently available for
+    /// Picture in Picture.
+    ///
+    /// > Important: This method must only be started in response to some form of user interaction.
+    public func startIfPossible() {
+        custom.start()
+    }
 }
 
 extension PictureInPicture: PictureInPictureDelegate {

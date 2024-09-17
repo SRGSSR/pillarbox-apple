@@ -44,8 +44,6 @@ Advanced integration is more involved and requires additional integration steps 
 - Dismiss and restore your player user interface when appropriate.
 - Continue playing even when the player user interface has been dismissed.
 
-> Important: Only begin PiP playback in response to user interaction and never programmatically. The App Store review team rejects apps that fail to follow this requirement.
-
 Advanced integration is available both for ``VideoView`` as well as ``SystemVideoView`` and is usually achieved as follows:
 
 1. Apply ``VideoView/supportsPictureInPicture(_:)`` on your ``VideoView`` or ``SystemVideoView/supportsPictureInPicture(_:)`` on your ``SystemVideoView``.
