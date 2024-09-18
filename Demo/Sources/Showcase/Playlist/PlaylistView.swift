@@ -134,6 +134,7 @@ struct PlaylistView: View {
     let medias: [Media]
 
     @StateObject private var model = PlaylistViewModel.persisted ?? PlaylistViewModel()
+    @State private var isPresentingPictureInPicture: Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -145,6 +146,14 @@ struct PlaylistView: View {
             }
 #endif
         }
+        .onTapGesture {
+            isPresentingPictureInPicture = true
+        }
+        .sheet(isPresented: $isPresentingPictureInPicture, content: {
+
+            PlaybackView(player: model.player, layout: $model.layout)
+                .supportsPictureInPicture()
+        })
         .animation(.defaultLinear, value: model.layout)
         .onAppear {
             model.medias = medias

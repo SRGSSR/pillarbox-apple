@@ -22,23 +22,23 @@ final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
 
-    @objc private dynamic var controller: AVPictureInPictureController?
+    @objc private dynamic let controller: AVPictureInPictureController
 
     weak var delegate: PictureInPictureDelegate?
 
-    var refs: [Ref] = []
-
     override init() {
+        controller = AVPictureInPictureController(contentSource: .init(playerLayer: .init()))
         super.init()
+        controller.delegate = self
         configureIsPossiblePublisher()
     }
 
     func start() {
-        controller?.startPictureInPicture()
+        controller.startPictureInPicture()
     }
 
     func stop() {
-        controller?.stopPictureInPicture()
+        controller.stopPictureInPicture()
     }
 
     func toggle() {
@@ -51,30 +51,11 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func acquire(for view: VideoLayerView) {
-        if let ref = refs.first(where: { $0.view === view }) {
-            ref.count += 1
-        }
-        else {
-            controller = AVPictureInPictureController(playerLayer: view.playerLayer)
-            controller?.delegate = self
-            refs.append(.init(count: 1, view: view))
-        }
+        controller.contentSource = .init(playerLayer: view.playerLayer)
     }
 
     func relinquish(for view: VideoLayerView) {
-        guard let ref = refs.last, ref.view === view else { return }
-        ref.count -= 1
-        if ref.count == 0 {
-            refs.removeAll(where: { $0 === ref })
-            if let ref = refs.last(where: { $0.count > 0 }) {
-                controller = AVPictureInPictureController(playerLayer: ref.view.playerLayer)
-                controller?.delegate = self
-                ref.count = 1
-            }
-            else {
-                controller = nil
-            }
-        }
+
     }
 
     func onAppear(with player: AVPlayer, supportsPictureInPicture: Bool) {
@@ -91,27 +72,27 @@ final class CustomPictureInPicture: NSObject {
     ///
     /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
     func detach(with player: AVPlayer) {
-        refs.filter { $0.view.player === player }.forEach { $0.view.player = nil }
+        //refs.filter { $0.view.player === player }.forEach { $0.view.player = nil }
     }
 
     private func configureIsPossiblePublisher() {
-        publisher(for: \.controller)
-            .map { controller in
-                guard let controller else { return Just(false).eraseToAnyPublisher() }
-                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .receiveOnMainThread()
-            .assign(to: &$isPossible)
+//        publisher(for: \.controller)
+//            .map { controller in
+//                guard let controller else { return Just(false).eraseToAnyPublisher() }
+//                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
+//            }
+//            .switchToLatest()
+//            .receiveOnMainThread()
+//            .assign(to: &$isPossible)
     }
 }
 
 extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
-        if let view = refs.last?.view, view.playerLayer == pictureInPictureController.playerLayer {
-            acquire(for: view)
-        }
+//        if let ref = refs.first(where: { $0.view.playerLayer === pictureInPictureController.playerLayer }) {
+//            acquire(for: ref.view)
+//        }
         delegate?.pictureInPictureWillStart()
     }
 
@@ -144,9 +125,9 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        if let view = refs.last?.view, view.playerLayer == pictureInPictureController.playerLayer {
-            relinquish(for: view)
-        }
+//        if let ref = refs.first(where: { $0.view.playerLayer === pictureInPictureController.playerLayer }) {
+//            relinquish(for: ref.view)
+//        }
         delegate?.pictureInPictureDidStop()
     }
 }
