@@ -133,6 +133,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func embeddingsSection() -> some View {
+        // swiftlint:disable:next closure_body_length
         CustomSection("Embeddings") {
             cell(
                 title: "Twins",
@@ -186,6 +187,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func pictureInPictureCornerCases() -> some View {
+        // swiftlint:disable:next closure_body_length
         CustomSection("Picture in Picture Corner Cases") {
             cell(
                 title: "Twins (basic)",

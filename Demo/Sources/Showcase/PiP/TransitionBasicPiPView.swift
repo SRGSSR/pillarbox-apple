@@ -8,6 +8,29 @@ import AVFoundation
 import PillarboxPlayer
 import SwiftUI
 
+private struct PresentedView: View {
+    @ObservedObject var player: Player
+
+    @State private var supportsPictureInPicture = true
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack {
+            VideoView(player: player)
+                .supportsPictureInPicture(supportsPictureInPicture)
+            Toggle("Supports PiP", isOn: $supportsPictureInPicture)
+            Button(action: player.togglePlayPause) {
+                Text("Play / pause")
+            }
+        }
+        .overlay(alignment: .topLeading) {
+            CloseButton()
+                .padding(.horizontal)
+                .frame(minHeight: 35)
+        }
+    }
+}
+
 struct TransitionBasicPiPView: View {
     let media: Media
 
@@ -47,29 +70,6 @@ struct TransitionBasicPiPView: View {
 
     private func openModal() {
         isPresented.toggle()
-    }
-}
-
-private struct PresentedView: View {
-    @ObservedObject var player: Player
-
-    @State private var supportsPictureInPicture = true
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        VStack {
-            VideoView(player: player)
-                .supportsPictureInPicture(supportsPictureInPicture)
-            Toggle("Supports PiP", isOn: $supportsPictureInPicture)
-            Button(action: player.togglePlayPause) {
-                Text("Play / pause")
-            }
-        }
-        .overlay(alignment: .topLeading) {
-            CloseButton()
-                .padding(.horizontal)
-                .frame(minHeight: 35)
-        }
     }
 }
 
