@@ -6,6 +6,7 @@
 
 import AVKit
 import Combine
+import OrderedCollections
 
 /// Manages Picture in Picture for `VideoView` instances.
 final class CustomPictureInPicture: NSObject {
@@ -13,7 +14,7 @@ final class CustomPictureInPicture: NSObject {
     @Published private(set) var isActive = false
 
     @objc private dynamic let controller: AVPictureInPictureController
-    var videoViews: Set<VideoLayerView> = []
+    var videoViews: OrderedSet<VideoLayerView> = []
 
     weak var delegate: PictureInPictureDelegate?
 
@@ -43,7 +44,7 @@ final class CustomPictureInPicture: NSObject {
 
     func acquire(for view: VideoLayerView) {
         print("--> acq(\(Unmanaged.passRetained(view).toOpaque()))")
-        videoViews.insert(view)
+        videoViews.append(view)
         controller.contentSource = .init(playerLayer: view.playerLayer)
     }
 
@@ -53,7 +54,7 @@ final class CustomPictureInPicture: NSObject {
         if !isActive && controller.contentSource?.playerLayer === view.playerLayer {
             print("--> kil(\(Unmanaged.passRetained(view).toOpaque()))")
             controller.contentSource = nil
-            if let availableView = Array(videoViews).last {
+            if let availableView = videoViews.last {
                 print("--> ac2(\(Unmanaged.passRetained(availableView).toOpaque()))")
                 controller.contentSource = .init(playerLayer: availableView.playerLayer)
             }
