@@ -16,7 +16,7 @@ struct TwinsAdvancedPiPView: View {
     @State private var bottomSupportsPictureInPicture = true
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack {
             VideoView(player: model.player)
                 .supportsPictureInPicture(topSupportsPictureInPicture)
                 .overlay(alignment: .topTrailing) {
@@ -24,10 +24,12 @@ struct TwinsAdvancedPiPView: View {
                         .padding()
                 }
             Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
+                .padding()
 
             Button(action: model.player.togglePlayPause) {
                 Text("Play / pause")
             }
+            .padding()
 
             VideoView(player: model.player)
                 .supportsPictureInPicture(bottomSupportsPictureInPicture)
@@ -36,6 +38,7 @@ struct TwinsAdvancedPiPView: View {
                         .padding()
                 }
             Toggle("Support PiP", isOn: $bottomSupportsPictureInPicture)
+                .padding()
         }
         .onAppear(perform: play)
         .enabledForInAppPictureInPicture(persisting: model)

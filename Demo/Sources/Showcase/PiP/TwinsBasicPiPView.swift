@@ -16,18 +16,21 @@ struct TwinsBasicPiPView: View {
     @State private var bottomSupportsPictureInPicture = true
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack {
             VideoView(player: player)
                 .supportsPictureInPicture(topSupportsPictureInPicture)
             Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
+                .padding()
 
             Button(action: player.togglePlayPause) {
                 Text("Play / pause")
             }
+            .padding()
 
             VideoView(player: player)
                 .supportsPictureInPicture(bottomSupportsPictureInPicture)
             Toggle("Support PiP", isOn: $bottomSupportsPictureInPicture)
+                .padding()
         }
         .onAppear(perform: play)
         .tracked(name: "twins-basic-pip")

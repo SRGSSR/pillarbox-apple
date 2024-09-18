@@ -18,10 +18,13 @@ private struct PresentedView: View {
         VStack {
             VideoView(player: player)
                 .supportsPictureInPicture(supportsPictureInPicture)
-            Toggle("Supports PiP", isOn: $supportsPictureInPicture)
-            Button(action: player.togglePlayPause) {
-                Text("Play / pause")
+            VStack(spacing: 20) {
+                Toggle("Supports PiP", isOn: $supportsPictureInPicture)
+                Button(action: player.togglePlayPause) {
+                    Text("Play / pause")
+                }
             }
+            .padding()
         }
         .overlay(alignment: .topTrailing) {
             PiPButton()
@@ -44,21 +47,23 @@ struct TransitionAdvancedPiPView: View {
     @State private var isPresented = false
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack {
             VideoView(player: model.player)
                 .supportsPictureInPicture(supportsPictureInPicture)
                 .accessibilityAddTraits(.isButton)
-            Toggle("Supports PiP", isOn: $supportsPictureInPicture)
-
-            HStack {
-                Button(action: model.player.togglePlayPause) {
-                    Text("Play / pause")
-                }
-                Spacer()
-                Button(action: openModal) {
-                    Text("Open modal")
+            VStack(spacing: 20) {
+                Toggle("Supports PiP", isOn: $supportsPictureInPicture)
+                HStack {
+                    Button(action: model.player.togglePlayPause) {
+                        Text("Play / pause")
+                    }
+                    Spacer()
+                    Button(action: openModal) {
+                        Text("Open modal")
+                    }
                 }
             }
+            .padding()
         }
         .overlay(alignment: .topTrailing) {
             PiPButton()

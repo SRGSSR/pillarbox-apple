@@ -18,20 +18,26 @@ struct MultiBasicPiPView: View {
     @State private var bottomSupportsPictureInPicture = true
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack {
             VideoView(player: player1)
                 .supportsPictureInPicture(topSupportsPictureInPicture)
-            Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
-            Button(action: player1.togglePlayPause) {
-                Text("Play / pause")
+            VStack(spacing: 20) {
+                Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
+                Button(action: player1.togglePlayPause) {
+                    Text("Play / pause")
+                }
             }
+            .padding()
 
             VideoView(player: player2)
                 .supportsPictureInPicture(bottomSupportsPictureInPicture)
-            Toggle("Supports PiP", isOn: $bottomSupportsPictureInPicture)
-            Button(action: player2.togglePlayPause) {
-                Text("Play / pause")
+            VStack(spacing: 20) {
+                Toggle("Supports PiP", isOn: $bottomSupportsPictureInPicture)
+                Button(action: player2.togglePlayPause) {
+                    Text("Play / pause")
+                }
             }
+            .padding()
         }
         .onAppear(perform: play)
         .tracked(name: "multi-basic-pip")
