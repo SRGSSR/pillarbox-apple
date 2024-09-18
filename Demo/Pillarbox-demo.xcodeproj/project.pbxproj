@@ -105,6 +105,7 @@
 		6FC5D6A42A6FACB20012BC89 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC5D6A32A6FACB20012BC89 /* CloseButton.swift */; };
 		6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCA4746292CBEC7008C2812 /* ShowTime */; };
 		6FCB9DDE29E024E900961B69 /* BlurredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB9DDD29E024E900961B69 /* BlurredView.swift */; };
+		6FD3081F2C9ABAF4005486CC /* MultiAdvancedPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD3081E2C9ABAF4005486CC /* MultiAdvancedPiPView.swift */; };
 		6FD407892B189C0600D34BD1 /* TrackingVisibilityTutorial~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD407882B189C0600D34BD1 /* TrackingVisibilityTutorial~ios.swift */; };
 		6FDB51CB2A4042B2001F430F /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDB51CA2A4042B2001F430F /* Router.swift */; };
 		6FE324B329E4657D007501CF /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE324B229E4657D007501CF /* View.swift */; };
@@ -216,6 +217,7 @@
 		6FC5D6A12A6FA8D20012BC89 /* Modal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modal.swift; sourceTree = "<group>"; };
 		6FC5D6A32A6FACB20012BC89 /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 		6FCB9DDD29E024E900961B69 /* BlurredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredView.swift; sourceTree = "<group>"; };
+		6FD3081E2C9ABAF4005486CC /* MultiAdvancedPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAdvancedPiPView.swift; sourceTree = "<group>"; };
 		6FD407882B189C0600D34BD1 /* TrackingVisibilityTutorial~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackingVisibilityTutorial~ios.swift"; sourceTree = "<group>"; };
 		6FDB51CA2A4042B2001F430F /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		6FE324B229E4657D007501CF /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
@@ -586,6 +588,7 @@
 		6FB077112C9AA17C0027148A /* PiP */ = {
 			isa = PBXGroup;
 			children = (
+				6FD3081E2C9ABAF4005486CC /* MultiAdvancedPiPView.swift */,
 				6FB0770F2C9AA17C0027148A /* MultiBasicPiPView.swift */,
 				6FB077152C9AABCE0027148A /* TransitionAdvancedPiPView.swift */,
 				6F3F65462C983055008BAF38 /* TransitionBasicPiPView.swift */,
@@ -710,6 +713,7 @@
 				0EDFF0DB2B0740DA005030B4 /* SourceCodeViewable.swift in Sources */,
 				6F3F65472C983055008BAF38 /* TransitionBasicPiPView.swift in Sources */,
 				6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */,
+				6FD3081F2C9ABAF4005486CC /* MultiAdvancedPiPView.swift in Sources */,
 				6F59E88829CF31E20093E6FB /* UserDefaults.swift in Sources */,
 				6FED426B2A96F4D3004D7724 /* TransitionView.swift in Sources */,
 				6F59E88D29CF31E20093E6FB /* ShowcaseView.swift in Sources */,

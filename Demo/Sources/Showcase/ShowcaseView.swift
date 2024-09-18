@@ -214,6 +214,16 @@ struct ShowcaseView: View {
             .sourceCode(of: MultiBasicPiPView.self)
 
             cell(
+                title: "Multi-instance (advanced)",
+                subtitle: "Two videos played at the same time",
+                destination: .multiAdvancedPiP(
+                    media1: URNMedia.onDemandHorizontalVideo,
+                    media2: URNMedia.onDemandVideo
+                )
+            )
+            .sourceCode(of: MultiAdvancedPiPView.self)
+
+            cell(
                 title: "Transition (basic)",
                 subtitle: "A transition between two layouts sharing the same player",
                 destination: .transitionBasicPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
