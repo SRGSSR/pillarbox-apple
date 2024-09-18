@@ -7,7 +7,7 @@
 import PillarboxPlayer
 import SwiftUI
 
-struct SimpleTwinsView: View {
+struct TwinsBasicPiPView: View {
     let media: Media
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
@@ -16,11 +16,13 @@ struct SimpleTwinsView: View {
         VStack {
             VideoView(player: player)
                 .supportsPictureInPicture()
-            VideoView(player: player)
-                .supportsPictureInPicture()
+
             Button(action: player.togglePlayPause) {
                 Text("Play / pause")
             }
+
+            VideoView(player: player)
+                .supportsPictureInPicture()
         }
         .onAppear(perform: play)
         .tracked(name: "simple-twins")
@@ -32,10 +34,10 @@ struct SimpleTwinsView: View {
     }
 }
 
-extension SimpleTwinsView: SourceCodeViewable {
+extension TwinsBasicPiPView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    SimpleTwinsView(media: URLMedia.onDemandVideoLocalHLS)
+    TwinsBasicPiPView(media: URLMedia.onDemandVideoLocalHLS)
 }

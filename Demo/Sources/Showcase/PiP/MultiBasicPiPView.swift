@@ -7,7 +7,7 @@
 import PillarboxPlayer
 import SwiftUI
 
-struct SimpleMultiView: View {
+struct MultiBasicPiPView: View {
     let media1: Media
     let media2: Media
 
@@ -41,10 +41,10 @@ struct SimpleMultiView: View {
     }
 }
 
-extension SimpleMultiView: SourceCodeViewable {
+extension MultiBasicPiPView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    SimpleMultiView(media1: URLMedia.onDemandVideoLocalHLS, media2: URLMedia.onDemandVideoMP4)
+    MultiBasicPiPView(media1: URLMedia.onDemandVideoLocalHLS, media2: URLMedia.onDemandVideoMP4)
 }

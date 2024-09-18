@@ -29,6 +29,7 @@ struct ShowcaseView: View {
         layoutsSection()
         playlistsSection()
         embeddingsSection()
+        pictureInPictureCornerCases()
         systemPlayerSection()
         miscellaneousPlayerFeaturesSection()
         customPictureInPictureSection()
@@ -132,8 +133,6 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func embeddingsSection() -> some View {
-        // swiftlint:disable:previous function_body_length
-        // swiftlint:disable:next closure_body_length
         CustomSection("Embeddings") {
             cell(
                 title: "Twins",
@@ -141,13 +140,6 @@ struct ShowcaseView: View {
                 destination: .twins(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             .sourceCode(of: TwinsView.self)
-
-            cell(
-                title: "Simple twins",
-                subtitle: "A video displayed twice",
-                destination: .simpleTwins(media: URLMedia.appleBasic_16_9_TS_HLS)
-            )
-            .sourceCode(of: SimpleTwinsView.self)
 
             cell(
                 title: "Multi-instance",
@@ -170,16 +162,6 @@ struct ShowcaseView: View {
             .sourceCode(of: MultiView.self)
 
             cell(
-                title: "Simple multi-instance",
-                subtitle: "Two videos played at the same time",
-                destination: .simpleMulti(
-                    media1: URNMedia.onDemandHorizontalVideo,
-                    media2: URNMedia.onDemandVideo
-                )
-            )
-            .sourceCode(of: SimpleMultiView.self)
-
-            cell(
                 title: "Link",
                 subtitle: "A player which can be linked to a view",
                 destination: .link(media: URLMedia.appleAdvanced_16_9_fMP4_HLS)
@@ -199,13 +181,35 @@ struct ShowcaseView: View {
                 destination: .transition(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             .sourceCode(of: TransitionView.self)
+        }
+    }
+
+    @ViewBuilder
+    private func pictureInPictureCornerCases() -> some View {
+        CustomSection("Picture in Picture Corner Cases") {
+            cell(
+                title: "Twins",
+                subtitle: "A video displayed twice",
+                destination: .twinsBasicPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
+            )
+            .sourceCode(of: TwinsBasicPiPView.self)
 
             cell(
-                title: "Simple transition",
-                subtitle: "A transition between two layouts sharing the same player",
-                destination: .simpleTransition(media: URLMedia.appleBasic_16_9_TS_HLS)
+                title: "Multi-instance",
+                subtitle: "Two videos played at the same time",
+                destination: .multiBasicPiP(
+                    media1: URNMedia.onDemandHorizontalVideo,
+                    media2: URNMedia.onDemandVideo
+                )
             )
-            .sourceCode(of: SimpleTransitionView.self)
+            .sourceCode(of: MultiBasicPiPView.self)
+
+            cell(
+                title: "Transition",
+                subtitle: "A transition between two layouts sharing the same player",
+                destination: .transitionBasicPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
+            )
+            .sourceCode(of: TransitionBasicPiPView.self)
         }
     }
 

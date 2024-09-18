@@ -8,7 +8,7 @@ import AVFoundation
 import PillarboxPlayer
 import SwiftUI
 
-struct SimpleTransitionView: View {
+struct TransitionBasicPiPView: View {
     let media: Media
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
@@ -23,7 +23,7 @@ struct SimpleTransitionView: View {
             }
             .onAppear(perform: play)
             .fullScreenCover(isPresented: $isPresented) {
-                PlaybackView(player: player)
+                VideoView(player: player)
                     .supportsPictureInPicture()
             }
     }
@@ -34,10 +34,10 @@ struct SimpleTransitionView: View {
     }
 }
 
-extension SimpleTransitionView: SourceCodeViewable {
+extension TransitionBasicPiPView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    SimpleTransitionView(media: URLMedia.onDemandVideoLocalHLS)
+    TransitionBasicPiPView(media: URLMedia.onDemandVideoLocalHLS)
 }
