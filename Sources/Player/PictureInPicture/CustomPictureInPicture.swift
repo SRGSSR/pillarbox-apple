@@ -7,16 +7,6 @@
 import AVKit
 import Combine
 
-class Ref {
-    var count: Int
-    let view: VideoLayerView
-
-    init(count: Int, view: VideoLayerView) {
-        self.count = count
-        self.view = view
-    }
-}
-
 /// Manages Picture in Picture for `VideoView` instances.
 final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
@@ -64,7 +54,7 @@ final class CustomPictureInPicture: NSObject {
             print("--> kil(\(Unmanaged.passRetained(view).toOpaque()))")
             controller.contentSource = nil
             if let availableView = Array(videoViews).last {
-                print("--> acq(\(Unmanaged.passRetained(availableView).toOpaque()))")
+                print("--> ac2(\(Unmanaged.passRetained(availableView).toOpaque()))")
                 controller.contentSource = .init(playerLayer: availableView.playerLayer)
             }
         }
@@ -83,28 +73,22 @@ final class CustomPictureInPicture: NSObject {
     /// it.
     ///
     /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
-    func detach(with player: AVPlayer) {
-        //refs.filter { $0.view.player === player }.forEach { $0.view.player = nil }
-    }
+    func detach(with player: AVPlayer) {}
 
     private func configureIsPossiblePublisher() {
-//        publisher(for: \.controller)
-//            .map { controller in
-//                guard let controller else { return Just(false).eraseToAnyPublisher() }
-//                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
-//            }
-//            .switchToLatest()
-//            .receiveOnMainThread()
-//            .assign(to: &$isPossible)
+        publisher(for: \.controller)
+            .map { controller in
+                controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .assign(to: &$isPossible)
     }
 }
 
 extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
-//        if let ref = refs.first(where: { $0.view.playerLayer === pictureInPictureController.playerLayer }) {
-//            acquire(for: ref.view)
-//        }
         delegate?.pictureInPictureWillStart()
     }
 
@@ -137,9 +121,6 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-//        if let ref = refs.first(where: { $0.view.playerLayer === pictureInPictureController.playerLayer }) {
-//            relinquish(for: ref.view)
-//        }
         delegate?.pictureInPictureDidStop()
     }
 }
