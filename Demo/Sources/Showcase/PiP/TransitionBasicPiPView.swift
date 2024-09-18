@@ -26,6 +26,7 @@ struct TransitionBasicPiPView: View {
                 VideoView(player: player)
                     .supportsPictureInPicture()
             }
+            .tracked(name: "transition-basic-pip")
     }
 
     private func play() {

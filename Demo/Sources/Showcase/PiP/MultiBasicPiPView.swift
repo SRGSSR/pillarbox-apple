@@ -14,22 +14,27 @@ struct MultiBasicPiPView: View {
     @StateObject private var player1 = Player(configuration: .externalPlaybackDisabled)
     @StateObject private var player2 = Player(configuration: .externalPlaybackDisabled)
 
+    @State private var topSupportsPictureInPicture = true
+    @State private var bottomSupportsPictureInPicture = true
+
     var body: some View {
         VStack {
             VideoView(player: player1)
-                .supportsPictureInPicture()
+                .supportsPictureInPicture(topSupportsPictureInPicture)
+            Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
             Button(action: player1.togglePlayPause) {
                 Text("Play / pause")
             }
 
             VideoView(player: player2)
-                .supportsPictureInPicture()
+                .supportsPictureInPicture(bottomSupportsPictureInPicture)
+            Toggle("Supports PiP", isOn: $bottomSupportsPictureInPicture)
             Button(action: player2.togglePlayPause) {
                 Text("Play / pause")
             }
         }
         .onAppear(perform: play)
-        .tracked(name: "simple-multi")
+        .tracked(name: "multi-basic-pip")
     }
 
     private func play() {

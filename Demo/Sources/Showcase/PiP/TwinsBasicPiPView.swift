@@ -12,20 +12,25 @@ struct TwinsBasicPiPView: View {
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
 
+    @State private var topSupportsPictureInPicture = true
+    @State private var bottomSupportsPictureInPicture = true
+
     var body: some View {
         VStack {
             VideoView(player: player)
-                .supportsPictureInPicture()
+                .supportsPictureInPicture(topSupportsPictureInPicture)
+            Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
 
             Button(action: player.togglePlayPause) {
                 Text("Play / pause")
             }
 
             VideoView(player: player)
-                .supportsPictureInPicture()
+                .supportsPictureInPicture(bottomSupportsPictureInPicture)
+            Toggle("Support PiP", isOn: $bottomSupportsPictureInPicture)
         }
         .onAppear(perform: play)
-        .tracked(name: "simple-twins")
+        .tracked(name: "twins-basic-pip")
     }
 
     private func play() {
