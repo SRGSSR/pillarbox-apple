@@ -8,23 +8,23 @@ import AVFoundation
 import PillarboxPlayer
 import SwiftUI
 
-struct TransitionBasicPiPView: View {
+struct TransitionAdvancedPiPView: View {
     let media: Media
 
-    @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
 
     @State private var supportsPictureInPicture = true
     @State private var isPresented = false
 
     var body: some View {
         VStack(spacing: 20) {
-            VideoView(player: player)
+            VideoView(player: model.player)
                 .supportsPictureInPicture(supportsPictureInPicture)
                 .accessibilityAddTraits(.isButton)
             Toggle("Supports PiP", isOn: $supportsPictureInPicture)
 
             HStack {
-                Button(action: player.togglePlayPause) {
+                Button(action: model.player.togglePlayPause) {
                     Text("Play / pause")
                 }
                 Spacer()
@@ -33,16 +33,21 @@ struct TransitionBasicPiPView: View {
                 }
             }
         }
+        .overlay(alignment: .topTrailing) {
+            PiPButton()
+                .padding()
+        }
         .onAppear(perform: play)
         .fullScreenCover(isPresented: $isPresented) {
-            PresentedView(player: player)
+            PresentedView(player: model.player)
         }
+        .enabledForInAppPictureInPicture(persisting: model)
         .tracked(name: "transition-basic-pip")
     }
 
     private func play() {
-        player.append(media.item())
-        player.play()
+        model.media = media
+        model.play()
     }
 
     private func openModal() {
@@ -65,6 +70,10 @@ private struct PresentedView: View {
                 Text("Play / pause")
             }
         }
+        .overlay(alignment: .topTrailing) {
+            PiPButton()
+                .padding()
+        }
         .overlay(alignment: .topLeading) {
             CloseButton()
                 .padding(.horizontal)
@@ -73,10 +82,10 @@ private struct PresentedView: View {
     }
 }
 
-extension TransitionBasicPiPView: SourceCodeViewable {
+extension TransitionAdvancedPiPView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    TransitionBasicPiPView(media: URLMedia.onDemandVideoLocalHLS)
+    TransitionAdvancedPiPView(media: URLMedia.onDemandVideoLocalHLS)
 }

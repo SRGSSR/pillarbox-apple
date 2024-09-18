@@ -18,7 +18,7 @@ struct MultiBasicPiPView: View {
     @State private var bottomSupportsPictureInPicture = true
 
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             VideoView(player: player1)
                 .supportsPictureInPicture(topSupportsPictureInPicture)
             Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)

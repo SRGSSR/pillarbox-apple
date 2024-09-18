@@ -25,8 +25,10 @@ enum RouterDestination: Identifiable, Hashable {
     case transition(media: Media)
 
     case twinsBasicPiP(media: Media)
+    case twinsAdvancedPiP(media: Media)
     case multiBasicPiP(media1: Media, media2: Media)
     case transitionBasicPiP(media: Media)
+    case transitionAdvancedPiP(media: Media)
 
     case stories
     case playlist(medias: [Media])
@@ -62,10 +64,14 @@ enum RouterDestination: Identifiable, Hashable {
             return "transition"
         case .twinsBasicPiP:
             return "twinsBasicPiP"
+        case .twinsAdvancedPiP:
+            return "twinsAdvancedPiP"
         case .multiBasicPiP:
             return "multiBasicPiP"
         case .transitionBasicPiP:
             return "transitionBasicPiP"
+        case .transitionAdvancedPiP:
+            return "transitionAdvancedPiP"
         case .stories:
             return "stories"
         case .playlist:
@@ -119,10 +125,14 @@ enum RouterDestination: Identifiable, Hashable {
             TransitionView(media: media)
         case let .twinsBasicPiP(media: media):
             TwinsBasicPiPView(media: media)
+        case let .twinsAdvancedPiP(media: media):
+            TwinsAdvancedPiPView(media: media)
         case let .multiBasicPiP(media1: media1, media2: media2):
             MultiBasicPiPView(media1: media1, media2: media2)
         case let .transitionBasicPiP(media: media):
             TransitionBasicPiPView(media: media)
+        case let .transitionAdvancedPiP(media: media):
+            TransitionAdvancedPiPView(media: media)
         case .stories:
             StoriesView()
         case let .playlist(medias: medias):

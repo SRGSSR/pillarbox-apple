@@ -7,42 +7,51 @@
 import PillarboxPlayer
 import SwiftUI
 
-struct TwinsBasicPiPView: View {
+struct TwinsAdvancedPiPView: View {
     let media: Media
 
-    @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
 
     @State private var topSupportsPictureInPicture = true
     @State private var bottomSupportsPictureInPicture = true
 
     var body: some View {
         VStack(spacing: 20) {
-            VideoView(player: player)
+            VideoView(player: model.player)
                 .supportsPictureInPicture(topSupportsPictureInPicture)
+                .overlay(alignment: .topTrailing) {
+                    PiPButton()
+                        .padding()
+                }
             Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
 
-            Button(action: player.togglePlayPause) {
+            Button(action: model.player.togglePlayPause) {
                 Text("Play / pause")
             }
 
-            VideoView(player: player)
+            VideoView(player: model.player)
                 .supportsPictureInPicture(bottomSupportsPictureInPicture)
+                .overlay(alignment: .topTrailing) {
+                    PiPButton()
+                        .padding()
+                }
             Toggle("Support PiP", isOn: $bottomSupportsPictureInPicture)
         }
         .onAppear(perform: play)
+        .enabledForInAppPictureInPicture(persisting: model)
         .tracked(name: "twins-basic-pip")
     }
 
     private func play() {
-        player.append(media.item())
-        player.play()
+        model.media = media
+        model.play()
     }
 }
 
-extension TwinsBasicPiPView: SourceCodeViewable {
+extension TwinsAdvancedPiPView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    TwinsBasicPiPView(media: URLMedia.onDemandVideoLocalHLS)
+    TwinsAdvancedPiPView(media: URLMedia.onDemandVideoLocalHLS)
 }

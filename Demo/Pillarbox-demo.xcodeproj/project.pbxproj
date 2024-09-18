@@ -95,6 +95,8 @@
 		6FAD51142B331AAD0078FE08 /* SingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD51132B331AAD0078FE08 /* SingleView.swift */; };
 		6FB077122C9AA17C0027148A /* MultiBasicPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0770F2C9AA17C0027148A /* MultiBasicPiPView.swift */; };
 		6FB077132C9AA17C0027148A /* TwinsBasicPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB077102C9AA17C0027148A /* TwinsBasicPiPView.swift */; };
+		6FB077172C9AABCF0027148A /* TransitionAdvancedPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB077152C9AABCE0027148A /* TransitionAdvancedPiPView.swift */; };
+		6FB077192C9AABCF0027148A /* TwinsAdvancedPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB077162C9AABCE0027148A /* TwinsAdvancedPiPView.swift */; };
 		6FB8ED742C417E7E0049171B /* MetricEventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB8ED732C417E780049171B /* MetricEventCell.swift */; };
 		6FBCC1F92B2A090E009EA3E3 /* MotionManager~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCC1F82B2A090E009EA3E3 /* MotionManager~ios.swift */; };
 		6FBF198F2B1A2E1C00B16BD5 /* OptimizingCustomLayouts2~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBF198D2B1A2E1C00B16BD5 /* OptimizingCustomLayouts2~ios.swift */; };
@@ -205,6 +207,8 @@
 		6FAD51132B331AAD0078FE08 /* SingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleView.swift; sourceTree = "<group>"; };
 		6FB0770F2C9AA17C0027148A /* MultiBasicPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiBasicPiPView.swift; sourceTree = "<group>"; };
 		6FB077102C9AA17C0027148A /* TwinsBasicPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwinsBasicPiPView.swift; sourceTree = "<group>"; };
+		6FB077152C9AABCE0027148A /* TransitionAdvancedPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionAdvancedPiPView.swift; sourceTree = "<group>"; };
+		6FB077162C9AABCE0027148A /* TwinsAdvancedPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwinsAdvancedPiPView.swift; sourceTree = "<group>"; };
 		6FB8ED732C417E780049171B /* MetricEventCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricEventCell.swift; sourceTree = "<group>"; };
 		6FBCC1F82B2A090E009EA3E3 /* MotionManager~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MotionManager~ios.swift"; sourceTree = "<group>"; };
 		6FBF198D2B1A2E1C00B16BD5 /* OptimizingCustomLayouts2~ios.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OptimizingCustomLayouts2~ios.swift"; sourceTree = "<group>"; };
@@ -583,7 +587,9 @@
 			isa = PBXGroup;
 			children = (
 				6FB0770F2C9AA17C0027148A /* MultiBasicPiPView.swift */,
+				6FB077152C9AABCE0027148A /* TransitionAdvancedPiPView.swift */,
 				6F3F65462C983055008BAF38 /* TransitionBasicPiPView.swift */,
+				6FB077162C9AABCE0027148A /* TwinsAdvancedPiPView.swift */,
 				6FB077102C9AA17C0027148A /* TwinsBasicPiPView.swift */,
 			);
 			path = PiP;
@@ -771,6 +777,8 @@
 				0E4128BD2AFB7F2A00D67759 /* InlineSystemPlayerView.swift in Sources */,
 				6F59E89029CF31E20093E6FB /* Story.swift in Sources */,
 				6F59E89D29CF31E20093E6FB /* VanillaPlayerView.swift in Sources */,
+				6FB077172C9AABCF0027148A /* TransitionAdvancedPiPView.swift in Sources */,
+				6FB077192C9AABCF0027148A /* TwinsAdvancedPiPView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

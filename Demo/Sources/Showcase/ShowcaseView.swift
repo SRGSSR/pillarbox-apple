@@ -188,14 +188,21 @@ struct ShowcaseView: View {
     private func pictureInPictureCornerCases() -> some View {
         CustomSection("Picture in Picture Corner Cases") {
             cell(
-                title: "Twins",
+                title: "Twins (basic)",
                 subtitle: "A video displayed twice",
                 destination: .twinsBasicPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             .sourceCode(of: TwinsBasicPiPView.self)
 
             cell(
-                title: "Multi-instance",
+                title: "Twins (advanced)",
+                subtitle: "A video displayed twice",
+                destination: .twinsAdvancedPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
+            )
+            .sourceCode(of: TwinsAdvancedPiPView.self)
+
+            cell(
+                title: "Multi-instance (basic)",
                 subtitle: "Two videos played at the same time",
                 destination: .multiBasicPiP(
                     media1: URNMedia.onDemandHorizontalVideo,
@@ -205,11 +212,18 @@ struct ShowcaseView: View {
             .sourceCode(of: MultiBasicPiPView.self)
 
             cell(
-                title: "Transition",
+                title: "Transition (basic)",
                 subtitle: "A transition between two layouts sharing the same player",
                 destination: .transitionBasicPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             .sourceCode(of: TransitionBasicPiPView.self)
+
+            cell(
+                title: "Transition (advanced)",
+                subtitle: "A transition between two layouts sharing the same player",
+                destination: .transitionAdvancedPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
+            )
+            .sourceCode(of: TransitionAdvancedPiPView.self)
         }
     }
 
