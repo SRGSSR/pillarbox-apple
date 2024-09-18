@@ -42,7 +42,7 @@ struct TwinsAdvancedPiPView: View {
         }
         .onAppear(perform: play)
         .enabledForInAppPictureInPicture(persisting: model)
-        .tracked(name: "twins-basic-pip")
+        .tracked(name: "twins-advanced-pip")
     }
 
     private func play() {

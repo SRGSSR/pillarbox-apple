@@ -74,7 +74,7 @@ struct TransitionAdvancedPiPView: View {
             PresentedView(player: model.player)
         }
         .enabledForInAppPictureInPicture(persisting: model)
-        .tracked(name: "transition-basic-pip")
+        .tracked(name: "transition-advanced-pip")
     }
 
     private func play() {

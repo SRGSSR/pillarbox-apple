@@ -81,7 +81,7 @@ struct MultiAdvancedPiPView: View {
         }
         .onAppear(perform: play)
         .enabledForInAppPictureInPicture(persisting: model)
-        .tracked(name: "multi-basic-pip")
+        .tracked(name: "multi-advanced-pip")
     }
 
     private func play() {
