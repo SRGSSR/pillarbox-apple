@@ -14,9 +14,11 @@ final class CustomPictureInPicture: NSObject {
     @Published private(set) var isActive = false
 
     let controller = AVPictureInPictureController(playerLayer: .init())
-    var videoViews: OrderedSet<VideoLayerView> = []
+    var videoViews: OrderedSet<HostView> = []
 
     weak var delegate: PictureInPictureDelegate?
+
+    var lastLayerView: VideoLayerView?
 
     override init() {
         super.init()
@@ -41,23 +43,22 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func acquire(for view: VideoLayerView) {
-        print("--> acq(\(Unmanaged.passRetained(view).toOpaque()))")
+    func acquire(for view: HostView) {
         videoViews.append(view)
-        controller?.contentSource = .init(playerLayer: view.playerLayer)
+        lastLayerView = view.layerView
+        controller?.contentSource = .init(playerLayer: view.layerView.playerLayer)
     }
 
-    func relinquish(for view: VideoLayerView) {
+    func relinquish(for view: HostView) {
         videoViews.remove(view)
-        print("--> rel(\(Unmanaged.passRetained(view).toOpaque()))")
-        if !isActive && controller?.contentSource?.playerLayer === view.playerLayer {
-            print("--> kil(\(Unmanaged.passRetained(view).toOpaque()))")
+        if !isActive && controller?.contentSource?.playerLayer === view.layerView.playerLayer {
             if let availableView = videoViews.last {
-                print("--> ac2(\(Unmanaged.passRetained(availableView).toOpaque()))")
-                controller?.contentSource = .init(playerLayer: availableView.playerLayer)
+                controller?.contentSource = .init(playerLayer: availableView.layerView.playerLayer)
+                lastLayerView = availableView.layerView
             }
             else {
                 controller?.contentSource = nil
+                lastLayerView = nil
             }
         }
     }
