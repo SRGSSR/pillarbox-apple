@@ -24,7 +24,7 @@ private struct PresentedView: View {
                     Text("Play / pause")
                 }
             }
-            .padding()
+            .padding(.horizontal)
         }
         .overlay(alignment: .topTrailing) {
             PiPButton()
@@ -61,7 +61,7 @@ struct TransitionAdvancedPiPView: View {
                     }
                 }
             }
-            .padding()
+            .padding(.horizontal)
         }
         .overlay(alignment: .topTrailing) {
             PiPButton()

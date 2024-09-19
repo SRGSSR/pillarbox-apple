@@ -24,7 +24,7 @@ private struct PresentedView: View {
                     Text("Play / pause")
                 }
             }
-            .padding()
+            .padding(.horizontal)
         }
         .overlay(alignment: .topLeading) {
             CloseButton(topBarStyle: true)
@@ -57,7 +57,7 @@ struct TransitionBasicPiPView: View {
                     }
                 }
             }
-            .padding()
+            .padding(.horizontal)
         }
         .onAppear(perform: play)
         .fullScreenCover(isPresented: $isPresented) {

@@ -20,17 +20,17 @@ struct TwinsBasicPiPView: View {
             VideoView(player: player)
                 .supportsPictureInPicture(topSupportsPictureInPicture)
             Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
-                .padding()
+                .padding(.horizontal)
 
             Button(action: player.togglePlayPause) {
                 Text("Play / pause")
             }
-            .padding()
+            .padding(.horizontal)
 
             VideoView(player: player)
                 .supportsPictureInPicture(bottomSupportsPictureInPicture)
             Toggle("Support PiP", isOn: $bottomSupportsPictureInPicture)
-                .padding()
+                .padding(.horizontal)
         }
         .onAppear(perform: play)
         .tracked(name: "twins-basic-pip")

@@ -24,12 +24,12 @@ struct TwinsAdvancedPiPView: View {
                         .padding()
                 }
             Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
-                .padding()
+                .padding(.horizontal)
 
             Button(action: model.player.togglePlayPause) {
                 Text("Play / pause")
             }
-            .padding()
+            .padding(.horizontal)
 
             VideoView(player: model.player)
                 .supportsPictureInPicture(bottomSupportsPictureInPicture)
@@ -38,7 +38,7 @@ struct TwinsAdvancedPiPView: View {
                         .padding()
                 }
             Toggle("Support PiP", isOn: $bottomSupportsPictureInPicture)
-                .padding()
+                .padding(.horizontal)
         }
         .onAppear(perform: play)
         .enabledForInAppPictureInPicture(persisting: model)

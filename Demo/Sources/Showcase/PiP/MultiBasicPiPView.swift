@@ -27,7 +27,7 @@ struct MultiBasicPiPView: View {
                     Text("Play / pause")
                 }
             }
-            .padding()
+            .padding(.horizontal)
 
             VideoView(player: player2)
                 .supportsPictureInPicture(bottomSupportsPictureInPicture)
@@ -37,7 +37,7 @@ struct MultiBasicPiPView: View {
                     Text("Play / pause")
                 }
             }
-            .padding()
+            .padding(.horizontal)
         }
         .onAppear(perform: play)
         .tracked(name: "multi-basic-pip")

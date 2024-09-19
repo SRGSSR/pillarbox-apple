@@ -63,7 +63,7 @@ struct MultiAdvancedPiPView: View {
                     Text("Play / pause")
                 }
             }
-            .padding()
+            .padding(.horizontal)
 
             VideoView(player: model.player2)
                 .supportsPictureInPicture(model.supportsPictureInPicture2)
@@ -77,7 +77,7 @@ struct MultiAdvancedPiPView: View {
                     Text("Play / pause")
                 }
             }
-            .padding()
+            .padding(.horizontal)
         }
         .onAppear(perform: play)
         .enabledForInAppPictureInPicture(persisting: model)
