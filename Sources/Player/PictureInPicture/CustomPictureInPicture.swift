@@ -13,24 +13,23 @@ final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
 
-    @objc private dynamic let controller: AVPictureInPictureController
+    let controller = AVPictureInPictureController(playerLayer: .init())
     var videoViews: OrderedSet<VideoLayerView> = []
 
     weak var delegate: PictureInPictureDelegate?
 
     override init() {
-        controller = AVPictureInPictureController(contentSource: .init(playerLayer: .init()))
         super.init()
-        controller.delegate = self
+        controller?.delegate = self
         configureIsPossiblePublisher()
     }
 
     func start() {
-        controller.startPictureInPicture()
+        controller?.startPictureInPicture()
     }
 
     func stop() {
-        controller.stopPictureInPicture()
+        controller?.stopPictureInPicture()
     }
 
     func toggle() {
@@ -45,18 +44,20 @@ final class CustomPictureInPicture: NSObject {
     func acquire(for view: VideoLayerView) {
         print("--> acq(\(Unmanaged.passRetained(view).toOpaque()))")
         videoViews.append(view)
-        controller.contentSource = .init(playerLayer: view.playerLayer)
+        controller?.contentSource = .init(playerLayer: view.playerLayer)
     }
 
     func relinquish(for view: VideoLayerView) {
         videoViews.remove(view)
         print("--> rel(\(Unmanaged.passRetained(view).toOpaque()))")
-        if !isActive && controller.contentSource?.playerLayer === view.playerLayer {
+        if !isActive && controller?.contentSource?.playerLayer === view.playerLayer {
             print("--> kil(\(Unmanaged.passRetained(view).toOpaque()))")
-            controller.contentSource = nil
             if let availableView = videoViews.last {
                 print("--> ac2(\(Unmanaged.passRetained(availableView).toOpaque()))")
-                controller.contentSource = .init(playerLayer: availableView.playerLayer)
+                controller?.contentSource = .init(playerLayer: availableView.playerLayer)
+            }
+            else {
+                controller?.contentSource = nil
             }
         }
     }
@@ -77,11 +78,7 @@ final class CustomPictureInPicture: NSObject {
     func detach(with player: AVPlayer) {}
 
     private func configureIsPossiblePublisher() {
-        publisher(for: \.controller)
-            .map { controller in
-                controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
-            }
-            .switchToLatest()
+        controller?.publisher(for: \.isPictureInPicturePossible)
             .receiveOnMainThread()
             .assign(to: &$isPossible)
     }
