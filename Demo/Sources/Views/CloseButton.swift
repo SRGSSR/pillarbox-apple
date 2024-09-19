@@ -8,12 +8,18 @@ import SwiftUI
 
 struct CloseButton: View {
     @Environment(\.dismiss) private var dismiss
+    let topBarStyle: Bool
+
+    init(topBarStyle: Bool = false) {
+        self.topBarStyle = topBarStyle
+    }
 
     var body: some View {
         Button(action: dismiss.callAsFunction) {
             Image(systemName: "chevron.down")
                 .tint(.white)
                 .font(.system(size: 20))
+                .topBarStyle(topBarStyle)
         }
         .shadow(color: .black, radius: 1)
 #if os(iOS)

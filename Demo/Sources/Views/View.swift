@@ -103,3 +103,16 @@ extension View {
 #endif
     }
 }
+
+extension View {
+    @ViewBuilder
+    func topBarStyle(_ apply: Bool = true) -> some View {
+        if apply {
+            padding(.horizontal)
+                .frame(minHeight: 35)
+        }
+        else {
+            self
+        }
+    }
+}

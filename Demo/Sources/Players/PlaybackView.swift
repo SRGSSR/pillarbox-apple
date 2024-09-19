@@ -822,8 +822,7 @@ private struct ErrorView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .topLeading) {
-            CloseButton()
-                .topBarStyle()
+            CloseButton(topBarStyle: true)
         }
     }
 }
@@ -856,8 +855,7 @@ struct PlaybackView: View {
                 PlaybackMessageView(title: "No content")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(alignment: .topLeading) {
-                        CloseButton()
-                            .topBarStyle()
+                        CloseButton(topBarStyle: true)
                     }
             }
         }
@@ -907,13 +905,6 @@ extension PlaybackView {
         var view = self
         view.supportsPictureInPicture = supportsPictureInPicture
         return view
-    }
-}
-
-private extension View {
-    func topBarStyle() -> some View {
-        padding(.horizontal)
-            .frame(minHeight: 35)
     }
 }
 

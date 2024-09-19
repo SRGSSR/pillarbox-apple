@@ -31,9 +31,7 @@ private struct PresentedView: View {
                 .padding()
         }
         .overlay(alignment: .topLeading) {
-            CloseButton()
-                .padding(.horizontal)
-                .frame(minHeight: 35)
+            CloseButton(topBarStyle: true)
         }
     }
 }
