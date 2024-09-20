@@ -141,5 +141,8 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
 
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         delegate?.pictureInPictureDidStop()
+        if hostViews.isEmpty {
+            controller?.contentSource = nil
+        }
     }
 }
