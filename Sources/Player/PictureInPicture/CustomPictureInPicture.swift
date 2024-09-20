@@ -80,7 +80,10 @@ final class CustomPictureInPicture: NSObject {
     /// it.
     ///
     /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
-    func detach(with player: AVPlayer) {}
+    func detach(with player: AVPlayer) {
+        guard lastLayerView?.player === player else { return }
+        lastLayerView?.player = nil
+    }
 
     private func configureIsPossiblePublisher() {
         controller?.publisher(for: \.isPictureInPicturePossible)
