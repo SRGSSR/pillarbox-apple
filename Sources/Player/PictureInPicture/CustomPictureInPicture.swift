@@ -107,7 +107,7 @@ final class CustomPictureInPicture: NSObject {
 extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
-        videoLayerView = hostViews.first(where: { $0.contentSource == pictureInPictureController.contentSource })?.layerView
+        videoLayerView = hostViews.first { $0.contentSource == pictureInPictureController.contentSource }?.videoLayerView
         delegate?.pictureInPictureWillStart()
     }
 

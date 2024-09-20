@@ -8,46 +8,46 @@ import AVKit
 import UIKit
 
 final class PictureInPictureHostView: UIView {
-    weak var layerView: VideoLayerView?
+    weak var videoLayerView: VideoLayerView?
 
     var player: AVPlayer? {
         get {
-            layerView?.player
+            videoLayerView?.player
         }
         set {
-            layerView?.player = newValue
+            videoLayerView?.player = newValue
         }
     }
 
     var gravity: AVLayerVideoGravity {
         get {
-            layerView?.gravity ?? .resizeAspect
+            videoLayerView?.gravity ?? .resizeAspect
         }
         set {
-            layerView?.gravity = newValue
+            videoLayerView?.gravity = newValue
         }
     }
 
     var contentSource: AVPictureInPictureController.ContentSource? {
-        layerView?.contentSource
+        videoLayerView?.contentSource
     }
 
-    func addVideoLayerView(_ layerView: VideoLayerView) {
-        addSubview(layerView)
-        layerView.translatesAutoresizingMaskIntoConstraints = false
+    func addVideoLayerView(_ videoLayerView: VideoLayerView) {
+        addSubview(videoLayerView)
+        videoLayerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            leadingAnchor.constraint(equalTo: layerView.leadingAnchor),
-            trailingAnchor.constraint(equalTo: layerView.trailingAnchor),
-            topAnchor.constraint(equalTo: layerView.topAnchor),
-            bottomAnchor.constraint(equalTo: layerView.bottomAnchor)
+            leadingAnchor.constraint(equalTo: videoLayerView.leadingAnchor),
+            trailingAnchor.constraint(equalTo: videoLayerView.trailingAnchor),
+            topAnchor.constraint(equalTo: videoLayerView.topAnchor),
+            bottomAnchor.constraint(equalTo: videoLayerView.bottomAnchor)
         ])
-        self.layerView = layerView
+        self.videoLayerView = videoLayerView
     }
 
     override func willRemoveSubview(_ subview: UIView) {
         super.willRemoveSubview(subview)
-        if let layerView, subview === layerView {
-            addVideoLayerView(layerView.duplicate())
+        if let videoLayerView, subview === videoLayerView {
+            addVideoLayerView(videoLayerView.duplicate())
         }
     }
 }
