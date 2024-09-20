@@ -48,10 +48,7 @@ final class HostView: UIView {
     override func willRemoveSubview(_ subview: UIView) {
         super.willRemoveSubview(subview)
         if let layerView, subview === layerView {
-            let layerViewCopy = VideoLayerView()
-            layerViewCopy.player = layerView.player
-            layerViewCopy.gravity = layerView.gravity
-            addLayerView(layerViewCopy)
+            addLayerView(layerView.duplicate())
         }
     }
 }
