@@ -13,6 +13,7 @@ final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
 
+    // TODO: Can we make mandatory (force unwrap) and deal with platform support above? Would be cleaner.
     private let controller = AVPictureInPictureController(playerLayer: .init())
     private var hostViews: OrderedSet<PictureInPictureHostView> = []
 
