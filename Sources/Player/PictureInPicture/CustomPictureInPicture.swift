@@ -13,12 +13,12 @@ final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
 
-    let controller = AVPictureInPictureController(playerLayer: .init())
-    var videoViews: OrderedSet<HostView> = []
+    private let controller = AVPictureInPictureController(playerLayer: .init())
+    private var hostViews: OrderedSet<PictureInPictureHostView> = []
 
     weak var delegate: PictureInPictureDelegate?
 
-    private var lastLayerView: VideoLayerView?
+    private var videoLayerView: VideoLayerView?
 
     override init() {
         super.init()
@@ -43,10 +43,10 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func acquire(for view: HostView, player: Player) -> VideoLayerView {
-        videoViews.append(view)
-        if let lastLayerView, lastLayerView.player == player.queuePlayer {
-            return lastLayerView
+    func makeVideoLayerView(hostedBy hostView: PictureInPictureHostView, for player: Player) -> VideoLayerView {
+        hostViews.append(hostView)
+        if let videoLayerView, videoLayerView.player == player.queuePlayer {
+            return videoLayerView
         }
         else {
             let layerView = VideoLayerView()
@@ -55,11 +55,11 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func relinquish(for view: HostView) {
-        videoViews.remove(view)
-        if !isActive && controller?.contentSource == view.contentSource {
-            if let availableView = videoViews.last {
-                controller?.contentSource = availableView.contentSource
+    func dismantleVideoLayerView(hostedBy hostView: PictureInPictureHostView) {
+        hostViews.remove(hostView)
+        if !isActive && controller?.contentSource == hostView.contentSource {
+            if let lastHostView = hostViews.last {
+                controller?.contentSource = lastHostView.contentSource
             }
             else {
                 controller?.contentSource = nil
@@ -81,8 +81,8 @@ final class CustomPictureInPicture: NSObject {
     ///
     /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
     func detach(with player: AVPlayer) {
-        guard lastLayerView?.player === player else { return }
-        lastLayerView?.player = nil
+        guard videoLayerView?.player === player else { return }
+        videoLayerView?.player = nil
     }
 
     private func configureIsPossiblePublisher() {
@@ -95,7 +95,7 @@ final class CustomPictureInPicture: NSObject {
 extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
-        lastLayerView = videoViews.first(where: { $0.contentSource == pictureInPictureController.contentSource })?.layerView
+        videoLayerView = hostViews.first(where: { $0.contentSource == pictureInPictureController.contentSource })?.layerView
         delegate?.pictureInPictureWillStart()
     }
 
@@ -124,7 +124,7 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = false
-        lastLayerView = nil
+        videoLayerView = nil
         delegate?.pictureInPictureWillStop()
     }
 
