@@ -144,5 +144,8 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         if hostViews.isEmpty {
             controller?.contentSource = nil
         }
+        else if !hostViews.contains(where: { $0.contentSource == controller?.contentSource }) {
+            controller?.contentSource = hostViews.last?.contentSource
+        }
     }
 }
