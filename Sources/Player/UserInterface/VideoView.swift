@@ -39,7 +39,7 @@ public struct VideoView: View {
                 MonoscopicVideoView(player: player, orientation: orientation)
             }
         }
-        .opacity(player.mediaType != .unknown ? 1 : 0)
+        //.opacity(player.mediaType != .unknown ? 1 : 0)
         .onAppear {
             PictureInPicture.shared.system.detach(with: player.queuePlayer)
             PictureInPicture.shared.custom.onAppear(
