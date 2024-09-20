@@ -10,10 +10,6 @@ struct CloseButton: View {
     @Environment(\.dismiss) private var dismiss
     let topBarStyle: Bool
 
-    init(topBarStyle: Bool = false) {
-        self.topBarStyle = topBarStyle
-    }
-
     var body: some View {
         Button(action: dismiss.callAsFunction) {
             Image(systemName: "chevron.down")
@@ -25,5 +21,9 @@ struct CloseButton: View {
 #if os(iOS)
         .keyboardShortcut(.escape, modifiers: [])
 #endif
+    }
+
+    init(topBarStyle: Bool = false) {
+        self.topBarStyle = topBarStyle
     }
 }
