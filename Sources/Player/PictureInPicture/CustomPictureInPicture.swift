@@ -45,8 +45,11 @@ final class CustomPictureInPicture: NSObject {
 
     func acquire(for view: HostView) {
         videoViews.append(view)
-        lastLayerView = view.layerView
         controller?.contentSource = .init(playerLayer: view.layerView.playerLayer)
+    }
+
+    func register(for view: HostView) {
+        videoViews.append(view)
     }
 
     func relinquish(for view: HostView) {
@@ -54,11 +57,9 @@ final class CustomPictureInPicture: NSObject {
         if !isActive && controller?.contentSource?.playerLayer === view.layerView.playerLayer {
             if let availableView = videoViews.last {
                 controller?.contentSource = .init(playerLayer: availableView.layerView.playerLayer)
-                lastLayerView = availableView.layerView
             }
             else {
                 controller?.contentSource = nil
-                lastLayerView = nil
             }
         }
     }
@@ -88,6 +89,7 @@ final class CustomPictureInPicture: NSObject {
 extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
+        lastLayerView = videoViews.first(where: { $0.layerView.playerLayer === controller?.contentSource?.playerLayer })?.layerView
         delegate?.pictureInPictureWillStart()
     }
 
@@ -116,6 +118,7 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = false
+        lastLayerView = nil
         delegate?.pictureInPictureWillStop()
     }
 

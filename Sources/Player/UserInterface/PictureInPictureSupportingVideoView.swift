@@ -55,12 +55,22 @@ struct PictureInPictureSupportingVideoView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> HostView {
-        if let lastLayerView = PictureInPicture.shared.custom.lastLayerView, lastLayerView.player === player.queuePlayer {
-            let view = HostView(layerView: lastLayerView)
-            PictureInPicture.shared.custom.acquire(for: view)
-            return view
+        if let lastLayerView = PictureInPicture.shared.custom.lastLayerView {
+            if lastLayerView.player === player.queuePlayer {
+                print("--> reuse last layer view")
+                let view = HostView(layerView: lastLayerView)
+                PictureInPicture.shared.custom.acquire(for: view)
+                return view
+            }
+            else {
+                print("--> create new layer view (reg)")
+                let view = HostView(layerView: .init())
+                PictureInPicture.shared.custom.register(for: view)
+                return view
+            }
         }
         else {
+            print("--> create new layer view (acq)")
             let view = HostView(layerView: .init())
             PictureInPicture.shared.custom.acquire(for: view)
             return view
