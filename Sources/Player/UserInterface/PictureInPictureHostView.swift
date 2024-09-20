@@ -32,7 +32,7 @@ final class PictureInPictureHostView: UIView {
         layerView?.contentSource
     }
 
-    func addLayerView(_ layerView: VideoLayerView) {
+    func addVideoLayerView(_ layerView: VideoLayerView) {
         addSubview(layerView)
         layerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -47,7 +47,7 @@ final class PictureInPictureHostView: UIView {
     override func willRemoveSubview(_ subview: UIView) {
         super.willRemoveSubview(subview)
         if let layerView, subview === layerView {
-            addLayerView(layerView.duplicate())
+            addVideoLayerView(layerView.duplicate())
         }
     }
 }

@@ -12,13 +12,11 @@ struct PictureInPictureSupportingVideoView: UIViewRepresentable {
     let gravity: AVLayerVideoGravity
 
     static func dismantleUIView(_ uiView: PictureInPictureHostView, coordinator: Void) {
-        PictureInPicture.shared.custom.dismantleVideoLayerView(hostedBy: uiView)
+        PictureInPicture.shared.custom.dismantleHostView(uiView)
     }
 
     func makeUIView(context: Context) -> PictureInPictureHostView {
-        let view = PictureInPictureHostView()
-        view.addLayerView(PictureInPicture.shared.custom.makeVideoLayerView(hostedBy: view, for: player))
-        return view
+        PictureInPicture.shared.custom.makeHostView(for: player)
     }
 
     func updateUIView(_ uiView: PictureInPictureHostView, context: Context) {

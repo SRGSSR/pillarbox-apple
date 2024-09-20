@@ -44,8 +44,14 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func makeVideoLayerView(hostedBy hostView: PictureInPictureHostView, for player: Player) -> VideoLayerView {
+    func makeHostView(for player: Player) -> PictureInPictureHostView {
+        let hostView = PictureInPictureHostView()
         hostViews.append(hostView)
+        hostView.addVideoLayerView(makeVideoLayerView(hostedBy: hostView, for: player))
+        return hostView
+    }
+
+    func makeVideoLayerView(hostedBy hostView: PictureInPictureHostView, for player: Player) -> VideoLayerView {
         if let videoLayerView {
             if videoLayerView.player == player.queuePlayer {
                 return videoLayerView
@@ -61,7 +67,7 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func dismantleVideoLayerView(hostedBy hostView: PictureInPictureHostView) {
+    func dismantleHostView(_ hostView: PictureInPictureHostView) {
         hostViews.remove(hostView)
         if !isActive && controller?.contentSource == hostView.contentSource {
             if let lastHostView = hostViews.last {
