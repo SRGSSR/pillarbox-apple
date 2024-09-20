@@ -5,14 +5,35 @@
 //
 
 import AVFoundation
+import AVKit
 import SwiftUI
 
-class HostView: UIView {
-    var layerView: VideoLayerView
+final class HostView: UIView {
+    weak var layerView: VideoLayerView?
 
-    init(layerView: VideoLayerView) {
-        self.layerView = layerView
-        super.init(frame: .zero)
+    var player: AVPlayer? {
+        get {
+            layerView?.player
+        }
+        set {
+            layerView?.player = newValue
+        }
+    }
+
+    var gravity: AVLayerVideoGravity {
+        get {
+            layerView?.gravity ?? .resizeAspect
+        }
+        set {
+            layerView?.gravity = newValue
+        }
+    }
+
+    var contentSource: AVPictureInPictureController.ContentSource? {
+        layerView?.contentSource
+    }
+
+    func addLayerView(_ layerView: VideoLayerView) {
         addSubview(layerView)
         layerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -21,28 +42,17 @@ class HostView: UIView {
             topAnchor.constraint(equalTo: layerView.topAnchor),
             bottomAnchor.constraint(equalTo: layerView.bottomAnchor)
         ])
+        self.layerView = layerView
     }
 
     override func willRemoveSubview(_ subview: UIView) {
         super.willRemoveSubview(subview)
-        guard subview === layerView else { return }
-
-        let layerView = VideoLayerView()
-        layerView.player = self.layerView.player
-        layerView.playerLayer.videoGravity = self.layerView.playerLayer.videoGravity
-        self.layerView = layerView
-        addSubview(layerView)
-        layerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            leadingAnchor.constraint(equalTo: layerView.leadingAnchor),
-            trailingAnchor.constraint(equalTo: layerView.trailingAnchor),
-            topAnchor.constraint(equalTo: layerView.topAnchor),
-            bottomAnchor.constraint(equalTo: layerView.bottomAnchor)
-        ])
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        if let layerView, subview === layerView {
+            let layerViewCopy = VideoLayerView()
+            layerViewCopy.player = layerView.player
+            layerViewCopy.gravity = layerView.gravity
+            addLayerView(layerViewCopy)
+        }
     }
 }
 
@@ -55,27 +65,13 @@ struct PictureInPictureSupportingVideoView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> HostView {
-        if let lastLayerView = PictureInPicture.shared.custom.lastLayerView {
-            if lastLayerView.player === player.queuePlayer {
-                let view = HostView(layerView: lastLayerView)
-                PictureInPicture.shared.custom.acquire(for: view)
-                return view
-            }
-            else {
-                let view = HostView(layerView: .init())
-                PictureInPicture.shared.custom.register(for: view)
-                return view
-            }
-        }
-        else {
-            let view = HostView(layerView: .init())
-            PictureInPicture.shared.custom.acquire(for: view)
-            return view
-        }
+        let view = HostView()
+        view.addLayerView(PictureInPicture.shared.custom.acquire(for: view, player: player))
+        return view
     }
 
     func updateUIView(_ uiView: HostView, context: Context) {
-        uiView.layerView.player = player.queuePlayer
-        uiView.layerView.playerLayer.videoGravity = gravity
+        uiView.player = player.queuePlayer
+        uiView.gravity = gravity
     }
 }

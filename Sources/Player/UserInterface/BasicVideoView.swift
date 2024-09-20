@@ -17,6 +17,6 @@ struct BasicVideoView: UIViewRepresentable {
 
     func updateUIView(_ uiView: VideoLayerView, context: Context) {
         uiView.player = player.queuePlayer
-        uiView.playerLayer.videoGravity = gravity
+        uiView.gravity = gravity
     }
 }

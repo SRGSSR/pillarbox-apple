@@ -18,7 +18,7 @@ final class CustomPictureInPicture: NSObject {
 
     weak var delegate: PictureInPictureDelegate?
 
-    var lastLayerView: VideoLayerView?
+    private var lastLayerView: VideoLayerView?
 
     override init() {
         super.init()
@@ -43,20 +43,23 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func acquire(for view: HostView) {
+    func acquire(for view: HostView, player: Player) -> VideoLayerView {
         videoViews.append(view)
-        controller?.contentSource = .init(playerLayer: view.layerView.playerLayer)
-    }
-
-    func register(for view: HostView) {
-        videoViews.append(view)
+        if let lastLayerView, lastLayerView.player == player.queuePlayer {
+            return lastLayerView
+        }
+        else {
+            let layerView = VideoLayerView()
+            controller?.contentSource = layerView.contentSource
+            return layerView
+        }
     }
 
     func relinquish(for view: HostView) {
         videoViews.remove(view)
-        if !isActive && controller?.contentSource?.playerLayer === view.layerView.playerLayer {
+        if !isActive && controller?.contentSource == view.contentSource {
             if let availableView = videoViews.last {
-                controller?.contentSource = .init(playerLayer: availableView.layerView.playerLayer)
+                controller?.contentSource = availableView.contentSource
             }
             else {
                 controller?.contentSource = nil
@@ -89,7 +92,7 @@ final class CustomPictureInPicture: NSObject {
 extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
-        lastLayerView = videoViews.first(where: { $0.layerView.playerLayer === controller?.contentSource?.playerLayer })?.layerView
+        lastLayerView = videoViews.first(where: { $0.contentSource == pictureInPictureController.contentSource })?.layerView
         delegate?.pictureInPictureWillStart()
     }
 
