@@ -16,22 +16,10 @@ private struct PresentedView: View {
 
     var body: some View {
         VStack {
-            VideoView(player: player)
+            PlaybackView(player: player)
                 .supportsPictureInPicture(supportsPictureInPicture)
-            VStack(spacing: 20) {
-                Toggle("Supports PiP", isOn: $supportsPictureInPicture)
-                Button(action: player.togglePlayPause) {
-                    Text("Play / pause")
-                }
-            }
-            .padding(.horizontal)
-        }
-        .overlay(alignment: .topTrailing) {
-            PiPButton()
-                .padding()
-        }
-        .overlay(alignment: .topLeading) {
-            CloseButton(topBarStyle: true)
+            Toggle("Supports PiP", isOn: $supportsPictureInPicture)
+                .padding(.horizontal)
         }
     }
 }
@@ -46,26 +34,16 @@ struct TransitionPiPView: View {
 
     var body: some View {
         VStack {
-            VideoView(player: model.player)
+            PlaybackView(player: model.player)
                 .supportsPictureInPicture(supportsPictureInPicture)
-                .accessibilityAddTraits(.isButton)
+
             VStack(spacing: 20) {
                 Toggle("Supports PiP", isOn: $supportsPictureInPicture)
-                HStack {
-                    Button(action: model.player.togglePlayPause) {
-                        Text("Play / pause")
-                    }
-                    Spacer()
-                    Button(action: openModal) {
-                        Text("Open modal")
-                    }
+                Button(action: openModal) {
+                    Text("Open modal")
                 }
             }
             .padding(.horizontal)
-        }
-        .overlay(alignment: .topTrailing) {
-            PiPButton()
-                .padding()
         }
         .onAppear(perform: play)
         .fullScreenCover(isPresented: $isPresented) {
