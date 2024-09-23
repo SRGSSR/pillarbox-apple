@@ -33,7 +33,6 @@
 		6F3724A42C74D6E90091C488 /* UnbufferedURLMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3724A32C74D6E90091C488 /* UnbufferedURLMedia.swift */; };
 		6F3724A62C74D6F30091C488 /* URNMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3724A52C74D6F30091C488 /* URNMedia.swift */; };
 		6F3724A82C74E3130091C488 /* PlaylistSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3724A72C74E3130091C488 /* PlaylistSelectionView.swift */; };
-		6F3F65472C983055008BAF38 /* TransitionBasicPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3F65462C983055008BAF38 /* TransitionBasicPiPView.swift */; };
 		6F56F91F2C1D85F800495E20 /* MetricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56F91E2C1D85F600495E20 /* MetricsView.swift */; };
 		6F56F9232C1D893400495E20 /* ObservedBitrateChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56F9222C1D892800495E20 /* ObservedBitrateChart.swift */; };
 		6F56F9252C1D89FC00495E20 /* IndicatedBitrateChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F56F9242C1D89F700495E20 /* IndicatedBitrateChart.swift */; };
@@ -93,10 +92,8 @@
 		6F9D879A2BE35A6100DEE9EB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 6F9D87992BE3587700DEE9EB /* PrivacyInfo.xcprivacy */; };
 		6FAD51122B331A370078FE08 /* MultiViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD51112B331A370078FE08 /* MultiViewModel.swift */; };
 		6FAD51142B331AAD0078FE08 /* SingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FAD51132B331AAD0078FE08 /* SingleView.swift */; };
-		6FB077122C9AA17C0027148A /* MultiBasicPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0770F2C9AA17C0027148A /* MultiBasicPiPView.swift */; };
-		6FB077132C9AA17C0027148A /* TwinsBasicPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB077102C9AA17C0027148A /* TwinsBasicPiPView.swift */; };
 		6FB077172C9AABCF0027148A /* TransitionAdvancedPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB077152C9AABCE0027148A /* TransitionAdvancedPiPView.swift */; };
-		6FB077192C9AABCF0027148A /* TwinsAdvancedPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB077162C9AABCE0027148A /* TwinsAdvancedPiPView.swift */; };
+		6FB077192C9AABCF0027148A /* TwinsPiPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB077162C9AABCE0027148A /* TwinsPiPView.swift */; };
 		6FB8ED742C417E7E0049171B /* MetricEventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB8ED732C417E780049171B /* MetricEventCell.swift */; };
 		6FBCC1F92B2A090E009EA3E3 /* MotionManager~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBCC1F82B2A090E009EA3E3 /* MotionManager~ios.swift */; };
 		6FBF198F2B1A2E1C00B16BD5 /* OptimizingCustomLayouts2~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBF198D2B1A2E1C00B16BD5 /* OptimizingCustomLayouts2~ios.swift */; };
@@ -142,7 +139,6 @@
 		6F3724A32C74D6E90091C488 /* UnbufferedURLMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnbufferedURLMedia.swift; sourceTree = "<group>"; };
 		6F3724A52C74D6F30091C488 /* URNMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URNMedia.swift; sourceTree = "<group>"; };
 		6F3724A72C74E3130091C488 /* PlaylistSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistSelectionView.swift; sourceTree = "<group>"; };
-		6F3F65462C983055008BAF38 /* TransitionBasicPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionBasicPiPView.swift; sourceTree = "<group>"; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		6F45DB9B2893B773008ACCE6 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		6F45DB9D2893B773008ACCE6 /* Demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.nightly.xcconfig; sourceTree = "<group>"; };
@@ -206,10 +202,8 @@
 		6F9D87992BE3587700DEE9EB /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		6FAD51112B331A370078FE08 /* MultiViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiViewModel.swift; sourceTree = "<group>"; };
 		6FAD51132B331AAD0078FE08 /* SingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleView.swift; sourceTree = "<group>"; };
-		6FB0770F2C9AA17C0027148A /* MultiBasicPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiBasicPiPView.swift; sourceTree = "<group>"; };
-		6FB077102C9AA17C0027148A /* TwinsBasicPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwinsBasicPiPView.swift; sourceTree = "<group>"; };
 		6FB077152C9AABCE0027148A /* TransitionAdvancedPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionAdvancedPiPView.swift; sourceTree = "<group>"; };
-		6FB077162C9AABCE0027148A /* TwinsAdvancedPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwinsAdvancedPiPView.swift; sourceTree = "<group>"; };
+		6FB077162C9AABCE0027148A /* TwinsPiPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwinsPiPView.swift; sourceTree = "<group>"; };
 		6FB8ED732C417E780049171B /* MetricEventCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricEventCell.swift; sourceTree = "<group>"; };
 		6FBCC1F82B2A090E009EA3E3 /* MotionManager~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MotionManager~ios.swift"; sourceTree = "<group>"; };
 		6FBF198D2B1A2E1C00B16BD5 /* OptimizingCustomLayouts2~ios.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OptimizingCustomLayouts2~ios.swift"; sourceTree = "<group>"; };
@@ -589,11 +583,8 @@
 			isa = PBXGroup;
 			children = (
 				6FD3081E2C9ABAF4005486CC /* MultiAdvancedPiPView.swift */,
-				6FB0770F2C9AA17C0027148A /* MultiBasicPiPView.swift */,
 				6FB077152C9AABCE0027148A /* TransitionAdvancedPiPView.swift */,
-				6F3F65462C983055008BAF38 /* TransitionBasicPiPView.swift */,
-				6FB077162C9AABCE0027148A /* TwinsAdvancedPiPView.swift */,
-				6FB077102C9AA17C0027148A /* TwinsBasicPiPView.swift */,
+				6FB077162C9AABCE0027148A /* TwinsPiPView.swift */,
 			);
 			path = PiP;
 			sourceTree = "<group>";
@@ -703,15 +694,12 @@
 				6FC5D6A42A6FACB20012BC89 /* CloseButton.swift in Sources */,
 				6F59E88529CF31E20093E6FB /* ContentListsView.swift in Sources */,
 				6F59E8A329CF31E20093E6FB /* ExamplesView.swift in Sources */,
-				6FB077122C9AA17C0027148A /* MultiBasicPiPView.swift in Sources */,
-				6FB077132C9AA17C0027148A /* TwinsBasicPiPView.swift in Sources */,
 				6F56F91F2C1D85F800495E20 /* MetricsView.swift in Sources */,
 				0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */,
 				6F3724A62C74D6F30091C488 /* URNMedia.swift in Sources */,
 				6F59E89C29CF31E20093E6FB /* BasicPlaybackView.swift in Sources */,
 				6F7DDB5F2C20360F00B48A67 /* StallsChart.swift in Sources */,
 				0EDFF0DB2B0740DA005030B4 /* SourceCodeViewable.swift in Sources */,
-				6F3F65472C983055008BAF38 /* TransitionBasicPiPView.swift in Sources */,
 				6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */,
 				6FD3081F2C9ABAF4005486CC /* MultiAdvancedPiPView.swift in Sources */,
 				6F59E88829CF31E20093E6FB /* UserDefaults.swift in Sources */,
@@ -782,7 +770,7 @@
 				6F59E89029CF31E20093E6FB /* Story.swift in Sources */,
 				6F59E89D29CF31E20093E6FB /* VanillaPlayerView.swift in Sources */,
 				6FB077172C9AABCF0027148A /* TransitionAdvancedPiPView.swift in Sources */,
-				6FB077192C9AABCF0027148A /* TwinsAdvancedPiPView.swift in Sources */,
+				6FB077192C9AABCF0027148A /* TwinsPiPView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
