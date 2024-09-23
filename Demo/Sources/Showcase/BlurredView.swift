@@ -26,9 +26,7 @@ struct BlurredView: View {
         }
         .background(.black)
         .overlay(alignment: .topLeading) {
-            CloseButton()
-                .padding(.horizontal)
-                .frame(minHeight: 35)
+            CloseButton(topBarStyle: true)
         }
         .onAppear(perform: play)
         .onForeground(perform: player.play)

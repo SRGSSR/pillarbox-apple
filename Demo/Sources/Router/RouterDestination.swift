@@ -19,9 +19,14 @@ enum RouterDestination: Identifiable, Hashable {
     case blurred(media: Media)
     case twins(media: Media)
     case multi(media1: Media, media2: Media)
+
     case link(media: Media)
     case wrapped(media: Media)
     case transition(media: Media)
+
+    case twinsPiP(media: Media)
+    case multiPiP(media1: Media, media2: Media)
+    case transitionPiP(media: Media)
 
     case stories
     case playlist(medias: [Media])
@@ -55,6 +60,12 @@ enum RouterDestination: Identifiable, Hashable {
             return "wrapped"
         case .transition:
             return "transition"
+        case .twinsPiP:
+            return "twinsPiP"
+        case .multiPiP:
+            return "multiPiP"
+        case .transitionPiP:
+            return "transitionPiP"
         case .stories:
             return "stories"
         case .playlist:
@@ -106,6 +117,12 @@ enum RouterDestination: Identifiable, Hashable {
             WrappedView(media: media)
         case let .transition(media: media):
             TransitionView(media: media)
+        case let .twinsPiP(media: media):
+            TwinsPiPView(media: media)
+        case let .multiPiP(media1: media1, media2: media2):
+            MultiPiPView(media1: media1, media2: media2)
+        case let .transitionPiP(media: media):
+            TransitionPiPView(media: media)
         case .stories:
             StoriesView()
         case let .playlist(medias: medias):

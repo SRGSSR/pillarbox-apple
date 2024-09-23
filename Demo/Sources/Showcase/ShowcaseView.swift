@@ -29,6 +29,7 @@ struct ShowcaseView: View {
         layoutsSection()
         playlistsSection()
         embeddingsSection()
+        pictureInPictureCornerCases()
         systemPlayerSection()
         miscellaneousPlayerFeaturesSection()
         customPictureInPictureSection()
@@ -181,6 +182,35 @@ struct ShowcaseView: View {
                 destination: .transition(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
             .sourceCode(of: TransitionView.self)
+        }
+    }
+
+    @ViewBuilder
+    private func pictureInPictureCornerCases() -> some View {
+        CustomSection("Picture in Picture Corner Cases") {
+            cell(
+                title: "Twins",
+                subtitle: "A video displayed twice",
+                destination: .twinsPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
+            )
+            .sourceCode(of: TwinsPiPView.self)
+
+            cell(
+                title: "Multi-instance",
+                subtitle: "Two videos played at the same time",
+                destination: .multiPiP(
+                    media1: URNMedia.onDemandHorizontalVideo,
+                    media2: URNMedia.onDemandVideo
+                )
+            )
+            .sourceCode(of: MultiPiPView.self)
+
+            cell(
+                title: "Transition",
+                subtitle: "A transition between two layouts sharing the same player",
+                destination: .transitionPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
+            )
+            .sourceCode(of: TransitionPiPView.self)
         }
     }
 

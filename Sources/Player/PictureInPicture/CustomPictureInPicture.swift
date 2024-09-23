@@ -6,21 +6,23 @@
 
 import AVKit
 import Combine
+import OrderedCollections
 
 /// Manages Picture in Picture for `VideoView` instances.
 final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
 
-    @objc private dynamic var controller: AVPictureInPictureController?
+    private let controller = AVPictureInPictureController(playerLayer: .init())
+    private var hostViews: OrderedSet<PictureInPictureHostView> = []
 
     weak var delegate: PictureInPictureDelegate?
-    private var referenceCount = 0
 
-    var view: VideoLayerView?
+    private var videoLayerView: VideoLayerView?
 
     override init() {
         super.init()
+        controller?.delegate = self
         configureIsPossiblePublisher()
     }
 
@@ -41,29 +43,38 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func acquire(for view: VideoLayerView) {
-        if self.view === view {
-            referenceCount += 1
-        }
-        else {
-            self.view = view
-            controller = AVPictureInPictureController(playerLayer: view.playerLayer)
-            if let controller {
-                controller.delegate = self
-                referenceCount = 1
+    func makeHostView(for player: Player) -> PictureInPictureHostView {
+        let hostView = PictureInPictureHostView()
+        hostViews.append(hostView)
+        hostView.addVideoLayerView(makeVideoLayerView(hostedBy: hostView, for: player))
+        return hostView
+    }
+
+    private func makeVideoLayerView(hostedBy hostView: PictureInPictureHostView, for player: Player) -> VideoLayerView {
+        if let videoLayerView {
+            if videoLayerView.player == player.queuePlayer {
+                return videoLayerView
             }
             else {
-                referenceCount = 0
+                return VideoLayerView()
             }
+        }
+        else {
+            let layerView = VideoLayerView()
+            controller?.contentSource = layerView.contentSource
+            return layerView
         }
     }
 
-    func relinquish(for view: VideoLayerView) {
-        guard self.view === view else { return }
-        referenceCount -= 1
-        if referenceCount == 0 {
-            controller = nil
-            self.view = nil
+    func dismantleHostView(_ hostView: PictureInPictureHostView) {
+        hostViews.remove(hostView)
+        if !isActive && controller?.contentSource == hostView.contentSource {
+            if let lastHostView = hostViews.last {
+                controller?.contentSource = lastHostView.contentSource
+            }
+            else {
+                controller?.contentSource = nil
+            }
         }
     }
 
@@ -81,17 +92,12 @@ final class CustomPictureInPicture: NSObject {
     ///
     /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
     func detach(with player: AVPlayer) {
-        guard view?.player === player else { return }
-        view?.player = nil
+        guard videoLayerView?.player === player else { return }
+        videoLayerView?.player = nil
     }
 
     private func configureIsPossiblePublisher() {
-        publisher(for: \.controller)
-            .map { controller in
-                guard let controller else { return Just(false).eraseToAnyPublisher() }
-                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
-            }
-            .switchToLatest()
+        controller?.publisher(for: \.isPictureInPicturePossible)
             .receiveOnMainThread()
             .assign(to: &$isPossible)
     }
@@ -100,9 +106,7 @@ final class CustomPictureInPicture: NSObject {
 extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
-        if let view, view.playerLayer == pictureInPictureController.playerLayer {
-            acquire(for: view)
-        }
+        videoLayerView = hostViews.first { $0.contentSource == pictureInPictureController.contentSource }?.videoLayerView
         delegate?.pictureInPictureWillStart()
     }
 
@@ -131,13 +135,21 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = false
+        videoLayerView = nil
         delegate?.pictureInPictureWillStop()
     }
 
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        if let view, view.playerLayer == pictureInPictureController.playerLayer {
-            relinquish(for: view)
-        }
         delegate?.pictureInPictureDidStop()
+
+        // Ensure proper resource cleanup if PiP is closed from the overlay without matching video view visible.
+        if hostViews.isEmpty {
+            controller?.contentSource = nil
+        }
+        // Wire the PiP controller to a valid source if the restored state is not bound to the player involved in
+        // the restoration.
+        else if !hostViews.contains(where: { $0.contentSource == controller?.contentSource }) {
+            controller?.contentSource = hostViews.last?.contentSource
+        }
     }
 }

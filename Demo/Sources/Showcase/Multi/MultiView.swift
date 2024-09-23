@@ -28,8 +28,7 @@ struct MultiView: View {
                 routePickerView()
                 PiPButton()
             }
-            .padding(.horizontal)
-            .frame(minHeight: 35)
+            .topBarStyle()
         }
         .onAppear {
             model.media1 = media1

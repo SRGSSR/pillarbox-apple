@@ -26,9 +26,7 @@ struct LinkView: View {
                 .padding()
         }
         .overlay(alignment: .topLeading) {
-            CloseButton()
-                .padding(.horizontal)
-                .frame(minHeight: 35)
+            CloseButton(topBarStyle: true)
         }
         .onAppear(perform: play)
         .onForeground(perform: resume)

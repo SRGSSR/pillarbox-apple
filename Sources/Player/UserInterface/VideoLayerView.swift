@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import AVKit
 import UIKit
 
 final class VideoLayerView: UIView {
@@ -12,12 +13,36 @@ final class VideoLayerView: UIView {
         AVPlayerLayer.self
     }
 
-    var playerLayer: AVPlayerLayer {
+    private var playerLayer: AVPlayerLayer {
         layer as! AVPlayerLayer
     }
 
+    lazy var contentSource: AVPictureInPictureController.ContentSource = {
+        .init(playerLayer: playerLayer)
+    }()
+
     var player: AVPlayer? {
-        get { playerLayer.player }
-        set { playerLayer.player = newValue }
+        get {
+            playerLayer.player
+        }
+        set {
+            playerLayer.player = newValue
+        }
+    }
+
+    var gravity: AVLayerVideoGravity {
+        get {
+            playerLayer.videoGravity
+        }
+        set {
+            playerLayer.videoGravity = newValue
+        }
+    }
+
+    func duplicate() -> VideoLayerView {
+        let duplicate = VideoLayerView()
+        duplicate.player = player
+        duplicate.gravity = gravity
+        return duplicate
     }
 }

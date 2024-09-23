@@ -66,7 +66,7 @@ extension PictureInPicture: PictureInPictureDelegate {
                 // The Picture in Picture overlay restoration animation should always occur slightly after the playback
                 // user interface restoration animation starts, otherwise the restoration animation will be dropped (likely
                 // because otherwise the video frame into which the PiP overlay should return cannot be determined).
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                     completion(finished)
                 }
             }
