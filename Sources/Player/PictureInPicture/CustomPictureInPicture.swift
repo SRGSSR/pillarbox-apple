@@ -146,8 +146,8 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         if hostViews.isEmpty {
             controller?.contentSource = nil
         }
-        // Wire the PiP controller to a valid source if the restored state is not bound to the player bound
-        // involved in the restoration.
+        // Wire the PiP controller to a valid source if the restored state is not bound to the player involved in
+        // the restoration.
         else if !hostViews.contains(where: { $0.contentSource == controller?.contentSource }) {
             controller?.contentSource = hostViews.last?.contentSource
         }
