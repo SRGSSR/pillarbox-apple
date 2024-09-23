@@ -17,28 +17,8 @@ struct TwinsPiPView: View {
 
     var body: some View {
         VStack {
-            VideoView(player: model.player)
-                .supportsPictureInPicture(topSupportsPictureInPicture)
-                .overlay(alignment: .topTrailing) {
-                    PiPButton()
-                        .padding()
-                }
-            Toggle("Supports PiP", isOn: $topSupportsPictureInPicture)
-                .padding(.horizontal)
-
-            Button(action: model.player.togglePlayPause) {
-                Text("Play / pause")
-            }
-            .padding(.horizontal)
-
-            VideoView(player: model.player)
-                .supportsPictureInPicture(bottomSupportsPictureInPicture)
-                .overlay(alignment: .topTrailing) {
-                    PiPButton()
-                        .padding()
-                }
-            Toggle("Support PiP", isOn: $bottomSupportsPictureInPicture)
-                .padding(.horizontal)
+            playbackView(supportsPictureInPicture: $topSupportsPictureInPicture)
+            playbackView(supportsPictureInPicture: $bottomSupportsPictureInPicture)
         }
         .onAppear(perform: play)
         .enabledForInAppPictureInPicture(persisting: model)
@@ -48,6 +28,16 @@ struct TwinsPiPView: View {
     private func play() {
         model.media = media
         model.play()
+    }
+
+    private func playbackView(supportsPictureInPicture: Binding<Bool>) -> some View {
+        VStack {
+            PlaybackView(player: model.player)
+                .supportsPictureInPicture(supportsPictureInPicture.wrappedValue)
+
+            Toggle("Supports PiP", isOn: supportsPictureInPicture)
+                .padding(.horizontal)
+        }
     }
 }
 
