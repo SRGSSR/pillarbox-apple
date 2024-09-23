@@ -100,7 +100,8 @@ let package = Package(
             name: "PillarboxPlayer",
             dependencies: [
                 .target(name: "PillarboxCore"),
-                .product(name: "DequeModule", package: "swift-collections")
+                .product(name: "DequeModule", package: "swift-collections"),
+                .product(name: "OrderedCollections", package: "swift-collections")
             ],
             path: "Sources/Player",
             resources: [
@@ -166,8 +167,7 @@ let package = Package(
             dependencies: [
                 .target(name: "PillarboxCircumspect"),
                 .target(name: "PillarboxPlayer"),
-                .target(name: "PillarboxStreams"),
-                .product(name: "OrderedCollections", package: "swift-collections")
+                .target(name: "PillarboxStreams")
             ],
             resources: [
                 .process("Resources")
