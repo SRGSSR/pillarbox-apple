@@ -7,7 +7,7 @@
 import PillarboxPlayer
 import SwiftUI
 
-private final class MultiAdvancedPiPViewModel: ObservableObject, PictureInPicturePersistable {
+private final class MultiPiPViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var media1: Media? {
         didSet {
             guard media1 != oldValue else { return }
@@ -43,11 +43,11 @@ private final class MultiAdvancedPiPViewModel: ObservableObject, PictureInPictur
     }
 }
 
-struct MultiAdvancedPiPView: View {
+struct MultiPiPView: View {
     let media1: Media
     let media2: Media
 
-    @StateObject private var model = MultiAdvancedPiPViewModel.persisted ?? MultiAdvancedPiPViewModel()
+    @StateObject private var model = MultiPiPViewModel.persisted ?? MultiPiPViewModel()
 
     var body: some View {
         VStack {
@@ -91,10 +91,10 @@ struct MultiAdvancedPiPView: View {
     }
 }
 
-extension MultiAdvancedPiPView: SourceCodeViewable {
+extension MultiPiPView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    MultiAdvancedPiPView(media1: URLMedia.onDemandVideoLocalHLS, media2: URLMedia.onDemandVideoMP4)
+    MultiPiPView(media1: URLMedia.onDemandVideoLocalHLS, media2: URLMedia.onDemandVideoMP4)
 }

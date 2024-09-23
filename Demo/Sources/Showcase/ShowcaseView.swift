@@ -187,55 +187,30 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func pictureInPictureCornerCases() -> some View {
-        // swiftlint:disable:next closure_body_length
         CustomSection("Picture in Picture Corner Cases") {
             cell(
-                title: "Twins (basic)",
+                title: "Twins",
                 subtitle: "A video displayed twice",
-                destination: .twinsBasicPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
+                destination: .twinsPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
-            .sourceCode(of: TwinsBasicPiPView.self)
+            .sourceCode(of: TwinsPiPView.self)
 
             cell(
-                title: "Twins (advanced)",
-                subtitle: "A video displayed twice",
-                destination: .twinsAdvancedPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
-            )
-            .sourceCode(of: TwinsAdvancedPiPView.self)
-
-            cell(
-                title: "Multi-instance (basic)",
+                title: "Multi-instance",
                 subtitle: "Two videos played at the same time",
-                destination: .multiBasicPiP(
+                destination: .multiPiP(
                     media1: URNMedia.onDemandHorizontalVideo,
                     media2: URNMedia.onDemandVideo
                 )
             )
-            .sourceCode(of: MultiBasicPiPView.self)
+            .sourceCode(of: MultiPiPView.self)
 
             cell(
-                title: "Multi-instance (advanced)",
-                subtitle: "Two videos played at the same time",
-                destination: .multiAdvancedPiP(
-                    media1: URNMedia.onDemandHorizontalVideo,
-                    media2: URNMedia.onDemandVideo
-                )
-            )
-            .sourceCode(of: MultiAdvancedPiPView.self)
-
-            cell(
-                title: "Transition (basic)",
+                title: "Transition",
                 subtitle: "A transition between two layouts sharing the same player",
-                destination: .transitionBasicPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
+                destination: .transitionPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
             )
-            .sourceCode(of: TransitionBasicPiPView.self)
-
-            cell(
-                title: "Transition (advanced)",
-                subtitle: "A transition between two layouts sharing the same player",
-                destination: .transitionAdvancedPiP(media: URLMedia.appleBasic_16_9_TS_HLS)
-            )
-            .sourceCode(of: TransitionAdvancedPiPView.self)
+            .sourceCode(of: TransitionPiPView.self)
         }
     }
 

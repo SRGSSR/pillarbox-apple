@@ -36,7 +36,7 @@ private struct PresentedView: View {
     }
 }
 
-struct TransitionAdvancedPiPView: View {
+struct TransitionPiPView: View {
     let media: Media
 
     @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
@@ -85,10 +85,10 @@ struct TransitionAdvancedPiPView: View {
     }
 }
 
-extension TransitionAdvancedPiPView: SourceCodeViewable {
+extension TransitionPiPView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    TransitionAdvancedPiPView(media: URLMedia.onDemandVideoLocalHLS)
+    TransitionPiPView(media: URLMedia.onDemandVideoLocalHLS)
 }

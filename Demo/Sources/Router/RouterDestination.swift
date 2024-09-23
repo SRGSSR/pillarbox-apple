@@ -24,12 +24,9 @@ enum RouterDestination: Identifiable, Hashable {
     case wrapped(media: Media)
     case transition(media: Media)
 
-    case twinsBasicPiP(media: Media)
-    case twinsAdvancedPiP(media: Media)
-    case multiBasicPiP(media1: Media, media2: Media)
-    case multiAdvancedPiP(media1: Media, media2: Media)
-    case transitionBasicPiP(media: Media)
-    case transitionAdvancedPiP(media: Media)
+    case twinsPiP(media: Media)
+    case multiPiP(media1: Media, media2: Media)
+    case transitionPiP(media: Media)
 
     case stories
     case playlist(medias: [Media])
@@ -63,18 +60,12 @@ enum RouterDestination: Identifiable, Hashable {
             return "wrapped"
         case .transition:
             return "transition"
-        case .twinsBasicPiP:
-            return "twinsBasicPiP"
-        case .twinsAdvancedPiP:
-            return "twinsAdvancedPiP"
-        case .multiBasicPiP:
-            return "multiBasicPiP"
-        case .multiAdvancedPiP:
-            return "multiAdvancedPiP"
-        case .transitionBasicPiP:
-            return "transitionBasicPiP"
-        case .transitionAdvancedPiP:
-            return "transitionAdvancedPiP"
+        case .twinsPiP:
+            return "twinsPiP"
+        case .multiPiP:
+            return "multiPiP"
+        case .transitionPiP:
+            return "transitionPiP"
         case .stories:
             return "stories"
         case .playlist:
@@ -126,18 +117,12 @@ enum RouterDestination: Identifiable, Hashable {
             WrappedView(media: media)
         case let .transition(media: media):
             TransitionView(media: media)
-        case let .twinsBasicPiP(media: media):
-            TwinsBasicPiPView(media: media)
-        case let .twinsAdvancedPiP(media: media):
-            TwinsAdvancedPiPView(media: media)
-        case let .multiBasicPiP(media1: media1, media2: media2):
-            MultiBasicPiPView(media1: media1, media2: media2)
-        case let .multiAdvancedPiP(media1: media1, media2: media2):
-            MultiAdvancedPiPView(media1: media1, media2: media2)
-        case let .transitionBasicPiP(media: media):
-            TransitionBasicPiPView(media: media)
-        case let .transitionAdvancedPiP(media: media):
-            TransitionAdvancedPiPView(media: media)
+        case let .twinsPiP(media: media):
+            TwinsPiPView(media: media)
+        case let .multiPiP(media1: media1, media2: media2):
+            MultiPiPView(media1: media1, media2: media2)
+        case let .transitionPiP(media: media):
+            TransitionPiPView(media: media)
         case .stories:
             StoriesView()
         case let .playlist(medias: medias):

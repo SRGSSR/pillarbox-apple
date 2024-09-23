@@ -7,7 +7,7 @@
 import PillarboxPlayer
 import SwiftUI
 
-struct TwinsAdvancedPiPView: View {
+struct TwinsPiPView: View {
     let media: Media
 
     @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
@@ -51,10 +51,10 @@ struct TwinsAdvancedPiPView: View {
     }
 }
 
-extension TwinsAdvancedPiPView: SourceCodeViewable {
+extension TwinsPiPView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    TwinsAdvancedPiPView(media: URLMedia.onDemandVideoLocalHLS)
+    TwinsPiPView(media: URLMedia.onDemandVideoLocalHLS)
 }
