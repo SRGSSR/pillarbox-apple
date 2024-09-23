@@ -50,7 +50,7 @@ struct TransitionPiPView: View {
             PresentedView(player: model.player)
         }
         .enabledForInAppPictureInPicture(persisting: model)
-        .tracked(name: "transition-advanced-pip")
+        .tracked(name: "transition-pip")
     }
 
     private func play() {

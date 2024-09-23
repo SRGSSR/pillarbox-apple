@@ -56,7 +56,7 @@ struct MultiPiPView: View {
         }
         .onAppear(perform: play)
         .enabledForInAppPictureInPicture(persisting: model)
-        .tracked(name: "multi-advanced-pip")
+        .tracked(name: "multi-pip")
     }
 
     private func play() {
