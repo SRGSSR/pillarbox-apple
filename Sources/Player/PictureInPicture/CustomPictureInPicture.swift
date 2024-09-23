@@ -50,7 +50,7 @@ final class CustomPictureInPicture: NSObject {
         return hostView
     }
 
-    func makeVideoLayerView(hostedBy hostView: PictureInPictureHostView, for player: Player) -> VideoLayerView {
+    private func makeVideoLayerView(hostedBy hostView: PictureInPictureHostView, for player: Player) -> VideoLayerView {
         if let videoLayerView {
             if videoLayerView.player == player.queuePlayer {
                 return videoLayerView
