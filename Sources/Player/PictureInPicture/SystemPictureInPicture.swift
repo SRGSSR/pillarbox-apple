@@ -29,13 +29,8 @@ final class SystemPictureInPicture: NSObject {
     }
 
     private func makePlayerViewController(hostedBy _: PictureInPictureHostViewController, for player: Player) -> AVPlayerViewController {
-        if let playerViewController {
-            if playerViewController.player == player.queuePlayer {
-                return playerViewController
-            }
-            else {
-                return AVPlayerViewController()
-            }
+        if let playerViewController, playerViewController.player == player.queuePlayer {
+            return playerViewController
         }
         else {
             let playerViewController = AVPlayerViewController()

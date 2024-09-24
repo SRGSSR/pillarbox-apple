@@ -28,7 +28,7 @@ final class PictureInPictureHostViewController: UIViewController {
 
     override func removeFromParent() {
         super.removeFromParent()
-        if let viewController, view === viewController.view {
+        if let viewController, self == viewController {
             let duplicate = AVPlayerViewController()
             duplicate.player = viewController.player
             duplicate.videoGravity = viewController.videoGravity
