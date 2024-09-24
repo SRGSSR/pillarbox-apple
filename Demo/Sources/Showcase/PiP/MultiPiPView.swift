@@ -10,6 +10,7 @@ import SwiftUI
 struct MultiPiPView: View {
     let media1: Media
     let media2: Media
+    let isSystemPlayer: Bool
 
     @StateObject private var model = MultiPiPViewModel.persisted ?? MultiPiPViewModel()
 
@@ -31,11 +32,21 @@ struct MultiPiPView: View {
 
     private func playbackView(player: Player, supportsPictureInPicture: Binding<Bool>) -> some View {
         VStack {
-            PlaybackView(player: player)
-                .supportsPictureInPicture(supportsPictureInPicture.wrappedValue)
-
+            playbackView(player: player, supportsPictureInPicture: supportsPictureInPicture.wrappedValue)
             Toggle("Supports PiP", isOn: supportsPictureInPicture)
                 .padding(.horizontal)
+        }
+    }
+
+    @ViewBuilder
+    private func playbackView(player: Player, supportsPictureInPicture: Bool) -> some View {
+        if isSystemPlayer {
+            SystemVideoView(player: player)
+                .supportsPictureInPicture(supportsPictureInPicture)
+        }
+        else {
+            PlaybackView(player: player)
+                .supportsPictureInPicture(supportsPictureInPicture)
         }
     }
 }
@@ -45,5 +56,5 @@ extension MultiPiPView: SourceCodeViewable {
 }
 
 #Preview {
-    MultiPiPView(media1: URLMedia.onDemandVideoLocalHLS, media2: URLMedia.onDemandVideoMP4)
+    MultiPiPView(media1: URLMedia.onDemandVideoLocalHLS, media2: URLMedia.onDemandVideoMP4, isSystemPlayer: false)
 }
