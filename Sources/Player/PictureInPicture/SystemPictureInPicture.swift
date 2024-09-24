@@ -117,18 +117,4 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
             self.playerViewController = hostViewControllers.last?.viewController
         }
     }
-
-#if os(iOS)
-    func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        willBeginFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
-    ) {
-    }
-
-    func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        willEndFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
-    ) {
-    }
-#endif
 }
