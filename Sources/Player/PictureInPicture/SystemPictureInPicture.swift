@@ -37,7 +37,6 @@ final class SystemPictureInPicture: NSObject {
             playerViewController.delegate = self
             playerViewController.allowsPictureInPicturePlayback = true
             playerViewController.player = player.queuePlayer
-            self.playerViewController = playerViewController
             return playerViewController
         }
     }
@@ -73,6 +72,7 @@ final class SystemPictureInPicture: NSObject {
 extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = true
+        self.playerViewController = playerViewController
         delegate?.pictureInPictureWillStart()
     }
 
@@ -113,7 +113,7 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         }
         // Wire the PiP controller to a valid source if the restored state is not bound to the player involved in
         // the restoration.
-        else if !hostViewControllers.contains(where: { $0 == playerViewController }) {
+        else if !hostViewControllers.map(\.viewController).contains(self.playerViewController) {
             self.playerViewController = hostViewControllers.last?.viewController
         }
     }
