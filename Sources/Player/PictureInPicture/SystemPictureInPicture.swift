@@ -5,12 +5,14 @@
 //
 
 import AVKit
+import OrderedCollections
 
 /// Manages Picture in Picture for `SystemVideoView` instances.
 final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
 
     var playerViewController: AVPlayerViewController?
+    var hostViewControllers: OrderedSet<PictureInPictureHostViewController> = []
 
     weak var delegate: PictureInPictureDelegate?
     private var referenceCount = 0
@@ -19,22 +21,41 @@ final class SystemPictureInPicture: NSObject {
         playerViewController?.stopPictureInPicture()
     }
 
-    func acquire(for controller: AVPlayerViewController) {
-        if controller === playerViewController {
-            referenceCount += 1
+    func makeHostViewController(for player: Player) -> PictureInPictureHostViewController {
+        let hostViewController = PictureInPictureHostViewController()
+        hostViewControllers.append(hostViewController)
+        hostViewController.addViewController(makePlayerViewController(hostedBy: hostViewController, for: player))
+        return hostViewController
+    }
+
+    private func makePlayerViewController(hostedBy _: PictureInPictureHostViewController, for player: Player) -> AVPlayerViewController {
+        if let playerViewController {
+            if playerViewController.player == player.queuePlayer {
+                return playerViewController
+            }
+            else {
+                return AVPlayerViewController()
+            }
         }
         else {
-            playerViewController = controller
-            playerViewController?.delegate = self
-            referenceCount = 1
+            let playerViewController = AVPlayerViewController()
+            playerViewController.delegate = self
+            playerViewController.allowsPictureInPicturePlayback = true
+            playerViewController.player = player.queuePlayer
+            self.playerViewController = playerViewController
+            return playerViewController
         }
     }
 
-    func relinquish(for controller: AVPlayerViewController) {
-        guard controller === playerViewController else { return }
-        referenceCount -= 1
-        if referenceCount == 0 {
-            playerViewController = nil
+    func dismantleHostViewController(_ hostViewController: PictureInPictureHostViewController) {
+        hostViewControllers.remove(hostViewController)
+        if !isActive && playerViewController == hostViewController.viewController {
+            if let lastHostView = hostViewControllers.last {
+                playerViewController = lastHostView.viewController
+            }
+            else {
+                playerViewController = nil
+            }
         }
     }
 
@@ -57,7 +78,6 @@ final class SystemPictureInPicture: NSObject {
 extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = true
-        acquire(for: playerViewController)
         delegate?.pictureInPictureWillStart()
     }
 
@@ -90,8 +110,17 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     }
 
     func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        relinquish(for: playerViewController)
         delegate?.pictureInPictureDidStop()
+
+        // Ensure proper resource cleanup if PiP is closed from the overlay without matching video view visible.
+        if hostViewControllers.isEmpty {
+            self.playerViewController = nil
+        }
+        // Wire the PiP controller to a valid source if the restored state is not bound to the player involved in
+        // the restoration.
+        else if !hostViewControllers.contains(where: { $0 == playerViewController }) {
+            self.playerViewController = hostViewControllers.last?.viewController
+        }
     }
 
 #if os(iOS)
@@ -99,14 +128,12 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         _ playerViewController: AVPlayerViewController,
         willBeginFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
     ) {
-        acquire(for: playerViewController)
     }
 
     func playerViewController(
         _ playerViewController: AVPlayerViewController,
         willEndFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
     ) {
-        relinquish(for: playerViewController)
     }
 #endif
 }
