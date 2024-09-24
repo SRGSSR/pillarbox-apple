@@ -24,11 +24,11 @@ final class SystemPictureInPicture: NSObject {
     func makeHostViewController(for player: Player) -> PictureInPictureHostViewController {
         let hostViewController = PictureInPictureHostViewController()
         hostViewControllers.append(hostViewController)
-        hostViewController.addViewController(makePlayerViewController(hostedBy: hostViewController, for: player))
+        hostViewController.addViewController(makePlayerViewController(for: player))
         return hostViewController
     }
 
-    private func makePlayerViewController(hostedBy _: PictureInPictureHostViewController, for player: Player) -> AVPlayerViewController {
+    private func makePlayerViewController(for player: Player) -> AVPlayerViewController {
         if let playerViewController, playerViewController.player == player.queuePlayer {
             return playerViewController
         }
