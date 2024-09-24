@@ -74,4 +74,7 @@ Advanced integration is available both for ``VideoView`` as well as ``SystemVide
 
 The above instructions assume you are using either `VideoView` in a custom layout, or  that ``SystemVideoView`` is presented full screen.
 
-When ``SystemVideoView`` is presented inline, though, its close button is replaced with a maximization button to switch to full screen display. Picture in Picture can be enabled whether the inline player has been maximized or not, and for this reason any life cycle implementation for the inline system player should not dismiss the player view when Picture in Picture is about to start. Implementing view restoration is still required, though.
+When ``SystemVideoView`` is presented inline, though, its close button is replaced with a maximization button to switch to full screen display.
+Picture in Picture can be enabled whether the inline player has been maximized or not, and for this reason any life cycle implementation for the inline system player should not dismiss the player view when Picture in Picture is about to start.
+However, the player view can be dismissed when Picture in Picture has finished starting.
+Finally, implementing the view restoration is still required.
