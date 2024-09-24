@@ -50,7 +50,7 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
 #if os(tvOS)
         uiViewController.viewController?.contextualActions = contextualActions
         context.coordinator.player = player
-        context.coordinator.controller = uiViewController
+        context.coordinator.controller = uiViewController.viewController
 #endif
     }
 }
