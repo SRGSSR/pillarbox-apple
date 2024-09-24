@@ -24,6 +24,7 @@ final class PictureInPictureHostViewController: UIViewController {
         ])
 
         viewController.didMove(toParent: self)
+        self.viewController = viewController
     }
 
     override func removeFromParent() {
