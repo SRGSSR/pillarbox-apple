@@ -53,6 +53,9 @@ final class CustomPictureInPicture: NSObject {
     private func makeVideoLayerView(for player: Player) -> VideoLayerView {
         if let videoLayerView {
             if videoLayerView.player == player.queuePlayer {
+                if let hostView = videoLayerView.superview as? PictureInPictureHostView {
+                    hostView.addVideoLayerView(videoLayerView.duplicate())
+                }
                 return videoLayerView
             }
             else {

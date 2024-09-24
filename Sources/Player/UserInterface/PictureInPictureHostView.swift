@@ -43,11 +43,4 @@ final class PictureInPictureHostView: UIView {
         ])
         self.videoLayerView = videoLayerView
     }
-
-    override func willRemoveSubview(_ subview: UIView) {
-        super.willRemoveSubview(subview)
-        if let videoLayerView, subview === videoLayerView {
-            addVideoLayerView(videoLayerView.duplicate())
-        }
-    }
 }
