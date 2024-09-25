@@ -17,8 +17,8 @@ extension AVPlayerViewController {
         allowsPictureInPicturePlayback = true
     }
 
-    func duplicate() -> AVPlayerViewController {
-        let duplicate = AVPlayerViewController()
+    func duplicate() -> Self {
+        let duplicate = Self()
         duplicate.player = player
         duplicate.showsPlaybackControls = showsPlaybackControls
         duplicate.videoGravity = videoGravity

@@ -7,6 +7,17 @@
 import AVKit
 import OrderedCollections
 
+private class PlayerViewController: AVPlayerViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // We can use fine-grained presentation information to avoid stopping Picture in Picture when enabled
+        // from maximized layout.
+        if isMovingToParent || isBeingPresented {
+            PictureInPicture.shared.system.stop()
+        }
+    }
+}
+
 /// Manages Picture in Picture for `SystemVideoView` instances.
 final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
@@ -36,7 +47,7 @@ final class SystemPictureInPicture: NSObject {
             return playerViewController
         }
         else {
-            let playerViewController = AVPlayerViewController()
+            let playerViewController = PlayerViewController()
             playerViewController.delegate = self
             playerViewController.allowsPictureInPicturePlayback = true
             playerViewController.player = player.queuePlayer
