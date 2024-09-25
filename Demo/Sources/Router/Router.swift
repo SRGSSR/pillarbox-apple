@@ -45,7 +45,7 @@ final class Router: ObservableObject {
 }
 
 extension Router: PictureInPictureDelegate {
-    func pictureInPictureWillStart(for player: Player) {
+    func pictureInPictureWillStart() {
         switch presented {
         case .player, .systemPlayer, .playlist, .multi, .twinsPiP, .multiPiP, .transitionPiP:
             previousPresented = presented
@@ -57,7 +57,7 @@ extension Router: PictureInPictureDelegate {
         }
     }
 
-    func pictureInPictureDidStart(for player: Player) {
+    func pictureInPictureDidStart() {
         switch presented {
         case .inlineSystemPlayer, .multiSystemPiP:
             presented = nil
@@ -66,9 +66,9 @@ extension Router: PictureInPictureDelegate {
         }
     }
 
-    func pictureInPictureControllerFailedToStart(for player: Player, with error: Error) {}
+    func pictureInPictureControllerFailedToStart(with error: Error) {}
 
-    func pictureInPictureRestoreUserInterfaceForStop(for player: Player, with completion: @escaping (Bool) -> Void) {
+    func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
         if let previousPresented, previousPresented != presented {
             presented = previousPresented
             completion(true)
@@ -78,9 +78,9 @@ extension Router: PictureInPictureDelegate {
         }
     }
 
-    func pictureInPictureWillStop(for player: Player) {
+    func pictureInPictureWillStop() {
         previousPresented = nil
     }
 
-    func pictureInPictureDidStop(for player: Player) {}
+    func pictureInPictureDidStop() {}
 }

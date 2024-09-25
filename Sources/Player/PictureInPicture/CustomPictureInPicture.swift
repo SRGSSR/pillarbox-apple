@@ -52,7 +52,7 @@ final class CustomPictureInPicture: NSObject {
 
     private func makeVideoLayerView(for player: Player) -> VideoLayerView {
         if let videoLayerView {
-            if videoLayerView.player == player {
+            if videoLayerView.player == player.queuePlayer {
                 if let hostView = videoLayerView.superview as? PictureInPictureHostView {
                     hostView.addVideoLayerView(videoLayerView.duplicate())
                 }
@@ -110,37 +110,26 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
         videoLayerView = hostViews.first { $0.contentSource == pictureInPictureController.contentSource }?.videoLayerView
-
-        assert(videoLayerView?.player != nil)
-        if let player = videoLayerView?.player {
-            delegate?.pictureInPictureWillStart(for: player)
-        }
+        delegate?.pictureInPictureWillStart()
     }
 
     func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        assert(videoLayerView?.player != nil)
-        if let player = videoLayerView?.player {
-            delegate?.pictureInPictureDidStart(for: player)
-        }
+        delegate?.pictureInPictureDidStart()
     }
 
     func pictureInPictureController(
         _ pictureInPictureController: AVPictureInPictureController,
         failedToStartPictureInPictureWithError error: Error
     ) {
-        assert(videoLayerView?.player != nil)
-        if let player = videoLayerView?.player {
-            delegate?.pictureInPictureControllerFailedToStart(for: player, with: error)
-        }
+        delegate?.pictureInPictureControllerFailedToStart(with: error)
     }
 
     func pictureInPictureController(
         _ pictureInPictureController: AVPictureInPictureController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
-        assert(videoLayerView?.player != nil)
-        if let delegate, let player = videoLayerView?.player {
-            delegate.pictureInPictureRestoreUserInterfaceForStop(for: player, with: completionHandler)
+        if let delegate {
+            delegate.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
         }
         else {
             completionHandler(true)
@@ -148,19 +137,12 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        assert(videoLayerView?.player != nil)
-        if let player = videoLayerView?.player {
-            delegate?.pictureInPictureWillStop(for: player)
-        }
-
         isActive = false
+        delegate?.pictureInPictureWillStop()
     }
 
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        assert(videoLayerView?.player != nil)
-        if let player = videoLayerView?.player {
-            delegate?.pictureInPictureDidStop(for: player)
-        }
+        delegate?.pictureInPictureDidStop()
 
         // Ensure proper resource cleanup if PiP is closed from the overlay without matching video view visible.
         if hostViews.isEmpty {

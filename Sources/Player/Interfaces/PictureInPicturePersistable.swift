@@ -11,24 +11,16 @@
 /// processes.
 public protocol PictureInPicturePersistable: AnyObject {
     /// Called when Picture in Picture is about to start.
-    ///
-    /// - Parameter player: The player associated to the Picture in Picture.
-    func pictureInPictureWillStart(for player: Player)
+    func pictureInPictureWillStart()
 
     /// Called when Picture in Picture has started.
-    ///
-    /// - Parameter player: The player associated to the Picture in Picture.
-    func pictureInPictureDidStart(for player: Player)
+    func pictureInPictureDidStart()
 
     /// Called when Picture in Picture is about to stop.
-    ///
-    /// - Parameter player: The player associated to the Picture in Picture.
-    func pictureInPictureWillStop(for player: Player)
+    func pictureInPictureWillStop()
 
     /// Called when Picture in Picture has stopped.
-    ///
-    /// - Parameter player: The player associated to the Picture in Picture.
-    func pictureInPictureDidStop(for player: Player)
+    func pictureInPictureDidStop()
 }
 
 public extension PictureInPicturePersistable {
@@ -38,14 +30,14 @@ public extension PictureInPicturePersistable {
     }
 
     /// Default implementation. Does nothing.
-    func pictureInPictureWillStart(for player: Player) {}
+    func pictureInPictureWillStart() {}
 
     /// Default implementation. Does nothing.
-    func pictureInPictureDidStart(for player: Player) {}
+    func pictureInPictureDidStart() {}
 
     /// Default implementation. Does nothing.
-    func pictureInPictureWillStop(for player: Player) {}
+    func pictureInPictureWillStop() {}
 
     /// Default implementation. Does nothing.
-    func pictureInPictureDidStop(for player: Player) {}
+    func pictureInPictureDidStop() {}
 }

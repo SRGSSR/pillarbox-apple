@@ -7,7 +7,7 @@
 import Combine
 import PillarboxPlayer
 
-final class MultiPiPViewModel: ObservableObject {
+final class MultiPiPViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var media1: Media? {
         didSet {
             guard media1 != oldValue else { return }
@@ -40,16 +40,5 @@ final class MultiPiPViewModel: ObservableObject {
     func play() {
         player1.play()
         player2.play()
-    }
-}
-
-extension MultiPiPViewModel: PictureInPicturePersistable {
-    func pictureInPictureDidStart(for player: Player) {
-        if player == player1 {
-            player2.pause()
-        }
-        else {
-            player1.pause()
-        }
     }
 }

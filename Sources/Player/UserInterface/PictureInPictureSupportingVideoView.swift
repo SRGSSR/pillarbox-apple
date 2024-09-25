@@ -20,7 +20,7 @@ struct PictureInPictureSupportingVideoView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: PictureInPictureHostView, context: Context) {
-        uiView.player = player
+        uiView.player = player.queuePlayer
         uiView.gravity = gravity
     }
 }

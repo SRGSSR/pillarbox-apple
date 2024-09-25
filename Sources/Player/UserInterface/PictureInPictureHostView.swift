@@ -10,7 +10,7 @@ import UIKit
 final class PictureInPictureHostView: UIView {
     private(set) weak var videoLayerView: VideoLayerView?
 
-    var player: Player? {
+    var player: AVPlayer? {
         get {
             videoLayerView?.player
         }

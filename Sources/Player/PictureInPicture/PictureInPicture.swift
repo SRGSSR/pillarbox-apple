@@ -44,25 +44,25 @@ public final class PictureInPicture {
 }
 
 extension PictureInPicture: PictureInPictureDelegate {
-    public func pictureInPictureWillStart(for player: Player) {
-        delegate?.pictureInPictureWillStart(for: player)
+    public func pictureInPictureWillStart() {
+        delegate?.pictureInPictureWillStart()
 
         persisted = persistable
-        persisted?.pictureInPictureWillStart(for: player)
+        persisted?.pictureInPictureWillStart()
     }
 
-    public func pictureInPictureDidStart(for player: Player) {
-        delegate?.pictureInPictureDidStart(for: player)
-        persisted?.pictureInPictureDidStart(for: player)
+    public func pictureInPictureDidStart() {
+        delegate?.pictureInPictureDidStart()
+        persisted?.pictureInPictureDidStart()
     }
 
-    public func pictureInPictureControllerFailedToStart(for player: Player, with error: Error) {
-        delegate?.pictureInPictureControllerFailedToStart(for: player, with: error)
+    public func pictureInPictureControllerFailedToStart(with error: Error) {
+        delegate?.pictureInPictureControllerFailedToStart(with: error)
     }
 
-    public func pictureInPictureRestoreUserInterfaceForStop(for player: Player, with completion: @escaping (Bool) -> Void) {
+    public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
         if let delegate {
-            delegate.pictureInPictureRestoreUserInterfaceForStop(for: player) { finished in
+            delegate.pictureInPictureRestoreUserInterfaceForStop { finished in
                 // The Picture in Picture overlay restoration animation should always occur slightly after the playback
                 // user interface restoration animation starts, otherwise the restoration animation will be dropped (likely
                 // because otherwise the video frame into which the PiP overlay should return cannot be determined).
@@ -76,14 +76,14 @@ extension PictureInPicture: PictureInPictureDelegate {
         }
     }
 
-    public func pictureInPictureWillStop(for player: Player) {
-        delegate?.pictureInPictureWillStop(for: player)
-        persisted?.pictureInPictureWillStop(for: player)
+    public func pictureInPictureWillStop() {
+        delegate?.pictureInPictureWillStop()
+        persisted?.pictureInPictureWillStop()
     }
 
-    public func pictureInPictureDidStop(for player: Player) {
-        delegate?.pictureInPictureDidStop(for: player)
-        persisted?.pictureInPictureDidStop(for: player)
+    public func pictureInPictureDidStop() {
+        delegate?.pictureInPictureDidStop()
+        persisted?.pictureInPictureDidStop()
         persisted = nil
     }
 }
