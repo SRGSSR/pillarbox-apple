@@ -7,20 +7,10 @@
 import AVKit
 import OrderedCollections
 
-private class PlayerViewController: AVPlayerViewController {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // We can use fine-grained presentation information to avoid stopping Picture in Picture when enabled
-        // from maximized layout.
-        if isMovingToParentOrBeingPresented() {
-            PictureInPicture.shared.system.stop()
-        }
-    }
-}
-
 /// Manages Picture in Picture for `SystemVideoView` instances.
 final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
+    private var isFullscreen = false
 
     private var playerViewController: AVPlayerViewController?
     private var hostViewControllers: OrderedSet<PictureInPictureHostViewController> = []
@@ -47,7 +37,7 @@ final class SystemPictureInPicture: NSObject {
             return playerViewController
         }
         else {
-            let playerViewController = PlayerViewController()
+            let playerViewController = AVPlayerViewController()
             playerViewController.delegate = self
             playerViewController.allowsPictureInPicturePlayback = true
             playerViewController.player = player.queuePlayer
@@ -70,6 +60,9 @@ final class SystemPictureInPicture: NSObject {
     func onAppear(with player: AVPlayer, supportsPictureInPicture: Bool) {
         if !supportsPictureInPicture {
             detach(with: player)
+        }
+        else if !isFullscreen {
+            stop()
         }
     }
 
@@ -141,4 +134,20 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
             self.playerViewController = hostViewControllers.last?.viewController
         }
     }
+
+#if os(iOS)
+    func playerViewController(
+        _ playerViewController: AVPlayerViewController,
+        willBeginFullScreenPresentationWithAnimationCoordinator coordinator: any UIViewControllerTransitionCoordinator
+    ) {
+        isFullscreen = true
+    }
+
+    func playerViewController(
+        _ playerViewController: AVPlayerViewController,
+        willEndFullScreenPresentationWithAnimationCoordinator coordinator: any UIViewControllerTransitionCoordinator
+    ) {
+        isFullscreen = false
+    }
+#endif
 }
