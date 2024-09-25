@@ -6,8 +6,6 @@
 
 import AVFoundation
 
-private var kParentKey: Void?
-
 extension AVPlayer {
     /// The available time range.
     ///
@@ -27,17 +25,6 @@ extension AVPlayer {
         }
         else {
             return .invalid
-        }
-    }
-}
-
-extension AVPlayer {
-    var parent: Player? {
-        get {
-            objc_getAssociatedObject(self, &kParentKey) as? Player
-        }
-        set {
-            objc_setAssociatedObject(self, &kParentKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
         }
     }
 }

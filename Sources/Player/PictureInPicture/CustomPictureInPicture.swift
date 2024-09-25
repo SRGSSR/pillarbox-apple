@@ -110,13 +110,16 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
         videoLayerView = hostViews.first { $0.contentSource == pictureInPictureController.contentSource }?.videoLayerView
-        if let player = pictureInPictureController.parentPlayer {
+
+        assert(videoLayerView?.player != nil)
+        if let player = videoLayerView?.player {
             delegate?.pictureInPictureWillStart(for: player)
         }
     }
 
     func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        if let player = pictureInPictureController.parentPlayer {
+        assert(videoLayerView?.player != nil)
+        if let player = videoLayerView?.player {
             delegate?.pictureInPictureDidStart(for: player)
         }
     }
@@ -125,7 +128,8 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         _ pictureInPictureController: AVPictureInPictureController,
         failedToStartPictureInPictureWithError error: Error
     ) {
-        if let player = pictureInPictureController.parentPlayer {
+        assert(videoLayerView?.player != nil)
+        if let player = videoLayerView?.player {
             delegate?.pictureInPictureControllerFailedToStart(for: player, with: error)
         }
     }
@@ -134,7 +138,8 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         _ pictureInPictureController: AVPictureInPictureController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
-        if let delegate, let player = pictureInPictureController.parentPlayer {
+        assert(videoLayerView?.player != nil)
+        if let delegate, let player = videoLayerView?.player {
             delegate.pictureInPictureRestoreUserInterfaceForStop(for: player, with: completionHandler)
         }
         else {
@@ -143,15 +148,17 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        isActive = false
-        videoLayerView = nil
-        if let player = pictureInPictureController.parentPlayer {
+        assert(videoLayerView?.player != nil)
+        if let player = videoLayerView?.player {
             delegate?.pictureInPictureWillStop(for: player)
         }
+
+        isActive = false
     }
 
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        if let player = pictureInPictureController.parentPlayer {
+        assert(videoLayerView?.player != nil)
+        if let player = videoLayerView?.player {
             delegate?.pictureInPictureDidStop(for: player)
         }
 
@@ -164,5 +171,7 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         else if !hostViews.contains(where: { $0.contentSource == controller?.contentSource }) {
             controller?.contentSource = hostViews.last?.contentSource
         }
+
+        videoLayerView = nil
     }
 }

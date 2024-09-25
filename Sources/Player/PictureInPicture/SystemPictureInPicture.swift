@@ -7,6 +7,35 @@
 import AVKit
 import OrderedCollections
 
+final class PlayerViewController: AVPlayerViewController {
+    var parentPlayer: Player? {
+        didSet {
+            player = parentPlayer?.queuePlayer
+        }
+    }
+
+    func duplicate() -> Self {
+        let duplicate = Self()
+        duplicate.parentPlayer = parentPlayer
+        duplicate.showsPlaybackControls = showsPlaybackControls
+        duplicate.videoGravity = videoGravity
+        duplicate.allowsPictureInPicturePlayback = allowsPictureInPicturePlayback
+        duplicate.requiresLinearPlayback = requiresLinearPlayback
+        duplicate.pixelBufferAttributes = pixelBufferAttributes
+        duplicate.delegate = delegate
+        duplicate.speeds = speeds
+#if os(iOS)
+        duplicate.showsTimecodes = showsTimecodes
+        duplicate.allowsVideoFrameAnalysis = allowsVideoFrameAnalysis
+        duplicate.canStartPictureInPictureAutomaticallyFromInline = canStartPictureInPictureAutomaticallyFromInline
+        duplicate.updatesNowPlayingInfoCenter = updatesNowPlayingInfoCenter
+        duplicate.entersFullScreenWhenPlaybackBegins = entersFullScreenWhenPlaybackBegins
+        duplicate.exitsFullScreenWhenPlaybackEnds = exitsFullScreenWhenPlaybackEnds
+#endif
+        return duplicate
+    }
+}
+
 /// Manages Picture in Picture for `SystemVideoView` instances.
 final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
@@ -31,16 +60,17 @@ final class SystemPictureInPicture: NSObject {
 
     private func makePlayerViewController(for player: Player) -> AVPlayerViewController {
         if let playerViewController, playerViewController.player == player.queuePlayer {
-            if let parent = playerViewController.parent as? PictureInPictureHostViewController {
+            if let playerViewController = playerViewController as? PlayerViewController,
+               let parent = playerViewController.parent as? PictureInPictureHostViewController {
                 parent.addViewController(playerViewController.duplicate())
             }
             return playerViewController
         }
         else {
-            let playerViewController = AVPlayerViewController()
+            let playerViewController = PlayerViewController()
             playerViewController.delegate = self
             playerViewController.allowsPictureInPicturePlayback = true
-            playerViewController.player = player.queuePlayer
+            playerViewController.parentPlayer = player
             return playerViewController
         }
     }
@@ -80,13 +110,13 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = true
         self.playerViewController = playerViewController
-        if let player = playerViewController.parentPlayer {
+        if let player = (playerViewController as? PlayerViewController)?.parentPlayer {
             delegate?.pictureInPictureWillStart(for: player)
         }
     }
 
     func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        if let player = playerViewController.parentPlayer {
+        if let player = (playerViewController as? PlayerViewController)?.parentPlayer {
             delegate?.pictureInPictureDidStart(for: player)
         }
     }
@@ -95,7 +125,7 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         _ playerViewController: AVPlayerViewController,
         failedToStartPictureInPictureWithError error: Error
     ) {
-        if let player = playerViewController.parentPlayer {
+        if let player = (playerViewController as? PlayerViewController)?.parentPlayer {
             delegate?.pictureInPictureControllerFailedToStart(for: player, with: error)
         }
     }
@@ -104,7 +134,7 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         _ playerViewController: AVPlayerViewController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
-        if let delegate, let player = playerViewController.parentPlayer {
+        if let delegate, let player = (playerViewController as? PlayerViewController)?.parentPlayer {
             delegate.pictureInPictureRestoreUserInterfaceForStop(for: player, with: completionHandler)
         }
         else {
@@ -114,13 +144,13 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
 
     func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = false
-        if let player = playerViewController.parentPlayer {
+        if let player = (playerViewController as? PlayerViewController)?.parentPlayer {
             delegate?.pictureInPictureWillStop(for: player)
         }
     }
 
     func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        if let player = playerViewController.parentPlayer {
+        if let player = (playerViewController as? PlayerViewController)?.parentPlayer {
             delegate?.pictureInPictureDidStop(for: player)
         }
 
