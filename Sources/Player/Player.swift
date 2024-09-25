@@ -213,6 +213,7 @@ public final class Player: ObservableObject, Equatable {
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
 #endif
         self.configuration = configuration
+        queuePlayer.parent = self
 
         configurePlayer()
         configurePublishedPropertyPublishers()
