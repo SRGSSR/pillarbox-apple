@@ -12,7 +12,7 @@ private class PlayerViewController: AVPlayerViewController {
         super.viewWillAppear(animated)
         // We can use fine-grained presentation information to avoid stopping Picture in Picture when enabled
         // from maximized layout.
-        if isMovingToParent || isBeingPresented {
+        if isMovingToParentOrBeingPresented() {
             PictureInPicture.shared.system.stop()
         }
     }
