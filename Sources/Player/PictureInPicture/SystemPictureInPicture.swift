@@ -11,8 +11,8 @@ import OrderedCollections
 final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
 
-    var playerViewController: AVPlayerViewController?
-    var hostViewControllers: OrderedSet<PictureInPictureHostViewController> = []
+    private var playerViewController: AVPlayerViewController?
+    private var hostViewControllers: OrderedSet<PictureInPictureHostViewController> = []
 
     weak var delegate: PictureInPictureDelegate?
     private var referenceCount = 0
@@ -73,26 +73,32 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = true
         self.playerViewController = playerViewController
-        delegate?.pictureInPictureWillStart()
+        if let player = playerViewController.parentPlayer {
+            delegate?.pictureInPictureWillStart(for: player)
+        }
     }
 
     func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        delegate?.pictureInPictureDidStart()
+        if let player = playerViewController.parentPlayer {
+            delegate?.pictureInPictureDidStart(for: player)
+        }
     }
 
     func playerViewController(
         _ playerViewController: AVPlayerViewController,
         failedToStartPictureInPictureWithError error: Error
     ) {
-        delegate?.pictureInPictureControllerFailedToStart(with: error)
+        if let player = playerViewController.parentPlayer {
+            delegate?.pictureInPictureControllerFailedToStart(for: player, with: error)
+        }
     }
 
     func playerViewController(
         _ playerViewController: AVPlayerViewController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
-        if let delegate {
-            delegate.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
+        if let delegate, let player = playerViewController.parentPlayer {
+            delegate.pictureInPictureRestoreUserInterfaceForStop(for: player, with: completionHandler)
         }
         else {
             completionHandler(true)
@@ -101,11 +107,15 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
 
     func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = false
-        delegate?.pictureInPictureWillStop()
+        if let player = playerViewController.parentPlayer {
+            delegate?.pictureInPictureWillStop(for: player)
+        }
     }
 
     func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        delegate?.pictureInPictureDidStop()
+        if let player = playerViewController.parentPlayer {
+            delegate?.pictureInPictureDidStop(for: player)
+        }
 
         // Ensure proper resource cleanup if PiP is closed from the overlay without matching video view visible.
         if hostViewControllers.isEmpty {

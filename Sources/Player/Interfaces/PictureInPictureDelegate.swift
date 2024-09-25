@@ -10,25 +10,25 @@
 /// Picture life cycle to dismiss and restore views as required.
 public protocol PictureInPictureDelegate: AnyObject {
     /// Called when Picture in Picture is about to start.
-    ///
+    /// 
     /// Use this method to save which view was presented before dismissing it. Use the saved view for later restoration.
-    func pictureInPictureWillStart()
+    func pictureInPictureWillStart(for player: Player)
 
     /// Called when Picture in Picture has started.
-    func pictureInPictureDidStart()
+    func pictureInPictureDidStart(for player: Player)
 
     /// Called when Picture in Picture failed to start.
-    func pictureInPictureControllerFailedToStart(with error: Error)
+    func pictureInPictureControllerFailedToStart(for player: Player, with error: Error)
 
     /// Called when the user interface will be restored from Picture in Picture.
     ///
     /// Use this method to present the original view which Picture in Picture was initiated from. The completion handler
     /// must be called with `true` when the Picture in Picture overlay restoration animation must start.
-    func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void)
+    func pictureInPictureRestoreUserInterfaceForStop(for player: Player, with completion: @escaping (Bool) -> Void)
 
     /// Called when Picture in Picture is about to stop.
-    func pictureInPictureWillStop()
+    func pictureInPictureWillStop(for player: Player)
 
     /// Called when Picture in Picture has stopped.
-    func pictureInPictureDidStop()
+    func pictureInPictureDidStop(for player: Player)
 }
