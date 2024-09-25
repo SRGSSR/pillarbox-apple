@@ -30,6 +30,9 @@ final class SystemPictureInPicture: NSObject {
 
     private func makePlayerViewController(for player: Player) -> AVPlayerViewController {
         if let playerViewController, playerViewController.player == player.queuePlayer {
+            if let parent = playerViewController.parent as? PictureInPictureHostViewController {
+                parent.addViewController(playerViewController.duplicate())
+            }
             return playerViewController
         }
         else {
