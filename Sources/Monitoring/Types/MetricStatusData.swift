@@ -10,6 +10,7 @@ struct MetricStatusData: Encodable {
     let bitrate: Double?
     let bufferedDuration: Int?
     let duration: Int?
+    let frameDrops: Int?
     let playbackDuration: Int?
     let position: Int?
     let positionTimestamp: Int?

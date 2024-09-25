@@ -158,6 +158,7 @@ private extension MetricsTracker {
             bitrate: metrics?.indicatedBitrate,
             bufferedDuration: Self.bufferedDuration(from: properties),
             duration: Self.duration(from: properties),
+            frameDrops: metrics?.total.numberOfDroppedVideoFrames,
             playbackDuration: stopwatch.time().toMilliseconds,
             position: Self.position(from: properties),
             positionTimestamp: Self.positionTimestamp(from: properties),

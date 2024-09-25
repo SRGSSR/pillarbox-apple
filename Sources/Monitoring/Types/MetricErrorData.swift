@@ -17,7 +17,7 @@ struct MetricErrorData: Encodable {
 
 extension MetricErrorData {
     enum Severity: String, Encodable {
-        case fatal = "FATAL"
-        case warning = "WARNING"
+        case fatal = "Fatal"
+        case warning = "Warning"
     }
 }
