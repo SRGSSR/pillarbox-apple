@@ -21,12 +21,9 @@ final class VideoLayerView: UIView {
         .init(playerLayer: playerLayer)
     }()
 
-    var player: AVPlayer? {
-        get {
-            playerLayer.player
-        }
-        set {
-            playerLayer.player = newValue
+    var player: Player? {
+        didSet {
+            playerLayer.player = player?.queuePlayer
         }
     }
 

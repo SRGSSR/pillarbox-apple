@@ -8,9 +8,9 @@ import AVKit
 import UIKit
 
 final class PictureInPictureHostView: UIView {
-    weak var videoLayerView: VideoLayerView?
+    private(set) weak var videoLayerView: VideoLayerView?
 
-    var player: AVPlayer? {
+    var player: Player? {
         get {
             videoLayerView?.player
         }
