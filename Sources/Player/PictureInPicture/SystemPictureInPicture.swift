@@ -39,6 +39,9 @@ final class SystemPictureInPicture: NSObject {
         else {
             let playerViewController = AVPlayerViewController()
             playerViewController.allowsPictureInPicturePlayback = true
+#if os(iOS)
+            playerViewController.updatesNowPlayingInfoCenter = false
+#endif
             playerViewController.delegate = self
             playerViewController.player = player.queuePlayer
             return playerViewController
