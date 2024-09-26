@@ -133,8 +133,8 @@ private extension MetricsTracker {
                 metadataUrl: metadata?.metadataUrl,
                 origin: Bundle.main.bundleIdentifier
             ),
-            qoeMetrics: .init(events: events),
-            qosMetrics: .init(events: events)
+            qoeTimings: .init(events: events),
+            qosTimings: .init(events: events)
         )
     }
 

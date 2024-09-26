@@ -13,8 +13,8 @@ struct MetricStartData: Encodable {
     let screen: Screen
     let player: Player
     let media: Media
-    let qoeMetrics: ExperienceMetrics?
-    let qosMetrics: ServiceMetrics?
+    let qoeTimings: ExperienceTimings?
+    let qosTimings: ServiceTimings?
 }
 
 extension MetricStartData {
@@ -42,7 +42,7 @@ extension MetricStartData {
         let version: String
     }
 
-    struct ExperienceMetrics: Encodable {
+    struct ExperienceTimings: Encodable {
         let metadata: Int?
         let asset: Int?
         let total: Int
@@ -83,7 +83,7 @@ extension MetricStartData {
         }
     }
 
-    struct ServiceMetrics: Encodable {
+    struct ServiceTimings: Encodable {
         let metadata: Int?
 
         init?(events: [MetricEvent]) {
