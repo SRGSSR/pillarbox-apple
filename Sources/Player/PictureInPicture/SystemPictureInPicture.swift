@@ -7,10 +7,20 @@
 import AVKit
 import OrderedCollections
 
+private class PlayerViewController: AVPlayerViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // We can use fine-grained presentation information to avoid stopping Picture in Picture when enabled
+        // from maximized layout.
+        if isMovingToParentOrBeingPresented() {
+            PictureInPicture.shared.system.stop()
+        }
+    }
+}
+
 /// Manages Picture in Picture for `SystemVideoView` instances.
 final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
-    private var isFullScreen = false
 
     private var playerViewController: AVPlayerViewController?
     private var hostViewControllers: OrderedSet<PictureInPictureHostViewController> = []
@@ -37,7 +47,7 @@ final class SystemPictureInPicture: NSObject {
             return playerViewController
         }
         else {
-            let playerViewController = AVPlayerViewController()
+            let playerViewController = PlayerViewController()
             playerViewController.allowsPictureInPicturePlayback = true
 #if os(iOS)
             playerViewController.updatesNowPlayingInfoCenter = false
@@ -63,9 +73,6 @@ final class SystemPictureInPicture: NSObject {
     func onAppear(with player: AVPlayer, supportsPictureInPicture: Bool) {
         if !supportsPictureInPicture {
             detach(with: player)
-        }
-        else if !isFullScreen {
-            stop()
         }
     }
 
@@ -127,20 +134,18 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
             self.playerViewController = hostViewControllers.last?.viewController
         }
     }
+}
 
-#if os(iOS)
-    func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        willBeginFullScreenPresentationWithAnimationCoordinator coordinator: any UIViewControllerTransitionCoordinator
-    ) {
-        isFullScreen = true
+private extension UIViewController {
+    func isMovingToParentOrBeingPresented() -> Bool {
+        if isMovingToParent || isBeingPresented {
+            return true
+        }
+        else if let parent {
+            return parent.isMovingToParentOrBeingPresented()
+        }
+        else {
+            return false
+        }
     }
-
-    func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        willEndFullScreenPresentationWithAnimationCoordinator coordinator: any UIViewControllerTransitionCoordinator
-    ) {
-        isFullScreen = false
-    }
-#endif
 }
