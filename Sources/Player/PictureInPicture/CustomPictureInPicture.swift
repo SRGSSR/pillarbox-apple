@@ -144,14 +144,14 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         delegate?.pictureInPictureDidStop()
 
-        // Ensure proper resource cleanup if PiP is closed from the overlay without matching video view visible.
-        if hostViews.isEmpty {
-            controller?.contentSource = nil
-        }
         // Wire the PiP controller to a valid source if the restored state is not bound to the player involved in
         // the restoration.
-        else if !hostViews.contains(where: { $0.contentSource == controller?.contentSource }) {
+        if !hostViews.contains(where: { $0.contentSource == controller?.contentSource }) {
             controller?.contentSource = hostViews.last?.contentSource
+        }
+        // Ensure proper resource cleanup, e.g. when PiP is closed from the overlay without matching video view visible.
+        else {
+            controller?.contentSource = nil
         }
 
         videoLayerView = nil
