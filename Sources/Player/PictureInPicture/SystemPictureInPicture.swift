@@ -10,7 +10,7 @@ import OrderedCollections
 /// Manages Picture in Picture for `SystemVideoView` instances.
 final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
-    private var isFullscreen = false
+    private var isFullScreen = false
 
     private var playerViewController: AVPlayerViewController?
     private var hostViewControllers: OrderedSet<PictureInPictureHostViewController> = []
@@ -64,7 +64,7 @@ final class SystemPictureInPicture: NSObject {
         if !supportsPictureInPicture {
             detach(with: player)
         }
-        else if !isFullscreen {
+        else if !isFullScreen {
             stop()
         }
     }
@@ -133,14 +133,14 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         _ playerViewController: AVPlayerViewController,
         willBeginFullScreenPresentationWithAnimationCoordinator coordinator: any UIViewControllerTransitionCoordinator
     ) {
-        isFullscreen = true
+        isFullScreen = true
     }
 
     func playerViewController(
         _ playerViewController: AVPlayerViewController,
         willEndFullScreenPresentationWithAnimationCoordinator coordinator: any UIViewControllerTransitionCoordinator
     ) {
-        isFullscreen = false
+        isFullScreen = false
     }
 #endif
 }
