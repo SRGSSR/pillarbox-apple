@@ -206,7 +206,7 @@ struct ShowcaseView: View {
             .sourceCode(of: MultiPiPView.self)
 
             cell(
-                title: "System Multi-instance",
+                title: "System multi-instance",
                 subtitle: "Two videos played at the same time",
                 destination: .multiSystemPiP(
                     media1: URNMedia.onDemandHorizontalVideo,
