@@ -76,7 +76,7 @@ final class CustomPictureInPicture: NSObject {
                 controller?.contentSource = lastHostView.contentSource
             }
             else {
-                controller?.contentSource = nil
+                controller?.contentSource = .empty
             }
         }
     }
@@ -151,9 +151,15 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         }
         // Ensure proper resource cleanup, e.g. when PiP is closed from the overlay without matching video view visible.
         else {
-            controller?.contentSource = nil
+            controller?.contentSource = .empty
         }
 
         videoLayerView = nil
     }
+}
+
+private extension AVPictureInPictureController.ContentSource {
+    // Setting the content source to `nil` sometimes lead to some AVFoundation-related resources not being correctly
+    // released. This is likely an AVKit issue which can be mitigated with an empty content source.
+    static let empty = AVPictureInPictureController.ContentSource(playerLayer: .init())
 }
