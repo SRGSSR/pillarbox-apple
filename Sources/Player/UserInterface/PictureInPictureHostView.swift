@@ -8,7 +8,7 @@ import AVKit
 import UIKit
 
 final class PictureInPictureHostView: UIView {
-    weak var videoLayerView: VideoLayerView?
+    private(set) weak var videoLayerView: VideoLayerView?
 
     var player: AVPlayer? {
         get {
@@ -42,12 +42,5 @@ final class PictureInPictureHostView: UIView {
             bottomAnchor.constraint(equalTo: videoLayerView.bottomAnchor)
         ])
         self.videoLayerView = videoLayerView
-    }
-
-    override func willRemoveSubview(_ subview: UIView) {
-        super.willRemoveSubview(subview)
-        if let videoLayerView, subview === videoLayerView {
-            addVideoLayerView(videoLayerView.duplicate())
-        }
     }
 }

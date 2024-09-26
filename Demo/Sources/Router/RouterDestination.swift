@@ -26,6 +26,7 @@ enum RouterDestination: Identifiable, Hashable {
 
     case twinsPiP(media: Media)
     case multiPiP(media1: Media, media2: Media)
+    case multiSystemPiP(media1: Media, media2: Media)
     case transitionPiP(media: Media)
 
     case stories
@@ -64,6 +65,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "twinsPiP"
         case .multiPiP:
             return "multiPiP"
+        case .multiSystemPiP:
+            return "multiSystemPiP"
         case .transitionPiP:
             return "transitionPiP"
         case .stories:
@@ -120,7 +123,9 @@ enum RouterDestination: Identifiable, Hashable {
         case let .twinsPiP(media: media):
             TwinsPiPView(media: media)
         case let .multiPiP(media1: media1, media2: media2):
-            MultiPiPView(media1: media1, media2: media2)
+            MultiPiPView(media1: media1, media2: media2, isSystemPlayer: false)
+        case let .multiSystemPiP(media1: media1, media2: media2):
+            MultiPiPView(media1: media1, media2: media2, isSystemPlayer: true)
         case let .transitionPiP(media: media):
             TransitionPiPView(media: media)
         case .stories:

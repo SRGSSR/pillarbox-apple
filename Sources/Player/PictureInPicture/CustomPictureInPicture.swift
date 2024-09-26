@@ -46,13 +46,16 @@ final class CustomPictureInPicture: NSObject {
     func makeHostView(for player: Player) -> PictureInPictureHostView {
         let hostView = PictureInPictureHostView()
         hostViews.append(hostView)
-        hostView.addVideoLayerView(makeVideoLayerView(hostedBy: hostView, for: player))
+        hostView.addVideoLayerView(makeVideoLayerView(for: player))
         return hostView
     }
 
-    private func makeVideoLayerView(hostedBy hostView: PictureInPictureHostView, for player: Player) -> VideoLayerView {
+    private func makeVideoLayerView(for player: Player) -> VideoLayerView {
         if let videoLayerView {
             if videoLayerView.player == player.queuePlayer {
+                if let hostView = videoLayerView.superview as? PictureInPictureHostView {
+                    hostView.addVideoLayerView(videoLayerView.duplicate())
+                }
                 return videoLayerView
             }
             else {
@@ -73,7 +76,7 @@ final class CustomPictureInPicture: NSObject {
                 controller?.contentSource = lastHostView.contentSource
             }
             else {
-                controller?.contentSource = nil
+                controller?.contentSource = .empty
             }
         }
     }
@@ -135,7 +138,6 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = false
-        videoLayerView = nil
         delegate?.pictureInPictureWillStop()
     }
 
@@ -144,12 +146,20 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
 
         // Ensure proper resource cleanup if PiP is closed from the overlay without matching video view visible.
         if hostViews.isEmpty {
-            controller?.contentSource = nil
+            controller?.contentSource = .empty
         }
         // Wire the PiP controller to a valid source if the restored state is not bound to the player involved in
         // the restoration.
-        else if !hostViews.contains(where: { $0.contentSource == controller?.contentSource }) {
+        if !hostViews.contains(where: { $0.contentSource == controller?.contentSource }) {
             controller?.contentSource = hostViews.last?.contentSource
         }
+
+        videoLayerView = nil
     }
+}
+
+private extension AVPictureInPictureController.ContentSource {
+    // Setting the content source to `nil` sometimes lead to some AVFoundation-related resources not being correctly
+    // released. This is likely an AVKit issue which can be mitigated with an empty content source.
+    static let empty = AVPictureInPictureController.ContentSource(playerLayer: .init())
 }

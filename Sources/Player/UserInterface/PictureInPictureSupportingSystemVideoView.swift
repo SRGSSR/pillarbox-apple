@@ -7,17 +7,6 @@
 import AVKit
 import SwiftUI
 
-private class PlayerViewController: AVPlayerViewController {
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // We can use fine-grained presentation information to avoid stopping Picture in Picture when enabled
-        // from maximized layout.
-        if isMovingToParent || isBeingPresented {
-            PictureInPicture.shared.system.stop()
-        }
-    }
-}
-
 // swiftlint:disable:next type_name
 struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable {
 #if os(tvOS)
@@ -30,8 +19,8 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
 
-    static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: Coordinator) {
-        PictureInPicture.shared.system.relinquish(for: uiViewController)
+    static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: Coordinator) {
+        PictureInPicture.shared.system.dismantleHostViewController(uiViewController)
     }
 
 #if os(tvOS)
@@ -40,23 +29,17 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
     }
 #endif
 
-    func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let controller = PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
-        controller.allowsPictureInPicturePlayback = true
-#if os(iOS)
-        controller.updatesNowPlayingInfoCenter = false
-#endif
-        PictureInPicture.shared.system.acquire(for: controller)
-        return controller
+    func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
+        PictureInPicture.shared.system.makeHostViewController(for: player)
     }
 
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
-        uiViewController.player = player.systemPlayer
-        uiViewController.videoGravity = gravity
+    func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
+        uiViewController.viewController?.player = player.systemPlayer
+        uiViewController.viewController?.videoGravity = gravity
 #if os(tvOS)
-        uiViewController.contextualActions = contextualActions
+        uiViewController.viewController?.contextualActions = contextualActions
         context.coordinator.player = player
-        context.coordinator.controller = uiViewController
+        context.coordinator.controller = uiViewController.viewController
 #endif
     }
 }

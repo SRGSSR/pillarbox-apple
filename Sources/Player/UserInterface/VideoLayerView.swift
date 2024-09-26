@@ -39,8 +39,8 @@ final class VideoLayerView: UIView {
         }
     }
 
-    func duplicate() -> VideoLayerView {
-        let duplicate = VideoLayerView()
+    func duplicate() -> Self {
+        let duplicate = Self()
         duplicate.player = player
         duplicate.gravity = gravity
         return duplicate

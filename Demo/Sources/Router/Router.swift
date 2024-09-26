@@ -50,14 +50,21 @@ extension Router: PictureInPictureDelegate {
         case .player, .systemPlayer, .playlist, .multi, .twinsPiP, .multiPiP, .transitionPiP:
             previousPresented = presented
             presented = nil
-        case .inlineSystemPlayer:
+        case .inlineSystemPlayer, .multiSystemPiP:
             previousPresented = presented
         default:
             break
         }
     }
 
-    func pictureInPictureDidStart() {}
+    func pictureInPictureDidStart() {
+        switch presented {
+        case .inlineSystemPlayer, .multiSystemPiP:
+            presented = nil
+        default:
+            break
+        }
+    }
 
     func pictureInPictureControllerFailedToStart(with error: Error) {}
 
