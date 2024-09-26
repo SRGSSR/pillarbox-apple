@@ -74,6 +74,6 @@ Advanced integration is available both for ``VideoView`` as well as ``SystemVide
 
 The above instructions assume you are using either `VideoView` in a custom layout, or  that ``SystemVideoView`` is presented full screen.
 
-When ``SystemVideoView`` is presented inline, though, its close button is replaced with a maximization button to switch to full screen display. If dismissal of the viem containing the inline player is desired when Picture in Picture starts, you should wait until ``PictureInPictureDelegate/pictureInPictureDidStart()`` is called, otherwise playback may be paused by the system. 
+When ``SystemVideoView`` is presented inline, though, its close button is replaced with a maximization button to switch to full screen display. If dismissal of the viem containing the inline player is desired when Picture in Picture starts, you should wait until ``PictureInPictureDelegate/pictureInPictureDidStart()`` is called, otherwise playback may be paused by the system.
 
 > Warning: If several system video views are presented at the same time and enabled for Picture in Picture, automatic Picture in Picture start (e.g. when swiping to go Home) will not work.
