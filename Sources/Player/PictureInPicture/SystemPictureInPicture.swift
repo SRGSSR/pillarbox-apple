@@ -135,17 +135,3 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         }
     }
 }
-
-private extension UIViewController {
-    func isMovingToParentOrBeingPresented() -> Bool {
-        if isMovingToParent || isBeingPresented {
-            return true
-        }
-        else if let parent {
-            return parent.isMovingToParentOrBeingPresented()
-        }
-        else {
-            return false
-        }
-    }
-}
