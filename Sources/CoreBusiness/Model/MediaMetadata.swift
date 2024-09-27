@@ -130,11 +130,11 @@ extension MediaMetadata: AssetMetadata {
     }
 
     var viewport: Viewport {
-        switch resource.presentation {
-        case .default:
-            return .standard
+        switch resource?.presentation {
         case .video360:
             return .monoscopic
+        default:
+            return .standard
         }
     }
 
