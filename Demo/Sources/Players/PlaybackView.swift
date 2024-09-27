@@ -246,6 +246,7 @@ private struct MainView: View {
                     .supportsPictureInPicture(supportsPictureInPicture)
             }
         }
+        .opacity(player.mediaType != .unknown ? 1 : 0)
         .animation(.easeIn(duration: 0.2), values: player.mediaType, player.isExternalPlaybackActive)
     }
 
