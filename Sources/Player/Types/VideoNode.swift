@@ -11,20 +11,21 @@ import SpriteKit
 final class VideoNode: SKVideoNode {
     private let _player: AVPlayer
 
-    override init(avPlayer player: AVPlayer) {
-        _player = player
-        super.init(avPlayer: player)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     override var isPaused: Bool {
         get {
             super.isPaused
         }
         set {}
+    }
+
+    override init(avPlayer player: AVPlayer) {
+        _player = player
+        super.init(avPlayer: player)
+    }
+
+    @available(*, unavailable)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     deinit {

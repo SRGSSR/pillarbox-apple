@@ -25,7 +25,7 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
 
     static func dismantleUIView(_ uiView: SCNView, coordinator: Coordinator) {
         uiView.scene = nil
-        
+
         if let player = coordinator.player {
             DisplaySleep.shared.allow(for: player)
         }
