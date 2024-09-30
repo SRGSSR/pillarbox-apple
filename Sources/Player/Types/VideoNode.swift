@@ -28,9 +28,9 @@ final class VideoNode: SKVideoNode {
     }
 
     deinit {
-        let player = _player
-        DispatchQueue.main.async {
-            player.play()
+        let rate = _player.rate
+        DispatchQueue.main.async { [_player] in
+            _player.rate = rate
         }
     }
 }
