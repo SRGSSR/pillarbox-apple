@@ -9,7 +9,16 @@ import SpriteKit
 
 /// Lightweight video node subclass to disable automatic un-pause when waking the application from the background.
 final class VideoNode: SKVideoNode {
-    private static let _playerKey = "12_34p9l3a23y4e5r76".components(separatedBy: .decimalDigits).joined(separator: "")
+    private let _player: AVPlayer
+
+    override init(avPlayer player: AVPlayer) {
+        _player = player
+        super.init(avPlayer: player)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override var isPaused: Bool {
         get {
@@ -19,8 +28,9 @@ final class VideoNode: SKVideoNode {
     }
 
     deinit {
-        if #available(iOS 18, tvOS 18, *) {
-            setValue(nil, forKey: Self._playerKey)
+        let player = _player
+        DispatchQueue.main.async {
+            player.play()
         }
     }
 }
