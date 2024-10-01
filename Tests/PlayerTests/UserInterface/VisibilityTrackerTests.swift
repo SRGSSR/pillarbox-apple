@@ -99,13 +99,14 @@ final class VisibilityTrackerTests: TestCase {
     }
 
     func testResetAutoHide() {
-        let visibilityTracker = VisibilityTracker(delay: 0.5)
+        let visibilityTracker = VisibilityTracker(delay: 0.3)
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
-        player.play()
         visibilityTracker.player = player
-        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
+        player.play()
+        expect(player.playbackState).toEventually(equal(.playing))
+        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(200))
         visibilityTracker.reset()
-        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
+        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(200))
     }
 
     func testResetDoesNotShowControls() {
