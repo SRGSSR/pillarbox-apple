@@ -14,13 +14,14 @@ public struct Playlist<RowContent>: View where RowContent: View {
 
     private let editActions: EditActions<[PlayerItem]>
     private let rowContent: (_ source: Any?, _ isCurrent: Bool) -> RowContent
-    @State private var selection: PlayerItem?
+    private let selection: Binding<PlayerItem?>?
+    @State private var _selection: PlayerItem?
 
     public var body: some View {
-        List($player.items, id: \.self, editActions: editActions, selection: $selection) { item in
+        List($player.items, id: \.self, editActions: editActions, selection: selection ?? $_selection) { item in
             rowContent(item.wrappedValue.source, item.wrappedValue == player.currentItem)
         }
-        .onChange(of: selection) { selection in
+        .onChange(of: _selection) { selection in
             player.currentItem = selection
         }
     }
@@ -30,6 +31,7 @@ public struct Playlist<RowContent>: View where RowContent: View {
     /// - Parameters:
     ///   - player: The player whose items must be displayed.
     ///   - editActions: The available edit actions.
+    ///   - selection: A binding to a selected value.
     ///   - rowContent: A view builder that creates a row for a single item of the playlist. The closure receives two
     ///     parameters:
     ///       - The ``PlayerItem/source`` associated with the item, if any.
@@ -37,10 +39,12 @@ public struct Playlist<RowContent>: View where RowContent: View {
     public init(
         player: Player,
         editActions: EditActions<[PlayerItem]> = [],
+        selection: Binding<PlayerItem?>? = nil,
         @ViewBuilder rowContent: @escaping (_ source: Any?, _ isCurrent: Bool) -> RowContent
     ) {
         self.player = player
         self.editActions = editActions
+        self.selection = selection
         self.rowContent = rowContent
     }
 }
