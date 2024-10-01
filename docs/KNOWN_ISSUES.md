@@ -68,6 +68,14 @@ Pillarbox can be used in iPad applications run on Silicon Macs (_Designed for iP
 
 No workaround is available yet.
 
+## AirPlay does not work in Mac applications "Designed for iPad" (FB15343579)
+
+Pillarbox can be used in iPad applications run on Silicon Macs (_Designed for iPad_ destination) but AirPlay does not work. Playback fails.
+
+### Workaround
+
+No workaround is available yet.
+
 ## Playback of a livestream in a playlist might fail if the previous item was played at a speed > 1
 
 When chaining an on-demand stream played at a speed > 1 to a livestream (without DVR) in a playlist, livestream playback might fail with a Core Media error. If there is an item after it the livestream item will simply be skipped, otherwise the player will end in a failed state.
