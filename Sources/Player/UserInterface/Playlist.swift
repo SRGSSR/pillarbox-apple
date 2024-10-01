@@ -14,10 +14,14 @@ public struct Playlist<RowContent>: View where RowContent: View {
 
     private let editActions: EditActions<[PlayerItem]>
     private let rowContent: (_ source: Any?, _ isCurrent: Bool) -> RowContent
+    @State private var selection: PlayerItem?
 
     public var body: some View {
-        List($player.items, id: \.self, editActions: editActions, selection: $player.currentItem) { item in
+        List($player.items, id: \.self, editActions: editActions, selection: $selection) { item in
             rowContent(item.wrappedValue.source, item.wrappedValue == player.currentItem)
+        }
+        .onChange(of: selection) { selection in
+            player.currentItem = selection
         }
     }
 
