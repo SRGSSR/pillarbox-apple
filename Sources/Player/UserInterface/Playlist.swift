@@ -23,6 +23,9 @@ public struct Playlist<RowContent>: View where RowContent: View {
         .onChange(of: selection) { selection in
             player.currentItem = selection
         }
+        .onChange(of: player.currentItem) { item in
+            selection = item
+        }
     }
 
     /// Creates a playlist.
