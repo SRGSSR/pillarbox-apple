@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
       "state" : {
-        "revision" : "2d1cd9c0cb52ca76702023b528a059fc0a7d5a4d",
-        "version" : "6.13.0"
+        "revision" : "adeebce59de7017eb0abe2b6a74346ca8371ffcc",
+        "version" : "6.14.0"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattgallagher/CwlCatchException.git",
       "state" : {
-        "revision" : "3ef6999c73b6938cc0da422f2c912d0158abb0a0",
-        "version" : "2.2.0"
+        "revision" : "07b2ba21d361c223e25e3c1e924288742923f08c",
+        "version" : "2.2.1"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattgallagher/CwlPreconditionTesting.git",
       "state" : {
-        "revision" : "2ef56b2caf25f55fa7eef8784c30d5a767550f54",
-        "version" : "2.2.1"
+        "revision" : "0139c665ebb45e6a9fbdb68aabfd7c39f3fe0071",
+        "version" : "2.2.2"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CommandersAct/iOSV5.git",
       "state" : {
-        "revision" : "b65eb27cde41d3c40b05520f8713d55a52821553",
-        "version" : "5.4.9"
+        "revision" : "ec5b7d6192ce5ecd1ab40a8f7a6aa75a19f7d1c7",
+        "version" : "5.4.11"
       }
     },
     {
@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SRGSSR/srgdataprovider-apple.git",
       "state" : {
-        "revision" : "b29c4e796d0c1dbe4bb05b1f79834f4560ee6347",
-        "version" : "19.0.2"
+        "revision" : "a315d507213ed16adc3d827aadc6b266c6e21275",
+        "version" : "19.0.6"
       }
     },
     {
@@ -122,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "94cf62b3ba8d4bed62680a282d4c25f9c63c2efb",
-        "version" : "1.1.0"
+        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
+        "version" : "1.1.4"
       }
     }
   ],
