@@ -17,7 +17,6 @@ struct MetricStatusData: Encodable {
     let stall: Stall
     let streamType: String?
     let url: String?
-    let vpn: Bool
 }
 
 extension MetricStatusData {

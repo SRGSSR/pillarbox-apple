@@ -146,7 +146,8 @@ private extension MetricsTracker {
             position: Self.position(from: properties),
             positionTimestamp: Self.positionTimestamp(from: properties),
             severity: severity,
-            url: URL(string: properties?.metrics()?.uri)
+            url: URL(string: properties?.metrics()?.uri),
+            vpn: Self.isUsingVirtualPrivateNetwork()
         )
     }
 
@@ -167,8 +168,7 @@ private extension MetricsTracker {
                 duration: stallDuration.toMilliseconds
             ),
             streamType: Self.streamType(from: properties),
-            url: metrics?.uri,
-            vpn: Self.isUsingVirtualPrivateNetwork()
+            url: metrics?.uri
         )
     }
 

@@ -13,6 +13,7 @@ struct MetricErrorData: Encodable {
     let positionTimestamp: Int?
     let severity: Severity
     let url: URL?
+    let vpn: Bool
 }
 
 extension MetricErrorData {
