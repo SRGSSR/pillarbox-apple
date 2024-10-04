@@ -24,6 +24,9 @@ public struct MediaMetadata {
     /// The URL at which the playback context was retrieved.
     public let mediaCompositionUrl: URL?
 
+    /// The main chapter.
+    public let mainChapter: MediaComposition.Chapter
+
     /// The resource to be played.
     public let resource: MediaComposition.Resource
 
@@ -34,9 +37,22 @@ public struct MediaMetadata {
         resource.streamType
     }
 
+    /// The available chapters.
+    public var chapters: [Chapter] {
+        guard mainChapter.mediaType == .video else { return [] }
+        return mediaComposition.chapters(relatedTo: mainChapter).map { chapter in
+            .init(
+                identifier: chapter.urn,
+                title: chapter.title,
+                imageSource: .url(imageUrl(for: chapter)),
+                timeRange: chapter.timeRange
+            )
+        }
+    }
+
     /// The consolidated comScore analytics data.
     var analyticsData: [String: String] {
-        var analyticsData = mediaComposition.mainChapter.analyticsData
+        var analyticsData = mainChapter.analyticsData
         guard !analyticsData.isEmpty else { return [:] }
         analyticsData.merge(mediaComposition.analyticsData) { _, new in new }
         analyticsData.merge(resource.analyticsData) { _, new in new }
@@ -45,7 +61,7 @@ public struct MediaMetadata {
 
     /// The consolidated Commanders Act analytics data.
     var analyticsMetadata: [String: String] {
-        var analyticsMetadata = mediaComposition.mainChapter.analyticsMetadata
+        var analyticsMetadata = mainChapter.analyticsMetadata
         guard !analyticsMetadata.isEmpty else { return [:] }
         analyticsMetadata.merge(mediaComposition.analyticsMetadata) { _, new in new }
         analyticsMetadata.merge(resource.analyticsMetadata) { _, new in new }
@@ -54,7 +70,9 @@ public struct MediaMetadata {
 
     init(mediaCompositionResponse: MediaCompositionResponse, dataProvider: DataProvider) throws {
         let mediaComposition = mediaCompositionResponse.mediaComposition
-        let mainChapter = mediaComposition.mainChapter
+        guard let mainChapter = mediaComposition.chapter(for: mediaComposition.chapterUrn) else {
+            throw DataError.noResourceAvailable
+        }
         if let blockingReason = mainChapter.blockingReason {
             throw DataError.blocked(withMessage: blockingReason.description)
         }
@@ -63,6 +81,7 @@ public struct MediaMetadata {
         }
         self.mediaComposition = mediaComposition
         self.mediaCompositionUrl = mediaCompositionResponse.response.url
+        self.mainChapter = mainChapter
         self.resource = resource
         self.dataProvider = dataProvider
     }
@@ -79,7 +98,7 @@ extension MediaMetadata: AssetMetadata {
             title: title,
             subtitle: subtitle,
             description: description,
-            imageSource: .url(imageUrl(for: mediaComposition.mainChapter)),
+            imageSource: .url(imageUrl(for: mainChapter)),
             viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
@@ -88,7 +107,6 @@ extension MediaMetadata: AssetMetadata {
     }
 
     var title: String {
-        let mainChapter = mediaComposition.mainChapter
         guard mainChapter.contentType != .livestream else { return mainChapter.title }
         if let show = mediaComposition.show {
             return show.title
@@ -99,7 +117,6 @@ extension MediaMetadata: AssetMetadata {
     }
 
     var subtitle: String? {
-        let mainChapter = mediaComposition.mainChapter
         guard mainChapter.contentType != .livestream else { return nil }
         if let show = mediaComposition.show {
             if Self.areRedundant(chapter: mainChapter, show: show) {
@@ -115,7 +132,7 @@ extension MediaMetadata: AssetMetadata {
     }
 
     var description: String? {
-        mediaComposition.mainChapter.description
+        mainChapter.description
     }
 
     var episodeInformation: EpisodeInformation? {
@@ -137,23 +154,12 @@ extension MediaMetadata: AssetMetadata {
         }
     }
 
-    private var chapters: [Chapter] {
-        mediaComposition.chapters.map { chapter in
-            .init(
-                identifier: chapter.urn,
-                title: chapter.title,
-                imageSource: .url(imageUrl(for: chapter)),
-                timeRange: chapter.timeRange
-            )
-        }
-    }
-
     private var timeRanges: [TimeRange] {
         blockedTimeRanges + creditsTimeRanges
     }
 
     private var blockedTimeRanges: [TimeRange] {
-        mediaComposition.mainChapter.segments
+        mainChapter.segments
             .filter { $0.blockingReason != nil }
             .map { segment in
                 TimeRange(kind: .blocked, start: segment.timeRange.start, end: segment.timeRange.end)
@@ -161,7 +167,7 @@ extension MediaMetadata: AssetMetadata {
     }
 
     private var creditsTimeRanges: [TimeRange] {
-        mediaComposition.mainChapter.timeIntervals.map { interval in
+        mainChapter.timeIntervals.map { interval in
             switch interval.kind {
             case .openingCredits:
                 TimeRange(kind: .credits(.opening), start: interval.timeRange.start, end: interval.timeRange.end)

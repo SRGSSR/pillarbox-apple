@@ -47,6 +47,21 @@ final class MediaMetadataTests: XCTestCase {
         expect(metadata.episodeInformation).to(beNil())
     }
 
+    func testMainChapter() throws {
+        let metadata = try Self.metadata(.onDemand)
+        expect(metadata.mainChapter.urn).to(equal(metadata.mediaComposition.chapterUrn))
+    }
+
+    func testChapters() throws {
+        let metadata = try Self.metadata(.mixed)
+        expect(metadata.chapters.count).to(equal(10))
+    }
+
+    func testAudioChapterRemoval() throws {
+        let metadata = try Self.metadata(.audioChapters)
+        expect(metadata.chapters).to(beEmpty())
+    }
+
     func testAnalytics() throws {
         let metadata = try Self.metadata(.onDemand)
         expect(metadata.analyticsData).notTo(beEmpty())
