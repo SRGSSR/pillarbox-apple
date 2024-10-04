@@ -27,6 +27,8 @@ public final class PictureInPicture {
     // Strong to retain when acquired.
     private(set) var persisted: PictureInPicturePersistable?
 
+    private var isRestored = false
+
     private init() {
         custom.delegate = self
         system.delegate = self
@@ -61,6 +63,7 @@ extension PictureInPicture: PictureInPictureDelegate {
     }
 
     public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
+        isRestored = true
         if let delegate {
             delegate.pictureInPictureRestoreUserInterfaceForStop { finished in
                 // The Picture in Picture overlay restoration animation should always occur slightly after the playback
@@ -83,7 +86,10 @@ extension PictureInPicture: PictureInPictureDelegate {
 
     public func pictureInPictureDidStop() {
         delegate?.pictureInPictureDidStop()
-        persisted?.pictureInPictureDidStop()
+        if !isRestored {
+            persisted?.pictureInPictureDidClose()
+        }
+        isRestored = false
         persisted = nil
     }
 }
