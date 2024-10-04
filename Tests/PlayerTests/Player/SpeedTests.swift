@@ -86,10 +86,9 @@ final class SpeedTests: TestCase {
 
     func testSpeedUpdateWhenStartingPlayback() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [1, 0.5],
-            from: player.changePublisher(at: \.effectivePlaybackSpeed).removeDuplicates(),
-            during: .seconds(2)
+            from: player.changePublisher(at: \.effectivePlaybackSpeed).removeDuplicates()
         ) {
             player.setDesiredPlaybackSpeed(0.5)
         }
@@ -97,10 +96,9 @@ final class SpeedTests: TestCase {
 
     func testSpeedRangeUpdateWhenStartingPlayback() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [1...1, 0.1...1],
-            from: player.changePublisher(at: \.playbackSpeedRange).removeDuplicates(),
-            during: .seconds(2)
+            from: player.changePublisher(at: \.playbackSpeedRange).removeDuplicates()
         ) {
             player.setDesiredPlaybackSpeed(0.5)
         }

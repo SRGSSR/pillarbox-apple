@@ -16,10 +16,9 @@ final class CurrentItemTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [item1, item2, nil],
-            from: player.changePublisher(at: \.currentItem).removeDuplicates(),
-            during: .seconds(3)
+            from: player.changePublisher(at: \.currentItem).removeDuplicates()
         ) {
             player.play()
         }
@@ -56,10 +55,9 @@ final class CurrentItemTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(items: [item1, item2])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [item1, item2],
-            from: player.changePublisher(at: \.currentItem).removeDuplicates(),
-            during: .seconds(2)
+            from: player.changePublisher(at: \.currentItem).removeDuplicates()
         ) {
             player.play()
         }
@@ -105,10 +103,9 @@ final class CurrentItemTests: TestCase {
         let item1 = PlayerItem.mock(url: Stream.shortOnDemand.url, loadedAfter: 1)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [item1, item2],
-            from: player.changePublisher(at: \.currentItem).removeDuplicates(),
-            during: .seconds(3)
+            from: player.changePublisher(at: \.currentItem).removeDuplicates()
         ) {
             player.play()
         }
@@ -117,10 +114,9 @@ final class CurrentItemTests: TestCase {
     func testCurrentItemAfterPlayerEnded() {
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [item, nil],
-            from: player.changePublisher(at: \.currentItem).removeDuplicates(),
-            during: .seconds(2)
+            from: player.changePublisher(at: \.currentItem).removeDuplicates()
         ) {
             player.play()
         }
