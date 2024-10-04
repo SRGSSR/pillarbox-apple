@@ -9,20 +9,14 @@ public struct MediaComposition: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"
         case _analyticsMetadata = "analyticsMetadata"
+        case chapters = "chapterList"
         case chapterUrn
-        case _chapters = "chapterList"
         case episode
         case show
     }
 
     /// The URN of the chapter to be played.
     public let chapterUrn: String
-
-    /// The available chapters.
-    public var chapters: [Chapter] {
-        guard mainChapter.mediaType == .video else { return [] }
-        return _chapters.filter { $0.fullLengthUrn == chapterUrn && $0.mediaType == mainChapter.mediaType }
-    }
 
     /// The related show.
     public let show: Show?
@@ -40,22 +34,21 @@ public struct MediaComposition: Decodable {
         _analyticsMetadata ?? [:]
     }
 
-    var allChapters: [Chapter] {
-        [mainChapter] + chapters
-    }
-
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsData: [String: String]?
 
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsMetadata: [String: String]?
 
-    private let _chapters: [Chapter]
+    private let chapters: [Chapter]
 }
 
-public extension MediaComposition {
-    /// The main chapter.
-    var mainChapter: Chapter {
-        _chapters.first { $0.urn == chapterUrn }!
+extension MediaComposition {
+    func chapters(relatedTo chapter: Chapter) -> [Chapter] {
+        chapters.filter { $0.fullLengthUrn == chapter.urn && $0.mediaType == chapter.mediaType }
+    }
+
+    func chapter(for urn: String) -> Chapter? {
+        chapters.first { $0.urn == urn }
     }
 }
