@@ -46,6 +46,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 expect(data.name).to(equal("NSURLErrorDomain(-1100)"))
                 expect(data.message).to(equal("The requested URL was not found on this server."))
                 expect(data.position).to(beNil())
+                expect(data.vpn).to(beFalse())
             }
         ) {
             player.play()
@@ -204,7 +205,6 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 let data = payload.data
                 expect(data.airplay).to(beFalse())
                 expect(data.streamType).to(equal("On-demand"))
-                expect(data.vpn).to(beFalse())
             }
         ) {
             player.play()
