@@ -25,13 +25,17 @@ public struct MediaMetadata {
     public let mediaCompositionUrl: URL?
 
     /// The resource to be played.
-    public let resource: MediaComposition.Resource
+    public let resource: MediaComposition.Resource?
 
     private let dataProvider: DataProvider
 
     /// The stream type.
     public var streamType: StreamType {
-        resource.streamType
+        resource?.streamType ?? .unknown
+    }
+
+    var blockingReason: MediaComposition.BlockingReason? {
+        mediaComposition.mainChapter.blockingReason
     }
 
     /// The consolidated comScore analytics data.
@@ -39,7 +43,9 @@ public struct MediaMetadata {
         var analyticsData = mediaComposition.mainChapter.analyticsData
         guard !analyticsData.isEmpty else { return [:] }
         analyticsData.merge(mediaComposition.analyticsData) { _, new in new }
-        analyticsData.merge(resource.analyticsData) { _, new in new }
+        if let resource {
+            analyticsData.merge(resource.analyticsData) { _, new in new }
+        }
         return analyticsData
     }
 
@@ -48,22 +54,17 @@ public struct MediaMetadata {
         var analyticsMetadata = mediaComposition.mainChapter.analyticsMetadata
         guard !analyticsMetadata.isEmpty else { return [:] }
         analyticsMetadata.merge(mediaComposition.analyticsMetadata) { _, new in new }
-        analyticsMetadata.merge(resource.analyticsMetadata) { _, new in new }
+        if let resource {
+            analyticsMetadata.merge(resource.analyticsMetadata) { _, new in new }
+        }
         return analyticsMetadata
     }
 
-    init(mediaCompositionResponse: MediaCompositionResponse, dataProvider: DataProvider) throws {
+    init(mediaCompositionResponse: MediaCompositionResponse, dataProvider: DataProvider) {
         let mediaComposition = mediaCompositionResponse.mediaComposition
-        let mainChapter = mediaComposition.mainChapter
-        if let blockingReason = mainChapter.blockingReason {
-            throw DataError.blocked(withMessage: blockingReason.description)
-        }
-        guard let resource = mainChapter.recommendedResource else {
-            throw DataError.noResourceAvailable
-        }
         self.mediaComposition = mediaComposition
         self.mediaCompositionUrl = mediaCompositionResponse.response.url
-        self.resource = resource
+        self.resource = mediaComposition.mainChapter.recommendedResource
         self.dataProvider = dataProvider
     }
 
@@ -129,11 +130,11 @@ extension MediaMetadata: AssetMetadata {
     }
 
     var viewport: Viewport {
-        switch resource.presentation {
-        case .default:
-            return .standard
+        switch resource?.presentation {
         case .video360:
             return .monoscopic
+        default:
+            return .standard
         }
     }
 
