@@ -39,7 +39,7 @@ public extension PlayerItem {
                     behavior: .mandatory
                 ) { metadata in
                     MetricsTracker.Metadata(
-                        identifier: metadata.mediaComposition.mainChapter.urn,
+                        identifier: metadata.mainChapter.urn,
                         metadataUrl: metadata.mediaCompositionUrl,
                         assetUrl: metadata.resource.url
                     )
