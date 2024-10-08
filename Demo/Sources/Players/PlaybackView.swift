@@ -192,7 +192,9 @@ private struct MainView: View {
         HStack {
             HStack(spacing: 20) {
                 CloseButton()
-                PiPButton()
+                if supportsPictureInPicture {
+                    PiPButton()
+                }
                 routePickerView()
             }
             .opacity(shouldHideInterface ? 0 : 1)
