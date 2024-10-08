@@ -92,11 +92,10 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     private func configureCurrentMediaPublisher() {
-        player.objectWillChange
-            .receive(on: DispatchQueue.main)
-            .map { [weak self] in
-                guard let self, let currentItem = player.currentItem else { return nil }
-                return media(for: currentItem)
+        player.currentItemPublisher
+            .map { [weak self] item in
+                guard let self, let item else { return nil }
+                return media(for: item)
             }
             .assign(to: &$currentMedia)
     }
