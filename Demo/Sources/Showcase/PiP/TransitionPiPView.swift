@@ -35,7 +35,7 @@ struct TransitionPiPView: View {
     var body: some View {
         VStack {
             PlaybackView(player: model.player)
-                .supportsPictureInPicture(supportsPictureInPicture)
+                .supportsPictureInPicture(supportsPictureInPicture && !isPresented)
 
             VStack(spacing: 20) {
                 Toggle("Supports PiP", isOn: $supportsPictureInPicture)
