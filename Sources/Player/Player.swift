@@ -95,6 +95,13 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
+    public lazy var currentItemPublisher: AnyPublisher<PlayerItem?, Never> = {
+        queuePublisher
+            .slice(at: \.item)
+            .share(replay: 1)
+            .eraseToAnyPublisher()
+    }()
+
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
         Publishers.Merge(
             elementsQueueUpdatePublisher(),
@@ -108,7 +115,7 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
-        currentItemPublisher()
+        currentItemPublisher
             .map { item -> AnyPublisher<PlayerMetadata, Never> in
                 guard let item else { return Just(.empty).eraseToAnyPublisher() }
                 return item.metadataPublisher()
