@@ -113,17 +113,6 @@ private struct Toolbar: View {
     }
 }
 
-private struct BottomView: View {
-    let model: PlaylistViewModel
-
-    var body: some View {
-        Toolbar(model: model)
-        List(model.items, id: \.self) { item in
-            Text("item")
-        }
-    }
-}
-
 struct PlaylistView: View {
     let medias: [Media]
 
@@ -135,13 +124,16 @@ struct PlaylistView: View {
                 .supportsPictureInPicture()
 #if os(iOS)
             if model.layout != .maximized {
-                BottomView(model: model)
+                Toolbar(model: model)
+                List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
+                    MediaCell(media: media)
+                }
             }
 #endif
         }
         .animation(.defaultLinear, value: model.layout)
         .onAppear {
-            model.items = medias.map { $0.item() }
+            model.medias = medias
             model.play()
         }
         .enabledForInAppPictureInPicture(persisting: model)
