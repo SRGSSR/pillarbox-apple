@@ -25,7 +25,7 @@ final class DataProviderTests: XCTestCase {
 
     func testBlockedMediaMetadata() {
         expectFailure(
-            DataError.blocked(withMessage: "Some message"),
+            DataError.blocked(withMessage: ""),
             from: DataProvider().mediaMetadataPublisher(forUrn: "urn:rts:video:13382911")
         )
     }
