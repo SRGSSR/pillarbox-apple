@@ -73,9 +73,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     func add(_ medias: [Media]) {
-        medias.forEach { media in
-            player.append(media.item())
-        }
+        self.medias.append(contentsOf: medias)
     }
 
     func play() {
