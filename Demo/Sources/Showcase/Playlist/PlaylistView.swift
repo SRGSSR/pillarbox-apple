@@ -118,14 +118,8 @@ private struct BottomView: View {
 
     var body: some View {
         Toolbar(model: model)
-        Playlist(player: model.player, editActions: .all) { source, isCurrent in
-            switch source {
-            case let media as Media:
-                MediaCell(media: media)
-                    .fontWeight(isCurrent ? .semibold : .regular)
-            default:
-                Color.clear
-            }
+        List(model.items, id: \.self) { item in
+            Text("item")
         }
     }
 }
@@ -147,7 +141,7 @@ struct PlaylistView: View {
         }
         .animation(.defaultLinear, value: model.layout)
         .onAppear {
-            model.medias = medias
+            model.items = medias.map { $0.item() }
             model.play()
         }
         .enabledForInAppPictureInPicture(persisting: model)

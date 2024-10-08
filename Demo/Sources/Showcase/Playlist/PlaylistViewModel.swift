@@ -13,13 +13,12 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     @Published var layout: PlaybackView.Layout = .minimized
 
-    var medias: [Media] {
+    var items: [PlayerItem] {
         get {
-            player.items.compactMap { $0.source as? Media }
+            player.items
         }
         set {
-            guard Set(medias) != Set(newValue) else { return }
-            player.items = newValue.map { $0.item() }
+            player.items = newValue
         }
     }
 
