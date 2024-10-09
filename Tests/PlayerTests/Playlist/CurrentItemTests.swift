@@ -161,7 +161,7 @@ final class CurrentItemTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1])
         player.currentItem = item2
-        expect(player.currentItem).toAlways(equal(item1), until: .seconds(1))
+        expect(player.currentItem).to(equal(item2))
     }
 
     func testSetCurrentItemToNil() {

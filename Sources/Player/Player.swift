@@ -18,12 +18,9 @@ public final class Player: ObservableObject, Equatable {
     public static let version = PackageInfo.version
 
     /// The current item.
-    public var currentItem: PlayerItem? {
-        get {
-            tracker?.item
-        }
-        set {
-            replaceCurrentItemWithItem(newValue)
+    @Published public var currentItem: PlayerItem? {
+        didSet {
+            replaceCurrentItemWithItem(currentItem)
         }
     }
 
@@ -95,13 +92,6 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
-    public lazy var currentItemPublisher: AnyPublisher<PlayerItem?, Never> = {
-        queuePublisher
-            .slice(at: \.item)
-            .share(replay: 1)
-            .eraseToAnyPublisher()
-    }()
-
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
         Publishers.Merge(
             elementsQueueUpdatePublisher(),
@@ -115,7 +105,8 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
-        currentItemPublisher
+        queuePublisher
+            .slice(at: \.item)
             .map { item -> AnyPublisher<PlayerMetadata, Never> in
                 guard let item else { return Just(.empty).eraseToAnyPublisher() }
                 return item.metadataPublisher()
@@ -317,6 +308,7 @@ public extension Player {
 private extension Player {
     func configurePublishedPropertyPublishers() {
         configurePropertiesPublisher()
+        configureCurrentItemPublisher()
         configureErrorPublisher()
         configurePlaybackSpeedPublisher()
     }
@@ -395,6 +387,13 @@ private extension Player {
             .receiveOnMainThread()
             .weakAssign(to: \.properties, on: self)
             .store(in: &cancellables)
+    }
+
+    func configureCurrentItemPublisher() {
+        queuePublisher
+            .slice(at: \.item)
+            .receiveOnMainThread()
+            .assign(to: &$currentItem)
     }
 
     func configureErrorPublisher() {
