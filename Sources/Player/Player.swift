@@ -18,6 +18,9 @@ public final class Player: ObservableObject, Equatable {
     public static let version = PackageInfo.version
 
     /// The current item.
+    ///
+    /// This method can be used to replace the current item with an item not in the current ``items``. If the item set
+    /// is identical to the current item a skip to its default position is performed instead.
     @Published public var currentItem: PlayerItem? {
         willSet {
             if currentItem != newValue {
