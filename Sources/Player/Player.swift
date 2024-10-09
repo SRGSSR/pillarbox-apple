@@ -110,8 +110,7 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
-        queuePublisher
-            .slice(at: \.item)
+        currentItemPublisher()
             .map { item -> AnyPublisher<PlayerMetadata, Never> in
                 guard let item else { return Just(.empty).eraseToAnyPublisher() }
                 return item.metadataPublisher()
@@ -395,8 +394,7 @@ private extension Player {
     }
 
     func configureCurrentItemPublisher() {
-        queuePublisher
-            .slice(at: \.item)
+        currentItemPublisher()
             .receiveOnMainThread()
             .assign(to: &$currentItem)
     }
