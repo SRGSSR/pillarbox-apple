@@ -82,7 +82,7 @@ extension Player {
 
     func replaceCurrentItemWithItem(_ item: PlayerItem?) {
         if let item {
-            guard storedItems.contains(item), let index = storedItems.firstIndex(of: item) else { return }
+            guard let index = storedItems.firstIndex(of: item) else { return }
             let playerItems = AVPlayerItem.playerItems(
                 from: Array(storedItems),
                 after: index,
