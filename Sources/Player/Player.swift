@@ -20,7 +20,12 @@ public final class Player: ObservableObject, Equatable {
     /// The current item.
     @Published public var currentItem: PlayerItem? {
         willSet {
-            replaceCurrentItemWithItem(newValue)
+            if currentItem != newValue {
+                replaceCurrentItemWithItem(newValue)
+            }
+            else {
+                skipToDefault()
+            }
         }
     }
 
