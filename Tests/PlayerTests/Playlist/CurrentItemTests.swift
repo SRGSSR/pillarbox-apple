@@ -159,9 +159,11 @@ final class CurrentItemTests: TestCase {
     func testSetCurrentItemWithUnknownItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
-        let player = Player(items: [item1])
-        player.currentItem = item2
-        expect(player.currentItem).to(equal(item2))
+        let item3 = PlayerItem.simple(url: Stream.mediumOnDemand.url)
+        let player = Player(items: [item1, item2])
+        player.currentItem = item3
+        expect(player.currentItem).to(equal(item3))
+        expect(player.items).to(equalDiff([item3, item2]))
     }
 
     func testSetCurrentItemToNil() {
@@ -170,6 +172,7 @@ final class CurrentItemTests: TestCase {
         expect(player.currentItem).to(equal(item))
         player.currentItem = nil
         expect(player.currentItem).to(beNil())
+        expect(player.items).to(equalDiff([item]))
         expect(player.queuePlayer.items()).to(beEmpty())
     }
 }
