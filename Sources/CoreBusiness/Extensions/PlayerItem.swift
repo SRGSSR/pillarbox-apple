@@ -34,7 +34,7 @@ public extension PlayerItem {
                 CommandersActTracker.adapter { $0.analyticsMetadata },
                 MetricsTracker.adapter(
                     configuration: .init(
-                        serviceUrl: URL(string: "http://sse-broker-alb-1501344577.eu-central-1.elb.amazonaws.com/api/events")!
+                        serviceUrl: URL(string: "https://monitoring.pillarbox.ch/api/events")!
                     ),
                     behavior: .mandatory
                 ) { metadata in
