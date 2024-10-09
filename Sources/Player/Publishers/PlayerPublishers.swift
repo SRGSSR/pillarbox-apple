@@ -9,6 +9,10 @@ import Combine
 import PillarboxCore
 
 extension Player {
+    func currentItemPublisher() -> AnyPublisher<PlayerItem?, Never> {
+        queuePublisher.slice(at: \.item)
+    }
+
     func currentPlayerItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
         queuePublisher.slice(at: \.itemState.item)
     }
