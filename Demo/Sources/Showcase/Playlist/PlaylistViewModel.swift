@@ -23,12 +23,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var currentMedia: Media? {
         didSet {
             guard let currentMedia, let currentItem = items[currentMedia] else { return }
-            if player.currentItem != currentItem {
-                player.currentItem = currentItem
-            }
-            else {
-                player.skipToDefault()
-            }
+            player.currentItem = currentItem
         }
     }
 

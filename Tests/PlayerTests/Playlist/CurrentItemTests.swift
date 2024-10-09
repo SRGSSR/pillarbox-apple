@@ -175,4 +175,17 @@ final class CurrentItemTests: TestCase {
         expect(player.items).to(equalDiff([item]))
         expect(player.queuePlayer.items()).to(beEmpty())
     }
+
+    func testSetCurrentItemToSameItem() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item])
+        player.play()
+        expect(player.time().seconds).toEventually(beGreaterThan(1))
+        player.pause()
+        player.currentItem = item
+        expect(player.playbackState).toAlways(equal(.paused), until: .seconds(1))
+        expect(player.currentItem).to(equal(item))
+        expect(player.items).to(equalDiff([item]))
+        expect(player.time().seconds).to(equal(0))
+    }
 }
