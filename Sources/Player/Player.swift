@@ -19,8 +19,8 @@ public final class Player: ObservableObject, Equatable {
 
     /// The current item.
     @Published public var currentItem: PlayerItem? {
-        didSet {
-            replaceCurrentItemWithItem(currentItem)
+        willSet {
+            replaceCurrentItemWithItem(newValue)
         }
     }
 

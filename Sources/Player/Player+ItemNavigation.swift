@@ -82,15 +82,19 @@ extension Player {
 
     func replaceCurrentItemWithItem(_ item: PlayerItem?) {
         if let item {
-            guard let index = storedItems.firstIndex(of: item) else { return }
-            let playerItems = AVPlayerItem.playerItems(
-                from: Array(storedItems),
-                after: index,
-                repeatMode: repeatMode,
-                length: configuration.preloadedItems,
-                reload: true
-            )
-            queuePlayer.replaceItems(with: playerItems)
+            if let index = storedItems.firstIndex(of: item) {
+                let playerItems = AVPlayerItem.playerItems(
+                    from: Array(storedItems),
+                    after: index,
+                    repeatMode: repeatMode,
+                    length: configuration.preloadedItems,
+                    reload: true
+                )
+                queuePlayer.replaceItems(with: playerItems)
+            }
+            else if let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) {
+                storedItems[currentIndex] = item
+            }
         }
         else {
             queuePlayer.removeAllItems()
