@@ -59,7 +59,6 @@ struct Media: Hashable {
             return .simple(
                 url: url,
                 metadata: self,
-                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -71,7 +70,6 @@ struct Media: Hashable {
             return .tokenProtected(
                 url: url,
                 metadata: self,
-                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -84,7 +82,6 @@ struct Media: Hashable {
                 url: url,
                 certificateUrl: certificateUrl,
                 metadata: self,
-                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -101,7 +98,6 @@ struct Media: Hashable {
             return .simple(
                 url: url,
                 metadata: self,
-                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -113,7 +109,6 @@ struct Media: Hashable {
             return .urn(
                 urn,
                 server: serverSetting.server,
-                source: self,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.mainChapter.title)

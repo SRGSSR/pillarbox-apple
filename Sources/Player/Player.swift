@@ -18,12 +18,17 @@ public final class Player: ObservableObject, Equatable {
     public static let version = PackageInfo.version
 
     /// The current item.
-    public var currentItem: PlayerItem? {
-        get {
-            tracker?.item
-        }
-        set {
-            replaceCurrentItemWithItem(newValue)
+    ///
+    /// This method can be used to replace the current item with an item not in the current ``items``. If the item set
+    /// is identical to the current item a skip to its default position is performed instead.
+    @Published public var currentItem: PlayerItem? {
+        willSet {
+            if currentItem != newValue {
+                replaceCurrentItemWithItem(newValue)
+            }
+            else {
+                skipToDefault()
+            }
         }
     }
 
@@ -310,6 +315,7 @@ public extension Player {
 private extension Player {
     func configurePublishedPropertyPublishers() {
         configurePropertiesPublisher()
+        configureCurrentItemPublisher()
         configureErrorPublisher()
         configurePlaybackSpeedPublisher()
     }
@@ -388,6 +394,12 @@ private extension Player {
             .receiveOnMainThread()
             .weakAssign(to: \.properties, on: self)
             .store(in: &cancellables)
+    }
+
+    func configureCurrentItemPublisher() {
+        currentItemPublisher()
+            .receiveOnMainThread()
+            .assign(to: &$currentItem)
     }
 
     func configureErrorPublisher() {

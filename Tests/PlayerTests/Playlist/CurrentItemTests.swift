@@ -159,9 +159,11 @@ final class CurrentItemTests: TestCase {
     func testSetCurrentItemWithUnknownItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
-        let player = Player(items: [item1])
-        player.currentItem = item2
-        expect(player.currentItem).toAlways(equal(item1), until: .seconds(1))
+        let item3 = PlayerItem.simple(url: Stream.mediumOnDemand.url)
+        let player = Player(items: [item1, item2])
+        player.currentItem = item3
+        expect(player.currentItem).to(equal(item3))
+        expect(player.items).to(equalDiff([item3, item2]))
     }
 
     func testSetCurrentItemToNil() {
@@ -170,6 +172,20 @@ final class CurrentItemTests: TestCase {
         expect(player.currentItem).to(equal(item))
         player.currentItem = nil
         expect(player.currentItem).to(beNil())
+        expect(player.items).to(equalDiff([item]))
         expect(player.queuePlayer.items()).to(beEmpty())
+    }
+
+    func testSetCurrentItemToSameItem() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item])
+        player.play()
+        expect(player.time().seconds).toEventually(beGreaterThan(1))
+        player.pause()
+        player.currentItem = item
+        expect(player.playbackState).toAlways(equal(.paused), until: .seconds(1))
+        expect(player.currentItem).to(equal(item))
+        expect(player.items).to(equalDiff([item]))
+        expect(player.time().seconds).to(equal(0))
     }
 }

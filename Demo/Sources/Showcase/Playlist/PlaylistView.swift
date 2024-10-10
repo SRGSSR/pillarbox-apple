@@ -113,23 +113,6 @@ private struct Toolbar: View {
     }
 }
 
-private struct BottomView: View {
-    let model: PlaylistViewModel
-
-    var body: some View {
-        Toolbar(model: model)
-        Playlist(player: model.player, editActions: .all) { source, isCurrent in
-            switch source {
-            case let media as Media:
-                MediaCell(media: media)
-                    .fontWeight(isCurrent ? .semibold : .regular)
-            default:
-                Color.clear
-            }
-        }
-    }
-}
-
 struct PlaylistView: View {
     let medias: [Media]
 
@@ -141,7 +124,10 @@ struct PlaylistView: View {
                 .supportsPictureInPicture()
 #if os(iOS)
             if model.layout != .maximized {
-                BottomView(model: model)
+                Toolbar(model: model)
+                List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
+                    MediaCell(media: media)
+                }
             }
 #endif
         }

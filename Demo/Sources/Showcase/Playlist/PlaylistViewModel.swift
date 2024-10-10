@@ -6,6 +6,7 @@
 
 import Combine
 import Foundation
+import OrderedCollections
 import PillarboxPlayer
 
 final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
@@ -13,13 +14,25 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     @Published var layout: PlaybackView.Layout = .minimized
 
+    @Published private var items = OrderedDictionary<Media, PlayerItem>() {
+        didSet {
+            player.items = items.values.elements
+        }
+    }
+
+    @Published var currentMedia: Media? {
+        didSet {
+            guard let currentMedia, let currentItem = items[currentMedia] else { return }
+            player.currentItem = currentItem
+        }
+    }
+
     var medias: [Media] {
         get {
-            player.items.compactMap { $0.source as? Media }
+            Array(items.keys)
         }
         set {
-            guard Set(medias) != Set(newValue) else { return }
-            player.items = newValue.map { $0.item() }
+            items = Self.updated(initialItems: items, with: newValue)
         }
     }
 
@@ -27,10 +40,35 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         player.items.isEmpty
     }
 
-    func add(_ medias: [Media]) {
-        medias.forEach { media in
-            player.append(media.item())
+    init() {
+        configureCurrentMediaPublisher()
+    }
+
+    private static func updated(
+        initialItems: OrderedDictionary<Media, PlayerItem>,
+        with medias: [Media]
+    ) -> OrderedDictionary<Media, PlayerItem> {
+        var items = initialItems
+        let changes = medias.difference(from: initialItems.keys).inferringMoves()
+        changes.forEach { change in
+            switch change {
+            case let .insert(offset: offset, element: element, associatedWith: associatedWith):
+                if let associatedWith {
+                    let previousPlayerItem = initialItems.elements[associatedWith].value
+                    items.updateValue(previousPlayerItem, forKey: element, insertingAt: offset)
+                }
+                else {
+                    items.updateValue(element.item(), forKey: element, insertingAt: offset)
+                }
+            case let .remove(offset: offset, element: _, associatedWith: _):
+                items.remove(at: offset)
+            }
         }
+        return items
+    }
+
+    func add(_ medias: [Media]) {
+        self.medias.append(contentsOf: medias)
     }
 
     func play() {
@@ -39,10 +77,23 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     func shuffle() {
-        player.items = player.items.shuffled()
+        items.shuffle()
     }
 
     func trash() {
-        player.removeAllItems()
+        medias = []
+    }
+
+    private func configureCurrentMediaPublisher() {
+        player.$currentItem
+            .map { [weak self] item in
+                guard let self, let item else { return nil }
+                return media(for: item)
+            }
+            .assign(to: &$currentMedia)
+    }
+
+    private func media(for item: PlayerItem) -> Media? {
+        items.first { $0.value == item }?.key
     }
 }
