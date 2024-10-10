@@ -7,7 +7,6 @@
 @testable import PillarboxPlayer
 
 import Combine
-import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 import XCTest

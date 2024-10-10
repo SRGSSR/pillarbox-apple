@@ -9,7 +9,6 @@
 import AVFoundation
 import Nimble
 import PillarboxCircumspect
-import PillarboxStreams
 
 final class AVPlayerItemRepeatAllUpdateTests: TestCase {
     func testPlayerItemsWithoutCurrentItem() {
