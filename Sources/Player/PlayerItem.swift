@@ -28,12 +28,6 @@ public final class PlayerItem: Equatable {
 
     let id = UUID()
 
-    /// The source attached to the item, if any.
-    ///
-    /// You can optionally attach information about the source that the item was created from at construction time
-    /// so that you can access it at a later time if needed. Some APIs, e.g. ``Playlist``, will also automatically
-    /// resurface attached source information in cases it can be helpful.
-
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
     /// - Parameters:
