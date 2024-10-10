@@ -222,6 +222,7 @@ struct MetricsView: View {
                     Text(identifier)
 #if os(iOS)
                         .textSelection(.enabled)
+                        .swipeActions { CopyButton(text: identifier) }
 #endif
                 }
             } header: {

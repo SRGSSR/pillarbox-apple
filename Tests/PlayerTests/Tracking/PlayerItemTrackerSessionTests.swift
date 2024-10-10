@@ -7,7 +7,6 @@
 @testable import PillarboxPlayer
 
 import Nimble
-import PillarboxCircumspect
 import PillarboxStreams
 
 final class PlayerItemTrackerSessionTests: TestCase {

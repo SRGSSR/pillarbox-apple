@@ -6,7 +6,6 @@
 
 import Combine
 import Foundation
-import PillarboxCore
 
 extension PlayerItem {
     private static func experience(fromService service: DateInterval, startDate: Date) -> DateInterval {

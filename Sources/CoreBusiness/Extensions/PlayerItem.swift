@@ -7,6 +7,7 @@
 import AVFoundation
 import Combine
 import PillarboxAnalytics
+import PillarboxMonitoring
 import PillarboxPlayer
 
 public extension PlayerItem {
@@ -30,7 +31,19 @@ public extension PlayerItem {
             publisher: publisher(forUrn: urn, server: server, configuration: configuration),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
-                CommandersActTracker.adapter { $0.analyticsMetadata }
+                CommandersActTracker.adapter { $0.analyticsMetadata },
+                MetricsTracker.adapter(
+                    configuration: .init(
+                        serviceUrl: URL(string: "https://monitoring.pillarbox.ch/api/events")!
+                    ),
+                    behavior: .mandatory
+                ) { metadata in
+                    MetricsTracker.Metadata(
+                        identifier: metadata.mainChapter.urn,
+                        metadataUrl: metadata.mediaCompositionUrl,
+                        assetUrl: metadata.resource.url
+                    )
+                }
             ] + trackerAdapters
         )
     }

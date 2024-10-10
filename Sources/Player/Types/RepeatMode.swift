@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A mode setting how a player repeats playback of items in its queue.
 public enum RepeatMode {
     /// Disabled.
