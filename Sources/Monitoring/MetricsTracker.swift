@@ -63,8 +63,6 @@ public final class MetricsTracker: PlayerItemTracker {
             }
             sendEvent(name: .error, data: errorData(error: error, severity: .fatal))
             session.stop()
-        case let .warning(error):
-            sendEvent(name: .error, data: errorData(error: error, severity: .warning))
         default:
             break
         }
