@@ -72,7 +72,7 @@ public struct Asset<M> {
             configuration: configuration
         )
     }
-    
+
     /// Returns an unavailable asset.
     ///
     /// - Parameters:

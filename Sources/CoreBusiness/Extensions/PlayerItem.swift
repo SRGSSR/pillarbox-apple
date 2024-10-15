@@ -41,7 +41,7 @@ public extension PlayerItem {
                     MetricsTracker.Metadata(
                         identifier: metadata.mainChapter.urn,
                         metadataUrl: metadata.mediaCompositionUrl,
-                        assetUrl: metadata.resource.url
+                        assetUrl: metadata.resource?.url
                     )
                 }
             ] + trackerAdapters
@@ -98,17 +98,22 @@ public extension PlayerItem {
 private extension PlayerItem {
     static func publisher(forUrn urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
         let dataProvider = DataProvider(server: server)
-        return dataProvider.mediaMetadataPublisher(forUrn: urn)
-            .map { metadata in
-                asset(metadata: metadata, configuration: configuration)
+        return dataProvider.mediaCompositionPublisher(forUrn: urn)
+            .tryMap { response in
+                let metadata = try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
+                return asset(metadata: metadata, configuration: configuration, dataProvider: dataProvider)
             }
             .eraseToAnyPublisher()
     }
 
-    private static func asset(metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
-        let resource = metadata.resource
+    private static func asset(metadata: MediaMetadata, configuration: PlayerItemConfiguration, dataProvider: DataProvider) -> Asset<MediaMetadata> {
+        if let blockingReason = metadata.blockingReason {
+            return .unavailable(with: DataError.blocked(withMessage: blockingReason.description), metadata: metadata)
+        }
+        guard let resource = metadata.resource else {
+            return .unavailable(with: DataError.noResourceAvailable, metadata: metadata)
+        }
         let configuration = assetConfiguration(for: resource, configuration: configuration)
-
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
             return .encrypted(url: resource.url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration)
         }
