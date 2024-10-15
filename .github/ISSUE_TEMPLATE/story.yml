@@ -1,0 +1,26 @@
+---
+name: 📙 Story
+description: Describe requirements.
+projects: ["SRGSSR/9"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      value: "**As a developer** "
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      value: "- "
+    validations:
+      required: true
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Tasks
+      value: "- [ ] "
+    validations:
+      required: true
