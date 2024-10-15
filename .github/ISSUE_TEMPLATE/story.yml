@@ -1,6 +1,7 @@
 ---
 name: 📙 Story
 description: Describe requirements.
+projects: ["SRGSSR/9"]
 body:
   - type: textarea
     id: description
