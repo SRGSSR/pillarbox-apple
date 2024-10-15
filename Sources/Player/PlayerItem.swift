@@ -28,62 +28,6 @@ public final class PlayerItem: Equatable {
 
     let id = UUID()
 
-    /// Creates an item loaded from an ``Asset`` publisher data source.
-    ///
-    /// - Parameters:
-    ///   - publisher: The asset publisher.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init<P, M>(
-        publisher: P,
-        trackerAdapters: [TrackerAdapter<M>] = []
-    ) where P: Publisher, P.Output == Asset<M>, M: AssetMetadata {
-        self.init(
-            publisher: publisher,
-            metadataMapper: { $0.playerMetadata },
-            trackerAdapters: trackerAdapters
-        )
-    }
-
-    /// Creates a player item from an ``Asset``.
-    ///
-    /// - Parameters:
-    ///   - asset: The asset to play.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init<M>(
-        asset: Asset<M>,
-        trackerAdapters: [TrackerAdapter<M>] = []
-    ) where M: AssetMetadata {
-        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
-    }
-
-    /// Creates an item loaded from an ``Asset`` publisher data source.
-    ///
-    /// - Parameters:
-    ///   - publisher: The asset publisher.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init<P>(
-        publisher: P,
-        trackerAdapters: [TrackerAdapter<Void>] = []
-    ) where P: Publisher, P.Output == Asset<Void> {
-        self.init(
-            publisher: publisher,
-            metadataMapper: { _ in .empty },
-            trackerAdapters: trackerAdapters
-        )
-    }
-
-    /// Creates a player item from an ``Asset``.
-    ///
-    /// - Parameters:
-    ///   - asset: The asset to play.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init(
-        asset: Asset<Void>,
-        trackerAdapters: [TrackerAdapter<Void>] = []
-    ) {
-        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
-    }
-
     private init<P, M>(
         publisher: P,
         metadataMapper: @escaping (M) -> PlayerMetadata,
@@ -145,40 +89,61 @@ public final class PlayerItem: Equatable {
     }
 }
 
-extension PlayerItem {
-    private func trackerAdapters(matchingBehavior behavior: TrackingBehavior) -> [PlayerItemTracking] {
-        trackerAdapters.filter { $0.behavior == behavior }
+public extension PlayerItem {
+    /// Creates an item loaded from an ``Asset`` publisher data source.
+    ///
+    /// - Parameters:
+    ///   - publisher: The asset publisher.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    convenience init<P, M>(
+        publisher: P,
+        trackerAdapters: [TrackerAdapter<M>] = []
+    ) where P: Publisher, P.Output == Asset<M>, M: AssetMetadata {
+        self.init(
+            publisher: publisher,
+            metadataMapper: { $0.playerMetadata },
+            trackerAdapters: trackerAdapters
+        )
     }
 
-    func enableTrackers(matchingBehavior behavior: TrackingBehavior, for player: AVPlayer) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.enable(for: player)
-        }
+    /// Creates a player item from an ``Asset``.
+    ///
+    /// - Parameters:
+    ///   - asset: The asset to play.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    convenience init<M>(
+        asset: Asset<M>,
+        trackerAdapters: [TrackerAdapter<M>] = []
+    ) where M: AssetMetadata {
+        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
     }
 
-    func updateTrackersProperties(matchingBehavior behavior: TrackingBehavior, to properties: PlayerProperties) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.updateProperties(to: properties)
-        }
+    /// Creates an item loaded from an ``Asset`` publisher data source.
+    ///
+    /// - Parameters:
+    ///   - publisher: The asset publisher.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    convenience init<P>(
+        publisher: P,
+        trackerAdapters: [TrackerAdapter<Void>] = []
+    ) where P: Publisher, P.Output == Asset<Void> {
+        self.init(
+            publisher: publisher,
+            metadataMapper: { _ in .empty },
+            trackerAdapters: trackerAdapters
+        )
     }
 
-    func updateTrackersMetricEvents(matchingBehavior behavior: TrackingBehavior, to events: [MetricEvent]) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.updateMetricEvents(to: events)
-        }
-    }
-
-    func disableTrackers(matchingBehavior behavior: TrackingBehavior, with properties: PlayerProperties) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.disable(with: properties)
-        }
-    }
-
-    func sessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {
-        trackerAdapters.compactMap(\.registration)
-            .filter { $0.type == type }
-            .map(\.sessionIdentifier)
-            .sorted()
+    /// Creates a player item from an ``Asset``.
+    ///
+    /// - Parameters:
+    ///   - asset: The asset to play.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    convenience init(
+        asset: Asset<Void>,
+        trackerAdapters: [TrackerAdapter<Void>] = []
+    ) {
+        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
     }
 }
 
@@ -309,6 +274,43 @@ public extension PlayerItem {
             asset: .encrypted(url: url, delegate: delegate, configuration: configuration),
             trackerAdapters: trackerAdapters
         )
+    }
+}
+
+extension PlayerItem {
+    private func trackerAdapters(matchingBehavior behavior: TrackingBehavior) -> [PlayerItemTracking] {
+        trackerAdapters.filter { $0.behavior == behavior }
+    }
+
+    func enableTrackers(matchingBehavior behavior: TrackingBehavior, for player: AVPlayer) {
+        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+            adapter.enable(for: player)
+        }
+    }
+
+    func updateTrackersProperties(matchingBehavior behavior: TrackingBehavior, to properties: PlayerProperties) {
+        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+            adapter.updateProperties(to: properties)
+        }
+    }
+
+    func updateTrackersMetricEvents(matchingBehavior behavior: TrackingBehavior, to events: [MetricEvent]) {
+        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+            adapter.updateMetricEvents(to: events)
+        }
+    }
+
+    func disableTrackers(matchingBehavior behavior: TrackingBehavior, with properties: PlayerProperties) {
+        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+            adapter.disable(with: properties)
+        }
+    }
+
+    func sessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {
+        trackerAdapters.compactMap(\.registration)
+            .filter { $0.type == type }
+            .map(\.sessionIdentifier)
+            .sorted()
     }
 }
 
