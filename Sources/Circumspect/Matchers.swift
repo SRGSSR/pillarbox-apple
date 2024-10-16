@@ -18,8 +18,7 @@ public func equal<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> 
         case (_, .none):
             return MatcherResult(status: .fail, message: message)
         case let (.some(expected), .some(actual)):
-            let matches = areEquivalent(expected, actual)
-            return MatcherResult(bool: matches, message: message)
+            return MatcherResult(bool: areEquivalent(expected, actual), message: message)
         }
     }
 }
