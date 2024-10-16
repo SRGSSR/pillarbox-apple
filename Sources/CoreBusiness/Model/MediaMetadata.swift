@@ -28,13 +28,13 @@ public struct MediaMetadata {
     public let mainChapter: MediaComposition.Chapter
 
     /// The resource to be played.
-    public let resource: MediaComposition.Resource
+    public let resource: MediaComposition.Resource?
 
     private let dataProvider: DataProvider
 
     /// The stream type.
     public var streamType: StreamType {
-        resource.streamType
+        resource?.streamType ?? .unknown
     }
 
     /// The available chapters.
@@ -55,7 +55,9 @@ public struct MediaMetadata {
         var analyticsData = mainChapter.analyticsData
         guard !analyticsData.isEmpty else { return [:] }
         analyticsData.merge(mediaComposition.analyticsData) { _, new in new }
-        analyticsData.merge(resource.analyticsData) { _, new in new }
+        if let resource {
+            analyticsData.merge(resource.analyticsData) { _, new in new }
+        }
         return analyticsData
     }
 
@@ -64,7 +66,9 @@ public struct MediaMetadata {
         var analyticsMetadata = mainChapter.analyticsMetadata
         guard !analyticsMetadata.isEmpty else { return [:] }
         analyticsMetadata.merge(mediaComposition.analyticsMetadata) { _, new in new }
-        analyticsMetadata.merge(resource.analyticsMetadata) { _, new in new }
+        if let resource {
+            analyticsMetadata.merge(resource.analyticsMetadata) { _, new in new }
+        }
         return analyticsMetadata
     }
 
@@ -73,16 +77,10 @@ public struct MediaMetadata {
         guard let mainChapter = mediaComposition.chapter(for: mediaComposition.chapterUrn) else {
             throw DataError.noResourceAvailable
         }
-        if let blockingReason = mainChapter.blockingReason {
-            throw DataError.blocked(withMessage: blockingReason.description)
-        }
-        guard let resource = mainChapter.recommendedResource else {
-            throw DataError.noResourceAvailable
-        }
         self.mediaComposition = mediaComposition
         self.mediaCompositionUrl = mediaCompositionResponse.response.url
         self.mainChapter = mainChapter
-        self.resource = resource
+        self.resource = mainChapter.recommendedResource
         self.dataProvider = dataProvider
     }
 
@@ -146,12 +144,16 @@ extension MediaMetadata: AssetMetadata {
     }
 
     var viewport: Viewport {
-        switch resource.presentation {
-        case .default:
-            return .standard
+        switch resource?.presentation {
         case .video360:
             return .monoscopic
+        default:
+            return .standard
         }
+    }
+
+    var blockingReason: MediaComposition.BlockingReason? {
+        mainChapter.blockingReason
     }
 
     private var timeRanges: [TimeRange] {

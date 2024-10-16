@@ -72,6 +72,26 @@ public struct Asset<M> {
             configuration: configuration
         )
     }
+
+    /// Returns an unavailable asset.
+    ///
+    /// - Parameters:
+    ///   - error: The reason why the asset is not available.
+    ///   - metadata: The metadata associated with the asset.
+    /// - Returns: The asset
+    ///
+    /// Use an unavailable asset when a business reason prevents the content from being played but metadata is
+    /// nonetheless available.
+    public static func unavailable(
+        with error: Error,
+        metadata: M
+    ) -> Self {
+        .init(
+            resource: .failing(error: error),
+            metadata: metadata,
+            configuration: .default
+        )
+    }
 }
 
 public extension Asset where M == Void {
