@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Difference
+import CustomDump
 
 enum AssertDescription {
     static func difference<T, U>(expected: [T], actual: [U]) -> String {
@@ -12,6 +12,6 @@ enum AssertDescription {
     }
 
     static func difference<T>(expected: [T], actual: [T]) -> String {
-        diff(expected, actual).joined(separator: ", ")
+        diff(expected, actual) ?? "-"
     }
 }
