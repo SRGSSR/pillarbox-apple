@@ -163,7 +163,7 @@ final class CurrentItemTests: TestCase {
         let player = Player(items: [item1, item2])
         player.currentItem = item3
         expect(player.currentItem).to(equal(item3))
-        expect(player.items).to(equalDiff([item3, item2]))
+        expect(player.items).to(equal([item3, item2]))
     }
 
     func testSetCurrentItemToNil() {
@@ -172,7 +172,7 @@ final class CurrentItemTests: TestCase {
         expect(player.currentItem).to(equal(item))
         player.currentItem = nil
         expect(player.currentItem).to(beNil())
-        expect(player.items).to(equalDiff([item]))
+        expect(player.items).to(equal([item]))
         expect(player.queuePlayer.items()).to(beEmpty())
     }
 
@@ -185,7 +185,7 @@ final class CurrentItemTests: TestCase {
         player.currentItem = item
         expect(player.playbackState).toAlways(equal(.paused), until: .seconds(1))
         expect(player.currentItem).to(equal(item))
-        expect(player.items).to(equalDiff([item]))
+        expect(player.items).to(equal([item]))
         expect(player.time().seconds).to(equal(0))
     }
 }

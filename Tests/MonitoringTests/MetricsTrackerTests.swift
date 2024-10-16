@@ -164,7 +164,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
             },
             error()
         )
-        expect(player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)).to(equalDiff([sessionId!]))
+        expect(player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)).to(equal([sessionId!]))
     }
 
     func testPayloads() {

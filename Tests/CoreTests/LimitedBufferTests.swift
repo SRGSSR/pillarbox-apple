@@ -22,10 +22,10 @@ final class LimitedBufferTests: XCTestCase {
         let buffer = LimitedBuffer<Int>(size: 2)
         expect(buffer.values).to(beEmpty())
         buffer.append(1)
-        expect(buffer.values).to(equalDiff([1]))
+        expect(buffer.values).to(equal([1]))
         buffer.append(2)
-        expect(buffer.values).to(equalDiff([1, 2]))
+        expect(buffer.values).to(equal([1, 2]))
         buffer.append(3)
-        expect(buffer.values).to(equalDiff([2, 3]))
+        expect(buffer.values).to(equal([2, 3]))
     }
 }

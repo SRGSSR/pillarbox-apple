@@ -17,11 +17,6 @@ public protocol Similar {
     static func ~~ (lhs: Self, rhs: Self) -> Bool
 }
 
-/// Matches against an expected similar value, displaying mismatches in a user-readable form.
-public func equalDiff<T>(_ expectedValue: T?) -> Matcher<T> where T: Similar {
-    equalDiff(expectedValue, by: ~~)
-}
-
 /// Matches against an expected similar value.
 public func beSimilarTo<T>(_ expectedValue: T?) -> Matcher<T> where T: Similar {
     equal(expectedValue, by: ~~)

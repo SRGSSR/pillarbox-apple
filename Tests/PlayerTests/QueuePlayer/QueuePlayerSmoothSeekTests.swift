@@ -19,7 +19,7 @@ final class QueuePlayerSmoothSeekTests: TestCase {
             player.seek(to: CMTime(value: 1, timescale: 1), smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
-        }.to(postNotifications(equalDiff([]), from: QueuePlayer.notificationCenter))
+        }.to(postNotifications(equal([]), from: QueuePlayer.notificationCenter))
     }
 
     func testNotificationsForSeek() {
@@ -30,7 +30,7 @@ final class QueuePlayerSmoothSeekTests: TestCase {
             player.seek(to: time, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
-        }.to(postNotifications(equalDiff([
+        }.to(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
@@ -48,7 +48,7 @@ final class QueuePlayerSmoothSeekTests: TestCase {
             player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
-        }.to(postNotifications(equalDiff([
+        }.to(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .didSeek, object: player),
 
@@ -71,7 +71,7 @@ final class QueuePlayerSmoothSeekTests: TestCase {
             player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
-        }.toEventually(postNotifications(equalDiff([
+        }.toEventually(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
@@ -92,7 +92,7 @@ final class QueuePlayerSmoothSeekTests: TestCase {
             player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
-        }.toEventually(postNotifications(equalDiff([
+        }.toEventually(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
@@ -121,7 +121,7 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         player.seek(to: time2, smooth: true, completionHandler: completion(index: 2))
         player.seek(to: time3, smooth: true, completionHandler: completion(index: 3))
 
-        expect(results).toEventually(equalDiff([
+        expect(results).toEventually(equal([
             1: true,
             2: true,
             3: true
@@ -150,7 +150,7 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         player.seek(to: time2, smooth: false, completionHandler: completion(index: 2))
         player.seek(to: time3, smooth: true, completionHandler: completion(index: 3))
 
-        expect(results).toEventually(equalDiff([
+        expect(results).toEventually(equal([
             1: false,
             2: true,
             3: true

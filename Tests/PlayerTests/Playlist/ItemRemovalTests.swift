@@ -18,7 +18,7 @@ final class ItemRemovalTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         player.remove(item1)
-        expect(player.items).to(equalDiff([item2, item3]))
+        expect(player.items).to(equal([item2, item3]))
     }
 
     func testRemoveCurrentItem() {
@@ -29,7 +29,7 @@ final class ItemRemovalTests: TestCase {
         player.advanceToNextItem()
         player.remove(item2)
         expect(player.currentItem).to(equal(item3))
-        expect(player.items).to(equalDiff([item1, item3]))
+        expect(player.items).to(equal([item1, item3]))
     }
 
     func testRemoveNextItem() {
@@ -39,7 +39,7 @@ final class ItemRemovalTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         player.remove(item3)
-        expect(player.items).to(equalDiff([item1, item2]))
+        expect(player.items).to(equal([item1, item2]))
     }
 
     func testRemoveForeignItem() {
@@ -47,7 +47,7 @@ final class ItemRemovalTests: TestCase {
         let foreignItem = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item])
         player.remove(foreignItem)
-        expect(player.items).to(equalDiff([item]))
+        expect(player.items).to(equal([item]))
     }
 
     func testRemoveAllItems() {

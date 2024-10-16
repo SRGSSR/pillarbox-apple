@@ -128,7 +128,7 @@ final class ReplaySubjectTests: XCTestCase {
                 },
                 receiveCompletion: { _ in }
             ))
-        expect(results).to(equalDiff([1, 2]))
+        expect(results).to(equal([1, 2]))
     }
 
     func testThreadSafety() {
@@ -165,6 +165,6 @@ final class ReplaySubjectTests: XCTestCase {
         .store(in: &cancellables)
 
         subject.send(1)
-        expect(values).to(equalDiff(["A1", "B1", "A2", "B2", "C1", "C2"]))
+        expect(values).to(equal(["A1", "B1", "A2", "B2", "C1", "C2"]))
     }
 }

@@ -16,9 +16,9 @@ final class ItemsTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let item3 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2, item3])
-        expect(player.items).to(equalDiff([item1, item2, item3]))
+        expect(player.items).to(equal([item1, item2, item3]))
         expect(player.previousItems).to(beEmpty())
-        expect(player.nextItems).to(equalDiff([item2, item3]))
+        expect(player.nextItems).to(equal([item2, item3]))
     }
 
     func testItemsOnMiddleItem() {
@@ -27,9 +27,9 @@ final class ItemsTests: TestCase {
         let item3 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
-        expect(player.items).to(equalDiff([item1, item2, item3]))
-        expect(player.previousItems).to(equalDiff([item1]))
-        expect(player.nextItems).to(equalDiff([item3]))
+        expect(player.items).to(equal([item1, item2, item3]))
+        expect(player.previousItems).to(equal([item1]))
+        expect(player.nextItems).to(equal([item3]))
     }
 
     func testItemsOnLastItem() {
@@ -39,8 +39,8 @@ final class ItemsTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         player.advanceToNextItem()
-        expect(player.items).to(equalDiff([item1, item2, item3]))
-        expect(player.previousItems).to(equalDiff([item1, item2]))
+        expect(player.items).to(equal([item1, item2, item3]))
+        expect(player.previousItems).to(equal([item1, item2]))
         expect(player.nextItems).to(beEmpty())
     }
 

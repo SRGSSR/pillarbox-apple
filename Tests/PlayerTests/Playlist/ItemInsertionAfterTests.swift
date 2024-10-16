@@ -18,7 +18,7 @@ final class ItemInsertionAfterTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         let insertedItem = PlayerItem.simple(url: Stream.onDemand.url)
         expect(player.insert(insertedItem, after: item2)).to(beTrue())
-        expect(player.items).to(equalDiff([item1, item2, insertedItem, item3]))
+        expect(player.items).to(equal([item1, item2, insertedItem, item3]))
     }
 
     func testInsertItemAfterCurrentItem() {
@@ -29,7 +29,7 @@ final class ItemInsertionAfterTests: TestCase {
         player.advanceToNextItem()
         let insertedItem = PlayerItem.simple(url: Stream.onDemand.url)
         expect(player.insert(insertedItem, after: item2)).to(beTrue())
-        expect(player.items).to(equalDiff([item1, item2, insertedItem, item3]))
+        expect(player.items).to(equal([item1, item2, insertedItem, item3]))
     }
 
     func testInsertItemAfterPreviousItem() {
@@ -41,7 +41,7 @@ final class ItemInsertionAfterTests: TestCase {
         player.advanceToNextItem()
         let insertedItem = PlayerItem.simple(url: Stream.onDemand.url)
         expect(player.insert(insertedItem, after: item2)).to(beTrue())
-        expect(player.items).to(equalDiff([item1, item2, insertedItem, item3]))
+        expect(player.items).to(equal([item1, item2, insertedItem, item3]))
     }
 
     func testInsertItemAfterLastItem() {
@@ -50,7 +50,7 @@ final class ItemInsertionAfterTests: TestCase {
         let player = Player(items: [item1, item2])
         let insertedItem = PlayerItem.simple(url: Stream.onDemand.url)
         expect(player.insert(insertedItem, after: item2)).to(beTrue())
-        expect(player.items).to(equalDiff([item1, item2, insertedItem]))
+        expect(player.items).to(equal([item1, item2, insertedItem]))
     }
 
     func testInsertItemAfterIdenticalItem() {
@@ -58,7 +58,7 @@ final class ItemInsertionAfterTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.insert(item1, after: item2)).to(beFalse())
-        expect(player.items).to(equalDiff([item1, item2]))
+        expect(player.items).to(equal([item1, item2]))
     }
 
     func testInsertItemAfterForeignItem() {
@@ -67,7 +67,7 @@ final class ItemInsertionAfterTests: TestCase {
         let foreignItem = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item])
         expect(player.insert(insertedItem, after: foreignItem)).to(beFalse())
-        expect(player.items).to(equalDiff([item]))
+        expect(player.items).to(equal([item]))
     }
 
     func testInsertItemAfterNil() {
@@ -75,7 +75,7 @@ final class ItemInsertionAfterTests: TestCase {
         let player = Player(items: [item])
         let insertedItem = PlayerItem.simple(url: Stream.onDemand.url)
         expect(player.insert(insertedItem, after: nil)).to(beTrue())
-        expect(player.items).to(equalDiff([item, insertedItem]))
+        expect(player.items).to(equal([item, insertedItem]))
     }
 
     func testAppendItem() {
@@ -83,6 +83,6 @@ final class ItemInsertionAfterTests: TestCase {
         let player = Player(items: [item])
         let insertedItem = PlayerItem.simple(url: Stream.onDemand.url)
         expect(player.append(insertedItem)).to(beTrue())
-        expect(player.items).to(equalDiff([item, insertedItem]))
+        expect(player.items).to(equal([item, insertedItem]))
     }
 }

@@ -35,7 +35,7 @@ final class QueuePlayerSeekTests: TestCase {
             player.seek(to: CMTime(value: 1, timescale: 1)) { finished in
                 expect(finished).to(beTrue())
             }
-        }.to(postNotifications(equalDiff([]), from: QueuePlayer.notificationCenter))
+        }.to(postNotifications(equal([]), from: QueuePlayer.notificationCenter))
     }
 
     func testNotificationsForSeek() {
@@ -46,7 +46,7 @@ final class QueuePlayerSeekTests: TestCase {
             player.seek(to: time) { finished in
                 expect(finished).to(beTrue())
             }
-        }.to(postNotifications(equalDiff([
+        }.to(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
@@ -64,7 +64,7 @@ final class QueuePlayerSeekTests: TestCase {
             player.seek(to: time2) { finished in
                 expect(finished).to(beTrue())
             }
-        }.to(postNotifications(equalDiff([
+        }.to(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .didSeek, object: player),
 
@@ -87,7 +87,7 @@ final class QueuePlayerSeekTests: TestCase {
             player.seek(to: time2) { finished in
                 expect(finished).to(beTrue())
             }
-        }.toEventually(postNotifications(equalDiff([
+        }.toEventually(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
@@ -108,7 +108,7 @@ final class QueuePlayerSeekTests: TestCase {
             player.seek(to: time2) { finished in
                 expect(finished).to(beTrue())
             }
-        }.toEventually(postNotifications(equalDiff([
+        }.toEventually(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
@@ -137,7 +137,7 @@ final class QueuePlayerSeekTests: TestCase {
         player.seek(to: time2, completionHandler: completion(index: 2))
         player.seek(to: time3, completionHandler: completion(index: 3))
 
-        expect(results).toEventually(equalDiff([
+        expect(results).toEventually(equal([
             1: false,
             2: false,
             3: true
@@ -166,7 +166,7 @@ final class QueuePlayerSeekTests: TestCase {
         player.seek(to: time2, smooth: true, completionHandler: completion(index: 2))
         player.seek(to: time3, smooth: false, completionHandler: completion(index: 3))
 
-        expect(results).toEventually(equalDiff([
+        expect(results).toEventually(equal([
             1: false,
             2: false,
             3: true
@@ -206,7 +206,7 @@ final class QueuePlayerSeekTests: TestCase {
             player.seek(to: time) { _ in
                 QueuePlayer.notificationCenter.post(name: notificationName, object: self)
             }
-        }.toEventually(postNotifications(equalDiff([
+        }.toEventually(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
             Notification(name: .didSeek, object: player),
             Notification(name: notificationName, object: self)
@@ -229,7 +229,7 @@ final class QueuePlayerSeekTests: TestCase {
             player.seek(to: time2) { _ in
                 QueuePlayer.notificationCenter.post(name: notificationName2, object: self)
             }
-        }.toEventually(postNotifications(equalDiff([
+        }.toEventually(postNotifications(equal([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: notificationName1, object: self),

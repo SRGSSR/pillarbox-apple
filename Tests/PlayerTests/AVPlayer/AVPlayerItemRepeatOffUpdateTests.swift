@@ -31,7 +31,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("C")]))
+        expect(items.map(\.id)).to(equal([UUID("A"), UUID("B"), UUID("C")]))
     }
 
     func testPlayerItemsWithPreservedCurrentItem() {
@@ -57,7 +57,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("3"), UUID("B"), UUID("C")]))
+        expect(items.map(\.id)).to(equal([UUID("3"), UUID("B"), UUID("C")]))
         expect(items.first).to(equal(currentItem))
     }
 
@@ -84,7 +84,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("3")]))
+        expect(items.map(\.id)).to(equal([UUID("3")]))
         expect(items.first).to(equal(currentItem))
     }
 
@@ -105,7 +105,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
+        expect(items.map(\.id)).to(equal([UUID("A"), UUID("B")]))
     }
 
     func testPlayerItemsWithCurrentItemReplacedByAnotherItem() {
@@ -129,7 +129,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("2"), UUID("C")]))
+        expect(items.map(\.id)).to(equal([UUID("2"), UUID("C")]))
     }
 
     func testPlayerItemsWithUpdatedCurrentItem() {
@@ -152,7 +152,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("1"), UUID("2"), UUID("3")]))
+        expect(items.map(\.id)).to(equal([UUID("1"), UUID("2"), UUID("3")]))
         expect(items.first).to(equal(currentItem))
     }
 
@@ -170,6 +170,6 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: 2
         )
-        expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
+        expect(items.map(\.id)).to(equal([UUID("A"), UUID("B")]))
     }
 }
