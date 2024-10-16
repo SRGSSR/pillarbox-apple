@@ -12,6 +12,6 @@ enum AssertDescription {
     }
 
     static func difference<T>(expected: [T], actual: [T]) -> String {
-        diff(expected, actual).joined(separator: ", ")
+        ""
     }
 }

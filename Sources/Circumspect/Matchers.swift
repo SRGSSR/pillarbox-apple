@@ -37,7 +37,7 @@ public func equalDiff<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T)
         case let (.some(expected), .some(actual)):
             return MatcherResult(
                 bool: areEquivalent(expected, actual),
-                message: ExpectationMessage.fail(diff(expectedValue, actualValue).joined(separator: ", "))
+                message: ExpectationMessage.fail("")
             )
         }
     }
