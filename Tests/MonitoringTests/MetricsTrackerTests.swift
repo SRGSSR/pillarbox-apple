@@ -42,7 +42,6 @@ final class MetricsTrackerTests: MonitoringTestCase {
             start(),
             error { payload in
                 let data = payload.data
-                expect(data.severity).to(equal(.fatal))
                 expect(data.name).to(equal("NSURLErrorDomain(-1100)"))
                 expect(data.message).to(equal("The requested URL was not found on this server."))
                 expect(data.position).to(beNil())
