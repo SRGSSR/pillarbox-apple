@@ -4,7 +4,10 @@ The following document lists known Pillarbox issues. Entries with a feedback num
 
 ## Video view leak (FB11934227)
 
-A bug in AVKit currently makes `SystemVideoView` leak resources after having interacted with the playback button on iOS 16. The issue has been fixed on iOS 17.
+A bug in AVKit makes `SystemVideoView` leak resources after having interacted with the playback button
+
+> [!IMPORTANT]
+> This issue has been fixed in iOS 17.
 
 ### Workaround
 
@@ -18,7 +21,7 @@ DRM-protected streams do not play in the simulator. This is expected behavior as
 
 Use a physical device.
 
-## Seeking to the end of an on-demand might confuse the player (FB12020197, FB12019796, FB12019343, FB11970329)
+## Seeking to the end of an on-demand might confuse the player (FB12020197, FB12019343, FB11970329)
 
 Seeking near the end of a content might sometimes confuse the player (image stuck while sound is still playing, for example).
 
@@ -103,6 +106,9 @@ No workaround is available yet.
 ## Tap gesture recognizers prevent RoutePickerView from showing its route selection dialog (FB12663995)
 
 When a layout contains a `RoutePickerView` as well as a tap gesture recognizer (even simultaneously recognizing), the presence of the gesture recognizer prevents the route picker from displaying the associated route selection dialog.
+
+> [!IMPORTANT]
+> This issue has been fixed in iOS 18.
 
 ### Workaround
 
