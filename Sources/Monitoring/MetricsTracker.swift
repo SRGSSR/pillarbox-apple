@@ -61,7 +61,7 @@ public final class MetricsTracker: PlayerItemTracker {
                 session.start()
                 sendEvent(name: .start, data: startData(from: events))
             }
-            sendEvent(name: .error, data: errorData(error: error, severity: .fatal))
+            sendEvent(name: .error, data: errorData(from: error))
             session.stop()
         default:
             break
@@ -136,14 +136,13 @@ private extension MetricsTracker {
         )
     }
 
-    func errorData(error: Error, severity: MetricErrorData.Severity) -> MetricErrorData {
+    func errorData(from error: Error) -> MetricErrorData {
         let error = error as NSError
         return MetricErrorData(
             message: error.localizedDescription,
             name: "\(error.domain)(\(error.code))",
             position: Self.position(from: properties),
             positionTimestamp: Self.positionTimestamp(from: properties),
-            severity: severity,
             url: URL(string: properties?.metrics()?.uri),
             vpn: Self.isUsingVirtualPrivateNetwork()
         )

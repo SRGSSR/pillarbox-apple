@@ -11,14 +11,6 @@ struct MetricErrorData: Encodable {
     let name: String
     let position: Int?
     let positionTimestamp: Int?
-    let severity: Severity
     let url: URL?
     let vpn: Bool
-}
-
-extension MetricErrorData {
-    enum Severity: String, Encodable {
-        case fatal = "Fatal"
-        case warning = "Warning"
-    }
 }
