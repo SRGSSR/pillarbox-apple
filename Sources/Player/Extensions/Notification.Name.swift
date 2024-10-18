@@ -11,6 +11,6 @@ enum SeekKey: String {
 }
 
 extension Notification.Name {
-    static let willSeek = Notification.Name("QueuePlayerWillSeekNotification")
-    static let didSeek = Notification.Name("QueuePlayerDidSeekNotification")
+    static let willSeek = Notification.Name("PillarboxPlayer_willSeekNotification")
+    static let didSeek = Notification.Name("PillarboxPlayer_didSeekNotification")
 }
