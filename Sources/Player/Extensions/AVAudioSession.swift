@@ -70,5 +70,5 @@ extension AVAudioSession {
 }
 
 extension Notification.Name {
-    static let didUpdateAudioSessionOptions = Notification.Name("PillarboxPlayerDidUpdateAudioSessionOptionsNotification")
+    static let didUpdateAudioSessionOptions = Notification.Name("PillarboxPlayer_didUpdateAudioSessionOptions")
 }

@@ -56,7 +56,7 @@ enum ComScoreHitInterceptor {
 }
 
 private extension Notification.Name {
-    static let didReceiveComScoreRequest = Notification.Name("URLSessionDidReceiveComScoreRequestNotification")
+    static let didReceiveComScoreRequest = Notification.Name("PillarboxAnalytics_didReceiveComScoreRequest")
 }
 
 private extension URLSession {
