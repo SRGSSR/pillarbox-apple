@@ -44,7 +44,7 @@ extension Player {
         Publishers.Merge3(
             desiredPlaybackSpeedUpdatePublisher(),
             supportedPlaybackSpeedPublisher(),
-            avPlayerViewControllerPlaybackSpeedUpdatePublisher()
+            defaultRateSpeedUpdatePublisher()
         )
         .removeDuplicates()
         .eraseToAnyPublisher()
@@ -92,14 +92,8 @@ private extension Player {
         .eraseToAnyPublisher()
     }
 
-    func avPlayerViewControllerPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
-        propertiesPublisher
-            .slice(at: \.rate)
-            .filter { rate in
-                rate != 0 && Thread.callStackSymbols.contains { symbol in
-                    symbol.contains("AVPlayerController")
-                }
-            }
+    func defaultRateSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
+        queuePlayer.publisher(for: \.defaultRate)
             .removeDuplicates()
             .map { .value($0) }
             .eraseToAnyPublisher()
