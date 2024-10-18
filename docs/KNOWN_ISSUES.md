@@ -126,7 +126,7 @@ No workaround is available yet.
 
 ## Control Center playback button state is incorrect in multi-player configurations (FB13684239)
 
-When mutiple player instances are used and one of them has been made active, the  Control Center playback button state does not always correctly reflect the state of the active player, but is altered by the state of the other available players as well.
+When multiple player instances are used and one of them has been made active, the  Control Center playback button state does not always correctly reflect the state of the active player, but is altered by the state of the other available players as well.
 
 ### Workaround
 
