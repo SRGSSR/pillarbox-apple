@@ -7,10 +7,10 @@
 import Foundation
 
 enum MetricRequestInfoKey: String {
-    case identifier = "MetricRequestIdentifier"
-    case payload = "MetricRequestIdentifierPayload"
+    case identifier = "MetricRequestInfoKey_identifier"
+    case payload = "MetricRequestInfoKey_payload"
 }
 
 extension Notification.Name {
-    static let didSendMetricRequest = Notification.Name(rawValue: "MetricsTrackerDidSendMetricRequestNotification")
+    static let didSendMetricRequest = Notification.Name(rawValue: "PillarboxMonitoring_didSendMetricRequest")
 }
