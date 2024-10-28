@@ -9,7 +9,7 @@ Enable video and audio wireless sharing to Apple TV or AirPlay‑enabled receive
 
 ## Overview
 
-> Important: AirPlay integration is only meaningful for iOS apps.
+> Important: AirPlay integration is only meaningful for iOS apps. Note that iPad apps run on macOS or using Catalyst do not support AirPlay either.
 
 ``Player`` natively supports [AirPlay](https://developer.apple.com/airplay/) to compatible receivers. Enabling AirPlay in your app requires some general setup as well as activation on a player basis.
 
