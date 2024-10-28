@@ -48,6 +48,42 @@ public extension PlayerItem {
         )
     }
 
+
+    /// Creates a player item from a Media Composition URL.
+    ///
+    /// - Parameters:
+    ///   - url: The custom media composition URL to play.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: The configuration to apply to the player item.
+    ///
+    /// Metadata is automatically associated with the item. In addition to trackers you provide, tracking is performed
+    /// according to SRG SSR analytics standards.
+    static func mediaCompositionUrl(
+        url: URL,
+        trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
+        configuration: PlayerItemConfiguration = .default
+    ) -> Self {
+        .init(
+            publisher: publisher(forMediaCompositionUrl: url, configuration: configuration),
+            trackerAdapters: [
+                ComScoreTracker.adapter { $0.analyticsData },
+                CommandersActTracker.adapter { $0.analyticsMetadata },
+                MetricsTracker.adapter(
+                    configuration: .init(
+                        serviceUrl: URL(string: "https://monitoring.pillarbox.ch/api/events")!
+                    ),
+                    behavior: .mandatory
+                ) { metadata in
+                    MetricsTracker.Metadata(
+                        identifier: metadata.mainChapter.urn,
+                        metadataUrl: metadata.mediaCompositionUrl,
+                        assetUrl: metadata.resource?.url
+                    )
+                }
+            ] + trackerAdapters
+        )
+    }
+
     /// Creates a player item from a URL, loaded with standard SRG SSR token protection.
     ///
     /// - Parameters:
@@ -97,8 +133,18 @@ public extension PlayerItem {
 
 private extension PlayerItem {
     static func publisher(forUrn urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
-        let dataProvider = DataProvider(server: server)
+        let dataProvider = UrnDataProvider(server: server)
         return dataProvider.mediaCompositionPublisher(forUrn: urn)
+            .tryMap { response in
+                let metadata = try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
+                return asset(metadata: metadata, configuration: configuration, dataProvider: dataProvider)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    static func publisher(forMediaCompositionUrl url: URL, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
+        let dataProvider = MediaCompositionDataProvider()
+        return dataProvider.mediaCompositionPublisher(forUrl: url)
             .tryMap { response in
                 let metadata = try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
                 return asset(metadata: metadata, configuration: configuration, dataProvider: dataProvider)
