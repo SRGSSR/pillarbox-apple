@@ -7,12 +7,37 @@
 import AVKit
 import SwiftUI
 
+private struct _RoutePickerView: UIViewRepresentable {
+    let prioritizesVideoDevices: Bool
+    let activeTintColor: Color?
+
+    func makeUIView(context: Context) -> AVRoutePickerView {
+        AVRoutePickerView()
+    }
+
+    func updateUIView(_ uiView: AVRoutePickerView, context: Context) {
+        uiView.prioritizesVideoDevices = prioritizesVideoDevices
+        if let activeTintColor {
+            uiView.activeTintColor = UIColor(activeTintColor)
+        }
+    }
+}
+
 /// A button to pick a playback route.
 ///
-/// Behavior: h-exp, v-exp
-public struct RoutePickerView: UIViewRepresentable {
+/// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
+public struct RoutePickerView: View {
     private var prioritizesVideoDevices: Bool
     private var activeTintColor: Color?
+
+    public var body: some View {
+        if !ProcessInfo.processInfo.isRunningOnMac {
+            _RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices, activeTintColor: activeTintColor)
+        }
+        else {
+            EmptyView()
+        }
+    }
 
     /// Creates a route picker button.
     ///
@@ -21,17 +46,6 @@ public struct RoutePickerView: UIViewRepresentable {
     ///   show a videocentric icon.
     public init(prioritizesVideoDevices: Bool = false) {
         self.prioritizesVideoDevices = prioritizesVideoDevices
-    }
-
-    public func makeUIView(context: Context) -> AVRoutePickerView {
-        AVRoutePickerView()
-    }
-
-    public func updateUIView(_ uiView: AVRoutePickerView, context: Context) {
-        uiView.prioritizesVideoDevices = prioritizesVideoDevices
-        if let activeTintColor {
-            uiView.activeTintColor = UIColor(activeTintColor)
-        }
     }
 }
 
