@@ -24,12 +24,12 @@ enum Resource {
         )
     }
 
-    func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
+    func playerItem(configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
         let item = rawPlayerItem(configuration: configuration)
-        item.preferredPeakBitRate = configuration.preferredPeakBitRate
-        item.preferredPeakBitRateForExpensiveNetworks = configuration.preferredPeakBitRateForExpensiveNetworks
-        item.preferredMaximumResolution = configuration.preferredMaximumResolution
-        item.preferredMaximumResolutionForExpensiveNetworks = configuration.preferredMaximumResolutionForExpensiveNetworks
+        item.preferredPeakBitRate = limits.preferredPeakBitRate
+        item.preferredPeakBitRateForExpensiveNetworks = limits.preferredPeakBitRateForExpensiveNetworks
+        item.preferredMaximumResolution = limits.preferredMaximumResolution
+        item.preferredMaximumResolutionForExpensiveNetworks = limits.preferredMaximumResolutionForExpensiveNetworks
         return item
     }
 

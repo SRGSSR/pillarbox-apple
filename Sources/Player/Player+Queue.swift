@@ -31,7 +31,7 @@ extension Player {
     func queuePlayerItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
         queuePublisher
             .withPrevious(.empty)
-            .compactMap { [weak self, configuration] previous, current in
+            .compactMap { [weak self, configuration, limits] previous, current in
                 guard let self, let buffer = Queue.buffer(from: previous, to: current, length: configuration.preloadedItems) else {
                     return nil
                 }
@@ -41,7 +41,8 @@ extension Player {
                     currentItem: buffer.item,
                     repeatMode: repeatMode,
                     length: buffer.length,
-                    configuration: configuration
+                    configuration: configuration,
+                    limits: limits
                 )
             }
             .removeDuplicates()

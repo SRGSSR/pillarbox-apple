@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import CoreGraphics
 import Foundation
 
 /// A player configuration.
@@ -45,28 +44,6 @@ public struct PlayerConfiguration {
     /// background videos.
     public let allowsConstrainedNetworkAccess: Bool
 
-    /// A limit of network bandwidth consumption observed by the player on all networks.
-    ///
-    /// Disabled when set to zero.
-    public let preferredPeakBitRate: Double
-
-    /// A limit of network bandwidth consumption observed by the player when connecting over
-    /// [expensive networks](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/3235752-allowsexpensivenetworkaccess).
-    ///
-    /// Disabled when set to zero.
-    public let preferredPeakBitRateForExpensiveNetworks: Double
-
-    /// A limit of resolution observed by the player on all networks.
-    ///
-    /// Disabled when set to `.zero`.
-    public let preferredMaximumResolution: CGSize
-
-    /// A limit of resolution observed by the player when connecting over
-    /// [expensive networks](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/3235752-allowsexpensivenetworkaccess).
-    ///
-    /// Disabled when set to `.zero`.
-    public let preferredMaximumResolutionForExpensiveNetworks: CGSize
-
     /// Creates a player configuration.
     public init(
         allowsExternalPlayback: Bool = true,
@@ -75,11 +52,7 @@ public struct PlayerConfiguration {
         navigationMode: NavigationMode = .smart(interval: 3),
         backwardSkipInterval: TimeInterval = 10,
         forwardSkipInterval: TimeInterval = 10,
-        allowsConstrainedNetworkAccess: Bool = true,
-        preferredPeakBitRate: Double = 0,
-        preferredPeakBitRateForExpensiveNetworks: Double = 0,
-        preferredMaximumResolution: CGSize = .zero,
-        preferredMaximumResolutionForExpensiveNetworks: CGSize = .zero
+        allowsConstrainedNetworkAccess: Bool = true
     ) {
         assert(backwardSkipInterval > 0)
         assert(forwardSkipInterval > 0)
@@ -90,9 +63,5 @@ public struct PlayerConfiguration {
         self.backwardSkipInterval = backwardSkipInterval
         self.forwardSkipInterval = forwardSkipInterval
         self.allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
-        self.preferredPeakBitRate = preferredPeakBitRate
-        self.preferredPeakBitRateForExpensiveNetworks = preferredPeakBitRateForExpensiveNetworks
-        self.preferredMaximumResolution = preferredMaximumResolution
-        self.preferredMaximumResolutionForExpensiveNetworks = preferredMaximumResolutionForExpensiveNetworks
     }
 }
