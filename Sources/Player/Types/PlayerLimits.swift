@@ -8,7 +8,7 @@ import AVFoundation
 import CoreGraphics
 
 /// A set of limits applied by the player during playback.
-public struct PlayerLimits: Equatable {
+public struct PlayerLimits {
     /// No limits.
     public static let none = Self()
 
