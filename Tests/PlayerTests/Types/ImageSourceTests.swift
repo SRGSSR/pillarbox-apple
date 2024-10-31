@@ -29,9 +29,9 @@ final class ImageSourceTests: TestCase {
 
     func testNonLoadedImageForValidUrl() {
         let url = Bundle.module.url(forResource: "pixel", withExtension: "jpg")!
-        let source = ImageSource.url(url)
+        let source = ImageSource.url(standardResolution: url)
         expectSimilarPublished(
-            values: [.url(url)],
+            values: [.url(standardResolution: url)],
             from: source.imageSourcePublisher(),
             during: .milliseconds(100)
         )
@@ -40,9 +40,9 @@ final class ImageSourceTests: TestCase {
     func testLoadedImageForValidUrl() {
         let url = Bundle.module.url(forResource: "pixel", withExtension: "jpg")!
         let image = UIImage(contentsOfFile: url.path())!
-        let source = ImageSource.url(url)
+        let source = ImageSource.url(standardResolution: url)
         expectSimilarPublished(
-            values: [.url(url), .image(image)],
+            values: [.url(standardResolution: url), .image(image)],
             from: source.imageSourcePublisher(),
             during: .milliseconds(100)
         ) {
@@ -52,9 +52,9 @@ final class ImageSourceTests: TestCase {
 
     func testInvalidImageFormat() {
         let url = Bundle.module.url(forResource: "invalid", withExtension: "jpg")!
-        let source = ImageSource.url(url)
+        let source = ImageSource.url(standardResolution: url)
         expectSimilarPublished(
-            values: [.url(url), .none],
+            values: [.url(standardResolution: url), .none],
             from: source.imageSourcePublisher(),
             during: .milliseconds(100)
         ) {
@@ -64,9 +64,9 @@ final class ImageSourceTests: TestCase {
 
     func testFailingUrl() {
         let url = URL(string: "https://localhost:8123/missing.jpg")!
-        let source = ImageSource.url(url)
+        let source = ImageSource.url(standardResolution: url)
         expectSimilarPublished(
-            values: [.url(url), .none],
+            values: [.url(standardResolution: url), .none],
             from: source.imageSourcePublisher(),
             during: .seconds(1)
         ) {
