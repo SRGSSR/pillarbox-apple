@@ -18,7 +18,7 @@ private let kSession = URLSession(configuration: .default)
 public struct ImageSource: Equatable {
     enum Kind: Equatable {
         case none
-        case url(URL, constrainedNetworkUrl: URL)
+        case url(standardResolution: URL, lowResolution: URL)
         case image(UIImage)
     }
 
@@ -28,9 +28,14 @@ public struct ImageSource: Equatable {
     let kind: Kind
     private let trigger = Trigger()
 
-    /// URL.
-    public static func url(_ url: URL, constrainedNetworkUrl: URL? = nil) -> Self {
-        Self(kind: .url(url, constrainedNetworkUrl: constrainedNetworkUrl ?? url))
+    /// An image retrieved from a URL.
+    ///
+    /// - Parameters:
+    ///   - standardResolutionUrl: The URL where an image with standard resolution can be retrieved.
+    ///   - lowResolutionUrl: The URL where an image with low resolution can be retrieved when low-data mode has been
+    ///     enabled. If not specified the standard resolution URL is used instead.
+    public static func url(standardResolution standardResolutionUrl: URL, lowResolution lowResolutionUrl: URL? = nil) -> Self {
+        Self(kind: .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl ?? standardResolutionUrl))
     }
 
     /// Image.
@@ -58,15 +63,18 @@ extension ImageSource {
 
     func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
         switch kind {
-        case let .url(url, constrainedNetworkUrl: constrainedNetworkUrl):
-            return imageSourcePublisher(for: url, constrainedNetworkUrl: constrainedNetworkUrl)
+        case let .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl):
+            return imageSourcePublisher(forStandardResolutionUrl: standardResolutionUrl, lowResolutionUrl: lowResolutionUrl)
         default:
             return Just(self).eraseToAnyPublisher()
         }
     }
 
-    private func imageSourcePublisher(for url: URL, constrainedNetworkUrl: URL) -> AnyPublisher<ImageSource, Never> {
-        var request = URLRequest(url: url)
+    private func imageSourcePublisher(
+        forStandardResolutionUrl standardResolutionUrl: URL,
+        lowResolutionUrl: URL
+    ) -> AnyPublisher<ImageSource, Never> {
+        var request = URLRequest(url: standardResolutionUrl)
         request.allowsConstrainedNetworkAccess = false
         return kSession.dataTaskPublisher(for: request)
             .wait(untilOutputFrom: trigger.signal(activatedBy: TriggerId.load))
@@ -74,7 +82,7 @@ extension ImageSource {
                 guard error.networkUnavailableReason == .constrained else {
                     throw error
                 }
-                return kSession.dataTaskPublisher(for: constrainedNetworkUrl).eraseToAnyPublisher()
+                return kSession.dataTaskPublisher(for: lowResolutionUrl).eraseToAnyPublisher()
             }
             .map { data, _ in
                 guard let image = UIImage(data: data) else { return .none }

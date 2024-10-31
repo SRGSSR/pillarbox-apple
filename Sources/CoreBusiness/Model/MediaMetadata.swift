@@ -44,7 +44,7 @@ public struct MediaMetadata {
             .init(
                 identifier: chapter.urn,
                 title: chapter.title,
-                imageSource: .url(imageUrl(for: chapter)),
+                imageSource: .url(standardResolution: imageUrl(for: chapter)),
                 timeRange: chapter.timeRange
             )
         }
@@ -96,7 +96,7 @@ extension MediaMetadata: AssetMetadata {
             title: title,
             subtitle: subtitle,
             description: description,
-            imageSource: .url(imageUrl(for: mainChapter)),
+            imageSource: .url(standardResolution: imageUrl(for: mainChapter)),
             viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
