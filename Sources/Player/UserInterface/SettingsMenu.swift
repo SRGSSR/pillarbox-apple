@@ -61,7 +61,7 @@ private struct MediaSelectionMenuContent: View {
 
 @available(iOS 16.0, tvOS 17.0, *)
 private struct SettingsMenuContent: View {
-    var player: Player
+    let player: Player
 
     var body: some View {
         playbackSpeedMenu()

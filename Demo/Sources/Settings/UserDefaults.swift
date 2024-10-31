@@ -17,6 +17,7 @@ extension UserDefaults {
         case smartNavigationEnabled
         case seekBehaviorSetting
         case serverSetting
+        case qualitySetting
     }
 
     @objc dynamic var presenterModeEnabled: Bool {
@@ -44,12 +45,17 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: DemoSettingKey.serverSetting.rawValue)) ?? .ilProduction
     }
 
+    @objc dynamic var qualitySetting: QualitySetting {
+        .init(rawValue: integer(forKey: DemoSettingKey.qualitySetting.rawValue)) ?? .high
+    }
+
     private static func registerDefaultDemoSettings() {
         UserDefaults.standard.register(defaults: [
             DemoSettingKey.presenterModeEnabled.rawValue: false,
             DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.immediate.rawValue,
             DemoSettingKey.smartNavigationEnabled.rawValue: true,
-            DemoSettingKey.serverSetting.rawValue: ServerSetting.ilProduction.rawValue
+            DemoSettingKey.serverSetting.rawValue: ServerSetting.ilProduction.rawValue,
+            DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue
         ])
     }
 }

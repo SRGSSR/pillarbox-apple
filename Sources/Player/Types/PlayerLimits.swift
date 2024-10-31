@@ -12,12 +12,12 @@ public struct PlayerLimits {
     /// No limits.
     public static let none = Self()
 
-    /// A limit of network bandwidth consumption observed by the player on all networks.
+    /// A limit of network bandwidth consumption, in bits per second, observed by the player on all networks.
     ///
     /// Disabled when set to zero.
     public let preferredPeakBitRate: Double
 
-    /// A limit of network bandwidth consumption observed by the player when connecting over
+    /// A limit of network bandwidth consumption, in bits per second, observed by the player when connecting over
     /// [expensive networks](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/3235752-allowsexpensivenetworkaccess).
     ///
     /// Disabled when set to zero.
