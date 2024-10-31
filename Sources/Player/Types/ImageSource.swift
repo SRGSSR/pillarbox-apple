@@ -82,7 +82,7 @@ extension ImageSource {
                 guard error.networkUnavailableReason == .constrained else {
                     throw error
                 }
-                return kSession.dataTaskPublisher(for: lowResolutionUrl).eraseToAnyPublisher()
+                return kSession.dataTaskPublisher(for: lowResolutionUrl)
             }
             .map { data, _ in
                 guard let image = UIImage(data: data) else { return .none }
