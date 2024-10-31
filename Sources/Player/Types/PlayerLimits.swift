@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreGraphics
 
 /// A set of limits applied by the player during playback.
@@ -44,5 +45,18 @@ public struct PlayerLimits: Equatable {
         self.preferredPeakBitRateForExpensiveNetworks = preferredPeakBitRateForExpensiveNetworks
         self.preferredMaximumResolution = preferredMaximumResolution
         self.preferredMaximumResolutionForExpensiveNetworks = preferredMaximumResolutionForExpensiveNetworks
+    }
+
+    func apply(to playerItem: AVPlayerItem) {
+        playerItem.preferredPeakBitRate = preferredPeakBitRate
+        playerItem.preferredPeakBitRateForExpensiveNetworks = preferredPeakBitRateForExpensiveNetworks
+        playerItem.preferredMaximumResolution = preferredMaximumResolution
+        playerItem.preferredMaximumResolutionForExpensiveNetworks = preferredMaximumResolutionForExpensiveNetworks
+    }
+
+    func apply(to playerItems: [AVPlayerItem]) {
+        playerItems.forEach { playerItem in
+            apply(to: playerItem)
+        }
     }
 }

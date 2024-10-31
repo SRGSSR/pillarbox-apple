@@ -49,12 +49,7 @@ public final class Player: ObservableObject, Equatable {
     /// Limits applied by the player.
     @Published public var limits: PlayerLimits = .none {
         didSet {
-            queuePlayer.items().forEach { item in
-                item.preferredPeakBitRate = limits.preferredPeakBitRate
-                item.preferredPeakBitRateForExpensiveNetworks = limits.preferredPeakBitRateForExpensiveNetworks
-                item.preferredMaximumResolution = limits.preferredMaximumResolution
-                item.preferredMaximumResolutionForExpensiveNetworks = limits.preferredMaximumResolutionForExpensiveNetworks
-            }
+            limits.apply(to: queuePlayer.items())
         }
     }
 
