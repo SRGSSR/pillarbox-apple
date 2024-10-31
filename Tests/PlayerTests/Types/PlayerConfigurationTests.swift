@@ -9,7 +9,7 @@
 import Nimble
 
 final class PlayerConfigurationTests: TestCase {
-    func testPlayerConfigurationDefaultValues() {
+    func testDefaultValues() {
         let configuration = PlayerConfiguration()
         expect(configuration.allowsExternalPlayback).to(beTrue())
         expect(configuration.usesExternalPlaybackWhileMirroring).to(beFalse())
@@ -21,7 +21,7 @@ final class PlayerConfigurationTests: TestCase {
         expect(configuration.allowsConstrainedNetworkAccess).to(beTrue())
     }
 
-    func testPlayerConfigurationCustomValues() {
+    func testCustomValues() {
         let configuration = PlayerConfiguration(
             allowsExternalPlayback: false,
             usesExternalPlaybackWhileMirroring: true,
