@@ -17,7 +17,7 @@ enum Resource {
 
     private static let logger = Logger(category: "Resource")
 
-    func playerItem() -> AVPlayerItem {
+    func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
         switch self {
         case let .simple(url: url):
             return AVPlayerItem(url: url)

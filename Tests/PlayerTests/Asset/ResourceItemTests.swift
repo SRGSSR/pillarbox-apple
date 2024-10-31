@@ -12,7 +12,7 @@ import PillarboxStreams
 
 final class ResourceItemTests: TestCase {
     func testNativePlayerItem() {
-        let item = Resource.simple(url: Stream.onDemand.url).playerItem()
+        let item = Resource.simple(url: Stream.onDemand.url).playerItem(configuration: .default)
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true],
@@ -21,7 +21,7 @@ final class ResourceItemTests: TestCase {
     }
 
     func testLoadingPlayerItem() {
-        let item = Resource.loading.playerItem()
+        let item = Resource.loading.playerItem(configuration: .default)
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false],
@@ -30,7 +30,7 @@ final class ResourceItemTests: TestCase {
     }
 
     func testFailingPlayerItem() {
-        let item = Resource.failing(error: StructError()).playerItem()
+        let item = Resource.failing(error: StructError()).playerItem(configuration: .default)
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.unknown],

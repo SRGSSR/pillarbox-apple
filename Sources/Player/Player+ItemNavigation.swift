@@ -34,7 +34,8 @@ public extension Player {
                 after: index,
                 repeatMode: repeatMode,
                 length: configuration.preloadedItems,
-                reload: true
+                reload: true,
+                configuration: configuration
             )
         )
     }
@@ -65,7 +66,8 @@ public extension Player {
                 after: index,
                 repeatMode: repeatMode,
                 length: configuration.preloadedItems,
-                reload: true
+                reload: true,
+                configuration: configuration
             )
         )
     }
@@ -88,7 +90,8 @@ extension Player {
                     after: index,
                     repeatMode: repeatMode,
                     length: configuration.preloadedItems,
-                    reload: true
+                    reload: true,
+                    configuration: configuration
                 )
                 queuePlayer.replaceItems(with: playerItems)
             }
@@ -108,7 +111,8 @@ extension Player {
             replacing: contents,
             currentItem: queuePlayer.currentItem,
             repeatMode: repeatMode,
-            length: configuration.preloadedItems
+            length: configuration.preloadedItems,
+            configuration: configuration
         )
         queuePlayer.replaceItems(with: items)
     }

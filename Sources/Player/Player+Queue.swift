@@ -40,7 +40,8 @@ extension Player {
                     replacing: previous.elements.map(\.content),
                     currentItem: buffer.item,
                     repeatMode: repeatMode,
-                    length: buffer.length
+                    length: buffer.length,
+                    configuration: configuration
                 )
             }
             .removeDuplicates()

@@ -29,7 +29,8 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             replacing: previousContents,
             currentItem: nil,
             repeatMode: .all,
-            length: .max
+            length: .max,
+            configuration: .default
         )
         expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("C"), UUID("A")]))
     }
@@ -49,13 +50,14 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             .test(id: "B"),
             .test(id: "C")
         ]
-        let currentItem = currentItemContent.playerItem()
+        let currentItem = currentItemContent.playerItem(configuration: .default)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
             currentItem: currentItem,
             repeatMode: .all,
-            length: .max
+            length: .max,
+            configuration: .default
         )
         expect(items.map(\.id)).to(equalDiff([UUID("3"), UUID("B"), UUID("C"), UUID("A")]))
         expect(items.first).to(equal(currentItem))
@@ -76,13 +78,14 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             .test(id: "C"),
             currentItemContent
         ]
-        let currentItem = currentItemContent.playerItem()
+        let currentItem = currentItemContent.playerItem(configuration: .default)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
             currentItem: currentItem,
             repeatMode: .all,
-            length: .max
+            length: .max,
+            configuration: .default
         )
         expect(items.map(\.id)).to(equalDiff([UUID("3"), UUID("A")]))
         expect(items.first).to(equal(currentItem))
@@ -97,13 +100,14 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             .test(id: "A"),
             .test(id: "B")
         ]
-        let unknownItem = AssetContent.test(id: "1").playerItem()
+        let unknownItem = AssetContent.test(id: "1").playerItem(configuration: .default)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
             currentItem: unknownItem,
             repeatMode: .all,
-            length: .max
+            length: .max,
+            configuration: .default
         )
         expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("A")]))
     }
@@ -121,13 +125,14 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             otherContent,
             .test(id: "C")
         ]
-        let currentItem = currentItemContent.playerItem()
+        let currentItem = currentItemContent.playerItem(configuration: .default)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
             currentItem: currentItem,
             repeatMode: .all,
-            length: .max
+            length: .max,
+            configuration: .default
         )
         expect(items.map(\.id)).to(equalDiff([UUID("2"), UUID("C"), UUID("3")]))
     }
@@ -144,13 +149,14 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             .test(id: "2"),
             .test(id: "3")
         ]
-        let currentItem = currentItemContent.playerItem()
+        let currentItem = currentItemContent.playerItem(configuration: .default)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
             currentItem: currentItem,
             repeatMode: .all,
-            length: .max
+            length: .max,
+            configuration: .default
         )
         expect(items.map(\.id)).to(equalDiff([UUID("1"), UUID("2"), UUID("3"), UUID("1")]))
         expect(items.first).to(equal(currentItem))
@@ -168,7 +174,8 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             replacing: [],
             currentItem: nil,
             repeatMode: .all,
-            length: 2
+            length: 2,
+            configuration: .default
         )
         expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
     }

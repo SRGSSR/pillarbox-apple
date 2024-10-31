@@ -14,14 +14,14 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url, configuration: .init(preferredForwardBufferDuration: 4))
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
-        expect(item.content.playerItem().preferredForwardBufferDuration).to(equal(4))
+        expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(4))
     }
 
     func testSimpleItemWithoutConfiguration() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
-        expect(item.content.playerItem().preferredForwardBufferDuration).to(equal(0))
+        expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(0))
     }
 
     func testCustomItem() {
@@ -29,7 +29,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.custom(url: Stream.onDemand.url, delegate: delegate, configuration: .init(preferredForwardBufferDuration: 4))
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.content.playerItem().preferredForwardBufferDuration).to(equal(4))
+        expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(4))
     }
 
     func testCustomItemWithoutConfiguration() {
@@ -37,7 +37,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.custom(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.content.playerItem().preferredForwardBufferDuration).to(equal(0))
+        expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(0))
     }
 
     func testEncryptedItem() {
@@ -45,7 +45,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.encrypted(url: Stream.onDemand.url, delegate: delegate, configuration: .init(preferredForwardBufferDuration: 4))
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.content.playerItem().preferredForwardBufferDuration).to(equal(4))
+        expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(4))
     }
 
     func testEncryptedItemWithoutConfiguration() {
@@ -53,6 +53,6 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.encrypted(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.content.playerItem().preferredForwardBufferDuration).to(equal(0))
+        expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(0))
     }
 }

@@ -37,11 +37,12 @@ extension AVPlayerItem {
         replacing previousContents: [AssetContent],
         currentItem: AVPlayerItem?,
         repeatMode: RepeatMode,
-        length: Int
+        length: Int,
+        configuration: PlayerConfiguration
     ) -> [AVPlayerItem] {
         let sources = itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem)
         let updatedSources = updatedItemSources(sources, repeatMode: repeatMode, firstContent: currentContents.first)
-        return playerItems(from: updatedSources, length: length, reload: false)
+        return playerItems(from: updatedSources, length: length, reload: false, configuration: configuration)
     }
 
     private static func updatedItemSources(_ sources: [ItemSource], repeatMode: RepeatMode, firstContent: AssetContent?) -> [ItemSource] {
@@ -84,16 +85,28 @@ extension AVPlayerItem {
         }
     }
 
-    static func playerItems(from items: [PlayerItem], after index: Int, repeatMode: RepeatMode, length: Int, reload: Bool) -> [AVPlayerItem] {
+    static func playerItems(
+        from items: [PlayerItem],
+        after index: Int,
+        repeatMode: RepeatMode,
+        length: Int,
+        reload: Bool,
+        configuration: PlayerConfiguration
+    ) -> [AVPlayerItem] {
         let afterContents = items.suffix(from: index).map(\.content)
         let sources = updatedItemSources(newItemSources(from: afterContents), repeatMode: repeatMode, firstContent: items.first?.content)
-        return playerItems(from: sources, length: length, reload: reload)
+        return playerItems(from: sources, length: length, reload: reload, configuration: configuration)
     }
 
-    private static func playerItems(from sources: [ItemSource], length: Int, reload: Bool) -> [AVPlayerItem] {
+    private static func playerItems(
+        from sources: [ItemSource],
+        length: Int,
+        reload: Bool,
+        configuration: PlayerConfiguration
+    ) -> [AVPlayerItem] {
         sources
             .prefix(length)
-            .map { $0.playerItem(reload: reload) }
+            .map { $0.playerItem(reload: reload, configuration: configuration) }
     }
 
     private static func newItemSources(from contents: [AssetContent]) -> [ItemSource] {
