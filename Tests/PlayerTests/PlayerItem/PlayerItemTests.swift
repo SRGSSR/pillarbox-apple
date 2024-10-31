@@ -10,49 +10,114 @@ import Nimble
 import PillarboxStreams
 
 final class PlayerItemTests: TestCase {
+    private static let playerConfiguration = PlayerConfiguration(
+        preferredPeakBitRate: 100,
+        preferredPeakBitRateForExpensiveNetworks: 200,
+        preferredMaximumResolution: .init(width: 100, height: 200),
+        preferredMaximumResolutionForExpensiveNetworks: .init(width: 300, height: 400)
+    )
+
     func testSimpleItem() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        PlayerItem.load(for: item.id)
+        expect(item.content.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
+        let playerItem = item.content.playerItem(configuration: .default)
+        expect(playerItem.preferredForwardBufferDuration).to(equal(0))
+        expect(playerItem.preferredPeakBitRate).to(equal(0))
+        expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(0))
+        expect(playerItem.preferredMaximumResolution).to(equal(.zero))
+        expect(playerItem.preferredMaximumResolutionForExpensiveNetworks).to(equal(.zero))
+    }
+
+    func testSimpleItemWithConfiguration() {
         let item = PlayerItem.simple(url: Stream.onDemand.url, configuration: .init(preferredForwardBufferDuration: 4))
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
         expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(4))
     }
 
-    func testSimpleItemWithoutConfiguration() {
+    func testSimpleItemWithNonStandardPlayerConfiguration() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
-        expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(0))
+        let playerItem = item.content.playerItem(configuration: Self.playerConfiguration)
+        expect(playerItem.preferredPeakBitRate).to(equal(100))
+        expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(200))
+        expect(playerItem.preferredMaximumResolution).to(equal(.init(width: 100, height: 200)))
+        expect(playerItem.preferredMaximumResolutionForExpensiveNetworks).to(equal(.init(width: 300, height: 400)))
     }
 
     func testCustomItem() {
         let delegate = ResourceLoaderDelegateMock()
-        let item = PlayerItem.custom(url: Stream.onDemand.url, delegate: delegate, configuration: .init(preferredForwardBufferDuration: 4))
+        let item = PlayerItem.custom(url: Stream.onDemand.url, delegate: delegate)
+        PlayerItem.load(for: item.id)
+        expect(item.content.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
+        let playerItem = item.content.playerItem(configuration: .default)
+        expect(playerItem.preferredForwardBufferDuration).to(equal(0))
+        expect(playerItem.preferredPeakBitRate).to(equal(0))
+        expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(0))
+        expect(playerItem.preferredMaximumResolution).to(equal(.zero))
+        expect(playerItem.preferredMaximumResolutionForExpensiveNetworks).to(equal(.zero))
+    }
+
+    func testCustomItemWithConfiguration() {
+        let delegate = ResourceLoaderDelegateMock()
+        let item = PlayerItem.custom(
+            url: Stream.onDemand.url,
+            delegate: delegate,
+            configuration: .init(preferredForwardBufferDuration: 4)
+        )
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
         expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(4))
     }
 
-    func testCustomItemWithoutConfiguration() {
+    func testCustomItemWithNonStandardPlayerConfiguration() {
         let delegate = ResourceLoaderDelegateMock()
         let item = PlayerItem.custom(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(0))
+        let playerItem = item.content.playerItem(configuration: Self.playerConfiguration)
+        expect(playerItem.preferredPeakBitRate).to(equal(100))
+        expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(200))
+        expect(playerItem.preferredMaximumResolution).to(equal(.init(width: 100, height: 200)))
+        expect(playerItem.preferredMaximumResolutionForExpensiveNetworks).to(equal(.init(width: 300, height: 400)))
     }
 
     func testEncryptedItem() {
         let delegate = ContentKeySessionDelegateMock()
-        let item = PlayerItem.encrypted(url: Stream.onDemand.url, delegate: delegate, configuration: .init(preferredForwardBufferDuration: 4))
+        let item = PlayerItem.encrypted(url: Stream.onDemand.url, delegate: delegate)
+        PlayerItem.load(for: item.id)
+        expect(item.content.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
+        let playerItem = item.content.playerItem(configuration: .default)
+        expect(playerItem.preferredForwardBufferDuration).to(equal(0))
+        expect(playerItem.preferredPeakBitRate).to(equal(0))
+        expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(0))
+        expect(playerItem.preferredMaximumResolution).to(equal(.zero))
+        expect(playerItem.preferredMaximumResolutionForExpensiveNetworks).to(equal(.zero))
+    }
+
+    func testEncryptedItemWithConfiguration() {
+        let delegate = ContentKeySessionDelegateMock()
+        let item = PlayerItem.encrypted(
+            url: Stream.onDemand.url,
+            delegate: delegate,
+            configuration: .init(preferredForwardBufferDuration: 4)
+        )
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
         expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(4))
     }
 
-    func testEncryptedItemWithoutConfiguration() {
+    func testEncryptedItemWithNonStandardPlayerConfiguration() {
         let delegate = ContentKeySessionDelegateMock()
         let item = PlayerItem.encrypted(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.content.playerItem(configuration: .default).preferredForwardBufferDuration).to(equal(0))
+        let playerItem = item.content.playerItem(configuration: Self.playerConfiguration)
+        expect(playerItem.preferredPeakBitRate).to(equal(100))
+        expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(200))
+        expect(playerItem.preferredMaximumResolution).to(equal(.init(width: 100, height: 200)))
+        expect(playerItem.preferredMaximumResolutionForExpensiveNetworks).to(equal(.init(width: 300, height: 400)))
     }
 }
