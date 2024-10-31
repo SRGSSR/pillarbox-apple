@@ -18,7 +18,7 @@ private let kSession = URLSession(configuration: .default)
 public struct ImageSource: Equatable {
     enum Kind: Equatable {
         case none
-        case url(URL)
+        case url(URL, constrainedNetworkUrl: URL)
         case image(UIImage)
     }
 
@@ -29,8 +29,8 @@ public struct ImageSource: Equatable {
     private let trigger = Trigger()
 
     /// URL.
-    public static func url(_ url: URL) -> Self {
-        Self(kind: .url(url))
+    public static func url(_ url: URL, constrainedNetworkUrl: URL? = nil) -> Self {
+        Self(kind: .url(url, constrainedNetworkUrl: constrainedNetworkUrl ?? url))
     }
 
     /// Image.
@@ -58,16 +58,24 @@ extension ImageSource {
 
     func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
         switch kind {
-        case let .url(url):
-            return imageSourcePublisher(for: url)
+        case let .url(url, constrainedNetworkUrl: constrainedNetworkUrl):
+            return imageSourcePublisher(for: url, constrainedNetworkUrl: constrainedNetworkUrl)
         default:
             return Just(self).eraseToAnyPublisher()
         }
     }
 
-    private func imageSourcePublisher(for url: URL) -> AnyPublisher<ImageSource, Never> {
-        kSession.dataTaskPublisher(for: url)
+    private func imageSourcePublisher(for url: URL, constrainedNetworkUrl: URL) -> AnyPublisher<ImageSource, Never> {
+        var request = URLRequest(url: url)
+        request.allowsConstrainedNetworkAccess = false
+        return kSession.dataTaskPublisher(for: request)
             .wait(untilOutputFrom: trigger.signal(activatedBy: TriggerId.load))
+            .tryCatch { error in
+                guard error.networkUnavailableReason == .constrained else {
+                    throw error
+                }
+                return kSession.dataTaskPublisher(for: constrainedNetworkUrl).eraseToAnyPublisher()
+            }
             .map { data, _ in
                 guard let image = UIImage(data: data) else { return .none }
                 return .image(image)
