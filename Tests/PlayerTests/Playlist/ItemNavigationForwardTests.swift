@@ -48,7 +48,7 @@ final class ItemNavigationForwardTests: TestCase {
         player.advanceToNextItem()
 
         let items = player.queuePlayer.items()
-        expect(items.count).to(equal(player.configuration.preloadedItems))
+        expect(items).to(haveCount(player.configuration.preloadedItems))
     }
 
     func testWrapAtBackWithRepeatAll() {

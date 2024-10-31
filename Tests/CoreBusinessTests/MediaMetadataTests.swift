@@ -54,7 +54,7 @@ final class MediaMetadataTests: XCTestCase {
 
     func testChapters() throws {
         let metadata = try Self.metadata(.mixed)
-        expect(metadata.chapters.count).to(equal(10))
+        expect(metadata.chapters).to(haveCount(10))
     }
 
     func testAudioChapterRemoval() throws {

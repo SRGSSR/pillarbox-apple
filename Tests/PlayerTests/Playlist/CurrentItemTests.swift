@@ -153,7 +153,7 @@ final class CurrentItemTests: TestCase {
         player.currentItem = item3
 
         let items = player.queuePlayer.items()
-        expect(items.count).to(equal(player.configuration.preloadedItems))
+        expect(items).to(haveCount(player.configuration.preloadedItems))
     }
 
     func testSetCurrentItemWithUnknownItem() {

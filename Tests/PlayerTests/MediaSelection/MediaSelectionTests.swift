@@ -69,7 +69,7 @@ final class MediaSelectionTests: TestCase {
     func testLegibleOptionsMustNotContainForcedSubtitles() {
         let player = Player(item: .simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url))
         expect(player.mediaSelectionCharacteristics).toEventually(equal([.audible, .legible]))
-        expect(player.mediaSelectionOptions(for: .legible).count).to(equal(6))
+        expect(player.mediaSelectionOptions(for: .legible)).to(haveCount(6))
     }
 
     func testInitialAudibleOption() {
