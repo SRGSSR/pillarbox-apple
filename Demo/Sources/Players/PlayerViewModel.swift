@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Foundation
 import PillarboxPlayer
 
 final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
@@ -23,9 +24,20 @@ final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var layout: PlaybackView.Layout = .minimized
 
     let player = Player(configuration: .standard)
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        configureLimitsPublisher()
+    }
 
     func play() {
         player.becomeActive()
         player.play()
+    }
+
+    private func configureLimitsPublisher() {
+        UserDefaults.standard.limitsPublisher()
+            .assign(to: \.limits, on: player)
+            .store(in: &cancellables)
     }
 }

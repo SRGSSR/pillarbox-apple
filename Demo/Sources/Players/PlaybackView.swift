@@ -867,9 +867,6 @@ struct PlaybackView: View {
     @Binding private var layout: Layout
     @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
-    @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
-    private var qualitySetting: QualitySetting = .high
-
     private var supportsPictureInPicture = false
 
     var body: some View {
@@ -888,12 +885,6 @@ struct PlaybackView: View {
                         CloseButton(topBarStyle: true)
                     }
             }
-        }
-        .onChange(of: qualitySetting) { newValue in
-            player.limits = newValue.limits
-        }
-        .onAppear {
-            player.limits = qualitySetting.limits
         }
         .background(.black)
         .bind(progressTracker, to: player)

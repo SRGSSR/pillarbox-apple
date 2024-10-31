@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Foundation
 import PillarboxPlayer
 
 enum PlayerPosition {
@@ -13,6 +14,8 @@ enum PlayerPosition {
 }
 
 final class MultiViewModel: ObservableObject {
+    private var cancellables = Set<AnyCancellable>()
+
     @Published var media1: Media? {
         didSet {
             guard media1 != oldValue else { return }
@@ -80,6 +83,7 @@ final class MultiViewModel: ObservableObject {
 
     init() {
         Self.make(activePlayer: player1, inactivePlayer: player2)
+        configureLimitsPublisher()
     }
 
     private static func update(player: Player, with media: Media?) {
@@ -107,6 +111,15 @@ final class MultiViewModel: ObservableObject {
 
     func swap() {
         isSwapped.toggle()
+    }
+
+    private func configureLimitsPublisher() {
+        UserDefaults.standard.limitsPublisher()
+            .assign(to: \.limits, on: player1)
+            .store(in: &cancellables)
+        UserDefaults.standard.limitsPublisher()
+            .assign(to: \.limits, on: player2)
+            .store(in: &cancellables)
     }
 }
 

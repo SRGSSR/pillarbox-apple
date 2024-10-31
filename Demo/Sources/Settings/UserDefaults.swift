@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import Foundation
 import PillarboxPlayer
 
@@ -57,6 +58,12 @@ extension UserDefaults {
             DemoSettingKey.serverSetting.rawValue: ServerSetting.ilProduction.rawValue,
             DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue
         ])
+    }
+
+    func limitsPublisher() -> AnyPublisher<PlayerLimits, Never> {
+        publisher(for: \.qualitySetting)
+            .map(\.limits)
+            .eraseToAnyPublisher()
     }
 }
 
