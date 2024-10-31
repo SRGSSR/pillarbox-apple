@@ -46,8 +46,8 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// Limits applied by the player.
-    @Published public var limits: PlayerLimits = .none {
+    /// The limits applied by the player.
+    public var limits: PlayerLimits = .none {
         didSet {
             limits.apply(to: queuePlayer.items())
         }
