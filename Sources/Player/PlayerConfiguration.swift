@@ -36,12 +36,12 @@ public struct PlayerConfiguration {
     /// The number of items to preload.
     let preloadedItems = 2
 
-    /// A Boolean value that indicates whether the player is allowed to play content on networks enabled for Low Data
-    /// Mode.
+    /// A Boolean value indicating whether the player is permitted to play content on networks with Low Data Mode
+    /// enabled.
     ///
-    /// A player which cannot is not allowed access to constrained networks will report the network as being
-    /// unreachable. You should only enable this option on players which play non-essential content, e.g. animated
-    /// background videos.
+    /// When this property is set to `false`, playback fails with a network availability error on constrained networks.
+    /// This option is therefore mostly useful for players associated with non-essential content, such as animated
+    /// background videos used purely for visual enhancement.
     public let allowsConstrainedNetworkAccess: Bool
 
     /// Creates a player configuration.

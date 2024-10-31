@@ -18,19 +18,18 @@ enum Resource {
     private static let logger = Logger(category: "Resource")
 
     private func asset(for url: URL, with configuration: PlayerConfiguration) -> AVURLAsset {
-        .init(
-            url: url,
-            options: [AVURLAssetAllowsConstrainedNetworkAccessKey: configuration.allowsConstrainedNetworkAccess]
-        )
+        .init(url: url, options: [
+            AVURLAssetAllowsConstrainedNetworkAccessKey: configuration.allowsConstrainedNetworkAccess
+        ])
     }
 
     func playerItem(configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
-        let item = rawPlayerItem(configuration: configuration)
+        let item = unlimitedPlayerItem(configuration: configuration)
         limits.apply(to: item)
         return item
     }
 
-    private func rawPlayerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
+    private func unlimitedPlayerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
         switch self {
         case let .simple(url: url):
             return AVPlayerItem(asset: asset(for: url, with: configuration))

@@ -31,9 +31,9 @@ public struct ImageSource: Equatable {
     /// An image retrieved from a URL.
     ///
     /// - Parameters:
-    ///   - standardResolutionUrl: The URL where an image with standard resolution can be retrieved.
-    ///   - lowResolutionUrl: The URL where an image with low resolution can be retrieved when Low Data Mode has been
-    ///     enabled. If not specified the standard resolution URL is used instead.
+    ///   - standardResolutionUrl: The URL where a variant with standard resolution can be retrieved.
+    ///   - lowResolutionUrl: The URL where a variant with low resolution can be retrieved when Low Data Mode has been
+    ///     enabled. If omitted the standard resolution URL is used.
     public static func url(standardResolution standardResolutionUrl: URL, lowResolution lowResolutionUrl: URL? = nil) -> Self {
         Self(kind: .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl ?? standardResolutionUrl))
     }
