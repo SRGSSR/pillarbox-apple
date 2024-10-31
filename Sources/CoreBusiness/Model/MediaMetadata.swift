@@ -44,7 +44,10 @@ public struct MediaMetadata {
             .init(
                 identifier: chapter.urn,
                 title: chapter.title,
-                imageSource: .url(standardResolution: imageUrl(for: chapter)),
+                imageSource: .url(
+                    standardResolution: standardResolutionImageUrl(for: chapter),
+                    lowResolution: lowResolutionImageUrl(for: chapter)
+                ),
                 timeRange: chapter.timeRange
             )
         }
@@ -96,7 +99,10 @@ extension MediaMetadata: AssetMetadata {
             title: title,
             subtitle: subtitle,
             description: description,
-            imageSource: .url(standardResolution: imageUrl(for: mainChapter)),
+            imageSource: .url(
+                standardResolution: standardResolutionImageUrl(for: mainChapter),
+                lowResolution: lowResolutionImageUrl(for: mainChapter)
+            ),
             viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
@@ -179,7 +185,11 @@ extension MediaMetadata: AssetMetadata {
         }
     }
 
-    private func imageUrl(for chapter: MediaComposition.Chapter) -> URL {
+    private func standardResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
         dataProvider.resizedImageUrl(chapter.imageUrl, width: .width720)
+    }
+
+    private func lowResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
+        dataProvider.resizedImageUrl(chapter.imageUrl, width: .width320)
     }
 }
