@@ -64,4 +64,16 @@ final class PlayerLimitsTests: TestCase {
             expect(item.preferredMaximumResolutionForExpensiveNetworks).to(equal(.init(width: 300, height: 400)))
         }
     }
+
+    func testLoadedItem() {
+        let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1))
+        player.limits = Self.limits
+        expect(player.playbackState).toEventually(equal(.paused))
+        player.queuePlayer.items().forEach { item in
+            expect(item.preferredPeakBitRate).to(equal(100))
+            expect(item.preferredPeakBitRateForExpensiveNetworks).to(equal(200))
+            expect(item.preferredMaximumResolution).to(equal(.init(width: 100, height: 200)))
+            expect(item.preferredMaximumResolutionForExpensiveNetworks).to(equal(.init(width: 300, height: 400)))
+        }
+    }
 }
