@@ -11,6 +11,7 @@ import PillarboxPlayer
 
 final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     let player = Player(configuration: .standard)
+    private var cancellables = Set<AnyCancellable>()
 
     @Published var layout: PlaybackView.Layout = .minimized
 
@@ -42,6 +43,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     init() {
         configureCurrentMediaPublisher()
+        configureLimitsPublisher()
     }
 
     private static func updated(
@@ -91,6 +93,12 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
                 return media(for: item)
             }
             .assign(to: &$currentMedia)
+    }
+
+    private func configureLimitsPublisher() {
+        UserDefaults.standard.limitsPublisher()
+            .assign(to: \.limits, on: player)
+            .store(in: &cancellables)
     }
 
     private func media(for item: PlayerItem) -> Media? {

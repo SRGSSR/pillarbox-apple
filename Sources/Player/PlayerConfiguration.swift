@@ -36,6 +36,14 @@ public struct PlayerConfiguration {
     /// The number of items to preload.
     let preloadedItems = 2
 
+    /// A Boolean value indicating whether the player is permitted to play content on networks with Low Data Mode
+    /// enabled.
+    ///
+    /// When this property is set to `false`, playback fails with a network availability error on constrained networks.
+    /// This option is therefore mostly useful for players associated with non-essential content, such as animated
+    /// background videos used purely for visual enhancement.
+    public let allowsConstrainedNetworkAccess: Bool
+
     /// Creates a player configuration.
     public init(
         allowsExternalPlayback: Bool = true,
@@ -43,7 +51,8 @@ public struct PlayerConfiguration {
         preventsDisplaySleepDuringVideoPlayback: Bool = true,
         navigationMode: NavigationMode = .smart(interval: 3),
         backwardSkipInterval: TimeInterval = 10,
-        forwardSkipInterval: TimeInterval = 10
+        forwardSkipInterval: TimeInterval = 10,
+        allowsConstrainedNetworkAccess: Bool = true
     ) {
         assert(backwardSkipInterval > 0)
         assert(forwardSkipInterval > 0)
@@ -53,5 +62,6 @@ public struct PlayerConfiguration {
         self.navigationMode = navigationMode
         self.backwardSkipInterval = backwardSkipInterval
         self.forwardSkipInterval = forwardSkipInterval
+        self.allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
     }
 }

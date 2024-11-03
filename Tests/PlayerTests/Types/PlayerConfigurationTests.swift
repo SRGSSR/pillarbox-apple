@@ -9,33 +9,34 @@
 import Nimble
 
 final class PlayerConfigurationTests: TestCase {
-    func testPlayerConfigurationDefaultValues() {
+    func testDefaultValues() {
         let configuration = PlayerConfiguration()
-        let player = Player(configuration: configuration)
-        expect(player.configuration.allowsExternalPlayback).to(beTrue())
-        expect(player.configuration.usesExternalPlaybackWhileMirroring).to(beFalse())
-        expect(player.configuration.preventsDisplaySleepDuringVideoPlayback).to(beTrue())
-        expect(player.configuration.navigationMode).to(equal(.smart(interval: 3)))
-        expect(player.configuration.backwardSkipInterval).to(equal(10))
-        expect(player.configuration.forwardSkipInterval).to(equal(10))
-        expect(player.configuration.preloadedItems).to(equal(2))
+        expect(configuration.allowsExternalPlayback).to(beTrue())
+        expect(configuration.usesExternalPlaybackWhileMirroring).to(beFalse())
+        expect(configuration.preventsDisplaySleepDuringVideoPlayback).to(beTrue())
+        expect(configuration.navigationMode).to(equal(.smart(interval: 3)))
+        expect(configuration.backwardSkipInterval).to(equal(10))
+        expect(configuration.forwardSkipInterval).to(equal(10))
+        expect(configuration.preloadedItems).to(equal(2))
+        expect(configuration.allowsConstrainedNetworkAccess).to(beTrue())
     }
 
-    func testPlayerConfigurationInit() {
+    func testCustomValues() {
         let configuration = PlayerConfiguration(
             allowsExternalPlayback: false,
             usesExternalPlaybackWhileMirroring: true,
             preventsDisplaySleepDuringVideoPlayback: false,
             navigationMode: .immediate,
             backwardSkipInterval: 42,
-            forwardSkipInterval: 47
+            forwardSkipInterval: 47,
+            allowsConstrainedNetworkAccess: false
         )
-        let player = Player(configuration: configuration)
-        expect(player.configuration.allowsExternalPlayback).to(beFalse())
-        expect(player.configuration.usesExternalPlaybackWhileMirroring).to(beTrue())
-        expect(player.configuration.preventsDisplaySleepDuringVideoPlayback).to(beFalse())
-        expect(player.configuration.navigationMode).to(equal(.immediate))
-        expect(player.configuration.backwardSkipInterval).to(equal(42))
-        expect(player.configuration.forwardSkipInterval).to(equal(47))
+        expect(configuration.allowsExternalPlayback).to(beFalse())
+        expect(configuration.usesExternalPlaybackWhileMirroring).to(beTrue())
+        expect(configuration.preventsDisplaySleepDuringVideoPlayback).to(beFalse())
+        expect(configuration.navigationMode).to(equal(.immediate))
+        expect(configuration.backwardSkipInterval).to(equal(42))
+        expect(configuration.forwardSkipInterval).to(equal(47))
+        expect(configuration.allowsConstrainedNetworkAccess).to(beFalse())
     }
 }

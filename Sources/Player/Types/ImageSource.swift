@@ -18,7 +18,7 @@ private let kSession = URLSession(configuration: .default)
 public struct ImageSource: Equatable {
     enum Kind: Equatable {
         case none
-        case url(URL)
+        case url(standardResolution: URL, lowResolution: URL)
         case image(UIImage)
     }
 
@@ -28,9 +28,14 @@ public struct ImageSource: Equatable {
     let kind: Kind
     private let trigger = Trigger()
 
-    /// URL.
-    public static func url(_ url: URL) -> Self {
-        Self(kind: .url(url))
+    /// An image retrieved from a URL.
+    ///
+    /// - Parameters:
+    ///   - standardResolutionUrl: The URL where a variant with standard resolution can be retrieved.
+    ///   - lowResolutionUrl: The URL where a variant with low resolution can be retrieved when Low Data Mode has been
+    ///     enabled. If omitted the standard resolution URL is used.
+    public static func url(standardResolution standardResolutionUrl: URL, lowResolution lowResolutionUrl: URL? = nil) -> Self {
+        Self(kind: .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl ?? standardResolutionUrl))
     }
 
     /// Image.
@@ -58,16 +63,27 @@ extension ImageSource {
 
     func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
         switch kind {
-        case let .url(url):
-            return imageSourcePublisher(for: url)
+        case let .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl):
+            return imageSourcePublisher(forStandardResolutionUrl: standardResolutionUrl, lowResolutionUrl: lowResolutionUrl)
         default:
             return Just(self).eraseToAnyPublisher()
         }
     }
 
-    private func imageSourcePublisher(for url: URL) -> AnyPublisher<ImageSource, Never> {
-        kSession.dataTaskPublisher(for: url)
+    private func imageSourcePublisher(
+        forStandardResolutionUrl standardResolutionUrl: URL,
+        lowResolutionUrl: URL
+    ) -> AnyPublisher<ImageSource, Never> {
+        var request = URLRequest(url: standardResolutionUrl)
+        request.allowsConstrainedNetworkAccess = false
+        return kSession.dataTaskPublisher(for: request)
             .wait(untilOutputFrom: trigger.signal(activatedBy: TriggerId.load))
+            .tryCatch { error in
+                guard error.networkUnavailableReason == .constrained else {
+                    throw error
+                }
+                return kSession.dataTaskPublisher(for: lowResolutionUrl)
+            }
             .map { data, _ in
                 guard let image = UIImage(data: data) else { return .none }
                 return .image(image)

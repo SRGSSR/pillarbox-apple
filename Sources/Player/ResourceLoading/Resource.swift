@@ -17,21 +17,33 @@ enum Resource {
 
     private static let logger = Logger(category: "Resource")
 
-    func playerItem() -> AVPlayerItem {
+    private func asset(for url: URL, with configuration: PlayerConfiguration) -> AVURLAsset {
+        .init(url: url, options: [
+            AVURLAssetAllowsConstrainedNetworkAccessKey: configuration.allowsConstrainedNetworkAccess
+        ])
+    }
+
+    func playerItem(configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
+        let item = unlimitedPlayerItem(configuration: configuration)
+        limits.apply(to: item)
+        return item
+    }
+
+    private func unlimitedPlayerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
         switch self {
         case let .simple(url: url):
-            return AVPlayerItem(url: url)
+            return AVPlayerItem(asset: asset(for: url, with: configuration))
         case let .custom(url: url, delegate: delegate):
             return ResourceLoadedPlayerItem(
-                url: url,
+                asset: asset(for: url, with: configuration),
                 resourceLoaderDelegate: delegate
             )
         case let .encrypted(url: url, delegate: delegate):
 #if targetEnvironment(simulator)
             Self.logger.error("FairPlay-encrypted assets cannot be played in the simulator")
-            return AVPlayerItem(url: url)
+            return AVPlayerItem(asset: asset(for: url, with: configuration))
 #else
-            let asset = AVURLAsset(url: url)
+            let asset = asset(for: url, with: configuration)
             kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
             kContentKeySession.addContentKeyRecipient(asset)
             kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)

@@ -5,9 +5,12 @@
 //
 
 import Combine
+import Foundation
 import PillarboxPlayer
 
 final class MultiPiPViewModel: ObservableObject, PictureInPicturePersistable {
+    private var cancellables = Set<AnyCancellable>()
+
     @Published var media1: Media? {
         didSet {
             guard media1 != oldValue else { return }
@@ -28,6 +31,10 @@ final class MultiPiPViewModel: ObservableObject, PictureInPicturePersistable {
     let player1 = Player(configuration: .externalPlaybackDisabled)
     let player2 = Player(configuration: .externalPlaybackDisabled)
 
+    init() {
+        configureLimitsPublisher()
+    }
+
     private static func update(player: Player, with media: Media?) {
         if let item = media?.item() {
             player.items = [item]
@@ -40,5 +47,14 @@ final class MultiPiPViewModel: ObservableObject, PictureInPicturePersistable {
     func play() {
         player1.play()
         player2.play()
+    }
+
+    private func configureLimitsPublisher() {
+        UserDefaults.standard.limitsPublisher()
+            .assign(to: \.limits, on: player1)
+            .store(in: &cancellables)
+        UserDefaults.standard.limitsPublisher()
+            .assign(to: \.limits, on: player2)
+            .store(in: &cancellables)
     }
 }

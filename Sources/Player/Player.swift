@@ -46,6 +46,13 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    /// The limits applied by the player.
+    public var limits: PlayerLimits = .none {
+        didSet {
+            limits.apply(to: queuePlayer.items())
+        }
+    }
+
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 

@@ -15,8 +15,17 @@ extension ImageSource: Similar {
         switch (lhs.kind, rhs.kind) {
         case (.none, .none):
             return true
-        case let (.url(lhsUrl), .url(rhsUrl)):
-            return lhsUrl == rhsUrl
+        case let (
+            .url(
+                standardResolution: lhsStandardResolutionUrl,
+                lowResolution: lhsLowResolutionUrl
+            ),
+            .url(
+                standardResolution: rhsStandardResolutionUrl,
+                lowResolution: rhsLowResolutionUrl
+            )
+        ):
+            return lhsStandardResolutionUrl == rhsStandardResolutionUrl && lhsLowResolutionUrl == rhsLowResolutionUrl
         case let (.image(lhsImage), .image(rhsImage)):
             return lhsImage.pngData() == rhsImage.pngData()
         default:

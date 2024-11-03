@@ -73,6 +73,9 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
+    @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
+    private var qualitySetting: QualitySetting = .high
+
     @AppStorage(UserDefaults.PlaybackHudSettingKey.enabled.rawValue, store: .playbackHud)
     private var playbackHudEnabled = false
 
@@ -162,6 +165,7 @@ struct SettingsView: View {
                 Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
             }
             seekBehaviorPicker()
+            qualityPicker()
         } header: {
              Text("Player")
                 .headerStyle()
@@ -171,8 +175,21 @@ struct SettingsView: View {
     @ViewBuilder
     private func seekBehaviorPicker() -> some View {
         Picker("Seek behavior", selection: $seekBehaviorSetting) {
-            Text("Immediate").tag(SeekBehaviorSetting.immediate)
-            Text("Deferred").tag(SeekBehaviorSetting.deferred)
+            ForEach(SeekBehaviorSetting.allCases, id: \.self) { setting in
+                Text(setting.name).tag(setting)
+            }
+        }
+#if os(tvOS)
+        .pickerStyle(.navigationLink)
+#endif
+    }
+
+    @ViewBuilder
+    private func qualityPicker() -> some View {
+        Picker("Quality", selection: $qualitySetting) {
+            ForEach(QualitySetting.allCases, id: \.self) { setting in
+                Text(setting.name).tag(setting)
+            }
         }
 #if os(tvOS)
         .pickerStyle(.navigationLink)

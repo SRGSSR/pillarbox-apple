@@ -7,7 +7,16 @@
 import Foundation
 
 @objc
-enum SeekBehaviorSetting: Int {
+enum SeekBehaviorSetting: Int, CaseIterable {
     case immediate
     case deferred
+
+    var name: String {
+        switch self {
+        case .immediate:
+            return "Immediate"
+        case .deferred:
+            return "Deferred"
+        }
+    }
 }

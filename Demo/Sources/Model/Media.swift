@@ -144,7 +144,7 @@ extension Media: AssetMetadata {
             return .image(image)
         }
         else if let imageUrl {
-            return .url(imageUrl)
+            return .url(standardResolution: imageUrl)
         }
         else {
             return .none

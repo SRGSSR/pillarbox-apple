@@ -445,6 +445,7 @@ private struct SettingsMenu: View {
     var body: some View {
         Menu {
             player.standardSettingMenu()
+            QualityMenu(player: player)
             metricsMenu()
         } label: {
             Image(systemName: "ellipsis.circle")
@@ -465,6 +466,29 @@ private struct SettingsMenu: View {
 
     private func showMetrics() {
         isPresentingMetrics = true
+    }
+}
+
+private struct QualityMenu: View {
+    let player: Player
+
+    @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
+    private var qualitySetting: QualitySetting = .high
+
+    var body: some View {
+        Menu {
+            Picker("Quality", selection: $qualitySetting) {
+                ForEach(QualitySetting.allCases, id: \.self) { quality in
+                    Text(quality.name).tag(quality)
+                }
+            }
+        } label: {
+            Label {
+                Text("Quality")
+            } icon: {
+                Image(systemName: "person.and.background.dotted")
+            }
+        }
     }
 }
 
