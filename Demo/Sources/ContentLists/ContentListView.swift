@@ -56,6 +56,7 @@ private struct LoadedView: View {
         Button(action: openPlaylist) {
             Image(systemName: "rectangle.stack.badge.play")
         }
+        .accessibilityLabel("Open as playlist")
         .opacity(medias().isEmpty ? 0 : 1)
     }
 }
