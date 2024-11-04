@@ -56,6 +56,8 @@ private struct InformationSectionContent: View {
                 .lineLimit(1)
                 .foregroundColor(.secondary)
         }
+        .accessibilityElement()
+        .accessibilityLabel("\(Text(name)), \(value)")
     }
 }
 
@@ -115,6 +117,8 @@ private struct ExperienceStartupTimesSectionContent: View {
                 .lineLimit(1)
                 .foregroundColor(.secondary)
         }
+        .accessibilityElement()
+        .accessibilityLabel("\(Text(name)), \(value)")
     }
 }
 
@@ -150,6 +154,8 @@ private struct ServiceStartupTimesSectionContent: View {
                 .lineLimit(1)
                 .foregroundColor(.secondary)
         }
+        .accessibilityElement()
+        .accessibilityLabel("\(Text(name)), \(value)")
     }
 }
 
@@ -201,6 +207,7 @@ struct MetricsView: View {
             ExperienceStartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
         } header: {
             Text("Startup times (QoE)")
+                .accessibilityLabel("Startup times (Quality of experience)")
         }
     }
 
@@ -210,6 +217,7 @@ struct MetricsView: View {
             ServiceStartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
         } header: {
             Text("Startup times (QoS)")
+                .accessibilityLabel("Startup times (Quality of service)")
         }
     }
 

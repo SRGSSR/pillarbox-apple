@@ -52,6 +52,8 @@ struct MetricEventCell: View {
                 .lineLimit(3)
                 .multilineTextAlignment(.leading)
         }
+        .accessibilityElement()
+        .accessibilityLabel(description)
     }
 
     private static func duration(from time: CMTime) -> String? {

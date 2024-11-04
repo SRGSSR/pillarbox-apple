@@ -7,6 +7,16 @@
     "-" : {
 
     },
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
     "%g× %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -280,6 +290,12 @@
 
     },
     "Startup times (QoS)" : {
+
+    },
+    "Startup times (Quality of experience)" : {
+
+    },
+    "Startup times (Quality of service)" : {
 
     },
     "Stop" : {
