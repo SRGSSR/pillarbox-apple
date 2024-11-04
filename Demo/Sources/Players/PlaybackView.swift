@@ -482,6 +482,7 @@ private struct QualityMenu: View {
                     Text(quality.name).tag(quality)
                 }
             }
+            .pickerStyle(.inline)
         } label: {
             Label {
                 Text("Quality")
