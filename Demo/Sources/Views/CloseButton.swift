@@ -18,6 +18,7 @@ struct CloseButton: View {
                 .topBarStyle(topBarStyle)
         }
         .shadow(color: .black, radius: 1)
+        .accessibilityLabel("Close")
 #if os(iOS)
         .keyboardShortcut(.escape, modifiers: [])
 #endif
