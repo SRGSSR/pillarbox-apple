@@ -4,9 +4,9 @@ set -e
 
 echo "... checking Swift code..."
 if [ $# -eq 0 ]; then
-  mint run swiftlint --quiet --strict
+  swiftlint --quiet --strict
 elif [[ "$1" == "only-changes" ]]; then
-  git diff --staged --name-only | grep ".swift$" | xargs mint run swiftlint --quiet --strict
+  git diff --staged --name-only | grep ".swift$" | xargs swiftlint lint --quiet --strict
 fi
 echo "... checking Ruby scripts..."
 bundle exec rubocop --format quiet
