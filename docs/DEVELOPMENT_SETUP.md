@@ -13,10 +13,10 @@ The following tools are required for the best possible development experience:
 - [ffmpeg](https://ffmpeg.org)
 - [gem](https://rubygems.org)
 - [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli)
-- [mint](https://github.com/yonaskolb/Mint)
 - [Periphery](https://github.com/peripheryapp/periphery)
 - [Python](https://www.python.org)
 - [shellcheck](https://www.shellcheck.net)
+- [swiftlint](https://github.com/realm/SwiftLint)
 - [xcodes](https://github.com/RobotsAndPencils/xcodes)
 - [yamllint](https://github.com/adrienverge/yamllint)
 

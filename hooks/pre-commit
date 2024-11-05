@@ -4,7 +4,7 @@
 # Quality check
 #================================================================
 
-PATH="$(which mint):$(which ruby):$PATH"
+PATH="$(which swiftlint):$(which ruby):$PATH"
 
 if Scripts/check-quality.sh only-changes; then
 	echo "✅ Quality checked"

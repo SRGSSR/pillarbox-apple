@@ -27,8 +27,8 @@ The continuous integration agents must have the following tools installed:
 - [bundler](https://bundler.io)
 - [ffmpeg](https://ffmpeg.org)
 - [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli)
-- [mint](https://github.com/yonaskolb/Mint)
 - [shellcheck](https://www.shellcheck.net)
+- [swiftlint](https://github.com/realm/SwiftLint)
 - [xcodes](https://github.com/RobotsAndPencils/xcodes)
 - [yamllint](https://github.com/adrienverge/yamllint)
 
