@@ -9,7 +9,7 @@ import XCTest
 
 public extension XCTestCase {
     /// Expects a publisher to emit at least a value.
-    func expectOutput<P>(
+    func expectValue<P>(
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
@@ -27,6 +27,6 @@ public extension XCTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) where O: ObservableObject {
-        expectOutput(from: object.objectWillChange, timeout: timeout, file: file, line: line, while: executing)
+        expectValue(from: object.objectWillChange, timeout: timeout, file: file, line: line, while: executing)
     }
 }

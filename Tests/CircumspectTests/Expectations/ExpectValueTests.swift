@@ -13,13 +13,13 @@ private class Object: ObservableObject {
     @Published var value = 0
 }
 
-final class ExpectOutputTests: XCTestCase {
-    func testSingleOutput() {
-        expectOutput(from: Just([1, 2, 3].publisher))
+final class ExpectValueTests: XCTestCase {
+    func testSingleValue() {
+        expectValue(from: Just([1, 2, 3].publisher))
     }
 
-    func testMultipleOutputs() {
-        expectOutput(from: Just([1, 2, 3].publisher))
+    func testMultipleValues() {
+        expectValue(from: Just([1, 2, 3].publisher))
     }
 
     func testSingleChange() {
