@@ -195,7 +195,7 @@ public extension Publisher {
     ) -> AnyPublisher<DateInterval, Failure> where S: Scheduler, S.SchedulerTimeType == DispatchQueue.SchedulerTimeType {
         measureInterval(using: scheduler)
             .map { stride in
-                let date = Date()
+                let date = Date.now
                 return DateInterval(start: date.advanced(by: -TimeInterval(from: stride)), end: date)
             }
             .eraseToAnyPublisher()

@@ -25,7 +25,7 @@ extension PlayerItem {
             $content
                 .compactMap(\.dateInterval)
                 .removeDuplicates(),
-            Just(Date())
+            Just(Date.now)
         )
         .map { dateInterval, startDate in
             MetricEvent(
