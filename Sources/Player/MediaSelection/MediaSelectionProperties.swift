@@ -7,14 +7,16 @@
 import AVFoundation
 
 struct MediaSelectionProperties: Equatable {
-    static let empty = Self(groups: [:], selection: nil)
+    static let empty = Self(groups: [:], selection: nil, settingsChangeDate: .now)
 
     private let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
     let selection: AVMediaSelection?
+    private let settingsChangeDate: Date
 
-    init(groups: [AVMediaCharacteristic: AVMediaSelectionGroup], selection: AVMediaSelection?) {
+    init(groups: [AVMediaCharacteristic: AVMediaSelectionGroup], selection: AVMediaSelection?, settingsChangeDate: Date) {
         self.groups = groups
         self.selection = selection
+        self.settingsChangeDate = settingsChangeDate
     }
 }
 
