@@ -41,6 +41,7 @@ struct BasicPlaybackView: View {
 #endif
             ProgressView()
                 .opacity(isBusy ? 1 : 0)
+                .accessibilityHidden(true)
         }
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)
     }
