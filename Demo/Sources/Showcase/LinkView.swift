@@ -21,6 +21,7 @@ struct LinkView: View {
                 BasicPlaybackView(player: isDisplayed ? player : Player())
                 ProgressView()
                     .opacity(isBusy ? 1 : 0)
+                    .accessibilityHidden(true)
             }
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()

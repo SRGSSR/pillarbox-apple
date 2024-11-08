@@ -135,6 +135,7 @@ struct ContentListView: View {
             case .loading:
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .accessibilityHidden(true)
             case let .loaded(contents: contents) where contents.isEmpty:
                 RefreshableMessageView(model: model, message: "No content.", icon: .empty)
             case let .loaded(contents: contents):

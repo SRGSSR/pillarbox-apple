@@ -19,6 +19,7 @@ struct SearchView: View {
                 MessageView(message: "Enter something to search.", icon: .system("magnifyingglass"))
             case .loading:
                 ProgressView()
+                    .accessibilityHidden(true)
             case let .loaded(medias: medias):
                 loadedView(medias)
             case let .failed(error):

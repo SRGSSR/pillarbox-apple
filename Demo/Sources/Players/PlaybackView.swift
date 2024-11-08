@@ -508,6 +508,7 @@ private struct LoadingIndicator: View {
             .tint(.white)
             .opacity(isBuffering ? 1 : 0)
             .animation(.linear(duration: 0.1), value: isBuffering)
+            .accessibilityHidden(true)
             .onReceive(player: player, assign: \.isBuffering, to: $isBuffering)
     }
 }
