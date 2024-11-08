@@ -103,6 +103,9 @@
     "Deferred" : {
 
     },
+    "Delete all" : {
+
+    },
     "Displays touches for presentation purposes." : {
 
     },
@@ -199,6 +202,9 @@
     "Mode" : {
 
     },
+    "Next" : {
+
+    },
     "None" : {
 
     },
@@ -250,6 +256,9 @@
     "Presenter mode" : {
 
     },
+    "Previous" : {
+
+    },
     "Progress" : {
 
     },
@@ -281,6 +290,9 @@
 
     },
     "Shows a video overlay displaying various playback-related statistics." : {
+
+    },
+    "Shuffle" : {
 
     },
     "Simulate memory warning" : {

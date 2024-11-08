@@ -19,6 +19,8 @@ private struct MediaCell: View {
                     .foregroundColor(.secondary)
             }
         }
+        .accessibilityElement()
+        .accessibilityLabel(media.title)
     }
 }
 
@@ -35,6 +37,17 @@ private struct Toolbar: View {
             "repeat.1.circle.fill"
         case .all:
             "repeat.circle.fill"
+        }
+    }
+
+    private var repeatModeAccessibilityLabel: String {
+        switch player.repeatMode {
+        case .off:
+            "Repeat none"
+        case .one:
+            "Repeat current"
+        case .all:
+            "Repeat all"
         }
     }
 
@@ -63,6 +76,7 @@ private struct Toolbar: View {
         Button(action: player.returnToPrevious) {
             Image(systemName: "arrow.left")
         }
+        .accessibilityLabel("Previous")
         .disabled(!player.canReturnToPrevious())
     }
 
@@ -72,19 +86,23 @@ private struct Toolbar: View {
             Button(action: toggleRepeatMode) {
                 Image(systemName: repeatModeImageName)
             }
+            .accessibilityLabel(repeatModeAccessibilityLabel)
 
             Button(action: model.shuffle) {
                 Image(systemName: "shuffle")
             }
+            .accessibilityLabel("Shuffle")
             .disabled(model.isEmpty)
 
             Button(action: add) {
                 Image(systemName: "plus")
             }
+            .accessibilityLabel("Add")
 
             Button(action: model.trash) {
                 Image(systemName: "trash")
             }
+            .accessibilityLabel("Delete all")
             .disabled(model.isEmpty)
         }
     }
@@ -94,6 +112,7 @@ private struct Toolbar: View {
         Button(action: player.advanceToNext) {
             Image(systemName: "arrow.right")
         }
+        .accessibilityLabel("Next")
         .disabled(!player.canAdvanceToNext())
     }
 
