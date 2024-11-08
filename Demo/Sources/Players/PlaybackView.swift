@@ -108,12 +108,16 @@ private struct MainView: View {
     private func main() -> some View {
         ZStack {
             video()
+                .accessibilityElement()
+                .accessibilityLabel("Video")
+                .accessibilityHint("Double tap to toggle controls")
+                .accessibilityAction(.default, visibilityTracker.toggle)
+                .accessibilityHidden(shouldKeepControlsAlwaysVisible)
             controls()
         }
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
-        .accessibilityAddTraits(.isButton)
         .gesture(toggleGesture(), including: toggleGestureMask)
         .gesture(magnificationGesture(), including: magnificationGestureMask)
         .simultaneousGesture(visibilityResetGesture())
