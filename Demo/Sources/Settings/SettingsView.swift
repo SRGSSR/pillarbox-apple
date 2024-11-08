@@ -61,7 +61,7 @@ private struct InfoCell: View {
                 .lineLimit(2)
         }
         .accessibilityElement()
-        .accessibilityLabel("\(title), \(value)")
+        .accessibilityLabel("\(Text(title)), \(value)")
     }
 }
 
