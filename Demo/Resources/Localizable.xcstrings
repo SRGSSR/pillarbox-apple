@@ -226,6 +226,9 @@
     "Open as playlist" : {
 
     },
+    "Open full-screen player" : {
+
+    },
     "Open modal" : {
 
     },
@@ -328,7 +331,7 @@
     "Stop" : {
 
     },
-    "Supports PiP" : {
+    "Supports Picture in Picture" : {
 
     },
     "Swap" : {

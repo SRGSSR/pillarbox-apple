@@ -30,8 +30,13 @@ struct TransitionView: View {
 
     var body: some View {
         VideoView(player: player)
-            .accessibilityAddTraits(.isButton)
             .onTapGesture {
+                isPresented.toggle()
+            }
+            .accessibilityElement()
+            .accessibilityLabel("Open full-screen player")
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAction(.default) {
                 isPresented.toggle()
             }
             .onAppear(perform: play)
