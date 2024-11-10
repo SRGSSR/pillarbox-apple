@@ -39,6 +39,7 @@ struct SimplePlayerView: View {
     private func progressView() -> some View {
         ProgressView()
             .opacity(isBusy ? 1 : 0)
+            .accessibilityHidden(true)
     }
 
     @ViewBuilder

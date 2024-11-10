@@ -7,6 +7,16 @@
     "-" : {
 
     },
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
     "%g× %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -66,6 +76,9 @@
     "Clear URL cache" : {
 
     },
+    "Close" : {
+
+    },
     "Color" : {
 
     },
@@ -90,10 +103,16 @@
     "Deferred" : {
 
     },
+    "Delete all" : {
+
+    },
     "Displays touches for presentation purposes." : {
 
     },
     "Documentation" : {
+
+    },
+    "Double tap to toggle controls" : {
 
     },
     "Embeddings" : {
@@ -141,6 +160,9 @@
     "Information" : {
 
     },
+    "Jump to live" : {
+
+    },
     "Kind" : {
 
     },
@@ -157,6 +179,9 @@
 
     },
     "Made with " : {
+
+    },
+    "Made with love in Switzerland" : {
 
     },
     "Max. %.02f Mbps" : {
@@ -180,6 +205,9 @@
     "Mode" : {
 
     },
+    "Next" : {
+
+    },
     "None" : {
 
     },
@@ -193,6 +221,12 @@
 
     },
     "Observed bitrate min" : {
+
+    },
+    "Open as playlist" : {
+
+    },
+    "Open full-screen player" : {
 
     },
     "Open modal" : {
@@ -228,6 +262,9 @@
     "Presenter mode" : {
 
     },
+    "Previous" : {
+
+    },
     "Progress" : {
 
     },
@@ -261,6 +298,9 @@
     "Shows a video overlay displaying various playback-related statistics." : {
 
     },
+    "Shuffle" : {
+
+    },
     "Simulate memory warning" : {
 
     },
@@ -282,10 +322,13 @@
     "Startup times (QoS)" : {
 
     },
-    "Stop" : {
+    "Startup times (Quality of experience)" : {
 
     },
-    "Supports PiP" : {
+    "Startup times (Quality of service)" : {
+
+    },
+    "Stop" : {
 
     },
     "Swap" : {
@@ -361,6 +404,9 @@
 
     },
     "Version information" : {
+
+    },
+    "Video" : {
 
     },
     "Web" : {

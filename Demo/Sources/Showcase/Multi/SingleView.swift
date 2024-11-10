@@ -21,6 +21,7 @@ struct SingleView: View {
             playbackButton(player: player)
             ProgressView()
                 .opacity(isBusy ? 1 : 0)
+                .accessibilityHidden(true)
         }
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)
     }

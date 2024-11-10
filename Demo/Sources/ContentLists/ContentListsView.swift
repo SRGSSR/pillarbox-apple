@@ -69,6 +69,8 @@ struct ContentListsView: View {
                 Text(title)
             }
             .headerStyle()
+            .accessibilityElement()
+            .accessibilityLabel(title)
         }
     }
 

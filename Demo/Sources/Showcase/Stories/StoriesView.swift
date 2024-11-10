@@ -24,6 +24,8 @@ private struct StoryView: View {
         }
         .tint(.white)
         .animation(.defaultLinear, value: isBusy)
+        .accessibilityElement()
+        .accessibilityLabel("Video")
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)
     }
 }

@@ -9,11 +9,10 @@ import Foundation
 
 final class DataProvider {
     private let server: Server
-    private let session: URLSession
+    private let session = URLSession(configuration: .default)
 
     init(server: Server = .production) {
         self.server = server
-        session = URLSession(configuration: .default)
     }
 
     static func decoder() -> JSONDecoder {

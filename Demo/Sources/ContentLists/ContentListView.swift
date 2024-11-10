@@ -56,6 +56,7 @@ private struct LoadedView: View {
         Button(action: openPlaylist) {
             Image(systemName: "rectangle.stack.badge.play")
         }
+        .accessibilityLabel("Open as playlist")
         .opacity(medias().isEmpty ? 0 : 1)
     }
 }
@@ -134,6 +135,7 @@ struct ContentListView: View {
             case .loading:
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .accessibilityHidden(true)
             case let .loaded(contents: contents) where contents.isEmpty:
                 RefreshableMessageView(model: model, message: "No content.", icon: .empty)
             case let .loaded(contents: contents):

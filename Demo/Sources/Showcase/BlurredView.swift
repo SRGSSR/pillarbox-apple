@@ -24,6 +24,7 @@ struct BlurredView: View {
             ProgressView()
                 .opacity(isBusy ? 1 : 0)
         }
+        .accessibilityHidden(true)
         .background(.black)
         .overlay(alignment: .topLeading) {
             CloseButton(topBarStyle: true)

@@ -36,6 +36,9 @@ private struct PresentedModifier: ViewModifier {
                         dismiss()
                     }
             )
+            .accessibilityAction(.escape) {
+                dismiss()
+            }
     }
 }
 

@@ -60,6 +60,8 @@ private struct InfoCell: View {
                 .multilineTextAlignment(.trailing)
                 .lineLimit(2)
         }
+        .accessibilityElement()
+        .accessibilityLabel("\(Text(title)), \(value)")
     }
 }
 
@@ -306,6 +308,8 @@ struct SettingsView: View {
             Text(" in Switzerland")
         }
         .frame(maxWidth: .infinity)
+        .accessibilityElement()
+        .accessibilityLabel("Made with love in Switzerland")
     }
 
 #if os(iOS)

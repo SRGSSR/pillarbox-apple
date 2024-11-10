@@ -32,8 +32,9 @@ struct Cell: View {
                         .foregroundColor(.secondary)
                 }
             }
-
             .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityElement()
+            .accessibilityLabel(title ?? "")
 #else
             MediaCardView(
                 size: size,

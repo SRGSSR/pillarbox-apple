@@ -108,12 +108,16 @@ private struct MainView: View {
     private func main() -> some View {
         ZStack {
             video()
+                .accessibilityElement()
+                .accessibilityLabel("Video")
+                .accessibilityHint("Double tap to toggle controls")
+                .accessibilityAction(.default, visibilityTracker.toggle)
+                .accessibilityHidden(shouldKeepControlsAlwaysVisible)
             controls()
         }
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
-        .accessibilityAddTraits(.isButton)
         .gesture(toggleGesture(), including: toggleGestureMask)
         .gesture(magnificationGesture(), including: magnificationGestureMask)
         .simultaneousGesture(visibilityResetGesture())
@@ -504,6 +508,7 @@ private struct LoadingIndicator: View {
             .tint(.white)
             .opacity(isBuffering ? 1 : 0)
             .animation(.linear(duration: 0.1), value: isBuffering)
+            .accessibilityHidden(true)
             .onReceive(player: player, assign: \.isBuffering, to: $isBuffering)
     }
 }
@@ -555,6 +560,7 @@ private struct LiveButton: View {
                         .fontWeight(.ultraLight)
                         .font(.system(size: 20))
                 }
+                .accessibilityLabel("Jump to live")
             }
         }
         .onReceive(player: player, assign: \.streamType, to: $streamType)
@@ -793,7 +799,7 @@ private struct PlaybackMessageView: View {
 private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
-    private var imageName: String? {
+    private var imageName: String {
         if player.canReplay() {
             return "arrow.counterclockwise.circle.fill"
         }
@@ -805,22 +811,30 @@ private struct PlaybackButton: View {
         }
     }
 
+    private var accessibilityLabel: String {
+        if player.canReplay() {
+            return "Restart"
+        }
+        else if player.shouldPlay {
+            return "Pause"
+        }
+        else {
+            return "Play"
+        }
+    }
+
     var body: some View {
         Button(action: play) {
-            if let imageName {
-                Image(systemName: imageName)
-                    .resizable()
-                    .tint(.white)
-            }
-            else {
-                Color.clear
-            }
+            Image(systemName: imageName)
+                .resizable()
+                .tint(.white)
         }
 #if os(iOS)
         .keyboardShortcut(.space, modifiers: [])
 #endif
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
+        .accessibilityLabel(accessibilityLabel)
     }
 
     private func play() {

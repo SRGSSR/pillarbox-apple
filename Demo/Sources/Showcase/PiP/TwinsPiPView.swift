@@ -35,7 +35,7 @@ struct TwinsPiPView: View {
             PlaybackView(player: model.player)
                 .supportsPictureInPicture(supportsPictureInPicture.wrappedValue)
 
-            Toggle("Supports PiP", isOn: supportsPictureInPicture)
+            Toggle("Picture in Picture", isOn: supportsPictureInPicture)
                 .padding(.horizontal)
         }
     }

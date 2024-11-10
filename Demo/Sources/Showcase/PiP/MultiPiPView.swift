@@ -33,7 +33,7 @@ struct MultiPiPView: View {
     private func playbackView(player: Player, supportsPictureInPicture: Binding<Bool>) -> some View {
         VStack {
             playbackView(player: player, supportsPictureInPicture: supportsPictureInPicture.wrappedValue)
-            Toggle("Supports PiP", isOn: supportsPictureInPicture)
+            Toggle("Picture in Picture", isOn: supportsPictureInPicture)
                 .padding(.horizontal)
         }
     }

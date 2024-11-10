@@ -18,7 +18,7 @@ private struct PresentedView: View {
         VStack {
             PlaybackView(player: player)
                 .supportsPictureInPicture(supportsPictureInPicture)
-            Toggle("Supports PiP", isOn: $supportsPictureInPicture)
+            Toggle("Picture in Picture", isOn: $supportsPictureInPicture)
                 .padding(.horizontal)
         }
     }
@@ -38,7 +38,7 @@ struct TransitionPiPView: View {
                 .supportsPictureInPicture(supportsPictureInPicture && !isPresented)
 
             VStack(spacing: 20) {
-                Toggle("Supports PiP", isOn: $supportsPictureInPicture)
+                Toggle("Picture in Picture", isOn: $supportsPictureInPicture)
                 Button(action: openModal) {
                     Text("Open modal")
                 }
