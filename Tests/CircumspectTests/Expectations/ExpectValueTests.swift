@@ -15,7 +15,7 @@ private class Object: ObservableObject {
 
 final class ExpectValueTests: XCTestCase {
     func testSingleValue() {
-        expectValue(from: Just([1, 2, 3].publisher))
+        expectValue(from: Just(1))
     }
 
     func testMultipleValues() {
