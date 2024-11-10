@@ -76,12 +76,10 @@ extension AVPlayerItem {
         Publishers.CombineLatest3(
             asset.mediaSelectionGroupsPublisher(),
             mediaSelectionPublisher(),
-            NotificationCenter.default.publisher(for: kMACaptionAppearanceSettingsChangedNotification as Notification.Name)
-                .map { _ in }
-                .prepend(())
+            mediaAccessibilityCaptionAppearanceSettingsChangeDatePublisher()
         )
-        .map { groups, selection, _ in
-            MediaSelectionProperties(groups: groups, selection: selection)
+        .map { groups, selection, settingsChangeDate in
+            MediaSelectionProperties(groups: groups, selection: selection, settingsChangeDate: settingsChangeDate)
         }
         .prepend(.empty)
         .removeDuplicates()
@@ -99,6 +97,13 @@ extension AVPlayerItem {
             .switchToLatest()
             .prepend(currentMediaSelection)
             .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    private func mediaAccessibilityCaptionAppearanceSettingsChangeDatePublisher() -> AnyPublisher<Date, Never> {
+        NotificationCenter.default.publisher(for: kMACaptionAppearanceSettingsChangedNotification as Notification.Name)
+            .map { _ in .now }
+            .prepend(.now)
             .eraseToAnyPublisher()
     }
 

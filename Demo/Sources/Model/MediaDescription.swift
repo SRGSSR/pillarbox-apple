@@ -53,7 +53,7 @@ enum MediaDescription {
     }
 
     static func style(for media: SRGMedia) -> Style {
-        media.timeAvailability(at: Date()) == .available ? .standard : .disabled
+        media.timeAvailability(at: .now) == .available ? .standard : .disabled
     }
 
     static func date(for media: SRGMedia) -> String {

@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Nimble
+import PillarboxCircumspect
 import PillarboxStreams
 
 final class MediaSelectionTests: TestCase {
@@ -271,6 +272,20 @@ final class MediaSelectionTests: TestCase {
 
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
         expect(player.currentMediaOption(for: .legible)).to(equal(.off))
+    }
+
+    func testObservabilityWhenTogglingBetweenOffAndAutomatic() {
+        MediaAccessibilityDisplayType.forcedOnly.apply()
+
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
+
+        expectChange(from: player) {
+            player.select(mediaOption: .automatic, for: .legible)
+        }
+        expectChange(from: player) {
+            player.select(mediaOption: .off, for: .legible)
+        }
     }
 }
 

@@ -38,7 +38,7 @@ public final class PlayerItem: Equatable {
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             Publishers.CombineLatest(
                 publisher,
-                Just(Date()).setFailureType(to: P.Failure.self)
+                Just(Date.now).setFailureType(to: P.Failure.self)
             )
             .handleEvents(receiveOutput: { asset, _ in
                 trackerAdapters.forEach { adapter in
@@ -49,7 +49,7 @@ public final class PlayerItem: Equatable {
                 Publishers.CombineLatest3(
                     Just(asset),
                     metadataMapper(asset.metadata).playerMetadataPublisher(),
-                    Just(DateInterval(start: startDate, end: Date()))
+                    Just(DateInterval(start: startDate, end: .now))
                 )
             }
             .switchToLatest()

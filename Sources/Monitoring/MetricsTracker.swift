@@ -52,10 +52,10 @@ public final class MetricsTracker: PlayerItemTracker {
             sendEvent(name: .start, data: startData(from: events))
             startHeartbeat()
         case .stall:
-            stallDate = Date()
+            stallDate = .now
         case .resumeAfterStall:
             guard let stallDate else { break }
-            stallDuration += Date().timeIntervalSince(stallDate)
+            stallDuration += Date.now.timeIntervalSince(stallDate)
         case let .failure(error):
             if !session.isStarted {
                 session.start()

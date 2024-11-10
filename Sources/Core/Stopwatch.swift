@@ -17,20 +17,20 @@ public final class Stopwatch {
     /// Starts the stopwatch.
     public func start() {
         guard date == nil else { return }
-        date = Date()
+        date = .now
     }
 
     /// Stops the stopwatch.
     public func stop() {
         guard let date else { return }
-        total += Date().timeIntervalSince(date)
+        total += Date.now.timeIntervalSince(date)
         self.date = nil
     }
 
     /// The time accumulated by the stopwatch.
     public func time() -> TimeInterval {
         if let date {
-            return total + Date().timeIntervalSince(date)
+            return total + Date.now.timeIntervalSince(date)
         }
         else {
             return total

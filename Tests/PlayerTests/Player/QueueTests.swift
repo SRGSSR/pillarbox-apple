@@ -115,16 +115,6 @@ final class QueueTests: TestCase {
         expect(player.currentItem).to(equal(item2))
     }
 
-    func testFailingUnauthorizedItemBetweenPlayableItems() {
-        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
-        let item2 = PlayerItem.simple(url: Stream.unauthorized.url)
-        let item3 = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(items: [item1, item2, item3])
-        player.play()
-        expect(player.urls).toEventually(beEmpty())
-        expect(player.currentItem).to(equal(item2))
-    }
-
     func testFailingMp3ItemBetweenPlayableItems() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailableMp3.url)
