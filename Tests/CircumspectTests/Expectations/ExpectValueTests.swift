@@ -19,7 +19,7 @@ final class ExpectValueTests: XCTestCase {
     }
 
     func testMultipleValues() {
-        expectValue(from: Just([1, 2, 3].publisher))
+        expectValue(from: [1, 2, 3].publisher)
     }
 
     func testSingleChange() {
