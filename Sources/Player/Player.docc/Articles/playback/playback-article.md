@@ -15,7 +15,7 @@ Use a ``Player`` to play of one or several items sequentially and be automatical
 
 ## Create a Player
 
-You create a player with or without associated items to be played. Since ``Player`` is an [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject) you usually store an instance as a [`StateObject`](https://developer.apple.com/documentation/swiftui/stateobject) belonging to some [SwiftUI](https://developer.apple.com/documentation/swiftui) view. This not only ensures that the instance remains available for the duration of the view, but also that the view body is automatically updated when the state of the player changes.
+You can create a player with or without associated items to be played. Since ``Player`` is an [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject) you must store an instance as a [`StateObject`](https://developer.apple.com/documentation/swiftui/stateobject) belonging to some [SwiftUI](https://developer.apple.com/documentation/swiftui) view. This not only ensures that the instance remains available for the lifetime of the view, but also that the view body is automatically updated when the state of the player changes.
 
 @TabNavigator {
     @Tab("Empty") {
@@ -58,7 +58,7 @@ You create a player with or without associated items to be played. Since ``Playe
 
 ## Configure the player
 
-The player can be customized during the instantiation phase by providing a dedicated ``PlayerConfiguration`` object. It is important to note that the configuration is set only at the time of instantiation and remains constant throughout the player's entire life cycle.
+The player can be customized during the instantiation phase by providing a dedicated ``PlayerConfiguration`` object. The configuration is set at creation time and cannot be changed afterwards.
 
 ## Load custom content
 
