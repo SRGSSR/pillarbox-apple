@@ -13,8 +13,6 @@ public extension View {
     ///   - player: The player.
     ///   - keyPath: The key path to extract.
     ///   - binding: The binding to which the value must be assigned.
-    /// - Returns: A view that fills the given binding when the player's publisher emits an
-    ///   event.
     ///
     /// > Warning: Be careful to associate often updated state to local view scopes to avoid unnecessary view body refreshes. Please
     /// refer to <doc:state-observation-article> for more information.
@@ -28,6 +26,24 @@ public extension View {
         }
     }
 
+    /// Observes values emitted by the given player's publisher.
+    ///
+    /// - Parameters:
+    ///   - player: The player.
+    ///   - keyPath: The key path to extract.
+    ///   - action: A closure to run when the value changes.
+    @ViewBuilder
+    func onReceive<T>(player: Player?, at keyPath: KeyPath<PlayerProperties, T>, perform action: @escaping (T) -> Void) -> some View where T: Equatable {
+        if let player {
+            onReceive(player.propertiesPublisher, at: keyPath, perform: action)
+        }
+        else {
+            self
+        }
+    }
+}
+
+public extension View {
     /// Enable in-app Picture in Picture support.
     ///
     /// - Parameter persistable: The object to persist during Picture in Picture.
