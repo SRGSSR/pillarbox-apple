@@ -51,6 +51,14 @@ private struct MainView: View {
             MetricsView(metricsCollector: metricsCollector)
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
+        .onContinuousHover { phase in
+            switch phase {
+            case .active:
+                visibilityTracker.reset()
+            case .ended:
+                break
+            }
+        }
         .bind(visibilityTracker, to: player)
         .bind(metricsCollector, to: player)
     }
