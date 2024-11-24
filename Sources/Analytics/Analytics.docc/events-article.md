@@ -10,7 +10,7 @@ Better understand how your app functionalities are used.
 
 As a product team you need to better understand which features are popular and which ones aren't.
 
-The PillarboxAnalytics framework provides a way to send arbitrary events so that your analysts can better understand your users and help you lead your product in the right direction.
+The ``PillarboxAnalytics`` framework provides a way to send arbitrary events so that your analysts can better understand your users and help you lead your product in the right direction.
 
 > Important: Tracking must be properly setup first. Please refer to <doc:setup-article> for more information.
 

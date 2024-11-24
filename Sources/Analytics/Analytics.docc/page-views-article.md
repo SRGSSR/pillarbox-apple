@@ -8,7 +8,7 @@ Identify where users navigate within your app.
 
 ## Overview
 
-As a product team you need to better understand where users navigate within your app. The PillarboxAnalytics framework provides a way to track views as they are brought on screen. This makes it possible to improve on user journeys and make your content more discoverable.
+As a product team you need to better understand where users navigate within your app. The ``PillarboxAnalytics`` framework provides a way to track views as they are brought on screen. This makes it possible to improve on user journeys and make your content more discoverable.
 
 > Important: Tracking must be properly setup first. Please refer to <doc:setup-article> for more information.
 
@@ -64,7 +64,7 @@ private extension HomeView {
 
 ### Track page views in UIKit
 
-View controllers commonly represent screens in a UIKit application. The PillarboxAnalytics framework provides a streamlined way to associate page view data with a view controller by having it conform to the ``PageViewTracking`` protocol:
+View controllers commonly represent screens in a UIKit application. The ``PillarboxAnalytics`` framework provides a streamlined way to associate page view data with a view controller by having it conform to the ``PageViewTracking`` protocol:
 
 ```swift
 final class HomeViewController: UIViewController {
@@ -103,7 +103,7 @@ Only a container can namely decide for which child (or children) page views shou
 - If page views must be automatically forwarded to all children of a container no additional work is required.
 - If page views must be automatically forwarded to only selected children, though, then a container must conform to the `ContainerPageViewTracking` protocol to declare which children must be considered active for measurements.
 
-> Tip: The PillarboxAnalytics framework provides native support for standard UIKit containers without any additional work.
+> Tip: The ``PillarboxAnalytics`` framework provides native support for standard UIKit containers without any additional work.
 
 ### Trigger page views manually
 

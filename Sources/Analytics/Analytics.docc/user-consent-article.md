@@ -8,9 +8,9 @@ Take into account user choices about the data they are willing to share.
 
 ## Overview
 
-The PillarboxAnalytics framework does not directly implement user consent management but provides a way to forward user consent choices to the Commanders Act and comScore SDKs so that user wishes can be properly taken into account at the data processing level.
+The ``PillarboxAnalytics`` framework does not directly implement user consent management but provides a way to forward user consent choices to the Commanders Act and comScore SDKs so that user wishes can be properly taken into account at the data processing level.
 
-> Note: Do not worry if you observe analytics-related network traffic with a proxy tool like [Charles](https://www.charlesproxy.com). The PillarboxAnalytics framework still sends data but user consent is transmitted in each request payload for server-side processing.
+> Note: Do not worry if you observe analytics-related network traffic with a proxy tool like [Charles](https://www.charlesproxy.com). The ``PillarboxAnalytics`` framework still sends data but user consent is transmitted in each request payload for server-side processing.
 
 ### Setup an analytics data source
 

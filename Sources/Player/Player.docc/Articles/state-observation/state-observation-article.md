@@ -9,7 +9,7 @@ Learn how to observe state associated with a player.
 
 ## Overview
 
-The PillarboxPlayer framework heavily relies on [Combine](https://developer.apple.com/documentation/combine),  [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject) and published properties. This makes it possible for SwiftUI views to automatically observe and respond to change.
+The ``PillarboxPlayer`` framework heavily relies on [Combine](https://developer.apple.com/documentation/combine),  [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject) and published properties. This makes it possible for SwiftUI views to automatically observe and respond to change.
 
 Unsupervised property publishing can lead to an explosion of updates sent from an observable object, though, leading to potentially unnecessary SwiftUI view body refreshes, poor layout performance and energy consumption issues.
 
