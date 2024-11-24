@@ -4,13 +4,13 @@
     @PageColor(purple)
 }
 
-Encode and package streams for optimal compatibility with the PillarboxPlayer framework.
+Encode and package streams for optimal compatibility with the ``PillarboxPlayer`` framework.
 
 ## Overview
 
 Apple provides HLS [authoring specifications](https://developer.apple.com/documentation/http_live_streaming/hls_authoring_specification_for_apple_devices/) regarding encoding and packaging best practices for compatibility with Apple devices. These  specifications cover compatible codecs, encoding profiles or recommended encoding ladders, among many other topics.
 
-For optimal playback experience with the PillarboxPlayer framework some of these specifications need to be followed rigorously. This article covers these specific requirements in more detail and provides more information about how streams can be tested for compatibility with PillarboxPlayer.
+For optimal playback experience with the ``PillarboxPlayer`` framework some of these specifications need to be followed rigorously. This article covers these specific requirements in more detail and provides more information about how streams can be tested for compatibility with ``PillarboxPlayer``.
 
 > Note: More information about automatic media selection is available from <doc:subtitles-and-alternative-audio-tracks-article>.
 
@@ -60,7 +60,7 @@ Note that I-frame playlists are a [must-have](https://developer.apple.com/docume
 
 ### Inspecting and testing streams
 
-Several tools are available for stream encoding and packaging teams to check that the streams they deliver work well with PillarboxPlayer.
+Several tools are available for stream encoding and packaging teams to check that the streams they deliver work well with ``PillarboxPlayer``.
 
 #### HTTP Live Streaming Tools
 
@@ -88,7 +88,7 @@ HLS streams can always be tested with a variety of native players, most notably:
 - Safari on iOS / iPadOS.
 - QuickTime Player on macOS.
 
-> Important: Streams that cannot be correctly played with Apple official players will almost certainly fail to play correctly with PillarboxPlayer.
+> Important: Streams that cannot be correctly played with Apple official players will almost certainly fail to play correctly with ``PillarboxPlayer``.
 
 #### 3rd party players
 
