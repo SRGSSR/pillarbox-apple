@@ -15,7 +15,7 @@ Media playback is frequently highlighted in product specifications as a key indi
 
 By ensuring your application manages resources responsibly, especially when handling video or audio playback, you enhance the user experience. Not only will users be able to enjoy your content for longer, but they’ll also extend their device’s battery life, enabling more use on a single charge.
 
-This article discusses a few strategies to reduce resource consumption associated with PillarboxPlayer in your application.
+This article discusses a few strategies to reduce resource consumption associated with ``PillarboxPlayer`` in your application.
 
 ## Profile your application
 
@@ -34,9 +34,9 @@ To gain a comprehensive understanding of your application's memory and CPU usage
 
 ## Restrict the number of players loaded with content
 
-An empty ``PillarboxPlayer`` instance is lightweight, but once loaded with content, it interacts with media service daemons to handle playback. The more ``PillarboxPlayer`` instances your application loads simultaneously, the more CPU, memory, and potentially network resources are therefore consumed.
+An empty ``Player`` instance is lightweight, but once loaded with content, it interacts with media service daemons to handle playback. The more ``Player`` instances your application loads simultaneously, the more CPU, memory, and potentially network resources are therefore consumed.
 
-To minimize resource usage, aim to keep the number of ``PillarboxPlayer`` instances loaded with content as low as possible. Consider these strategies:
+To minimize resource usage, aim to keep the number of ``Player`` instances loaded with content as low as possible. Consider these strategies:
 
 - **Implement a Player Pool**: Instead of creating a new player instance for every need, maintain a pool of reusable players. Borrow a player from the pool when needed and return it when done.
 - **Clear Unused Players**: Use ``Player/removeAllItems()`` to empty a player's item queue without destroying the player instance. To reload previously played content, use ``PlayerItemConfiguration/position`` to resume playback from where it was last interrupted.
@@ -45,7 +45,7 @@ To minimize resource usage, aim to keep the number of ``PillarboxPlayer`` instan
 
 ## Implement autoplay wisely
 
-Autoplay is a common feature, but its implementation requires careful consideration, as it can lead to unnecessary resource consumption. While `PillarboxPlayer` does not provide dedicated APIs for autoplay, if you plan to implement this functionality, consider the following best practices to enhance the user experience:
+Autoplay is a common feature, but its implementation requires careful consideration, as it can lead to unnecessary resource consumption. While ``PillarboxPlayer`` does not provide dedicated APIs for autoplay, if you plan to implement this functionality, consider the following best practices to enhance the user experience:
 
 - **Make Autoplay Optional**: Always provide a setting to disable autoplay. Some users may find this feature intrusive and prefer to turn it off. Offering this option is not only user-friendly but also environmentally conscious, as it helps conserve resources.
 - **Disable Autoplay in Poor Conditions**: Automatically disable autoplay when the user is connected to a mobile network or when [Low Data](https://support.apple.com/en-is/102433) or [Low Power](https://support.apple.com/en-us/101604) modes are enabled. This ensures a better experience by reducing resource consumption in constrained conditions.
@@ -59,4 +59,4 @@ Autoplay is a common feature, but its implementation requires careful considerat
 
 ## Optimize user interface refreshes
 
-PillarboxPlayer offers various tools to optimize view layouts in response to <doc:state-observation-article>. For detailed guidance, please refer to the <doc:optimizing-custom-layouts> tutorial.
+``PillarboxPlayer`` offers various tools to optimize view layouts in response to <doc:state-observation-article>. For detailed guidance, please refer to the <doc:optimizing-custom-layouts> tutorial.
