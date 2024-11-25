@@ -25,6 +25,7 @@ public struct PictureInPictureButton<Content>: View where Content: View {
                 Button(action: PictureInPicture.shared.custom.toggle) {
                     content(isActive)
                 }
+                .hoverEffect()
                 .onReceive(PictureInPicture.shared.custom.$isActive) { isActive = $0 }
             }
         }

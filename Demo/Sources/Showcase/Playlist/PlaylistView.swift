@@ -76,6 +76,7 @@ private struct Toolbar: View {
         Button(action: player.returnToPrevious) {
             Image(systemName: "arrow.left")
         }
+        .hoverEffect()
         .accessibilityLabel("Previous")
         .disabled(!player.canReturnToPrevious())
     }
@@ -86,22 +87,26 @@ private struct Toolbar: View {
             Button(action: toggleRepeatMode) {
                 Image(systemName: repeatModeImageName)
             }
+            .hoverEffect()
             .accessibilityLabel(repeatModeAccessibilityLabel)
 
             Button(action: model.shuffle) {
                 Image(systemName: "shuffle")
             }
+            .hoverEffect()
             .accessibilityLabel("Shuffle")
             .disabled(model.isEmpty)
 
             Button(action: add) {
                 Image(systemName: "plus")
             }
+            .hoverEffect()
             .accessibilityLabel("Add")
 
             Button(action: model.trash) {
                 Image(systemName: "trash")
             }
+            .hoverEffect()
             .accessibilityLabel("Delete all")
             .disabled(model.isEmpty)
         }
@@ -112,6 +117,7 @@ private struct Toolbar: View {
         Button(action: player.advanceToNext) {
             Image(systemName: "arrow.right")
         }
+        .hoverEffect()
         .accessibilityLabel("Next")
         .disabled(!player.canAdvanceToNext())
     }

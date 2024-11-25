@@ -51,6 +51,14 @@ private struct MainView: View {
             MetricsView(metricsCollector: metricsCollector)
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
+        .onContinuousHover { phase in
+            switch phase {
+            case .active:
+                visibilityTracker.reset()
+            case .ended:
+                break
+            }
+        }
         .bind(visibilityTracker, to: player)
         .bind(metricsCollector, to: player)
     }
@@ -352,6 +360,7 @@ private struct SkipBackwardButton: View {
         .opacity(player.canSkipBackward() ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipBackward())
         .keyboardShortcut("s", modifiers: [])
+        .circularHoverEffect()
     }
 
     private func skipBackward() {
@@ -375,6 +384,7 @@ private struct SkipForwardButton: View {
         .opacity(player.canSkipForward() ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipForward())
         .keyboardShortcut("d", modifiers: [])
+        .circularHoverEffect()
     }
 
     private func skipForward() {
@@ -394,6 +404,7 @@ private struct FullScreenButton: View {
                     .font(.system(size: 20))
             }
             .keyboardShortcut("f", modifiers: [])
+            .hoverEffect()
         }
     }
 
@@ -431,6 +442,7 @@ private struct VolumeButton: View {
                 .font(.system(size: 20))
         }
         .keyboardShortcut("m", modifiers: [])
+        .hoverEffect()
     }
 
     private var imageName: String {
@@ -457,6 +469,7 @@ private struct SettingsMenu: View {
                 .tint(.white)
         }
         .menuOrder(.fixed)
+        .hoverEffect()
     }
 
     @ViewBuilder
@@ -560,6 +573,7 @@ private struct LiveButton: View {
                         .fontWeight(.ultraLight)
                         .font(.system(size: 20))
                 }
+                .hoverEffect()
                 .accessibilityLabel("Jump to live")
             }
         }
@@ -829,12 +843,13 @@ private struct PlaybackButton: View {
                 .resizable()
                 .tint(.white)
         }
-#if os(iOS)
-        .keyboardShortcut(.space, modifiers: [])
-#endif
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
         .accessibilityLabel(accessibilityLabel)
+#if os(iOS)
+        .keyboardShortcut(.space, modifiers: [])
+        .circularHoverEffect()
+#endif
     }
 
     private func play() {

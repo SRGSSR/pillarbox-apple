@@ -22,6 +22,7 @@ struct CloseButton: View {
 #if os(iOS)
         .keyboardShortcut(.escape, modifiers: [])
 #endif
+        .hoverEffect()
     }
 
     init(topBarStyle: Bool = false) {
