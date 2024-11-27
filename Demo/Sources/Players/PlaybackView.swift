@@ -360,7 +360,7 @@ private struct SkipBackwardButton: View {
         .opacity(player.canSkipBackward() ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipBackward())
         .keyboardShortcut("s", modifiers: [])
-        .circularHoverEffect()
+        .hoverEffect()
     }
 
     private func skipBackward() {
@@ -384,7 +384,7 @@ private struct SkipForwardButton: View {
         .opacity(player.canSkipForward() ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipForward())
         .keyboardShortcut("d", modifiers: [])
-        .circularHoverEffect()
+        .hoverEffect()
     }
 
     private func skipForward() {
@@ -848,7 +848,7 @@ private struct PlaybackButton: View {
         .accessibilityLabel(accessibilityLabel)
 #if os(iOS)
         .keyboardShortcut(.space, modifiers: [])
-        .circularHoverEffect()
+        .hoverEffect()
 #endif
     }
 

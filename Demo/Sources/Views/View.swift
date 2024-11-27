@@ -116,13 +116,3 @@ extension View {
         }
     }
 }
-
-#if os(iOS)
-extension View {
-    func circularHoverEffect() -> some View {
-        padding()
-            .hoverEffect(.highlight)
-            .clipShape(Circle())
-    }
-}
-#endif
