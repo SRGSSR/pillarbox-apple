@@ -3,6 +3,9 @@
 SCRIPT_NAME=$(basename "$0")
 SCRIPT_DIR=$(dirname "$0")
 
+eval "$(pkgx --shellcode)"
+env +python +ffmpeg +packager
+
 GENERATED_DIR="/tmp/pillarbox"
 
 METADATA_DIR="$SCRIPT_DIR/../metadata"
@@ -14,8 +17,8 @@ function serve_test_streams {
 
     kill_test_streams "$dest_dir"
 
-    if ! command -v python3 &> /dev/null; then
-        echo "python3 could not be found"
+    if ! command -v python &> /dev/null; then
+        echo "python could not be found"
         exit 1
     fi
 
@@ -89,7 +92,7 @@ function generate_packaged_streams {
     mkdir -p "$dest_dir"
 
     local on_demand_with_options_dir="$dest_dir/on_demand_with_options"
-    shaka-packager \
+    packager \
         "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_with_options_dir/640x360/\$Number\$.ts" \
         "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_options_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
         "in=$src_dir/source_audio_fre.mp4,stream=audio,segment_template=$on_demand_with_options_dir/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
@@ -100,19 +103,19 @@ function generate_packaged_streams {
         --hls_master_playlist_output "$on_demand_with_options_dir/master.m3u8" > /dev/null 2>&1
 
     local on_demand_without_options_dir="$dest_dir/on_demand_without_options"
-    shaka-packager \
+    packager \
         "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_without_options_dir/640x360/\$Number\$.ts" \
         --hls_master_playlist_output "$on_demand_without_options_dir/master.m3u8" > /dev/null 2>&1
 
     local on_demand_with_single_audible_option_dir="$dest_dir/on_demand_with_single_audible_option"
-    shaka-packager \
+    packager \
         "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_with_single_audible_option_dir/640x360/\$Number\$.ts" \
         "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_single_audible_option_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
         --hls_master_playlist_output "$on_demand_with_single_audible_option_dir/master.m3u8" > /dev/null 2>&1
 }
 
 function serve_directory {
-    python3 -m http.server 8123 --directory "$1" > /dev/null 2>&1 &
+    python -m http.server 8123 --directory "$1" > /dev/null 2>&1 &
 }
 
 function kill_test_streams {

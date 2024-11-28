@@ -19,7 +19,7 @@ TESTFLIGHT_PLATFORMS = {
 }.freeze
 
 DEVICES = {
-  ios: 'iPhone 15',
+  ios: 'iPhone 16',
   tvos: 'Apple TV'
 }.freeze
 
