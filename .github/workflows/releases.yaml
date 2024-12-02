@@ -1,0 +1,41 @@
+---
+name: Releases
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  deliver-demo-releases:
+    name: "🚀 Releases"
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        platform: [ios, tvos]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Add Apple certificate
+        run: |
+          Scripts/add-apple-certificate.sh \
+          $RUNNER_TEMP \
+          ${{ secrets.KEYCHAIN_PASSWORD }} \
+          ${{ secrets.SRGSSR_APPLE_DEV_CERTIFICATE_B64 }}
+
+      - name: Configure environment
+        run: |
+          Scripts/configure-environment.sh \
+          ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+
+      - name: Archive the demo
+        run: |
+          make deliver-demo-release-${{ matrix.platform }}
+        env:
+          TEAM_ID: ${{ secrets.TEAM_ID }}
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ISSUER_ID }}
+          TESTFLIGHT_GROUPS: ${{ vars.TESTFLIGHT_GROUPS }}
