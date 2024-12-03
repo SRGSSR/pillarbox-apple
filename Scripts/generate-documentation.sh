@@ -1,10 +1,10 @@
 #!/bin/bash
 
 pushd "$(dirname "$0")/.." > /dev/null || exit
-xcodebuild docbuild -scheme Analytics -destination generic/platform=iOS
-xcodebuild docbuild -scheme Circumspect -destination generic/platform=iOS
-xcodebuild docbuild -scheme Core -destination generic/platform=iOS
-xcodebuild docbuild -scheme CoreBusiness -destination generic/platform=iOS
-xcodebuild docbuild -scheme Monitoring -destination generic/platform=iOS
-xcodebuild docbuild -scheme Player -destination generic/platform=iOS
+xcodebuild docbuild -scheme PillarboxAnalytics -destination generic/platform=iOS
+xcodebuild docbuild -scheme PillarboxCircumspect -destination generic/platform=iOS
+xcodebuild docbuild -scheme PillarboxCore -destination generic/platform=iOS
+xcodebuild docbuild -scheme PillarboxCoreBusiness -destination generic/platform=iOS
+xcodebuild docbuild -scheme PillarboxMonitoring -destination generic/platform=iOS
+xcodebuild docbuild -schemePillarboxPlayer -destination generic/platform=iOS
 popd > /dev/null || exit
