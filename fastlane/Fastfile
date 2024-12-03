@@ -198,6 +198,7 @@ def run_package_tests(platform_id, scheme_name)
     result_bundle: true,
     number_of_retries: 3,
     clean: true,
+    output_types: 'junit',
     xcargs: '-testLanguage en -testRegion en_US',
     xcodebuild_formatter: 'xcbeautify --renderer github-actions'
   )
