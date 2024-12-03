@@ -19,7 +19,7 @@ TESTFLIGHT_PLATFORMS = {
 }.freeze
 
 DEVICES = {
-  ios: 'iPhone 15',
+  ios: 'iPhone 16',
   tvos: 'Apple TV'
 }.freeze
 
@@ -197,13 +197,7 @@ def run_package_tests(platform_id, scheme_name)
     result_bundle: true,
     number_of_retries: 3,
     clean: true,
-    fail_build: false,
     xcargs: '-testLanguage en -testRegion en_US'
-  )
-  trainer(
-    path: 'fastlane/test_output',
-    output_remove_retry_attempts: true,
-    fail_build: false
   )
 end
 

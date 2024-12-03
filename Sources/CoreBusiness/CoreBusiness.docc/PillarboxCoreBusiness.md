@@ -22,7 +22,7 @@ To play an SRG SSR content simply create a `PlayerItem` with ``PillarboxPlayer/P
 
 You can optionally change the server or add additional custom player item trackers. Standard SRG SSR trackers cannot be disabled.
 
-> Tip: Tracker adapters receive standard a ``MediaMetadata`` instance as parameter. If data your tracker needs is not available please file a corresponding [issue](https://github.com/SRGSSR/pillarbox-apple/issues/new?assignees=&labels=enhancement%2Ctriage&projects=&template=feature_request.yaml) so that we can parse it.
+> Tip: Tracker adapters receive standard a ``MediaMetadata`` instance as parameter. If data your tracker needs is not available please file a corresponding [issue](https://github.com/SRGSSR/pillarbox-apple/issues/new?assignees=&labels=enhancement%2Ctriage&projects=&template=feature_request.yml) so that we can parse it.
 
 ### Avoid background playback
 
