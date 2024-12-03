@@ -134,9 +134,9 @@ find-dead-code:
 	@echo "... done.\n"
 
 .PHONY: doc
-doc: install-pkgx
+doc: install-pkgx install-bundler
 	@echo "Generating documentation sets..."
-	@pkgx fastlane doc
+	@pkgx bundle exec fastlane doc
 	@echo "... done.\n"
 
 .PHONY: help
