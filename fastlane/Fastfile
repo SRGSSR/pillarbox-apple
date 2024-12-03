@@ -199,8 +199,13 @@ def run_package_tests(platform_id, scheme_name)
     number_of_retries: 3,
     clean: true,
     output_types: 'junit',
+    fail_build: false,
     xcargs: '-testLanguage en -testRegion en_US',
     xcodebuild_formatter: 'xcbeautify --renderer github-actions'
+  )
+  trainer(
+    path: 'fastlane/test_output',
+    output_remove_retry_attempts: true
   )
 end
 
