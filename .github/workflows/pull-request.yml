@@ -42,6 +42,7 @@ jobs:
 
       - name: Publish report
         uses: mikepenz/action-junit-report@v5
+        if: always()
         with:
           report_paths: 'fastlane/test_output/*.xml'
 

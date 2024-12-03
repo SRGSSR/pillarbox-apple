@@ -205,8 +205,7 @@ def run_package_tests(platform_id, scheme_name)
   )
   trainer(
     path: 'fastlane/test_output',
-    output_remove_retry_attempts: true,
-    fail_build: false
+    output_remove_retry_attempts: true
   )
 end
 
