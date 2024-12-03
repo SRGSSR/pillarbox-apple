@@ -9,5 +9,5 @@ xcodebuild docbuild -scheme PillarboxCircumspect -destination generic/platform=i
 xcodebuild docbuild -scheme PillarboxCore -destination generic/platform=iOS | xcbeautify --renderer github-actions
 xcodebuild docbuild -scheme PillarboxCoreBusiness -destination generic/platform=iOS | xcbeautify --renderer github-actions
 xcodebuild docbuild -scheme PillarboxMonitoring -destination generic/platform=iOS | xcbeautify --renderer github-actions
-xcodebuild docbuild -schemePillarboxPlayer -destination generic/platform=iOS | xcbeautify --renderer github-actions
+xcodebuild docbuild -scheme PillarboxPlayer -destination generic/platform=iOS | xcbeautify --renderer github-actions
 popd > /dev/null || exit
