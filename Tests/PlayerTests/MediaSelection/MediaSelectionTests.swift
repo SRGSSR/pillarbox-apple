@@ -11,6 +11,8 @@ import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
+#if os(iOS)
+
 final class MediaSelectionTests: TestCase {
     func testCharacteristicsAndOptionsWhenEmpty() {
         let player = Player()
@@ -295,3 +297,5 @@ private extension Player {
         return try await item.asset.loadMediaSelectionGroup(for: characteristic)
     }
 }
+
+#endif
