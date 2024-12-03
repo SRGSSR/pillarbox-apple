@@ -1,7 +1,7 @@
 ---
 name: Pull Request
 
-on: # yamllint disable-line rule:truthy
+on:  # yamllint disable-line rule:truthy
   merge_group:
   pull_request:
 
