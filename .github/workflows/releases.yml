@@ -3,14 +3,12 @@ name: Releases
 
 on:  # yamllint disable-line rule:truthy
   push:
-    branches:
-      - main
-    tags:
-      - '*'
+    branches: main
+    tags: '*'
 
 jobs:
   deliver-demo-releases:
-    name: "🚀 Releases"
+    name: 🚀 Releases
     runs-on: macos-latest
     strategy:
       matrix:

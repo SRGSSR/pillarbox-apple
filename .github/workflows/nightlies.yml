@@ -3,11 +3,11 @@ name: Nightlies
 
 on:  # yamllint disable-line rule:truthy
   push:
-    branches: [main]
+    branches: main
 
 jobs:
   deliver-demo-nightlies:
-    name: "🌙 Nightlies"
+    name: 🌙 Nightlies
     runs-on: macos-latest
     strategy:
       matrix:

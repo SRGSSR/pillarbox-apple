@@ -5,7 +5,7 @@ on: pull_request  # yamllint disable-line rule:truthy
 
 jobs:
   check-quality:
-    name: "🔎 Check quality"
+    name: 🔎 Check quality
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -15,7 +15,7 @@ jobs:
         run: make check-quality
 
   build-documentation:
-    name: "📚 Build documentation"
+    name: 📚 Build documentation
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -25,7 +25,7 @@ jobs:
         run: make doc
 
   tests:
-    name: "🧪 Tests"
+    name: 🧪 Tests
     runs-on: macos-latest
     strategy:
       matrix:
@@ -38,7 +38,7 @@ jobs:
         run: make test-${{ matrix.platform }}
 
   archive-demos:
-    name: "📦 Archives"
+    name: 📦 Archives
     runs-on: macos-latest
     strategy:
       matrix:
