@@ -1,7 +1,9 @@
 ---
 name: Pull Request
 
-on: pull_request  # yamllint disable-line rule:truthy
+on: # yamllint disable-line rule:truthy
+  merge_group:
+  pull_request:
 
 jobs:
   check-quality:
