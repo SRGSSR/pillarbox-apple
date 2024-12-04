@@ -44,6 +44,7 @@ jobs:
         uses: kishikawakatsumi/xcresulttool@v1
         if: always()
         with:
+          title: 📋 Unit test report (${{ matrix.platform }})
           path: fastlane/test_output/Pillarbox-NoDebug.xcresult
           show-passed-tests: false
 
