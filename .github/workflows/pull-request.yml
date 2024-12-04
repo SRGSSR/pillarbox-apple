@@ -46,6 +46,7 @@ jobs:
         with:
           report_paths: 'fastlane/test_output/*.xml'
           check_name: 📋 Unit test report (${{ matrix.platform }})
+          fail_on_failure: true
 
   archive-demos:
     name: 📦 Archives
