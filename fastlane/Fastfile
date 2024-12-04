@@ -204,7 +204,7 @@ def run_package_tests(platform_id, scheme_name)
 end
 
 def run_all_tests(platform_id)
-  run_package_tests(platform_id, 'Pillarbox-NoDebug')
+  run_package_tests(platform_id, 'PillarboxCore')
 end
 
 # -- Lanes

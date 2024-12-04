@@ -7,6 +7,7 @@
 @testable import PillarboxCore
 
 import Combine
+import Nimble
 import PillarboxCircumspect
 import XCTest
 
@@ -41,5 +42,9 @@ final class WithPreviousPublisherTests: XCTestCase {
             values: [1, 2, 3, 4, 5],
             from: (1...5).publisher.withPrevious(-1).map(\.current)
         )
+    }
+
+    func testFailure() {
+        expect(true).to(beFalse())
     }
 }
