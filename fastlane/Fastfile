@@ -117,8 +117,7 @@ def build_and_sign_app(platform_id, configuration_id)
     export_team_id: ENV.fetch('TEAM_ID'),
     output_directory: 'Binaries',
     xcargs: "-authenticationKeyIssuerID #{ENV.fetch('KEY_ISSUER_ID')} -authenticationKeyID #{ENV.fetch('KEY_ID')} " \
-            "-authenticationKeyPath #{api_key_filepath} -allowProvisioningUpdates",
-    xcodebuild_formatter: 'xcbeautify --renderer github-actions'
+            "-authenticationKeyPath #{api_key_filepath} -allowProvisioningUpdates"
   )
 end
 
@@ -200,8 +199,7 @@ def run_package_tests(platform_id, scheme_name)
     clean: true,
     output_types: 'junit',
     fail_build: false,
-    xcargs: '-testLanguage en -testRegion en_US',
-    xcodebuild_formatter: 'xcbeautify'
+    xcargs: '-testLanguage en -testRegion en_US'
   )
   trainer(
     path: 'fastlane/test_output',
