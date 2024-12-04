@@ -45,10 +45,10 @@ jobs:
         if: always()
         with:
           title: 📋 Unit test report (${{ matrix.platform }})
-          path: fastlane/test_output/PillarboxCore.xcresult
-          upload-bundles: never
-          show-code-coverage: false
+          path: fastlane/test_output/Pillarbox-NoDebug.xcresult
           show-passed-tests: false
+          show-code-coverage: false
+          upload-bundles: never
 
   archive-demos:
     name: 📦 Archives
