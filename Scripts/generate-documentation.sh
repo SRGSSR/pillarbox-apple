@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 eval "$(pkgx --shellcode)"
 env +xcbeautify
 
