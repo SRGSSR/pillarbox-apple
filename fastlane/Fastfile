@@ -201,7 +201,7 @@ def run_package_tests(platform_id, scheme_name)
     output_types: 'junit',
     fail_build: false,
     xcargs: '-testLanguage en -testRegion en_US',
-    xcodebuild_formatter: 'xcbeautify --renderer github-actions'
+    xcodebuild_formatter: 'xcbeautify'
   )
   trainer(
     path: 'fastlane/test_output',
