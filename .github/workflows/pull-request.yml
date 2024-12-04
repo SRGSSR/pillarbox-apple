@@ -47,6 +47,7 @@ jobs:
           title: 📋 Unit test report (${{ matrix.platform }})
           path: fastlane/test_output/PillarboxCore.xcresult
           upload-bundles: never
+          show-code-coverage: false
           show-passed-tests: false
 
   archive-demos:
