@@ -41,15 +41,15 @@ deliver-demo-nightly-tvos: install-pkgx install-bundler
 	@echo "... done.\n"
 
 .PHONY: deliver-demo-release-ios
-deliver-demo-release-ios: install-pkgx
+deliver-demo-release-ios: install-pkgx install-bundler
 	@echo "Delivering demo release build for iOS..."
-	@bundle exec fastlane deliver_demo_release_ios
+	@pkgx bundle exec fastlane deliver_demo_release_ios
 	@echo "... done.\n"
 
-.PHONY: deliver-demo-release-tvos
+.PHONY: deliver-demo-release-tvos install-bundler
 deliver-demo-release-tvos: install-pkgx
 	@echo "Delivering demo release build for tvOS..."
-	@bundle exec fastlane deliver_demo_release_tvos
+	@pkgx bundle exec fastlane deliver_demo_release_tvos
 	@echo "... done.\n"
 
 .PHONY: test-streams-start
