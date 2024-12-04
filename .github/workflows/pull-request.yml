@@ -45,6 +45,7 @@ jobs:
         if: always()
         with:
           path: fastlane/test_output/Pillarbox-NoDebug.xcresult
+          show-passed-tests: false
 
   archive-demos:
     name: 📦 Archives
