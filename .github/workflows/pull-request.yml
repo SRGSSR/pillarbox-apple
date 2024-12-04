@@ -41,12 +41,10 @@ jobs:
         run: make test-${{ matrix.platform }}
 
       - name: Publish report
-        uses: mikepenz/action-junit-report@v5
+        uses: kishikawakatsumi/xcresulttool@v1
         if: always()
         with:
-          report_paths: 'fastlane/test_output/*.xml'
-          check_name: 📋 Unit test report (${{ matrix.platform }})
-          fail_on_failure: true
+          path: fastlane/test_output/Pillarbox-NoDebug.xcresult
 
   archive-demos:
     name: 📦 Archives
