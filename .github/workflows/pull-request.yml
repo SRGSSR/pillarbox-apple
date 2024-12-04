@@ -45,6 +45,7 @@ jobs:
         if: always()
         with:
           report_paths: 'fastlane/test_output/*.xml'
+          check_name: 📋 Unit test report (${{ matrix.platform }})
 
   archive-demos:
     name: 📦 Archives
