@@ -30,6 +30,7 @@ jobs:
     name: 🧪 Tests
     runs-on: macos-latest
     strategy:
+      fail-fast: false
       matrix:
         platform: [ios, tvos]
     steps:
