@@ -31,7 +31,7 @@ jobs:
           Scripts/configure-environment.sh \
           ${{ secrets.APP_STORE_CONNECT_API_KEY }}
 
-      - name: Archive the demo
+      - name: Deliver the demo
         run: |
           make deliver-demo-nightly-${{ matrix.platform }}
         env:

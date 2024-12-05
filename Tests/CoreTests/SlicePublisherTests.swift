@@ -22,6 +22,6 @@ final class SlicePublisherTests: XCTestCase {
             Person(firstName: "Jane", lastName: "Smith"),
             Person(firstName: "John", lastName: "Bridges")
         ].publisher.slice(at: \.firstName)
-        expectEqualPublished(values: ["Jane", "John"], from: publisher)
+        expectEqualPublished(values: ["Jane", "John"], from: publisher, during: .milliseconds(100))
     }
 }

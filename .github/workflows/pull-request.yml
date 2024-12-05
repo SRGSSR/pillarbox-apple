@@ -16,16 +16,6 @@ jobs:
       - name: Run the quality check
         run: make check-quality
 
-  build-documentation:
-    name: 📚 Build documentation
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build the documentation
-        run: make doc
-
   tests:
     name: 🧪 Tests
     runs-on: macos-latest
@@ -39,6 +29,14 @@ jobs:
 
       - name: Run tests
         run: make test-${{ matrix.platform }}
+
+      - name: Publish report
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: 'fastlane/test_output/*.xml'
+          check_name: 📋 Unit test report (${{ matrix.platform }})
+          fail_on_failure: true
 
   archive-demos:
     name: 📦 Archives

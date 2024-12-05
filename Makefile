@@ -41,15 +41,15 @@ deliver-demo-nightly-tvos: install-pkgx install-bundler
 	@echo "... done.\n"
 
 .PHONY: deliver-demo-release-ios
-deliver-demo-release-ios: install-pkgx
+deliver-demo-release-ios: install-pkgx install-bundler
 	@echo "Delivering demo release build for iOS..."
-	@bundle exec fastlane deliver_demo_release_ios
+	@pkgx bundle exec fastlane deliver_demo_release_ios
 	@echo "... done.\n"
 
-.PHONY: deliver-demo-release-tvos
+.PHONY: deliver-demo-release-tvos install-bundler
 deliver-demo-release-tvos: install-pkgx
 	@echo "Delivering demo release build for tvOS..."
-	@bundle exec fastlane deliver_demo_release_tvos
+	@pkgx bundle exec fastlane deliver_demo_release_tvos
 	@echo "... done.\n"
 
 .PHONY: test-streams-start
@@ -133,12 +133,6 @@ find-dead-code:
 	@pkgx periphery scan --project ./Demo/Pillarbox-demo.xcodeproj --schemes Pillarbox-demo --targets Pillarbox-demo --skip-build --index-store-path ./.build/derived-data/Index.noindex/DataStore/
 	@echo "... done.\n"
 
-.PHONY: doc
-doc: install-pkgx
-	@echo "Generating documentation sets..."
-	@pkgx fastlane doc
-	@echo "... done.\n"
-
 .PHONY: help
 help:
 	@echo "The following targets are available:"
@@ -171,6 +165,5 @@ help:
 	@echo "   spm-reload                         Reload SPM dependencies"
 	@echo "   clean-imports                      Remove useless imports from the project"
 	@echo "   find-dead-code                     Find dead code"
-	@echo "   doc                                Build the documentation"
 	@echo ""
 	@echo "   help                               Display this help message"
