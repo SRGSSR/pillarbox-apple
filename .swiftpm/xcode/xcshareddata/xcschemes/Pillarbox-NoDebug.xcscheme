@@ -186,7 +186,7 @@
       codeCoverageEnabled = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO"
+            skipped = "YES"
             parallelizable = "YES"
             testExecutionOrdering = "random">
             <BuildableReference
@@ -246,7 +246,7 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "YES"
+            skipped = "NO"
             parallelizable = "YES"
             testExecutionOrdering = "random">
             <BuildableReference
