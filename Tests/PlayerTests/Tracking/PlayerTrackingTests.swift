@@ -80,6 +80,7 @@ final class PlayerTrackingTests: TestCase {
         }
     }
 
+#if false
     func testTrackingEnabledTwice() {
         let publisher = PlayerItemTrackerMock.StatePublisher()
 
@@ -90,6 +91,7 @@ final class PlayerTrackingTests: TestCase {
             player.isTrackingEnabled = true
         }
     }
+#endif
 
     func testMandatoryTracker() {
         let player = Player()

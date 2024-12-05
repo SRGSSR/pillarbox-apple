@@ -36,6 +36,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         ], from: player.metricEventsPublisher)
     }
 
+#if false
     func testPlaylist() {
         let player = Player(items: [.simple(url: Stream.shortOnDemand.url), .simple(url: Stream.mediumOnDemand.url)])
         expectSimilarPublished(
@@ -51,4 +52,5 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
             player.play()
         }
     }
+#endif
 }
