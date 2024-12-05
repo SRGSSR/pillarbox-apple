@@ -263,9 +263,4 @@ platform :ios do
   lane :test_tvos do
     run_all_tests(:tvos)
   end
-
-  desc 'Build documentation'
-  lane :doc do
-    sh('../Scripts/generate-documentation.sh')
-  end
 end

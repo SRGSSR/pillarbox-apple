@@ -16,16 +16,6 @@ jobs:
       - name: Run the quality check
         run: make check-quality
 
-  build-documentation:
-    name: 📚 Build documentation
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build the documentation
-        run: make doc
-
   tests:
     name: 🧪 Tests
     runs-on: macos-latest
