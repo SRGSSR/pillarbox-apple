@@ -93,7 +93,7 @@ Documentation is also available for companion products:
 Further documentation is also available by following the links below:
 
 - [Known issues](docs/KNOWN_ISSUES.md)
-- [Development setup](docs/DEVELOPMENT_SETUP.md)
+- [Development tools](docs/DEVELOPMENT_TOOLS.md)
 - [Continuous integration](docs/CONTINUOUS_INTEGRATION.md)
 
 # Plugins
