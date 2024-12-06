@@ -110,6 +110,11 @@ If you are using Xcode Cloud this can be achieved with a [custom build script](h
 
 If your project is built with `xcodebuild` directly the same effect can be achieved by passing the `-skipPackagePluginValidation` option.
 
+> [!IMPORTANT]
+> Build services such as GitHub Actions, Bitrise, CircleCI, and Travis CI often provide caching mechanisms to accelerate CI/CD pipelines, including caching Swift package sources. Pillarbox leverages Git tags from its package repository to automatically determine the correct version. However, this process depends on having up-to-date local tags, which may not be guaranteed when a package cache is used.
+>
+> To ensure accuracy and reliability, we recommend performing clean builds when delivering your application via a delivery pipeline. Caches can still be utilized for routine continuous integration tasks to save time during development.
+
 # Code example
 
 With Pillarbox creating a custom video player user interface has never been easier. Simply instantiate a `Player` and start building your user interface in SwiftUI right away:
