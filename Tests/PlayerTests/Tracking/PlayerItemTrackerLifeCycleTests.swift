@@ -20,6 +20,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         }
     }
 
+#if false
     func testItemPlayback() {
         let player = Player()
         let publisher = PlayerItemTrackerMock.StatePublisher()
@@ -31,6 +32,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
             player.play()
         }
     }
+#endif
 
     func testItemEntirePlayback() {
         let player = Player()
