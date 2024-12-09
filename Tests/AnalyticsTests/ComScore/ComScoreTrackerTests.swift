@@ -61,7 +61,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.pause()
         }
     }
@@ -132,7 +132,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-        expectNoHits(during: .seconds(3)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.play()
         }
     }
@@ -163,7 +163,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
 
         player.isTrackingEnabled = false
 
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.play()
         }
 

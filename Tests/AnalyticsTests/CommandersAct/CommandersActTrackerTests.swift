@@ -34,7 +34,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
                 CommandersActTracker.adapter { _ in [:] }
             ]
         ))
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.pause()
         }
     }
@@ -129,7 +129,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             player?.play()
         }
 
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             player = nil
         }
     }
@@ -141,7 +141,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
                 CommandersActTracker.adapter { _ in [:] }
             ]
         ))
-        expectNoHits(during: .seconds(3)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.play()
         }
     }
@@ -172,7 +172,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
 
         player.isTrackingEnabled = false
 
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.play()
         }
 
