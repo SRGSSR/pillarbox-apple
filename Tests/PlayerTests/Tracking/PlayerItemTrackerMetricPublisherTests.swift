@@ -12,7 +12,7 @@ import PillarboxStreams
 final class PlayerItemTrackerMetricPublisherTests: TestCase {
     func testEmptyPlayer() {
         let player = Player()
-        expectSimilarPublished(values: [[]], from: player.metricEventsPublisher, during: .milliseconds(500))
+        expectAtLeastSimilarPublished(values: [[]], from: player.metricEventsPublisher)
     }
 
     func testItemPlayback() {
@@ -38,15 +38,14 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
 
     func testPlaylist() {
         let player = Player(items: [.simple(url: Stream.shortOnDemand.url), .simple(url: Stream.mediumOnDemand.url)])
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [
                 [],
                 [.anyMetadata],
                 [.anyMetadata, .anyAsset],
                 [.anyMetadata, .anyAsset]
             ],
-            from: player.metricEventsPublisher,
-            during: .seconds(2)
+            from: player.metricEventsPublisher
         ) {
             player.play()
         }

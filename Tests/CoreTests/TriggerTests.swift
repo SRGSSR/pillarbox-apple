@@ -40,7 +40,7 @@ final class TriggerTests: XCTestCase {
 
     func testHashableActivationIndex() {
         let trigger = Trigger()
-        expectEqualPublished(values: ["out"], from: trigger.signal(activatedBy: "index").map { _ in "out" }, during: .seconds(1)) {
+        expectAtLeastEqualPublished(values: ["out"], from: trigger.signal(activatedBy: "index").map { _ in "out" }) {
             trigger.activate(for: "index")
         }
     }

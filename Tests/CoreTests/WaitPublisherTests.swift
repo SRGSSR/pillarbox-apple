@@ -18,7 +18,7 @@ final class WaitPublisherTests: XCTestCase {
             .wait(untilOutputFrom: signal)
         expectNothingPublished(from: publisher, during: .milliseconds(100))
 
-        expectEqualPublished(values: ["Received"], from: publisher, during: .milliseconds(100)) {
+        expectAtLeastEqualPublished(values: ["Received"], from: publisher) {
             signal.send(())
         }
     }

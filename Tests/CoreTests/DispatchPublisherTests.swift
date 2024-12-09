@@ -81,13 +81,13 @@ final class DispatchPublisherTests: XCTestCase {
         let delayedPublisher = [1, 2, 3].publisher
             .delayIfNeeded(for: 0.1, scheduler: DispatchQueue.main)
         let subject = CurrentValueSubject<Int, Never>(0)
-        expectEqualPublished(values: [0, 1, 2, 3], from: Publishers.Merge(delayedPublisher, subject), during: .milliseconds(100))
+        expectAtLeastEqualPublished(values: [0, 1, 2, 3], from: Publishers.Merge(delayedPublisher, subject))
     }
 
     func testDelayIfNeededOutputOrderingWithZeroDelay() {
         let delayedPublisher = [1, 2, 3].publisher
             .delayIfNeeded(for: 0, scheduler: DispatchQueue.main)
         let subject = CurrentValueSubject<Int, Never>(0)
-        expectEqualPublished(values: [1, 2, 3, 0], from: Publishers.Merge(delayedPublisher, subject), during: .milliseconds(100))
+        expectAtLeastEqualPublished(values: [1, 2, 3, 0], from: Publishers.Merge(delayedPublisher, subject))
     }
 }

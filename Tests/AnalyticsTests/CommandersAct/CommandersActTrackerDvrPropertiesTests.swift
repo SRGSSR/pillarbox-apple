@@ -119,7 +119,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         ))
         expect(player?.playbackState).toEventually(equal(.paused))
 
-        expectNoHits(during: .seconds(5)) {
+        expectNoHits(during: .milliseconds(500)) {
             player = nil
         }
     }

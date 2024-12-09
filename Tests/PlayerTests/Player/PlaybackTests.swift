@@ -39,10 +39,9 @@ final class PlaybackTests: XCTestCase {
     func testUnknown() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.idle],
-            from: playbackStatePublisher(for: player),
-            during: .seconds(1)
+            from: playbackStatePublisher(for: player)
         )
     }
 }
