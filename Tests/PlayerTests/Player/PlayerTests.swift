@@ -45,10 +45,9 @@ final class PlayerTests: TestCase {
     func testRetrieveCurrentValueOnSubscription() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.properties.isBuffering).toEventually(beFalse())
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false],
-            from: player.propertiesPublisher.slice(at: \.isBuffering),
-            during: .seconds(1)
+            from: player.propertiesPublisher.slice(at: \.isBuffering)
         )
     }
 

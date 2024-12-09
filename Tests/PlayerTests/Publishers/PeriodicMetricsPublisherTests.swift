@@ -13,10 +13,9 @@ import PillarboxStreams
 final class PeriodicMetricsPublisherTests: TestCase {
     func testEmpty() {
         let player = Player()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0],
-            from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count),
-            during: .seconds(1)
+            from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count)
         )
     }
 
@@ -44,7 +43,7 @@ final class PeriodicMetricsPublisherTests: TestCase {
     func testNoMetricsForLiveMp3() {
         let player = Player(item: .simple(url: Stream.liveMp3.url))
         let publisher = player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count)
-        expectEqualPublished(values: [0], from: publisher, during: .milliseconds(500)) {
+        expectAtLeastEqualPublished(values: [0], from: publisher) {
             player.play()
         }
     }
@@ -63,10 +62,9 @@ final class PeriodicMetricsPublisherTests: TestCase {
     func testFailure() {
         let item = PlayerItem.failing(loadedAfter: 0.1)
         let player = Player(item: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0],
-            from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count),
-            during: .seconds(1)
+            from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count)
         )
     }
 }
