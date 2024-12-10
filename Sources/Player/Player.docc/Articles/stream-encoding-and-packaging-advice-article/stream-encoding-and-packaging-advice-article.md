@@ -64,9 +64,11 @@ Several tools are available for stream encoding and packaging teams to check tha
 
 #### HTTP Live Streaming Tools
 
-Apple provides a series of command-line tools, available for macOS and CentOS Linux, on its [developer portal](https://developer.apple.com/download/all/) (a developer account is required).
+Apple offers a suite of command-line _HTTP Live Streaming Tools_ for macOS, accessible via its [developer portal](https://developer.apple.com/download/all/) (an account is required).
 
-These most notably contain the `mediastreamvalidator` command which which HLS streams can be validated. Please refer to the associated documentation for more information.
+Among these tools is the `mediastreamvalidator` command, which allows you to validate HLS streams. It can generate JSON output that, when processed by the `hlsreport` command, creates an HTML report highlighting violations of the HLS Authoring Specification and identifying stream discontinuities (using the `--disc` parameter).
+
+> Note: For detailed usage, consult the man pages for these tools.
 
 #### Inspection tools
 
