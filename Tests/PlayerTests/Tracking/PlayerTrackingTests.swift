@@ -46,7 +46,7 @@ final class PlayerTrackingTests: TestCase {
         }
 
         expectAtLeastEqualPublished(
-            values: [.enabled, .metricEvents, .disabled],
+            values: [.enabled, .metricEvents, .metricEvents, .disabled],
             from: publisher
         ) {
             player.isTrackingEnabled = true
