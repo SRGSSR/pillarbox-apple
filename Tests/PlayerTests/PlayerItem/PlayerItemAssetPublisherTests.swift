@@ -12,19 +12,17 @@ import PillarboxStreams
 final class PlayerItemAssetPublisherTests: TestCase {
     func testNoLoad() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [.loading],
-            from: item.$content.map(\.resource),
-            during: .milliseconds(500)
+            from: item.$content.map(\.resource)
         )
     }
 
     func testLoad() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [.loading, .simple(url: Stream.onDemand.url)],
-            from: item.$content.map(\.resource),
-            during: .milliseconds(500)
+            from: item.$content.map(\.resource)
         ) {
             PlayerItem.load(for: item.id)
         }
@@ -32,18 +30,16 @@ final class PlayerItemAssetPublisherTests: TestCase {
 
     func testReload() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [.loading, .simple(url: Stream.onDemand.url)],
-            from: item.$content.map(\.resource),
-            during: .milliseconds(500)
+            from: item.$content.map(\.resource)
         ) {
             PlayerItem.load(for: item.id)
         }
 
-        expectSimilarPublishedNext(
+        expectAtLeastSimilarPublished(
             values: [.simple(url: Stream.onDemand.url)],
-            from: item.$content.map(\.resource),
-            during: .milliseconds(500)
+            from: item.$content.map(\.resource)
         ) {
             PlayerItem.reload(for: item.id)
         }

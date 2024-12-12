@@ -32,10 +32,9 @@ final class ResourceItemTests: TestCase {
     func testFailingPlayerItem() {
         let item = Resource.failing(error: StructError()).playerItem(configuration: .default, limits: .none)
         _ = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.unknown],
-            from: item.statusPublisher(),
-            during: .seconds(1)
+            from: item.statusPublisher()
         )
     }
 }

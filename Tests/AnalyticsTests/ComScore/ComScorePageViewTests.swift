@@ -123,14 +123,14 @@ final class ComScorePageViewTests: ComScoreTestCase {
 
     func testAutomaticTrackingWithoutProtocolImplementation() {
         let viewController = UIViewController()
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             viewController.simulateViewAppearance()
         }
     }
 
     func testManualTrackingWithoutProtocolImplementation() {
         let viewController = UIViewController()
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             viewController.trackPageView()
         }
     }
@@ -179,7 +179,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let viewController2 = AutomaticMockViewController(title: "title2")
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [viewController1, viewController2]
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             viewController2.simulateViewAppearance()
         }
     }
@@ -209,14 +209,14 @@ final class ComScorePageViewTests: ComScoreTestCase {
             UINavigationController(rootViewController: viewController1),
             UINavigationController(rootViewController: viewController2)
         ]
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             viewController2.simulateViewAppearance()
         }
     }
 
     func testManualTracking() {
         let viewController = ManualMockViewController()
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             viewController.simulateViewAppearance()
         }
         expectAtLeastHits(

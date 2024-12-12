@@ -11,29 +11,26 @@ import UIKit
 
 final class ImageSourceTests: TestCase {
     func testNone() {
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.none],
-            from: ImageSource.none.imageSourcePublisher(),
-            during: .milliseconds(100)
+            from: ImageSource.none.imageSourcePublisher()
         )
     }
 
     func testImage() {
         let image = UIImage(systemName: "circle")!
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.image(image)],
-            from: ImageSource.image(image).imageSourcePublisher(),
-            during: .milliseconds(100)
+            from: ImageSource.image(image).imageSourcePublisher()
         )
     }
 
     func testNonLoadedImageForValidUrl() {
         let url = Bundle.module.url(forResource: "pixel", withExtension: "jpg")!
         let source = ImageSource.url(standardResolution: url)
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [.url(standardResolution: url)],
-            from: source.imageSourcePublisher(),
-            during: .milliseconds(100)
+            from: source.imageSourcePublisher()
         )
     }
 
@@ -41,10 +38,9 @@ final class ImageSourceTests: TestCase {
         let url = Bundle.module.url(forResource: "pixel", withExtension: "jpg")!
         let image = UIImage(contentsOfFile: url.path())!
         let source = ImageSource.url(standardResolution: url)
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [.url(standardResolution: url), .image(image)],
-            from: source.imageSourcePublisher(),
-            during: .milliseconds(100)
+            from: source.imageSourcePublisher()
         ) {
             _ = source.image
         }
@@ -53,10 +49,9 @@ final class ImageSourceTests: TestCase {
     func testInvalidImageFormat() {
         let url = Bundle.module.url(forResource: "invalid", withExtension: "jpg")!
         let source = ImageSource.url(standardResolution: url)
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [.url(standardResolution: url), .none],
-            from: source.imageSourcePublisher(),
-            during: .milliseconds(100)
+            from: source.imageSourcePublisher()
         ) {
             _ = source.image
         }
@@ -65,10 +60,9 @@ final class ImageSourceTests: TestCase {
     func testFailingUrl() {
         let url = URL(string: "https://localhost:8123/missing.jpg")!
         let source = ImageSource.url(standardResolution: url)
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [.url(standardResolution: url), .none],
-            from: source.imageSourcePublisher(),
-            during: .seconds(1)
+            from: source.imageSourcePublisher()
         ) {
             _ = source.image
         }

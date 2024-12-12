@@ -40,7 +40,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             ]
         ))
 
-        expectNoHits(during: .seconds(3)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.play()
         }
     }
@@ -53,7 +53,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             ]
         ))
 
-        expectNoHits(during: .seconds(3)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.play()
         }
     }

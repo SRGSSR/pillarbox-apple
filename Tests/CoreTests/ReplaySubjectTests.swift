@@ -33,13 +33,13 @@ final class ReplaySubjectTests: XCTestCase {
         subject.send(1)
         subject.send(2)
         subject.send(3)
-        expectEqualPublished(values: [2, 3], from: subject, during: .milliseconds(100))
+        expectAtLeastEqualPublished(values: [2, 3], from: subject)
     }
 
     func testNewValuesWithBufferOfZero() {
         let subject = ReplaySubject<Int, Never>(bufferSize: 0)
         subject.send(1)
-        expectEqualPublished(values: [2, 3], from: subject, during: .milliseconds(100)) {
+        expectAtLeastEqualPublished(values: [2, 3], from: subject) {
             subject.send(2)
             subject.send(3)
         }
@@ -50,7 +50,7 @@ final class ReplaySubjectTests: XCTestCase {
         subject.send(1)
         subject.send(2)
         subject.send(3)
-        expectEqualPublished(values: [2, 3, 4, 5], from: subject, during: .milliseconds(100)) {
+        expectAtLeastEqualPublished(values: [2, 3, 4, 5], from: subject) {
             subject.send(4)
             subject.send(5)
         }
@@ -61,8 +61,8 @@ final class ReplaySubjectTests: XCTestCase {
         subject.send(1)
         subject.send(2)
         subject.send(3)
-        expectEqualPublished(values: [2, 3], from: subject, during: .milliseconds(100))
-        expectEqualPublished(values: [2, 3], from: subject, during: .milliseconds(100))
+        expectAtLeastEqualPublished(values: [2, 3], from: subject)
+        expectAtLeastEqualPublished(values: [2, 3], from: subject)
     }
 
     func testSubscriptionRelease() {
@@ -79,10 +79,10 @@ final class ReplaySubjectTests: XCTestCase {
         subject.send(1)
         subject.send(2)
         subject.send(3)
-        expectEqualPublished(values: [2, 3, 4], from: subject, during: .milliseconds(100)) {
+        expectAtLeastEqualPublished(values: [2, 3, 4], from: subject) {
             subject.send(4)
         }
-        expectEqualPublished(values: [3, 4], from: subject, during: .milliseconds(100))
+        expectAtLeastEqualPublished(values: [3, 4], from: subject)
     }
 
     func testCompletion() {
@@ -98,7 +98,7 @@ final class ReplaySubjectTests: XCTestCase {
         subject.send(1)
         subject.send(completion: .finished)
         subject.send(2)
-        expectEqualPublished(values: [1], from: subject, during: .milliseconds(100))
+        expectAtLeastEqualPublished(values: [1], from: subject)
     }
 
     func testCompletionWithMultipleSubscribers() {

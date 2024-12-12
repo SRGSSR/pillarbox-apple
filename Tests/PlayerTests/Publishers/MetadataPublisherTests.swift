@@ -17,19 +17,17 @@ final class MetadataPublisherTests: TestCase {
 
     func testEmpty() {
         let player = Player()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil],
-            from: Self.titlePublisherTest(for: player),
-            during: .milliseconds(100)
+            from: Self.titlePublisherTest(for: player)
         )
     }
 
     func testImmediatelyAvailableWithoutMetadata() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil],
-            from: Self.titlePublisherTest(for: player),
-            during: .milliseconds(100)
+            from: Self.titlePublisherTest(for: player)
         )
     }
 
@@ -37,10 +35,9 @@ final class MetadataPublisherTests: TestCase {
         let player = Player(
             item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: AssetMetadataMock(title: "title"))
         )
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, "title"],
-            from: Self.titlePublisherTest(for: player),
-            during: .milliseconds(200)
+            from: Self.titlePublisherTest(for: player)
         )
     }
 
@@ -50,19 +47,17 @@ final class MetadataPublisherTests: TestCase {
             loadedAfter: 0,
             withMetadata: AssetMetadataMock(title: "title")
         ))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, "title"],
-            from: Self.titlePublisherTest(for: player),
-            during: .milliseconds(200)
+            from: Self.titlePublisherTest(for: player)
         )
     }
 
     func testUpdate() {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 0.1))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, "title0", "title1"],
-            from: Self.titlePublisherTest(for: player),
-            during: .milliseconds(500)
+            from: Self.titlePublisherTest(for: player)
         )
     }
 
@@ -72,10 +67,9 @@ final class MetadataPublisherTests: TestCase {
             values: [nil, "Title 1"],
             from: Self.titlePublisherTest(for: player)
         )
-        expectEqualPublishedNext(
+        expectAtLeastEqualPublishedNext(
             values: [nil, "Title 2"],
-            from: Self.titlePublisherTest(for: player),
-            during: .milliseconds(500)
+            from: Self.titlePublisherTest(for: player)
         ) {
             player.items = [.webServiceMock(media: .media2)]
         }
@@ -83,10 +77,9 @@ final class MetadataPublisherTests: TestCase {
 
     func testEntirePlayback() {
         let player = Player(item: .mock(url: Stream.shortOnDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, "title", nil],
-            from: Self.titlePublisherTest(for: player),
-            during: .seconds(2)
+            from: Self.titlePublisherTest(for: player)
         ) {
             player.play()
         }

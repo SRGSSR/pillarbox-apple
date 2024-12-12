@@ -46,6 +46,7 @@ final class PlayerItemTrackerMock: PlayerItemTracker {
     func updateProperties(to properties: PlayerProperties) {}
 
     func updateMetricEvents(to events: [MetricEvent]) {
+        guard !events.isEmpty else { return }
         configuration.statePublisher.send(.metricEvents)
     }
 

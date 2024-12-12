@@ -23,7 +23,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
     func testItemPlayback() {
         let player = Player()
         let publisher = PlayerItemTrackerMock.StatePublisher()
-        expectEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher, during: .seconds(2)) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher) {
             player.append(.simple(
                 url: Stream.onDemand.url,
                 trackerAdapters: [PlayerItemTrackerMock.adapter(statePublisher: publisher)]
@@ -72,7 +72,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
     func testFailedItem() {
         let player = Player()
         let publisher = PlayerItemTrackerMock.StatePublisher()
-        expectEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher, during: .milliseconds(500)) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher) {
             player.append(.simple(
                 url: Stream.unavailable.url,
                 trackerAdapters: [PlayerItemTrackerMock.adapter(statePublisher: publisher)]

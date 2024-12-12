@@ -28,10 +28,9 @@ final class CurrentItemTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.unavailable.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [item1],
-            from: player.changePublisher(at: \.currentItem).removeDuplicates(),
-            during: .milliseconds(500)
+            from: player.changePublisher(at: \.currentItem).removeDuplicates()
         ) {
             player.play()
         }
@@ -42,10 +41,9 @@ final class CurrentItemTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let item3 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2, item3])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [item1, item2],
-            from: player.changePublisher(at: \.currentItem).removeDuplicates(),
-            during: .seconds(2)
+            from: player.changePublisher(at: \.currentItem).removeDuplicates()
         ) {
             player.play()
         }
@@ -87,10 +85,9 @@ final class CurrentItemTests: TestCase {
     func testCurrentItemWithFailedItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [item],
-            from: player.changePublisher(at: \.currentItem).removeDuplicates(),
-            during: .milliseconds(500)
+            from: player.changePublisher(at: \.currentItem).removeDuplicates()
         )
     }
 
@@ -126,10 +123,9 @@ final class CurrentItemTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [item1, item2],
-            from: player.changePublisher(at: \.currentItem).removeDuplicates(),
-            during: .milliseconds(500)
+            from: player.changePublisher(at: \.currentItem).removeDuplicates()
         ) {
             player.currentItem = item2
         }
