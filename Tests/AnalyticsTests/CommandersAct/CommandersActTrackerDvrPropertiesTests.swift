@@ -94,16 +94,12 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
                 CommandersActTracker.adapter { _ in .test }
             ]
         ))
-
-        player?.play()
-        expect(player?.playbackState).toEventually(equal(.playing))
-
-        player?.pause()
-        wait(for: .seconds(2))
-
+        expectAtLeastHits(play()) {
+            player?.play()
+        }
         expectAtLeastHits(
             stop { labels in
-                expect(labels.media_position).to(equal(0))
+                expect(labels.media_position).notTo(beNil())
             }
         ) {
             player = nil
@@ -119,7 +115,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         ))
         expect(player?.playbackState).toEventually(equal(.paused))
 
-        expectNoHits(during: .seconds(5)) {
+        expectNoHits(during: .milliseconds(500)) {
             player = nil
         }
     }

@@ -34,7 +34,7 @@ final class CommandersActHeartbeatTests: CommandersActTestCase {
 
     func testNoHeartbeatInitially() {
         _ = Self.player(from: .onDemand, into: &cancellables)
-        expectNoHits(during: .milliseconds(300))
+        expectNoHits(during: .milliseconds(500))
     }
 
     func testOnDemandHeartbeatAfterPlay() {
@@ -63,7 +63,7 @@ final class CommandersActHeartbeatTests: CommandersActTestCase {
         expectAtLeastHits(pos()) {
             player.play()
         }
-        expectNoHits(during: .milliseconds(300)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.pause()
         }
     }

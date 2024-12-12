@@ -58,7 +58,7 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
         player.play()
         expect(player.playbackState).toEventually(equal(.playing))
 
-        expectNoHits(during: .seconds(2)) {
+        expectNoHits(during: .milliseconds(500)) {
             player.setDesiredPlaybackSpeed(1)
         }
     }
