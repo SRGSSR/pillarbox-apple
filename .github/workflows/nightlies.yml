@@ -9,6 +9,7 @@ jobs:
   deliver-demo-nightlies:
     name: 🌙 Nightlies
     runs-on: macos-latest
+    timeout-minutes: 1
     strategy:
       matrix:
         platform: [ios, tvos]
