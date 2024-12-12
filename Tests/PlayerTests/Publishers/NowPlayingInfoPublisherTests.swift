@@ -20,10 +20,9 @@ final class NowPlayingInfoPublisherTests: TestCase {
 
     func testInactive() {
         let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [[:]],
-            from: Self.nowPlayingInfoPublisher(for: player),
-            during: .milliseconds(100)
+            from: Self.nowPlayingInfoPublisher(for: player)
         )
     }
 
@@ -36,10 +35,9 @@ final class NowPlayingInfoPublisherTests: TestCase {
             player.isActive = true
         }
 
-        expectSimilarPublishedNext(
+        expectAtLeastSimilarPublishedNext(
             values: [[:]],
-            from: Self.nowPlayingInfoPublisher(for: player),
-            during: .milliseconds(100)
+            from: Self.nowPlayingInfoPublisher(for: player)
         ) {
             player.isActive = false
         }

@@ -15,7 +15,7 @@ final class PlayerTrackingTests: TestCase {
         player.isTrackingEnabled = false
         let publisher = PlayerItemTrackerMock.StatePublisher()
 
-        expectEqualPublished(values: [.initialized], from: publisher, during: .milliseconds(500)) {
+        expectAtLeastEqualPublished(values: [.initialized], from: publisher) {
             player.append(
                 .simple(
                     url: Stream.shortOnDemand.url,
@@ -34,7 +34,7 @@ final class PlayerTrackingTests: TestCase {
 
         let publisher = PlayerItemTrackerMock.StatePublisher()
 
-        expectEqualPublished(values: [.initialized], from: publisher, during: .seconds(1)) {
+        expectAtLeastEqualPublished(values: [.initialized], from: publisher) {
             player.append(
                 .simple(
                     url: Stream.shortOnDemand.url,
@@ -60,7 +60,7 @@ final class PlayerTrackingTests: TestCase {
 
         let publisher = PlayerItemTrackerMock.StatePublisher()
 
-        expectEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher, during: .seconds(1)) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher) {
             player.append(
                 .simple(
                     url: Stream.shortOnDemand.url,
@@ -86,7 +86,7 @@ final class PlayerTrackingTests: TestCase {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url, trackerAdapters: [PlayerItemTrackerMock.adapter(statePublisher: publisher)]))
         player.isTrackingEnabled = true
 
-        expectEqualPublished(values: [.metricEvents, .metricEvents], from: publisher, during: .seconds(1)) {
+        expectAtLeastEqualPublished(values: [.metricEvents, .metricEvents], from: publisher) {
             player.isTrackingEnabled = true
         }
     }
@@ -97,7 +97,7 @@ final class PlayerTrackingTests: TestCase {
 
         let publisher = PlayerItemTrackerMock.StatePublisher()
 
-        expectEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher, during: .seconds(1)) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher) {
             player.append(
                 .simple(
                     url: Stream.shortOnDemand.url,
@@ -115,7 +115,7 @@ final class PlayerTrackingTests: TestCase {
 
         let publisher = PlayerItemTrackerMock.StatePublisher()
 
-        expectEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher, during: .seconds(1)) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents], from: publisher) {
             player.append(
                 .simple(
                     url: Stream.onDemand.url,

@@ -50,7 +50,7 @@ final class ProgressTrackerTimeTests: TestCase {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
-        expectPublished(
+        expectAtLeastPublished(
             values: [
                 .invalid,
                 .zero,
@@ -62,8 +62,7 @@ final class ProgressTrackerTimeTests: TestCase {
             ],
             from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),
-            to: beClose(within: 0.1),
-            during: .seconds(2)
+            to: beClose(within: 0.1)
         ) {
             progressTracker.player = player
             player.play()

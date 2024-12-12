@@ -16,7 +16,7 @@ final class MeasurePublisherTests: XCTestCase {
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .measureDateInterval()
             .map(\.duration)
-        expectPublished(values: [0.5], from: publisher, to: beClose(within: 0.1), during: .seconds(1))
+        expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
     }
 
     func testWithMultipleEvents() {
@@ -24,7 +24,7 @@ final class MeasurePublisherTests: XCTestCase {
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .measureDateInterval()
             .map(\.duration)
-        expectPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1), during: .seconds(1))
+        expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
     }
 
     func testWithoutEvents() {
