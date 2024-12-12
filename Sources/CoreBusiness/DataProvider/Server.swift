@@ -26,15 +26,13 @@ public struct Server {
     private let baseUrl: URL
     private let queryItems: [URLQueryItem]
 
-    /// Creates a server with custom settings.
+    /// This API will be removed in a future Pillarbox release. Do not use.
     ///
-    /// - Parameters:
-    ///   - baseUrl: The base URL of the server.
-    ///   - queryItems: Additional query items to associate with each request.
-    ///
-    /// Useful for servers which can exactly pose as SRG SSR servers and deliver the same playback metadata format and
-    /// image scaling capabilities.
+    /// > Warning: This API will be removed in a future Pillarbox release. Do not use.
     public init(baseUrl: URL, queryItems: [URLQueryItem] = []) {
+        // FIXME: This initializer must be made private after SAM replaces the IL. The assertion must be removed at
+        //        the same time.
+        assert(Bundle.main.allowsReservedInitializer, "This API will be removed in a future Pillarbox release. Do not use.")
         self.baseUrl = baseUrl
         self.queryItems = queryItems
     }
@@ -69,5 +67,12 @@ public struct Server {
         else {
             return url
         }
+    }
+}
+
+private extension Bundle {
+    var allowsReservedInitializer: Bool {
+        guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return false }
+        return bundleIdentifier.hasPrefix("ch.srgssr.Pillarbox-demo") || bundleIdentifier.hasPrefix("com.apple.dt.xctest.tool")
     }
 }
