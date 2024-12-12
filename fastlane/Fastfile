@@ -25,9 +25,8 @@ DEVICES = {
 
 ICON_GLOBS = {
   ios: '/Demo/Resources/Assets.xcassets/AppIcon.appiconset/*.png',
-  tvos: \
-    '/Demo/Resources/Assets.xcassets/App Icon & Top Shelf Image.brandassets/*/Back.imagestacklayer' \
-    '/Content.imageset/*.png'
+  tvos: '/Demo/Resources/Assets.xcassets/App Icon & Top Shelf Image.brandassets/*/Back.imagestacklayer' \
+        '/Content.imageset/*.png'
 }.freeze
 
 SHIELD_SCALES = {
