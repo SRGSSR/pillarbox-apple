@@ -19,7 +19,7 @@ jobs:
   tests:
     name: 🧪 Tests
     runs-on: macos-latest
-    timeout-minutes: 1
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:

@@ -9,7 +9,7 @@ jobs:
   deliver-demo-releases:
     name: 🚀 Releases
     runs-on: macos-latest
-    timeout-minutes: 1
+    timeout-minutes: 20
     strategy:
       matrix:
         platform: [ios, tvos]
