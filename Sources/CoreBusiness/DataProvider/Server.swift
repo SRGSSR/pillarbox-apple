@@ -32,7 +32,7 @@ public struct Server {
     public init(baseUrl: URL, queryItems: [URLQueryItem] = []) {
         // FIXME: This initializer must be made private after SAM replaces the IL. The assertion must be removed at
         //        the same time.
-        assert(Bundle.main.bundleIdentifier!.hasPrefix("ch.srgssr.Pillarbox-demo"), "This API will be removed in a future Pillarbox release. Do not use.")
+        assert(Bundle.main.allowsReservedInitializer, "This API will be removed in a future Pillarbox release. Do not use.")
         self.baseUrl = baseUrl
         self.queryItems = queryItems
     }
@@ -67,5 +67,12 @@ public struct Server {
         else {
             return url
         }
+    }
+}
+
+private extension Bundle {
+    var allowsReservedInitializer: Bool {
+        guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return false }
+        return bundleIdentifier.hasPrefix("ch.srgssr.Pillarbox-demo") || bundleIdentifier.hasPrefix("com.apple.dt.xctest.tool")
     }
 }
