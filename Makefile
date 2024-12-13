@@ -119,39 +119,39 @@ find-dead-code:
 
 .PHONY: help
 help:
-	@echo "The following targets are available:"
+	@echo "Available targets:"
 	@echo
-	@echo "   all                                Default target"
+	@echo "Default:"
+	@echo "  all                            Default target"
 	@echo
-	@echo "   archive-demo-ios                   Archive the iOS demo (for all configurations)"
-	@echo "     Example: make archive-demo-ios MODE=--non-interactive (interactive by default)"
-	@echo "   archive-demo-tvos                  Archive the tvOS demo (for all configurations)"
-	@echo "     Example: make archive-demo-tvos MODE=--non-interactive (interactive by default)"
+	@echo "Archive:"
+	@echo "  archive-demo-ios               Archive iOS demo [MODE=\"--non-interactive\"]"
+	@echo "  archive-demo-tvos              Archive tvOS demo [MODE=\"--non-interactive\"]"
 	@echo
-	@echo "   deliver-demo-nightly-ios           Deliver a demo nightly build for iOS"
-	@echo "     Example: make deliver-demo-nightly-ios MODE=--non-interactive (interactive by default)"
-	@echo "   deliver-demo-nightly-tvos          Deliver a demo nightly build for tvOS"
-	@echo "     Example: make deliver-demo-nightly-tvos MODE=--non-interactive (interactive by default)"
+	@echo "Deliver:"
+	@echo "  deliver-demo-nightly-ios       Deliver nightly iOS demo build [MODE=\"--non-interactive\"]"
+	@echo "  deliver-demo-nightly-tvos      Deliver nightly tvOS demo build [MODE=\"--non-interactive\"]"
+	@echo "  deliver-demo-release-ios       Deliver release iOS demo build [MODE=\"--non-interactive\"]"
+	@echo "  deliver-demo-release-tvos      Deliver release tvOS demo build [MODE=\"--non-interactive\"]"
 	@echo
-	@echo "   deliver-demo-release-ios           Deliver a demo release build for iOS"
-	@echo "     Example: make deliver-demo-release-ios MODE=--non-interactive (interactive by default)"
-	@echo "   deliver-demo-release-tvos          Deliver a demo release build for tvOS"
-	@echo "     Example: make deliver-demo-release-tvos MODE=--non-interactive (interactive by default)"
+	@echo "Test:"
+	@echo "  test-streams-start             Start test streams"
+	@echo "  test-streams-stop              Stop test streams"
+	@echo "  test-ios                       Build & run iOS unit tests"
+	@echo "  test-tvos                      Build & run tvOS unit tests"
 	@echo
-	@echo "   test-streams-start                 Start servicing test streams"
-	@echo "   test-streams-stop                  Stop servicing test streams"
+	@echo "Quality:"
+	@echo "  check-quality                  Run quality checks"
+	@echo "  fix-quality                    Automatically fix quality issues"
 	@echo
-	@echo "   test-ios                           Build and run unit tests for iOS"
-	@echo "   test-tvos                          Build and run unit tests for tvOS"
+	@echo "Git Hooks:"
+	@echo "  git-hook-install               Install custom hooks from ./hooks"
+	@echo "  git-hook-uninstall             Revert to default hooks"
 	@echo
-	@echo "   check-quality                      Run quality checks"
-	@echo "   fix-quality                        Fix quality automatically (if possible)"
+	@echo "Utilities:"
+	@echo "  spm-reload                     Reload SPM dependencies"
+	@echo "  clean-imports                  Remove unused imports"
+	@echo "  find-dead-code                 Locate dead code"
 	@echo
-	@echo "   git-hook-install                   Use hooks located in ./hooks"
-	@echo "   git-hook-uninstall                 Use default hooks located in .git/hooks"
-	@echo
-	@echo "   spm-reload                         Reload SPM dependencies"
-	@echo "   clean-imports                      Remove useless imports from the project"
-	@echo "   find-dead-code                     Find dead code"
-	@echo
-	@echo "   help                               Display this help message"
+	@echo "Other:"
+	@echo "  help                           Show this help message"
