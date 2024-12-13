@@ -31,12 +31,12 @@ fi
 
 echo -e "Archiving $PLATFORM demo..."
 
-TEAM_ID=""
-KEY_ISSUER_ID=""
-KEY_ID=""
-APPLE_API_KEY_BASE64=""
-
 if [[ $IS_INTERACTIVE == true ]]; then
+    TEAM_ID=""
+    KEY_ISSUER_ID=""
+    KEY_ID=""
+    APPLE_API_KEY_BASE64=""
+
     echo "Please provide information related to your Apple account:"
     echo
     read -rp "  TEAM_ID: " TEAM_ID
@@ -53,7 +53,7 @@ if [[ $IS_INTERACTIVE == true ]]; then
         exit 1
     fi
     echo
-    
+
     export TEAM_ID
     export KEY_ISSUER_ID
     export KEY_ID
