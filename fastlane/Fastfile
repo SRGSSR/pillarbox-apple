@@ -46,14 +46,6 @@ APP_IDENTIFIERS = {
   release: 'ch.srgssr.Pillarbox-demo'
 }.freeze
 
-# -- Helpers
-
-def valid_float?(string)
-  true if Float string
-rescue StandardError
-  false
-end
-
 # -- External configuration
 
 def api_key_filepath
