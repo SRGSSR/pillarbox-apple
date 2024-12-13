@@ -13,43 +13,54 @@ archive-demo-tvos:
 	@Scripts/archive-demo.sh $(MODE) --platform tvos
 
 .PHONY: deliver-demo-nightly-ios
-deliver-demo-nightly-ios: install-pkgx install-bundler
+deliver-demo-nightly-ios:
+	@Scripts/install-pkgx.sh
+	@Scripts/install-bundler.sh
 	@echo "Delivering demo nightly build for iOS..."
 	@pkgx +magick +rsvg-convert bundle exec fastlane deliver_demo_nightly_ios
 	@echo "... done.\n"
 
 .PHONY: deliver-demo-nightly-tvos
-deliver-demo-nightly-tvos: install-pkgx install-bundler
+deliver-demo-nightly-tvos:
+	@Scripts/install-pkgx.sh
+	@Scripts/install-bundler.sh
 	@echo "Delivering demo nightly build for tvOS..."
 	@pkgx +magick +rsvg-convert bundle exec fastlane deliver_demo_nightly_tvos
 	@echo "... done.\n"
 
 .PHONY: deliver-demo-release-ios
-deliver-demo-release-ios: install-pkgx install-bundler
+deliver-demo-release-ios:
+	@Scripts/install-pkgx.sh
+	@Scripts/install-bundler.sh
 	@echo "Delivering demo release build for iOS..."
 	@pkgx bundle exec fastlane deliver_demo_release_ios
 	@echo "... done.\n"
 
 .PHONY: deliver-demo-release-tvos install-bundler
-deliver-demo-release-tvos: install-pkgx
+deliver-demo-release-tvos:
+	@Scripts/install-pkgx.sh
 	@echo "Delivering demo release build for tvOS..."
 	@pkgx bundle exec fastlane deliver_demo_release_tvos
 	@echo "... done.\n"
 
 .PHONY: test-streams-start
-test-streams-start: install-pkgx
+test-streams-start:
+	@Scripts/install-pkgx.sh
 	@echo "Starting test streams"
 	@Scripts/test-streams.sh -s
 	@echo "... done.\n"
 
 .PHONY: test-streams-stop
-test-streams-stop: install-pkgx
+test-streams-stop:
+	@Scripts/install-pkgx.sh
 	@echo "Stopping test streams"
 	@Scripts/test-streams.sh -k
 	@echo "... done.\n"
 
 .PHONY: test-ios
-test-ios: install-pkgx install-bundler
+test-ios:
+	@Scripts/install-pkgx.sh
+	@Scripts/install-bundler.sh
 	@echo "Running unit tests..."
 	@Scripts/test-streams.sh -s
 	@pkgx bundle exec fastlane test_ios
@@ -57,7 +68,9 @@ test-ios: install-pkgx install-bundler
 	@echo "... done.\n"
 
 .PHONY: test-tvos
-test-tvos: install-pkgx install-bundler
+test-tvos:
+	@Scripts/install-pkgx.sh
+	@Scripts/install-bundler.sh
 	@echo "Running unit tests..."
 	@Scripts/test-streams.sh -s
 	@pkgx bundle exec fastlane test_tvos
@@ -65,13 +78,15 @@ test-tvos: install-pkgx install-bundler
 	@echo "... done.\n"
 
 .PHONY: check-quality
-check-quality: install-pkgx
+check-quality:
+	@Scripts/install-pkgx.sh
 	@echo "Checking quality..."
 	@Scripts/check-quality.sh
 	@echo "... done.\n"
 
 .PHONY: fix-quality
-fix-quality: install-pkgx
+fix-quality:
+	@Scripts/install-pkgx.sh
 	@echo "Fixing quality..."
 	@Scripts/fix-quality.sh
 	@echo "... done.\n"
