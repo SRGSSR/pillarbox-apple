@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function usage {
     echo
     echo "[!] Usage: $0 [--non-interactive] --platform [ios | tvos]"
@@ -44,9 +46,12 @@ if [[ $IS_INTERACTIVE == true ]]; then
     export TEAM_ID
     export KEY_ISSUER_ID
     export KEY_ID
-    "$(dirname "$0")/configure-environment.sh" "$APPLE_API_KEY_BASE64"
     echo
+    "$(dirname "$0")/configure-environment.sh" "$APPLE_API_KEY_BASE64"
 fi
+
+"$(dirname "$0")/install-pkgx.sh"
+"$(dirname "$0")/install-bundler.sh"
 
 pkgx bundle exec fastlane "archive_demo_$PLATFORM"
 echo "... done"
