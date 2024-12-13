@@ -14,34 +14,19 @@ archive-demo-tvos:
 
 .PHONY: deliver-demo-nightly-ios
 deliver-demo-nightly-ios:
-	@Scripts/install-pkgx.sh
-	@Scripts/install-bundler.sh
-	@echo "Delivering demo nightly build for iOS..."
-	@pkgx +magick +rsvg-convert bundle exec fastlane deliver_demo_nightly_ios
-	@echo "... done.\n"
+	@Scripts/deliver-demo.sh $(MODE) --platform ios --configuration nightly
 
 .PHONY: deliver-demo-nightly-tvos
 deliver-demo-nightly-tvos:
-	@Scripts/install-pkgx.sh
-	@Scripts/install-bundler.sh
-	@echo "Delivering demo nightly build for tvOS..."
-	@pkgx +magick +rsvg-convert bundle exec fastlane deliver_demo_nightly_tvos
-	@echo "... done.\n"
+	@Scripts/deliver-demo.sh $(MODE) --platform tvos --configuration nightly
 
 .PHONY: deliver-demo-release-ios
 deliver-demo-release-ios:
-	@Scripts/install-pkgx.sh
-	@Scripts/install-bundler.sh
-	@echo "Delivering demo release build for iOS..."
-	@pkgx bundle exec fastlane deliver_demo_release_ios
-	@echo "... done.\n"
+	@Scripts/deliver-demo.sh $(MODE) --platform ios --configuration release
 
 .PHONY: deliver-demo-release-tvos install-bundler
 deliver-demo-release-tvos:
-	@Scripts/install-pkgx.sh
-	@echo "Delivering demo release build for tvOS..."
-	@pkgx bundle exec fastlane deliver_demo_release_tvos
-	@echo "... done.\n"
+	@Scripts/deliver-demo.sh $(MODE) --platform tvos --configuration release
 
 .PHONY: test-streams-start
 test-streams-start:
@@ -144,10 +129,14 @@ help:
 	@echo "     Example: make archive-demo-tvos MODE=--non-interactive (interactive by default)"
 	@echo
 	@echo "   deliver-demo-nightly-ios           Deliver a demo nightly build for iOS"
+	@echo "     Example: make deliver-demo-nightly-ios MODE=--non-interactive (interactive by default)"
 	@echo "   deliver-demo-nightly-tvos          Deliver a demo nightly build for tvOS"
+	@echo "     Example: make deliver-demo-nightly-tvos MODE=--non-interactive (interactive by default)"
 	@echo
 	@echo "   deliver-demo-release-ios           Deliver a demo release build for iOS"
+	@echo "     Example: make deliver-demo-release-ios MODE=--non-interactive (interactive by default)"
 	@echo "   deliver-demo-release-tvos          Deliver a demo release build for tvOS"
+	@echo "     Example: make deliver-demo-release-tvos MODE=--non-interactive (interactive by default)"
 	@echo
 	@echo "   test-streams-start                 Start servicing test streams"
 	@echo "   test-streams-stop                  Stop servicing test streams"
