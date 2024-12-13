@@ -5,7 +5,7 @@ all: help
 
 
 .PHONY: archive-demo-ios
-archive-demo-ios: 
+archive-demo-ios:
 	@Scripts/archive-demo.sh $(MODE) --platform ios
 
 .PHONY: archive-demo-tvos
