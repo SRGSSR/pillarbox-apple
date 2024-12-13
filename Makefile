@@ -3,30 +3,14 @@
 .PHONY: all
 all: help
 
-.PHONY: install-pkgx
-install-pkgx:
-	@echo "Installing pkgx..."
-	@curl -Ssf https://pkgx.sh | sh &> /dev/null
-	@echo "... done.\n"
-
-.PHONY: install-bundler
-install-bundler:
-	@echo "Installing bundler..."
-	@pkgx bundle config set path '.bundle'
-	@pkgx bundle install
-	@echo "... done.\n"
-
-.PHONY: fastlane
-fastlane: install-pkgx install-bundler
-	@pkgx bundle exec fastlane
 
 .PHONY: archive-demo-ios
-archive-demo-ios: install-pkgx install-bundler
-	@pkgx bundle exec fastlane archive_demo_ios
+archive-demo-ios: 
+	@Scripts/archive-demo.sh $(MODE) --platform ios
 
 .PHONY: archive-demo-tvos
-archive-demo-tvos: install-pkgx install-bundler
-	@pkgx bundle exec fastlane archive_demo_tvos
+archive-demo-tvos:
+	@Scripts/archive-demo.sh $(MODE) --platform tvos
 
 .PHONY: deliver-demo-nightly-ios
 deliver-demo-nightly-ios: install-pkgx install-bundler
@@ -142,7 +126,9 @@ help:
 	@echo "   fastlane                           Run fastlane"
 	@echo ""
 	@echo "   archive-demo-ios                   Archive the iOS demo (for all configurations)"
+	@echo "     Example: make archive-demo-ios MODE=--non-interactive (interactive by default)"
 	@echo "   archive-demo-tvos                  Archive the tvOS demo (for all configurations)"
+	@echo "     Example: make archive-demo-tvos MODE=--non-interactive (interactive by default)"
 	@echo ""
 	@echo "   deliver-demo-nightly-ios           Deliver a demo nightly build for iOS"
 	@echo "   deliver-demo-nightly-tvos          Deliver a demo nightly build for tvOS"
