@@ -6,10 +6,10 @@ eval "$(pkgx --shellcode)"
 
 echo "... checking Swift code..."
 env +swiftlint
-if [ $# -eq 0 ]; then
-  swiftlint --quiet --strict
-elif [[ "$1" == "only-changes" ]]; then
+if [[ "$1" == "--only-changes" ]]; then
   git diff --staged --name-only | grep ".swift$" | xargs swiftlint lint --quiet --strict
+else
+  swiftlint --quiet --strict
 fi
 
 echo "... checking Ruby scripts..."

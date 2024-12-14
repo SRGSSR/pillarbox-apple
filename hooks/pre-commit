@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Quality check
-if Scripts/check-quality.sh only-changes; then
+if Scripts/check-quality.sh --only-changes; then
 	echo "✅ Quality checked"
 else
 	echo "❌ Quality check failed"
