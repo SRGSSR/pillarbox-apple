@@ -3,6 +3,7 @@
 SCRIPT_NAME=$(basename "$0")
 SCRIPT_DIR=$(dirname "$0")
 
+Scripts/install-pkgx.sh
 eval "$(pkgx --shellcode)"
 env +python +ffmpeg +packager
 
@@ -142,9 +143,11 @@ function usage {
 while getopts sk OPT; do
     case "$OPT" in
         s)
+            echo "Starting test streams"
             serve_test_streams "$GENERATED_DIR"
             ;;
         k)
+            echo "Stopping test streams"
             kill_test_streams "$GENERATED_DIR"
             ;;
         *)
@@ -153,3 +156,5 @@ while getopts sk OPT; do
             ;;
     esac
 done
+
+echo "... done"

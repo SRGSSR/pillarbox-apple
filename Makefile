@@ -30,17 +30,11 @@ deliver-demo-release-tvos:
 
 .PHONY: test-streams-start
 test-streams-start:
-	@Scripts/install-pkgx.sh
-	@echo "Starting test streams"
 	@Scripts/test-streams.sh -s
-	@echo "... done.\n"
 
 .PHONY: test-streams-stop
 test-streams-stop:
-	@Scripts/install-pkgx.sh
-	@echo "Stopping test streams"
 	@Scripts/test-streams.sh -k
-	@echo "... done.\n"
 
 .PHONY: test-ios
 test-ios:
