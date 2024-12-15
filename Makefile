@@ -38,23 +38,11 @@ test-streams-stop:
 
 .PHONY: test-ios
 test-ios:
-	@Scripts/install-pkgx.sh
-	@Scripts/install-bundler.sh
-	@echo "Running unit tests..."
-	@Scripts/test-streams.sh -s
-	@pkgx bundle exec fastlane test_ios
-	@Scripts/test-streams.sh -k
-	@echo "... done.\n"
+	@Scripts/test.sh --platform ios
 
 .PHONY: test-tvos
 test-tvos:
-	@Scripts/install-pkgx.sh
-	@Scripts/install-bundler.sh
-	@echo "Running unit tests..."
-	@Scripts/test-streams.sh -s
-	@pkgx bundle exec fastlane test_tvos
-	@Scripts/test-streams.sh -k
-	@echo "... done.\n"
+	@Scripts/test.sh --platform tvos
 
 .PHONY: check-quality
 check-quality:
