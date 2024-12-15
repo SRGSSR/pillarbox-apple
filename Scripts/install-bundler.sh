@@ -2,7 +2,11 @@
 
 set -e
 
+eval "$(pkgx --shellcode)"
+
+env +gem +bundle
+
 echo "Installing bundler..."
-pkgx bundle config set path '.bundle'
-pkgx bundle install
+bundle config set path '.bundle'
+bundle install
 echo "... done."
