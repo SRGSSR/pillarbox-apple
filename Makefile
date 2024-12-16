@@ -50,10 +50,7 @@ check-quality:
 
 .PHONY: fix-quality
 fix-quality:
-	@Scripts/install-pkgx.sh
-	@echo "Fixing quality..."
 	@Scripts/fix-quality.sh
-	@echo "... done.\n"
 
 .PHONY: git-hook-install
 git-hook-install:
