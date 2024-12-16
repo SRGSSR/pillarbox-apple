@@ -64,15 +64,6 @@ git-hook-uninstall:
 	@git config --unset core.hooksPath
 	@echo "... done.\n"
 
-.PHONY: spm-reload
-spm-reload:
-	@echo "Remove dependencies..."
-	@swift package reset
-	@echo "... done.\n"
-	@echo "Reload dependencies..."
-	@swift package update
-	@echo "... done.\n"
-
 .PHONY: clean-imports
 clean-imports:
 	@echo "Cleaning imports..."
@@ -125,7 +116,6 @@ help:
 	@echo "  git-hook-uninstall             Revert to default hooks"
 	@echo
 	@echo "Utilities:"
-	@echo "  spm-reload                     Reload SPM dependencies"
 	@echo "  clean-imports                  Remove unused imports"
 	@echo "  find-dead-code                 Locate dead code"
 	@echo
