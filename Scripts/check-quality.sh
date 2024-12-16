@@ -2,6 +2,10 @@
 
 set -e
 
+echo "Checking quality..."
+
+Scripts/install-pkgx.sh
+
 eval "$(pkgx --shellcode)"
 
 echo "... checking Swift code..."
@@ -24,3 +28,5 @@ pkgx markdownlint --ignore fastlane .
 
 echo "... checking YAML files..."
 pkgx yamllint .*.yml .github
+
+echo "...done"

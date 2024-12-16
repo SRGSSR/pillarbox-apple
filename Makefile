@@ -46,10 +46,7 @@ test-tvos:
 
 .PHONY: check-quality
 check-quality:
-	@Scripts/install-pkgx.sh
-	@echo "Checking quality..."
 	@Scripts/check-quality.sh
-	@echo "... done.\n"
 
 .PHONY: fix-quality
 fix-quality:
