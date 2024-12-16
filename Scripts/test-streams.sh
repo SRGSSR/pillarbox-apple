@@ -157,4 +157,4 @@ while getopts sk OPT; do
     esac
 done
 
-echo "... done"
+echo "... done."

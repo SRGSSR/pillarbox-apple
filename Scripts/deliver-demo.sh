@@ -51,4 +51,4 @@ eval "$(pkgx --shellcode)"
 env +bundle +magick +rsvg-convert
 
 bundle exec fastlane "deliver_demo_${CONFIGURATION}_${PLATFORM}"
-echo "... done"
+echo "... done."

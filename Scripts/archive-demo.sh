@@ -40,4 +40,4 @@ Scripts/install-pkgx.sh
 Scripts/install-bundler.sh
 
 pkgx bundle exec fastlane "archive_demo_$PLATFORM"
-echo "... done"
+echo "... done."

@@ -29,4 +29,4 @@ pkgx markdownlint --ignore fastlane .
 echo "... checking YAML files..."
 pkgx yamllint .*.yml .github
 
-echo "...done"
+echo "... done."
