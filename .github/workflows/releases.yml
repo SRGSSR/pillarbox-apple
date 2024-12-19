@@ -34,7 +34,8 @@ jobs:
 
       - name: Deliver the demo
         run: |
-          make deliver-demo-release-${{ matrix.platform }}
+          make deliver-demo-release-${{ matrix.platform }} \
+          MODE="--non-interactive"
         env:
           TEAM_ID: ${{ secrets.TEAM_ID }}
           KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}

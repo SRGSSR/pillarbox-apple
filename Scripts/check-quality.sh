@@ -2,20 +2,31 @@
 
 set -e
 
+echo "Checking quality..."
+
+Scripts/install-pkgx.sh
+
 eval "$(pkgx --shellcode)"
-env +swiftlint +rubocop +shellcheck +markdownlint +yamllint
 
 echo "... checking Swift code..."
-if [ $# -eq 0 ]; then
-  swiftlint --quiet --strict
-elif [[ "$1" == "only-changes" ]]; then
+env +swiftlint
+if [[ "$1" == "--only-changes" ]]; then
   git diff --staged --name-only | grep ".swift$" | xargs swiftlint lint --quiet --strict
+else
+  swiftlint --quiet --strict
 fi
+
 echo "... checking Ruby scripts..."
-rubocop --format quiet
+rm -rf ~/.pkgx/sqlite.org # Avoid https://github.com/pkgxdev/pkgx/issues/1059
+pkgx rubocop --format quiet
+
 echo "... checking Shell scripts..."
-shellcheck Scripts/*.sh hooks/* Artifacts/**/*.sh
+pkgx shellcheck Scripts/*.sh hooks/* Artifacts/**/*.sh
+
 echo "... checking Markdown documentation..."
-markdownlint --ignore fastlane .
+pkgx markdownlint --ignore fastlane .
+
 echo "... checking YAML files..."
-yamllint .*.yml .github
+pkgx yamllint .*.yml .github
+
+echo "... done."

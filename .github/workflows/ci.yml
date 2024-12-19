@@ -63,7 +63,7 @@ jobs:
           ${{ secrets.APP_STORE_CONNECT_API_KEY }}
 
       - name: Archive the demo
-        run: make archive-demo-${{ matrix.platform }}
+        run: make archive-demo-${{ matrix.platform }} MODE="--non-interactive"
         env:
           TEAM_ID: ${{ secrets.TEAM_ID }}
           KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
