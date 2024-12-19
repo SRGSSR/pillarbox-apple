@@ -54,15 +54,11 @@ fix-quality:
 
 .PHONY: git-hook-install
 git-hook-install:
-	@echo "Installing git hooks..."
-	@git config core.hooksPath hooks
-	@echo "... done.\n"
+	@Scripts/git-hooks.sh --install
 
 .PHONY: git-hook-uninstall
 git-hook-uninstall:
-	@echo "Uninstalling git hooks..."
-	@git config --unset core.hooksPath
-	@echo "... done.\n"
+	@Scripts/git-hooks.sh --uninstall
 
 .PHONY: clean-imports
 clean-imports:
