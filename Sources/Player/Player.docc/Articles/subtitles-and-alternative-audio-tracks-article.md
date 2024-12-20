@@ -4,45 +4,47 @@
     @PageColor(purple)
 }
 
-Manage subtitles and alternative audio tracks to let users watch content in their preferred language.
+Enable users to enjoy content in their preferred language by managing subtitles and alternative audio tracks.
 
 ## Overview
 
-Media selection designates the management of options sharing the same [AVMediaCharacteristic](https://developer.apple.com/documentation/avfoundation/avmediacharacteristic), most notably legible (subtitles) or audible (audio tracks).
+Media selection refers to managing options that share the same [AVMediaCharacteristic](https://developer.apple.com/documentation/avfoundation/avmediacharacteristic), such as legible (subtitles) or audible (audio tracks).
 
-To ensure the best possible user experience ``Player`` provides first-class media selection support:
+To deliver a seamless user experience, ``Player`` offers robust media selection support:
 
-- Automatic option selection based on preferred languages and characteristics.
-- Current subtitle selection persistence between media playbacks apps via [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility/).
-- Audio Description (AD), Subtitles for the Deaf or Hard-of-Hearing (SDH) and Closed Captions (CC) support according to user accessibility preferences.
-- Forced subtitles display.
+- **Automatic Selection:** Chooses options based on preferred languages and characteristics.
+- **Selection Persistence:** Retains current subtitle choices across media playback apps using [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility/).
+- **Accessibility Support:** Honors user preferences for Audio Description (AD), Subtitles for the Deaf or Hard-of-Hearing (SDH), and Closed Captions (CC).
+- **Forced Subtitles:** Ensures display of forced subtitles when required.
 
 ### Manage media selection programmatically
 
-Media selection belongs to essential properties automatically published by a ``Player`` instance, as explained in <doc:state-observation-article>. SwiftUI views observing a player instance will therefore be automatically redrawn when the list of available media selection options is updated, but also when selection itself changes.
+Media selection is a core property of a ``Player`` instance and is automatically published, as detailed in <doc:state-observation-article>. SwiftUI views observing a Player instance will automatically update when media selection options or the current selection changes.
 
-You can list available options for a characteristic using ``Player/mediaSelectionOptions(for:)``, retrieve the current selection with ``Player/selectedMediaOption(for:)`` or update it with ``Player/select(mediaOption:for:)``. The list of available characteristics itself must be retrieved by calling ``Player/mediaSelectionCharacteristics`` first.
+Use the following APIs to manage media selection programmatically:
 
-> Tip: Custom user interfaces written in SwiftUI should directly use ``Player/mediaOption(for:)``, which returns a binding to the current media selection for some characteristic.
+- **List Options:** Retrieve available options for a characteristic using ``Player/mediaSelectionOptions(for:)``.
+- **Get Current Selection:** Access the current selection with ``Player/selectedMediaOption(for:)``.
+- **Update Selection:** Change the selection with ``Player/select(mediaOption:for:)``. To identify available characteristics, first call ``Player/mediaSelectionCharacteristics``.
+
+> Tip: When using SwiftUI, leverage ``Player/mediaOption(for:)``, which provides a binding to the current selection for a characteristic.
 
 ### Set preferred languages and characteristics
 
-Depending on system language, accessibility settings and available renditions for a characteristic, a ``Player`` instance always attempts to pick the best possible combination of audio track and subtitles when playing some content.
+``Player`` automatically selects the best combination of audio tracks and subtitles based on system language, accessibility settings, and available renditions.
 
-You can programmatically override the current preferred languages and characteristics for a player instance by calling ``Player/setMediaSelection(preferredLanguages:for:)``. Preferences can not only be updated during playback but also even before playback starts. This can be useful if your app manages its own language preference setting which should take precedence over system defaults.
+To override default preferences, call ``Player/setMediaSelection(preferredLanguages:for:)``. Preferences can be updated during playback or configured beforehand, which is useful if your app includes a custom language preference setting that should take precedence over system defaults.
 
-> Note: You should trust the system defaults in most case. They provide the best possible user experience by taking into accessibility preferences and recent choices made in other media playback apps.
+> Note: In most cases, rely on system defaults. They optimize user experience by incorporating accessibility preferences and recent user selections from other media apps.
 
 ### Display media selection
 
-Most of the time all that is required when implementing a playback user interface is a way for users to change the current subtitles or audio track.
+For most playback user interfaces, all you need is a way to let users switch subtitles or audio tracks:
 
-If you need a menu matching the standard system player experience simply call ``Player/standardSettingMenu()`` and wrap its returned view into a [Menu](https://developer.apple.com/documentation/swiftui/menu). The obtained menu not only offers media selection for audible and legible characteristics but also playback speed selection.
-
-If you want to build your own menu you can retrieve the media selection submenu for some characteristic with ``Player/mediaSelectionMenu(characteristic:)``.  This lets you build a menu with entries tailored to your app needs.
-
-You can also build an entirely custom media selection user interface with the help of the media selection APIs listed above.
+- To replicate the standard system player experience, use ``Player/standardSettingMenu()`` and embed its result in a [Menu](https://developer.apple.com/documentation/swiftui/menu). This menu includes options for media selection and playback speed.
+- To customize menus further, use ``Player/mediaSelectionMenu(characteristic:)`` to retrieve a submenu for a specific characteristic.
+- For complete control, use the media selection APIs to build a fully custom interface.
 
 ### Stream packaging requirements
 
-Automatic media selection requires content to be packaged according to standards discussed in <doc:stream-encoding-and-packaging-advice-article>. Please check the associated troubleshooting guide should automatic selection not work according to your expectations.
+Automatic media selection depends on properly packaged content, as outlined in <doc:stream-encoding-and-packaging-advice-article>. If automatic selection does not behave as expected, consult the included troubleshooting guide.
