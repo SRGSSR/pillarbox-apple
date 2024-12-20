@@ -8,22 +8,22 @@ Control the pace at which content is played.
 
 ## Overview
 
-Some users prefer playing content at faster or slower speeds. You can adjust the playback speed of a ``Player`` programmatically at any time. Controls can also be provided to let users change the playback speed.
+Many users prefer playing content at customized speeds, whether faster or slower. You can adjust the playback speed of a ``Player`` programmatically at any time and optionally provide controls to allow users to modify the playback speed themselves.
 
 ### Adjust the playback speed programmatically
 
-Playback speed information belongs to essential properties automatically published by a ``Player`` instance, as explained in <doc:state-observation-article>. SwiftUI views observing a player instance will therefore be automatically redrawn when playback speed changes.
+Playback speed is part of the essential properties automatically published by a ``Player`` instance, as detailed in <doc:state-observation-article>. SwiftUI views observing a player instance will automatically update when the playback speed changes.
 
-You can adjust the speed at which content is played using the ``Player/setDesiredPlaybackSpeed(_:)`` method. As its name suggests this method only sets a desired speed. The actual speed might be limited by the content being played. The current effective playback speed can be queried with ``Player/effectivePlaybackSpeed``, while the available speed range can be retrieved from ``Player/playbackSpeedRange``.
+To adjust the playback speed programmatically, use the ``Player/setDesiredPlaybackSpeed(_:)`` method. As the name implies, this method sets the desired speed. However, the actual speed may vary depending on the content’s limitations. You can query the current effective playback speed using ``Player/effectivePlaybackSpeed`` and retrieve the available speed range with ``Player/playbackSpeedRange``.
 
-> Tip: Custom user interfaces written in SwiftUI should directly use ``Player/playbackSpeed``, which returns a binding to the current playback speed.
+> Tip: For custom user interfaces built in SwiftUI, use ``Player/playbackSpeed``. This provides a binding to the current playback speed, ensuring seamless integration with SwiftUI views.
 
 ### Provide speed controls
 
-Most of the time all that is required when implementing a playback user interface is a way for users to change the current playback speed.
+When building a playback user interface, one of the most common requirements is to provide users with the ability to change the playback speed.
 
-If you need a menu matching the standard system player experience simply call ``Player/standardSettingMenu()`` and wrap its returned view into a [Menu](https://developer.apple.com/documentation/swiftui/menu). The obtained menu not only offers media selection for audible and legible characteristics but also playback speed selection.
+For a quick implementation, you can use the standard system player experience by calling ``Player/standardSettingMenu()``. Wrap the returned view in a [Menu](https://developer.apple.com/documentation/swiftui/menu) to create a menu that offers not only playback speed selection but also media options for audible and legible characteristics.
 
-If you want to build your own menu you can retrieve the playback speed submenu with ``Player/playbackSpeedMenu(speeds:)``.  This lets you build a menu with entries tailored to your app needs, including the list of speeds you want to support.
+If you want more customization, you can create your own menu using ``Player/playbackSpeedMenu(speeds:)``. This allows you to tailor the list of speed options to your app’s needs.
 
-You can also build an entirely custom media selection user interface with the help of the playback speed APIs listed above.
+For a fully custom solution, you can design a bespoke media selection interface using the playback speed APIs described above.
