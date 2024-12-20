@@ -9,16 +9,19 @@ Customize how resources associated with an asset are loaded.
 
 ## Overview
 
-You can customize how resources associated with an ``Asset`` delivered by a ``PlayerItem`` must be loaded. This involves implementing a custom [`AVAssetResourceLoaderDelegate`](https://developer.apple.com/documentation/avfoundation/avassetresourceloaderdelegate) which is provided to the asset at creation time.
+You can control how resources linked to an ``Asset`` delivered by a ``PlayerItem`` are loaded. This is achieved by implementing a custom [`AVAssetResourceLoaderDelegate`](https://developer.apple.com/documentation/avfoundation/avassetresourceloaderdelegate), which is provided to the asset when it is created.
 
 ### Create a resource loader delegate
 
-Create a type conforming to [`AVAssetResourceLoaderDelegate`](https://developer.apple.com/documentation/avfoundation/avassetresourceloaderdelegate) and implement request and authentication challenges, as required by the resource that must be played.
+To customize the loading of resources, create a type that conforms to [`AVAssetResourceLoaderDelegate`](https://developer.apple.com/documentation/avfoundation/avassetresourceloaderdelegate). Implement the necessary methods to handle resource requests and authentication challenges, as required by the resource being played.
 
-Please refer to the [official documentation](https://developer.apple.com/documentation/avfoundation/avassetresourceloaderdelegate) and code samples for more information about how a resource loader must be implemented.
+For more detailed guidance on implementing a resource loader, refer to the [official documentation](https://developer.apple.com/documentation/avfoundation/avassetresourceloaderdelegate) and associated code samples.
 
 ### Associate a resource loader delegate with an asset
 
-The main responsibility of a ``PlayerItem`` loaded into a ``Player`` is to deliver an ``Asset`` to be actually played. Assets do not only convey the URL to be played but can also be attached a resource loader delegate.
+A ``PlayerItem``’s primary role is to deliver an ``Asset`` to be played. The asset not only provides the URL but can also be associated with a resource loader delegate.
 
-To associate an instance of the resource loader delegate type you created above, have your custom ``PlayerItem`` publisher deliver a custom asset to which an instance of the delegate can be supplied. Alternatively, and provided you have all metadata and the URL to be played readily available, you can simply use one of the available ``PlayerItem`` custom construction helpers.
+To link your custom resource loader delegate to an asset:
+
+- Ensure your ``PlayerItem`` publisher provides a custom ``Asset``, which includes the resource loader delegate.
+- Alternatively, if you have all the required metadata and the URL, you can use one of the available ``PlayerItem`` custom construction helpers to create the asset and associate it with the delegate.
