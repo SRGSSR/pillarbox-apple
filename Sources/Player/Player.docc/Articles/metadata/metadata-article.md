@@ -55,7 +55,7 @@ If your metadata includes markers within the content, you can associate a ``Chap
 
 Your metadata might also describe notable time ranges, such as:
 
-- **Opening and Closing Credits:** Custom UIs might adjust their presentation (e.g., adding a skip button) during credits.
+- **Opening and Closing Credits:** Custom UIs might adjust their presentation (e.g. adding a skip button) during credits.
 - **Blocked Time Ranges:** Segments that should be unplayable. A ``Player`` automatically skips these during playback and prevents seeking into them.
 
 To associate time ranges with your metadata, build a ``TimeRange`` list and provide it to the ``PlayerMetadata`` via its ``PlayerMetadata/timeRanges`` parameter.

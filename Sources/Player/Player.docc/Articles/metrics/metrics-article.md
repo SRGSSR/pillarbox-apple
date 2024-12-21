@@ -2,49 +2,58 @@
 
 @Metadata {
     @PageColor(purple)
-    @PageImage(purpose: card, source: metrics-card, alt: "An image depicting a waveform inspected by a looking glass.")
+    @PageImage(purpose: card, source: metrics-card, alt: "An image depicting a waveform inspected by a magnifying glass.")
 }
 
 Inspect key metrics during playback.
 
 ## Overview
 
-Providing the best playback experience to your users is crucial. This can prove to be challenging, especially since media playback involves many moving parts (stream encoding and packaging, metadata delivery, CDN, network quality), all possibly negatively impacting the end user experience in various ways.
+Delivering the best playback experience to your users is essential but can be challenging. Media playback involves numerous components—stream encoding, packaging, metadata delivery, CDN performance, and network quality—all of which can impact the user experience.
 
-> Tip: For more information about stream encoding and packaging please refer to <doc:stream-encoding-and-packaging-advice-article>.
+> Tip: For more information on stream encoding and packaging, refer to <doc:stream-encoding-and-packaging-advice-article>.
 
-To better understand how your playback experience is perceived by your users, you usually need to ask yourself:
+To gauge how users perceive your playback experience, consider the following:
 
-- How long does a user wait for content to be ready to play?
-- How many playback sessions fail with an error, and which errors occur the most?
-- Do stalls occur often and for which reasons? How much users do have to wait for playback to resume?
+- **Startup Time:** How long does a user wait before content starts playing?
+- **Error Rates:** How often do playback sessions fail, and what are the most common errors?
+- **Stalls and Recovery:** How frequently does playback stall? How long do users wait for it to resume?
 
-Pillarbox ``Player`` provides extensive metrics which can help you provide answer to these questions.
+Pillarbox ``Player`` provides extensive metrics to help answer these questions and optimize the user experience.
 
-### Receive metrics when needed
+## Receive metrics on demand
 
-You can receive current metrics at any time by calling the ``Player/metrics()`` player method. The same metrics are also available from ``PlayerProperties``.
+You can access playback metrics at any time by calling the ``Player/metrics()`` method. These metrics are also available through ``PlayerProperties``.
 
 ## Receive metrics periodically
 
-Subscribe to ``Player/periodicMetricsPublisher(forInterval:queue:limit:)`` to receive a stream of ``Metrics`` related to the item currently being played.
+Subscribe to ``Player/periodicMetricsPublisher(forInterval:queue:limit:)`` to receive a continuous stream of ``Metrics`` related to the current playback item.
 
-These metrics contain various instantaneous measurements, e.g. a bandwidth estimate or the bitrate of the content being played, but also cumulative values and increments since the last measurement. They are especially useful to understand not only what happens globally during a playback session, but also at regular time intervals.
+These metrics include both instantaneous values (e.g. bandwidth estimates, content bitrate) and cumulative data since the last update. This helps you analyze not only the overall playback session but also its performance over regular intervals.
 
 ## Receive important metric-related events
 
-Subscribe to ``Player/metricEventsPublisher`` to receive a stream of ``MetricEvent``s related to the item currently being played.
+Subscribe to ``Player/metricEventsPublisher`` to receive a stream of ``MetricEvent``s for the item being played.
 
-Events include timing events, most notably metadata and asset loading, as well as warnings and errors. Please refer to the documentation to learn more about all ``MetricEvent/Kind-swift.enum``s of events that are currently supported.
+These events include:
+
+- Timing events (e.g. metadata and asset loading durations).
+- Warnings and errors.
+
+For detailed information on supported events, refer to the documentation on ``MetricEvent/Kind-swift.enum``.
 
 ## Visualize metrics on-device
 
-A ``MetricsCollector`` is provided to easily collect ``Metrics`` as well as ``MetricEvent``s for the item currently being played. Since the collector is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject) it can be used to build custom visual data representations, for example using SwiftUI.
+A ``MetricsCollector`` is available to simplify the collection of ``Metrics`` and ``MetricEvent``s for the current playback item.
 
-> Tip: Values from ``Metrics/increment`` and ``Metrics/total`` can be easily visualized with the help of [Swift Charts](https://developer.apple.com/documentation/charts).  
+Since ``MetricsCollector`` is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject), you can use it to build custom visualizations using SwiftUI.
+
+> Tip: Use [Swift Charts](https://developer.apple.com/documentation/charts) to easily visualize cumulative values (``Metrics/total``) and incremental changes (``Metrics/increment``).
 
 ## Monitor metrics remotely
 
-Metrics collected locally can be sent to a service for remote monitoring. Trackers are especially suited to this task. See <doc:tracking-article> for more information.
+Metrics collected locally can be sent to a service for remote monitoring. Trackers are especially suited to this task.
 
-> Tip: Pillarbox offers a ready-to-use monitoring platform and a corresponding tracker available from the PillarboxMonitoring package.
+For more details, refer to <doc:tracking-article>.
+
+> Tip: Pillarbox offers a pre-built monitoring platform and a corresponding tracker, available through the PillarboxMonitoring package.
