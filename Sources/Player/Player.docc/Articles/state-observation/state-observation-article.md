@@ -99,7 +99,7 @@ struct PlaybackView: View {
 
  [Proper use](https://developer.apple.com/documentation/swiftui/model-data) of SwiftUI property wrappers ensures efficient UI updates. Below are common patterns:
 
-1. **Player Neither Owned nor Observed**: Pass the player as a constant:
+1. **Player Neither Owned nor Observed:** Pass the player as a constant:
 
     ```swift
     struct Widget: View {
@@ -111,7 +111,7 @@ struct PlaybackView: View {
     }
     ```
 
-2. **Player Owned but Not Observed**: Store the player in a `@State`:
+2. **Player Owned but Not Observed:** Store the player in a `@State`:
 
     ```swift
     struct PlayerInterface: View {
@@ -123,7 +123,7 @@ struct PlaybackView: View {
     }
     ```
 
-3. **Player Not Owned but Observed**: Receive the player as an `@ObservedObject`:
+3. **Player Not Owned but Observed:** Receive the player as an `@ObservedObject`:
 
     ```swift
     struct Widget: View {
@@ -135,7 +135,7 @@ struct PlaybackView: View {
     }
     ```
 
-4. **Player Owned and Observed**: Store the player in a `@StateObject`:
+4. **Player Owned and Observed:** Store the player in a `@StateObject`:
 
     ```swift
     struct PlayerInterface: View {
