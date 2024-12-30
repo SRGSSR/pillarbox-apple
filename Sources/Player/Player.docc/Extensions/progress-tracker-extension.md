@@ -2,26 +2,23 @@
 
 ## Topics
 
-### Creating a progress tracker
+### Creating a Progress Tracker
 
 - ``init(interval:seekBehavior:)``
 
-### Binding to a player
+### Binding to a Player
 
 - ``player``
 - ``SwiftUICore/View/bind(_:to:)-8fqem``
 
-### Getting and updating progress
+### Managing Progress
 
 - ``progress``
-- ``isInteracting``
-
-### Finding the available progress range
-
 - ``range``
 - ``isProgressAvailable``
+- ``isInteracting``
 
-### Getting time information
+### Getting Time
 
 - ``time``
 - ``timeRange``

@@ -2,7 +2,7 @@
 
 ## Topics
 
-### Server information
+### Getting Server Information
 
 - ``numberOfServerAddressChanges``
 - ``mediaRequestsWWAN``
@@ -10,7 +10,7 @@
 - ``numberOfBytesTransferred``
 - ``numberOfMediaRequests``
 
-### Playback-related information
+### Getting Playback Information
 
 - ``playbackDuration``
 - ``numberOfDroppedVideoFrames``
@@ -18,6 +18,6 @@
 - ``segmentsDownloadedDuration``
 - ``downloadOverdue``
 
-### Bitrate information
+### Getting Bitrate Information
 
 - ``switchBitrate``

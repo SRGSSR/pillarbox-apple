@@ -2,16 +2,16 @@
 
 ## Topics
 
-### Creating a visibility tracker
+### Creating a Visibility Tracker
 
 - ``init(delay:isUserInterfaceHidden:)``
 
-### Binding to a player
+### Binding to a Player
 
 - ``player``
 - ``SwiftUICore/View/bind(_:to:)-wthx``
 
-### Getting and updating user interface visibility
+### Managing User Interface Visibility
 
 - ``isUserInterfaceHidden``
 - ``toggle()``
