@@ -1,30 +1,30 @@
 @Tutorials(name: "system-features") {
-    @Intro(title: "Integrating With System Features") {
-        Learn how you can integrate your player with standard system features.
+    @Intro(title: "Integrating with system features") {
+        Discover how to seamlessly integrate your player with key system features to enhance the user experience.
         
-        @Image(source: building-custom-user-interfaces-intro, alt: "An image of a phone displaying some content.")
+        @Image(source: integrating-with-system-features-intro, alt: "A smartphone displaying system feature integrations.")
     }
         
     @Chapter(name: "Integrating with the Control Center") {
-        Enable playback steering from the Control Center. 
+        Learn how to enable playback control directly from the Control Center.
         
-        @Image(source: integrating-with-system-features-1, alt: "An image of a phone displaying some content.")
+        @Image(source: integrating-with-system-features-1, alt: "A smartphone showcasing Control Center playback controls.")
         
         @TutorialReference(tutorial: integrating-with-control-center)
     }
     
     @Chapter(name: "Supporting AirPlay") {
-        Enable video and audio sharing to Apple TV or AirPlay‑enabled receivers. 
+        Add support for streaming video and audio to Apple TV and AirPlay-enabled devices.
         
-        @Image(source: integrating-with-system-features-2, alt: "An image of a phone displaying some content.")
+        @Image(source: integrating-with-system-features-2, alt: "A smartphone displaying AirPlay streaming options.")
         
         @TutorialReference(tutorial: supporting-airplay)
     }
     
-    @Chapter(name: "Supporting Picture in Picture for video playback") {
-        Enable uninterrupted video playback experiences when multitasking. 
+    @Chapter(name: "Enabling Picture in Picture for video playback") {
+        Implement Picture in Picture to provide uninterrupted video playback while multitasking.
         
-        @Image(source: integrating-with-system-features-3, alt: "An image of a phone displaying some content.")
+        @Image(source: integrating-with-system-features-3, alt: "A smartphone showing Picture in Picture mode during video playback.")
         
         @TutorialReference(tutorial: supporting-basic-picture-in-picture)
     }
