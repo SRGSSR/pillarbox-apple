@@ -1,4 +1,4 @@
-@Tutorial(time: 5) {
+@Tutorial(time: 10) {
     @Intro(title: "Supporting AirPlay") {
         Enable video and audio sharing to Apple TV or other AirPlay-enabled receivers seamlessly.
 

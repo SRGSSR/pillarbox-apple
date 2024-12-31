@@ -1,4 +1,4 @@
-@Tutorial(time: 5) {
+@Tutorial(time: 10) {
     @Intro(title: "Tracking playback progress") {
         Learn how to track video playback progress and allow users to update it interactively using a slider.
 
