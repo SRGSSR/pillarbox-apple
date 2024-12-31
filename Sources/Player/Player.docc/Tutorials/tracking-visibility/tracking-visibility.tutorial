@@ -1,51 +1,51 @@
 @Tutorial(time: 10) {
     @Intro(title: "Tracking visibility") {
-        Implement meaningful behavior for the visibility of your user interface.
-        
-        @Image(source: tracking-visibility-intro, alt: "An image depicting an eye.")
+        Learn how to implement dynamic behaviors for your user interface based on its visibility status.
+
+        @Image(source: tracking-visibility-intro, alt: "An image of an eye symbolizing visibility tracking.")
     }
-    
-    @Section(title: "Add visibility tracking") {
+
+    @Section(title: "Implement visibility tracking") {
         @ContentAndMedia {
-            Start from a player user interface that always displays controls. Add visibility tracking to have the user interface automatically disappear during playback. Make it possible for users to toggle the user interface on and off interactively.
+            Start with a player interface that always displays controls. Add visibility tracking to automatically hide the interface during playback while allowing users to toggle it on or off interactively.
         }
-        
+
         @Steps {
             @Step {
-                Replace your `ContentView` code with the attached implementation. 
-                
-                We start our implementation from a basic player user interface, displaying a playback button layered on top of a semi-transparent overlay. The user interface cannot be hidden.
-                
+                Replace your `ContentView` implementation with the provided code.
+
+                The starting point includes a basic player interface with a playback button displayed over a semi-transparent overlay. The interface currently cannot be hidden.
+
                 @Code(name: "ContentView.swift", file: tracking-visibility-1-1.swift) {
-                    @Image(source: tracking-visibility-1-1, alt: "A screenshot of an iPhone playing a video with a button displayed on top of an overlay.")
+                    @Image(source: tracking-visibility-1-1, alt: "An iPhone screenshot showing a video player with playback controls over an overlay.")
                 }
             }
-            
+
             @Step {
-                Add a ``VisibilityTracker`` to your `ContentView` and store it as a `@StateObject` associated with the view.
-                
+                Add a `VisibilityTracker` to `ContentView`, and store it as a `@StateObject` to manage visibility states effectively.
+
                 @Code(name: "ContentView.swift", file: tracking-visibility-1-2.swift)
             }
-            
+
             @Step {
-                Bind the visibility tracker to the player using the ``SwiftUICore/View/bind(_:to:)-wthx`` modifier. This ensures the tracker is kept informed of the player state so that it ca adjust the user interface visibility appropriately.
-                
+                Bind the visibility tracker to the player using the ``SwiftUICore/View/bind(_:to:)-wthx`` modifier. This ensures the tracker reacts to player state changes and adjusts the user interface visibility accordingly.
+
                 @Code(name: "ContentView.swift", file: tracking-visibility-1-3.swift)
             }
 
             @Step {
-                Use the ``VisibilityTracker/isUserInterfaceHidden`` Boolean to animate the control overlay opacity between 0 and 1.
-                
+                Use the ``VisibilityTracker/isUserInterfaceHidden`` property to animate the control overlay's opacity between visible and hidden states.
+
                 @Code(name: "ContentView.swift", file: tracking-visibility-1-4.swift)
             }
-            
+
             @Step {
-                Add a tap gesture recognizer that calls the visibility tracker `toggle()` method.
-                
-                Run the application and check that you can toggle the user interface on and off. Also note that the user interface automatically disappears after a while during playback.
-                
+                Add a tap gesture recognizer to the overlay, invoking the visibility tracker's `toggle()` method.
+
+                Test the application to confirm you can toggle the user interface on and off. Observe that the interface also disappears automatically during playback if left idle.
+
                 @Code(name: "ContentView.swift", file: tracking-visibility-1-5.swift) {
-                    @Image(source: tracking-visibility-1-5, alt: "A screenshot of an iPhone playing a video.")
+                    @Image(source: tracking-visibility-1-5, alt: "An iPhone screenshot showing a video player with the user interface toggled.")
                 }
             }
         }
