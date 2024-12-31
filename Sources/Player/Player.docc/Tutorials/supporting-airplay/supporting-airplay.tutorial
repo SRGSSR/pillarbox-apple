@@ -18,7 +18,7 @@
             @Step {
                 Configure your app's [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`, e.g. in your application delegate.
 
-                @Code(name: "Application.swift", file: supporting-airplay-1-1.swift)
+                @Code(name: "Application.swift", file: supporting-airplay-1-2.swift)
             }
         }
     }
@@ -30,7 +30,7 @@
         
         @Steps {
             @Step {
-                Create an instance of a `Player` and display its content in a `VideoView`.
+                Create a `Player` instance and display its content using a `VideoView`.
 
                 @Code(name: "ContentView.swift", file: supporting-airplay-2-1.swift) {
                     @Image(source: supporting-airplay-2-1, alt: "A screenshot showing the basic player setup.")
