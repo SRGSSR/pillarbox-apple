@@ -1,4 +1,4 @@
-@Tutorial(time: 4) {
+@Tutorial(time: 5) {
     @Intro(title: "Tracking progress") {
         Track playback progress and make it possible for users to update it interactively.
         

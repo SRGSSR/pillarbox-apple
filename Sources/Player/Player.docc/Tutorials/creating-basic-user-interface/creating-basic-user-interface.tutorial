@@ -1,4 +1,4 @@
-@Tutorial(time: 7) {
+@Tutorial(time: 10) {
     @Intro(title: "Creating a basic user interface") {
         Learn how you create a custom player user interface for your app. Discover how you can iterate on your ideas. Add basic playback controls and learn how to use playback state to adjust the appearance of your user interface.
         

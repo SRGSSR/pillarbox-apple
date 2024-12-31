@@ -1,4 +1,4 @@
-@Tutorial(time: 4) {
+@Tutorial(time: 5) {
     @Intro(title: "Tracking visibility") {
         Implement meaningful behavior for the visibility of your user interface.
         

@@ -1,4 +1,4 @@
-@Tutorial(time: 2) {
+@Tutorial(time: 5) {
     @Intro(title: "Integrating with the Control Center") {
         Learn how to enable playback control directly from the Control Center.
 

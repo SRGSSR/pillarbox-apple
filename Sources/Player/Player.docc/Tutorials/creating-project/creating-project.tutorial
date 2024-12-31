@@ -1,4 +1,4 @@
-@Tutorial(time: 3) {
+@Tutorial(time: 5) {
     @Intro(title: "Creating a project") {
         Learn how to set up a new project with PillarboxPlayer as a Swift Package dependency.
         
