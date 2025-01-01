@@ -4,34 +4,40 @@
     @PageColor(green)
 }
 
-Identify where users navigate within your app.
+Track user navigation within your app.
 
 ## Overview
 
-As a product team you need to better understand where users navigate within your app. The ``PillarboxAnalytics`` framework provides a way to track views as they are brought on screen. This makes it possible to improve on user journeys and make your content more discoverable.
+Understanding how users navigate through your app is critical for improving user journeys and enhancing content discoverability.
 
-> Important: Tracking must be properly setup first. Please refer to <doc:setup-article> for more information.
+The ``PillarboxAnalytics`` framework enables you to track page views as they appear on-screen. This provides valuable insights into user behavior, helping you optimize your app’s design and functionality.
 
-Helpers are available to record page views, whether your view hierarchy is managed with UIKit or SwiftUI.
+> Important: Ensure tracking is properly set up before proceeding. Refer to the <doc:setup-article> article for details.
 
-> Note: A page view is recorded when a view is brought on screen, when it is revealed as part of another view being dismissed or when the app returns from background with the view visible.
+Page view tracking is supported in both SwiftUI and UIKit. Page views must in general be recorded when:
 
-### Decide which data needs to be sent
+- A view is brought onto the screen.
+- A view is revealed as part of another view being dismissed.
+- The app returns from the background with a view visible.
 
-Tracking a page view requires a view to be associated with ``ComScorePageView``, respectively ``CommandersActPageView`` information. Both types have mandatory fields as well as optional information:
+### Define page view data
 
-- comScore requires only a `name` to be provided.
-- Commanders Act requires a `name` and a `type` to be provided. You can also use `levels` to classify your page views hierarchically. This classification does not need to represent where the view is located in your view hierarchy, though.
+Tracking a page view requires associating it with both ``ComScorePageView`` and ``CommandersActPageView`` information. Each type includes mandatory fields, along with optional attributes for additional context:
 
-For inspiration you should have a look at how [Play SRG products](https://confluence.srg.beecollaboration.com/display/SRGPLAY/Play+SRG+native+page+view+analytic+events) define page views.
+- **ComScore:** Only requires a `name` to be specified.
+- **Commanders Act:** Requires both a `name` and a `type`. Additionally, you can use the `levels` attribute to classify page views hierarchically. Note that this classification doesn’t need to reflect the page’s position within your view hierarchy.
 
-> Tip: Commanders Act fields need to be properly mapped server-side. Please check our [internal wiki](https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=13188692) for more information about available keys or contact the GD ADI team for more information.
+For inspiration, explore how [Play SRG products](https://confluence.srg.beecollaboration.com/display/SRGPLAY/Play+SRG+native+page+view+analytic+events) utilize page views.
+
+> Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=13188692) for available keys or contact the GD ADI team for further guidance on mapping and implementation.
 >
-> You should not add custom information to comScore page views as undefined fields will be ignored server-side anyway.
+> Avoid adding custom fields to comScore page views as unsupported fields are ignored server-side.
 
 ### Track page views in SwiftUI
 
-To associate a page view with a SwiftUI view, simply apply the ``SwiftUICore/View/tracked(comScore:commandersAct:)`` modifier. You could for example track a home view as follows:
+Associate page views with SwiftUI views using the ``SwiftUICore/View/tracked(comScore:commandersAct:)`` modifier.
+
+#### Example: Home view tracking
 
 ```swift
 struct HomeView: View {
@@ -42,11 +48,7 @@ struct HomeView: View {
         .tracked(comScore: comScore, commandersAct: commandersAct)
     }
 }
-```
 
-with page view data defined in a private extension:
-
-```swift
 private extension HomeView {
     var comScore: ComScorePageView {
         .init(name: "home")
@@ -64,7 +66,9 @@ private extension HomeView {
 
 ### Track page views in UIKit
 
-View controllers commonly represent screens in a UIKit application. The ``PillarboxAnalytics`` framework provides a streamlined way to associate page view data with a view controller by having it conform to the ``PageViewTracking`` protocol:
+For UIKit, use view controllers to represent screens and associate page view data by conforming to the ``PageViewTracking`` protocol.
+
+#### Example: Home view controller tracking
 
 ```swift
 final class HomeViewController: UIViewController {
@@ -90,22 +94,22 @@ extension HomeViewController: PageViewTracking {
 }
 ```
 
-With automatic tracking enabled page views will be recorded for `PageViewTracking`-conforming view controllers without any additional work. Note that this process occurs when a view controller `viewDidAppear(_:)` method is called.
+With ``PageViewTracking/isTrackedAutomatically-80h6v`` set to `true`, page views are recorded automatically when `viewDidAppear(_:)` is called.
 
-> Tip: If your view controller lacks the required data when its associated view appears you can disable automatic tracking and manually trigger a page view later using ``UIKit/UIViewController/trackPageView()``.
+> Tip: If page view data is unavailable at `viewDidAppear(_:)`, disable automatic tracking and manually trigger the page view later with ``UIKit/UIViewController/trackPageView()``.
 
-### Implement page view tracking support in custom UIKit containers
+### Support page views in custom UIKit containers
 
-If your application uses custom view controller containers, and if you want to use automatic tracking, be sure to have them conform to the ``ContainerPageViewTracking`` protocol so that automatic page views are correctly propagated throughout your application view controller hierarchy.
+If your app uses custom container view controllers and you want automatic tracking, ensure these containers conform to the ``ContainerPageViewTracking`` protocol. Possible behaviors include:
 
-Only a container can namely decide for which child (or children) page views should be recorded:
+- **Forward to All Children:** No additional configuration is required in this case.
+- **Selective Forwarding:** Implement ``ContainerPageViewTracking`` to specify active children for measurements.
 
-- If page views must be automatically forwarded to all children of a container no additional work is required.
-- If page views must be automatically forwarded to only selected children, though, then a container must conform to the `ContainerPageViewTracking` protocol to declare which children must be considered active for measurements.
-
-> Tip: The ``PillarboxAnalytics`` framework provides native support for standard UIKit containers without any additional work.
+> Note: Standard UIKit containers are natively supported by the ``PillarboxAnalytics`` framework.
 
 ### Trigger page views manually
+
+For advanced use cases or hybrid apps, trigger page views manually using ``Analytics/trackPageView(comScore:commandersAct:)``.
 
 Whether your application is implemented in SwiftUI, UIKit or a combination of both, you can always trigger a page view manually with ``Analytics/trackPageView(comScore:commandersAct:)``.
 
