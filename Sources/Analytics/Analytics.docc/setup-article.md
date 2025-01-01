@@ -4,31 +4,31 @@
     @PageColor(green)
 }
 
-Setup tracking for your application.
+Set up tracking for your application.
 
 ## Overview
 
-Before any measurements can take place you must start a tracker with a configuration tailored for your app.
+Before any measurements can occur, you must initialize a tracker with a configuration customized for your app.
 
 ### Obtain configuration information for your app
 
-The following information is required to properly setup tracking for your app:
+To properly set up tracking, gather the following details:
 
-- The product name, identical for all platforms on which your product is available.
-- The app/site name, which might differ between platforms.
+- **Product Name:** This must be consistent across all platforms where your product is available.
+- **App/Site Name:** This may vary between platforms.
 
-Values suitable for your app are delivered by the GD ADI team. Please refer to our [internal wiki](https://confluence.srg.beecollaboration.com/display/INTFORSCHUNG/Guidance+Implementation+Apps) for more information.
+The GD ADI team provides these values. For more details, consult our [internal wiki](https://confluence.srg.beecollaboration.com/display/INTFORSCHUNG/Guidance+Implementation+Apps).
 
 ### Configure your application manifest
 
-The name and version of your application are retrieved from the [app manifest](https://developer.apple.com/documentation/bundleresources/information_property_list). You must configure your `Info.plist` file so that it contains the following key-value pairs:
+The app’s name and version are retrieved from the [app manifest](https://developer.apple.com/documentation/bundleresources/information_property_list). Update your `Info.plist` file with the following keys:
 
-- `CFBundleName` must contain the product name obtained for your app.
-- `CFBundleShortVersionString` must contain the application version.
+- `CFBundleName`: Set this to the product name provided for your app.
+- `CFBundleShortVersionString`: Set this to the application version.
 
 ### Start tracking
 
-The ``Analytics`` singleton needs to be started before any measurements can take place. First create a configuration with parameters tailored to your app:
+To enable measurements, you need to start the ``Analytics`` singleton. First, create a configuration using parameters specific to your app:
 
 ```swift
 let configuration = Analytics.Configuration(
@@ -38,11 +38,11 @@ let configuration = Analytics.Configuration(
 )
 ```
 
-You must provide the vendor publishing the app, a source key as well as the site name your received for your app.
+Provide the **vendor** publishing the app, the appropriate **source key**, and the **site name** for your app.
 
-> Note: The source key must be `.productionSourceKey` for apps in production. During development you should set it to `.developmentSourceKey` to avoid polluting measurements associated with the production source key.
+> Note: Use `.productionSourceKey` for production apps. For development, set it to `.developmentSourceKey` to avoid contaminating production data.
 
-Once you have a configuration simply start the tracker singleton from the `application(_:didFinishLaunchingWithOptions:)` implementation of your [application delegate](https://developer.apple.com/documentation/uikit/uiapplicationdelegate):
+Next, initialize the tracker singleton in your `application(_:didFinishLaunchingWithOptions:)` method, located in your [application delegate](https://developer.apple.com/documentation/uikit/uiapplicationdelegate):
 
 ```swift
 final class AppDelegate: NSObject, UIApplicationDelegate {
@@ -62,4 +62,4 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 }
 ```
 
-> Tip: SwiftUI apps must use an [UIApplicationDelegateAdaptor](https://developer.apple.com/documentation/swiftui/uiapplicationdelegateadaptor) to register an application delegate.
+> Tip: For SwiftUI apps, use an [UIApplicationDelegateAdaptor](https://developer.apple.com/documentation/swiftui/uiapplicationdelegateadaptor) to register an application delegate.
