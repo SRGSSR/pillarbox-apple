@@ -9,12 +9,16 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             VideoView(player: player)
-            Button(action: player.togglePlayPause) {
-                Image(systemName: "play.circle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 50)
-            }
+            playbackButton()
+        }
+    }
+
+    private func playbackButton() -> some View {
+        Button(action: player.togglePlayPause) {
+            Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 50)
         }
     }
 }

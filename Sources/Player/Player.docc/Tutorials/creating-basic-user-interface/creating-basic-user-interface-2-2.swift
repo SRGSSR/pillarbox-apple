@@ -10,19 +10,37 @@ struct ContentView: View {
         ZStack {
             VideoView(player: player)
             HStack(spacing: 20) {
-                Button(action: {}) {
-                    Image(systemName: "gobackward.10")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 30)
-                }
-                Button(action: player.togglePlayPause) {
-                    Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 50)
-                }
+                skipBackwardButton()
+                playbackButton()
+                skipForwardButton()
             }
+        }
+    }
+
+    private func skipBackwardButton() -> some View {
+        Button(action: { player.skipBackward() }) {
+            Image(systemName: "gobackward.10")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 30)
+        }
+    }
+
+    private func playbackButton() -> some View {
+        Button(action: player.togglePlayPause) {
+            Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 50)
+        }
+    }
+
+    private func skipForwardButton() -> some View {
+        Button(action: { player.skipForward() }) {
+            Image(systemName: "goforward.10")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 30)
         }
     }
 }
