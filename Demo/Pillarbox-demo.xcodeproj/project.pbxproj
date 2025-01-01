@@ -21,7 +21,6 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6FD6C9F92CD8B61A00ED6B32 /* Preview Content */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Preview Content"; sourceTree = "<group>"; };
-		6FD6CA022CD8B61A00ED6B32 /* Tutorials */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Tutorials; sourceTree = "<group>"; };
 		6FD6CA0E2CD8B61A00ED6B32 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
 		6FD6CA7E2CD8B61A00ED6B32 /* Sources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Sources; sourceTree = "<group>"; };
 		6FD6CADF2CD8B61A00ED6B32 /* Xcode */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Xcode; sourceTree = "<group>"; };
@@ -49,7 +48,6 @@
 				6F7A2B242A7076FA005701C7 /* Packages */,
 				6FD6CA7E2CD8B61A00ED6B32 /* Sources */,
 				6FD6CA0E2CD8B61A00ED6B32 /* Resources */,
-				6FD6CA022CD8B61A00ED6B32 /* Tutorials */,
 				6FD6C9F92CD8B61A00ED6B32 /* Preview Content */,
 				6FD6CADF2CD8B61A00ED6B32 /* Xcode */,
 				6F05B8D62887E934005D75E3 /* Products */,
@@ -97,7 +95,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				6FD6C9F92CD8B61A00ED6B32 /* Preview Content */,
-				6FD6CA022CD8B61A00ED6B32 /* Tutorials */,
 				6FD6CA0E2CD8B61A00ED6B32 /* Resources */,
 				6FD6CA7E2CD8B61A00ED6B32 /* Sources */,
 			);
