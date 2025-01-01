@@ -30,7 +30,7 @@
         
         @Steps {
             @Step {
-                Create a `Player` instance and display its content using a `VideoView`.
+                Create a ``Player`` instance and display its content using a ``VideoView``.
 
                 @Code(name: "ContentView.swift", file: supporting-airplay-2-1.swift) {
                     @Image(source: supporting-airplay-2-1, alt: "A screenshot showing the basic player setup.")
@@ -38,7 +38,7 @@
             }
             
             @Step {
-                Add a `RoutePickerView` to your UI to provide an AirPlay button.
+                Add a ``RoutePickerView`` to your UI to provide an AirPlay button.
 
                 @Code(name: "ContentView.swift", file: supporting-airplay-2-2.swift) {
                     @Image(source: supporting-airplay-2-2, alt: "A screenshot of the player with an AirPlay button added.")

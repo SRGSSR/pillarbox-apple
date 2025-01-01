@@ -7,12 +7,12 @@
     
     @Section(title: "Enable playback control from the Control Center") {
         @ContentAndMedia {
-            Integrate a `Player` into your app to allow basic playback control via the Control Center.
+            Integrate a ``Player`` into your app to allow basic playback control via the Control Center.
         }
 
         @Steps {
             @Step {
-                Create a `Player` and associate it with a `VideoView` to display video content.
+                Create a ``Player`` and associate it with a ``VideoView`` to display video content.
 
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-1-1.swift) {
                     @Image(source: integrating-with-control-center-1-1, alt: "An iPhone screenshot showing the initial player setup.")
@@ -20,7 +20,7 @@
             }
             
             @Step {
-                Enable Control Center integration for the `Player`.
+                Enable Control Center integration for the ``Player``.
 
                 After this step, the Control Center can control playback actions such as play and pause. However, metadata will not yet be displayed.
 
@@ -38,7 +38,7 @@
         
         @Steps {
             @Step {
-                Add metadata to the `Player` by implementing the `AssetMetadata` protocol. 
+                Add metadata to the ``Player`` by implementing the ``AssetMetadata`` protocol. 
 
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-2-1.swift) {
                     @Image(source: integrating-with-control-center-2-1, alt: "An iPhone screenshot showing an empty Control Center.")
@@ -46,7 +46,7 @@
             }
             
             @Step {
-                Implement the protocol to provide `PlayerMetadata`. Include a title, a subtitle, and an image to display in the Control Center.
+                Implement the protocol to provide ``PlayerMetadata``. Include a title, a subtitle, and an image to display in the Control Center.
                 
                 This implementation assumes your app resources contain an image named `apple`.
 

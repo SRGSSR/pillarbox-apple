@@ -22,7 +22,7 @@
             }
 
             @Step {
-                Add a `VisibilityTracker` to `ContentView`, and store it as a `@StateObject` to manage visibility states effectively.
+                Add a ``VisibilityTracker`` to `ContentView`, and store it as a `@StateObject` to manage visibility states effectively.
 
                 @Code(name: "ContentView.swift", file: tracking-visibility-1-2.swift)
             }

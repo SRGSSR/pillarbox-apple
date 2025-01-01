@@ -24,7 +24,7 @@
             }
             
             @Step {
-                Add an `AVLayerVideoGravity` view state to store the current video gravity, initializing it to `.resizeAspect`. Pass this state to the `VideoView` using the appropriate modifier.
+                Add an `AVLayerVideoGravity` view state to store the current video gravity, initializing it to `.resizeAspect`. Pass this state to the ``VideoView`` using the appropriate modifier.
 
                 @Code(name: "ContentView.swift", file: supporting-pinch-to-zoom-1-2.swift)
             }
@@ -48,7 +48,7 @@
         
         @Steps {
             @Step {
-                Add padding around the `VideoView`, so it no longer occupies the full parent context.
+                Add padding around the ``VideoView``, so it no longer occupies the full parent context.
 
                 Run the project to confirm that the zoom gesture still works.
 
@@ -56,13 +56,13 @@
             }
             
             @Step {
-                Apply the `readLayout(into:)` modifier to the `VideoView` to gather layout information, storing it in a `LayoutInfo` state.
+                Apply the ``SwiftUICore/View/readLayout(into:)`` modifier to the ``VideoView`` to gather layout information, storing it in a `LayoutInfo` state.
 
                 @Code(name: "ContentView.swift", file: supporting-pinch-to-zoom-2-2.swift)
             }
             
             @Step {
-                Use the layout information to set the gesture mask to `.subviews` when the `VideoView` does not occupy its full context.
+                Use the layout information to set the gesture mask to `.subviews` when the ``VideoView`` does not occupy its full context.
 
                 Run the project to confirm that the zoom gesture is now disabled in non-maximized layouts. Remove the padding and test again to ensure the gesture works as expected when the player is in full-screen mode.
 

@@ -66,7 +66,7 @@
             @Step {
                 Replace your `ContentView` with the provided implementation.
 
-                Begin with a simple `VideoView`. At runtime, notice a few refreshes on the `VideoView` when playback starts.
+                Begin with a simple ``VideoView``. At runtime, notice a few refreshes on the ``VideoView`` when playback starts.
 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-1.swift) {
                     @Image(source: optimizing-custom-layouts-2-1, alt: "A screenshot of a video player with minimal layout.")
@@ -80,9 +80,9 @@
             }
             
             @Step {
-                Add a `ProgressView` below the `VideoView` to display the buffer progress.
+                Add a `ProgressView` below the ``VideoView`` to display the buffer progress.
 
-                At runtime, observe additional refreshes on the `VideoView` during playback and when buffering occurs.
+                At runtime, observe additional refreshes on the ``VideoView`` during playback and when buffering occurs.
 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-3.swift) {
                     @Image(source: optimizing-custom-layouts-2-3, alt: "A screenshot showing a video player with buffer progress.")
@@ -104,7 +104,7 @@
             @Step {
                 Add `BufferingView` to the view hierarchy.
 
-                At runtime, observe a few refreshes on the `VideoView` at playback start, as before, but no longer during content buffering.
+                At runtime, observe a few refreshes on the ``VideoView`` at playback start, as before, but no longer during content buffering.
 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-6.swift) {
                     @Image(source: optimizing-custom-layouts-2-6, alt: "A screenshot showing the final optimized layout.")
