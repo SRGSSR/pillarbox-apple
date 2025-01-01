@@ -14,12 +14,10 @@ struct ContentView: View {
     ))
 
     var body: some View {
-        ZStack {
-            VideoView(player: player)
-        }
-        .onAppear {
-            player.play()
-            player.becomeActive()
-        }
+        VideoView(player: player)
+            .onAppear {
+                player.play()
+                player.becomeActive()
+            }
     }
 }

@@ -22,7 +22,7 @@
             }
             
             @Step {
-                Apply the `_debugBodyCounter(color:)` modifier to the `VideoView` and `Slider`.
+                Apply the `_debugBodyCounter(color:)` modifier to the ``VideoView`` and `Slider`.
 
                 At runtime, you'll observe that both views are updated simultaneously.
 
@@ -34,13 +34,13 @@
             }
             
             @Step {
-                Refactor the `slider()` method into the body of a new private `ProgressSlider` view. Move the progress tracker `StateObject` to this view and remove the `bind(_:to:)` and overlay modifiers to ensure the code compiles.
+                Refactor the `slider()` method into the body of a new private `ProgressSlider` view. Move the progress tracker `StateObject` to this view and remove the ``SwiftUICore/View/bind(_:to:)-8fqem`` and overlay modifiers to ensure the code compiles.
 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-3.swift)
             }
 
             @Step {
-                Bind the progress tracker to the player in `ProgressSlider`. Since no element in the view depends directly on player updates, use a regular (non-observed) property. Reapply the `bind(_:to:)` modifier.
+                Bind the progress tracker to the player in `ProgressSlider`. Since no element in the view depends directly on player updates, use a regular (non-observed) property. Reapply the ``SwiftUICore/View/bind(_:to:)-8fqem`` modifier.
 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-4.swift)
             }

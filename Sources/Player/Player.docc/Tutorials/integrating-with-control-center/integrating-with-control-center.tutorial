@@ -7,7 +7,7 @@
     
     @Section(title: "Enable playback control from the Control Center") {
         @ContentAndMedia {
-            Integrate a ``Player`` into your app to allow basic playback control via the Control Center.
+            Integrate a player into your app that allows basic playback control via the Control Center.
         }
 
         @Steps {
@@ -20,7 +20,7 @@
             }
             
             @Step {
-                Enable Control Center integration for the ``Player``.
+                Call ``Player/becomeActive()`` to enable Control Center integration for the ``Player``.
 
                 After this step, the Control Center can control playback actions such as play and pause. However, metadata will not yet be displayed.
 
@@ -38,9 +38,9 @@
         
         @Steps {
             @Step {
-                Add metadata to the ``Player`` by implementing the ``AssetMetadata`` protocol. 
+                Add metadata to the ``Player`` that implements the ``AssetMetadata`` protocol. 
 
-                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-1.swift) {
+                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-1.swift, previousFile: integrating-with-control-center-1-2.swift) {
                     @Image(source: integrating-with-control-center-2-1, alt: "An iPhone screenshot showing an empty Control Center.")
                 }
             }

@@ -7,10 +7,8 @@ struct ContentView: View {
     )
 
     var body: some View {
-        ZStack {
-            VideoView(player: player)
-                .supportsPictureInPicture()
-        }
-        .onAppear(perform: player.play)
+        VideoView(player: player)
+            .supportsPictureInPicture()
+            .onAppear(perform: player.play)
     }
 }
