@@ -104,7 +104,7 @@ public final class ProgressTracker: ObservableObject {
     /// A Boolean reporting whether progress information is available.
     ///
     /// This Boolean is a recommendation you can use to entirely hide progress information in cases where it is not
-    /// meaningful (e.g. when loading content or for livestreams).
+    /// meaningful (e.g., when loading content or for livestreams).
     public var isProgressAvailable: Bool {
         _progress != nil
     }

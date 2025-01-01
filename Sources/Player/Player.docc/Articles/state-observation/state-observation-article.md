@@ -11,7 +11,7 @@ Learn how to observe and respond to state changes in a player.
 
 The ``PillarboxPlayer`` framework leverages [Combine](https://developer.apple.com/documentation/combine), [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject), and published properties, allowing SwiftUI views to automatically react to changes in state.
 
-However, indiscriminate property publishing can lead to excessive updates, causing unnecessary SwiftUI view refreshes, degraded layout performance, and higher energy consumption. To address this, ``Player`` only publishes essential states (e.g. playback status or media type), while other frequently updated states require explicit subscription.
+However, indiscriminate property publishing can lead to excessive updates, causing unnecessary SwiftUI view refreshes, degraded layout performance, and higher energy consumption. To address this, ``Player`` only publishes essential states (e.g., playback status or media type), while other frequently updated states require explicit subscription.
 
 ### Observe essential player states
 
@@ -36,7 +36,7 @@ struct PlaybackView: View {
 
 ### Observe time updates
 
-Accurate time observation is vital for playback features like progress bars. Different UI components may require updates at varying intervals (e.g. 0.1 seconds for a progress bar vs. 1 second for general UI).
+Accurate time observation is vital for playback features like progress bars. Different UI components may require updates at varying intervals (e.g., 0.1 seconds for a progress bar vs. 1 second for general UI).
 
 To avoid excessive layout refreshes, ``Player`` does not publish time updates automatically. Instead, explicit subscription is required:
 
@@ -47,7 +47,7 @@ For simpler progress tracking without explicit subscriptions, use ``ProgressTrac
 
 ### Explicitly subscribe to non-essential state updates
 
-Non-essential states (e.g. buffer positions or derived properties like stream type) are not automatically published. Instead, you can:
+Non-essential states (e.g., buffer positions or derived properties like stream type) are not automatically published. Instead, you can:
 
 - Subscribe to ``Player/propertiesPublisher`` for direct observation.
 - Use the ``SwiftUICore/View/onReceive(player:assign:to:)`` modifier to observe specific property changes locally. For example, to display a loading indicator during buffering:
@@ -152,7 +152,7 @@ struct PlaybackView: View {
 To minimize unnecessary UI refreshes, keep subscriptions scoped to the smallest required view hierarchy. Here’s how to optimize:
 
 - Use `View/_debugBodyCounter()` (from the PillarboxCore framework) to identify excessive view refreshes.
-- Move high-frequency updates (e.g. progress tracking with small intervals or explicit ``SwiftUICore/View/onReceive(player:assign:to:)`` subscriptions) into smaller subviews.
+- Move high-frequency updates (e.g., progress tracking with small intervals or explicit ``SwiftUICore/View/onReceive(player:assign:to:)`` subscriptions) into smaller subviews.
 - Recheck your layout with `View/_debugBodyCounter()` after implementing optimizations.
 
 > Note:  Refer to <doc:optimizing-custom-layouts> for detailed optimization techniques.

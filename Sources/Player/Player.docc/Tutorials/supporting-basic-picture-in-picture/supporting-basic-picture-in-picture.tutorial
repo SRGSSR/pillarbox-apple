@@ -16,7 +16,7 @@
             }
             
             @Step {
-                Configure your app's [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`, e.g. in your application delegate.
+                Configure your app's [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`, e.g., in your application delegate.
 
                 @Code(name: "Application.swift", file: supporting-basic-picture-in-picture-1-2)
             }

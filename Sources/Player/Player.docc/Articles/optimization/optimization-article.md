@@ -28,7 +28,7 @@ Use Instruments to identify optimization opportunities. Focus on the following a
 - **Time Profiler Instrument:** Detect unusual CPU activity and identify potential bottlenecks in your application's performance.
 - **Animation Hitches Instrument:** Investigate frame rate hiccups, particularly when players are displayed in scrollable views, to ensure smooth user interactions.
 - **Activity Monitor Instrument:**
-Since media playback occurs out-of-process through dedicated media services daemons (e.g. _mediaplaybackd_), use Activity Monitor to analyze their CPU and memory usage. Filter for daemons with names containing _media_ to focus on relevant processes.
+Since media playback occurs out-of-process through dedicated media services daemons (e.g., _mediaplaybackd_), use Activity Monitor to analyze their CPU and memory usage. Filter for daemons with names containing _media_ to focus on relevant processes.
 
 To gain a comprehensive understanding of your application's memory and CPU usage, you should therefore evaluate not only its own process but also the media service daemons it interacts with.
 

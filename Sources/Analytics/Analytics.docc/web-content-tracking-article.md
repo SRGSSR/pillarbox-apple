@@ -8,7 +8,7 @@ Ensure accurate tracking of web content displayed by your app.
 
 ## Overview
 
-Apps may display or embed web content in various ways, whether it’s part of the SRG SSR offering or external (e.g. an arbitrary YouTube page):
+Apps may display or embed web content in various ways, whether it’s part of the SRG SSR offering or external (e.g., an arbitrary YouTube page):
 
 - **SRG SSR websites:** These must implement page view tracking in JavaScript to collect usage data when accessed via browsers like Safari, Chrome, or Edge.
 - **External websites:** While not tracked by SRG SSR, these often provide indirect access to SRG SSR content through hyperlinks.
@@ -21,7 +21,7 @@ This article outlines the precautions necessary to ensure web content is tracked
 
 - **Web view:** An embeddable component for displaying web content directly within an app ([`WKWebView`](https://developer.apple.com/documentation/webkit/wkwebview)).
 - **In-app web browser:** A browser-like interface for viewing web content without leaving the app ([`SFSafariViewController`](https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller)).
-- **Device browser:** A standalone browser app (e.g. Safari, Chrome). Use [`open(_:options:completionHandler:)`](https://developer.apple.com/documentation/uikit/uiapplication/1648685-open) to open content in the default device browser, with support for deep linking.
+- **Device browser:** A standalone browser app (e.g., Safari, Chrome). Use [`open(_:options:completionHandler:)`](https://developer.apple.com/documentation/uikit/uiapplication/1648685-open) to open content in the default device browser, with support for deep linking.
 
 ### Use the device browser
 
@@ -40,7 +40,7 @@ This solution works well for apps displaying loosely related web content, such a
 
 In some cases, your app may need to tightly integrate web content into its native user interface. When doing so, consider using a **web view** or **in-app browser**.
 
-If the displayed web content belongs to SRG SSR, ensure that JavaScript tracking is **disabled for the first loaded page** (e.g. using a special resource path or parameter). This prevents overlapping measurements while your app is in the foreground.
+If the displayed web content belongs to SRG SSR, ensure that JavaScript tracking is **disabled for the first loaded page** (e.g., using a special resource path or parameter). This prevents overlapping measurements while your app is in the foreground.
 
 > Note: Only the **first level** of web navigation must adhere to this rule. Mediapulse allows tracking for deeper levels, as it’s impossible to fully control navigation starting from a random web page.
 

@@ -62,10 +62,10 @@ Customize the player during initialization by providing a ``PlayerConfiguration`
 
 ## Load custom content
 
-In scenarios where media URLs are dynamically retrieved (e.g. from a web service), you can create custom player items by following these steps:
+In scenarios where media URLs are dynamically retrieved (e.g., from a web service), you can create custom player items by following these steps:
 
 1. Write a publisher that fetches the media URL and associated metadata.
-2. Map the publisher’s output to an ``Asset``. If metadata is required (e.g. for <doc:control-center-article> integration or custom tracking), define and attach a suitable metadata type. Refer to the <doc:metadata-article> article for details.
+2. Map the publisher’s output to an ``Asset``. If metadata is required (e.g., for <doc:control-center-article> integration or custom tracking), define and attach a suitable metadata type. Refer to the <doc:metadata-article> article for details.
 3. Create a ``PlayerItem`` using the publisher, ensuring the initializer reflects any external parameters the publisher requires.
 
 ## Start playback

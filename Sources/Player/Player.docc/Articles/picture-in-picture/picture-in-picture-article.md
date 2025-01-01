@@ -85,4 +85,4 @@ To test your integration, follow these steps:
 
 When using ``SystemVideoView`` inline (not fullscreen), its close button is replaced with a maximize button to enable fullscreen mode. If you want to dismiss the view containing the inline player when PiP starts, wait for the ``PictureInPictureDelegate/pictureInPictureDidStart()`` callback to avoid playback interruptions.
 
-> Warning: Automatic PiP activation (e.g. swiping to go Home) may not work if multiple ``SystemVideoView`` instances with PiP enabled are active simultaneously.
+> Warning: Automatic PiP activation (e.g., swiping to go Home) may not work if multiple ``SystemVideoView`` instances with PiP enabled are active simultaneously.

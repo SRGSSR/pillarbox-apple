@@ -6,7 +6,7 @@
 
 /// The labels associated with a comScore hit.
 ///
-/// Mainly used for development-oriented purposes (e.g. unit testing).
+/// Mainly used for development-oriented purposes (e.g., unit testing).
 public struct ComScoreLabels {
     /// The raw label dictionary.
     public let dictionary: [String: String]

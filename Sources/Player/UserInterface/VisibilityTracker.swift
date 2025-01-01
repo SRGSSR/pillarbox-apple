@@ -16,11 +16,11 @@ import UIKit
 /// used to manage playback control visibility. It provides several standard behaviors that are usually expected from
 /// player user interfaces:
 ///
-/// - Users should be able to toggle user interface visibility on or off with some kind of interaction (e.g. tapping
+/// - Users should be able to toggle user interface visibility on or off with some kind of interaction (e.g., tapping
 ///   the player interface itself).
 /// - The user interface must automatically hide after some delay when the player is actually playing content (except
 ///   when VoiceOver has been enabled).
-/// - The user interface must be automatically revealed when playback is paused externally (e.g. by another app or
+/// - The user interface must be automatically revealed when playback is paused externally (e.g., by another app or
 ///   through the Control Center) so that playback can be quickly resumed.
 ///
 /// ## Usage
@@ -32,7 +32,7 @@ import UIKit
 /// 2. Bind the visibility tracker to a ``Player`` instance by applying the ``SwiftUICore/View/bind(_:to:)-wthx`` modifier.
 /// 3. Use ``isUserInterfaceHidden`` to adjust visibility of your user interface components based on the current
 ///    visibility tracker recommendation.
-/// 4. Introduce an interaction (e.g. a tap gesture) that lets your users toggle user interface visibility on or off.
+/// 4. Introduce an interaction (e.g., a tap gesture) that lets your users toggle user interface visibility on or off.
 ///    Simply call ``toggle()`` from the action associated with this interaction.
 /// 5. Call ``reset()`` when a user interaction should prevent the user interface from being automatically hidden. You
 ///    can for example call this method during slider interactions so that the user interface stays visible while the

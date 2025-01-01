@@ -29,7 +29,7 @@ You can access playback metrics at any time by calling the ``Player/metrics()`` 
 
 Subscribe to ``Player/periodicMetricsPublisher(forInterval:queue:limit:)`` to receive a continuous stream of ``Metrics`` related to the current playback item.
 
-These metrics include both instantaneous values (e.g. bandwidth estimates, content bitrate) and cumulative data since the last update. This helps you analyze not only the overall playback session but also its performance over regular intervals.
+These metrics include both instantaneous values (e.g., bandwidth estimates, content bitrate) and cumulative data since the last update. This helps you analyze not only the overall playback session but also its performance over regular intervals.
 
 ## Receive important metric-related events
 
@@ -37,7 +37,7 @@ Subscribe to ``Player/metricEventsPublisher`` to receive a stream of ``MetricEve
 
 These events include:
 
-- Timing events (e.g. metadata and asset loading durations).
+- Timing events (e.g., metadata and asset loading durations).
 - Warnings and errors.
 
 For detailed information on supported events, refer to the documentation on ``MetricEvent/Kind-swift.enum``.

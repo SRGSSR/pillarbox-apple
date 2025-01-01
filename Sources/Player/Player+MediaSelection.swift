@@ -112,7 +112,7 @@ public extension Player {
     ///   - characteristic: The media characteristic for which the selection criteria are to be applied. Supported values
     ///     include `.audible`, `.legible`, and `.visual`.
     ///
-    /// This method can be used to override the default media option selection for some characteristic, e.g. to start
+    /// This method can be used to override the default media option selection for some characteristic, e.g., to start
     /// playback with a predefined language for audio and / or subtitles.
     func setMediaSelection(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
         if let item = queuePlayer.currentItem {

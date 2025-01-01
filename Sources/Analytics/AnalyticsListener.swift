@@ -14,7 +14,7 @@ import TCServerSide
 /// The listener must be started first and provides two methods with which comScore, respectively Commanders Act
 /// hits can be captured.
 ///
-/// Note that `AnalyticsListener` is a development-oriented tool (e.g. unit testing) which must never be used directly
+/// Note that `AnalyticsListener` is a development-oriented tool (e.g., unit testing) which must never be used directly
 /// in production code.
 public enum AnalyticsListener {
     private static let sessionIdentifierKey = "listener_session_id"

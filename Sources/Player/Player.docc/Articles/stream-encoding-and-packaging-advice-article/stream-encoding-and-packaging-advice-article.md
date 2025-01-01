@@ -16,7 +16,7 @@ For optimal compatibility with the ``PillarboxPlayer`` framework, certain specif
 
 ### Automatic media option selection
 
-``Player`` supports automatic selection of audio and subtitle tracks based on language preferences and accessibility settings (e.g. unforced subtitles, CC, SDH, and audio descriptions). This feature requires streams to meet specific criteria:
+``Player`` supports automatic selection of audio and subtitle tracks based on language preferences and accessibility settings (e.g., unforced subtitles, CC, SDH, and audio descriptions). This feature requires streams to meet specific criteria:
 
 #### Audio renditions
 
