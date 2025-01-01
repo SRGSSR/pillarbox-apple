@@ -25,7 +25,6 @@ struct TrackingVisibilityTutorial: View {
         .bind(visibilityTracker, to: player)
     }
 
-    @ViewBuilder
     private func controls() -> some View {
         ZStack {
             Color(white: 0, opacity: 0.6)
@@ -36,7 +35,6 @@ struct TrackingVisibilityTutorial: View {
         .animation(.linear, value: visibilityTracker.isUserInterfaceHidden)
     }
 
-    @ViewBuilder
     private func playbackButton() -> some View {
         Button(action: player.togglePlayPause) {
             Image(systemName: player.shouldPlay ? "pause.circle" : "play.circle")

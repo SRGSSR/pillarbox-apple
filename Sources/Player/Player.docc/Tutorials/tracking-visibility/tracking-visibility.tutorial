@@ -40,7 +40,7 @@
             }
 
             @Step {
-                Add a tap gesture recognizer to the overlay, invoking the visibility tracker's `toggle()` method.
+                Add a tap gesture recognizer to the overlay, invoking the visibility tracker's ``VisibilityTracker/toggle()`` method.
 
                 Test the application to confirm you can toggle the user interface on and off. Observe that the interface also disappears automatically during playback if left idle.
 
