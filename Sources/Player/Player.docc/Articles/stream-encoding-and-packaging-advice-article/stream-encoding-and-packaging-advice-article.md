@@ -4,7 +4,7 @@
     @PageColor(purple)
 }
 
-Optimize your streams for seamless playback with the ``PillarboxPlayer`` framework.
+Optimize your streams for seamless playback with Pillarbox.
 
 ## Overview
 

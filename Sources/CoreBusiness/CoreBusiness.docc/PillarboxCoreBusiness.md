@@ -11,7 +11,7 @@ Play SRG SSR content with the PillarboxPlayer framework.
 
 The PillarboxCoreBusiness framework offers standard SRG SSR business integration, most notably:
 
-- **Player items** for loading content delivered through the Integration Layer.
+- **Player items** designed for loading content provided by the official SRG SSR backend, known as the Integration Layer.
 - **Streaming analytics** that adhere to SRG SSR requirements.
 
 > Important: Streaming measurements are automatically captured when playing SRG SSR content using the PillarboxCoreBusiness framework. Ensure that tracking is properly set up beforehand. Refer to the PillarboxAnalytics documentation for more details.

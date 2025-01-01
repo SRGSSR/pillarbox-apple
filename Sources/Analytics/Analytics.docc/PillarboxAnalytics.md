@@ -32,7 +32,7 @@ To comply with Switzerland’s [New Federal Act on Data Protection (nFADP)](http
 
 The PillarboxAnalytics framework links against [AdSupport](https://developer.apple.com/documentation/adsupport), but it does not use or share the [IDFA](https://developer.apple.com/documentation/adsupport/asidentifiermanager/advertisingidentifier).
 
-> Important: SRG SSR apps **must** not implement [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency) to ensure the IDFA remains inaccessible.
+> Important: SRG SSR apps must **not** implement [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency) to ensure the IDFA remains inaccessible.
 
 ### App privacy details
 

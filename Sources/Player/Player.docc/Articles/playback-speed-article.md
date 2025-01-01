@@ -12,7 +12,7 @@ Many users prefer playing content at customized speeds, whether faster or slower
 
 ### Adjust the playback speed programmatically
 
-Playback speed is part of the essential properties automatically published by a ``Player`` instance, as detailed in <doc:state-observation-article>. SwiftUI views observing a player instance will automatically update when the playback speed changes.
+Playback speed is part of the essential properties automatically published by a ``Player`` instance, as detailed in the <doc:state-observation-article> article. SwiftUI views observing a player instance will automatically update when the playback speed changes.
 
 To adjust the playback speed programmatically, use the ``Player/setDesiredPlaybackSpeed(_:)`` method. As the name implies, this method sets the desired speed. However, the actual speed may vary depending on the content’s limitations. You can query the current effective playback speed using ``Player/effectivePlaybackSpeed`` and retrieve the available speed range with ``Player/playbackSpeedRange``.
 
@@ -22,7 +22,7 @@ To adjust the playback speed programmatically, use the ``Player/setDesiredPlayba
 
 When building a playback user interface, one of the most common requirements is to provide users with the ability to change the playback speed.
 
-For a quick implementation, you can use the standard system player experience by calling ``Player/standardSettingMenu()``. Wrap the returned view in a [Menu](https://developer.apple.com/documentation/swiftui/menu) to create a menu that offers not only playback speed selection but also media options for audible and legible characteristics.
+For a quick implementation, you can use the standard system player experience by calling ``Player/standardSettingMenu()``. Wrap the returned view in a [Menu](https://developer.apple.com/documentation/swiftui/menu) to that offers not only playback speed selection but also media options for audible and legible characteristics.
 
 If you want more customization, you can create your own menu using ``Player/playbackSpeedMenu(speeds:)``. This allows you to tailor the list of speed options to your app’s needs.
 

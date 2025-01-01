@@ -31,6 +31,6 @@ Analytics.shared.sendEvent(commandersAct: .init(
 ))
 ```
 
-For inspiration, explore how [Play SRG products](https://confluence.srg.beecollaboration.com/display/SRGPLAY/Play+SRG+native+click+and+hidden+analytics+events) utilize events.
+For inspiration, explore how [Play SRG products](https://srgssr-ch.atlassian.net/wiki/x/AAmhLw) utilize events.
 
-> Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=13188692) for available keys or contact the GD ADI team for further guidance on mapping and implementation.
+> Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://srgssr-ch.atlassian.net/wiki/x/zIZwLw) for available keys or contact the GD ADI team for further guidance on mapping and implementation.

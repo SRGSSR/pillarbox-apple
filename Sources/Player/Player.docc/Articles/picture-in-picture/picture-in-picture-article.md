@@ -20,9 +20,9 @@ Regardless of the integration mode you choose, your app must be properly configu
 
 ### Configure your app
 
-To enable Picture in Picture, ensure the following configurations are applied:
+To enable PiP, ensure the following configurations are applied:
 
-1. **Background Modes:** Enable AirPlay support in your app’s [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#4182619).
+1. **Background Modes:** Enable PiP support in your app’s [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#4182619).
 2. **Audio Session:** Set the [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) category to [`.playback`](https://developer.apple.com/documentation/avfaudio/avaudiosession/category/1616509-playback).
 
 ### Basic integration
@@ -44,7 +44,7 @@ To test your integration, follow these steps:
 
 ### Advanced integration
 
-Advanced integration, available for ``VideoView`` as well as ``SystemVideoView``, is more involved and requires additional integration steps so that Picture in Picture can:
+Advanced integration, available for ``VideoView`` as well as ``SystemVideoView``, is more involved and requires additional integration steps so that PiP can:
 
 - Dismiss and restore your player user interface when appropriate.
 - Continue playing even when the player user interface has been dismissed.
@@ -79,7 +79,7 @@ To test your integration, follow these steps:
 5. Tap the PiP button within the app. Playback should seamlessly transition to PiP.
 6. Play the same video already in PiP. The player interface should restore without interrupting playback.
 7. Tap the PiP button within the app. Playback should seamlessly transition to PiP.
-8. Play a different video. The interface should restore, transitioning playback to the new content.
+8. Play a different video. The interface should restore while transitioning playback to the new content.
 
 #### System video view inline display
 

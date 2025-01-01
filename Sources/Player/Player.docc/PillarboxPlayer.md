@@ -10,13 +10,17 @@ Craft immersive audiovisual playback experiences.
 
 > Warning: PillarboxPlayer APIs are designed for use exclusively on the main thread. Invoking these APIs from background threads is unsupported and may result in unpredictable behavior.
 
-The PillarboxPlayer framework offers a comprehensive suite of tools to seamlessly integrate advanced audiovisual media capabilities into your app.
+The PillarboxPlayer framework offers a comprehensive suite of tools to seamlessly integrate advanced audiovisual media capabilities into your app:
 
-Easily play content using a ``Player`` and display it in the standard AVKit user interface with ``SystemVideoView``, or create a fully custom user interface starting with a simple ``VideoView``. Support any type of content from any source by implementing custom ``PlayerItem``s and ``Asset``s, regardless of its origin or playback requirements. Monitor and analyze playback with your own ``PlayerItemTracker``, tailored for purposes like analytics or performance tracking.
+- Easily play content using a ``Player`` and display it in the standard AVKit user interface with ``SystemVideoView``, or create a fully custom user interface starting with a simple ``VideoView``.
+- Support any type of content from any source by implementing custom ``PlayerItem``s and ``Asset``s, regardless of its origin or playback requirements.
+- Monitor and analyze playback with your own ``PlayerItemTracker``, tailored for purposes like analytics or performance tracking.
 
 @Image(source: player-intro, alt: "A screenshot of a player user interface")
 
 The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its declarative and reactive design principles to enable rapid iteration and refinement of your ideas.
+
+> Tip: Refer to the Human Interface Guidelines for best practices on integrating [audio](https://developer.apple.com/design/human-interface-guidelines/playing-audio) and [video](https://developer.apple.com/design/human-interface-guidelines/playing-video) experiences within your app.
 
 ### Featured
 

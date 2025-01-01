@@ -5,7 +5,7 @@
     @PageImage(purpose: card, source: tracking-card, alt: "An image depicting a graph.")
 }
 
-Monitor and analyze playback activity with custom item trackers.
+Monitor and analyze playback activity.
 
 ## Overview
 
@@ -27,14 +27,14 @@ The ``PlayerItemTracker`` protocol uses two associated types to define the data 
 After defining the associated types, implement the tracker lifecycle methods to manage its behavior:
 
 1. ``PlayerItemTracker/init(configuration:)`` is called when the tracker and its item are created. This initializer receives the configuration instance defined earlier.
-2. ``PlayerItemTracker/enable(for:)`` is called when the associated item becomes active. Use this method to integrate with the player, possibly leveraging the provided `AVPlayer` instance for third-party SDKs if needed.
+2. ``PlayerItemTracker/enable(for:)`` is called when the associated item becomes active. Use this method to integrate with the player, possibly leveraging the provided `AVPlayer` instance for third-party SDK integration if needed.
 3. ``PlayerItemTracker/updateMetadata(to:)`` is called when metadata is delivered. The method receives an instance of the tracker-specific metadata type defined earlier.
 4. ``PlayerItemTracker/updateProperties(to:)`` is called to reflect changes to player properties. As properties can update frequently, ensure this implementation is highly efficient.
 5. ``PlayerItemTracker/updateMetricEvents(to:)`` is called when processing ``MetricEvent`` instances as they are received.
 6. ``PlayerItemTracker/disable(with:)`` is called to clean up resources when the player item is no longer active. Use the provided properties to extract final player state information.
 7. Use `deinit` to perform any necessary cleanup when the tracker and its item are discarded.
 
-> Important: A tracker is reused if the same item is replayed. Ensure that any state is properly initialized or reset in the ``PlayerItemTracker/enable(for:)`` and ``PlayerItemTracker/disable(with:)`` methods.
+> Important: A tracker is reused if the same item is replayed. Ensure that any state is properly initialized in ``PlayerItemTracker/enable(for:)`` and reset in ``PlayerItemTracker/disable(with:)``.
 
 ### Attach a tracker to an item
 
@@ -55,7 +55,7 @@ You can also:
 
 ### Associate a session identifier
 
-Trackers can assign an optional session identifier to playback activity. Session identifiers are particularly useful for matching locally collected data with external services.
+Trackers can assign an optional session identifier to playback activity. Session identifiers are particularly useful for matching locally collected data with external services:
 
 1. Implement ``PlayerItemTracker/sessionIdentifier-329qf`` to provide a unique identifier for each playback session. Consider creating a new identifier for every playback attempt.
 2. Retrieve session identifiers in use with the ``Player/currentSessionIdentifiers(trackedBy:)`` method. Use this for debugging, support, or integration with external systems. For example, you can display identifiers alongside error messages, copy them to the clipboard, or include them in automated emails to support teams.

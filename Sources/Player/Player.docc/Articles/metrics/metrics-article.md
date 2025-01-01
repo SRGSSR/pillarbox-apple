@@ -11,7 +11,7 @@ Inspect key metrics during playback.
 
 Delivering the best playback experience to your users is essential but can be challenging. Media playback involves numerous components—stream encoding, packaging, metadata delivery, CDN performance, and network quality—all of which can impact the user experience.
 
-> Tip: For more information on stream encoding and packaging, refer to <doc:stream-encoding-and-packaging-advice-article>.
+> Tip: For more information on stream encoding and packaging, refer to the <doc:stream-encoding-and-packaging-advice-article> article.
 
 To gauge how users perceive your playback experience, consider the following:
 
@@ -19,7 +19,7 @@ To gauge how users perceive your playback experience, consider the following:
 - **Error Rates:** How often do playback sessions fail, and what are the most common errors?
 - **Stalls and Recovery:** How frequently does playback stall? How long do users wait for it to resume?
 
-Pillarbox ``Player`` provides extensive metrics to help answer these questions and optimize the user experience.
+``Player`` provides extensive metrics to help answer these questions and optimize the user experience.
 
 ## Receive metrics on demand
 
@@ -33,9 +33,7 @@ These metrics include both instantaneous values (e.g., bandwidth estimates, cont
 
 ## Receive important metric-related events
 
-Subscribe to ``Player/metricEventsPublisher`` to receive a stream of ``MetricEvent``s for the item being played.
-
-These events include:
+Subscribe to ``Player/metricEventsPublisher`` to receive a stream of ``MetricEvent``s for the item being played. These events include:
 
 - Timing events (e.g., metadata and asset loading durations).
 - Warnings and errors.

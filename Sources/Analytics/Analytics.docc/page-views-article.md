@@ -27,13 +27,13 @@ Tracking a page view requires associating it with both ``ComScorePageView`` and 
 - **ComScore:** Only requires a `name` to be specified.
 - **Commanders Act:** Requires both a `name` and a `type`. Additionally, you can use the `levels` attribute to classify page views hierarchically. Note that this classification doesn’t need to reflect the page’s position within your view hierarchy.
 
-For inspiration, explore how [Play SRG products](https://confluence.srg.beecollaboration.com/display/SRGPLAY/Play+SRG+native+page+view+analytic+events) utilize page views.
+For inspiration, explore how [Play SRG products](https://srgssr-ch.atlassian.net/wiki/x/FwWhLw) utilize page views.
 
-> Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=13188692) for available keys or contact the GD ADI team for further guidance on mapping and implementation.
+> Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://srgssr-ch.atlassian.net/wiki/x/zIZwLw) for available keys or contact the GD ADI team for further guidance on mapping and implementation.
 >
 > Avoid adding custom fields to comScore page views as unsupported fields are ignored server-side.
 
-### Track page views in SwiftUI
+### Automatically track page views in SwiftUI
 
 Associate page views with SwiftUI views using the ``SwiftUICore/View/tracked(comScore:commandersAct:)`` modifier.
 
@@ -64,7 +64,7 @@ private extension HomeView {
 }
 ```
 
-### Track page views in UIKit
+### Automatically track page views in UIKit
 
 For UIKit, use view controllers to represent screens and associate page view data by conforming to the ``PageViewTracking`` protocol.
 
@@ -96,21 +96,19 @@ extension HomeViewController: PageViewTracking {
 
 With ``PageViewTracking/isTrackedAutomatically-80h6v`` set to `true`, page views are recorded automatically when `viewDidAppear(_:)` is called.
 
-> Tip: If page view data is unavailable at `viewDidAppear(_:)`, disable automatic tracking and manually trigger the page view later with ``UIKit/UIViewController/trackPageView()``.
+> Tip: If page view data is unavailable in `viewDidAppear(_:)`, disable automatic tracking and manually trigger the page view later with ``UIKit/UIViewController/trackPageView()``.
 
-### Support page views in custom UIKit containers
+### Manually track views
 
-If your app uses custom container view controllers and you want automatic tracking, ensure these containers conform to the ``ContainerPageViewTracking`` protocol. Possible behaviors include:
+If automatic tracking is not suitable, you can manually trigger page views using ``Analytics/trackPageView(comScore:commandersAct:)``.
+
+In general this is best avoided, though, since you are then responsible of correctly tracking appearing and revealed views, as well as views displayed when the app returns from background.
+
+### Support automatic page view tracking in custom UIKit containers
+
+For apps utilizing custom container view controllers, ensure these containers conform to the ``ContainerPageViewTracking`` protocol to enable compatibility with automatic tracking. Possible behaviors include:
 
 - **Forward to All Children:** No additional configuration is required in this case.
 - **Selective Forwarding:** Implement ``ContainerPageViewTracking`` to specify active children for measurements.
 
 > Note: Standard UIKit containers are natively supported by the ``PillarboxAnalytics`` framework.
-
-### Trigger page views manually
-
-For advanced use cases or hybrid apps, trigger page views manually using ``Analytics/trackPageView(comScore:commandersAct:)``.
-
-Whether your application is implemented in SwiftUI, UIKit or a combination of both, you can always trigger a page view manually with ``Analytics/trackPageView(comScore:commandersAct:)``.
-
-In general this is best avoided, though, since you are then responsible of correctly tracking appearing and revealed views, as well as views displayed when the app returns from background.

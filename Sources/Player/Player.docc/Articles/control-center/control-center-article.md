@@ -21,11 +21,11 @@ The primary role of a ``PlayerItem`` is to load an ``Asset`` for playback. In ad
 
 Follow these steps to associate metadata with a ``PlayerItem`` for Control Center integration:
 
-1. **Define Metadata:** Create a type representing your asset metadata, ensuring it conforms to the ``AssetMetadata`` protocol. Refer to the <doc:metadata-article> for details.
+1. **Define Metadata:** Create a type representing your asset metadata, ensuring it conforms to the ``AssetMetadata`` protocol. Refer to the <doc:metadata-article> article for details.
 2. **Return Metadata:** Implement the ``AssetMetadata/playerMetadata`` method to return ``PlayerMetadata`` for display in the Control Center when the item is playing.
 3. **Publish Metadata:** Create a custom ``PlayerItem`` that retrieves and publishes all required metadata before delivering the asset. Alternatively, if you have all metadata and the URL ready, use a ``PlayerItem`` helper method to provide metadata at creation.
 
-> Tip: Metadata for a ``PlayerItem`` is automatically published by a ``Player``. Access this metadata via the ``Player/metadata`` property to enhance your custom UI. The metadata also appears in the ``SystemVideoView`` by default.
+Tip: The metadata you provide is also displayed in the ``SystemVideoView`` by default. When implementing a custom UI, ensure you use the same metadata to maintain consistency across the Control Center and player UI.
 
 ### Activate a player instance
 

@@ -10,7 +10,7 @@ Ensure accurate tracking of web content displayed by your app.
 
 Apps may display or embed web content in various ways, whether it’s part of the SRG SSR offering or external (e.g., an arbitrary YouTube page):
 
-- **SRG SSR websites:** These must implement page view tracking in JavaScript to collect usage data when accessed via browsers like Safari, Chrome, or Edge.
+- **SRG SSR websites:** These implement page view tracking in JavaScript to collect usage data when accessed via web browsers.
 - **External websites:** While not tracked by SRG SSR, these often provide indirect access to SRG SSR content through hyperlinks.
 
 > Important: To comply with Mediapulse guidelines, no tracked SRG SSR web content should be displayed while a tracked app is running in the foreground. Doing so would result in two overlapping analytics sessions (for native and web content), which is strictly forbidden.

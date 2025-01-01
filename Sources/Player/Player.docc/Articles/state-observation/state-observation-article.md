@@ -36,14 +36,14 @@ struct PlaybackView: View {
 
 ### Observe time updates
 
-Accurate time observation is vital for playback features like progress bars. Different UI components may require updates at varying intervals (e.g., 0.1 seconds for a progress bar vs. 1 second for general UI).
+Accurate time tracking is crucial for playback features like progress bars. However, to prevent excessive layout refreshes, a ``Player`` does not automatically publish time updates.
 
-To avoid excessive layout refreshes, ``Player`` does not publish time updates automatically. Instead, explicit subscription is required:
+In SwiftUI, use a ``ProgressTracker`` to efficiently manage and observe progress changes. When bound to a player, a progress tracker not only provides automatic progress updates but also allows the user to interactively adjust the progress.
+
+In other contexts, you can directly subscribe to time update publishers:
 
 - Use ``Player/periodicTimePublisher(forInterval:queue:)`` for periodic updates.
 - Use ``Player/boundaryTimePublisher(for:queue:)`` to detect specific time crossings.
-
-For simpler progress tracking without explicit subscriptions, use ``ProgressTracker`` to manage and observe progress changes effectively.
 
 ### Explicitly subscribe to non-essential state updates
 
@@ -149,10 +149,10 @@ struct PlaybackView: View {
 
 ### Optimize state observations
 
-To minimize unnecessary UI refreshes, keep subscriptions scoped to the smallest required view hierarchy. Here’s how to optimize:
+To minimize unnecessary UI refreshes, keep subscriptions scoped to the smallest required view hierarchy:
 
 - Use `View/_debugBodyCounter()` (from the PillarboxCore framework) to identify excessive view refreshes.
 - Move high-frequency updates (e.g., progress tracking with small intervals or explicit ``SwiftUICore/View/onReceive(player:assign:to:)`` subscriptions) into smaller subviews.
 - Recheck your layout with `View/_debugBodyCounter()` after implementing optimizations.
 
-> Note:  Refer to <doc:optimizing-custom-layouts> for detailed optimization techniques.
+> Note:  Refer to the <doc:optimizing-custom-layouts> tutorial for detailed optimization techniques.
