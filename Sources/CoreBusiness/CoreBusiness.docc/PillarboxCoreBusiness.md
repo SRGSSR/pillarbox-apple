@@ -9,26 +9,26 @@ Play SRG SSR content with the PillarboxPlayer framework.
 
 ## Overview
 
-The PillarboxCoreBusiness framework provides standard SRG SSR business integration:
+The PillarboxCoreBusiness framework offers standard SRG SSR business integration, most notably:
 
-- Player items to load content delivered by the Integration Layer.
-- Streaming analytics according to SRG SSR requirements.
+- **Player items** for loading content delivered through the Integration Layer.
+- **Streaming analytics** that adhere to SRG SSR requirements.
 
-> Important: Streaming measurements are automatically collected when playing SRG SSR content using the PillarboxCoreBusiness framework. Just ensure that tracking has been properly setup first. Please refer to the Analytics documentation for more information.
+> Important: Streaming measurements are automatically captured when playing SRG SSR content using the PillarboxCoreBusiness framework. Ensure that tracking is properly set up beforehand. Refer to the PillarboxAnalytics documentation for more details.
 
 ### Play SRG SSR content
 
-To play an SRG SSR content simply create a `PlayerItem` with ``PillarboxPlayer/PlayerItem/urn(_:server:trackerAdapters:configuration:)``, passing the URN of the content as parameter. Then load it into a `Player`.
+To play SRG SSR content, create a `PlayerItem` using ``PillarboxPlayer/PlayerItem/urn(_:server:trackerAdapters:configuration:)``, and pass the content URN as a parameter. Then load this `PlayerItem` into a `Player` instance.
 
-You can optionally change the server or add additional custom player item trackers. Standard SRG SSR trackers cannot be disabled.
+You can specify a different server or add custom tracker adapters. Standard SRG SSR trackers cannot be disabled.
 
-> Tip: Tracker adapters receive standard a ``MediaMetadata`` instance as parameter. If data your tracker needs is not available please file a corresponding [issue](https://github.com/SRGSSR/pillarbox-apple/issues/new?assignees=&labels=enhancement%2Ctriage&projects=&template=feature_request.yml) so that we can parse it.
+> Tip: Tracker adapters receive a ``MediaMetadata`` instance as input. If your tracker requires additional data that is not currently available, please submit a corresponding [feature request](https://github.com/SRGSSR/pillarbox-apple/issues/new?assignees=&labels=enhancement%2Ctriage&projects=&template=feature_request.yml).
 
 ### Avoid background playback
 
-comScore forbids video measurements without a video view being actually visible on screen.
+comScore regulations prohibit video measurements without a visible video view on the screen.
 
-You must therefore never enable background video playback with `Player/audiovisualBackgroundPlaybackPolicy` when playing SRG SSR content. Implement proper Picture in Picture support instead.
+Do not enable background video playback using `audiovisualBackgroundPlaybackPolicy` on a player loaded with SRG SSR content. Instead, implement proper Picture in Picture (PiP) support to ensure compliance.
 
 ## Topics
 
