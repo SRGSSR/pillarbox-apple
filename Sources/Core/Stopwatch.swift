@@ -7,6 +7,8 @@
 import Foundation
 
 /// A stopwatch.
+///
+/// All stopwatch commands must be performed on the same thread.
 public final class Stopwatch {
     private var date: Date?
     private var total: TimeInterval = 0
