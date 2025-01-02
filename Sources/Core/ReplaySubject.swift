@@ -11,7 +11,7 @@ import Foundation
 ///
 /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
 /// any relevant completion.
-public final class ReplaySubject<Output, Failure>: Subject where Failure: Error {
+public final class ReplaySubject<Output, Failure>: Subject, @unchecked Sendable where Failure: Error {
     private let buffer: LimitedBuffer<Output>
     private var completion: Subscribers.Completion<Failure>?
     private let lock = NSRecursiveLock()
