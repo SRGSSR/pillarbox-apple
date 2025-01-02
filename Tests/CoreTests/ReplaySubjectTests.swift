@@ -133,10 +133,8 @@ final class ReplaySubjectTests: XCTestCase {
 
     func testThreadSafety() {
         let replaySubject = ReplaySubject<Int, Never>(bufferSize: 3)
-        for i in 0..<100 {
-            DispatchQueue.global().async {
-                replaySubject.send(i)
-            }
+        DispatchQueue.concurrentPerform(iterations: 100) { i in
+            replaySubject.send(i)
         }
     }
 
