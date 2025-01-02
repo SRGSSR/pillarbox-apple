@@ -12,7 +12,7 @@ public extension Binding {
     /// - Parameters:
     ///   - object: The object to bind to.
     ///   - keyPath: The key path to bind to.
-    init<T>(_ object: T, at keyPath: ReferenceWritableKeyPath<T, Value>) {
+    init<T>(_ object: T, at keyPath: ReferenceWritableKeyPath<T, Value> & Sendable) where T: Sendable {
         self.init(
             get: { object[keyPath: keyPath] },
             set: { object[keyPath: keyPath] = $0 }
