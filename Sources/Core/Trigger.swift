@@ -5,12 +5,13 @@
 //
 
 import Combine
+import Foundation
 
 /// A device used to control a set of other publishers.
 ///
 /// A trigger is a small device from which other publishers, called signal publishers, can be created. These publishers
 /// can be activated at any time by the trigger.
-public struct Trigger {
+public struct Trigger: @unchecked Sendable {
     /// The index type.
     public typealias Index = Int
 
@@ -18,6 +19,7 @@ public struct Trigger {
     public typealias Signal = AnyPublisher<Void, Never>
 
     private let sender = PassthroughSubject<Index, Never>()
+    private let lock = NSRecursiveLock()
 
     /// Creates a trigger.
     public init() {}
@@ -27,10 +29,12 @@ public struct Trigger {
     /// - Parameter index: The index used for activation.
     /// - Returns: The signal.
     public func signal(activatedBy index: Index) -> Signal {
-        sender
-            .filter { $0 == index }
-            .map { _ in }
-            .eraseToAnyPublisher()
+        withLock(lock) {
+            sender
+                .filter { $0 == index }
+                .map { _ in }
+                .eraseToAnyPublisher()
+        }
     }
 
     /// Activates associated signal publishers matching the provided integer index.
@@ -39,7 +43,9 @@ public struct Trigger {
     ///
     /// Signal publishers emit a single void value upon activation.
     public func activate(for index: Index) {
-        sender.send(index)
+        withLock(lock) {
+            sender.send(index)
+        }
     }
 }
 
