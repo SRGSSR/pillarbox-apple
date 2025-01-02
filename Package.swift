@@ -174,5 +174,6 @@ let package = Package(
                 .process("Resources")
             ]
         )
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )
