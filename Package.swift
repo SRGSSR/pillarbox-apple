@@ -149,6 +149,9 @@ let package = Package(
             dependencies: [
                 .target(name: "PillarboxCircumspect"),
                 .target(name: "PillarboxCore")
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
         .testTarget(
