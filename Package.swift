@@ -66,7 +66,10 @@ let package = Package(
             dependencies: [
                 .product(name: "DequeModule", package: "swift-collections")
             ],
-            path: "Sources/Core"
+            path: "Sources/Core",
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
+            ]
         ),
         .target(
             name: "PillarboxCoreBusiness",
