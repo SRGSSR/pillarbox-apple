@@ -60,7 +60,7 @@ Your metadata might also describe notable time ranges, such as:
 
 To associate time ranges with your metadata, build a ``TimeRange`` list and provide it to the ``PlayerMetadata`` via its ``PlayerMetadata/timeRanges`` parameter.
 
-> Tip: On tvOS, use  `SystemVideoView/contextualActions(_:)` to link contextual actions during opening or closing credits.
+> Tip: On tvOS, use `SystemVideoView/contextualActions(_:)` to link contextual actions during opening or closing credits.
 
 ## Display metadata in a player user interface
 
