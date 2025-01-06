@@ -32,6 +32,8 @@ public struct PlayerLimits {
     /// [expensive networks](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/3235752-allowsexpensivenetworkaccess).
     ///
     /// Disabled when set to `.zero`.
+    ///
+    /// > Note: Limits are ignored when casting to an AirPlay receiver.
     public let preferredMaximumResolutionForExpensiveNetworks: CGSize
 
     /// Creates a set of limits.
