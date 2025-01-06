@@ -5,20 +5,26 @@
     @PageImage(purpose: card, source: fairplay-streaming-card, alt: "An image depicting a lock.")
 }
 
-Play content protected with Apple FairPlay DRM.
+Enable playback of content protected with Apple FairPlay DRM.
 
 ## Overview
 
-You can manage [FairPlay](https://developer.apple.com/streaming/fps/) decryption keys associated with an ``Asset`` delivered by a ``PlayerItem``. This involves implementing a custom [`AVContentKeySessionDelegate`](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate) which is provided to the asset at creation time.
+You can manage [FairPlay](https://developer.apple.com/streaming/fps/) decryption keys for an ``Asset`` delivered by a ``PlayerItem``. This process involves implementing a custom [`AVContentKeySessionDelegate`](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate), which you assign to the asset at creation.
 
 ### Create a content key session delegate
 
-Create a type conforming to [`AVContentKeySessionDelegate`](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate) and implement content key retrieval, as required by the resource that must be played.
+To support FairPlay decryption you need a content key session delegate:
 
-Please refer to the [official documentation](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate) and code samples for more information about how a content key session delegate must be implemented.
+1. **Define a Delegate Type:** Create a type conforming to [`AVContentKeySessionDelegate`](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate).
+2. **Implement Key Retrieval:** Implement methods required for retrieving and managing content keys, based on the needs of the protected resource.
 
-### Associate a content key sesion delegate with an asset
+For detailed guidance, refer to the [official documentation](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate) and related code samples.
 
-The main responsibility of a ``PlayerItem`` loaded into a ``Player`` is to deliver an ``Asset`` to be actually played. Assets do not only convey the URL to be played but can also be attached a content key session delegate.
+### Associate a content key session delegate with an asset
 
-To associate an instance of the content key session delegate type you created above, have your custom ``PlayerItem`` publisher deliver an encrypted asset to which an instance of the delegate can be supplied. Alternatively, and provided you have all metadata and the URL to be played readily available, you can simply use one of the available ``PlayerItem`` encrypted construction helpers.
+A ``PlayerItem`` is responsible for delivering an ``Asset`` to a ``Player`` for playback. In addition to the media URL, the asset can be linked to a content key session delegate.
+
+Several options are available to associate a content key session delegate with an item:
+
+- Use a custom ``PlayerItem`` publisher to deliver an encrypted asset, providing the delegate instance.
+- If metadata and the media URL are readily available, use one of the ``PlayerItem`` encrypted construction helpers to attach the delegate during asset creation.

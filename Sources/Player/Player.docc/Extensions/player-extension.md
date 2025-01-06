@@ -2,12 +2,22 @@
 
 ## Topics
 
-### Initializers
+### Creating a Player
 
 - ``init(item:configuration:)``
 - ``init(items:configuration:)``
 
-### Items
+#### Configuring Player Behavior
+
+- ``actionAtItemEnd``
+- ``audiovisualBackgroundPlaybackPolicy``
+- ``configuration``
+- ``isMuted``
+- ``repeatMode``
+- ``shouldPlay``
+- ``textStyleRules``
+
+### Managing Player Items
 
 - ``append(_:)``
 - ``currentItem``
@@ -22,7 +32,73 @@
 - ``remove(_:)``
 - ``removeAllItems()``
 
-### Media Selection
+### Controlling Playback
+
+- ``canReplay()``
+- ``pause()``
+- ``play()``
+- ``replay()``
+- ``togglePlayPause()``
+
+### Observing Playback Properties
+
+- ``chunkDuration``
+- ``date()``
+- ``error``
+- ``isExternalPlaybackActive``
+- ``mediaType``
+- ``metadata``
+- ``metrics()``
+- ``playbackState``
+- ``presentationSize``
+- ``propertiesPublisher``
+- ``rate``
+- ``time()``
+- ``version``
+
+### Observing Playback Time
+
+- ``boundaryTimePublisher(for:queue:)``
+- ``periodicTimePublisher(forInterval:queue:)``
+
+### Seeking Through Media
+
+- ``canSeek(to:)``
+- ``seek(_:smooth:completion:)``
+- ``seek(to:completion:)-9bknb``
+- ``seek(to:completion:)-2ypz8``
+- ``seek(to:completion:)-1tbeq``
+
+### Skipping Through Media
+
+- ``canSkipBackward()``
+- ``canSkipForward()``
+- ``canSkipToDefault()``
+- ``skipBackward(completion:)``
+- ``skipForward(completion:)``
+- ``skipToDefault(completion:)``
+
+### Creating Player Positions
+
+- ``after(_:)``
+- ``at(_:)``
+- ``before(_:)``
+- ``near(_:)``
+- ``to(_:toleranceBefore:toleranceAfter:)``
+
+### Navigating Between Items
+
+- ``advanceToNext()``
+- ``advanceToNextItem()``
+- ``canAdvanceToNext()``
+- ``canAdvanceToNextItem()``
+- ``canReturnToPrevious()``
+- ``canReturnToPreviousItem()``
+- ``currentItem``
+- ``returnToPrevious()``
+- ``returnToPreviousItem()``
+
+### Managing Media Selection
 
 - ``currentMediaOption(for:)``
 - ``mediaOption(for:)``
@@ -33,116 +109,33 @@
 - ``selectedMediaOption(for:)``
 - ``setMediaSelection(preferredLanguages:for:)``
 
-#### Behavior
-
-- ``actionAtItemEnd``
-- ``configuration``
-- ``repeatMode``
-- ``shouldPlay``
-- ``textStyleRules``
-
-### Navigation
-
-- ``advanceToNextItem()``
-- ``canAdvanceToNextItem()``
-- ``canReturnToPreviousItem()``
-- ``returnToPreviousItem()``
-- ``currentItem``
-
-### Playback
-
-- ``audiovisualBackgroundPlaybackPolicy``
-- ``pause()``
-- ``play()``
-- ``togglePlayPause()``
-
-### Playback Speed
+### Controlling Playback Speed
 
 - ``effectivePlaybackSpeed``
 - ``playbackSpeed``
 - ``playbackSpeedRange``
 - ``setDesiredPlaybackSpeed(_:)``
 
-### Properties
+### Accessing Player Internals
 
-- ``chunkDuration``
-- ``configuration``
-- ``error``
-- ``isExternalPlaybackActive``
-- ``isMuted``
-- ``mediaType``
-- ``metadata``
-- ``playbackState``
-- ``presentationSize``
-- ``propertiesPublisher``
-- ``rate``
 - ``systemPlayer``
-- ``version``
 
-### Current State
-
-- ``date()``
-- ``metrics()``
-- ``time()``
-
-### Replay
-
-- ``canReplay()``
-- ``replay()``
-
-### Seek
-
-- ``canSeek(to:)``
-- ``seek(_:smooth:completion:)``
-- ``seek(to:completion:)-9bknb``
-- ``seek(to:completion:)-2ypz8``
-- ``seek(to:completion:)-1tbeq``
-- ``after(_:)``
-- ``at(_:)``
-- ``before(_:)``
-- ``near(_:)``
-- ``to(_:toleranceBefore:toleranceAfter:)``
-
-### Skip
-
-- ``canSkipBackward()``
-- ``canSkipForward()``
-- ``skipBackward(completion:)``
-- ``skipForward(completion:)``
-
-### Skip to Default
-
-- ``canSkipToDefault()``
-- ``skipToDefault(completion:)``
-
-### Smart Navigation
-
-- ``advanceToNext()``
-- ``canAdvanceToNext()``
-- ``canReturnToPrevious()``
-- ``returnToPrevious()``
-
-### System Integration
+### Integrating with Control Center and AirPlay
 
 - ``becomeActive()``
 - ``resignActive()``
 
-### Time Publisher
-
-- ``boundaryTimePublisher(for:queue:)``
-- ``periodicTimePublisher(forInterval:queue:)``
-
-### Tracking
+### Tracking Playback
 
 - ``isTrackingEnabled``
 - ``currentSessionIdentifiers(trackedBy:)``
 
-### Metrics
+### Observing Metrics
 
 - ``metricEventsPublisher``
 - ``periodicMetricsPublisher(forInterval:queue:limit:)``
 
-### User Interface
+### Integrating with SwiftUI Menus
 
 - ``mediaSelectionMenu(characteristic:)``
 - ``playbackSpeedMenu(speeds:)``

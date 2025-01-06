@@ -2,24 +2,24 @@
 
 ## Topics
 
-### Date and time
+### Getting Date and Time
 
 - ``playbackStartDate``
 - ``time``
 
-### Server information
+### Getting Server Information
 
 - ``uri``
 - ``serverAddress``
 
-### Playback-related information
+### Getting Playback Information
 
 - ``playbackSessionId``
 - ``playbackStartOffset``
 - ``playbackType``
 - ``startupTime``
 
-### Bitrate information
+### Getting Bitrate Information
 
 - ``observedBitrateStandardDeviation``
 - ``indicatedBitrate``
@@ -28,7 +28,7 @@
 - ``averageVideoBitrate``
 - ``indicatedAverageBitrate``
 
-### Values
+### Reading Values
 
 - ``increment``
 - ``total``

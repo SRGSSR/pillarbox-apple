@@ -1,129 +1,81 @@
-@Tutorial(time: 7) {
+@Tutorial(time: 15) {
     @Intro(title: "Creating a basic user interface") {
-        Learn how you create a custom player user interface for your app. Discover how you can iterate on your ideas. Add basic playback controls and learn how to use playback state to adjust the appearance of your user interface.
-        
+        Learn how to create a custom player user interface for your app, incorporating playback controls that dynamically adjust based on the current playback state.
+
         @Image(source: creating-basic-user-interface-intro, alt: "An image depicting a playback button.")
     }
 
-    @Section(title: "Play and Pause") {
+    @Section(title: "Create a basic video playback interface") {
         @ContentAndMedia {
-            Create a basic play and pause user interface by following these steps:
+            Build a basic video playback featuring displaying a play/pause button.
         }
 
         @Steps {
             @Step {
-                Start by creating a content view.
+                Add a ``Player`` to your `ContentView` and store it as a `@StateObject` associated with the view. Provide the player with a ``PlayerItem`` containing a URL of your choice.
 
-                @Code(name: "ContentView.swift", file: creating-basic-user-interface-1-1.swift) {
-                    @Image(source: creating-basic-user-interface-1-1, alt: "A screenshot from an iPhone")
-                }
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-1-1.swift)
             }
-            
+
             @Step {
-                Import the player package.
+                Add a ``VideoView`` to your `ContentView` body to render the player content on the screen.
 
                 @Code(name: "ContentView.swift", file: creating-basic-user-interface-1-2.swift) {
-                    @Image(source: creating-basic-user-interface-1-2, alt: "A screenshot from an iPhone")
+                    @Image(source: creating-basic-user-interface-1-2, alt: "A screenshot of an iPhone UI displaying video content.")
                 }
             }
-            
+
             @Step {
-                Instantiate the player.
+                Add a play/pause button to control the player. Use ``Player/togglePlayPause()`` as the action for this button.
 
                 @Code(name: "ContentView.swift", file: creating-basic-user-interface-1-3.swift) {
-                    @Image(source: creating-basic-user-interface-1-3, alt: "A screenshot from an iPhone")
+                    @Image(source: creating-basic-user-interface-1-3, alt: "A screenshot of an iPhone UI with a play/pause button.")
                 }
             }
 
             @Step {
-                Add the video view to display the player content.
+                Use the player state to dynamically update the button's icon.
 
                 @Code(name: "ContentView.swift", file: creating-basic-user-interface-1-4.swift) {
-                    @Image(source: creating-basic-user-interface-1-4, alt: "A screenshot from an iPhone")
-                }
-            }
-
-            @Step {
-                Add a button to play and pause the player.
-                
-                At this step you are able to play and pause the player.
-                But the button has the wrong state.
-
-                @Code(name: "ContentView.swift", file: creating-basic-user-interface-1-5.swift) {
-                    @Image(source: creating-basic-user-interface-1-5, alt: "A screenshot from an iPhone")
-                }
-            }
-            
-            @Step {
-                Update the button to reflect the player state.
-
-                @Code(name: "ContentView.swift", file: creating-basic-user-interface-1-6.swift) {
-                    @Image(source: creating-basic-user-interface-1-6, alt: "A screenshot from an iPhone")
+                    @Image(source: creating-basic-user-interface-1-4, alt: "A screenshot of an iPhone UI showing dynamic button states.")
                 }
             }
         }
     }
-    
-    @Section(title: "Backward and Forward Seek") {
+
+    @Section(title: "Support skip forward/backward") {
         @ContentAndMedia {
-            Now we can go further by managing the seek backward and the seek forward to navigate through the media stream.
+            Enhance the user interface with skip buttons for seeking backward and forward in the media by fixed intervals.
         }
-        
+
         @Steps {
             @Step {
-                We can start by adding an horizontal stack that will contain all the buttons.
+                Add a button for skipping backward. Use `skipBackward()` as the action.
 
-                @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-1.swift) {
-                    @Image(source: creating-basic-user-interface-2-1, alt: "A screenshot from an iPhone")
+                The button icon matches the default backward skip interval (-10 seconds).
+
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-1.swift, previousFile: creating-basic-user-interface-1-5.swift) {
+                    @Image(source: creating-basic-user-interface-2-1, alt: "A screenshot of an iPhone UI with a +10 seconds button.")
                 }
             }
-            
+
             @Step {
-                Add a new button for the backward seek.
-                
-                At this step the button has no action.
-                So let's use the player to add backward action.
+                Add a button for skipping forward. Use `skipForward()` as the action.
+
+                The button icon matches the default forward skip interval (+10 seconds).
 
                 @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-2.swift) {
-                    @Image(source: creating-basic-user-interface-2-2, alt: "A screenshot from an iPhone")
+                    @Image(source: creating-basic-user-interface-2-2, alt: "A screenshot of an iPhone UI with a -10 seconds button.")
                 }
             }
-            
+
             @Step {
-                Add the backward action.
+                Customize skip intervals by adjusting the ``PlayerConfiguration``.
+                
+                Update button icons to match the skip intervals.
 
                 @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-3.swift) {
-                    @Image(source: creating-basic-user-interface-2-3, alt: "A screenshot from an iPhone")
-                }
-            }
-            
-            @Step {
-                We can proceed in the same manner with the forward action.
-                
-                Great! We've added two buttons. 
-                However, as you can see, by default, the backward and forward actions seek -10 and +10 seconds, respectively.
-
-                @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-4.swift) {
-                    @Image(source: creating-basic-user-interface-2-4, alt: "A screenshot from an iPhone")
-                }
-            }
-            
-            @Step {
-                To update this behavior, we can use the player configuration.
-                Let's add a configuration with new intervals, -5 seconds for the backward action and +15 seconds for the forward action.
-                
-                Note that we don't use minus interval for the backward interval.
-
-                @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-5.swift) {
-                    @Image(source: creating-basic-user-interface-2-5, alt: "A screenshot from an iPhone")
-                }
-            }
-            
-            @Step {
-                Don't forget to update your UI consequently.
-
-                @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-6.swift) {
-                    @Image(source: creating-basic-user-interface-2-6, alt: "A screenshot from an iPhone")
+                    @Image(source: creating-basic-user-interface-2-3, alt: "A screenshot of an iPhone UI with updated skip intervals.")
                 }
             }
         }

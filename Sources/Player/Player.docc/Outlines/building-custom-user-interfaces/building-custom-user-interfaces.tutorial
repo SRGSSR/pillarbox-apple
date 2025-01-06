@@ -1,23 +1,23 @@
 @Tutorials(name: "custom-user-interfaces") {
-    @Intro(title: "Building Custom User Interfaces") {
-        Learn how you create a custom player user interface for your app.
+    @Intro(title: "Building custom user interfaces") {
+        Discover how to create a personalized player user interface for your app.
         
-        @Image(source: building-custom-user-interfaces-intro, alt: "An image of a phone displaying some content.")
+        @Image(source: building-custom-user-interfaces-intro, alt: "A smartphone displaying a custom user interface.")
     }
     
     @Chapter(name: "Creating a basic playback app") {
-        Create a basic playback app including Player as a dependency.
+        Learn to build a basic playback app.
         
-        @Image(source: building-custom-user-interfaces-1, alt: "An image of a phone displaying some content.")
+        @Image(source: building-custom-user-interfaces-1, alt: "A smartphone showing a playback app in progress.")
         
         @TutorialReference(tutorial: creating-project)
         @TutorialReference(tutorial: creating-basic-user-interface)
     }
     
-    @Chapter(name: "Adding standard playback user interface behaviors") {
-        Add conventional user interface behaviors to your custom user interface.   
+    @Chapter(name: "Adding standard playback behaviors") {
+        Integrate conventional user interface behaviors into your custom player design.
         
-        @Image(source: building-custom-user-interfaces-2, alt: "An image of a phone displaying some content.")
+        @Image(source: building-custom-user-interfaces-2, alt: "A smartphone displaying standard playback features.")
         
         @TutorialReference(tutorial: tracking-progress)
         @TutorialReference(tutorial: tracking-visibility)
@@ -25,9 +25,9 @@
     }
     
     @Chapter(name: "Iterating on custom user interfaces") {
-        Learn how you can quickly iterate on your custom user interfaces to better address your needs. 
+        Explore techniques for rapidly iterating and refining your custom user interfaces to meet evolving needs.
         
-        @Image(source: building-custom-user-interfaces-3, alt: "An image of a phone displaying some content.")
+        @Image(source: building-custom-user-interfaces-3, alt: "A smartphone showcasing a refined custom user interface.")
         
         @TutorialReference(tutorial: optimizing-custom-layouts)
     }

@@ -1,52 +1,52 @@
-@Tutorial(time: 3) {
+@Tutorial(time: 5) {
     @Intro(title: "Creating a project") {
-        Create a project integrating Player as a Swift Package dependency.
+        Learn how to set up a new project with PillarboxPlayer as a Swift Package dependency.
         
-        @Image(source: creating-project-intro, alt: "An image depicting a settings gear.")
+        @Image(source: creating-project-intro, alt: "An image illustrating a settings gear.")
     }
     
     @Section(title: "Create a new project") {
         @ContentAndMedia {
-            Create and configure an Xcode project.
+            Set up and configure an Xcode project from scratch.
         }
         
         @Steps {
             @Step {
-                Open Xcode and either click "Create New Project" in Xcode’s startup window, or choose File > New > Project.
-                
-                @Image(source: creating-project-1-1, alt: "A screenshot of the Xcode splash screen.")
+                Launch Xcode. In the startup window, click **Create New Project**, or navigate to **File > New > Project**.
+
+                @Image(source: creating-project-1-1, alt: "A screenshot showing the Xcode splash screen with the option to create a new project.")
             }
             
             @Step {
-                In the template selector, select iOS as the platform, select the "App" template, and then click Next.
-                
-                @Image(source: creating-project-1-2, alt: "A screenshot of the Xcode project creation screen.")
+                In the template selector, choose **iOS** as the platform, select the **App** template, and click **Next**.
+
+                @Image(source: creating-project-1-2, alt: "A screenshot of the Xcode project template selection screen.")
             }
             
             @Step {
-                Enter "Tutorial" as the product name, select "SwiftUI" for the interface and "Swift" for the language, and click Next. Choose a location to save the project on your Mac.
-                
-                @Image(source: creating-project-1-3, alt: "A screenshot of the Xcode new project settings screen.")
+                Enter **Tutorial** as the product name. For the interface, select **SwiftUI**, and for the language, choose **Swift**. Click **Next** and choose a location on your Mac to save the project.
+
+                @Image(source: creating-project-1-3, alt: "A screenshot showing the Xcode project configuration details.")
             }
         }
     }
         
-    @Section(title: "Add the Player dependency") {
+    @Section(title: "Add the player dependency") {
         @ContentAndMedia {
-            Add PillarboxPlayer as a Swift Package dependency to your project.
+            Integrate PillarboxPlayer into your project as a Swift Package dependency.
         }
         
         @Steps {
             @Step {
-                Choose File > Add Package Dependencies and search for [https://github.com/SRGSSR/pillarbox-apple.git](https://github.com/SRGSSR/pillarbox-apple.git), then click Add Package.
-                
-                @Image(source: creating-project-2-1, alt: "A screenshot of the Xcode package setup screen.")
+                In Xcode, go to **File > Add Package Dependencies**. Search for the repository URL: [https://github.com/SRGSSR/pillarbox-apple.git](https://github.com/SRGSSR/pillarbox-apple.git). Click **Add Package**.
+
+                @Image(source: creating-project-2-1, alt: "A screenshot showing the Xcode interface for adding a package dependency.")
             }
             
             @Step {
-                Edit package products so that only PillarboxPlayer is added to the Tutorial application.
-                
-                @Image(source: creating-project-2-2, alt: "A screenshot of the Xcode package product selection screen.")
+                In the package configuration screen, ensure only **PillarboxPlayer** is added as a dependency to the **Tutorial** app.
+
+                @Image(source: creating-project-2-2, alt: "A screenshot showing the Xcode interface for selecting package products.")
             }
         }
     }

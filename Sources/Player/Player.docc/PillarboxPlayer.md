@@ -4,19 +4,23 @@
     @PageColor(purple)
 }
 
-Create engaging audio and video playback experiences.
+Craft immersive audiovisual playback experiences.
 
 ## Overview
 
-> Warning: PillarboxPlayer APIs are currently meant to be used from the main thread only. Calling APIs from background threads is not supported and leads to undefined behavior.
+> Warning: PillarboxPlayer APIs are designed for use exclusively on the main thread. Invoking these APIs from background threads is unsupported and may result in unpredictable behavior.
 
-The PillarboxPlayer framework provides a complete toolbox to add advanced audiovisual media capabilities to your app.
+The PillarboxPlayer framework offers a comprehensive suite of tools to seamlessly integrate advanced audiovisual media capabilities into your app:
 
-Play content easily with a ``Player`` and display its content in the standard AVKit user interface with ``SystemVideoView``, or build an entirely custom user interface starting from a simple ``VideoView``. Play any kind of content from any source by implementing your own ``PlayerItem``s and ``Asset``s, no matter where your content comes from or how it must be played. Track playback with your own ``PlayerItemTracker``, whether for analytics or monitoring purposes.
+- Easily play content using a ``Player`` and display it in the standard AVKit user interface with ``SystemVideoView``, or create a fully custom user interface starting with a simple ``VideoView``.
+- Support any type of content from any source by implementing custom ``PlayerItem``s and ``Asset``s, regardless of its origin or playback requirements.
+- Monitor and analyze playback with your own ``PlayerItemTracker``, tailored for purposes like analytics or performance tracking.
 
 @Image(source: player-intro, alt: "A screenshot of a player user interface")
 
-The PillarboxPlayer framework fully integrates with SwiftUI, embracing its declarative and reactive nature and letting you quickly iterate on your design ideas.
+The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its declarative and reactive design principles to enable rapid iteration and refinement of your ideas.
+
+> Tip: Refer to the Human Interface Guidelines for best practices on integrating [audio](https://developer.apple.com/design/human-interface-guidelines/playing-audio) and [video](https://developer.apple.com/design/human-interface-guidelines/playing-video) experiences within your app.
 
 ### Featured
 

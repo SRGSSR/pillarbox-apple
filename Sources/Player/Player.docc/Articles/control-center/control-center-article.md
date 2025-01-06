@@ -9,34 +9,33 @@ Enable playback steering from the Control Center.
 
 ## Overview
 
-> Note: For an example of use have a look at the <doc:integrating-with-control-center> tutorial.
+> Note: For a practical example, refer to the <doc:integrating-with-control-center> tutorial.
 
-``Player`` natively integrates with the Control Center. Most of this integration happens automatically but your app is still responsible of activating the player instance which must be associated with the Control Center. It must also provide the metadata (title, artwork image) associated with the ``PlayerItem`` currently being played.
+A ``Player`` instance integrates seamlessly with the Control Center, with much of the integration handled automatically. However, your app is responsible for activating the player instance linked to the Control Center and providing metadata (e.g., title, artwork) for the ``PlayerItem`` currently playing.
 
-> Important: The system uses some heuristics to determine whether an app is eligible for Control Center integration. In particular the [audio session](https://developer.apple.com/documentation/avfaudio/avaudiosession) must be configured with a non-mixable category option. More information is available from the [_Explore media metadata publishing and playback interactions_ WWDC session](https://developer.apple.com/videos/play/wwdc2022/110338/).
+> Important: System heuristics determine app eligibility for Control Center integration. For example, the [audio session](https://developer.apple.com/documentation/avfaudio/avaudiosession) must use a non-mixable category option. See the [_Explore media metadata publishing and playback interactions_ WWDC session](https://developer.apple.com/videos/play/wwdc2022/110338/) for more details.
 
 ### Provide player item metadata
 
-The main responsibility of a ``PlayerItem`` loaded into a ``Player`` is to deliver an ``Asset`` to be actually played. Assets do not only convey the URL to be played but can also be attached arbitrary metadata whose only requirement is to conform to the ``AssetMetadata`` protocol.
+The primary role of a ``PlayerItem`` is to load an ``Asset`` for playback. In addition to URLs, assets can include arbitrary metadata conforming to the ``AssetMetadata`` protocol.
 
-To associate Control Center metadata with a player item:
+Follow these steps to associate metadata with a ``PlayerItem`` for Control Center integration:
 
-1. Create a type which represents your asset metadata and have it conform to ``AssetMetadata``. More information is available from the <doc:metadata-article> article.
-2. Implement the ``AssetMetadata/playerMetadata`` method and return the ``PlayerMetadata`` which must be displayed in the Control Center when the item is currently being played.
-3. Implement a custom ``PlayerItem`` with a metadata publisher retrieving all metadata required before delivering an asset. Alternatively, and provided you have all metadata and the URL to be played readily available, you can simply use one of the available ``PlayerItem`` construction helpers, supplying the asset metadata at creation time.
+1. **Define Metadata:** Create a type representing your asset metadata, ensuring it conforms to the ``AssetMetadata`` protocol. Refer to the <doc:metadata-article> article for details.
+2. **Return Metadata:** Implement the ``AssetMetadata/playerMetadata`` method to return ``PlayerMetadata`` for display in the Control Center when the item is playing.
+3. **Publish Metadata:** Create a custom ``PlayerItem`` that retrieves and publishes all required metadata before delivering the asset. Alternatively, if you have all metadata and the URL ready, use a ``PlayerItem`` helper method to provide metadata at creation.
 
-> Tip: Metadata associated with a ``PlayerItem`` is automatically published by a ``Player``. You can retrieve this metadata from the ``Player/metadata`` property and use it when building a custom user interface. The metadata is also automatically displayed by ``SystemVideoView`` in a standard way.
+Tip: The metadata you provide is also displayed in the ``SystemVideoView`` by default. When implementing a custom UI, ensure you use the same metadata to maintain consistency across the Control Center and player UI.
 
-### Make a player instance active
+### Activate a player instance
 
-Several ``Player`` instances can coexist in an app but at most one can be integrated with the Control Center at any time.
+While multiple ``Player`` instances can exist in your app, only one can integrate with the Control Center at a time.
 
-When you want one player instance to take precedence call ``Player/becomeActive()``. Any other instance which might be active will resign in the process.
+- Use ``Player/becomeActive()`` to prioritize a player instance, automatically resigning any active instance.
+- Call ``Player/resignActive()`` to manually deactivate a player instance. Instances also resign automatically when deinitialized.
 
-You can manually call ``Player/resignActive()`` to have a player resign. Note that a player instance will automatically resign when deinitialized.
+### Support tvOS
 
-### Extend support to tvOS
+On tvOS, Control Center integration requires using a full-screen ``SystemVideoView``. Activating a player instance ensures compatibility with iOS devices acting as remotes, allowing them to display current item information in their own Control Center.
 
-Control Center integration on tvOS is achieved using a  ``SystemVideoView`` covering the whole screen. Making a player instance active is still required since this ensures that iOS devices used as remotes can also display current item information in their own Control Center.
-
-> Note: The tvOS Control Center only displays information about audio content.
+> Note: On tvOS, the Control Center only displays audio content information.

@@ -4,117 +4,116 @@
     @PageColor(purple)
 }
 
-Encode and package streams for optimal compatibility with the ``PillarboxPlayer`` framework.
+Optimize your streams for seamless playback with Pillarbox.
 
 ## Overview
 
-Apple provides HLS [authoring specifications](https://developer.apple.com/documentation/http_live_streaming/hls_authoring_specification_for_apple_devices/) regarding encoding and packaging best practices for compatibility with Apple devices. These  specifications cover compatible codecs, encoding profiles or recommended encoding ladders, among many other topics.
+Apple’s [HLS authoring specifications](https://developer.apple.com/documentation/http_live_streaming/hls_authoring_specification_for_apple_devices/) provide guidance on encoding and packaging for Apple device compatibility, covering codecs, encoding profiles, and recommended encoding ladders.
 
-For optimal playback experience with the ``PillarboxPlayer`` framework some of these specifications need to be followed rigorously. This article covers these specific requirements in more detail and provides more information about how streams can be tested for compatibility with ``PillarboxPlayer``.
+For optimal compatibility with the ``PillarboxPlayer`` framework, certain specifications must be followed closely. This guide outlines these key requirements and provides tools for testing stream compatibility with ``PillarboxPlayer``.
 
-> Note: More information about automatic media selection is available from <doc:subtitles-and-alternative-audio-tracks-article>.
+> Note: For more on automatic media selection, refer to <doc:subtitles-and-alternative-audio-tracks-article>.
 
 ### Automatic media option selection
 
-``Player`` supports automatic media option selection based on language and accessibility settings (e.g. unforced subtitles, CC, SDH and audio description), both for audible and legible renditions. This requires streams to satisfy common requirements which are listed below.
+``Player`` supports automatic selection of audio and subtitle tracks based on language preferences and accessibility settings (e.g., unforced subtitles, CC, SDH, and audio descriptions). This feature requires streams to meet specific criteria:
 
 #### Audio renditions
 
-For automatic selection to work with audio description be sure that the corresponding [renditions](https://datatracker.ietf.org/doc/html/rfc8216#section-4.3.4.1) have the `public.accessibility.describes-video` characteristic.
+- Include the `public.accessibility.describes-video` characteristic for audio description [renditions](https://datatracker.ietf.org/doc/html/rfc8216#section-4.3.4.1).
+- Set the `AUTOSELECT` attribute to `YES` for all renditions to enable automatic selection.
 
-All renditions should also have their `AUTOSELECT` attribute set to `YES` so that the player can consider them for automatic selection.
+#### Subtitle renditions
 
-#### Legible renditions
+- **Unforced Subtitles:** Set `AUTOSELECT` to `YES` for `SUBTITLES` and `CLOSED-CAPTIONS` renditions to allow selection in _Automatic_ mode.
+- **Forced Subtitles:** [Ensure](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Subtitles) `FORCED` and `AUTOSELECT` are set to `YES`. ``Player`` adheres to [Apple's' recommendations](https://developer.apple.com/library/archive/releasenotes/AudioVideo/RN-AVFoundation/index.html#//apple_ref/doc/uid/TP40010717-CH1-DontLinkElementID_3) and never returns forced subtitles for explicit user selection.
 
-For automatic selection to work with legible renditions:
+#### Closed Captions (CC) and Subtitles for the Deaf or Hard-of-Hearing (SDH)
 
-- Unforced `SUBTITLES` and `CLOSED-CAPTIONS` renditions must have their `AUTOSELECT` attribute set to `YES` so that the player can choose among them in _Automatic_ mode.
-- Forced `SUBTITLES` renditions [must](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Subtitles) have their `AUTOSELECT` attribute set to `YES`. Note that ``Player`` follows [Apple recommendations](https://developer.apple.com/library/archive/releasenotes/AudioVideo/RN-AVFoundation/index.html#//apple_ref/doc/uid/TP40010717-CH1-DontLinkElementID_3) and never returns forced subtitles for selection.
+- **CC:** Use the `CLOSED-CAPTIONS` type and set `AUTOSELECT` to `YES`.
+- **SDH:** Use the `SUBTITLES` type with the `public.accessibility.transcribes-spoken-dialog` and `public.accessibility.describes-music-and-sound` characteristics, and set `AUTOSELECT` to `YES`.
 
-#### CC and SDH
+#### Troubleshooting rendition selection
 
-``Player`` supports closed captions (CC) and Subtitles for the Deaf or Hard-of-Hearing (SDH):
+If renditions are not handled as expected:
 
-- CC renditions are identified by the `CLOSED-CAPTIONS` type. They must also have their `AUTOSELECT` attribute set to `YES`.
-- SDH renditions [must](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Accessibility) have the `SUBTITLES` type and the `public.accessibility.transcribes-spoken-dialog` and `public.accessibility.describes-music-and-sound` characteristics. They must also have their `AUTOSELECT` attribute set to `YES`.
+1. **Validate the Master Playlist:** Confirm attributes like `AUTOSELECT`, `FORCED`, and accessibility characteristics are correctly set.
+2. **Check System Settings**: Ensure the device’s system settings are configured with appropriate:
+    - **Languages:** List and order preferred languages correctly.
+    - **Accessibility Settings:** Enable or disable AD and SDH/CC preferences as needed.
+3. **Inspect your Code:** Verify that ``Player/setMediaSelection(preferredLanguages:for:)`` is not overriding automatic selection.
 
-#### Troubleshooting
+> Tip: Refer to the _Inspecting and testing streams_ section for useful troubleshooting tools.
 
-If you think audible or legible renditions are incorrectly handled for some content you play with a ``Player`` instance, please check the following in order:
+### Trick mode (Trick play)
 
-1. Check that your master playlist adopts the standards listed in this document. You should in particular ensure that `AUTOSELECT`, `FORCED` and accessibility characteristics are properly set.
-2. If your master playlist is correct then check system settings on your device. Automatic audible and legible rendition selection namely strongly depends on:
-    - The list of preferred languages defined in the system settings (all languages are considered as potentially understood by the user) and their relative order. Remove languages that you do not expect and reorder the list as appropriate.
-    - The user accessibility settings (AD and SDH / CC preferences). Enable or disable these settings according to your needs.
-3. Whether your code overrides rendition selection with ``Player/setMediaSelection(preferredLanguages:for:)``.
+``Player`` supports [trick mode](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Trick-Play), which uses I-frame playlists for [fast scrubbing](https://en.wikipedia.org/wiki/Trick_mode). If I-frame playlists are unavailable, ``Player`` implements _smooth seeking_, optimizing scrubbing by avoiding redundant seeks. However, this fallback is significantly slower.
 
-> Tip: Check the _Inspecting and testing streams_ section below for tools that can make troubleshooting easier.
-
-### Trick mode / Trick play
-
-``Player`` supports [trick mode](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Trick-Play) (aka trick play) which requires dedicated I-frame playlists to be delivered in video master playlists to provide for a [faster scrubbing experience](https://en.wikipedia.org/wiki/Trick_mode).
-
-The player still attempts to offer a good scrubbing experience when I-frame playlists are not available. In this case seek requests are performed in sequence, avoiding pending request interruption and eliminating superfluous seeks (an approach called _smooth seeking_). Note that this experience is an order of magnitude slower than the one obtained with trick mode, though.
-
-Note that I-frame playlists are a [must-have](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Trick-Play) for tvOS since they are the only way to provide previews during scrubbing.
+> Note: I-frame playlists are [mandatory](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Trick-Play) for tvOS ``SystemVideoView`` to provide preview functionality during scrubbing.
 
 ### Inspecting and testing streams
 
-Several tools are available for stream encoding and packaging teams to check that the streams they deliver work well with ``PillarboxPlayer``.
+Use the following tools to ensure streams meet ``PillarboxPlayer`` compatibility requirements:
 
 #### HTTP Live Streaming Tools
 
-Apple offers a suite of command-line _HTTP Live Streaming Tools_ for macOS, accessible via its [developer portal](https://developer.apple.com/download/all/) (an account is required).
+Apple provides HLS validation tools for macOS, accessible through the [developer portal](https://developer.apple.com/download/all/). Notable tools include:
 
-Among these tools is the `mediastreamvalidator` command, which allows you to validate HLS streams. It can generate JSON output that, when processed by the `hlsreport` command, creates an HTML report highlighting violations of the HLS Authoring Specification and identifying stream discontinuities (using the `--disc` parameter).
+- `mediastreamvalidator`: Validates HLS streams and generates reports.
+- `hlsreport`: Creates HTML summaries from `mediastreamvalidator` JSON reports, highlighting violations and discontinuities (use the `--disc` parameter).
 
-> Note: For detailed usage, consult the man pages for these tools.
+> Note: Consult the tool’s man pages for detailed usage instructions.
 
 #### Inspection tools
 
-The following commands can be useful to inspect streams:
+These tools help analyze stream properties and compliance:
 
-- ffprobe, which is part of [ffmpeg](https://ffmpeg.org/ffprobe.html).
-- [TSDuck](https://tsduck.io/)
-- [MediaInfo](https://mediaarea.net/en/MediaInfo), which provides a GUI as well as a command-line tool.
+- `ffprobe`, which is part of [ffmpeg](https://ffmpeg.org/ffprobe.html).
+- [TSDuck](https://tsduck.io/).
+- [MediaInfo](https://mediaarea.net/en/MediaInfo), which offers GUI and command-line utilities.
 
 #### Proxy applications
 
-Network activity associated with HLS streaming can be inspected with proxy tools like [Charles](https://www.charlesproxy.com) or [Proxyman](https://proxyman.io). Please refer to their respective documentation for more information.
+Inspect HLS network activity using tools like:
+
+- [Charles](https://www.charlesproxy.com).
+- [Proxyman](https://proxyman.io).
+
+> Note: Consult the tool’s documentations for detailed usage instructions.
 
 #### Official Apple players
 
-HLS streams can always be tested with a variety of native players, most notably:
+Test streams with native Apple players to ensure compatibility:
 
 - Safari on macOS.
-- Safari on iOS / iPadOS.
+- Safari on iOS/iPadOS.
 - QuickTime Player on macOS.
 
-> Important: Streams that cannot be correctly played with Apple official players will almost certainly fail to play correctly with ``PillarboxPlayer``.
+> Important: Streams that fail in these players are likely to fail with ``PillarboxPlayer``.
 
-#### 3rd party players
+#### Third-party players
 
-HLS streams can be tested with 3rd party players, mostly on the web. These include:
+Test streams on third-party platforms, such as:
 
 - hls.js, which provides an [official online playground](https://hlsjs.video-dev.org/demo).
-- [Video.js](https://videojs.com/), for which [official](https://videojs-http-streaming.netlify.app) and [non-official](https://amtins.github.io/cassettator-forbidden-adventures/) online playgrounds are available.
+- [Video.js](https://videojs.com/), for which [official](https://videojs-http-streaming.netlify.app) and [community](https://amtins.github.io/cassettator-forbidden-adventures/) playgrounds are available.
 
 #### Pillarbox demo
 
-Any URL, including SRG SSR URLs protected with DRM or a token, can be played directly with Pillarbox demo. You can install the iOS and tvOS demo applications by registering [with TestFlight](https://testflight.apple.com/join/TS6ngLqf) (an Apple ID is required).
+Use the Pillarbox demo app to test URLs, including DRM-protected streams. Install the iOS and tvOS demo applications via [TestFlight](https://testflight.apple.com/join/TS6ngLqf).
 
-The Pillarbox demo also offers two helpful tools for local inspection:
+The demo app includes:
 
-- A Playback HUD, which can enabled in the applications settings, added to any video played in the demo.
-- A metrics debugging view, which can be enabled from the custom player settings menu.
+- **Playback HUD**: Toggle in settings for detailed playback data.
+- **Metrics Debugging View:** Accessible via player settings.
 
 ![Demo debugging views](stream-encoding-and-packaging-advice-debugging-views)
 
 ### Technical documentation
 
-Please refer to the official documentation for more information:
+Refer to the following resources for further details:
 
-- [HTTP Live Streaming](https://developer.apple.com/streaming/)
-- [HLS Authoring Specification for Apple Devices](https://developer.apple.com/documentation/http_live_streaming/hls_authoring_specification_for_apple_devices/)
-- [RFC 8216](https://tools.ietf.org/html/rfc8216/)
-- [Playlist examples](https://developer.apple.com/documentation/http-live-streaming/example-playlists-for-http-live-streaming)
+- [HTTP Live Streaming](https://developer.apple.com/streaming/).
+- [HLS Authoring Specification for Apple Devices](https://developer.apple.com/documentation/http_live_streaming/hls_authoring_specification_for_apple_devices/).
+- [RFC 8216](https://tools.ietf.org/html/rfc8216/).
+- [Playlist examples](https://developer.apple.com/documentation/http-live-streaming/example-playlists-for-http-live-streaming).

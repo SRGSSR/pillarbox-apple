@@ -16,7 +16,6 @@ struct ContentView: View {
         .onAppear(perform: player.play)
     }
 
-    @ViewBuilder
     private func controls() -> some View {
         ZStack {
             Color(white: 0, opacity: 0.6)
@@ -25,7 +24,6 @@ struct ContentView: View {
         }
     }
 
-    @ViewBuilder
     private func playbackButton() -> some View {
         Button(action: player.togglePlayPause) {
             Image(systemName: player.shouldPlay ? "pause.circle" : "play.circle")

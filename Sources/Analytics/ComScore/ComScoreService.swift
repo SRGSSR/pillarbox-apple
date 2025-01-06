@@ -18,7 +18,7 @@ struct ComScoreService {
             builder.publisherId = "6036016"
             builder.secureTransmissionEnabled = true
 
-            // See https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=13188565
+            // See https://srgssr-ch.atlassian.net/wiki/x/-YdwLw
             // Coding Document for Video Players, section 4.4
             builder.httpRedirectCachingEnabled = false
         }

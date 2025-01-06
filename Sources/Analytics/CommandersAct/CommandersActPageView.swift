@@ -15,7 +15,7 @@ public struct CommandersActPageView {
     /// 
     /// - Parameters:
     ///   - name: The page name.
-    ///   - type: The page type (e.g. _Article_).
+    ///   - type: The page type (e.g., _Article_).
     ///   - labels: Additional information associated with the page view.
     ///   - levels: The page levels.
     ///

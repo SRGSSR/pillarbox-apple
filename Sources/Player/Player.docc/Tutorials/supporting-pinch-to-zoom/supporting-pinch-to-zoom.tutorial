@@ -1,39 +1,39 @@
-@Tutorial(time: 6) {
-    @Intro(title: "Supporting pinch to zoom") {
+@Tutorial(time: 15) {
+    @Intro(title: "Supporting pinch-to-zoom") {
         Add a pinch gesture to let users zoom in and out of videos.
-        
-        Users might want to zoom in a video for a more immersive experience. This articles explores a possible way to associate this feature with a pinch gesture only available when a player is displayed full screen. 
-        
-        @Image(source: supporting-pinch-to-zoom-intro, alt: "An image depicting pinch gestures with arrows.")
+
+        Zooming in allows users to have a more immersive video experience. This tutorial explores how to enable pinch-to-zoom functionality, making it available only when the video player is displayed in full-screen mode.
+
+        @Image(source: supporting-pinch-to-zoom-intro, alt: "Illustration showing pinch gestures with directional arrows.")
     }
     
-    @Section(title: "Add a pinch gesture to zoom in a video") {
+    @Section(title: "Add a pinch gesture for video zooming") {
         @ContentAndMedia {
-            Start with a simple video player user interface. Add a pinch gesture to change the player content gravity. Apply the content gravity when displaying the content.
+            Begin with a basic video player interface. Implement a pinch gesture to toggle the player's content gravity, allowing users to zoom in and out.
         }
         
         @Steps {
             @Step {
-                Replace your `ContentView` code with the attached implementation.
-                
-                We start our implementation from a basic video playback user interface.
-                
+                Replace your existing `ContentView` code with the provided implementation.
+
+                This implementation starts with a simple video playback interface.
+
                 @Code(name: "ContentView.swift", file: supporting-pinch-to-zoom-1-1.swift) {
                     @Image(source: supporting-pinch-to-zoom-1-1, alt: "A screenshot of an iPhone playing a video.")
                 }
             }
             
             @Step {
-                Users must be able to change the `VideoView` gravity between zoomed in (`.resizeAspect`) and zoomed out (`.resizeAspectFill`) states. Add a corresponding `AVLayerVideoGravity` view state to store the desired value, initialized with `.resizeAspect`. Provide this state to the `VideoView` using the dedicated modifier.
-                
+                Add an `AVLayerVideoGravity` view state to store the current video gravity, initializing it to `.resizeAspect`. Pass this state to the ``VideoView`` using the appropriate modifier.
+
                 @Code(name: "ContentView.swift", file: supporting-pinch-to-zoom-1-2.swift)
             }
             
             @Step {
-                Add a `MagnificationGesture` that toggles the desired gravity between zoomed in and zoomed out values, based on pinch direction.
-                
-                Run the project to check that the zoom gesture is working correctly.
-                
+                Implement a `MagnificationGesture` to switch the gravity between zoomed-in and zoomed-out states based on the pinch direction.
+
+                Run the project to verify that the pinch-to-zoom gesture is functioning as expected.
+
                 @Code(name: "ContentView.swift", file: supporting-pinch-to-zoom-1-3.swift) {
                     @Image(source: supporting-pinch-to-zoom-1-3, alt: "A screenshot of an iPhone playing a video.")
                 }
@@ -41,33 +41,31 @@
         }
     }
         
-    @Section(title: "Restrict the use of the zoom gesture to maximized user interface layouts") {
+    @Section(title: "Restrict pinch-to-zoom to maximized layouts") {
         @ContentAndMedia {
-            Disable the pinch gesture in non-maximized contexts.
-            
-            We improve our pinch gesture further by ensuring it is only available when the player user interface covers the current context.
+            Ensure the pinch gesture is available only when the video player fills the entire screen context.
         }
         
         @Steps {
             @Step {
-                Add some padding around the `VideoView` so that it does not fill its parent context anymore.
-                
-                Run the project to check that the zoom gesture is still working correctly. 
-                
+                Add padding around the ``VideoView``, so it no longer occupies the full parent context.
+
+                Run the project to confirm that the zoom gesture still works.
+
                 @Code(name: "ContentView.swift", file: supporting-pinch-to-zoom-2-1.swift, previousFile: supporting-pinch-to-zoom-1-3.swift)
             }
             
             @Step {
-                Read layout information for the `VideoView` by applying it the `readLayout(into:)` modifier, storing the result into a `LayoutInfo` state.
-                
+                Apply the ``SwiftUICore/View/readLayout(into:)`` modifier to the ``VideoView`` to gather layout information, storing it in a `LayoutInfo` state.
+
                 @Code(name: "ContentView.swift", file: supporting-pinch-to-zoom-2-2.swift)
             }
             
             @Step {
-                Use the layout info to set the gesture mask to `.subviews` when the view does not cover its entire context.
-                
-                Run the project to check that the zoom gesture now does not work anymore. If you remove the padding and run the project again you can verify that the gesture works as expected when the player is maximized.
-                
+                Use the layout information to set the gesture mask to `.subviews` when the ``VideoView`` does not occupy its full context.
+
+                Run the project to confirm that the zoom gesture is now disabled in non-maximized layouts. Remove the padding and test again to ensure the gesture works as expected when the player is in full-screen mode.
+
                 @Code(name: "ContentView.swift", file: supporting-pinch-to-zoom-2-3.swift)
             }
         }

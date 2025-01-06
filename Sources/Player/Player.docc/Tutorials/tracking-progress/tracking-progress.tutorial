@@ -1,45 +1,45 @@
-@Tutorial(time: 4) {
-    @Intro(title: "Tracking progress") {
-        Track playback progress and make it possible for users to update it interactively.
-        
+@Tutorial(time: 10) {
+    @Intro(title: "Tracking playback progress") {
+        Learn how to track video playback progress and allow users to update it interactively using a slider.
+
         @Image(source: tracking-progress-intro, alt: "An image depicting sliders.")
     }
     
-    @Section(title: "Display progress in the player user interface") {
+    @Section(title: "Display progress in the player interface") {
         @ContentAndMedia {
-            Create a basic player that is able to play a video. Display the video on screen and add a slider that displays and controls the current progress.
+            Create a basic video player interface. Display video content on the screen and integrate a slider to both show and control playback progress.
         }
         
         @Steps {
             @Step {
-                Add a ``Player`` to your `ContentView` and store it as a `@StateObject` associated with the view. Provide the player with a simple ``PlayerItem`` and a URL of your choice. 
-                
+                Add a ``Player`` to your `ContentView` and store it as a `@StateObject` associated with the view. Provide the player with a ``PlayerItem`` containing a URL of your choice.
+
                 @Code(name: "ContentView.swift", file: tracking-progress-1-1.swift)
             }
             
             @Step {
-                Add a ``VideoView`` to your `ContentView` body to display the player content. Call `play()` when the view appears.
-                
+                Add a ``VideoView`` to your `ContentView` body to render the player content on the screen. Call the ``Player/play()`` method when the view appears to start playback.
+
                 @Code(name: "ContentView.swift", file: tracking-progress-1-2.swift)
             }
             
             @Step {
-                Add a ``ProgressTracker`` to your `ContentView` and store it as a `@StateObject` associated with the view. Set its update interval to 1/10th of a second.
-                
+                Create a ``ProgressTracker`` instance and store it as a `@StateObject` in your `ContentView`. Set its update interval to 1/10th of a second for smooth progress tracking.
+
                 @Code(name: "ContentView.swift", file: tracking-progress-1-3.swift)
             }
 
             @Step {
-                Bind the progress tracker to the player using the ``SwiftUICore/View/bind(_:to:)-8fqem`` modifier. 
-                
+                Bind the progress tracker to the player using the ``SwiftUICore/View/bind(_:to:)-8fqem`` modifier. This ensures the tracker reflects the player's current progress.
+
                 @Code(name: "ContentView.swift", file: tracking-progress-1-4.swift)
             }
             
             @Step {
-                Use ``SwiftUI/Slider/init(progressTracker:onEditingChanged:)`` to create a slider that reflects and controls the current progress. Add the slider as overlay with bottom alignment.
-                
-                Build and run the app to see the result. Observe that the slider automatically updates as playback progresses and that it can be used to move playback to another position.
-                
+                Use ``SwiftUI/Slider/init(progressTracker:onEditingChanged:)`` to create a slider that dynamically displays and adjusts the playback position. Add the slider as an overlay, aligned at the bottom of the view.
+
+                Build and run the app to observe the functionality. The slider will automatically update as playback progresses and can also be used to seek to different positions within the video.
+
                 @Code(name: "ContentView.swift", file: tracking-progress-1-5.swift) {
                     @Image(source: tracking-progress-1-5, alt: "A screenshot of an iPhone playing a video with a slider to control the current progress.")
                 }

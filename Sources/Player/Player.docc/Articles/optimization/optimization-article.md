@@ -24,38 +24,38 @@ This article discusses a few strategies to reduce resource consumption associate
 
 Use Instruments to identify optimization opportunities. Focus on the following areas:
 
-- **Allocations Instrument**: Analyze memory usage to identify excessive consumption associated with your application process. You can filter allocations, such as with the keyword _player_, to pinpoint playback-related resources and verify that their count aligns with your expectations.
-- **Time Profiler Instrument**: Detect unusual CPU activity and identify potential bottlenecks in your application's performance.
-- **Animation Hitches Instrument**: Investigate frame rate hiccups, particularly when players are displayed in scrollable views, to ensure smooth user interactions.
-- **Activity Monitor Instrument**:
+- **Allocations Instrument:** Analyze memory usage to identify excessive consumption associated with your application process. You can filter allocations, such as with the keyword _player_, to pinpoint playback-related resources and verify that their count aligns with your expectations.
+- **Time Profiler Instrument:** Detect unusual CPU activity and identify potential bottlenecks in your application's performance.
+- **Animation Hitches Instrument:** Investigate frame rate hiccups, particularly when players are displayed in scrollable views, to ensure smooth user interactions.
+- **Activity Monitor Instrument:**
 Since media playback occurs out-of-process through dedicated media services daemons (e.g., _mediaplaybackd_), use Activity Monitor to analyze their CPU and memory usage. Filter for daemons with names containing _media_ to focus on relevant processes.
 
 To gain a comprehensive understanding of your application's memory and CPU usage, you should therefore evaluate not only its own process but also the media service daemons it interacts with.
 
 ## Restrict the number of players loaded with content
 
-An empty ``Player`` instance is lightweight, but once loaded with content, it interacts with media service daemons to handle playback. The more ``Player`` instances your application loads simultaneously, the more CPU, memory, and potentially network resources are therefore consumed.
+An empty ``Player`` instance is lightweight, but once loaded with content, it interacts with media service daemons to handle playback. The more player instances your application loads simultaneously, the more CPU, memory, and potentially network resources are therefore consumed.
 
 To minimize resource usage, aim to keep the number of ``Player`` instances loaded with content as low as possible. Consider these strategies:
 
-- **Implement a Player Pool**: Instead of creating a new player instance for every need, maintain a pool of reusable players. Borrow a player from the pool when needed and return it when done.
-- **Clear Unused Players**: Use ``Player/removeAllItems()`` to empty a player's item queue without destroying the player instance. To reload previously played content, use ``PlayerItemConfiguration/position`` to resume playback from where it was last interrupted.
-- **Leverage Thumbnails**: Display thumbnails representing the first frame or video content to create the illusion of instant playback without loading the actual video. This approach is especially effective in scrollable lists with autoplay functionality.
-- **Limit Buffering**: Control the player's buffering behavior by setting ``PlayerItemConfiguration/preferredForwardBufferDuration`` in a ``PlayerItem`` configuration. While the default buffering can be quite aggressive, reducing the buffer duration lowers memory usage but increases the likelihood of playback stalling and re-buffering. Use this setting judiciously to balance resource usage and playback stability.
+- **Implement a Player Pool:** Instead of creating a new player instance for every need, maintain a pool of reusable players. Borrow a player from the pool when needed and return it when done.
+- **Clear Unused Players:** Use ``Player/removeAllItems()`` to empty a player's item queue without destroying the player instance. When reloading previously played content, use ``PlayerItemConfiguration/position`` to resume playback from where it was last interrupted.
+- **Leverage Thumbnails:** Display thumbnails representing the first frame or video content to create the illusion of instant playback without loading the actual video. This approach is especially effective in scrollable lists with autoplay functionality.
+- **Limit Buffering:** Control the player's buffering behavior by setting ``PlayerItemConfiguration/preferredForwardBufferDuration`` in a ``PlayerItem`` configuration. While the default buffering can be quite aggressive, reducing the buffer duration lowers memory usage but increases the likelihood of playback stalling and re-buffering. Use this setting judiciously to balance resource usage and playback stability.
 
 ## Implement autoplay wisely
 
 Autoplay is a common feature, but its implementation requires careful consideration, as it can lead to unnecessary resource consumption. While ``PillarboxPlayer`` does not provide dedicated APIs for autoplay, if you plan to implement this functionality, consider the following best practices to enhance the user experience:
 
-- **Make Autoplay Optional**: Always provide a setting to disable autoplay. Some users may find this feature intrusive and prefer to turn it off. Offering this option is not only user-friendly but also environmentally conscious, as it helps conserve resources.
-- **Disable Autoplay in Poor Conditions**: Automatically disable autoplay when the user is connected to a mobile network or when [Low Data](https://support.apple.com/en-is/102433) or [Low Power](https://support.apple.com/en-us/101604) modes are enabled. This ensures a better experience by reducing resource consumption in constrained conditions.
+- **Make Autoplay Optional:** Always provide a setting to disable autoplay. Some users may find this feature intrusive and prefer to turn it off. Offering this option is not only user-friendly but also environmentally conscious, as it helps conserve resources.
+- **Disable Autoplay in Poor Conditions:** Automatically disable autoplay when the user is connected to a mobile network or when [Low Data](https://support.apple.com/en-is/102433) or [Low Power](https://support.apple.com/en-us/101604) modes are enabled. This ensures a better experience by reducing resource consumption in constrained conditions.
 
 ## Configure players to minimize resource usage
 
 ``PillarboxPlayer`` provides settings to help reduce resource usage. Consider the following available options:
 
-- **Disable Non-Essential Players in Low Data Mode**: Players that serve a purely decorative purpose can be automatically disabled when [Low Data Mode](https://support.apple.com/en-is/102433) is enabled. To do this, set ``PlayerConfiguration/allowsConstrainedNetworkAccess`` to `false` in the configuration provided at player creation.
-- **Provide a Quality Selector**: Users may want to reduce network bandwidth usage for economical or environmental reasons. Consider offering a range of ``PlayerLimits`` that users can choose from, allowing them to select the best option for their needs.
+- **Disable Non-Essential Players in Low Data Mode:** Players that serve a purely decorative purpose can be automatically disabled when [Low Data Mode](https://support.apple.com/en-is/102433) is enabled. To do this, set ``PlayerConfiguration/allowsConstrainedNetworkAccess`` to `false` in the configuration provided at player creation.
+- **Provide a Quality Selector:** Users may want to reduce network bandwidth usage for economical or environmental reasons. Consider offering a range of ``PlayerLimits`` that users can choose from, allowing them to select the best option for their needs.
 
 ## Optimize user interface refreshes
 

@@ -1,31 +1,31 @@
-@Tutorial(time: 2) {
+@Tutorial(time: 10) {
     @Intro(title: "Integrating with the Control Center") {
-        Control playback directly from the Control Center.
+        Learn how to enable playback control directly from the Control Center.
 
-        @Image(source: integrating-with-control-center, alt: "An image depicting the Control Center.")
+        @Image(source: integrating-with-control-center, alt: "An image showing the Control Center interface.")
     }
     
-    @Section(title: "Enable playback steering from the Control Center") {
+    @Section(title: "Enable playback control from the Control Center") {
         @ContentAndMedia {
-            Integrate a ``Player`` with the Control Center.
+            Integrate a player into your app that allows basic playback control via the Control Center.
         }
 
         @Steps {
             @Step {
-                Create a ``Player`` with an associated ``VideoView``.
+                Create a ``Player`` and associate it with a ``VideoView`` to display video content.
 
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-1-1.swift) {
-                    @Image(source: integrating-with-control-center-1-1, alt: "A screenshot from an iPhone")
+                    @Image(source: integrating-with-control-center-1-1, alt: "An iPhone screenshot showing the initial player setup.")
                 }
             }
             
             @Step {
-                Enable Control Center integration for the ``Player``.
+                Call ``Player/becomeActive()`` to enable Control Center integration for the ``Player``.
 
-                The Control Center can now be used to steer playback but does not display any metadata yet.
-                
+                After this step, the Control Center can control playback actions such as play and pause. However, metadata will not yet be displayed.
+
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-1-2.swift) {
-                    @Image(source: integrating-with-control-center-1-2, alt: "A screenshot from an iPhone")
+                    @Image(source: integrating-with-control-center-1-2, alt: "An iPhone screenshot showing Control Center integration.")
                 }
             }
         }
@@ -33,25 +33,25 @@
     
     @Section(title: "Display metadata in the Control Center") {
         @ContentAndMedia {
-            Associate metadata with the content being played so that it can be displayed in the Control Center.
+            Enhance the Control Center experience by associating metadata with the content being played.
         }
         
         @Steps {
             @Step {
-                Add metadata to the ``Player``, conforming to the ``AssetMetadata`` protocol.
+                Add metadata to the ``Player`` that implements the ``AssetMetadata`` protocol. 
 
-                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-1.swift) {
-                    @Image(source: integrating-with-control-center-2-1, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-1.swift, previousFile: integrating-with-control-center-1-2.swift) {
+                    @Image(source: integrating-with-control-center-2-1, alt: "An iPhone screenshot showing an empty Control Center.")
                 }
             }
             
             @Step {
-                Implement the protocol to return some ``PlayerMetadata``, including a title, a subtitle and an image.
+                Implement the protocol to provide ``PlayerMetadata``. Include a title, a subtitle, and an image to display in the Control Center.
                 
-                This code assumes that your application resources provide an image called `apple`.
-                
+                This implementation assumes your app resources contain an image named `apple`.
+
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-2-2.swift) {
-                    @Image(source: integrating-with-control-center-2-2, alt: "A screenshot from an iPhone")
+                    @Image(source: integrating-with-control-center-2-2, alt: "An iPhone screenshot showing metadata displayed in the Control Center.")
                 }
             }
         }
