@@ -8,7 +8,7 @@ Monitor playback activity.
 
 ## Overview
 
-The PillarboxMonitoring framework enables seamless integration of the Pillarbox player with its monitoring platform, ensuring detailed playback playback metrics and events, such as:
+The PillarboxMonitoring framework enables seamless integration of the Pillarbox player with its monitoring platform, ensuring detailed playback metrics and events, such as:
 
 - Time taken to start playback from the user’s perspective.
 - Fatal and non-fatal errors encountered.
