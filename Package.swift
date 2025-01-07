@@ -87,7 +87,10 @@ let package = Package(
             dependencies: [
                 .target(name: "PillarboxPlayer")
             ],
-            path: "Sources/Monitoring"
+            path: "Sources/Monitoring",
+            resources: [
+                .process("Resources")
+            ]
         ),
         .target(
             name: "PillarboxCircumspect",
