@@ -1,11 +1,6 @@
 #!/bin/bash
 
-SCRIPT_NAME=$(basename "$0")
 SCRIPT_DIR=$(dirname "$0")
-
-Scripts/install-pkgx.sh
-eval "$(pkgx --shellcode)"
-env +python +ffmpeg +packager
 
 GENERATED_DIR="/tmp/pillarbox"
 
@@ -131,30 +126,40 @@ function kill_test_streams {
 }
 
 function usage {
-    echo "Generate test streams and manage an HTTP server to serve them locally."
-    echo ""
-    echo "Usage: $SCRIPT_NAME [-s] [-k]"
-    echo ""
-    echo "Options:"
-    echo "   -s: Start serving test streams."
-    echo "   -k: Kill the server."
+    echo
+    echo "Usage: $0 [OPTION]"
+    echo "   -s         start serving test streams."
+    echo "   -k         kill the server."
+    echo
+    exit 1
 }
+
+function install_tools {
+    curl -Ssf https://pkgx.sh | sh &> /dev/null
+    eval "$(pkgx --shellcode)"
+    env +python +ffmpeg +packager
+}
+
+if [[ -z "$1" ]]; then
+    usage
+fi
 
 while getopts sk OPT; do
     case "$OPT" in
         s)
             echo "Starting test streams"
+            install_tools
             serve_test_streams "$GENERATED_DIR"
+            echo "... done."
             ;;
         k)
             echo "Stopping test streams"
+            install_tools
             kill_test_streams "$GENERATED_DIR"
+            echo "... done."
             ;;
         *)
             usage
-            exit 1
             ;;
     esac
 done
-
-echo "... done."

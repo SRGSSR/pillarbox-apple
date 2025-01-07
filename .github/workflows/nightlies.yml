@@ -21,7 +21,7 @@ jobs:
 
       - name: Add Apple certificate
         run: |
-          Scripts/add-apple-certificate.sh \
+          Scripts/private/add-apple-certificate.sh \
           $RUNNER_TEMP \
           ${{ secrets.KEYCHAIN_PASSWORD }} \
           ${{ secrets.APPLE_DEV_CERTIFICATE }} \
@@ -29,13 +29,12 @@ jobs:
 
       - name: Configure environment
         run: |
-          Scripts/configure-environment.sh \
+          Scripts/private/configure-environment.sh \
           ${{ secrets.APP_STORE_CONNECT_API_KEY }}
 
       - name: Deliver the demo
         run: |
-          make deliver-demo-nightly-${{ matrix.platform }} \
-          MODE="--non-interactive"
+          Scripts/private/deliver-demo.sh -p ${{ matrix.platform }} -c nightly
         env:
           TEAM_ID: ${{ secrets.TEAM_ID }}
           KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
