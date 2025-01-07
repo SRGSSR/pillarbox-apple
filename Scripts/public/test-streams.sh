@@ -4,7 +4,7 @@ SCRIPT_DIR=$(dirname "$0")
 
 GENERATED_DIR="/tmp/pillarbox"
 
-METADATA_DIR="$SCRIPT_DIR/../metadata"
+METADATA_DIR="$SCRIPT_DIR/../../metadata"
 SUBTITLES_DIR="$METADATA_DIR/subtitles"
 JSON_DIR="$METADATA_DIR/json"
 
