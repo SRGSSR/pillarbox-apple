@@ -51,7 +51,7 @@ jobs:
 
       - name: Add Apple certificate
         run: |
-          Scripts/add-apple-certificate.sh \
+          Scripts/private/add-apple-certificate.sh \
           $RUNNER_TEMP \
           ${{ secrets.KEYCHAIN_PASSWORD }} \
           ${{ secrets.APPLE_DEV_CERTIFICATE }} \
@@ -59,11 +59,11 @@ jobs:
 
       - name: Configure environment
         run: |
-          Scripts/configure-environment.sh \
+          Scripts/private/configure-environment.sh \
           ${{ secrets.APP_STORE_CONNECT_API_KEY }}
 
       - name: Archive the demo
-        run: make archive-demo-${{ matrix.platform }}
+        run: Scripts/private/archive-demo.sh -p ${{ matrix.platform }}
         env:
           TEAM_ID: ${{ secrets.TEAM_ID }}
           KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
