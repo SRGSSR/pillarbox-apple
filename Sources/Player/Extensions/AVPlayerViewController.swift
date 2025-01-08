@@ -33,4 +33,28 @@ extension AVPlayerViewController {
 #endif
         return duplicate
     }
+
+    func addOverlayViewController(_ overlayViewController: UIViewController) {
+        removeOverlayViewControllers()
+        guard let contentOverlayView, let overlayView = overlayViewController.view else { return }
+        addChild(overlayViewController)
+        contentOverlayView.addSubview(overlayView)
+        overlayViewController.didMove(toParent: self)
+
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            overlayView.topAnchor.constraint(equalTo: contentOverlayView.topAnchor),
+            overlayView.bottomAnchor.constraint(equalTo: contentOverlayView.bottomAnchor),
+            overlayView.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor),
+            overlayView.trailingAnchor.constraint(equalTo: contentOverlayView.trailingAnchor)
+        ])
+    }
+
+    private func removeOverlayViewControllers() {
+        children.forEach { viewController in
+            viewController.willMove(toParent: nil)
+            viewController.view.removeFromSuperview()
+            viewController.removeFromParent()
+        }
+    }
 }

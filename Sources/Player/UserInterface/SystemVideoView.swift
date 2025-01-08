@@ -19,10 +19,20 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     public var body: some View {
         ZStack {
             if supportsPictureInPicture {
-                PictureInPictureSupportingSystemVideoView(player: player, gravity: gravity, contextualActions: contextualActions)
+                PictureInPictureSupportingSystemVideoView(
+                    player: player,
+                    gravity: gravity,
+                    contextualActions: contextualActions,
+                    overlayViewController: UIHostingController(rootView: videoOverlay)
+                )
             }
             else {
-                BasicSystemVideoView(player: player, gravity: gravity, contextualActions: contextualActions)
+                BasicSystemVideoView(
+                    player: player,
+                    gravity: gravity,
+                    contextualActions: contextualActions,
+                    overlayViewController: UIHostingController(rootView: videoOverlay)
+                )
             }
         }
         .onAppear {
