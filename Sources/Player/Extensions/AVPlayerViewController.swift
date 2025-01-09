@@ -5,6 +5,7 @@
 //
 
 import AVKit
+import SwiftUI
 
 extension AVPlayerViewController {
     func stopPictureInPicture() {
@@ -34,8 +35,10 @@ extension AVPlayerViewController {
         return duplicate
     }
 
-    func addOverlayViewController(_ overlayViewController: UIViewController) {
+    func addVideoOverlay<VideoOverlay>(_ videoOverlay: VideoOverlay) where VideoOverlay: View {
         removeOverlayViewControllers()
+
+        let overlayViewController = UIHostingController(rootView: videoOverlay)
         guard let contentOverlayView, let overlayView = overlayViewController.view else { return }
         addChild(overlayViewController)
         contentOverlayView.addSubview(overlayView)

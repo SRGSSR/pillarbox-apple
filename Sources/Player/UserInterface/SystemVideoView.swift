@@ -23,7 +23,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     player: player,
                     gravity: gravity,
                     contextualActions: contextualActions,
-                    overlayViewController: UIHostingController(rootView: videoOverlay)
+                    videoOverlay: videoOverlay
                 )
             }
             else {
@@ -31,7 +31,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     player: player,
                     gravity: gravity,
                     contextualActions: contextualActions,
-                    overlayViewController: UIHostingController(rootView: videoOverlay)
+                    videoOverlay: videoOverlay
                 )
             }
         }
