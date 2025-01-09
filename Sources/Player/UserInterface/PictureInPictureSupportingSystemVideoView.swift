@@ -37,7 +37,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOvelay>: UIViewControllerR
     func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
         uiViewController.viewController?.player = player.systemPlayer
         uiViewController.viewController?.videoGravity = gravity
-        uiViewController.viewController?.addVideoOverlay(videoOverlay)
+        uiViewController.viewController?.setVideoOverlay(videoOverlay)
 #if os(tvOS)
         uiViewController.viewController?.contextualActions = contextualActions
         context.coordinator.player = player

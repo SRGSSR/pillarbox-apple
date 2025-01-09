@@ -35,29 +35,25 @@ extension AVPlayerViewController {
         return duplicate
     }
 
-    func addVideoOverlay<VideoOverlay>(_ videoOverlay: VideoOverlay) where VideoOverlay: View {
-        removeOverlayViewControllers()
+    func setVideoOverlay<VideoOverlay>(_ videoOverlay: VideoOverlay) where VideoOverlay: View {
+        if let hostController = children.compactMap({ $0 as? UIHostingController<VideoOverlay> }).first {
+            hostController.rootView = videoOverlay
+        }
+        else if let contentOverlayView {
+            let hostController = UIHostingController(rootView: videoOverlay)
+            if let hostView = hostController.view {
+                addChild(hostController)
+                contentOverlayView.addSubview(hostView)
+                hostController.didMove(toParent: self)
 
-        let overlayViewController = UIHostingController(rootView: videoOverlay)
-        guard let contentOverlayView, let overlayView = overlayViewController.view else { return }
-        addChild(overlayViewController)
-        contentOverlayView.addSubview(overlayView)
-        overlayViewController.didMove(toParent: self)
-
-        overlayView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            overlayView.topAnchor.constraint(equalTo: contentOverlayView.topAnchor),
-            overlayView.bottomAnchor.constraint(equalTo: contentOverlayView.bottomAnchor),
-            overlayView.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor),
-            overlayView.trailingAnchor.constraint(equalTo: contentOverlayView.trailingAnchor)
-        ])
-    }
-
-    private func removeOverlayViewControllers() {
-        children.forEach { viewController in
-            viewController.willMove(toParent: nil)
-            viewController.view.removeFromSuperview()
-            viewController.removeFromParent()
+                hostView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    hostView.topAnchor.constraint(equalTo: contentOverlayView.topAnchor),
+                    hostView.bottomAnchor.constraint(equalTo: contentOverlayView.bottomAnchor),
+                    hostView.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor),
+                    hostView.trailingAnchor.constraint(equalTo: contentOverlayView.trailingAnchor)
+                ])
+            }
         }
     }
 }

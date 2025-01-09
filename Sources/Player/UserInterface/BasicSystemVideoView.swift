@@ -31,7 +31,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
-        uiViewController.addVideoOverlay(videoOverlay)
+        uiViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
         uiViewController.contextualActions = contextualActions
         context.coordinator.player = player
