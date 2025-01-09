@@ -7,10 +7,11 @@
 import AVKit
 import SwiftUI
 
-struct BasicSystemVideoView: UIViewControllerRepresentable {
+struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
+    let videoOverlay: VideoOverlay
 
 #if os(tvOS)
     func makeCoordinator() -> AVPlayerViewControllerSpeedCoordinator {
@@ -30,6 +31,7 @@ struct BasicSystemVideoView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
+        uiViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
         uiViewController.contextualActions = contextualActions
         context.coordinator.player = player

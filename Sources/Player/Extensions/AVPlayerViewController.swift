@@ -5,6 +5,7 @@
 //
 
 import AVKit
+import SwiftUI
 
 extension AVPlayerViewController {
     func stopPictureInPicture() {
@@ -32,5 +33,27 @@ extension AVPlayerViewController {
         duplicate.exitsFullScreenWhenPlaybackEnds = exitsFullScreenWhenPlaybackEnds
 #endif
         return duplicate
+    }
+
+    func setVideoOverlay<VideoOverlay>(_ videoOverlay: VideoOverlay) where VideoOverlay: View {
+        guard let contentOverlayView else { return }
+        if let hostController = children.compactMap({ $0 as? UIHostingController<VideoOverlay> }).first {
+            hostController.rootView = videoOverlay
+        }
+        else {
+            let hostController = UIHostingController(rootView: videoOverlay)
+            guard let hostView = hostController.view else { return }
+            addChild(hostController)
+            contentOverlayView.addSubview(hostView)
+            hostController.didMove(toParent: self)
+
+            hostView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                hostView.topAnchor.constraint(equalTo: contentOverlayView.topAnchor),
+                hostView.bottomAnchor.constraint(equalTo: contentOverlayView.bottomAnchor),
+                hostView.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor),
+                hostView.trailingAnchor.constraint(equalTo: contentOverlayView.trailingAnchor)
+            ])
+        }
     }
 }

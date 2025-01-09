@@ -8,8 +8,9 @@ import AVFoundation
 import SwiftUI
 
 /// A view providing the standard system playback user experience.
-public struct SystemVideoView: View {
+public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private let player: Player
+    private let videoOverlay: VideoOverlay
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
@@ -18,10 +19,20 @@ public struct SystemVideoView: View {
     public var body: some View {
         ZStack {
             if supportsPictureInPicture {
-                PictureInPictureSupportingSystemVideoView(player: player, gravity: gravity, contextualActions: contextualActions)
+                PictureInPictureSupportingSystemVideoView(
+                    player: player,
+                    gravity: gravity,
+                    contextualActions: contextualActions,
+                    videoOverlay: videoOverlay
+                )
             }
             else {
-                BasicSystemVideoView(player: player, gravity: gravity, contextualActions: contextualActions)
+                BasicSystemVideoView(
+                    player: player,
+                    gravity: gravity,
+                    contextualActions: contextualActions,
+                    videoOverlay: videoOverlay
+                )
             }
         }
         .onAppear {
@@ -35,9 +46,25 @@ public struct SystemVideoView: View {
 
     /// Creates a view displaying video content.
     ///
-    /// - Parameter player: The player whose content is displayed.
-    public init(player: Player) {
+    /// - Parameters:
+    ///    - player: The player whose content is displayed.
+    ///    - videoOverlay: A closure returning an overlay view to be placed atop the player's content. This view is
+    ///      fully interactive, but is placed below the system-provided playback controls and will only receive unhandled
+    ///      events.
+    public init(player: Player, @ViewBuilder videoOverlay: () -> VideoOverlay) {
         self.player = player
+        self.videoOverlay = videoOverlay()
+    }
+}
+
+public extension SystemVideoView where VideoOverlay == EmptyView {
+    /// Creates a view displaying video content.
+    ///
+    /// - Parameter player: The player whose content is displayed.
+    init(player: Player) {
+        self.init(player: player) {
+            EmptyView()
+        }
     }
 }
 
