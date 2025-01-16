@@ -35,6 +35,23 @@ public extension Slider {
             onEditingChanged(isEditing)
         }
     }
+
+    init(
+        volumeTracker: VolumeTracker,
+        @ViewBuilder label: () -> Label,
+        @ViewBuilder minimumValueLabel: () -> ValueLabel,
+        @ViewBuilder maximumValueLabel: () -> ValueLabel,
+        onEditingChanged: @escaping (Bool) -> Void = { _ in }
+    ) {
+        self.init(
+            value: Binding(volumeTracker, at: \.volume),
+            in: 0...1,
+            label: label,
+            minimumValueLabel: minimumValueLabel,
+            maximumValueLabel: maximumValueLabel,
+            onEditingChanged: onEditingChanged
+        )
+    }
 }
 
 @available(iOS 16, *)
@@ -60,6 +77,19 @@ public extension Slider where ValueLabel == EmptyView {
             onEditingChanged(isEditing)
         }
     }
+
+    init(
+        volumeTracker: VolumeTracker,
+        @ViewBuilder label: () -> Label,
+        onEditingChanged: @escaping (Bool) -> Void = { _ in }
+    ) {
+        self.init(
+            value: Binding(volumeTracker, at: \.volume),
+            in: 0...1,
+            label: label,
+            onEditingChanged: onEditingChanged
+        )
+    }
 }
 
 @available(iOS 16, *)
@@ -81,5 +111,16 @@ public extension Slider where Label == EmptyView, ValueLabel == EmptyView {
             progressTracker.isInteracting = isEditing
             onEditingChanged(isEditing)
         }
+    }
+
+    init(
+        volumeTracker: VolumeTracker,
+        onEditingChanged: @escaping (Bool) -> Void = { _ in }
+    ) {
+        self.init(
+            value: Binding(volumeTracker, at: \.volume),
+            in: 0...1,
+            onEditingChanged: onEditingChanged
+        )
     }
 }
