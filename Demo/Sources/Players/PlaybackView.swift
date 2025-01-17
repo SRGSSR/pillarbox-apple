@@ -21,6 +21,7 @@ private struct MainView: View {
 
     @StateObject private var visibilityTracker = VisibilityTracker()
     @StateObject private var volumeTracker = VolumeTracker()
+    @State private var effectiveVolume: Float = 0
     @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1), limit: 90)
 
     @State private var layoutInfo: LayoutInfo = .none
@@ -244,8 +245,17 @@ private struct MainView: View {
     private func sliderTrack(progress: CGFloat, width: CGFloat) -> some View {
         Rectangle()
             .foregroundColor(.white)
-            .frame(width: progress * width)
-            .opacity(player.isMuted ? 0 : 1)
+            .frame(width: CGFloat(effectiveVolume) * width)
+            .animation(.linear(duration: 0.2), value: effectiveVolume)
+            .onAppear {
+                effectiveVolume = volumeTracker.volume
+            }
+            .onChange(of: player.isMuted) { isMuted in
+                effectiveVolume = Float(isMuted ? 0 : progress)
+            }
+            .onChange(of: volumeTracker.volume) { volume in
+                effectiveVolume = player.isMuted ? 0 : volume
+            }
     }
 
     private func routePickerView() -> some View {
