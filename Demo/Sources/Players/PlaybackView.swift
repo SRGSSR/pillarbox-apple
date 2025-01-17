@@ -707,13 +707,7 @@ private struct TimeSlider: View {
 
     @ViewBuilder
     private func slider() -> some View {
-        HSlider(
-            value: $progressTracker.progress,
-            onEditingChanged: { isEditing in
-                progressTracker.isInteracting = isEditing
-            },
-            onDragging: visibilityTracker.reset
-        ) { progress, width in
+        HSlider(value: $progressTracker.progress) { progress, width in
             ZStack(alignment: .leading) {
                 sliderBackground()
                 sliderTimeRanges(width: width)
@@ -725,6 +719,10 @@ private struct TimeSlider: View {
             .opacity(isVisible ? 1 : 0)
             .animation(.easeInOut(duration: 0.3), values: progressTracker.isInteracting, isVisible)
         }
+        .onEditingChanged { isEditing in
+            progressTracker.isInteracting = isEditing
+        }
+        .onDragging(visibilityTracker.reset)
     }
 
     @ViewBuilder

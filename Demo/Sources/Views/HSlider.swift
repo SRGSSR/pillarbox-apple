@@ -10,14 +10,14 @@ import SwiftUI
 struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
     @Binding private var value: Value
     private let bounds: ClosedRange<Value>
-    @State private var isInteracting = false
-
-    private let onEditingChanged: (Bool) -> Void
-    private let onDragging: () -> Void
     private let content: (CGFloat, CGFloat) -> Content
 
-    @GestureState private var gestureValue: DragGesture.Value?
+    fileprivate var onEditingChanged: (Bool) -> Void = { _ in }
+    fileprivate var onDragging: () -> Void = {}
+
+    @State private var isInteracting = false
     @State private var initialValue: Value = 0
+    @GestureState private var gestureValue: DragGesture.Value?
 
     var body: some View {
         GeometryReader { geometry in
@@ -37,18 +37,13 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         )
     }
 
-    // TODO: Likely provide optional closure support via modifiers (similar to gesture recognizer API)
     init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
-        onEditingChanged: @escaping (Bool) -> Void = { _ in },
-        onDragging: @escaping () -> Void = {},
         @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
     ) {
         self._value = value
         self.bounds = bounds
-        self.onEditingChanged = onEditingChanged
-        self.onDragging = onDragging
         self.content = content
     }
 
@@ -68,6 +63,20 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
             isInteracting = false
             onEditingChanged(false)
         }
+    }
+}
+
+extension HSlider {
+    func onEditingChanged(_ action: @escaping (Bool) -> Void) -> Self {
+        var slider = self
+        slider.onEditingChanged = action
+        return slider
+    }
+
+    func onDragging(_ action: @escaping () -> Void) -> Self {
+        var slider = self
+        slider.onDragging = action
+        return slider
     }
 }
 
