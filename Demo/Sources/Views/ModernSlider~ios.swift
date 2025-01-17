@@ -126,10 +126,7 @@ struct ModernSlider<V, ValueLabel>: View where V: BinaryFloatingPoint, V.Stride:
 }
 
 extension ModernSlider where ValueLabel == EmptyView {
-    init(
-        value: Binding<V>,
-        in bounds: ClosedRange<V> = 0...1
-    ) {
+    init(value: Binding<V>, in bounds: ClosedRange<V> = 0...1) {
         self.init(value: value, in: bounds, minimumValueLabel: { EmptyView() }, maximumValueLabel: { EmptyView() })
     }
 }
