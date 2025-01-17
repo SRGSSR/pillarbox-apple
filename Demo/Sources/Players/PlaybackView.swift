@@ -215,24 +215,30 @@ private struct MainView: View {
             Spacer()
             HStack(spacing: 20) {
                 LoadingIndicator(player: player)
-                if !shouldHideInterface {
-                    HSlider(value: $volumeTracker.volume) { progress, width in
-                        ZStack(alignment: .leading) {
-                            sliderBackground()
-                            sliderTrack(progress: progress, width: width)
-                        }
-                    }
-                    .onDragging(visibilityTracker.reset)
-                    .frame(width: 100, height: 8)
-                    .clipShape(.capsule)
-                    VolumeButton(player: player, volumeTracker: volumeTracker)
-                        .frame(width: 32)
-                }
+                volumeView()
             }
         }
         .topBarStyle()
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+
+    private func volumeView() -> some View {
+        HStack(spacing: 5) {
+            if !shouldHideInterface {
+                HSlider(value: $volumeTracker.volume) { progress, width in
+                    ZStack(alignment: .leading) {
+                        sliderBackground()
+                        sliderTrack(progress: progress, width: width)
+                    }
+                }
+                .onDragging(visibilityTracker.reset)
+                .frame(width: 100, height: 8)
+                .clipShape(.capsule)
+                VolumeButton(player: player, volumeTracker: volumeTracker)
+                    .frame(width: 32)
+            }
+        }
     }
 
     private func sliderBackground() -> some View {
