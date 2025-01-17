@@ -660,6 +660,21 @@ private struct TimeSlider: View {
             label(withText: formattedTotalTime)
         }
         .frame(height: 30)
+        .accessibilityRepresentation {
+            Slider(
+                progressTracker: progressTracker,
+                label: {
+                    Text("Current position")
+                },
+                minimumValueLabel: {
+                    label(withText: formattedElapsedTime)
+                },
+                maximumValueLabel: {
+                    label(withText: formattedTotalTime)
+                }
+            )
+        }
+        .accessibilityAddTraits(.updatesFrequently)
         ._debugBodyCounter(color: .blue)
         .onReceive(player: player, assign: \.streamType, to: $streamType)
         .onReceive(player: player, assign: \.buffer, to: $buffer)
