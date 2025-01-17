@@ -16,7 +16,7 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
     fileprivate var onDragging: () -> Void = {}
 
     @State private var isInteracting = false
-    @State private var initialValue: Value = 0
+    @State private var initialProgress: Value = 0
     @GestureState private var gestureValue: DragGesture.Value?
 
     private var progress: Value {
@@ -30,7 +30,7 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
                 // Use center alignment instead of top leading alignment used by `GeometryReader`.
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onChange(of: gestureValue) { value in
-                    updateProgress(for: value, in: geometry)
+                    update(for: value, in: geometry)
                 }
         }
         .gesture(
@@ -58,19 +58,19 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
         self.content = content
     }
 
-    private func updateProgress(for value: DragGesture.Value?, in geometry: GeometryProxy) {
+    private func update(for value: DragGesture.Value?, in geometry: GeometryProxy) {
         if let value {
             onDragging()
             if !isInteracting {
                 isInteracting = true
-                initialValue = self.value
+                initialProgress = progress
                 onEditingChanged(true)
             }
             let delta = (geometry.size.width != 0) ? Value(value.translation.width / geometry.size.width) : 0
-            self.value = initialValue + delta
+            self.value = (initialProgress + delta) * (bounds.upperBound - bounds.lowerBound) + bounds.lowerBound
         }
         else {
-            initialValue = 0
+            initialProgress = 0
             isInteracting = false
             onEditingChanged(false)
         }
