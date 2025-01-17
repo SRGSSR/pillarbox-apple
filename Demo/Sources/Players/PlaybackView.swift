@@ -20,6 +20,7 @@ private struct MainView: View {
     let progressTracker: ProgressTracker
 
     @StateObject private var visibilityTracker = VisibilityTracker()
+    @StateObject private var volumeTracker = VolumeTracker()
     @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1), limit: 90)
 
     @State private var layoutInfo: LayoutInfo = .none
@@ -214,6 +215,16 @@ private struct MainView: View {
             HStack(spacing: 20) {
                 LoadingIndicator(player: player)
                 if !shouldHideInterface {
+                    HSlider(value: $volumeTracker.volume) { progress, width in
+                        ZStack(alignment: .leading) {
+                            sliderBackground()
+                            sliderTrack(progress: progress, width: width)
+                        }
+                    }
+                    .onDragging(visibilityTracker.reset)
+                    .frame(width: 100, height: 8)
+                    .clipShape(.capsule)
+
                     VolumeButton(player: player)
                 }
             }
@@ -223,7 +234,19 @@ private struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
-    @ViewBuilder
+    private func sliderBackground() -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .opacity(0.1)
+            .background(.ultraThinMaterial)
+    }
+
+    private func sliderTrack(progress: CGFloat, width: CGFloat) -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .frame(width: progress * width)
+    }
+
     private func routePickerView() -> some View {
         RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
             .tint(.white)
