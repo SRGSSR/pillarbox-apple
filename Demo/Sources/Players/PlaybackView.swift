@@ -690,21 +690,6 @@ private struct TimeSlider: View {
         }
     }
 
-    private func highlights() -> [Highlight<Float>] {
-        [.init(bounds: 0...buffer, color: .white.opacity(0.3))] + timeRangeHighlights()
-    }
-
-    private func timeRangeHighlights() -> [Highlight<Float>] {
-        guard progressTracker.timeRange.isValid else { return [] }
-        let duration = progressTracker.timeRange.duration.seconds
-        return player.metadata.timeRanges.map { timeRange in
-            Highlight(
-                bounds: Self.bounds(for: timeRange, duration: duration),
-                color: Self.color(for: timeRange).opacity(0.7)
-            )
-        }
-    }
-
     @ViewBuilder
     private func slider() -> some View {
         HSlider(
