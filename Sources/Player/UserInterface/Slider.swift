@@ -36,6 +36,14 @@ public extension Slider {
         }
     }
 
+    /// Creates a slider bound to a volume tracker.
+    ///
+    /// - Parameters:
+    ///   - volumeTracker: The volume tracker.
+    ///   - label: A view describing the slider purpose.
+    ///   - minimumValueLabel: A view describing the lower bound.
+    ///   - maximumValueLabel: A view describing the upper bound.
+    ///   - onEditingChanged: A closure called when editing begins or ends.
     init(
         volumeTracker: VolumeTracker,
         @ViewBuilder label: () -> Label,
@@ -78,6 +86,12 @@ public extension Slider where ValueLabel == EmptyView {
         }
     }
 
+    /// Creates a slider bound to a volume tracker.
+    ///
+    /// - Parameters:
+    ///   - volumeTracker: The volume tracker.
+    ///   - label: A view describing the slider purpose.
+    ///   - onEditingChanged: A closure called when editing begins or ends.
     init(
         volumeTracker: VolumeTracker,
         @ViewBuilder label: () -> Label,
@@ -113,6 +127,11 @@ public extension Slider where Label == EmptyView, ValueLabel == EmptyView {
         }
     }
 
+    /// Creates a slider bound to a volume tracker.
+    ///
+    /// - Parameters:
+    ///   - volumeTracker: The volume tracker.
+    ///   - onEditingChanged: A closure called when editing begins or ends.
     init(
         volumeTracker: VolumeTracker,
         onEditingChanged: @escaping (Bool) -> Void = { _ in }
