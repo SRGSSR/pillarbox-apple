@@ -79,10 +79,11 @@ struct ModernSlider<V, ValueLabel>: View where V: BinaryFloatingPoint, V.Stride:
     }
 
     @ViewBuilder
-    private func rectangle(color: Color, width: CGFloat? = nil) -> some View {
+    private func rectangle(color: Color, width: CGFloat? = nil, offset: CGFloat = 0) -> some View {
         Rectangle()
             .foregroundColor(color)
             .frame(width: width)
+            .offset(x: offset)
     }
 
     @ViewBuilder
@@ -92,8 +93,11 @@ struct ModernSlider<V, ValueLabel>: View where V: BinaryFloatingPoint, V.Stride:
                 rectangle(color: .white.opacity(0.1))
                     .background(.ultraThinMaterial)
                 ForEach(highlights, id: \.self) { highlight in
-                    rectangle(color: highlight.color, width: geometry.size.width * CGFloat(highlight.bounds.upperBound - highlight.bounds.lowerBound))
-                        .offset(x: geometry.size.width * CGFloat(highlight.bounds.lowerBound))
+                    rectangle(
+                        color: highlight.color,
+                        width: geometry.size.width * CGFloat(highlight.bounds.upperBound - highlight.bounds.lowerBound),
+                        offset: geometry.size.width * CGFloat(highlight.bounds.lowerBound)
+                    )
                 }
                 rectangle(color: .white, width: geometry.size.width * CGFloat(value))
             }
