@@ -59,11 +59,11 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
     }
 
     private static func value(for progress: Value, in bounds: ClosedRange<Value>) -> Value {
-        progress * (bounds.upperBound - bounds.lowerBound) + bounds.lowerBound
+        (progress * (bounds.upperBound - bounds.lowerBound) + bounds.lowerBound).clamped(to: bounds)
     }
 
     private static func progress(for value: Value, in bounds: ClosedRange<Value>) -> Value {
-        (value - bounds.lowerBound) / (bounds.upperBound - bounds.lowerBound)
+        ((value - bounds.lowerBound) / (bounds.upperBound - bounds.lowerBound)).clamped(to: bounds)
     }
 
     private func update(for value: DragGesture.Value?, in geometry: GeometryProxy) {
