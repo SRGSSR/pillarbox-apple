@@ -12,9 +12,9 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     private let bounds: ClosedRange<Value>
     @State private var isInteracting = false
 
-    private let content: (CGFloat, CGFloat) -> Content
     private let onEditingChanged: (Bool) -> Void
     private let onDragging: () -> Void
+    private let content: (CGFloat, CGFloat) -> Content
 
     @GestureState private var gestureValue: DragGesture.Value?
     @State private var initialValue: Value = 0
@@ -37,18 +37,19 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         )
     }
 
+    // TODO: Likely provide optional closure support via modifiers (similar to gesture recognizer API)
     init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
-        @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content,
         onEditingChanged: @escaping (Bool) -> Void = { _ in },
-        onDragging: @escaping () -> Void = {}
+        onDragging: @escaping () -> Void = {},
+        @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
     ) {
         self._value = value
         self.bounds = bounds
-        self.content = content
         self.onEditingChanged = onEditingChanged
         self.onDragging = onDragging
+        self.content = content
     }
 
     private func updateProgress(for value: DragGesture.Value?, in geometry: GeometryProxy) {

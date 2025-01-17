@@ -654,24 +654,12 @@ private struct TimeSlider: View {
     }
 
     var body: some View {
-        ModernSlider(
-            value: $progressTracker.progress,
-            highlights: highlights(),
-            minimumValueLabel: {
-                label(withText: formattedElapsedTime)
-            },
-            maximumValueLabel: {
-                label(withText: formattedTotalTime)
-            },
-            onEditingChanged: { isEditing in
-                progressTracker.isInteracting = isEditing
-            },
-            onDragging: visibilityTracker.reset
-        )
-        .foregroundColor(.white)
-        .tint(.white)
-        .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
-        .opacity(isVisible ? 1 : 0)
+        HStack {
+            label(withText: formattedElapsedTime)
+            slider()
+            label(withText: formattedTotalTime)
+        }
+        .frame(height: 30)
         ._debugBodyCounter(color: .blue)
         .onReceive(player: player, assign: \.streamType, to: $streamType)
         .onReceive(player: player, assign: \.buffer, to: $buffer)
@@ -714,6 +702,31 @@ private struct TimeSlider: View {
                 bounds: Self.bounds(for: timeRange, duration: duration),
                 color: Self.color(for: timeRange).opacity(0.7)
             )
+        }
+    }
+
+    @ViewBuilder
+    private func slider() -> some View {
+        HSlider(
+            value: $progressTracker.progress,
+            onEditingChanged: { isEditing in
+                progressTracker.isInteracting = isEditing
+            },
+            onDragging: visibilityTracker.reset
+        ) { progress, width in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .foregroundColor(.white)
+                    .opacity(0.1)
+                    .background(.ultraThinMaterial)
+                Rectangle()
+                    .foregroundColor(.white)
+                    .frame(width: progress * width)
+            }
+            .frame(height: progressTracker.isInteracting ? 16 : 8)
+            .clipShape(.capsule)
+            .opacity(isVisible ? 1 : 0)
+            .animation(.easeInOut(duration: 0.3), values: progressTracker.isInteracting, isVisible)
         }
     }
 
