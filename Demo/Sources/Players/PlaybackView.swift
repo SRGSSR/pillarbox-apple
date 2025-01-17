@@ -705,7 +705,6 @@ private struct TimeSlider: View {
         }
     }
 
-    @ViewBuilder
     private func slider() -> some View {
         HSlider(value: $progressTracker.progress) { progress, width in
             ZStack(alignment: .leading) {
@@ -725,7 +724,6 @@ private struct TimeSlider: View {
         .onDragging(visibilityTracker.reset)
     }
 
-    @ViewBuilder
     private func sliderBackground() -> some View {
         Rectangle()
             .foregroundColor(.white)
@@ -747,7 +745,6 @@ private struct TimeSlider: View {
         }
     }
 
-    @ViewBuilder
     private func sliderBuffer(width: CGFloat) -> some View {
         Rectangle()
             .foregroundColor(.white)
@@ -756,7 +753,6 @@ private struct TimeSlider: View {
             .animation(.linear(duration: 0.5), value: buffer)
     }
 
-    @ViewBuilder
     private func sliderTrack(progress: CGFloat, width: CGFloat) -> some View {
         Rectangle()
             .foregroundColor(.white)
