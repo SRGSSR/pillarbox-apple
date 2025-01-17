@@ -253,15 +253,13 @@ private struct MainView: View {
             .foregroundColor(.white)
             .frame(width: CGFloat(effectiveVolume) * width)
             .animation(.linear(duration: 0.2), value: effectiveVolume)
-            .onAppear {
-                effectiveVolume = volumeTracker.volume
-            }
-            .onChange(of: player.isMuted) { isMuted in
-                effectiveVolume = Float(isMuted ? 0 : progress)
-            }
-            .onChange(of: volumeTracker.volume) { volume in
-                effectiveVolume = player.isMuted ? 0 : volume
-            }
+            .onAppear(perform: updateVolume)
+            .onChange(of: player.isMuted) { _ in updateVolume() }
+            .onChange(of: volumeTracker.volume) { _ in updateVolume() }
+    }
+
+    private func updateVolume() {
+        effectiveVolume = player.isMuted ? 0 : Float(volumeTracker.volume)
     }
 
     private func routePickerView() -> some View {
