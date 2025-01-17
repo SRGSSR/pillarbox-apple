@@ -21,7 +21,7 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
 
     private var progress: Value {
         guard !bounds.isEmpty else { return 0 }
-        return (value - bounds.lowerBound) / (bounds.upperBound - bounds.lowerBound)
+        return Self.progress(for: value, in: bounds)
     }
 
     public var body: some View {
@@ -40,7 +40,7 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
                 }
         )
     }
-    
+
     /// Creates a slider to select a value from a given range.
     ///
     /// - Parameters:
@@ -58,6 +58,14 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
         self.content = content
     }
 
+    private static func value(for progress: Value, in bounds: ClosedRange<Value>) -> Value {
+        progress * (bounds.upperBound - bounds.lowerBound) + bounds.lowerBound
+    }
+
+    private static func progress(for value: Value, in bounds: ClosedRange<Value>) -> Value {
+        (value - bounds.lowerBound) / (bounds.upperBound - bounds.lowerBound)
+    }
+
     private func update(for value: DragGesture.Value?, in geometry: GeometryProxy) {
         if let value {
             onDragging()
@@ -67,7 +75,7 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
                 onEditingChanged(true)
             }
             let delta = (geometry.size.width != 0) ? Value(value.translation.width / geometry.size.width) : 0
-            self.value = (initialProgress + delta) * (bounds.upperBound - bounds.lowerBound) + bounds.lowerBound
+            self.value = Self.value(for: initialProgress + delta, in: bounds)
         }
         else {
             initialProgress = 0
