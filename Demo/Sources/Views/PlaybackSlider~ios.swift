@@ -10,11 +10,11 @@ import SwiftUI
 struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
 
-    let timeRanges: [TimeRange]
-    let minimumValueLabel: () -> ValueLabel
-    let maximumValueLabel: () -> ValueLabel
-    let onEditingChanged: (Bool) -> Void
-    let onDragging: () -> Void
+    private let timeRanges: [TimeRange]
+    private let minimumValueLabel: () -> ValueLabel
+    private let maximumValueLabel: () -> ValueLabel
+    private let onEditingChanged: (Bool) -> Void
+    private let onDragging: () -> Void
 
     @GestureState private var gestureValue: DragGesture.Value?
     @State private var initialProgress: Float = 0
@@ -85,7 +85,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     private func timeRangeRectangle(timeRange: TimeRange, width: CGFloat, color: Color) -> some View {
         if progressTracker.timeRange.isValid {
             let duration = progressTracker.timeRange.duration.seconds
-            rectangle(opacity: 0.7, width: width * CGFloat(timeRange.end.seconds - timeRange.start.seconds) / CGFloat(duration), color: color)
+            rectangle(opacity: 0.7, width: width * CGFloat(timeRange.duration.seconds) / CGFloat(duration), color: color)
                 .offset(x: width * CGFloat(timeRange.start.seconds) / CGFloat(duration))
         }
     }

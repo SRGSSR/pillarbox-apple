@@ -630,6 +630,7 @@ private struct TimeSlider: View {
     @ObservedObject var progressTracker: ProgressTracker
     @ObservedObject var visibilityTracker: VisibilityTracker
     @State private var streamType: StreamType = .unknown
+    @State private var buffer: Float = 0
 
     private var formattedElapsedTime: String? {
         if streamType == .onDemand {
@@ -652,21 +653,35 @@ private struct TimeSlider: View {
         progressTracker.isProgressAvailable && streamType != .unknown
     }
 
+    private func highlights() -> [Highlight<Float>] {
+        [.init(bounds: 0...buffer, color: .white.opacity(0.3))] + timeRangeHighlights()
+    }
+
+    private func timeRangeHighlights() -> [Highlight<Float>] {
+        guard progressTracker.timeRange.isValid else { return [] }
+        let duration = progressTracker.timeRange.duration.seconds
+        return player.metadata.timeRanges.map { timeRange in
+            Highlight(
+                bounds: Self.bounds(for: timeRange, duration: duration),
+                color: Self.color(for: timeRange).opacity(0.7)
+            )
+        }
+    }
+
     var body: some View {
-        PlaybackSlider(
-            progressTracker: progressTracker,
-            timeRanges: player.metadata.timeRanges,
+        ModernSlider(
+            value: $progressTracker.progress,
+            highlights: highlights(),
             minimumValueLabel: {
                 label(withText: formattedElapsedTime)
             },
             maximumValueLabel: {
                 label(withText: formattedTotalTime)
             },
-            onDragging: {
-                if UserDefaults.standard.seekBehavior == .deferred {
-                    visibilityTracker.reset()
-                }
-            }
+            onEditingChanged: { isEditing in
+                progressTracker.isInteracting = isEditing
+            },
+            onDragging: visibilityTracker.reset
         )
         .foregroundColor(.white)
         .tint(.white)
@@ -674,6 +689,7 @@ private struct TimeSlider: View {
         .opacity(isVisible ? 1 : 0)
         ._debugBodyCounter(color: .blue)
         .onReceive(player: player, assign: \.streamType, to: $streamType)
+        .onReceive(player: player, assign: \.buffer, to: $buffer)
     }
 
     private static func formattedTime(_ time: CMTime, duration: CMTime) -> String? {
@@ -683,6 +699,21 @@ private struct TimeSlider: View {
         }
         else {
             return longFormatter.string(from: time.seconds)!
+        }
+    }
+
+    private static func bounds(for timeRange: TimeRange, duration: Double) -> ClosedRange<Float> {
+        let lowerBound = Float(timeRange.start.seconds / duration)
+        let upperBound = Float(timeRange.end.seconds / duration)
+        return lowerBound...upperBound
+    }
+
+    private static func color(for timeRange: TimeRange) -> Color {
+        switch timeRange.kind {
+        case .credits:
+            return .orange
+        case .blocked:
+            return .red
         }
     }
 
