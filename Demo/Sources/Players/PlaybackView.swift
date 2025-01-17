@@ -715,24 +715,54 @@ private struct TimeSlider: View {
             onDragging: visibilityTracker.reset
         ) { progress, width in
             ZStack(alignment: .leading) {
-                Rectangle()
-                    .foregroundColor(.white)
-                    .opacity(0.1)
-                    .background(.ultraThinMaterial)
-                Rectangle()
-                    .foregroundColor(.white)
-                    .opacity(0.3)
-                    .frame(width: CGFloat(buffer) * width)
-                    .animation(.linear(duration: 0.5), value: buffer)
-                Rectangle()
-                    .foregroundColor(.white)
-                    .frame(width: progress * width)
+                sliderBackground()
+                sliderTimeRanges(width: width)
+                sliderBuffer(width: width)
+                sliderTrack(progress: progress, width: width)
             }
             .frame(height: progressTracker.isInteracting ? 16 : 8)
             .clipShape(.capsule)
             .opacity(isVisible ? 1 : 0)
             .animation(.easeInOut(duration: 0.3), values: progressTracker.isInteracting, isVisible)
         }
+    }
+
+    @ViewBuilder
+    private func sliderBackground() -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .opacity(0.1)
+            .background(.ultraThinMaterial)
+    }
+
+    @ViewBuilder
+    private func sliderTimeRanges(width: CGFloat) -> some View {
+        if progressTracker.timeRange.isValid {
+            let duration = progressTracker.timeRange.duration.seconds
+            ForEach(player.metadata.timeRanges, id: \.self) { timeRange in
+                Rectangle()
+                    .foregroundColor(Self.color(for: timeRange))
+                    .opacity(0.7)
+                    .frame(width: width * CGFloat(timeRange.duration.seconds / duration))
+                    .offset(x: width * CGFloat(timeRange.start.seconds / duration))
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func sliderBuffer(width: CGFloat) -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .opacity(0.3)
+            .frame(width: CGFloat(buffer) * width)
+            .animation(.linear(duration: 0.5), value: buffer)
+    }
+
+    @ViewBuilder
+    private func sliderTrack(progress: CGFloat, width: CGFloat) -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .frame(width: progress * width)
     }
 
     @ViewBuilder
