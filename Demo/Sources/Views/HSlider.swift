@@ -22,6 +22,8 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     var body: some View {
         GeometryReader { geometry in
             content(.init(value), geometry.size.width)
+                // Use center alignment instead of top leading alignment used by `GeometryReader`.
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onChange(of: gestureValue) { value in
                     updateProgress(for: value, in: geometry)
                 }
