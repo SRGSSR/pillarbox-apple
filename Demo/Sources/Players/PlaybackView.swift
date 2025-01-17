@@ -224,8 +224,8 @@ private struct MainView: View {
                     .onDragging(visibilityTracker.reset)
                     .frame(width: 100, height: 8)
                     .clipShape(.capsule)
-
-                    VolumeButton(player: player)
+                    VolumeButton(player: player, volumeTracker: volumeTracker)
+                        .frame(width: 32)
                 }
             }
         }
@@ -245,6 +245,7 @@ private struct MainView: View {
         Rectangle()
             .foregroundColor(.white)
             .frame(width: progress * width)
+            .opacity(player.isMuted ? 0 : 1)
     }
 
     private func routePickerView() -> some View {
@@ -457,6 +458,7 @@ private struct FullScreenButton: View {
 // Behavior: h-hug, v-hug
 private struct VolumeButton: View {
     @ObservedObject var player: Player
+    @ObservedObject var volumeTracker: VolumeTracker
 
     var body: some View {
         Button(action: toggleMuted) {
@@ -469,7 +471,13 @@ private struct VolumeButton: View {
     }
 
     private var imageName: String {
-        player.isMuted ? "speaker.slash.fill" : "speaker.wave.3.fill"
+        let volume = ceilf(volumeTracker.volume * 3).clamped(to: 0...3)
+        if player.isMuted || volume == 0 {
+            return "speaker.slash.fill"
+        }
+        else {
+            return "speaker.wave.\(Int(volume)).fill"
+        }
     }
 
     private func toggleMuted() {
