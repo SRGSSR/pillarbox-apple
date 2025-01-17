@@ -50,6 +50,7 @@ struct ModernSlider<V, ValueLabel>: View where V: BinaryFloatingPoint, V.Stride:
                 value: $value,
                 in: bounds,
                 label: {
+                    // TODO: Should be customizable
                     Text("Progress")
                 },
                 minimumValueLabel: minimumValueLabel,
