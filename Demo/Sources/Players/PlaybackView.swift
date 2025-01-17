@@ -721,6 +721,11 @@ private struct TimeSlider: View {
                     .background(.ultraThinMaterial)
                 Rectangle()
                     .foregroundColor(.white)
+                    .opacity(0.3)
+                    .frame(width: CGFloat(buffer) * width)
+                    .animation(.linear(duration: 0.5), value: buffer)
+                Rectangle()
+                    .foregroundColor(.white)
                     .frame(width: progress * width)
             }
             .frame(height: progressTracker.isInteracting ? 16 : 8)
