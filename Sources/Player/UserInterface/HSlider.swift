@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-import PillarboxPlayer
 import SwiftUI
 
-struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
+/// A horizontal control for selecting a value from a bounded linear range of values.
+public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
     @Binding private var value: Value
     private let bounds: ClosedRange<Value>
     private let content: (CGFloat, CGFloat) -> Content
@@ -19,16 +19,20 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     @State private var initialValue: Value = 0
     @GestureState private var gestureValue: DragGesture.Value?
 
-    var body: some View {
+    private var progress: Value {
+        guard !bounds.isEmpty else { return 0 }
+        return (value - bounds.lowerBound) / (bounds.upperBound - bounds.lowerBound)
+    }
+
+    public var body: some View {
         GeometryReader { geometry in
-            content(.init(value), geometry.size.width)
+            content(.init(progress), geometry.size.width)
                 // Use center alignment instead of top leading alignment used by `GeometryReader`.
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onChange(of: gestureValue) { value in
                     updateProgress(for: value, in: geometry)
                 }
         }
-        .preventsTouchPropagation()
         .gesture(
             DragGesture(minimumDistance: 0)
                 .updating($gestureValue) { value, state, _ in
@@ -36,8 +40,15 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
                 }
         )
     }
-
-    init(
+    
+    /// Creates a slider to select a value from a given range.
+    ///
+    /// - Parameters:
+    ///   - value: The selected value within `bounds`.
+    ///   - bounds: The range of the valid values. Defaults to `0...1`.
+    ///   - content: A view that displays the progress (a value in `0...1`) corresponding to the current value within
+    ///     `bounds`. The width of view to draw in is provided as parameter.
+    public init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
@@ -66,13 +77,15 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     }
 }
 
-extension HSlider {
+public extension HSlider {
+    /// Adds an action to perform when editing begins or ends.
     func onEditingChanged(_ action: @escaping (Bool) -> Void) -> Self {
         var slider = self
         slider.onEditingChanged = action
         return slider
     }
 
+    /// Adds an action to perform when the user is dragging the slider.
     func onDragging(_ action: @escaping () -> Void) -> Self {
         var slider = self
         slider.onDragging = action
