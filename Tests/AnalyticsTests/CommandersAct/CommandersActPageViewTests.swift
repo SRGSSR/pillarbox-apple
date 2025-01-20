@@ -59,7 +59,6 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(name: "name"),
                 commandersAct: .init(
                     name: "name",
                     type: "type",
@@ -80,18 +79,12 @@ final class CommandersActPageViewTests: CommandersActTestCase {
 
     func testBlankTitle() {
         guard nimbleThrowAssertionsAvailable() else { return }
-        expect(Analytics.shared.trackPageView(
-            comScore: .init(name: "name"),
-            commandersAct: .init(name: " ", type: "type")
-        )).to(throwAssertion())
+        expect(Analytics.shared.trackPageView(commandersAct: .init(name: " ", type: "type"))).to(throwAssertion())
     }
 
     func testBlankType() {
         guard nimbleThrowAssertionsAvailable() else { return }
-        expect(Analytics.shared.trackPageView(
-            comScore: .init(name: "name"),
-            commandersAct: .init(name: "name", type: " ")
-        )).to(throwAssertion())
+        expect(Analytics.shared.trackPageView(commandersAct: .init(name: "name", type: " "))).to(throwAssertion())
     }
 
     func testBlankLevels() {
@@ -110,7 +103,6 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(name: "name"),
                 commandersAct: .init(
                     name: "name",
                     type: "type",
@@ -137,7 +129,6 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(name: "name"),
                 commandersAct: .init(
                     name: "name",
                     type: "type",
@@ -153,10 +144,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
             }
         ) {
-            Analytics.shared.trackPageView(
-                comScore: .init(name: "name"),
-                commandersAct: .init(name: "name", type: "type")
-            )
+            Analytics.shared.trackPageView(commandersAct: .init(name: "name", type: "type"))
         }
     }
 
@@ -168,7 +156,6 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(name: "name"),
                 commandersAct: .init(
                     name: "name",
                     type: "type",

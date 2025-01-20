@@ -7,11 +7,9 @@
 import SwiftUI
 
 private final class TrackerViewController: UIViewController, PageViewTracking {
-    let comScorePageView: ComScorePageView
     let commandersActPageView: CommandersActPageView
 
-    init(comScore: ComScorePageView, commandersAct: CommandersActPageView) {
-        comScorePageView = comScore
+    init(commandersAct: CommandersActPageView) {
         commandersActPageView = commandersAct
         super.init(nibName: nil, bundle: nil)
     }
@@ -23,11 +21,10 @@ private final class TrackerViewController: UIViewController, PageViewTracking {
 }
 
 private struct PageTrackingView: UIViewControllerRepresentable {
-    let comScore: ComScorePageView
     let commandersAct: CommandersActPageView
 
     func makeUIViewController(context: Context) -> TrackerViewController {
-        TrackerViewController(comScore: comScore, commandersAct: commandersAct)
+        TrackerViewController(commandersAct: commandersAct)
     }
 
     func updateUIViewController(_ uiViewController: TrackerViewController, context: Context) {}
@@ -39,9 +36,9 @@ public extension View {
     /// A page view will be automatically emitted when:
     /// - The receiver appears on screen.
     /// - The application returns from background with the receiver visible.
-    func tracked(comScore: ComScorePageView, commandersAct: CommandersActPageView) -> some View {
+    func tracked(commandersAct: CommandersActPageView) -> some View {
         background {
-            PageTrackingView(comScore: comScore, commandersAct: commandersAct)
+            PageTrackingView(commandersAct: commandersAct)
                 .allowsHitTesting(false)
         }
     }

@@ -22,20 +22,17 @@ Page view tracking is supported in both SwiftUI and UIKit. Page views must in ge
 
 ### Define page view data
 
-Tracking a page view requires associating it with both ``ComScorePageView`` and ``CommandersActPageView`` information. Each type includes mandatory fields, along with optional attributes for additional context:
+To track a page view, it must be associated with ``CommandersActPageView`` details, including a `name` and a `type`. Additionally, the `levels` attribute can be used to classify page views hierarchically. Note that this classification does not have to align with the page’s position in your view hierarchy.
 
-- **ComScore:** Only requires a `name` to be specified.
-- **Commanders Act:** Requires both a `name` and a `type`. Additionally, you can use the `levels` attribute to classify page views hierarchically. Note that this classification doesn’t need to reflect the page’s position within your view hierarchy.
+> Note: Page views are exclusively supported by Commanders Act.
 
 For inspiration, explore how [Play SRG products](https://srgssr-ch.atlassian.net/wiki/x/FwWhLw) utilize page views.
 
 > Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://srgssr-ch.atlassian.net/wiki/x/zIZwLw) for available keys or contact the GD ADI team for further guidance on mapping and implementation.
->
-> Avoid adding custom fields to comScore page views as unsupported fields are ignored server-side.
 
 ### Automatically track page views in SwiftUI
 
-Associate page views with SwiftUI views using the ``SwiftUICore/View/tracked(comScore:commandersAct:)`` modifier.
+Associate page views with SwiftUI views using the ``SwiftUICore/View/tracked(commandersAct:)`` modifier.
 
 #### Example: Home view tracking
 
@@ -45,15 +42,11 @@ struct HomeView: View {
         VStack {
             // ...
         }
-        .tracked(comScore: comScore, commandersAct: commandersAct)
+        .tracked(commandersAct: commandersAct)
     }
 }
 
 private extension HomeView {
-    var comScore: ComScorePageView {
-        .init(name: "home")
-    }
-
     var commandersAct: CommandersActPageView {
         .init(
             name: "home", 
@@ -76,10 +69,6 @@ final class HomeViewController: UIViewController {
 }
 
 extension HomeViewController: PageViewTracking {
-    var comScorePageView: ComScorePageView {
-        .init(name: "home")
-    }
-
     var commandersActPageView: CommandersActPageView {
         .init(
             name: "home", 
@@ -100,7 +89,7 @@ With ``PageViewTracking/isTrackedAutomatically-80h6v`` set to `true`, page views
 
 ### Manually track views
 
-If automatic tracking is not suitable, you can manually trigger page views using ``Analytics/trackPageView(comScore:commandersAct:)``.
+If automatic tracking is not suitable, you can manually trigger page views using ``Analytics/trackPageView(commandersAct:)``.
 
 In general this is best avoided, though, since you are then responsible of correctly tracking appearing and revealed views, as well as views displayed when the app returns from background.
 
