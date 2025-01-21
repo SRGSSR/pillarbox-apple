@@ -16,7 +16,7 @@ final class ContentListViewModel: ObservableObject, Refreshable {
     init() {
         $configuration
             .removeDuplicates()
-            .compactMap { $0 }
+            .compactMap(\.self)
             .map { [trigger] configuration in
                 Self.publisher(for: configuration, trigger: trigger)
             }

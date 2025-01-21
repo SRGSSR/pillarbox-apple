@@ -161,7 +161,7 @@ public final class VisibilityTracker: ObservableObject {
 
     private func voiceOverUnhidePublisher() -> AnyPublisher<Bool, Never> {
         voiceOverStatusPublisher()
-            .filter { $0 }
+            .filter(\.self)
             .map { _ in false }
             .eraseToAnyPublisher()
     }
