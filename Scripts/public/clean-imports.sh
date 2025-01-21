@@ -2,8 +2,7 @@
 
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
-    eval "$(pkgx --shellcode)"
-    env +swiftlint
+    eval "$(pkgx +swiftlint)"
 }
 
 install_tools

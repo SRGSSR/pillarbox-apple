@@ -11,8 +11,7 @@ function usage {
 
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
-    eval "$(pkgx --shellcode)"
-    env +bundle +magick +rsvg-convert
+    eval "$(pkgx +bundle +magick +rsvg-convert)"
 }
 
 while getopts p:c: OPT; do

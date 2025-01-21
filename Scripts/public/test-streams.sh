@@ -136,8 +136,7 @@ function usage {
 
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
-    eval "$(pkgx --shellcode)"
-    env +python +ffmpeg +packager
+    eval "$(pkgx +python +ffmpeg +packager)"
 }
 
 if [[ -z "$1" ]]; then

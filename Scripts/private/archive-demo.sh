@@ -11,8 +11,7 @@ function usage {
 
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
-    eval "$(pkgx --shellcode)"
-    env +bundle
+    eval "$(pkgx +bundle)"
 }
 
 if [[ -z "$1" ]]; then

@@ -12,8 +12,7 @@ function usage {
 
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
-    eval "$(pkgx --shellcode)"
-    env +swiftlint +shellcheck +markdownlint
+    eval "$(pkgx +swiftlint +shellcheck +markdownlint)"
 }
 
 while getopts c OPT; do
