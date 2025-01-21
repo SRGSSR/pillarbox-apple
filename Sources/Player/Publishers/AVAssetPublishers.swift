@@ -17,7 +17,7 @@ extension AVAsset {
             .map { characteristics, asset in
                 Publishers.MergeMany(characteristics.compactMap { characteristic in
                     asset.mediaSelectionGroupPublisher(for: characteristic)
-                        .compactMap { $0 }
+                        .compactMap(\.self)
                         .map { [characteristic: $0] }
                         .replaceError(with: [:])
                 })

@@ -23,7 +23,7 @@ extension AVMediaSelectionGroup {
         }
         .merging(withOptions) { _, new in new }
         .values
-        .flatMap { $0 }
+        .flatMap(\.self)
     }
 
     /// Returns media selection options where options without the provided characteristics are preferred.
@@ -42,7 +42,7 @@ extension AVMediaSelectionGroup {
         }
         .merging(withoutOptions) { _, new in new }
         .values
-        .flatMap { $0 }
+        .flatMap(\.self)
     }
 
     static func sortedMediaSelectionOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {

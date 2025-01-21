@@ -2,8 +2,9 @@
 
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
-    eval "$(pkgx --shellcode)"
-    env +periphery
+    set -a
+    eval "$(pkgx +periphery)"
+    set +a
 }
 
 install_tools

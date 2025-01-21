@@ -4,8 +4,9 @@ set -e
 
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
-    eval "$(pkgx --shellcode)"
-    env +swiftlint
+    set -a
+    eval "$(pkgx +swiftlint)"
+    set +a
 }
 
 install_tools

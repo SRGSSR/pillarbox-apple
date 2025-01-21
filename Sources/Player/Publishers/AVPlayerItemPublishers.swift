@@ -148,7 +148,7 @@ extension AVPlayerItem {
 
     private func timebaseUpdateNotificationPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.timebase)
-            .compactMap { $0 }
+            .compactMap(\.self)
             .map { _ in false }
             .eraseToAnyPublisher()
     }
@@ -218,7 +218,7 @@ extension AVPlayerItem {
 
     func assetMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         publisher(for: \.isPlaybackLikelyToKeepUp)
-            .first { $0 }
+            .first(where: \.self)
             .measureDateInterval()
             .weakCapture(self)
             .map { dateInterval, item in

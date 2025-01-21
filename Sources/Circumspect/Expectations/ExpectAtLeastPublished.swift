@@ -163,7 +163,7 @@ public extension XCTestCase {
             file: file,
             line: line,
             while: executing
-        ).flatMap({ $0 }) else {
+        ).flatMap(\.self) else {
             XCTFail("Failed to publish enough values", file: file, line: line)
             return
         }

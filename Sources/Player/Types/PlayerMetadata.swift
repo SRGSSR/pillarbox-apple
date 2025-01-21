@@ -65,7 +65,7 @@ public struct PlayerMetadata: Equatable {
             .init(identifier: .commonIdentifierDescription, value: description),
             .init(identifier: .commonIdentifierArtwork, value: artworkData),
             .init(identifier: .quickTimeUserDataCreationDate, value: episodeDescription)
-        ].compactMap { $0 }
+        ].compactMap(\.self)
     }
 
     var nowPlayingInfo: NowPlaying.Info {

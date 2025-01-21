@@ -11,8 +11,9 @@ function usage {
 
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
-    eval "$(pkgx --shellcode)"
-    env +ruby +bundle +xcodes
+    set -a
+    eval "$(pkgx +ruby +bundle +xcodes)"
+    set +a
 }
 
 if [[ -z "$1" ]]; then

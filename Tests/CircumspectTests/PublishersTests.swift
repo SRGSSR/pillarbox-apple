@@ -101,14 +101,14 @@ final class PublisherTests: XCTestCase {
     func testCollectFirst() throws {
         let values = try waitForOutput(
             from: [1, 2, 3, 4, 5].publisher.collectFirst(3)
-        ).flatMap { $0 }
+        ).flatMap(\.self)
         expect(values).to(equal([1, 2, 3]))
     }
 
     func testCollectNext() throws {
         let values = try waitForOutput(
             from: [1, 2, 3, 4, 5].publisher.collectNext(3)
-        ).flatMap { $0 }
+        ).flatMap(\.self)
         expect(values).to(equal([2, 3, 4]))
     }
 }
