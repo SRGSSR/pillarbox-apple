@@ -13,16 +13,6 @@ function serve_test_streams {
 
     kill_test_streams "$dest_dir"
 
-    if ! command -v python &> /dev/null; then
-        echo "python could not be found"
-        exit 1
-    fi
-
-    if ! command -v ffmpeg &> /dev/null; then
-        echo "ffmpeg could not be found"
-        exit 1
-    fi
-
     mkdir -p "$dest_dir"
     cp -R "$JSON_DIR" "$dest_dir"
 
