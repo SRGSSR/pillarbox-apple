@@ -20,10 +20,6 @@ private struct MainView: View {
     let progressTracker: ProgressTracker
 
     @StateObject private var visibilityTracker = VisibilityTracker()
-    @StateObject private var volumeTracker = VolumeTracker()
-    private var effectiveVolume: Float {
-        player.isMuted ? 0 : volumeTracker.volume
-    }
     @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1), limit: 90)
 
     @State private var layoutInfo: LayoutInfo = .none
@@ -217,7 +213,9 @@ private struct MainView: View {
             Spacer()
             HStack(spacing: 20) {
                 LoadingIndicator(player: player)
-                volumeView()
+                if !shouldHideInterface {
+                    VolumeButton(player: player)
+                }
             }
         }
         .topBarStyle()
@@ -225,38 +223,11 @@ private struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
-    private func volumeView() -> some View {
-        HStack(spacing: 5) {
-            if !shouldHideInterface {
-                if !player.isMuted {
-                    HSlider(value: $volumeTracker.volume) { progress, width in
-                        ZStack(alignment: .leading) {
-                            sliderBackground()
-                            sliderTrack(progress: progress, width: width)
-                        }
-                    }
-                    .onDragging(visibilityTracker.reset)
-                    .frame(width: 100, height: 8)
-                    .clipShape(.capsule)
-                }
-                VolumeButton(player: player, volumeTracker: volumeTracker)
-                    .frame(width: 32)
-            }
-        }
-    }
-
     private func sliderBackground() -> some View {
         Rectangle()
             .foregroundColor(.white)
             .opacity(0.1)
             .background(.ultraThinMaterial)
-    }
-
-    private func sliderTrack(progress: CGFloat, width: CGFloat) -> some View {
-        Rectangle()
-            .foregroundColor(.white)
-            .frame(width: CGFloat(effectiveVolume) * width)
-            .animation(.linear(duration: 0.2), value: effectiveVolume)
     }
 
     private func routePickerView() -> some View {
@@ -469,7 +440,6 @@ private struct FullScreenButton: View {
 // Behavior: h-hug, v-hug
 private struct VolumeButton: View {
     @ObservedObject var player: Player
-    @ObservedObject var volumeTracker: VolumeTracker
 
     var body: some View {
         Button(action: toggleMuted) {
@@ -482,13 +452,7 @@ private struct VolumeButton: View {
     }
 
     private var imageName: String {
-        let volume = ceilf(volumeTracker.volume * 3).clamped(to: 0...3)
-        if player.isMuted || volume == 0 {
-            return "speaker.slash.fill"
-        }
-        else {
-            return "speaker.wave.\(Int(volume)).fill"
-        }
+        player.isMuted ? "speaker.slash.fill" : "speaker.wave.3.fill"
     }
 
     private func toggleMuted() {
