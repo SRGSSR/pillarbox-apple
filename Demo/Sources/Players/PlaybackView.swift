@@ -21,7 +21,9 @@ private struct MainView: View {
 
     @StateObject private var visibilityTracker = VisibilityTracker()
     @StateObject private var volumeTracker = VolumeTracker()
-    @State private var effectiveVolume: Float = 0
+    private var effectiveVolume: Float {
+        player.isMuted ? 0 : volumeTracker.volume
+    }
     @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1), limit: 90)
 
     @State private var layoutInfo: LayoutInfo = .none
@@ -226,15 +228,17 @@ private struct MainView: View {
     private func volumeView() -> some View {
         HStack(spacing: 5) {
             if !shouldHideInterface {
-                HSlider(value: $volumeTracker.volume) { progress, width in
-                    ZStack(alignment: .leading) {
-                        sliderBackground()
-                        sliderTrack(progress: progress, width: width)
+                if !player.isMuted {
+                    HSlider(value: $volumeTracker.volume) { progress, width in
+                        ZStack(alignment: .leading) {
+                            sliderBackground()
+                            sliderTrack(progress: progress, width: width)
+                        }
                     }
+                    .onDragging(visibilityTracker.reset)
+                    .frame(width: 100, height: 8)
+                    .clipShape(.capsule)
                 }
-                .onDragging(visibilityTracker.reset)
-                .frame(width: 100, height: 8)
-                .clipShape(.capsule)
                 VolumeButton(player: player, volumeTracker: volumeTracker)
                     .frame(width: 32)
             }
@@ -253,13 +257,6 @@ private struct MainView: View {
             .foregroundColor(.white)
             .frame(width: CGFloat(effectiveVolume) * width)
             .animation(.linear(duration: 0.2), value: effectiveVolume)
-            .onAppear(perform: updateVolume)
-            .onChange(of: player.isMuted) { _ in updateVolume() }
-            .onChange(of: volumeTracker.volume) { _ in updateVolume() }
-    }
-
-    private func updateVolume() {
-        effectiveVolume = player.isMuted ? 0 : Float(volumeTracker.volume)
     }
 
     private func routePickerView() -> some View {
