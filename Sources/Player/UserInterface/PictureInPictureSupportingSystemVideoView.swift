@@ -9,12 +9,6 @@ import SwiftUI
 
 // swiftlint:disable:next type_name
 struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
-#if os(tvOS)
-    typealias Coordinator = AVPlayerViewControllerSpeedCoordinator
-#else
-    typealias Coordinator = Void
-#endif
-
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
@@ -25,7 +19,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     }
 
 #if os(tvOS)
-    func makeCoordinator() -> Coordinator {
+    func makeCoordinator() -> AVPlayerViewControllerSpeedCoordinator {
         .init()
     }
 #endif
