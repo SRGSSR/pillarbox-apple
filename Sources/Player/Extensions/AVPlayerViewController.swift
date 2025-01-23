@@ -43,6 +43,7 @@ extension AVPlayerViewController {
         else {
             let hostController = UIHostingController(rootView: videoOverlay)
             guard let hostView = hostController.view else { return }
+            hostView.backgroundColor = .clear
             addChild(hostController)
             contentOverlayView.addSubview(hostView)
             hostController.didMove(toParent: self)
