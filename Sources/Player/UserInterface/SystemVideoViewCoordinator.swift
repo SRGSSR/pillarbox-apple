@@ -30,20 +30,6 @@ final class SystemVideoViewCoordinator {
 
 @available(iOS, unavailable)
 private extension SystemVideoViewCoordinator {
-    func configurePlaybackSpeedPublisher(player: Player?, controller: AVPlayerViewController?) {
-        guard let player, let controller else {
-            cancellable = nil
-            return
-        }
-        cancellable = player.playbackSpeedPublisher()
-            .map { speed in
-                guard let range = speed.range, range != 1...1 else { return [] }
-                return Self.speedMenuItems(for: player, range: range, speed: speed.effectiveValue)
-            }
-            .receiveOnMainThread()
-            .assign(to: \.transportBarCustomMenuItems, on: controller)
-    }
-
     private static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
         Set(
             AVPlaybackSpeed.systemDefaultSpeeds
@@ -71,5 +57,19 @@ private extension SystemVideoViewCoordinator {
                 children: speedActions
             )
         ]
+    }
+
+    func configurePlaybackSpeedPublisher(player: Player?, controller: AVPlayerViewController?) {
+        guard let player, let controller else {
+            cancellable = nil
+            return
+        }
+        cancellable = player.playbackSpeedPublisher()
+            .map { speed in
+                guard let range = speed.range, range != 1...1 else { return [] }
+                return Self.speedMenuItems(for: player, range: range, speed: speed.effectiveValue)
+            }
+            .receiveOnMainThread()
+            .assign(to: \.transportBarCustomMenuItems, on: controller)
     }
 }
