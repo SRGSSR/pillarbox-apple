@@ -10,9 +10,10 @@ import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
+// swiftlint:disable file_length
+
 #if os(iOS)
 
-// Behavior: h-exp, v-exp
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
@@ -339,7 +340,6 @@ private struct ControlsView: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct SkipBackwardButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -363,7 +363,6 @@ private struct SkipBackwardButton: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct SkipForwardButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -387,7 +386,6 @@ private struct SkipForwardButton: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct FullScreenButton: View {
     @Binding var layout: PlaybackView.Layout
 
@@ -426,7 +424,6 @@ private struct FullScreenButton: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct VolumeButton: View {
     @ObservedObject var player: Player
 
@@ -505,7 +502,6 @@ private struct QualityMenu: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct LoadingIndicator: View {
     let player: Player
 
@@ -521,7 +517,6 @@ private struct LoadingIndicator: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct LiveLabel: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -549,7 +544,6 @@ private struct LiveLabel: View {
         .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 }
-// Behavior: h-hug, v-hug
 private struct LiveButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -580,7 +574,6 @@ private struct LiveButton: View {
     }
 }
 
-// Behavior: h-exp, v-hug
 private struct TimeBar: View {
     @ObservedObject var player: Player
     @ObservedObject var visibilityTracker: VisibilityTracker
@@ -598,7 +591,6 @@ private struct TimeBar: View {
     }
 }
 
-// Behavior: h-exp, v-hug
 private struct TimeSlider: View {
     private static let shortFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -842,7 +834,6 @@ private struct MainSystemView: View {
 
 #endif
 
-// Behavior: h-hug, v-hug
 private struct PlaybackMessageView: View {
     let title: String
     let subtitle: String?
@@ -871,7 +862,6 @@ private struct PlaybackMessageView: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
@@ -946,8 +936,6 @@ private struct ErrorView: View {
     }
 }
 
-/// A playback view with standard controls. Requires an ancestor view to own the player to be used.
-/// Behavior: h-exp, v-exp
 struct PlaybackView: View {
     enum Layout {
         case inline
