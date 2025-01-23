@@ -8,22 +8,22 @@ import AVKit
 import UIKit
 
 final class PictureInPictureHostViewController: UIViewController {
-    weak var viewController: AVPlayerViewController?
+    weak var playerViewController: AVPlayerViewController?
 
-    func addViewController(_ viewController: AVPlayerViewController) {
-        addChild(viewController)
-        view.addSubview(viewController.view)
+    func addViewController(_ playerViewController: AVPlayerViewController) {
+        addChild(playerViewController)
+        view.addSubview(playerViewController.view)
 
-        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        playerViewController.view.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            viewController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            playerViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            playerViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            playerViewController.view.topAnchor.constraint(equalTo: view.topAnchor),
+            playerViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
-        viewController.didMove(toParent: self)
-        self.viewController = viewController
+        playerViewController.didMove(toParent: self)
+        self.playerViewController = playerViewController
     }
 }

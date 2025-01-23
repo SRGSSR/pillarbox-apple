@@ -8,40 +8,33 @@ import AVKit
 import SwiftUI
 
 // swiftlint:disable:next type_name
-struct PictureInPictureSupportingSystemVideoView<VideoOvelay>: UIViewControllerRepresentable where VideoOvelay: View {
-#if os(tvOS)
-    typealias Coordinator = AVPlayerViewControllerSpeedCoordinator
-#else
-    typealias Coordinator = Void
-#endif
-
+struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
-    let videoOverlay: VideoOvelay
+    let videoOverlay: VideoOverlay
 
-    static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: Coordinator) {
+    static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: SystemVideoViewCoordinator) {
         PictureInPicture.shared.system.dismantleHostViewController(uiViewController)
     }
 
-#if os(tvOS)
-    func makeCoordinator() -> Coordinator {
+    func makeCoordinator() -> SystemVideoViewCoordinator {
         .init()
     }
-#endif
 
     func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
-        PictureInPicture.shared.system.makeHostViewController(for: player)
+        let controller = PictureInPicture.shared.system.makeHostViewController(for: player)
+        context.coordinator.controller = controller.playerViewController
+        return controller
     }
 
     func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
-        uiViewController.viewController?.player = player.systemPlayer
-        uiViewController.viewController?.videoGravity = gravity
-        uiViewController.viewController?.setVideoOverlay(videoOverlay)
+        uiViewController.playerViewController?.player = player.systemPlayer
+        uiViewController.playerViewController?.videoGravity = gravity
+        uiViewController.playerViewController?.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-        uiViewController.viewController?.contextualActions = contextualActions
-        context.coordinator.player = player
-        context.coordinator.controller = uiViewController.viewController
+        uiViewController.playerViewController?.contextualActions = contextualActions
 #endif
+        context.coordinator.player = player
     }
 }

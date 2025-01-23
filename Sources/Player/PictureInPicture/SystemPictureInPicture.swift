@@ -60,9 +60,9 @@ final class SystemPictureInPicture: NSObject {
 
     func dismantleHostViewController(_ hostViewController: PictureInPictureHostViewController) {
         hostViewControllers.remove(hostViewController)
-        if !isActive && playerViewController == hostViewController.viewController {
+        if !isActive && playerViewController == hostViewController.playerViewController {
             if let lastHostView = hostViewControllers.last {
-                playerViewController = lastHostView.viewController
+                playerViewController = lastHostView.playerViewController
             }
             else {
                 playerViewController = nil
@@ -130,8 +130,8 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         }
         // Wire the PiP controller to a valid source if the restored state is not bound to the player involved in
         // the restoration.
-        else if !hostViewControllers.map(\.viewController).contains(self.playerViewController) {
-            self.playerViewController = hostViewControllers.last?.viewController
+        else if !hostViewControllers.map(\.playerViewController).contains(self.playerViewController) {
+            self.playerViewController = hostViewControllers.last?.playerViewController
         }
     }
 }

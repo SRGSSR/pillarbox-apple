@@ -8,40 +8,29 @@ import AVKit
 import Combine
 import UIKit
 
-@available(iOS, unavailable)
-final class AVPlayerViewControllerSpeedCoordinator {
+final class SystemVideoViewCoordinator {
     var player: Player? {
         didSet {
+#if os(tvOS)
             configurePlaybackSpeedPublisher(player: player, controller: controller)
+#endif
         }
     }
 
     var controller: AVPlayerViewController? {
         didSet {
+#if os(tvOS)
             configurePlaybackSpeedPublisher(player: player, controller: controller)
+#endif
         }
     }
 
     private var cancellable: AnyCancellable?
-
-    private func configurePlaybackSpeedPublisher(player: Player?, controller: AVPlayerViewController?) {
-        guard let player, let controller else {
-            cancellable = nil
-            return
-        }
-        cancellable = player.playbackSpeedPublisher()
-            .map { speed in
-                guard let range = speed.range, range != 1...1 else { return [] }
-                return Self.speedMenuItems(for: player, range: range, speed: speed.effectiveValue)
-            }
-            .receiveOnMainThread()
-            .assign(to: \.transportBarCustomMenuItems, on: controller)
-    }
 }
 
 @available(iOS, unavailable)
-private extension AVPlayerViewControllerSpeedCoordinator {
-    static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
+private extension SystemVideoViewCoordinator {
+    private static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
         Set(
             AVPlaybackSpeed.systemDefaultSpeeds
                 .map(\.rate)
@@ -49,7 +38,7 @@ private extension AVPlayerViewControllerSpeedCoordinator {
         )
     }
 
-    static func speedMenuItems(
+    private static func speedMenuItems(
         for player: Player,
         range: ClosedRange<Float>,
         speed: Float
@@ -68,5 +57,19 @@ private extension AVPlayerViewControllerSpeedCoordinator {
                 children: speedActions
             )
         ]
+    }
+
+    func configurePlaybackSpeedPublisher(player: Player?, controller: AVPlayerViewController?) {
+        guard let player, let controller else {
+            cancellable = nil
+            return
+        }
+        cancellable = player.playbackSpeedPublisher()
+            .map { speed in
+                guard let range = speed.range, range != 1...1 else { return [] }
+                return Self.speedMenuItems(for: player, range: range, speed: speed.effectiveValue)
+            }
+            .receiveOnMainThread()
+            .assign(to: \.transportBarCustomMenuItems, on: controller)
     }
 }
