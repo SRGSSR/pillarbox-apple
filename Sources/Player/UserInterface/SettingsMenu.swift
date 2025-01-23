@@ -69,7 +69,6 @@ private struct SettingsMenuContent: View {
         legibleMediaSelectionMenu()
     }
 
-    @ViewBuilder
     private func playbackSpeedMenu() -> some View {
         Menu {
             player.playbackSpeedMenu()
@@ -82,7 +81,6 @@ private struct SettingsMenuContent: View {
         }
     }
 
-    @ViewBuilder
     private func audibleMediaSelectionMenu() -> some View {
         Menu {
             player.mediaSelectionMenu(characteristic: .audible)
@@ -95,7 +93,6 @@ private struct SettingsMenuContent: View {
         }
     }
 
-    @ViewBuilder
     private func legibleMediaSelectionMenu() -> some View {
         Menu {
             player.mediaSelectionMenu(characteristic: .legible)

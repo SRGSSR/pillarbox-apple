@@ -49,7 +49,6 @@ struct ContentListsView: View {
         section(title: list.name, image: image, configurations: configurations)
     }
 
-    @ViewBuilder
     private func section(title: String, image: String? = nil, configurations: [ContentList.Configuration]) -> some View {
         CustomSection {
             ForEach(configurations) { configuration in
@@ -74,7 +73,6 @@ struct ContentListsView: View {
         }
     }
 
-    @ViewBuilder
     private func radioShows(image: String) -> some View {
         section(title: "Radio Shows", image: image, configurations: [
             .init(list: .radioShows(radioChannel: .RSIReteUno), vendor: .RSI),
@@ -95,7 +93,6 @@ struct ContentListsView: View {
         ])
     }
 
-    @ViewBuilder
     private func latestAudiosSection(image: String) -> some View {
         section(title: "Latest Audios", image: image, configurations: [
             .init(list: .radioLatestMedias(radioChannel: .RSIReteUno), vendor: .RSI),
@@ -117,7 +114,6 @@ struct ContentListsView: View {
     }
 
 #if os(iOS)
-    @ViewBuilder
     private func serverSettingsMenu() -> some View {
         Menu {
             Picker("Server", selection: $selectedServerSetting) {
@@ -134,7 +130,6 @@ struct ContentListsView: View {
 }
 
 private extension View {
-    @ViewBuilder
     func businessUnitStyle() -> some View {
 #if os(tvOS)
         frame(width: 450, height: 250, alignment: .center)

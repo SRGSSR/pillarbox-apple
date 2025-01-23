@@ -51,7 +51,6 @@ private struct LoadedView: View {
         }
     }
 
-    @ViewBuilder
     private func toolbar() -> some View {
         Button(action: openPlaylist) {
             Image(systemName: "rectangle.stack.badge.play")

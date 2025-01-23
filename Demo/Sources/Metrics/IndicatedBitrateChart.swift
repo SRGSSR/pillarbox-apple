@@ -37,7 +37,6 @@ struct IndicatedBitrateChart: View {
         return value / 1_000_000
     }
 
-    @ViewBuilder
     private func chart() -> some View {
         Chart(Array(metrics.suffix(limit).enumerated()), id: \.offset) { metrics in
             if let indicatedBitrate = Self.indicatedBitrateMbps(from: metrics.element) {
@@ -55,7 +54,6 @@ struct IndicatedBitrateChart: View {
         .padding(.vertical)
     }
 
-    @ViewBuilder
     private func summary() -> some View {
         HStack {
             if let minIndicatedBitrateMbps {

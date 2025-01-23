@@ -71,7 +71,6 @@ private struct Toolbar: View {
         self.model = model
     }
 
-    @ViewBuilder
     private func previousButton() -> some View {
         Button(action: player.returnToPrevious) {
             Image(systemName: "arrow.left")
@@ -81,7 +80,6 @@ private struct Toolbar: View {
         .disabled(!player.canReturnToPrevious())
     }
 
-    @ViewBuilder
     private func managementButtons() -> some View {
         HStack(spacing: 30) {
             Button(action: toggleRepeatMode) {
@@ -112,7 +110,6 @@ private struct Toolbar: View {
         }
     }
 
-    @ViewBuilder
     private func nextButton() -> some View {
         Button(action: player.advanceToNext) {
             Image(systemName: "arrow.right")

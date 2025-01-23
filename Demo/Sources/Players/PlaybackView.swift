@@ -10,9 +10,10 @@ import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
+// swiftlint:disable file_length
+
 #if os(iOS)
 
-// Behavior: h-exp, v-exp
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
@@ -112,7 +113,6 @@ private struct MainView: View {
             .onEnded(visibilityTracker.reset)
     }
 
-    @ViewBuilder
     private func main() -> some View {
         ZStack {
             video()
@@ -132,7 +132,6 @@ private struct MainView: View {
         .supportsHighSpeed(!isMonoscopic, for: player)
     }
 
-    @ViewBuilder
     private func metadata() -> some View {
         VStack(alignment: .leading) {
             HStack {
@@ -156,7 +155,6 @@ private struct MainView: View {
         .opacity(shouldHideInterface ? 0 : 1)
     }
 
-    @ViewBuilder
     private func bottomBar() -> some View {
         VStack(spacing: 20) {
             skipButton()
@@ -168,7 +166,6 @@ private struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
-    @ViewBuilder
     private func bottomControls() -> some View {
         VStack(spacing: 0) {
             HStack(alignment: .bottom) {
@@ -189,7 +186,6 @@ private struct MainView: View {
         .opacity(isUserInterfaceHidden ? 0 : 1)
     }
 
-    @ViewBuilder
     private func bottomButtons() -> some View {
         HStack(spacing: 20) {
             LiveButton(player: player, progressTracker: progressTracker)
@@ -199,7 +195,6 @@ private struct MainView: View {
         .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
     }
 
-    @ViewBuilder
     private func topBar() -> some View {
         HStack {
             HStack(spacing: 20) {
@@ -223,7 +218,13 @@ private struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
-    @ViewBuilder
+    private func sliderBackground() -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .opacity(0.1)
+            .background(.ultraThinMaterial)
+    }
+
     private func routePickerView() -> some View {
         RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
             .tint(.white)
@@ -231,7 +232,6 @@ private struct MainView: View {
             .frame(width: 20)
     }
 
-    @ViewBuilder
     private func artwork(for imageSource: ImageSource) -> some View {
         LazyImage(source: imageSource) { image in
             image
@@ -242,7 +242,6 @@ private struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    @ViewBuilder
     private func video() -> some View {
         ZStack {
             if player.mediaType == .audio {
@@ -264,7 +263,6 @@ private struct MainView: View {
         .animation(.easeIn(duration: 0.2), values: player.mediaType, player.isExternalPlaybackActive)
     }
 
-    @ViewBuilder
     private func controls() -> some View {
         ZStack {
             Color(white: 0, opacity: 0.5)
@@ -274,14 +272,12 @@ private struct MainView: View {
         .opacity(shouldHideInterface ? 0 : 1)
     }
 
-    @ViewBuilder
     private func skipButton() -> some View {
         SkipButton(player: player, progressTacker: progressTracker)
             .padding(.trailing, 20)
             .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
-    @ViewBuilder
     private func image(name: String) -> some View {
         Image(systemName: name)
             .resizable()
@@ -344,7 +340,6 @@ private struct ControlsView: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct SkipBackwardButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -368,7 +363,6 @@ private struct SkipBackwardButton: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct SkipForwardButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -392,7 +386,6 @@ private struct SkipForwardButton: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct FullScreenButton: View {
     @Binding var layout: PlaybackView.Layout
 
@@ -431,7 +424,6 @@ private struct FullScreenButton: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct VolumeButton: View {
     @ObservedObject var player: Player
 
@@ -510,7 +502,6 @@ private struct QualityMenu: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct LoadingIndicator: View {
     let player: Player
 
@@ -526,7 +517,6 @@ private struct LoadingIndicator: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct LiveLabel: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -554,7 +544,6 @@ private struct LiveLabel: View {
         .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 }
-// Behavior: h-hug, v-hug
 private struct LiveButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -585,7 +574,6 @@ private struct LiveButton: View {
     }
 }
 
-// Behavior: h-exp, v-hug
 private struct TimeBar: View {
     @ObservedObject var player: Player
     @ObservedObject var visibilityTracker: VisibilityTracker
@@ -603,7 +591,6 @@ private struct TimeBar: View {
     }
 }
 
-// Behavior: h-exp, v-hug
 private struct TimeSlider: View {
     private static let shortFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -630,6 +617,7 @@ private struct TimeSlider: View {
     @ObservedObject var progressTracker: ProgressTracker
     @ObservedObject var visibilityTracker: VisibilityTracker
     @State private var streamType: StreamType = .unknown
+    @State private var buffer: Float = 0
 
     private var formattedElapsedTime: String? {
         if streamType == .onDemand {
@@ -653,27 +641,30 @@ private struct TimeSlider: View {
     }
 
     var body: some View {
-        PlaybackSlider(
-            progressTracker: progressTracker,
-            timeRanges: player.metadata.timeRanges,
-            minimumValueLabel: {
-                label(withText: formattedElapsedTime)
-            },
-            maximumValueLabel: {
-                label(withText: formattedTotalTime)
-            },
-            onDragging: {
-                if UserDefaults.standard.seekBehavior == .deferred {
-                    visibilityTracker.reset()
+        HStack {
+            label(withText: formattedElapsedTime)
+            slider()
+            label(withText: formattedTotalTime)
+        }
+        .frame(height: 30)
+        .accessibilityRepresentation {
+            Slider(
+                progressTracker: progressTracker,
+                label: {
+                    Text("Current position")
+                },
+                minimumValueLabel: {
+                    label(withText: formattedElapsedTime)
+                },
+                maximumValueLabel: {
+                    label(withText: formattedTotalTime)
                 }
-            }
-        )
-        .foregroundColor(.white)
-        .tint(.white)
-        .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
-        .opacity(isVisible ? 1 : 0)
+            )
+        }
+        .accessibilityAddTraits(.updatesFrequently)
         ._debugBodyCounter(color: .blue)
         .onReceive(player: player, assign: \.streamType, to: $streamType)
+        .onReceive(player: player, assign: \.buffer, to: $buffer)
     }
 
     private static func formattedTime(_ time: CMTime, duration: CMTime) -> String? {
@@ -684,6 +675,69 @@ private struct TimeSlider: View {
         else {
             return longFormatter.string(from: time.seconds)!
         }
+    }
+
+    private static func color(for timeRange: TimeRange) -> Color {
+        switch timeRange.kind {
+        case .credits:
+            return .orange
+        case .blocked:
+            return .red
+        }
+    }
+
+    private func slider() -> some View {
+        HSlider(value: $progressTracker.progress) { progress, width in
+            ZStack(alignment: .leading) {
+                sliderBackground()
+                sliderTimeRanges(width: width)
+                sliderBuffer(width: width)
+                sliderTrack(progress: progress, width: width)
+            }
+            .frame(height: progressTracker.isInteracting ? 16 : 8)
+            .clipShape(.capsule)
+            .opacity(isVisible ? 1 : 0)
+            .animation(.easeInOut(duration: 0.3), values: progressTracker.isInteracting, isVisible)
+        }
+        .onEditingChanged { isEditing in
+            progressTracker.isInteracting = isEditing
+        }
+        .onDragging(visibilityTracker.reset)
+    }
+
+    private func sliderBackground() -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .opacity(0.1)
+            .background(.ultraThinMaterial)
+    }
+
+    @ViewBuilder
+    private func sliderTimeRanges(width: CGFloat) -> some View {
+        if progressTracker.timeRange.isValid {
+            let duration = progressTracker.timeRange.duration.seconds
+            ForEach(player.metadata.timeRanges, id: \.self) { timeRange in
+                Rectangle()
+                    .foregroundColor(Self.color(for: timeRange))
+                    .opacity(0.7)
+                    .frame(width: width * CGFloat(timeRange.duration.seconds / duration))
+                    .offset(x: width * CGFloat(timeRange.start.seconds / duration))
+            }
+        }
+    }
+
+    private func sliderBuffer(width: CGFloat) -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .opacity(0.3)
+            .frame(width: CGFloat(buffer) * width)
+            .animation(.linear(duration: 0.5), value: buffer)
+    }
+
+    private func sliderTrack(progress: CGFloat, width: CGFloat) -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .frame(width: progress * width)
     }
 
     @ViewBuilder
@@ -780,7 +834,6 @@ private struct MainSystemView: View {
 
 #endif
 
-// Behavior: h-hug, v-hug
 private struct PlaybackMessageView: View {
     let title: String
     let subtitle: String?
@@ -809,7 +862,6 @@ private struct PlaybackMessageView: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
@@ -884,8 +936,6 @@ private struct ErrorView: View {
     }
 }
 
-/// A playback view with standard controls. Requires an ancestor view to own the player to be used.
-/// Behavior: h-exp, v-exp
 struct PlaybackView: View {
     enum Layout {
         case inline
@@ -929,7 +979,6 @@ struct PlaybackView: View {
         _layout = layout
     }
 
-    @ViewBuilder
     private func mainView() -> some View {
         ZStack {
 #if os(iOS)

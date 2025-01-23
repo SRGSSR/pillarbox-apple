@@ -30,14 +30,12 @@ struct SingleView: View {
         self.player = player
     }
 
-    @ViewBuilder
     private func videoView(player: Player) -> some View {
         VideoView(player: player)
             .supportsPictureInPicture(supportsPictureInPicture)
             .accessibilityAddTraits(.isButton)
     }
 
-    @ViewBuilder
     private func playbackButton(player: Player) -> some View {
         Button(action: player.togglePlayPause) {
             Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")

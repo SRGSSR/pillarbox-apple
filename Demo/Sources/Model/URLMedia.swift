@@ -76,7 +76,7 @@ enum URLMedia {
         title: "Bip",
         subtitle: "Content with opening and closing credits",
         imageUrl: "https://www.rts.ch/2023/05/01/10/22/10253916.image/16x9",
-        type: .url("https://rts-vod-amd.akamaized.net/ch/13986102/d13bcd9d-7030-3f5a-b28c-f9abfa6795b8/master.m3u8"),
+        type: .url("https://rts-vod-amd.akamaized.net/ch/10004745/c0547249-1328-308d-a392-47e0b86968bb/master.m3u8"),
         timeRanges: [
             .init(kind: .credits(.opening), start: .zero, end: .init(value: 9, timescale: 1)),
             .init(kind: .credits(.closing), start: .init(value: 163, timescale: 1), end: .init(value: 183_680, timescale: 1000))

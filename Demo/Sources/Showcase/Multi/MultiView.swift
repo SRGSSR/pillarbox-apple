@@ -38,7 +38,6 @@ struct MultiView: View {
         .tracked(name: "multi")
     }
 
-    @ViewBuilder
     private func playerView(player: Player, position: PlayerPosition) -> some View {
         SingleView(player: player)
             .supportsPictureInPicture(model.activePosition == position)
@@ -49,14 +48,12 @@ struct MultiView: View {
             .saturation(model.activePosition == position ? 1 : 0)
     }
 
-    @ViewBuilder
     private func swapButton() -> some View {
         Button(action: model.swap) {
             Label("Swap", systemImage: "rectangle.2.swap")
         }
     }
 
-    @ViewBuilder
     private func routePickerView() -> some View {
         RoutePickerView(prioritizesVideoDevices: true)
             .tint(.white)

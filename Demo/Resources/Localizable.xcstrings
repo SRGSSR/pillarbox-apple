@@ -91,6 +91,9 @@
     "Curr. %.02f Mbps" : {
 
     },
+    "Current position" : {
+
+    },
     "Data volume" : {
 
     },
@@ -263,9 +266,6 @@
 
     },
     "Previous" : {
-
-    },
-    "Progress" : {
 
     },
     "Project" : {

@@ -38,7 +38,6 @@ private struct ChapterCell: View {
         .animation(.defaultLinear, value: isHighlighted)
     }
 
-    @ViewBuilder
     private func imageView() -> some View {
         ZStack {
             Color(white: 1, opacity: 0.2)
@@ -112,7 +111,6 @@ private struct ChaptersList: View {
         ._debugBodyCounter(color: .purple)
     }
 
-    @ViewBuilder
     private func chaptersList() -> some View {
         HStack(spacing: 15) {
             ForEach(chapters, id: \.timeRange) { chapter in

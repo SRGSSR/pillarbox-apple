@@ -140,7 +140,6 @@ private struct MediaEntryView: View {
         .padding(constant(iOS: 0, tvOS: 30))
     }
 
-    @ViewBuilder
     private func kindPicker() -> some View {
         Picker("Kind", selection: $kind) {
             Text("URL").tag(Kind.url)
@@ -221,7 +220,6 @@ struct ExamplesView: View {
         section(title: "Corner cases", medias: model.cornerCaseMedias)
     }
 
-    @ViewBuilder
     private func section(title: String, medias: [Media]) -> some View {
         CustomSection(title) {
             ForEach(medias, id: \.self) { media in

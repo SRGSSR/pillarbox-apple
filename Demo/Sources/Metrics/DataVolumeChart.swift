@@ -27,7 +27,6 @@ struct DataVolumeChart: View {
         ByteCountFormatStyle().format(metrics.last?.total.numberOfBytesTransferred ?? 0)
     }
 
-    @ViewBuilder
     private func chart() -> some View {
         Chart(Array(metrics.suffix(limit).enumerated()), id: \.offset) { metrics in
             BarMark(
@@ -43,7 +42,6 @@ struct DataVolumeChart: View {
         .padding(.vertical)
     }
 
-    @ViewBuilder
     private func summary() -> some View {
         Text("Total \(bytesTransferred)")
             .font(.caption2)
