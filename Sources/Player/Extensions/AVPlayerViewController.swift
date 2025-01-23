@@ -7,7 +7,18 @@
 import AVKit
 import SwiftUI
 
+private var kContentOverlayViewControllerKey: Void?
+
 extension AVPlayerViewController {
+    private var contentOverlayViewController: UIViewController? {
+        get {
+            objc_getAssociatedObject(self, &kContentOverlayViewControllerKey) as? UIViewController
+        }
+        set {
+            objc_setAssociatedObject(self, &kContentOverlayViewControllerKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
     func stopPictureInPicture() {
         guard allowsPictureInPicturePlayback else { return }
         allowsPictureInPicturePlayback = false
@@ -37,16 +48,15 @@ extension AVPlayerViewController {
 
     func setVideoOverlay<VideoOverlay>(_ videoOverlay: VideoOverlay) where VideoOverlay: View {
         guard let contentOverlayView else { return }
-        if let hostController = children.compactMap({ $0 as? UIHostingController<VideoOverlay> }).first {
+        if let hostController = contentOverlayViewController as? UIHostingController<VideoOverlay> {
             hostController.rootView = videoOverlay
         }
         else {
             let hostController = UIHostingController(rootView: videoOverlay)
             guard let hostView = hostController.view else { return }
             hostView.backgroundColor = .clear
-            addChild(hostController)
             contentOverlayView.addSubview(hostView)
-            hostController.didMove(toParent: self)
+            contentOverlayViewController = hostController
 
             hostView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
