@@ -6,6 +6,7 @@
 
 import SwiftUI
 
+#if os(iOS)
 /// A horizontal control for selecting a value from a bounded linear range of values.
 struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
     @Binding private var value: Value
@@ -112,3 +113,4 @@ extension HSlider {
     .padding(.horizontal)
     .preferredColorScheme(.dark)
 }
+#endif
