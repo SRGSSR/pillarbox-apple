@@ -49,13 +49,6 @@ public struct ComScoreLabels {
         extract()
     }
 
-    // MARK: Page view labels
-
-    /// The value of `c8` (page title).
-    public var c8: String? {
-        extract()
-    }
-
     // MARK: Streaming labels
 
     /// The value of `ns_st_id` (media player session identifier).

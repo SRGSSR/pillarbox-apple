@@ -13,9 +13,6 @@ import UIKit
 ///
 /// For more information please read the <doc:page-views-article> article.
 public protocol PageViewTracking {
-    /// The comScore page view data.
-    var comScorePageView: ComScorePageView { get }
-
     /// The Commanders Act page view data.
     var commandersActPageView: CommandersActPageView { get }
 
@@ -85,10 +82,7 @@ extension UIViewController {
     /// useful when automatic tracking has been disabled by setting `isTrackedAutomatically` to `false`.
     public func trackPageView() {
         guard let trackedViewController = self as? PageViewTracking else { return }
-        Analytics.shared.trackPageView(
-            comScore: trackedViewController.comScorePageView,
-            commandersAct: trackedViewController.commandersActPageView
-        )
+        Analytics.shared.trackPageView(commandersAct: trackedViewController.commandersActPageView)
     }
 }
 
@@ -104,10 +98,7 @@ extension UIViewController {
 
     func trackAutomaticPageView() {
         guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
-        Analytics.shared.trackPageView(
-            comScore: trackedViewController.comScorePageView,
-            commandersAct: trackedViewController.commandersActPageView
-        )
+        Analytics.shared.trackPageView(commandersAct: trackedViewController.commandersActPageView)
     }
 
     func recursivelyTrackAutomaticPageViews() {

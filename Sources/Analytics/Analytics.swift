@@ -85,16 +85,8 @@ public class Analytics {
 
     /// Tracks a page view.
     ///
-    /// - Parameters:
-    ///   - comScorePageView: comScore page view data.
-    ///   - commandersActPageView: Commanders Act page view data.
-    public func trackPageView(
-        comScore comScorePageView: ComScorePageView,
-        commandersAct commandersActPageView: CommandersActPageView
-    ) {
-        comScoreService.trackPageView(
-            comScorePageView.merging(globals: dataSource?.comScoreGlobals)
-        )
+    /// - Parameter commandersActPageView: The Commanders Act page view data.
+    public func trackPageView(commandersAct commandersActPageView: CommandersActPageView) {
         commandersActService.trackPageView(
             commandersActPageView.merging(globals: dataSource?.commandersActGlobals)
         )
@@ -102,7 +94,7 @@ public class Analytics {
 
     /// Sends an event.
     /// 
-    /// - Parameter commandersActEvent: Commanders Act event data
+    /// - Parameter commandersActEvent: The Commanders Act event data.
     public func sendEvent(commandersAct commandersActEvent: CommandersActEvent) {
         commandersActService.sendEvent(
             commandersActEvent.merging(globals: dataSource?.commandersActGlobals)

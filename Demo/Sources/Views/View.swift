@@ -70,10 +70,7 @@ extension View {
     }
 
     func tracked(name: String, levels: [String] = []) -> some View {
-        tracked(
-            comScore: .init(name: name),
-            commandersAct: .init(name: name, type: "content", levels: levels)
-        )
+        tracked(commandersAct: .init(name: name, type: "content", levels: levels))
     }
 
     func pulseSymbolEffect17() -> some View {
