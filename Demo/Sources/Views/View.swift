@@ -90,7 +90,6 @@ extension View {
 }
 
 extension View {
-    @ViewBuilder
     func headerStyle() -> some View {
 #if os(tvOS)
         self

@@ -21,7 +21,6 @@ struct MediaRequestChart: View {
         metrics.last?.total.numberOfMediaRequests ?? 0
     }
 
-    @ViewBuilder
     private func chart() -> some View {
         Chart(Array(metrics.suffix(limit).enumerated()), id: \.offset) { metrics in
             BarMark(
@@ -36,7 +35,6 @@ struct MediaRequestChart: View {
         .padding(.vertical)
     }
 
-    @ViewBuilder
     private func summary() -> some View {
         Text("Total \(total)")
             .font(.caption2)

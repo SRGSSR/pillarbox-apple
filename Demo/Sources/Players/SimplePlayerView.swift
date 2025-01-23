@@ -28,21 +28,18 @@ struct SimplePlayerView: View {
         .tracked(name: "simple-player")
     }
 
-    @ViewBuilder
     private func videoView() -> some View {
         VideoView(player: player)
             .background(.black)
             .ignoresSafeArea()
     }
 
-    @ViewBuilder
     private func progressView() -> some View {
         ProgressView()
             .opacity(isBusy ? 1 : 0)
             .accessibilityHidden(true)
     }
 
-    @ViewBuilder
     private func playbackButton() -> some View {
         Button(action: player.togglePlayPause) {
             Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")

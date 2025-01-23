@@ -64,7 +64,6 @@ struct OptInView: View {
         .tracked(name: "tracking")
     }
 
-    @ViewBuilder
     private func audiovisualBackgroundPlaybackPolicyPicker() -> some View {
         Picker("Audiovisual background policy", selection: $audiovisualBackgroundPlaybackPolicy) {
             Text("Automatic").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic)
@@ -73,7 +72,6 @@ struct OptInView: View {
         }
     }
 
-    @ViewBuilder
     private func actionAtItemEndPicker() -> some View {
         Picker("Action at item end", selection: $actionAtItemEnd) {
             Text("Advance").tag(AVPlayer.ActionAtItemEnd.advance)

@@ -41,14 +41,12 @@ struct ShowcaseView: View {
 #endif
     }
 
-    @ViewBuilder
     private func cell(title: String, subtitle: String? = nil, destination: RouterDestination) -> some View {
         Cell(title: title, subtitle: subtitle) {
             router.presented = destination
         }
     }
 
-    @ViewBuilder
     private func layoutsSection() -> some View {
         CustomSection("Layouts") {
             cell(
@@ -74,7 +72,6 @@ struct ShowcaseView: View {
         }
     }
 
-    @ViewBuilder
     private func playlistsSection() -> some View {
         // swiftlint:disable:previous function_body_length
         // swiftlint:disable:next closure_body_length
@@ -131,7 +128,6 @@ struct ShowcaseView: View {
         .sourceCode(of: PlaylistView.self)
     }
 
-    @ViewBuilder
     private func embeddingsSection() -> some View {
         // swiftlint:disable:next closure_body_length
         CustomSection("Embeddings") {
@@ -185,7 +181,6 @@ struct ShowcaseView: View {
         }
     }
 
-    @ViewBuilder
     private func pictureInPictureCornerCases() -> some View {
         CustomSection("Picture in Picture Corner Cases") {
             cell(
@@ -224,7 +219,6 @@ struct ShowcaseView: View {
         }
     }
 
-    @ViewBuilder
     private func systemPlayerSection() -> some View {
         CustomSection("System player (using Pillarbox)") {
             cell(
@@ -259,7 +253,6 @@ struct ShowcaseView: View {
         .sourceCode(of: SystemPlayerView.self)
     }
 
-    @ViewBuilder
     private func miscellaneousPlayerFeaturesSection() -> some View {
         CustomSection("Miscellaneous player features (using Pillarbox)") {
             cell(
@@ -278,7 +271,6 @@ struct ShowcaseView: View {
         }
     }
 
-    @ViewBuilder
     private func customPictureInPictureSection() -> some View {
         // swiftlint:disable:next closure_body_length
         CustomSection("Custom Player and Picture in Picture (PiP) support") {
@@ -335,7 +327,6 @@ struct ShowcaseView: View {
         }
     }
 
-    @ViewBuilder
     private func systemPictureInPictureSection() -> some View {
         CustomSection("System Player and Picture in Picture (PiP) support") {
             cell(
@@ -374,7 +365,6 @@ struct ShowcaseView: View {
         }
     }
 
-    @ViewBuilder
     private func vanillaPlayerSection() -> some View {
         CustomSection("System player (using AVPlayer)") {
             cell(
@@ -401,7 +391,6 @@ struct ShowcaseView: View {
         .sourceCode(of: VanillaPlayerView.self)
     }
 
-    @ViewBuilder
     private func trackingSection() -> some View {
         CustomSection("Opt-in features") {
             cell(

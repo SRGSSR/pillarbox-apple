@@ -112,7 +112,6 @@ private struct MainView: View {
             .onEnded(visibilityTracker.reset)
     }
 
-    @ViewBuilder
     private func main() -> some View {
         ZStack {
             video()
@@ -132,7 +131,6 @@ private struct MainView: View {
         .supportsHighSpeed(!isMonoscopic, for: player)
     }
 
-    @ViewBuilder
     private func metadata() -> some View {
         VStack(alignment: .leading) {
             HStack {
@@ -156,7 +154,6 @@ private struct MainView: View {
         .opacity(shouldHideInterface ? 0 : 1)
     }
 
-    @ViewBuilder
     private func bottomBar() -> some View {
         VStack(spacing: 20) {
             skipButton()
@@ -168,7 +165,6 @@ private struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
-    @ViewBuilder
     private func bottomControls() -> some View {
         VStack(spacing: 0) {
             HStack(alignment: .bottom) {
@@ -189,7 +185,6 @@ private struct MainView: View {
         .opacity(isUserInterfaceHidden ? 0 : 1)
     }
 
-    @ViewBuilder
     private func bottomButtons() -> some View {
         HStack(spacing: 20) {
             LiveButton(player: player, progressTracker: progressTracker)
@@ -199,7 +194,6 @@ private struct MainView: View {
         .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
     }
 
-    @ViewBuilder
     private func topBar() -> some View {
         HStack {
             HStack(spacing: 20) {
@@ -237,7 +231,6 @@ private struct MainView: View {
             .frame(width: 20)
     }
 
-    @ViewBuilder
     private func artwork(for imageSource: ImageSource) -> some View {
         LazyImage(source: imageSource) { image in
             image
@@ -248,7 +241,6 @@ private struct MainView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    @ViewBuilder
     private func video() -> some View {
         ZStack {
             if player.mediaType == .audio {
@@ -270,7 +262,6 @@ private struct MainView: View {
         .animation(.easeIn(duration: 0.2), values: player.mediaType, player.isExternalPlaybackActive)
     }
 
-    @ViewBuilder
     private func controls() -> some View {
         ZStack {
             Color(white: 0, opacity: 0.5)
@@ -280,14 +271,12 @@ private struct MainView: View {
         .opacity(shouldHideInterface ? 0 : 1)
     }
 
-    @ViewBuilder
     private func skipButton() -> some View {
         SkipButton(player: player, progressTacker: progressTracker)
             .padding(.trailing, 20)
             .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
-    @ViewBuilder
     private func image(name: String) -> some View {
         Image(systemName: name)
             .resizable()
@@ -1002,7 +991,6 @@ struct PlaybackView: View {
         _layout = layout
     }
 
-    @ViewBuilder
     private func mainView() -> some View {
         ZStack {
 #if os(iOS)

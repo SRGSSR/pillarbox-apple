@@ -146,7 +146,6 @@ struct SettingsView: View {
         versionSection()
     }
 
-    @ViewBuilder
     private func applicationSection() -> some View {
         Section {
             Toggle(isOn: $isPresenterModeEnabled) {
@@ -159,7 +158,6 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
     private func playerSection() -> some View {
         Section {
             Toggle(isOn: $isSmartNavigationEnabled) {
@@ -174,7 +172,6 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
     private func seekBehaviorPicker() -> some View {
         Picker("Seek behavior", selection: $seekBehaviorSetting) {
             ForEach(SeekBehaviorSetting.allCases, id: \.self) { setting in
@@ -186,7 +183,6 @@ struct SettingsView: View {
 #endif
     }
 
-    @ViewBuilder
     private func qualityPicker() -> some View {
         Picker("Quality", selection: $qualitySetting) {
             ForEach(QualitySetting.allCases, id: \.self) { setting in
@@ -198,7 +194,6 @@ struct SettingsView: View {
 #endif
     }
 
-    @ViewBuilder
     private func debuggingSection() -> some View {
         Section {
             Button(action: simulateMemoryWarning) {
@@ -212,7 +207,6 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
     private func playbackHudSection() -> some View {
         Section {
             Toggle("Enabled", isOn: $playbackHudEnabled)
@@ -254,7 +248,6 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
     private func numberEditor(_ key: LocalizedStringKey, value: Binding<Int>) -> some View {
 #if os(iOS)
         Stepper(value: value) {
@@ -272,7 +265,6 @@ struct SettingsView: View {
 #endif
     }
 
-    @ViewBuilder
     private func numberTextField(value: Binding<Int>) -> some View {
         TextField("Value", value: value, format: .number)
             .multilineTextAlignment(.trailing)
@@ -280,7 +272,6 @@ struct SettingsView: View {
             .keyboardType(.numberPad)
     }
 
-    @ViewBuilder
     private func versionSection() -> some View {
         Section {
             InfoCell(title: "Application", value: "\(version), build \(buildVersion)")
@@ -298,7 +289,6 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
     private func versionFooter() -> some View {
         HStack(spacing: 0) {
             Text("Made with ")
@@ -313,7 +303,6 @@ struct SettingsView: View {
     }
 
 #if os(iOS)
-    @ViewBuilder
     private func gitHubSection() -> some View {
         Section("GitHub") {
             Button("Project") { GitHub.open(.project) }

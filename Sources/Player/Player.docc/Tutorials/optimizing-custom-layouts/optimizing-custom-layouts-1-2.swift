@@ -19,7 +19,6 @@ struct ContentView: View {
             .bind(progressTracker, to: player)
     }
 
-    @ViewBuilder
     private func slider() -> some View {
         Slider(progressTracker: progressTracker)
             ._debugBodyCounter(color: .blue)

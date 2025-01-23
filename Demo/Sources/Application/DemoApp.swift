@@ -29,7 +29,6 @@ struct DemoApp: App {
         }
     }
 
-    @ViewBuilder
     private func examplesTab() -> some View {
         RoutedNavigationStack(keyPath: \.examplesPath) {
             ExamplesView()
@@ -39,7 +38,6 @@ struct DemoApp: App {
         }
     }
 
-    @ViewBuilder
     private func showcaseTab() -> some View {
         RoutedNavigationStack(keyPath: \.showcasePath) {
             ShowcaseView()
@@ -49,7 +47,6 @@ struct DemoApp: App {
         }
     }
 
-    @ViewBuilder
     private func contentListsTab() -> some View {
         RoutedNavigationStack(keyPath: \.contentListsPath) {
             ContentListsView()
@@ -59,7 +56,6 @@ struct DemoApp: App {
         }
     }
 
-    @ViewBuilder
     private func searchTab() -> some View {
         RoutedNavigationStack(keyPath: \.searchPath) {
             SearchView()
@@ -69,7 +65,6 @@ struct DemoApp: App {
         }
     }
 
-    @ViewBuilder
     private func settingsTab() -> some View {
         RoutedNavigationStack(keyPath: \.settingsPath) {
             SettingsView()

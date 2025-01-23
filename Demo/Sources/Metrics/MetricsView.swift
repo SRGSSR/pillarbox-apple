@@ -201,7 +201,6 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
     private func experienceStartupTimesSection() -> some View {
         Section {
             ExperienceStartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
@@ -211,7 +210,6 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
     private func serviceStartupTimesSection() -> some View {
         Section {
             ServiceStartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
@@ -250,7 +248,6 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
     private func indicatedBitrateChartSection() -> some View {
         Section {
             IndicatedBitrateChart(metrics: metrics, limit: metricsCollector.limit)
@@ -259,7 +256,6 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
     private func observedBitrateChartSection() -> some View {
         Section {
             ObservedBitrateChart(metrics: metrics, limit: metricsCollector.limit)
@@ -268,7 +264,6 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
     private func dataVolumeChartSection() -> some View {
         Section {
             DataVolumeChart(metrics: metrics, limit: metricsCollector.limit)
@@ -277,7 +272,6 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
     private func mediaRequestsChartSection() -> some View {
         Section {
             MediaRequestChart(metrics: metrics, limit: metricsCollector.limit)
@@ -286,7 +280,6 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
     private func stallsChartSection() -> some View {
         Section {
             StallsChart(metrics: metrics, limit: metricsCollector.limit)
@@ -295,7 +288,6 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
     private func frameDropsChartSection() -> some View {
         Section {
             FrameDropsChart(metrics: metrics, limit: metricsCollector.limit)
