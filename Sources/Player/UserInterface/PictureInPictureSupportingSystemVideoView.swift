@@ -24,16 +24,16 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
 
     func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
         let controller = PictureInPicture.shared.system.makeHostViewController(for: player)
-        context.coordinator.controller = controller.viewController
+        context.coordinator.controller = controller.playerViewController
         return controller
     }
 
     func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
-        uiViewController.viewController?.player = player.systemPlayer
-        uiViewController.viewController?.videoGravity = gravity
-        uiViewController.viewController?.setVideoOverlay(videoOverlay)
+        uiViewController.playerViewController?.player = player.systemPlayer
+        uiViewController.playerViewController?.videoGravity = gravity
+        uiViewController.playerViewController?.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-        uiViewController.viewController?.contextualActions = contextualActions
+        uiViewController.playerViewController?.contextualActions = contextualActions
 #endif
         context.coordinator.player = player
     }
