@@ -8,7 +8,7 @@ import AVKit
 import SwiftUI
 
 // swiftlint:disable:next type_name
-struct PictureInPictureSupportingSystemVideoView<VideoOvelay>: UIViewControllerRepresentable where VideoOvelay: View {
+struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
 #if os(tvOS)
     typealias Coordinator = AVPlayerViewControllerSpeedCoordinator
 #else
@@ -18,7 +18,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOvelay>: UIViewControllerR
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
-    let videoOverlay: VideoOvelay
+    let videoOverlay: VideoOverlay
 
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: Coordinator) {
         PictureInPicture.shared.system.dismantleHostViewController(uiViewController)
