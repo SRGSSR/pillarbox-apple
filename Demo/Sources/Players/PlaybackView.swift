@@ -696,12 +696,6 @@ private struct TimeSlider: View {
         }
     }
 
-    private static func bounds(for timeRange: TimeRange, duration: Double) -> ClosedRange<Float> {
-        let lowerBound = Float(timeRange.start.seconds / duration)
-        let upperBound = Float(timeRange.end.seconds / duration)
-        return lowerBound...upperBound
-    }
-
     private static func color(for timeRange: TimeRange) -> Color {
         switch timeRange.kind {
         case .credits:

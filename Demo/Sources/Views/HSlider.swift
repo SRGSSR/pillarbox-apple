@@ -7,7 +7,7 @@
 import SwiftUI
 
 /// A horizontal control for selecting a value from a bounded linear range of values.
-public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
+struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
     @Binding private var value: Value
     private let bounds: ClosedRange<Value>
     private let content: (CGFloat, CGFloat) -> Content
@@ -24,7 +24,7 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
         return Self.progress(for: value, in: bounds)
     }
 
-    public var body: some View {
+    var body: some View {
         GeometryReader { geometry in
             content(.init(progress), geometry.size.width)
                 // Use center alignment instead of top leading alignment used by `GeometryReader`.
@@ -48,7 +48,7 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
     ///   - bounds: The range of the valid values. Defaults to `0...1`.
     ///   - content: A view that displays the progress (a value in `0...1`) corresponding to the current value within
     ///     `bounds`. The width of view to draw in is provided as parameter.
-    public init(
+    init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
@@ -85,7 +85,7 @@ public struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Va
     }
 }
 
-public extension HSlider {
+extension HSlider {
     /// Adds an action to perform when editing begins or ends.
     func onEditingChanged(_ action: @escaping (Bool) -> Void) -> Self {
         var slider = self
