@@ -13,11 +13,9 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
     let contextualActions: [UIAction]
     let videoOverlay: VideoOverlay
 
-#if os(tvOS)
-    func makeCoordinator() -> AVPlayerViewControllerSpeedCoordinator {
+    func makeCoordinator() -> SystemVideoViewCoordinator {
         .init()
     }
-#endif
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
@@ -25,6 +23,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
 #if os(iOS)
         controller.updatesNowPlayingInfoCenter = false
 #endif
+        context.coordinator.controller = controller
         return controller
     }
 
@@ -34,8 +33,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
         uiViewController.contextualActions = contextualActions
-        context.coordinator.player = player
-        context.coordinator.controller = uiViewController
 #endif
+        context.coordinator.player = player
     }
 }

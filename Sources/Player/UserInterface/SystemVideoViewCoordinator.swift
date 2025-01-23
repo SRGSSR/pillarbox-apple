@@ -8,23 +8,29 @@ import AVKit
 import Combine
 import UIKit
 
-@available(iOS, unavailable)
-final class AVPlayerViewControllerSpeedCoordinator {
+final class SystemVideoViewCoordinator {
     var player: Player? {
         didSet {
+#if os(tvOS)
             configurePlaybackSpeedPublisher(player: player, controller: controller)
+#endif
         }
     }
 
     var controller: AVPlayerViewController? {
         didSet {
+#if os(tvOS)
             configurePlaybackSpeedPublisher(player: player, controller: controller)
+#endif
         }
     }
 
     private var cancellable: AnyCancellable?
+}
 
-    private func configurePlaybackSpeedPublisher(player: Player?, controller: AVPlayerViewController?) {
+@available(iOS, unavailable)
+private extension SystemVideoViewCoordinator {
+    func configurePlaybackSpeedPublisher(player: Player?, controller: AVPlayerViewController?) {
         guard let player, let controller else {
             cancellable = nil
             return
@@ -37,11 +43,8 @@ final class AVPlayerViewControllerSpeedCoordinator {
             .receiveOnMainThread()
             .assign(to: \.transportBarCustomMenuItems, on: controller)
     }
-}
 
-@available(iOS, unavailable)
-private extension AVPlayerViewControllerSpeedCoordinator {
-    static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
+    private static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
         Set(
             AVPlaybackSpeed.systemDefaultSpeeds
                 .map(\.rate)
@@ -49,7 +52,7 @@ private extension AVPlayerViewControllerSpeedCoordinator {
         )
     }
 
-    static func speedMenuItems(
+    private static func speedMenuItems(
         for player: Player,
         range: ClosedRange<Float>,
         speed: Float
