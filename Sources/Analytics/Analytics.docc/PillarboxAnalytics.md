@@ -56,6 +56,7 @@ Before submitting your app to production, validate it, especially after signific
 ### Configuration
 
 - ``AnalyticsDataSource``
+- ``AnalyticsDelegate``
 - ``CommandersActGlobals``
 - ``ComScoreGlobals``
 - ``ComScoreConsent``
