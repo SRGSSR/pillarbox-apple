@@ -6,10 +6,17 @@
 
 /// A Commanders Act page view.
 public struct CommandersActPageView {
-    let name: String
-    let type: String
-    let levels: [String]
-    let labels: [String: String]
+    /// The page name.
+    public let name: String
+
+    /// The page type (e.g., _Article_).
+    public let type: String
+
+    /// Additional information associated with the page view.
+    public let levels: [String]
+
+    /// The page levels.
+    public let labels: [String: String]
 
     /// Creates a Commanders Act page view.
     /// 

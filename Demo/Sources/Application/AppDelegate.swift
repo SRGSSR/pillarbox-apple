@@ -6,12 +6,14 @@
 
 import AVFAudio
 import Combine
+import os
 import PillarboxAnalytics
 import ShowTime
 import SRGDataProvider
 import UIKit
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
+    private static let logger = Logger(category: "AppDelegate")
     private var cancellables = Set<AnyCancellable>()
 
     // swiftlint:disable:next discouraged_optional_collection
@@ -48,7 +50,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             sourceKey: .developmentSourceKey,
             appSiteName: "pillarbox-demo-apple"
         )
-        try? Analytics.shared.start(with: configuration, dataSource: self)
+        try? Analytics.shared.start(with: configuration, dataSource: self, delegate: self)
     }
 }
 
@@ -63,5 +65,15 @@ extension AppDelegate: AnalyticsDataSource {
         .init(consentServices: ["service1", "service2", "service3"], labels: [
             "demo_key": "demo_value"
         ])
+    }
+}
+
+extension AppDelegate: AnalyticsDelegate {
+    func didTrackPageView(commandersAct commandersActPageView: CommandersActPageView) {
+        Self.logger.debug("[didTrackPageView] commandersAct: \(commandersActPageView.name)")
+    }
+
+    func didSendEvent(commandersAct commandersActEvent: CommandersActEvent) {
+        Self.logger.debug("[didSendEvent] commandersAct: \(commandersActEvent.name)")
     }
 }

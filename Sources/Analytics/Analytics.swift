@@ -57,6 +57,7 @@ public class Analytics {
     private let commandersActService = CommandersActService()
 
     private weak var dataSource: AnalyticsDataSource?
+    private weak var delegate: AnalyticsDelegate?
 
     private init() {}
 
@@ -64,18 +65,20 @@ public class Analytics {
     ///
     /// - Parameters:
     ///   - configuration: The configuration to use.
-    ///   - dataSource: The data source to use.
+    ///   - dataSource: The object that acts as the data source of the analytics.
+    ///   - delegate: The object that acts as the delegate of the analytics.
     ///
     /// This method must be called from your `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`
     /// delegate method implementation, otherwise the behavior is undefined.
     ///
     /// The method throws if called more than once.
-    public func start(with configuration: Configuration, dataSource: AnalyticsDataSource? = nil) throws {
+    public func start(with configuration: Configuration, dataSource: AnalyticsDataSource? = nil, delegate: AnalyticsDelegate? = nil) throws {
         guard self.configuration == nil else {
             throw AnalyticsError.alreadyStarted
         }
         self.configuration = configuration
         self.dataSource = dataSource
+        self.delegate = delegate
 
         UIViewController.setupViewControllerTracking()
 
@@ -90,22 +93,22 @@ public class Analytics {
         commandersActService.trackPageView(
             commandersActPageView.merging(globals: dataSource?.commandersActGlobals)
         )
+        delegate?.didTrackPageView(commandersAct: commandersActPageView)
     }
 
     /// Sends an event.
     /// 
     /// - Parameter commandersActEvent: The Commanders Act event data.
     public func sendEvent(commandersAct commandersActEvent: CommandersActEvent) {
+        sendCommandersActEvent(commandersActEvent)
+        delegate?.didSendEvent(commandersAct: commandersActEvent)
+    }
+}
+
+extension Analytics {
+    func sendCommandersActEvent(_ commandersActEvent: CommandersActEvent) {
         commandersActService.sendEvent(
             commandersActEvent.merging(globals: dataSource?.commandersActGlobals)
         )
     }
-}
-
-public extension String {
-    /// The source key for apps in production.
-    static let productionSourceKey = "1b30366c-9e8d-4720-8b12-4165f468f9ae"
-
-    /// The source key for apps in development.
-    static let developmentSourceKey = "39ae8f94-595c-4ca4-81f7-fb7748bd3f04"
 }

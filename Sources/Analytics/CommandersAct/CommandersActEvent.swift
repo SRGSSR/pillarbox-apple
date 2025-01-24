@@ -6,8 +6,11 @@
 
 /// A Commanders Act event.
 public struct CommandersActEvent {
-    let name: String
-    let labels: [String: String]
+    /// The event name.
+    public let name: String
+
+    /// Additional information associated with the event.
+    public let labels: [String: String]
 
     /// Creates a Commanders Act event.
     ///
