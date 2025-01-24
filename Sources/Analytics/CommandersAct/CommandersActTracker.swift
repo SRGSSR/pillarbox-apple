@@ -81,7 +81,7 @@ private extension CommandersActTracker {
         case (.none, _) where event != .play, (.eof, _) where event != .play:
             break
         default:
-            Analytics.shared.sendEvent(commandersAct: .init(
+            Analytics.shared.sendCommandersActEvent(.init(
                 name: event.rawValue,
                 labels: labels(from: properties)
             ))

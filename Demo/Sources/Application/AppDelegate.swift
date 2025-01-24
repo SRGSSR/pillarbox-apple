@@ -70,6 +70,10 @@ extension AppDelegate: AnalyticsDataSource {
 
 extension AppDelegate: AnalyticsDelegate {
     func didTrackPageView(commandersAct commandersActPageView: CommandersActPageView) {
-        Self.logger.debug("[didTrackPageView] commandersActPageView: \(commandersActPageView.name)")
+        Self.logger.debug("[didTrackPageView] commandersAct: \(commandersActPageView.name)")
+    }
+
+    func didSendEvent(commandersAct commandersActEvent: CommandersActEvent) {
+        Self.logger.debug("[didSendEvent] commandersAct: \(commandersActEvent.name)")
     }
 }
