@@ -48,7 +48,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             sourceKey: .developmentSourceKey,
             appSiteName: "pillarbox-demo-apple"
         )
-        try? Analytics.shared.start(with: configuration, dataSource: self)
+        try? Analytics.shared.start(with: configuration, dataSource: self, delegate: self)
     }
 }
 
@@ -63,5 +63,16 @@ extension AppDelegate: AnalyticsDataSource {
         .init(consentServices: ["service1", "service2", "service3"], labels: [
             "demo_key": "demo_value"
         ])
+    }
+}
+
+extension AppDelegate: AnalyticsDelegate {
+    func didTrackPageView(commandersAct commandersActPageView: CommandersActPageView) {
+        // TODO: Should we expose the name or even all properties publicly?
+        let name = Mirror(reflecting: commandersActPageView)
+            .children
+            .first { $0.label == "name" }?
+            .value
+        print("[didTrackPageView] commandersActPageView: \(String(describing: name))")
     }
 }
