@@ -93,6 +93,7 @@ public class Analytics {
         commandersActService.trackPageView(
             commandersActPageView.merging(globals: dataSource?.commandersActGlobals)
         )
+        delegate?.didTrackPageView(commandersAct: commandersActPageView)
     }
 
     /// Sends an event.
