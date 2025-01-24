@@ -6,12 +6,14 @@
 
 import AVFAudio
 import Combine
+import os
 import PillarboxAnalytics
 import ShowTime
 import SRGDataProvider
 import UIKit
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
+    private static let logger = Logger(category: "AppDelegate")
     private var cancellables = Set<AnyCancellable>()
 
     // swiftlint:disable:next discouraged_optional_collection
@@ -68,11 +70,6 @@ extension AppDelegate: AnalyticsDataSource {
 
 extension AppDelegate: AnalyticsDelegate {
     func didTrackPageView(commandersAct commandersActPageView: CommandersActPageView) {
-        // TODO: Should we expose the name or even all properties publicly?
-        let name = Mirror(reflecting: commandersActPageView)
-            .children
-            .first { $0.label == "name" }?
-            .value
-        print("[didTrackPageView] commandersActPageView: \(String(describing: name))")
+        Self.logger.debug("[didTrackPageView] commandersActPageView: \(commandersActPageView.name)")
     }
 }
