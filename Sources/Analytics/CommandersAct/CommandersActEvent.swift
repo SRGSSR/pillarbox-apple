@@ -8,6 +8,7 @@
 public struct CommandersActEvent {
     /// The event name.
     public let name: String
+
     /// Additional information associated with the event.
     public let labels: [String: String]
 
