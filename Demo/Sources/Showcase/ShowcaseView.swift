@@ -399,7 +399,7 @@ struct ShowcaseView: View {
             )
             cell(
                 title: "Video URN",
-                destination: .optInPlayer(media: URNMedia.onDemandVerticalVideo)
+                destination: .optInPlayer(media: URNMedia.onDemandHorizontalVideo)
             )
         }
         .sourceCode(of: OptInView.self)
