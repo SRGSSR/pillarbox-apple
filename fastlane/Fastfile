@@ -4,7 +4,7 @@ default_platform(:ios)
 
 # -- Global constants
 
-APPLICATION_XCCONFIG_FILEPATH = 'Demo/Xcode/Shared/Targets/Application.xcconfig'
+APPLICATION_XCCONFIG_FILEPATH = 'Demo/Xcode/Application.xcconfig'
 
 # -- Platform-specific constants
 
@@ -91,10 +91,9 @@ def bump_testflight_build_number(platform_id, configuration_id)
     app_identifier: APP_IDENTIFIERS[configuration_id],
     platform: TESTFLIGHT_PLATFORMS[platform_id]
   ) + 1
-  update_xcconfig_value(
-    path: APPLICATION_XCCONFIG_FILEPATH,
-    name: 'CURRENT_PROJECT_VERSION',
-    value: build_number.to_s
+  increment_build_number(
+    build_number: build_number,
+    xcodeproj: 'Demo/Pillarbox-demo.xcodeproj'
   )
   build_number
 end

@@ -294,18 +294,21 @@
 		6F05B8E42887E935005D75E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = 6FD6CADF2CD8B61A00ED6B32 /* Xcode */;
-			baseConfigurationReferenceRelativePath = Application/Demo.debug.xcconfig;
+			baseConfigurationReferenceRelativePath = Application.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Preview Content\"";
 				DEVELOPMENT_TEAM = ABW92QGFZ7;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					MediaPlayer,
@@ -317,24 +320,28 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 16.0;
 			};
 			name = Debug;
 		};
 		6F05B8E52887E935005D75E3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = 6FD6CADF2CD8B61A00ED6B32 /* Xcode */;
-			baseConfigurationReferenceRelativePath = Application/Demo.release.xcconfig;
+			baseConfigurationReferenceRelativePath = Application.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Preview Content\"";
 				DEVELOPMENT_TEAM = ABW92QGFZ7;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					MediaPlayer,
@@ -346,6 +353,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 16.0;
 			};
 			name = Release;
 		};
@@ -409,18 +417,21 @@
 		6F45DB8D2893B717008ACCE6 /* Nightly */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = 6FD6CADF2CD8B61A00ED6B32 /* Xcode */;
-			baseConfigurationReferenceRelativePath = Application/Demo.nightly.xcconfig;
+			baseConfigurationReferenceRelativePath = Application.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Preview Content\"";
 				DEVELOPMENT_TEAM = ABW92QGFZ7;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					MediaPlayer,
@@ -432,6 +443,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 16.0;
 			};
 			name = Nightly;
 		};

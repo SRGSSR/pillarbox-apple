@@ -30,8 +30,6 @@
 	<string>14.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>MMFServiceURL</key>
-	<string>$(MMF_SERVICE_URL)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
