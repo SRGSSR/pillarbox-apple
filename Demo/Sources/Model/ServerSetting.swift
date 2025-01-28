@@ -25,8 +25,6 @@ enum ServerSetting: Int, CaseIterable {
     case samStage
     case samTest
 
-    case mmf
-
     var title: String {
         switch self {
         case .ilProduction:
@@ -53,8 +51,6 @@ enum ServerSetting: Int, CaseIterable {
             return "SAM Stage"
         case .samTest:
             return "SAM Test"
-        case .mmf:
-            return "MMF"
         }
     }
 
@@ -78,8 +74,6 @@ enum ServerSetting: Int, CaseIterable {
             return SRGIntegrationLayerStagingServiceURL().appending(component: "sam")
         case .samTest:
             return SRGIntegrationLayerTestServiceURL().appending(component: "sam")
-        case .mmf:
-            return URL(string: Bundle.main.infoDictionary?["MMFServiceURL"] as! String)!
         }
     }
 

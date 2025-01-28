@@ -7,5 +7,3 @@ CURRENT_PROJECT_VERSION = 1
 // Deployment targets
 IPHONEOS_DEPLOYMENT_TARGET = 16.0
 TVOS_DEPLOYMENT_TARGET = 16.0
-
-MMF_SERVICE_URL = https:/$()/play-mmf.herokuapp.com
