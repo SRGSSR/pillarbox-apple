@@ -34,12 +34,12 @@ public extension PlayerItem {
                 CommandersActTracker.adapter { $0.analyticsMetadata },
                 MetricsTracker.adapter(
                     configuration: .init(
+                        identifier: urn,
                         serviceUrl: URL(string: "https://monitoring.pillarbox.ch/api/events")!
                     ),
                     behavior: .mandatory
                 ) { metadata in
                     MetricsTracker.Metadata(
-                        identifier: metadata.mainChapter.urn,
                         metadataUrl: metadata.mediaCompositionUrl,
                         assetUrl: metadata.resource?.url
                     )
