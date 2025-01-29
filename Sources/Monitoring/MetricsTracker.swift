@@ -76,16 +76,19 @@ public final class MetricsTracker: PlayerItemTracker {
 public extension MetricsTracker {
     /// Configuration associated with the tracker.
     struct Configuration {
+        let identifier: String
         let serviceUrl: URL
         let heartbeatInterval: TimeInterval
 
         /// Creates the configuration.
         ///
         /// - Parameters:
+        ///   - identifier: An identifier for the content.
         ///   - serviceUrl: The URL service endpoint where data must be sent.
         ///   - heartbeatInterval: The interval between heartbeats, in seconds.
-        public init(serviceUrl: URL, heartbeatInterval: TimeInterval = 30) {
+        public init(identifier: String, serviceUrl: URL, heartbeatInterval: TimeInterval = 30) {
             assert(heartbeatInterval >= 1)
+            self.identifier = identifier
             self.serviceUrl = serviceUrl
             self.heartbeatInterval = heartbeatInterval
         }
@@ -93,18 +96,15 @@ public extension MetricsTracker {
 
     /// Metadata associated with the tracker.
     struct Metadata {
-        let identifier: String?
         let metadataUrl: URL?
         let assetUrl: URL?
 
         /// Creates metadata.
         ///
         /// - Parameters:
-        ///   - identifier: An identifier for the content.
         ///   - metadataUrl: The URL where metadata has been fetched.
         ///   - assetUrl: The URL of the asset being played.
-        public init(identifier: String? = nil, metadataUrl: URL? = nil, assetUrl: URL? = nil) {
-            self.identifier = identifier
+        public init(metadataUrl: URL? = nil, assetUrl: URL? = nil) {
             self.metadataUrl = metadataUrl
             self.assetUrl = assetUrl
         }
@@ -127,7 +127,7 @@ private extension MetricsTracker {
             player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
             media: .init(
                 assetUrl: metadata?.assetUrl,
-                id: metadata?.identifier,
+                id: configuration.identifier,
                 metadataUrl: metadata?.metadataUrl,
                 origin: Bundle.main.bundleIdentifier
             ),

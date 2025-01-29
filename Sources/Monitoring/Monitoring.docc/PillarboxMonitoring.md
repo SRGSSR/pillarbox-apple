@@ -24,9 +24,9 @@ To monitor playback, attach a ``MetricsTracker`` to a `PlayerItem`, configured w
 ```swift
 let item = PlayerItem.simple(url: URL(string: "https://your.domain.com/content.m3u8")!, trackerAdapters: [
     MetricsTracker.adapter(
-        configuration: .init(serviceUrl: URL(string: "https://your.domain.com/monitoring")!)
+        configuration: .init(identifier: "your-content-identifier", serviceUrl: URL(string: "https://your.domain.com/monitoring")!)
     ) { metadata in
-        .init(identifier: "your-content-identifier")
+        .init(assetUrl: URL(string: "https://your.domain.com/content.m3u8")!)
     }
 ])
 ```
