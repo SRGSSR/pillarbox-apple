@@ -8,8 +8,7 @@ import SwiftUI
 
 @main
 struct DemoApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self)
-    private var appDelegate
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
 
     @StateObject private var router = Router()
 
