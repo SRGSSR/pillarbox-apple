@@ -43,8 +43,7 @@ extension AsyncPublisher {
 
         private func performOperation() async {
             do {
-                let output = try await operation()
-                send(output)
+                send(try await operation())
                 subscriber?.receive(completion: .finished)
             }
             catch {
