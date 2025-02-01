@@ -31,7 +31,7 @@ extension VanillaPlayerView: SourceCodeViewable {
 
 // Workaround for FB13126425. Makes it possible to use `AVPlayer` as `@ObservableObject` to avoid memory leaks
 // in modal presentations.
-extension AVPlayer: ObservableObject {}
+extension AVPlayer: @retroactive ObservableObject {}
 
 #Preview {
     VanillaPlayerView(item: URLMedia.appleAdvanced_16_9_TS_HLS.playerItem()!)
