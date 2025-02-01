@@ -10,7 +10,7 @@ import Foundation
 /// A publisher that delivers output from an asynchronous work unit.
 public struct AsyncPublisher<Output, Failure>: Publisher where Failure: Error {
     private let operation: () async throws(Failure) -> Output
-    
+
     /// Creates a publisher from a given asynchronous work unit.
     ///
     /// - Parameter operation: The work unit to perform.

@@ -6,20 +6,13 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 
 extension AVAsynchronousKeyValueLoading {
     /// A publisher emitting values for a given asynchronously loaded property.
     func propertyPublisher<T>(_ property: AVAsyncProperty<Self, T>) -> AnyPublisher<T, Error> {
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.load(property)
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
+        AsyncPublisher {
+            try await self.load(property)
         }
         .eraseToAnyPublisher()
     }
@@ -29,16 +22,8 @@ extension AVAsynchronousKeyValueLoading {
         _ propertyA: AVAsyncProperty<Self, A>,
         _ propertyB: AVAsyncProperty<Self, B>
     ) -> AnyPublisher<(A, B), Error> {
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.load(propertyA, propertyB)
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
+        AsyncPublisher {
+            try await self.load(propertyA, propertyB)
         }
         .eraseToAnyPublisher()
     }
@@ -50,16 +35,8 @@ extension AVAsynchronousKeyValueLoading {
         _ propertyC: AVAsyncProperty<Self, C>
     ) -> AnyPublisher<(A, B, C), Error> {
         // swiftlint:disable:previous large_tuple
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.load(propertyA, propertyB, propertyC)
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
+        AsyncPublisher {
+            try await self.load(propertyA, propertyB, propertyC)
         }
         .eraseToAnyPublisher()
     }
@@ -72,16 +49,8 @@ extension AVAsynchronousKeyValueLoading {
         _ propertyD: AVAsyncProperty<Self, D>
     ) -> AnyPublisher<(A, B, C, D), Error> {
         // swiftlint:disable:previous large_tuple
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.load(propertyA, propertyB, propertyC, propertyD)
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
+        AsyncPublisher {
+            try await self.load(propertyA, propertyB, propertyC, propertyD)
         }
         .eraseToAnyPublisher()
     }
@@ -95,16 +64,8 @@ extension AVAsynchronousKeyValueLoading {
         _ propertyE: AVAsyncProperty<Self, E>
     ) -> AnyPublisher<(A, B, C, D, E), Error> {
         // swiftlint:disable:previous large_tuple
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.load(propertyA, propertyB, propertyC, propertyD, propertyE)
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
+        AsyncPublisher {
+            try await self.load(propertyA, propertyB, propertyC, propertyD, propertyE)
         }
         .eraseToAnyPublisher()
     }
@@ -119,16 +80,8 @@ extension AVAsynchronousKeyValueLoading {
         _ propertyF: AVAsyncProperty<Self, F>
     ) -> AnyPublisher<(A, B, C, D, E, F), Error> {
         // swiftlint:disable:previous large_tuple
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.load(propertyA, propertyB, propertyC, propertyD, propertyE, propertyF)
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
+        AsyncPublisher {
+            try await self.load(propertyA, propertyB, propertyC, propertyD, propertyE, propertyF)
         }
         .eraseToAnyPublisher()
     }
@@ -144,18 +97,8 @@ extension AVAsynchronousKeyValueLoading {
         _ propertyG: AVAsyncProperty<Self, G>
     ) -> AnyPublisher<(A, B, C, D, E, F, G), Error> {
         // swiftlint:disable:previous large_tuple
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.load(
-                        propertyA, propertyB, propertyC, propertyD, propertyE, propertyF, propertyG
-                    )
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
+        AsyncPublisher {
+            try await self.load(propertyA, propertyB, propertyC, propertyD, propertyE, propertyF, propertyG)
         }
         .eraseToAnyPublisher()
     }
@@ -172,18 +115,8 @@ extension AVAsynchronousKeyValueLoading {
         _ propertyH: AVAsyncProperty<Self, H>
     ) -> AnyPublisher<(A, B, C, D, E, F, G, H), Error> {
         // swiftlint:disable:previous large_tuple
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.load(
-                        propertyA, propertyB, propertyC, propertyD, propertyE, propertyF, propertyG, propertyH
-                    )
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
+        AsyncPublisher {
+            try await self.load(propertyA, propertyB, propertyC, propertyD, propertyE, propertyF, propertyG, propertyH)
         }
         .eraseToAnyPublisher()
     }
