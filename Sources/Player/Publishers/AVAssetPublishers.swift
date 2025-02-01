@@ -30,16 +30,8 @@ extension AVAsset {
     }
 
     private func mediaSelectionGroupPublisher(for characteristic: AVMediaCharacteristic) -> AnyPublisher<AVMediaSelectionGroup?, Error> {
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.loadMediaSelectionGroup(for: characteristic)
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
+        AsyncPublisher {
+            try await self.loadMediaSelectionGroup(for: characteristic)
         }
         .eraseToAnyPublisher()
     }
