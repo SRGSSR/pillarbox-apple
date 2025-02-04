@@ -696,6 +696,7 @@ private struct TimeSlider: View {
             }
             .frame(height: progressTracker.isInteracting ? 16 : 8)
             .clipShape(.capsule)
+            .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
             .opacity(isVisible ? 1 : 0)
             .animation(.easeInOut(duration: 0.3), values: progressTracker.isInteracting, isVisible)
         }
