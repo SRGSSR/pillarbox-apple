@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
       "state" : {
-        "revision" : "adeebce59de7017eb0abe2b6a74346ca8371ffcc",
-        "version" : "6.14.0"
+        "revision" : "56d8a44c387fee1f7ef1786f13f8960b85109d31",
+        "version" : "6.14.1"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble.git",
       "state" : {
-        "revision" : "f3bedd7c2a858f4513e7d004def200a69238db2f",
-        "version" : "13.6.2"
+        "revision" : "7795df4fff1a9cd231fe4867ae54f4dc5f5734f9",
+        "version" : "13.7.1"
       }
     },
     {
@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SRGSSR/srgdataprovider-apple.git",
       "state" : {
-        "revision" : "a315d507213ed16adc3d827aadc6b266c6e21275",
-        "version" : "19.0.6"
+        "revision" : "9ea26675cdfa11571b52f772f68d62e52a004e2c",
+        "version" : "19.0.7"
       }
     },
     {
