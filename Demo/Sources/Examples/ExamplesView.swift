@@ -50,12 +50,9 @@ private struct MediaEntryView: View {
         case url
         case tokenProtected
         case encrypted
-        case ilProductionUrn
-        case ilStageUrn
-        case ilTestUrn
-        case samProductionUrn
-        case samStageUrn
-        case samTestUrn
+        case productionUrn
+        case stageUrn
+        case testUrn
     }
 
     @State private var kind: Kind = .url
@@ -74,18 +71,12 @@ private struct MediaEntryView: View {
         case .encrypted:
             guard let url, let certificateUrl else { return URLMedia.unknown }
             return .init(title: "Encrypted", type: .encryptedUrl(url, certificateUrl: certificateUrl))
-        case .ilProductionUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .ilProduction))
-        case .ilStageUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .ilStage))
-        case .ilTestUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .ilTest))
-        case .samProductionUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .samProduction))
-        case .samStageUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .samStage))
-        case .samTestUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .samTest))
+        case .productionUrn:
+            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .production))
+        case .stageUrn:
+            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .stage))
+        case .testUrn:
+            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .test))
         }
     }
 
@@ -103,7 +94,7 @@ private struct MediaEntryView: View {
 
     private var textPlaceholder: String {
         switch kind {
-        case .ilProductionUrn, .ilStageUrn, .ilTestUrn, .samProductionUrn, .samStageUrn, .samTestUrn:
+        case .productionUrn, .stageUrn, .testUrn:
             return "URN"
         default:
             return "URL"
@@ -112,7 +103,7 @@ private struct MediaEntryView: View {
 
     private var isValid: Bool {
         switch kind {
-        case .ilProductionUrn, .ilStageUrn, .ilTestUrn, .samProductionUrn, .samStageUrn, .samTestUrn:
+        case .productionUrn, .stageUrn, .testUrn:
             return !text.isEmpty
         case .encrypted:
             return url != nil && certificateUrl != nil
@@ -146,13 +137,9 @@ private struct MediaEntryView: View {
             Text("URL with SRG SSR token protection").tag(Kind.tokenProtected)
             Text("URL with SRG SSR DRM encryption").tag(Kind.encrypted)
             Divider()
-            Text("URN (IL Production)").tag(Kind.ilProductionUrn)
-            Text("URN (IL Stage)").tag(Kind.ilStageUrn)
-            Text("URN (IL Test)").tag(Kind.ilTestUrn)
-            Divider()
-            Text("URN (SAM Production)").tag(Kind.samProductionUrn)
-            Text("URN (SAM Stage)").tag(Kind.samStageUrn)
-            Text("URN (SAM Test)").tag(Kind.samTestUrn)
+            Text("URN (Production)").tag(Kind.productionUrn)
+            Text("URN (Stage)").tag(Kind.stageUrn)
+            Text("URN (Test)").tag(Kind.testUrn)
         }
 #if os(tvOS)
         .pickerStyle(.navigationLink)

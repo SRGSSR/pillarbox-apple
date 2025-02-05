@@ -379,22 +379,13 @@
     "URN" : {
 
     },
-    "URN (IL Production)" : {
+    "URN (Production)" : {
 
     },
-    "URN (IL Stage)" : {
+    "URN (Stage)" : {
 
     },
-    "URN (IL Test)" : {
-
-    },
-    "URN (SAM Production)" : {
-
-    },
-    "URN (SAM Stage)" : {
-
-    },
-    "URN (SAM Test)" : {
+    "URN (Test)" : {
 
     },
     "Use a proxy tool to observe events." : {
