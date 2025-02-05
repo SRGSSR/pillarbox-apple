@@ -2,10 +2,6 @@
 
 default_platform(:ios)
 
-# -- Global constants
-
-APPLICATION_XCCONFIG_FILEPATH = 'Demo/Xcode/Application.xcconfig'
-
 # -- Platform-specific constants
 
 PLATFORMS = {
@@ -50,15 +46,6 @@ APP_IDENTIFIERS = {
 
 def api_key_filepath
   File.expand_path('../Configuration/AppStoreConnect_API_Key.p8')
-end
-
-# -- xcconfig management
-
-def xcconfig_build_number
-  get_xcconfig_value(
-    path: APPLICATION_XCCONFIG_FILEPATH,
-    name: 'CURRENT_PROJECT_VERSION'
-  )
 end
 
 # -- fastlane helpers
@@ -172,11 +159,12 @@ end
 
 def deliver_demo_release(platform_id)
   ensure_configuration_availability
+  build_number = bump_testflight_build_number(platform_id, :release)
   add_version_badge(platform_id, 'v.', last_git_tag, 'blue')
   build_and_sign_app(platform_id, :release)
   reset_git_repo(skip_clean: true)
   upload_app_to_testflight
-  distribute_app_to_testers(platform_id, :release, xcconfig_build_number)
+  distribute_app_to_testers(platform_id, :release, build_number)
 end
 
 def run_package_tests(platform_id, scheme_name)
