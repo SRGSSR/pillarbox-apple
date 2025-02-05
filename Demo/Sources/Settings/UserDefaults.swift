@@ -43,7 +43,7 @@ extension UserDefaults {
     }
 
     @objc dynamic var serverSetting: ServerSetting {
-        .init(rawValue: integer(forKey: DemoSettingKey.serverSetting.rawValue)) ?? .ilProduction
+        .init(rawValue: integer(forKey: DemoSettingKey.serverSetting.rawValue)) ?? .production
     }
 
     @objc dynamic var qualitySetting: QualitySetting {
@@ -55,7 +55,7 @@ extension UserDefaults {
             DemoSettingKey.presenterModeEnabled.rawValue: false,
             DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.immediate.rawValue,
             DemoSettingKey.smartNavigationEnabled.rawValue: true,
-            DemoSettingKey.serverSetting.rawValue: ServerSetting.ilProduction.rawValue,
+            DemoSettingKey.serverSetting.rawValue: ServerSetting.production.rawValue,
             DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue
         ])
     }

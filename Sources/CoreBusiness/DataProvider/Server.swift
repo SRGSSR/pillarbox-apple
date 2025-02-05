@@ -24,25 +24,13 @@ public struct Server {
     public static let test = Self(baseUrl: URL(string: "https://il-test.srgssr.ch")!)
 
     private let baseUrl: URL
-    private let queryItems: [URLQueryItem]
-
-    /// This API will be removed in a future Pillarbox release. Do not use.
-    ///
-    /// > Warning: This API will be removed in a future Pillarbox release. Do not use.
-    public init(baseUrl: URL, queryItems: [URLQueryItem] = []) {
-        // FIXME: This initializer must be made private after SAM replaces the IL. The assertion must be removed at
-        //        the same time.
-        assert(Bundle.main.allowsReservedInitializer, "This API will be removed in a future Pillarbox release. Do not use.")
-        self.baseUrl = baseUrl
-        self.queryItems = queryItems
-    }
 
     func mediaCompositionRequest(forUrn urn: String) -> URLRequest {
         let url = baseUrl.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return .init(url: url)
         }
-        components.queryItems = queryItems + [
+        components.queryItems = [
             URLQueryItem(name: "onlyChapters", value: "true"),
             URLQueryItem(name: "vector", value: Self.vector)
         ]
@@ -56,7 +44,7 @@ public struct Server {
         ) else {
             return url
         }
-        components.queryItems = queryItems + [
+        components.queryItems = [
             URLQueryItem(name: "imageUrl", value: url.absoluteString),
             URLQueryItem(name: "format", value: "jpg"),
             URLQueryItem(name: "width", value: String(width.rawValue))
@@ -67,12 +55,5 @@ public struct Server {
         else {
             return url
         }
-    }
-}
-
-private extension Bundle {
-    var allowsReservedInitializer: Bool {
-        guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return false }
-        return bundleIdentifier.hasPrefix("ch.srgssr.Pillarbox-demo") || bundleIdentifier.hasPrefix("com.apple.dt.xctest.tool")
     }
 }
