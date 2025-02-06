@@ -7,23 +7,32 @@
 import Foundation
 
 /// A server environment.
-public struct Server {
+public enum Server {
+    /// Production.
+    case production
+
+    /// Stage.
+    case stage
+
+    /// Test.
+    case test
+
 #if os(iOS)
     private static let vector = "appplay"
 #else
     private static let vector = "tvplay"
 #endif
 
-    /// Production.
-    public static let production = Self(baseUrl: URL(string: "https://il.srgssr.ch")!)
-
-    /// Stage.
-    public static let stage = Self(baseUrl: URL(string: "https://il-stage.srgssr.ch")!)
-
-    /// Test.
-    public static let test = Self(baseUrl: URL(string: "https://il-test.srgssr.ch")!)
-
-    private let baseUrl: URL
+    var baseUrl: URL {
+        switch self {
+        case .production:
+            URL(string: "https://il.srgssr.ch")!
+        case .stage:
+            URL(string: "https://il-stage.srgssr.ch")!
+        case .test:
+            URL(string: "https://il-test.srgssr.ch")!
+        }
+    }
 
     func mediaCompositionRequest(forUrn urn: String) -> URLRequest {
         let url = baseUrl.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
