@@ -92,7 +92,8 @@ def build_demo_app(platform_id, configuration_id)
     scheme: 'Pillarbox-demo',
     destination: "generic/platform=#{PLATFORMS[platform_id]}",
     output_directory: 'Binaries',
-    skip_archive: true
+    skip_archive: true,
+    skip_codesigning: true
   )
 end
 
