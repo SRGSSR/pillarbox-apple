@@ -22,7 +22,7 @@ public class Analytics {
     /// application.
     public struct Configuration {
         let vendor: Vendor
-        let sourceKey: String
+        let sourceKey: SourceKey
         let appSiteName: String
 
         /// Creates an analytics configuration.
@@ -31,10 +31,9 @@ public class Analytics {
         ///
         /// - Parameters:
         ///   - vendor: The vendor which the application belongs to.
-        ///   - sourceKey: The source key. Production apps should use `.productionSourceKey` while apps in development
-        ///     should use `.developmentSourceKey`.
+        ///   - sourceKey: The source key.
         ///   - appSiteName: The app/site name.
-        public init(vendor: Vendor, sourceKey: String, appSiteName: String) {
+        public init(vendor: Vendor, sourceKey: SourceKey, appSiteName: String) {
             self.vendor = vendor
             self.sourceKey = sourceKey
             self.appSiteName = appSiteName

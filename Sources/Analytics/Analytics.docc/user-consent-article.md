@@ -21,16 +21,16 @@ To send user consent choices you must therefore register an ``AnalyticsDataSourc
 ```swift
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(
-        _ application: UIApplication, 
+        _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         let configuration = Analytics.Configuration(
             vendor: .SRF,
-            sourceKey: .productionSourceKey,
+            sourceKey: .production,
             appSiteName: "app-site-name"
         )
         try? Analytics.shared.start(with: configuration, dataSource: self)
-        
+
         // ...
     }
 }
