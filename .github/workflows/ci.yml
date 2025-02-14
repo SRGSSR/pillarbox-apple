@@ -39,8 +39,8 @@ jobs:
           check_name: 📋 Unit test report (${{ matrix.platform }})
           fail_on_failure: true
 
-  archive-demos:
-    name: 📦 Archives
+  build-demos:
+    name: 🔨 Builds
     runs-on: macos-latest
     strategy:
       matrix:
@@ -49,23 +49,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Add Apple certificate
-        run: |
-          Scripts/private/add-apple-certificate.sh \
-          $RUNNER_TEMP \
-          ${{ secrets.KEYCHAIN_PASSWORD }} \
-          ${{ secrets.APPLE_DEV_CERTIFICATE }} \
-          ${{ secrets.APPLE_DEV_CERTIFICATE_PASSWORD }}
-
-      - name: Configure environment
-        run: |
-          Scripts/private/configure-environment.sh \
-          ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-
-      - name: Archive the demo
-        run: Scripts/private/archive-demo.sh -p ${{ matrix.platform }}
-        env:
-          TEAM_ID: ${{ secrets.TEAM_ID }}
-          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ISSUER_ID }}
-          TESTFLIGHT_GROUPS: ${{ vars.TESTFLIGHT_GROUPS }}
+      - name: Build the demo
+        run: make build-${{ matrix.platform }}

@@ -85,7 +85,19 @@ def bump_testflight_build_number(platform_id, configuration_id)
   build_number
 end
 
-def build_and_sign_app(platform_id, configuration_id)
+def build_demo_app(platform_id, configuration_id)
+  build_app(
+    project: 'Demo/Pillarbox-demo.xcodeproj',
+    configuration: CONFIGURATIONS[configuration_id],
+    scheme: 'Pillarbox-demo',
+    destination: "generic/platform=#{PLATFORMS[platform_id]}",
+    output_directory: 'Binaries',
+    skip_archive: true,
+    skip_codesigning: true
+  )
+end
+
+def build_and_sign_demo_app(platform_id, configuration_id)
   build_app(
     project: 'Demo/Pillarbox-demo.xcodeproj',
     configuration: CONFIGURATIONS[configuration_id],
@@ -141,17 +153,16 @@ rescue StandardError => e
   UI.important('TestFlight external delivery was skipped because a build is already in review')
 end
 
-def archive_demo(platform_id)
-  ensure_configuration_availability
-  build_and_sign_app(platform_id, :nightly)
-  build_and_sign_app(platform_id, :release)
+def build_demo(platform_id)
+  build_demo_app(platform_id, :nightly)
+  build_demo_app(platform_id, :release)
 end
 
 def deliver_demo_nightly(platform_id)
   ensure_configuration_availability
   build_number = bump_testflight_build_number(platform_id, :nightly)
   add_version_badge(platform_id, last_git_tag, build_number, 'orange')
-  build_and_sign_app(platform_id, :nightly)
+  build_and_sign_demo_app(platform_id, :nightly)
   reset_git_repo(skip_clean: true)
   upload_app_to_testflight
   distribute_app_to_testers(platform_id, :nightly, build_number)
@@ -161,7 +172,7 @@ def deliver_demo_release(platform_id)
   ensure_configuration_availability
   build_number = bump_testflight_build_number(platform_id, :release)
   add_version_badge(platform_id, 'v.', last_git_tag, 'blue')
-  build_and_sign_app(platform_id, :release)
+  build_and_sign_demo_app(platform_id, :release)
   reset_git_repo(skip_clean: true)
   upload_app_to_testflight
   distribute_app_to_testers(platform_id, :release, build_number)
@@ -203,14 +214,14 @@ platform :ios do
     reset_git_repo(skip_clean: true)
   end
 
-  desc 'Archive the iOS demo app'
-  lane :archive_demo_ios do
-    archive_demo(:ios)
+  desc 'Build the iOS demo app'
+  lane :build_demo_ios do
+    build_demo(:ios)
   end
 
-  desc 'Archive the tvOS demo app'
-  lane :archive_demo_tvos do
-    archive_demo(:tvos)
+  desc 'Build the tvOS demo app'
+  lane :build_demo_tvos do
+    build_demo(:tvos)
   end
 
   desc 'Deliver an iOS demo app nightly build'

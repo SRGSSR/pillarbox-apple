@@ -11,6 +11,14 @@ test-streams-start:
 test-streams-stop:
 	@Scripts/public/test-streams.sh -k
 
+.PHONY: build-ios
+build-ios:
+	@Scripts/public/build-demo.sh -p ios
+
+.PHONY: build-tvos
+build-tvos:
+	@Scripts/public/build-demo.sh -p tvos
+
 .PHONY: test-ios
 test-ios:
 	@Scripts/public/test-streams.sh -s
@@ -54,11 +62,15 @@ help:
 	@echo "Default:"
 	@echo "  all                            Default target"
 	@echo
-	@echo "Test:"
+	@echo "Builds:"
+	@echo "  build-ios                      Build iOS demo app"
+	@echo "  build-tvos                     Build tvOS demo app"
+	@echo
+	@echo "Tests:"
 	@echo "  test-streams-start             Start test streams"
 	@echo "  test-streams-stop              Stop test streams"
-	@echo "  test-ios                       Build & run iOS unit tests"
-	@echo "  test-tvos                      Build & run tvOS unit tests"
+	@echo "  test-ios                       Build and run iOS unit tests"
+	@echo "  test-tvos                      Build and run tvOS unit tests"
 	@echo
 	@echo "Quality:"
 	@echo "  check-quality                  Run quality checks"
