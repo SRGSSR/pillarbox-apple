@@ -37,8 +37,8 @@ fi
 
 install_tools
 
-echo -e "Archiving $PLATFORM demo..."
+echo -e "Building $PLATFORM demo..."
 bundle config set path '.bundle'
 bundle install
-bundle exec fastlane "archive_demo_$PLATFORM"
+bundle exec fastlane "build_demo_$PLATFORM"
 echo "... done."
