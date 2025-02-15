@@ -273,7 +273,7 @@ private struct MainView: View {
     }
 
     private func skipButton() -> some View {
-        SkipButton(player: player, progressTacker: progressTracker)
+        SkipButton(player: player, progressTracker: progressTracker)
             .padding(.trailing, 20)
             .frame(maxWidth: .infinity, alignment: .trailing)
     }
@@ -292,10 +292,10 @@ private struct MainView: View {
 
 private struct SkipButton: View {
     let player: Player
-    @ObservedObject var progressTacker: ProgressTracker
+    @ObservedObject var progressTracker: ProgressTracker
 
     private var skippableTimeRange: TimeRange? {
-        player.skippableTimeRange(at: progressTacker.time)
+        player.skippableTimeRange(at: progressTracker.time)
     }
 
     var body: some View {
