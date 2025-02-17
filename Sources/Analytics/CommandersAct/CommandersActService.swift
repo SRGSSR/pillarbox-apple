@@ -13,7 +13,7 @@ final class CommandersActService {
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
 
-        if let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) {
+        if let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey.rawValue) {
             serverSide.addPermanentData("app_library_version", withValue: Analytics.version)
             serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
             serverSide.addPermanentData("navigation_device", withValue: Self.device)

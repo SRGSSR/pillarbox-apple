@@ -27,7 +27,7 @@ class TestCase: XCTestCase {
         PollingDefaults.timeout = .seconds(20)
         PollingDefaults.pollInterval = .milliseconds(100)
         try? Analytics.shared.start(
-            with: .init(vendor: .SRG, sourceKey: .developmentSourceKey, appSiteName: "site"),
+            with: .init(vendor: .SRG, sourceKey: .development, appSiteName: "site"),
             dataSource: dataSource
         )
     }

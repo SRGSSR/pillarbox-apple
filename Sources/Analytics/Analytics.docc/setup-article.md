@@ -33,30 +33,30 @@ To enable measurements, you need to start the ``Analytics`` singleton. First, cr
 ```swift
 let configuration = Analytics.Configuration(
     vendor: .SRF,
-    sourceKey: .productionSourceKey,
+    sourceKey: .production,
     appSiteName: "app-site-name"
 )
 ```
 
 Provide the **vendor** publishing the app, the appropriate **source key**, and the **site name** for your app.
 
-> Note: Use `.productionSourceKey` for production apps. For development, set it to `.developmentSourceKey` to avoid contaminating production data.
+> Note: Use `.production` for production apps. For development, set it to `.development` to avoid contaminating production data.
 
 Next, initialize the tracker singleton in your `application(_:didFinishLaunchingWithOptions:)` method, located in your [application delegate](https://developer.apple.com/documentation/uikit/uiapplicationdelegate):
 
 ```swift
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(
-        _ application: UIApplication, 
+        _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         let configuration = Analytics.Configuration(
             vendor: .SRF,
-            sourceKey: .productionSourceKey,
+            sourceKey: .production,
             appSiteName: "app-site-name"
         )
         try? Analytics.shared.start(with: configuration)
-        
+
         // ...
     }
 }
