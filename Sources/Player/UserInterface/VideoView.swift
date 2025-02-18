@@ -18,6 +18,7 @@ public struct VideoView: View {
     private var supportsPictureInPicture = false
     private var orientation: SCNQuaternion = .monoscopicDefault
 
+    // swiftlint:disable:next missing_docs
     public var body: some View {
         ZStack {
             switch player.metadata.viewport {

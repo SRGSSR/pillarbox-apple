@@ -46,6 +46,7 @@ public final class PictureInPicture {
 }
 
 extension PictureInPicture: PictureInPictureDelegate {
+    // swiftlint:disable:next missing_docs
     public func pictureInPictureWillStart() {
         delegate?.pictureInPictureWillStart()
 
@@ -53,15 +54,18 @@ extension PictureInPicture: PictureInPictureDelegate {
         persisted?.pictureInPictureWillStart()
     }
 
+    // swiftlint:disable:next missing_docs
     public func pictureInPictureDidStart() {
         delegate?.pictureInPictureDidStart()
         persisted?.pictureInPictureDidStart()
     }
 
+    // swiftlint:disable:next missing_docs
     public func pictureInPictureControllerFailedToStart(with error: Error) {
         delegate?.pictureInPictureControllerFailedToStart(with: error)
     }
 
+    // swiftlint:disable:next missing_docs
     public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
         isRestored = true
         if let delegate {
@@ -79,11 +83,13 @@ extension PictureInPicture: PictureInPictureDelegate {
         }
     }
 
+    // swiftlint:disable:next missing_docs
     public func pictureInPictureWillStop() {
         delegate?.pictureInPictureWillStop()
         persisted?.pictureInPictureWillStop()
     }
 
+    // swiftlint:disable:next missing_docs
     public func pictureInPictureDidStop() {
         delegate?.pictureInPictureDidStop()
         if !isRestored {

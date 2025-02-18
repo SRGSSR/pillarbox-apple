@@ -28,6 +28,7 @@ public func beSimilarTo<T>(_ expectedValue: T?) -> Matcher<T> where T: Similar {
 }
 
 extension Array: Similar where Element: Similar {
+    // swiftlint:disable:next missing_docs
     public static func ~~ (lhs: Self, rhs: Self) -> Bool {
         guard lhs.count == rhs.count else { return false }
         return zip(lhs, rhs).allSatisfy(~~)
@@ -35,6 +36,7 @@ extension Array: Similar where Element: Similar {
 }
 
 extension Optional: Similar where Wrapped: Similar {
+    // swiftlint:disable:next missing_docs
     public static func ~~ (lhs: Wrapped?, rhs: Wrapped?) -> Bool {
         switch (lhs, rhs) {
         case (.none, .none):

@@ -18,6 +18,7 @@ public protocol ContainerPageViewTracking: UIViewController {
 }
 
 extension UINavigationController: ContainerPageViewTracking {
+    // swiftlint:disable:next missing_docs
     public var activeChildren: [UIViewController] {
         guard let topViewController else { return [] }
         return [topViewController]
@@ -25,6 +26,7 @@ extension UINavigationController: ContainerPageViewTracking {
 }
 
 extension UIPageViewController: ContainerPageViewTracking {
+    // swiftlint:disable:next missing_docs
     public var activeChildren: [UIViewController] {
         guard let viewController = viewControllers?.first else { return [] }
         return [viewController]
@@ -32,12 +34,14 @@ extension UIPageViewController: ContainerPageViewTracking {
 }
 
 extension UISplitViewController: ContainerPageViewTracking {
+    // swiftlint:disable:next missing_docs
     public var activeChildren: [UIViewController] {
         viewControllers
     }
 }
 
 extension UITabBarController: ContainerPageViewTracking {
+    // swiftlint:disable:next missing_docs
     public var activeChildren: [UIViewController] {
         guard let selectedViewController else { return [] }
         return [selectedViewController]

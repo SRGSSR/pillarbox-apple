@@ -19,6 +19,7 @@ public struct PictureInPictureButton<Content>: View where Content: View {
     @State private var isPossible = false
     @State private var isActive = false
 
+    // swiftlint:disable:next missing_docs
     public var body: some View {
         Group {
             if isPossible && PictureInPicture.shared.persistable != nil {

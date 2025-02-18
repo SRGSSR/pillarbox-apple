@@ -10,10 +10,19 @@
 public struct ComScoreHit {
     /// A name describing a comScore hit.
     public enum Name: String {
+        /// Play.
         case play
+
+        /// Rate change.
         case playrt
+
+        /// Pause.
         case pause
+
+        /// End.
         case end
+
+        /// View.
         case view
     }
 
@@ -31,6 +40,7 @@ public struct ComScoreHit {
 }
 
 extension ComScoreHit: CustomDebugStringConvertible {
+    // swiftlint:disable:next missing_docs
     public var debugDescription: String {
         name.rawValue
     }

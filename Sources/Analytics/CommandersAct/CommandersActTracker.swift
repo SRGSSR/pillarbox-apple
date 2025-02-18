@@ -22,14 +22,18 @@ public final class CommandersActTracker: PlayerItemTracker {
     private let heartbeat = CommandersActHeartbeat()
     private var cancellable: AnyCancellable?
 
+    // swiftlint:disable:next missing_docs
     public init(configuration: Void) {}
 
+    // swiftlint:disable:next missing_docs
     public func enable(for player: AVPlayer) {}
 
+    // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: [String: String]) {
         self.metadata = metadata
     }
 
+    // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: PlayerProperties) {
         if properties.isSeeking {
             notify(.seek, properties: properties)
@@ -48,8 +52,10 @@ public final class CommandersActTracker: PlayerItemTracker {
         }
     }
 
+    // swiftlint:disable:next missing_docs
     public func updateMetricEvents(to events: [MetricEvent]) {}
 
+    // swiftlint:disable:next missing_docs
     public func disable(with properties: PlayerProperties) {
         notify(.stop, properties: properties)
         reset()

@@ -55,16 +55,19 @@ public struct MetricEvent: Hashable {
         self.time = time
     }
 
+    // swiftlint:disable:next missing_docs
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }
 
+    // swiftlint:disable:next missing_docs
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 }
 
 extension MetricEvent.Kind: CustomStringConvertible {
+    // swiftlint:disable:next missing_docs
     public var description: String {
         switch self {
         case let .metadata(experience: experience, service: service):
@@ -106,6 +109,7 @@ extension MetricEvent: CustomStringConvertible {
         Self.dateFormatter.string(from: date)
     }
 
+    // swiftlint:disable:next missing_docs
     public var description: String {
         if let duration = Self.duration(from: time) {
             "[\(duration)] \(formattedDate) - \(kind.description)"
