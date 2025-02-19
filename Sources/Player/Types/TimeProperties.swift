@@ -26,7 +26,7 @@ extension TimeProperties {
     var buffer: Float {
         let duration = seekableTimeRange.duration
         guard loadedTimeRange.end.isNumeric, duration.isNumeric, duration != .zero else { return 0 }
-        return Float(loadedTimeRange.end.seconds / duration.seconds)
+        return Float(loadedTimeRange.end.seconds / duration.seconds).clamped(to: 0...1)
     }
 
     static func timeRange(from timeRanges: [NSValue]) -> CMTimeRange? {
