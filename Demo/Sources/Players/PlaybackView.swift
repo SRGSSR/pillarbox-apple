@@ -707,8 +707,7 @@ private struct TimeSlider: View {
     }
 
     private func sliderBackground() -> some View {
-        Rectangle()
-            .foregroundColor(.white)
+        Color.white
             .opacity(0.1)
             .background(.ultraThinMaterial)
     }
@@ -718,8 +717,7 @@ private struct TimeSlider: View {
         if progressTracker.timeRange.isValid {
             let duration = progressTracker.timeRange.duration.seconds
             ForEach(player.metadata.timeRanges, id: \.self) { timeRange in
-                Rectangle()
-                    .foregroundColor(Self.color(for: timeRange))
+                Self.color(for: timeRange)
                     .opacity(0.7)
                     .frame(width: width * CGFloat(timeRange.duration.seconds / duration))
                     .offset(x: width * CGFloat(timeRange.start.seconds / duration))
@@ -728,16 +726,14 @@ private struct TimeSlider: View {
     }
 
     private func sliderBuffer(width: CGFloat) -> some View {
-        Rectangle()
-            .foregroundColor(.white)
+        Color.white
             .opacity(0.3)
             .frame(width: CGFloat(buffer) * width)
             .animation(.linear(duration: 0.5), value: buffer)
     }
 
     private func sliderTrack(progress: CGFloat, width: CGFloat) -> some View {
-        Rectangle()
-            .foregroundColor(.white)
+        Color.white
             .frame(width: progress * width)
     }
 

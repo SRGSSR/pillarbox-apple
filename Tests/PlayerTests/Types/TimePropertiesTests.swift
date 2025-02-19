@@ -15,7 +15,7 @@ final class TimePropertiesTests: TestCase {
     }
 
     func testTimeRange() {
-        expect(TimeProperties.timeRange(from: [NSValue(timeRange: .finite)])).to(equal(.finite))
+        expect(TimeProperties.timeRange(from: [NSValue(timeRange: .oneSecond)])).to(equal(.oneSecond))
     }
 
     func testTimeRanges() {
@@ -34,7 +34,7 @@ final class TimePropertiesTests: TestCase {
     func testSeekableTimeRangeFallback() {
         expect(
             TimeProperties.timeRange(
-                loadedTimeRanges: [NSValue(timeRange: .finite)],
+                loadedTimeRanges: [NSValue(timeRange: .oneSecond)],
                 seekableTimeRanges: []
             )
         )
@@ -45,7 +45,7 @@ final class TimePropertiesTests: TestCase {
         expect(
             TimeProperties(
                 loadedTimeRanges: [],
-                seekableTimeRanges: [NSValue(timeRange: .finite)],
+                seekableTimeRanges: [NSValue(timeRange: .oneSecond)],
                 isPlaybackLikelyToKeepUp: true
             ).buffer
         )
@@ -55,8 +55,19 @@ final class TimePropertiesTests: TestCase {
     func testBuffer() {
         expect(
             TimeProperties(
-                loadedTimeRanges: [NSValue(timeRange: .finite)],
-                seekableTimeRanges: [NSValue(timeRange: .finite)],
+                loadedTimeRanges: [NSValue(timeRange: .oneSecond)],
+                seekableTimeRanges: [NSValue(timeRange: .oneSecond)],
+                isPlaybackLikelyToKeepUp: true
+            ).buffer
+        )
+        .to(equal(1))
+    }
+
+    func testBufferClamped() {
+        expect(
+            TimeProperties(
+                loadedTimeRanges: [NSValue(timeRange: .twoSeconds)],
+                seekableTimeRanges: [NSValue(timeRange: .oneSecond)],
                 isPlaybackLikelyToKeepUp: true
             ).buffer
         )
@@ -65,5 +76,6 @@ final class TimePropertiesTests: TestCase {
 }
 
 private extension CMTimeRange {
-    static let finite = Self(start: .zero, duration: .init(value: 1, timescale: 1))
+    static let oneSecond = Self(start: .zero, duration: .init(value: 1, timescale: 1))
+    static let twoSeconds = Self(start: .zero, duration: .init(value: 2, timescale: 1))
 }
