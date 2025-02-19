@@ -43,6 +43,7 @@ public struct ImageSource: Equatable {
         Self(kind: .image(image))
     }
 
+    // swiftlint:disable:next missing_docs
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.kind == rhs.kind
     }

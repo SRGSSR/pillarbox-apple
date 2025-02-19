@@ -18,6 +18,7 @@ public struct AsyncPublisher<Output, Failure>: Publisher where Failure: Error {
         self.operation = operation
     }
 
+    // swiftlint:disable:next missing_docs
     public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Failure, S.Input == Output {
         let subscription = AsyncPublisherSubscription(subscriber: subscriber, operation: operation)
         subscriber.receive(subscription: subscription)

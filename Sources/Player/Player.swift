@@ -245,6 +245,7 @@ public final class Player: ObservableObject, Equatable {
         self.init(items: [item], configuration: configuration)
     }
 
+    // swiftlint:disable:next missing_docs
     public static func == (lhs: Player, rhs: Player) -> Bool {
         lhs === rhs
     }

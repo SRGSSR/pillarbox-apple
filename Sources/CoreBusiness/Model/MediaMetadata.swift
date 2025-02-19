@@ -93,6 +93,7 @@ public struct MediaMetadata {
 }
 
 extension MediaMetadata: AssetMetadata {
+    // swiftlint:disable:next missing_docs
     public var playerMetadata: PlayerMetadata {
         .init(
             identifier: mediaComposition.chapterUrn,

@@ -16,6 +16,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var supportsPictureInPicture = false
     private var contextualActions: [UIAction] = []
 
+    // swiftlint:disable:next missing_docs
     public var body: some View {
         ZStack {
             if supportsPictureInPicture {

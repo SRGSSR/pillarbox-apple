@@ -7,6 +7,7 @@
 @testable import PillarboxMonitoring
 
 extension MetricPayload: CustomDebugStringConvertible {
+    // swiftlint:disable:next missing_docs
     public var debugDescription: String {
         eventName.rawValue
     }

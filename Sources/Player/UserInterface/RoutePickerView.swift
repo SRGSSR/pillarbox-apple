@@ -30,6 +30,7 @@ public struct RoutePickerView: View {
     private var prioritizesVideoDevices: Bool
     private var activeTintColor: Color?
 
+    // swiftlint:disable:next missing_docs
     public var body: some View {
         if !ProcessInfo.processInfo.isRunningOnMac {
             _RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices, activeTintColor: activeTintColor)

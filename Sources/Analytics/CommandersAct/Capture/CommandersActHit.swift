@@ -10,14 +10,31 @@
 public struct CommandersActHit {
     /// A name describing a Commanders Act hit.
     public enum Name: Equatable {
+        /// Play.
         case play
+
+        /// Pause.
         case pause
+
+        /// Seek.
         case seek
+
+        /// Stop.
         case stop
+
+        /// End.
         case eof
+
+        /// Heartbeat.
         case pos
+
+        /// Live heartbeat.
         case uptime
+
+        /// Page view.
         case page_view
+
+        /// Custom.
         case custom(String)
 
         /// Returns the hit raw representation.
@@ -85,6 +102,7 @@ public struct CommandersActHit {
 }
 
 extension CommandersActHit: CustomDebugStringConvertible {
+    // swiftlint:disable:next missing_docs
     public var debugDescription: String {
         name.rawValue
     }

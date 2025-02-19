@@ -71,6 +71,7 @@ public final class PlayerItem: Equatable {
         .assign(to: &$content)
     }
 
+    // swiftlint:disable:next missing_docs
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
         lhs === rhs
     }
@@ -324,6 +325,7 @@ extension PlayerItem {
 }
 
 extension PlayerItem: CustomDebugStringConvertible {
+    // swiftlint:disable:next missing_docs
     public var debugDescription: String {
         "\(id)"
     }

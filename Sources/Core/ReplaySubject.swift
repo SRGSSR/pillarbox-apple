@@ -24,6 +24,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
         buffer = .init(size: bufferSize)
     }
 
+    // swiftlint:disable:next missing_docs
     public func send(_ value: Output) {
         withLock(lock) {
             guard self.completion == nil else { return }
@@ -37,6 +38,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
         }
     }
 
+    // swiftlint:disable:next missing_docs
     public func send(completion: Subscribers.Completion<Failure>) {
         withLock(lock) {
             guard self.completion == nil else { return }
@@ -47,10 +49,12 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
         }
     }
 
+    // swiftlint:disable:next missing_docs
     public func send(subscription: Subscription) {
         subscription.request(.unlimited)
     }
 
+    // swiftlint:disable:next missing_docs
     public func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
         withLock(lock) {
             let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)

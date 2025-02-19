@@ -24,26 +24,31 @@ public final class MetricsTracker: PlayerItemTracker {
 
     private var cancellables = Set<AnyCancellable>()
 
+    // swiftlint:disable:next missing_docs
     public var sessionIdentifier: String? {
         session.id
     }
 
+    // swiftlint:disable:next missing_docs
     public init(configuration: Configuration) {
         self.configuration = configuration
     }
 
+    // swiftlint:disable:next missing_docs
     public func enable(for player: AVPlayer) {}
 
+    // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: Metadata) {
         self.metadata = metadata
     }
 
+    // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: PlayerProperties) {
         self.properties = properties
         updateStopwatch(with: properties)
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity missing_docs
     public func updateMetricEvents(to events: [MetricEvent]) {
         switch events.last?.kind {
         case .asset:
@@ -68,6 +73,7 @@ public final class MetricsTracker: PlayerItemTracker {
         }
     }
 
+    // swiftlint:disable:next missing_docs
     public func disable(with properties: PlayerProperties) {
         reset(with: properties)
     }

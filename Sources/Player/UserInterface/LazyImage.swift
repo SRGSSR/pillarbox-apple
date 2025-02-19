@@ -13,6 +13,7 @@ public struct LazyImage<Content>: View where Content: View {
     private let source: ImageSource
     private let content: (Image) -> Content
 
+    // swiftlint:disable:next missing_docs
     public var body: some View {
         if let image = source.image {
             content(Image(uiImage: image))
