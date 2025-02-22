@@ -22,13 +22,15 @@ PillarboxAnalytics enables app usage measurement through two main methods:
 - <doc:page-views-article>
 - <doc:events-article>
 
-> Note: Streaming data is automatically tracked when using SRG SSR content with the PillarboxCoreBusiness framework. Ensure tracking is set up correctly by referring to the <doc:setup-article> article.
+Streaming data is automatically tracked when using SRG SSR content with the PillarboxCoreBusiness framework. Ensure tracking is set up correctly by referring to the <doc:setup-article> article.
+
+> Warning: The Commanders Act SDK used by PillarboxAnalytics [misuses user defaults](https://github.com/CommandersAct/iOSV5/issues/19) to store frequently changing parameters. Consequently, each Commanders Act page view or event (including streaming events) triggers a user defaults mutation. To prevent subtle performance issues in your application, ensure it does not perform excessive work [in response to user defaults changes](https://developer.apple.com/documentation/foundation/userdefaults#2926902).
 
 ### Transparency and data protection
 
 To comply with Switzerland’s [New Federal Act on Data Protection (nFADP)](https://www.kmu.admin.ch/kmu/en/home/facts-and-trends/digitization/data-protection/new-federal-act-on-data-protection-nfadp.html), apps must integrate a user consent management system. For implementation details, refer to the <doc:user-consent-article> article.
 
-#### AdSupport and Identifier for Advertisers (IDFA)
+### AdSupport and Identifier for Advertisers (IDFA)
 
 The PillarboxAnalytics framework links against [AdSupport](https://developer.apple.com/documentation/adsupport), but it does not use or share the [IDFA](https://developer.apple.com/documentation/adsupport/asidentifiermanager/advertisingidentifier).
 
