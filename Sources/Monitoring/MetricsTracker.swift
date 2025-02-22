@@ -22,7 +22,6 @@ public final class MetricsTracker: PlayerItemTracker {
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
 
-    private let queue = DispatchQueue(label: "ch.srgssr.metricstracker")
     private var cancellables = Set<AnyCancellable>()
 
     // swiftlint:disable:next missing_docs
@@ -76,9 +75,7 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: PlayerProperties) {
-        queue.async {
-            self.reset(with: properties)
-        }
+        reset(with: properties)
     }
 }
 

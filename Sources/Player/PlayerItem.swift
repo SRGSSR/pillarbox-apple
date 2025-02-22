@@ -25,6 +25,7 @@ public final class PlayerItem: Equatable {
 
     @Published private(set) var content: AssetContent
     private let trackerAdapters: [any PlayerItemTracking]
+    private let queue = DispatchQueue(label: "ch.srgssr.metricstracker")
 
     let id = UUID()
 
@@ -302,8 +303,10 @@ extension PlayerItem {
     }
 
     func disableTrackers(matchingBehavior behavior: TrackingBehavior, with properties: PlayerProperties) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.disable(with: properties)
+        queue.async {
+            self.trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+                adapter.disable(with: properties)
+            }
         }
     }
 
