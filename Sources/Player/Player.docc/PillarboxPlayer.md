@@ -8,7 +8,7 @@ Craft immersive audiovisual playback experiences.
 
 ## Overview
 
-> Warning: PillarboxPlayer APIs are designed for use exclusively on the main thread. Invoking these APIs from background threads is unsupported and may result in unpredictable behavior.
+> Warning: Unless explicitly stated otherwise, PillarboxPlayer APIs are designed for use exclusively on the main thread. Invoking these APIs from background threads is unsupported and may result in unpredictable behavior.
 
 The PillarboxPlayer framework offers a comprehensive suite of tools to seamlessly integrate advanced audiovisual media capabilities into your app:
 

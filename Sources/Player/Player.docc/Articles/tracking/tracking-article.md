@@ -24,6 +24,8 @@ The ``PlayerItemTracker`` protocol uses two associated types to define the data 
 
 ### Implement the tracker lifecycle
 
+> Warning: Most tracker lifecycle methods are called on a background queue.
+
 After defining the associated types, implement the tracker lifecycle methods to manage its behavior:
 
 1. ``PlayerItemTracker/init(configuration:)`` is called when the tracker and its item are created. This initializer receives the configuration instance defined earlier.
