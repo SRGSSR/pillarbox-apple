@@ -17,7 +17,11 @@ struct PlayerItemProperties: Equatable {
     let timeProperties: TimeProperties
     let isEmpty: Bool
 
-    init(itemProperties: ItemProperties, mediaSelectionProperties: MediaSelectionProperties, timeProperties: TimeProperties) {
+    init(
+        itemProperties: ItemProperties,
+        mediaSelectionProperties: MediaSelectionProperties,
+        timeProperties: TimeProperties
+    ) {
         self.init(
             itemProperties: itemProperties,
             mediaSelectionProperties: mediaSelectionProperties,
@@ -26,7 +30,12 @@ struct PlayerItemProperties: Equatable {
         )
     }
 
-    private init(itemProperties: ItemProperties, mediaSelectionProperties: MediaSelectionProperties, timeProperties: TimeProperties, isEmpty: Bool) {
+    private init(
+        itemProperties: ItemProperties,
+        mediaSelectionProperties: MediaSelectionProperties,
+        timeProperties: TimeProperties,
+        isEmpty: Bool
+    ) {
         self.itemProperties = itemProperties
         self.mediaSelectionProperties = mediaSelectionProperties
         self.timeProperties = timeProperties
