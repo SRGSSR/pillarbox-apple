@@ -43,7 +43,7 @@ final class PlayerItemTrackerMock: PlayerItemTracker {
 
     func updateMetadata(to metadata: Void) {}
 
-    func updateProperties(to properties: PlayerProperties) {}
+    func updateProperties(to properties: TrackerProperties) {}
 
     func updateMetricEvents(to events: [MetricEvent]) {
         guard !events.isEmpty else { return }
@@ -54,7 +54,7 @@ final class PlayerItemTrackerMock: PlayerItemTracker {
         configuration.statePublisher.send(.enabled)
     }
 
-    func disable(with properties: PlayerProperties) {
+    func disable(with properties: TrackerProperties) {
         configuration.statePublisher.send(.disabled)
     }
 

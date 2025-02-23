@@ -19,15 +19,15 @@ final class ComScoreStreamingAnalytics: SCORStreamingAnalytics {
 }
 
 extension ComScoreStreamingAnalytics {
-    private static func duration(from properties: PlayerProperties) -> Int {
+    private static func duration(from properties: TrackerProperties) -> Int {
         Int(properties.seekableTimeRange.duration.timeInterval().toMilliseconds)
     }
 
-    private static func position(from properties: PlayerProperties) -> Int {
-        Int(properties.time().timeInterval().toMilliseconds)
+    private static func position(from properties: TrackerProperties) -> Int {
+        Int(properties.time.timeInterval().toMilliseconds)
     }
 
-    private static func offset(from properties: PlayerProperties) -> Int {
+    private static func offset(from properties: TrackerProperties) -> Int {
         Int(properties.endOffset().timeInterval().toMilliseconds)
     }
 
@@ -45,7 +45,7 @@ extension ComScoreStreamingAnalytics {
         }
     }
 
-    func setPlaybackPosition(from properties: PlayerProperties) {
+    func setPlaybackPosition(from properties: TrackerProperties) {
         if properties.streamType == .dvr {
             start(fromDvrWindowOffset: Self.offset(from: properties))
             setDVRWindowLength(Self.duration(from: properties))

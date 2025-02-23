@@ -37,13 +37,13 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
         configuration.statePublisher.send(.updatedMetadata(metadata))
     }
 
-    func updateProperties(to properties: PlayerProperties) {
+    func updateProperties(to properties: TrackerProperties) {
         configuration.statePublisher.send(.updatedProperties)
     }
 
     func updateMetricEvents(to events: [MetricEvent]) {}
 
-    func disable(with properties: PlayerProperties) {
+    func disable(with properties: TrackerProperties) {
         configuration.statePublisher.send(.disabled)
     }
 }
