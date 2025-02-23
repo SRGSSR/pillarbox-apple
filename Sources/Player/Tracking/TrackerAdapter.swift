@@ -6,6 +6,8 @@
 
 import AVFoundation
 
+private let kQueue = DispatchQueue(label: "ch.srgssr.tracker_adapter")
+
 /// An adapter which instantiates and manages a tracker of a specified type.
 ///
 /// An adapter transforms metadata delivered by a player item into the metadata format required by the tracker.
@@ -15,15 +17,13 @@ public struct TrackerAdapter<M> {
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
 
-    private let queue = DispatchQueue(label: "ch.srgssr.tracker_adapter")
-
     init<T>(
         trackerType: T.Type,
         configuration: T.Configuration,
         behavior: TrackingBehavior,
         mapper: ((M) -> T.Metadata)?
     ) where T: PlayerItemTracker {
-        let tracker = trackerType.init(configuration: configuration, queue: queue)
+        let tracker = trackerType.init(configuration: configuration, queue: kQueue)
         update = { metadata in
             if let mapper {
                 tracker.updateMetadata(to: mapper(metadata))
@@ -45,25 +45,25 @@ extension TrackerAdapter: PlayerItemTracking {
     }
 
     func enable(for player: AVPlayer) {
-        queue.async {
+        kQueue.async {
             tracker.enable(for: player)
         }
     }
 
     func updateProperties(to properties: PlayerProperties) {
-        queue.async {
+        kQueue.async {
             tracker.updateProperties(to: properties)
         }
     }
 
     func updateMetricEvents(to events: [MetricEvent]) {
-        queue.async {
+        kQueue.async {
             tracker.updateMetricEvents(to: events)
         }
     }
 
     func disable(with properties: PlayerProperties) {
-        queue.async {
+        kQueue.async {
             tracker.disable(with: properties)
         }
     }
