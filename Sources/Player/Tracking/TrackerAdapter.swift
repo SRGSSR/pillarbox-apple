@@ -23,7 +23,7 @@ public struct TrackerAdapter<M> {
         behavior: TrackingBehavior,
         mapper: ((M) -> T.Metadata)?
     ) where T: PlayerItemTracker {
-        let tracker = trackerType.init(configuration: configuration)
+        let tracker = trackerType.init(configuration: configuration, queue: queue)
         update = { metadata in
             if let mapper {
                 tracker.updateMetadata(to: mapper(metadata))

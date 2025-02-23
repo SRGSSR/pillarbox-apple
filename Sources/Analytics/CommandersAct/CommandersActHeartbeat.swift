@@ -9,6 +9,7 @@ import Foundation
 import PillarboxPlayer
 
 final class CommandersActHeartbeat {
+    private let queue: DispatchQueue
     private let delay: TimeInterval
     private let posInterval: TimeInterval
     private let uptimeInterval: TimeInterval
@@ -16,7 +17,8 @@ final class CommandersActHeartbeat {
     private var properties: PlayerProperties?
     private var cancellable: AnyCancellable?
 
-    init(delay: TimeInterval = 30, posInterval: TimeInterval = 30, uptimeInterval: TimeInterval = 60) {
+    init(queue: DispatchQueue, delay: TimeInterval = 30, posInterval: TimeInterval = 30, uptimeInterval: TimeInterval = 60) {
+        self.queue = queue
         self.delay = delay
         self.posInterval = posInterval
         self.uptimeInterval = uptimeInterval
@@ -27,7 +29,7 @@ final class CommandersActHeartbeat {
 
         if properties.playbackState == .playing {
             guard cancellable == nil else { return }
-            cancellable = Self.eventPublisher(for: properties, delay: delay, posInterval: posInterval, uptimeInterval: uptimeInterval)
+            cancellable = eventPublisher(for: properties, delay: delay, posInterval: posInterval, uptimeInterval: uptimeInterval)
                 .sink { [weak self] event in
                     self?.sendEvent(event, labels: labels)
                 }
@@ -51,22 +53,22 @@ final class CommandersActHeartbeat {
 }
 
 private extension CommandersActHeartbeat {
-    static func delayedPeriodicPublisher(delay: TimeInterval, interval: TimeInterval) -> AnyPublisher<Void, Never> {
+    func delayedPeriodicPublisher(delay: TimeInterval, interval: TimeInterval) -> AnyPublisher<Void, Never> {
         Timer.publish(every: interval, on: .main, in: .common)
             .autoconnect()
             .map { _ in }
             .prepend(())
-            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+            .delay(for: .seconds(delay), scheduler: queue)
             .eraseToAnyPublisher()
     }
 
-    static func eventPublisher(for event: Event, delay: TimeInterval, interval: TimeInterval) -> AnyPublisher<Event, Never> {
+    func eventPublisher(for event: Event, delay: TimeInterval, interval: TimeInterval) -> AnyPublisher<Event, Never> {
         delayedPeriodicPublisher(delay: delay, interval: interval)
             .map { _ in event }
             .eraseToAnyPublisher()
     }
 
-    static func eventPublisher(
+    func eventPublisher(
         for properties: PlayerProperties,
         delay: TimeInterval,
         posInterval: TimeInterval,

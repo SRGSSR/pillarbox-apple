@@ -19,11 +19,13 @@ public final class CommandersActTracker: PlayerItemTracker {
     private var metadata: [String: String] = [:]
     private var lastEvent: Event = .none
     private let stopwatch = Stopwatch()
-    private let heartbeat = CommandersActHeartbeat()
+    private let heartbeat: CommandersActHeartbeat
     private var cancellable: AnyCancellable?
 
     // swiftlint:disable:next missing_docs
-    public init(configuration: Void) {}
+    public init(configuration: Void, queue: DispatchQueue) {
+        heartbeat = .init(queue: queue)
+    }
 
     // swiftlint:disable:next missing_docs
     public func enable(for player: AVPlayer) {}

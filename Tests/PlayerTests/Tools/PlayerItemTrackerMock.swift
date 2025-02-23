@@ -36,7 +36,7 @@ final class PlayerItemTrackerMock: PlayerItemTracker {
         configuration.sessionIdentifier
     }
 
-    init(configuration: Configuration) {
+    init(configuration: Configuration, queue: DispatchQueue) {
         self.configuration = configuration
         configuration.statePublisher.send(.initialized)
     }

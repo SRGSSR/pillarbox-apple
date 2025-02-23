@@ -35,8 +35,10 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// Creates the tracker.
     ///
-    /// - Parameter configuration: The tracker configuration.
-    init(configuration: Configuration)
+    /// - Parameters:
+    ///    - configuration: The tracker configuration.
+    ///    - queue: The background queue on which tracker methods get called.
+    init(configuration: Configuration, queue: DispatchQueue)
 
     /// A method called when the tracker is enabled for a player.
     ///
