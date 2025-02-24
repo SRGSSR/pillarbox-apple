@@ -247,6 +247,7 @@ extension AVPlayerItem {
     func warningMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
             .compactMap { notification -> Error? in
+                // TODO: Here a hitch source as well
                 guard let lastErrorEvent = (notification.object as? AVPlayerItem)?.errorLog()?.events.last else { return nil }
                 return NSError(
                     domain: lastErrorEvent.errorDomain,
