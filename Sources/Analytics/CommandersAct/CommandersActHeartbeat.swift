@@ -13,7 +13,7 @@ final class CommandersActHeartbeat {
     private let posInterval: TimeInterval
     private let uptimeInterval: TimeInterval
 
-    private var properties: PlayerProperties?
+    private var properties: TrackerProperties?
     private var cancellable: AnyCancellable?
 
     init(delay: TimeInterval = 30, posInterval: TimeInterval = 30, uptimeInterval: TimeInterval = 60) {
@@ -22,7 +22,7 @@ final class CommandersActHeartbeat {
         self.uptimeInterval = uptimeInterval
     }
 
-    func update(with properties: PlayerProperties, labels: @escaping (PlayerProperties) -> [String: String]) {
+    func update(with properties: TrackerProperties, labels: @escaping (TrackerProperties) -> [String: String]) {
         self.properties = properties
 
         if properties.playbackState == .playing {
@@ -41,7 +41,7 @@ final class CommandersActHeartbeat {
         cancellable = nil
     }
 
-    private func sendEvent(_ event: Event, labels: @escaping (PlayerProperties) -> [String: String]) {
+    private func sendEvent(_ event: Event, labels: @escaping (TrackerProperties) -> [String: String]) {
         guard let properties else { return }
         Analytics.shared.sendEvent(commandersAct: .init(
             name: event.rawValue,
@@ -67,7 +67,7 @@ private extension CommandersActHeartbeat {
     }
 
     static func eventPublisher(
-        for properties: PlayerProperties,
+        for properties: TrackerProperties,
         delay: TimeInterval,
         posInterval: TimeInterval,
         uptimeInterval: TimeInterval

@@ -70,6 +70,6 @@ final class PlayerTests: TestCase {
 
     func testNoMetricsWhenFailed() {
         let player = Player(item: .failing(loadedAfter: 0.1))
-        expect(player.properties.metrics()).toAlways(beNil(), until: .seconds(1))
+        expect(player.metrics()).toAlways(beNil(), until: .seconds(1))
     }
 }

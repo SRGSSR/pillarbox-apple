@@ -11,7 +11,7 @@ protocol PlayerItemTracking {
     var registration: TrackingRegistration? { get }
 
     func enable(for player: AVPlayer)
-    func updateProperties(to properties: PlayerProperties)
+    func updateProperties(to properties: TrackerProperties)
     func updateMetricEvents(to events: [MetricEvent])
-    func disable(with properties: PlayerProperties)
+    func disable(with properties: TrackerProperties)
 }

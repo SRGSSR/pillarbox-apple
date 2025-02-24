@@ -32,7 +32,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     // swiftlint:disable:next missing_docs
-    public func updateProperties(to properties: PlayerProperties) {
+    public func updateProperties(to properties: TrackerProperties) {
         guard !metadata.isEmpty else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
@@ -57,7 +57,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     public func updateMetricEvents(to events: [MetricEvent]) {}
 
     // swiftlint:disable:next missing_docs
-    public func disable(with properties: PlayerProperties) {
+    public func disable(with properties: TrackerProperties) {
         streamingAnalytics = ComScoreStreamingAnalytics()
     }
 }

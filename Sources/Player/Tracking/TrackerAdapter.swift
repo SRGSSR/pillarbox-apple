@@ -46,7 +46,7 @@ extension TrackerAdapter: PlayerItemTracking {
         tracker.enable(for: player)
     }
 
-    func updateProperties(to properties: PlayerProperties) {
+    func updateProperties(to properties: TrackerProperties) {
         tracker.updateProperties(to: properties)
     }
 
@@ -54,7 +54,7 @@ extension TrackerAdapter: PlayerItemTracking {
         tracker.updateMetricEvents(to: events)
     }
 
-    func disable(with properties: PlayerProperties) {
+    func disable(with properties: TrackerProperties) {
         tracker.disable(with: properties)
     }
 }

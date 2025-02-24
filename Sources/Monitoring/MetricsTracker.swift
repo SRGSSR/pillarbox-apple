@@ -16,7 +16,7 @@ public final class MetricsTracker: PlayerItemTracker {
     private let stopwatch = Stopwatch()
 
     private var metadata: Metadata?
-    private var properties: PlayerProperties?
+    private var properties: TrackerProperties?
 
     private var session = TrackingSession()
     private var stallDate: Date?
@@ -43,7 +43,7 @@ public final class MetricsTracker: PlayerItemTracker {
     }
 
     // swiftlint:disable:next missing_docs
-    public func updateProperties(to properties: PlayerProperties) {
+    public func updateProperties(to properties: TrackerProperties) {
         self.properties = properties
         updateStopwatch(with: properties)
     }
@@ -74,7 +74,7 @@ public final class MetricsTracker: PlayerItemTracker {
     }
 
     // swiftlint:disable:next missing_docs
-    public func disable(with properties: PlayerProperties) {
+    public func disable(with properties: TrackerProperties) {
         reset(with: properties)
     }
 }
@@ -149,13 +149,13 @@ private extension MetricsTracker {
             name: "\(error.domain)(\(error.code))",
             position: Self.position(from: properties),
             positionTimestamp: Self.positionTimestamp(from: properties),
-            url: URL(string: properties?.metrics()?.uri),
+            url: URL(string: properties?.metrics?.uri),
             vpn: Self.isUsingVirtualPrivateNetwork()
         )
     }
 
-    func statusData(from properties: PlayerProperties) -> MetricStatusData {
-        let metrics = properties.metrics()
+    func statusData(from properties: TrackerProperties) -> MetricStatusData {
+        let metrics = properties.metrics
         return MetricStatusData(
             airplay: properties.isExternalPlaybackActive,
             bandwidth: metrics?.observedBitrate,
@@ -175,7 +175,7 @@ private extension MetricsTracker {
         )
     }
 
-    func updateStopwatch(with properties: PlayerProperties) {
+    func updateStopwatch(with properties: TrackerProperties) {
         if properties.playbackState == .playing && !properties.isBuffering {
             stopwatch.start()
         }
@@ -184,7 +184,7 @@ private extension MetricsTracker {
         }
     }
 
-    func reset(with properties: PlayerProperties?) {
+    func reset(with properties: TrackerProperties?) {
         defer {
             stallDuration = 0
             session.reset()
@@ -269,7 +269,7 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static func streamType(from properties: PlayerProperties) -> String? {
+    static func streamType(from properties: TrackerProperties) -> String? {
         switch properties.streamType {
         case .unknown:
             return nil
@@ -280,30 +280,30 @@ private extension MetricsTracker {
         }
     }
 
-    static func position(from properties: PlayerProperties?) -> Int? {
+    static func position(from properties: TrackerProperties?) -> Int? {
         guard let properties else { return nil }
         switch properties.streamType {
         case .unknown:
             return nil
         case .onDemand:
-            return properties.time().toMilliseconds
+            return properties.time.toMilliseconds
         case .live:
             return 0
         case .dvr:
-            return (properties.time() - properties.seekableTimeRange.start).toMilliseconds
+            return (properties.time - properties.seekableTimeRange.start).toMilliseconds
         }
     }
 
-    static func positionTimestamp(from properties: PlayerProperties?) -> Int? {
-        guard let date = properties?.date() else { return nil }
+    static func positionTimestamp(from properties: TrackerProperties?) -> Int? {
+        guard let date = properties?.date else { return nil }
         return date.timestamp
     }
 
-    static func bufferedDuration(from properties: PlayerProperties?) -> Int? {
+    static func bufferedDuration(from properties: TrackerProperties?) -> Int? {
         properties?.loadedTimeRange.duration.toMilliseconds
     }
 
-    static func duration(from properties: PlayerProperties) -> Int? {
+    static func duration(from properties: TrackerProperties) -> Int? {
         properties.seekableTimeRange.duration.toMilliseconds
     }
 

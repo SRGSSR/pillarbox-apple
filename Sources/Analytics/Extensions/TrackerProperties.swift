@@ -7,8 +7,8 @@
 import CoreMedia
 import PillarboxPlayer
 
-extension PlayerProperties {
+extension TrackerProperties {
     func endOffset() -> CMTime {
-        max(seekableTimeRange.end - time(), .zero)
+        max(seekableTimeRange.end - time, .zero)
     }
 }

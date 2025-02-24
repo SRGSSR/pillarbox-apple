@@ -8,7 +8,7 @@
 
 import Combine
 import Nimble
-import PillarboxPlayer
+@testable import PillarboxPlayer
 import PillarboxStreams
 
 final class CommandersActHeartbeatTests: CommandersActTestCase {
@@ -19,7 +19,7 @@ final class CommandersActHeartbeatTests: CommandersActTestCase {
         let player = Player(item: .simple(url: stream.url))
         player.propertiesPublisher
             .sink { properties in
-                heartbeat.update(with: properties) { properties in
+                heartbeat.update(with: .init(playerProperties: properties, time: .zero, date: nil, metrics: nil)) { properties in
                     ["media_volume": properties.isMuted ? "0" : "100"]
                 }
             }
