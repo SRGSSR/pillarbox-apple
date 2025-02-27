@@ -42,8 +42,8 @@ public struct CommandersActLabels: Decodable {
     /// The value of `navigation_property_type`.
     public let navigation_property_type: String?
 
-    /// The value of `navigation_bu_distributer`.
-    public let navigation_bu_distributer: String?
+    /// The value of `content_bu_owner`.
+    public let content_bu_owner: String?
 
     /// The value of `navigation_level_0`.
     public let navigation_level_0: String?
@@ -137,7 +137,7 @@ private extension CommandersActLabels {
         case navigation_device
         case consent_services
         case navigation_property_type
-        case navigation_bu_distributer
+        case content_bu_owner
         case navigation_level_0
         case navigation_level_1
         case navigation_level_2
