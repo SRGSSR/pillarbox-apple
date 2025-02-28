@@ -452,7 +452,7 @@ private struct SettingsMenu: View {
 
     var body: some View {
         Menu {
-            player.standardSettingMenu()
+            player.standardSettingsMenu()
             QualityMenu(player: player)
             metricsMenu()
         } label: {

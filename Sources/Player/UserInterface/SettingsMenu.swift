@@ -112,7 +112,7 @@ public extension Player {
     ///
     /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
     /// behavior.
-    func standardSettingMenu() -> some View {
+    func standardSettingsMenu() -> some View {
         SettingsMenuContent(player: self)
     }
 
