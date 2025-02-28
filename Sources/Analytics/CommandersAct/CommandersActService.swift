@@ -34,7 +34,7 @@ final class CommandersActService {
         }
         event.pageName = pageView.name
         event.addNonBlankAdditionalProperty("navigation_property_type", withStringValue: "app")
-        event.addNonBlankAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
+        event.addNonBlankAdditionalProperty("content_bu_owner", withStringValue: vendor?.rawValue)
         pageView.levels.enumerated().forEach { index, level in
             guard index < 8 else { return }
             event.addNonBlankAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
