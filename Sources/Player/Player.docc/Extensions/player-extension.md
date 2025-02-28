@@ -139,4 +139,4 @@
 
 - ``mediaSelectionMenu(characteristic:)``
 - ``playbackSpeedMenu(speeds:)``
-- ``standardSettingMenu()``
+- ``standardSettingsMenu()``
