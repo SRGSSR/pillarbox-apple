@@ -93,14 +93,14 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``PictureInPicturePersistable``
 - ``RoutePickerView``
 
-### Asset Resource Loading
+### Content Loading
 
 - <doc:fairplay-streaming-article>
 - <doc:asset-resource-loading-article>
 
 - ``Asset``
+- ``PlaybackConfiguration``
 - ``PlayerItem``
-- ``PlayerItemConfiguration``
 
 ### Tracking
 

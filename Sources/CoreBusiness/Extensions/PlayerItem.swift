@@ -25,7 +25,7 @@ public extension PlayerItem {
         _ urn: String,
         server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
-        configuration: PlayerItemConfiguration = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self {
         .init(
             publisher: publisher(forUrn: urn, server: server, configuration: configuration),
@@ -62,7 +62,7 @@ public extension PlayerItem {
         url: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .tokenProtected(url: url, metadata: metadata, configuration: configuration),
@@ -86,7 +86,7 @@ public extension PlayerItem {
         certificateUrl: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration),
@@ -96,7 +96,7 @@ public extension PlayerItem {
 }
 
 private extension PlayerItem {
-    static func publisher(forUrn urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
+    static func publisher(forUrn urn: String, server: Server, configuration: PlaybackConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
         let dataProvider = DataProvider(server: server)
         return dataProvider.mediaCompositionPublisher(forUrn: urn)
             .tryMap { response in
@@ -106,7 +106,7 @@ private extension PlayerItem {
             .eraseToAnyPublisher()
     }
 
-    private static func asset(metadata: MediaMetadata, configuration: PlayerItemConfiguration, dataProvider: DataProvider) -> Asset<MediaMetadata> {
+    private static func asset(metadata: MediaMetadata, configuration: PlaybackConfiguration, dataProvider: DataProvider) -> Asset<MediaMetadata> {
         if let blockingReason = metadata.blockingReason {
             return .unavailable(with: DataError.blocked(withMessage: blockingReason.description), metadata: metadata)
         }
@@ -129,8 +129,8 @@ private extension PlayerItem {
 
     private static func assetConfiguration(
         for resource: MediaComposition.Resource,
-        configuration: PlayerItemConfiguration
-    ) -> PlayerItemConfiguration {
+        configuration: PlaybackConfiguration
+    ) -> PlaybackConfiguration {
         // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
         // livestreams cannot be paused and resumed in the past, as requested by business people.
         guard resource.streamType == .live else { return configuration }

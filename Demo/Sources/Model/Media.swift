@@ -90,7 +90,7 @@ struct Media: Hashable {
                 configuration: .init(position: at(startTime))
             )
         case let .unbufferedUrl(url):
-            let configuration = PlayerItemConfiguration(
+            let configuration = PlaybackConfiguration(
                 position: at(startTime),
                 automaticallyPreservesTimeOffsetFromLive: true,
                 preferredForwardBufferDuration: 1

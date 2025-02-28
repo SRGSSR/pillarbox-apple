@@ -6,8 +6,8 @@
 
 import AVFoundation
 
-/// A player item configuration.
-public struct PlayerItemConfiguration {
+/// A playback configuration.
+public struct PlaybackConfiguration {
     /// The default configuration.
     public static let `default` = Self()
 
@@ -29,7 +29,7 @@ public struct PlayerItemConfiguration {
     /// disruption.
     public let preferredForwardBufferDuration: TimeInterval
 
-    /// Creates a player item configuration.
+    /// Creates a playback configuration.
     public init(
         position: Position = at(.zero),
         automaticallyPreservesTimeOffsetFromLive: Bool = false,
