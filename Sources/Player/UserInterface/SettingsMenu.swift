@@ -149,7 +149,7 @@ public extension Player {
     /// behavior.
     func playbackSpeedMenu(
         speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2],
-        action: @escaping (_ playbackSpeed: Float) -> Void = { _ in }
+        action: @escaping (_ speed: Float) -> Void = { _ in }
     ) -> some View {
         PlaybackSpeedMenuContent(speeds: speeds, action: action, player: self)
     }
