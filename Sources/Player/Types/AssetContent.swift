@@ -10,7 +10,7 @@ struct AssetContent {
     let id: UUID
     let resource: Resource
     let metadata: PlayerMetadata
-    let configuration: PlayerItemConfiguration
+    let configuration: PlaybackConfiguration
     let dateInterval: DateInterval?
 
     static func loading(id: UUID) -> Self {

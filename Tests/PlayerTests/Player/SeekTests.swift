@@ -107,13 +107,13 @@ final class SeekTests: TestCase {
     }
 
     func testOnDemandStartAtTime() {
-        let configuration = PlayerItemConfiguration(position: at(.init(value: 10, timescale: 1)))
+        let configuration = PlaybackConfiguration(position: at(.init(value: 10, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, configuration: configuration))
         expect(player.time().seconds).toEventually(equal(10))
     }
 
     func testDvrStartAtTime() {
-        let configuration = PlayerItemConfiguration(position: at(.init(value: 10, timescale: 1)))
+        let configuration = PlaybackConfiguration(position: at(.init(value: 10, timescale: 1)))
         let player = Player(item: .simple(url: Stream.dvr.url, configuration: configuration))
         expect(player.time().seconds).toEventually(equal(10))
     }

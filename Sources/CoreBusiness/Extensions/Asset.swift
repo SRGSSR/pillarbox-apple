@@ -8,7 +8,7 @@ import Foundation
 import PillarboxPlayer
 
 extension Asset {
-    static func tokenProtected(url: URL, metadata: M, configuration: PlayerItemConfiguration) -> Self {
+    static func tokenProtected(url: URL, metadata: M, configuration: PlaybackConfiguration) -> Self {
         let id = UUID()
         return .custom(
             url: AkamaiURLCoding.encodeUrl(url, id: id),
@@ -18,7 +18,7 @@ extension Asset {
         )
     }
 
-    static func encrypted(url: URL, certificateUrl: URL, metadata: M, configuration: PlayerItemConfiguration) -> Self {
+    static func encrypted(url: URL, certificateUrl: URL, metadata: M, configuration: PlaybackConfiguration) -> Self {
         .encrypted(
             url: url,
             delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl),

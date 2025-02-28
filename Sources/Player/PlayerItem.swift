@@ -161,7 +161,7 @@ public extension PlayerItem {
         url: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .simple(url: url, metadata: metadata, configuration: configuration),
@@ -185,7 +185,7 @@ public extension PlayerItem {
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
@@ -207,7 +207,7 @@ public extension PlayerItem {
         delegate: AVContentKeySessionDelegate,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlayerItemConfiguration = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
@@ -227,7 +227,7 @@ public extension PlayerItem {
     static func simple(
         url: URL,
         trackerAdapters: [TrackerAdapter<Void>] = [],
-        configuration: PlayerItemConfiguration = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self {
         .init(
             asset: .simple(url: url, configuration: configuration),
@@ -249,7 +249,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         trackerAdapters: [TrackerAdapter<Void>] = [],
-        configuration: PlayerItemConfiguration = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self {
         .init(
             asset: .custom(url: url, delegate: delegate, configuration: configuration),
@@ -269,7 +269,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         trackerAdapters: [TrackerAdapter<Void>] = [],
-        configuration: PlayerItemConfiguration = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self {
         .init(
             asset: .encrypted(url: url, delegate: delegate, configuration: configuration),

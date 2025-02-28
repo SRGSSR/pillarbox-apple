@@ -39,9 +39,9 @@ An empty ``Player`` instance is lightweight, but once loaded with content, it in
 To minimize resource usage, aim to keep the number of ``Player`` instances loaded with content as low as possible. Consider these strategies:
 
 - **Implement a Player Pool:** Instead of creating a new player instance for every need, maintain a pool of reusable players. Borrow a player from the pool when needed and return it when done.
-- **Clear Unused Players:** Use ``Player/removeAllItems()`` to empty a player's item queue without destroying the player instance. When reloading previously played content, use ``PlayerItemConfiguration/position`` to resume playback from where it was last interrupted.
+- **Clear Unused Players:** Use ``Player/removeAllItems()`` to empty a player's item queue without destroying the player instance. When reloading previously played content, use ``PlaybackConfiguration/position`` to resume playback from where it was last interrupted.
 - **Leverage Thumbnails:** Display thumbnails representing the first frame or video content to create the illusion of instant playback without loading the actual video. This approach is especially effective in scrollable lists with autoplay functionality.
-- **Limit Buffering:** Control the player's buffering behavior by setting ``PlayerItemConfiguration/preferredForwardBufferDuration`` in a ``PlayerItem`` configuration. While the default buffering can be quite aggressive, reducing the buffer duration lowers memory usage but increases the likelihood of playback stalling and re-buffering. Use this setting judiciously to balance resource usage and playback stability.
+- **Limit Buffering:** Control the player's buffering behavior by setting ``PlaybackConfiguration/preferredForwardBufferDuration`` in a ``PlayerItem`` configuration. While the default buffering can be quite aggressive, reducing the buffer duration lowers memory usage but increases the likelihood of playback stalling and re-buffering. Use this setting judiciously to balance resource usage and playback stability.
 
 ## Implement autoplay wisely
 
