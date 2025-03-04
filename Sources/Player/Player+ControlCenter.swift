@@ -120,14 +120,13 @@ extension Player {
         propertiesPublisher
             .map { [weak queuePlayer] properties in
                 var nowPlayingInfo = NowPlaying.Info()
-                // Always fill a key so that the Control Center can be enabled for the item, even if it has no associated metadata.
-                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (properties.streamType == .live)
                 if properties.streamType != .unknown {
                     nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
                     if let time = properties.seekTime ?? queuePlayer?.currentTime(), time.isValid {
                         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.seekableTimeRange.start).seconds
                     }
                     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.seekableTimeRange.duration.seconds
+                    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (properties.streamType == .live)
                 }
                 return nowPlayingInfo
             }
