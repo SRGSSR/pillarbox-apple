@@ -30,6 +30,10 @@ struct Queue {
         itemState.error
     }
 
+    var isActive: Bool {
+        playerItem == nil
+    }
+
     private var playerItem: AVPlayerItem? {
         itemState.item
     }

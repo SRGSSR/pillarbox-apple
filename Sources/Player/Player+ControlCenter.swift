@@ -134,14 +134,14 @@ extension Player {
     }
 
     func nowPlayingPublisher() -> AnyPublisher<NowPlaying, Never> {
-        $isActive
-            .map { [weak self] isActive in
-                guard let self, isActive else { return Just(NowPlaying.empty).eraseToAnyPublisher() }
+        Publishers.CombineLatest($isActive, queuePublisher)
+            .map { [weak self] isActive, queue in
+                guard let self, isActive, !queue.isActive else { return Just(NowPlaying.empty).eraseToAnyPublisher() }
                 return Publishers.CombineLatest(
                     metadataPublisher,
                     nowPlayingInfoPlaybackPublisher()
                 )
-                .map { NowPlaying(metadata: $0, playbackInfo: $1) }
+                .map { NowPlaying.filled(metadata: $0, playbackInfo: $1) }
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
