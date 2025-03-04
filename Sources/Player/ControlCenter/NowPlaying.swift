@@ -4,20 +4,33 @@
 //  License information is available from the LICENSE file.
 //
 
+import MediaPlayer
+
 /// Metadata describing what is currently being played.
-struct NowPlaying {
+enum NowPlaying {
+    case empty
+    case filled(metadata: PlayerMetadata, playbackInfo: Info)
+
     typealias Info = [String: Any]
 
-    static let empty = Self(metadata: .empty, playbackInfo: [:])
-
-    let metadata: PlayerMetadata
-    let playbackInfo: Info
-
-    var isEmpty: Bool {
-        metadata == .empty && playbackInfo.isEmpty
+    var info: Info {
+        switch self {
+        case .empty:
+            [:]
+        case let .filled(metadata, playbackInfo):
+            metadata.nowPlayingInfo
+                .merging(playbackInfo) { _, new in new }
+                // For proper Control Center integration at least one metadata key must be filled.
+                .merging([MPMediaItemPropertyTitle: ""]) { old, _ in old }
+        }
     }
 
-    var info: Info {
-        metadata.nowPlayingInfo.merging(playbackInfo) { _, new in new }
+    var isEmpty: Bool {
+        switch self {
+        case .empty:
+            true
+        default:
+            false
+        }
     }
 }

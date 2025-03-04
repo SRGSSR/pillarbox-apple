@@ -46,15 +46,8 @@ private extension Player {
 
     func playRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
-            guard let self else { return .commandFailed }
-            if canReplay() {
-                replay()
-                return .commandFailed
-            }
-            else {
-                play()
-                return .success
-            }
+            self?.play()
+            return .success
         }
     }
 
@@ -120,14 +113,13 @@ extension Player {
         propertiesPublisher
             .map { [weak queuePlayer] properties in
                 var nowPlayingInfo = NowPlaying.Info()
-                // Always fill a key so that the Control Center can be enabled for the item, even if it has no associated metadata.
-                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (properties.streamType == .live)
                 if properties.streamType != .unknown {
                     nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
                     if let time = properties.seekTime ?? queuePlayer?.currentTime(), time.isValid {
                         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.seekableTimeRange.start).seconds
                     }
                     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.seekableTimeRange.duration.seconds
+                    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (properties.streamType == .live)
                 }
                 return nowPlayingInfo
             }
@@ -135,14 +127,14 @@ extension Player {
     }
 
     func nowPlayingPublisher() -> AnyPublisher<NowPlaying, Never> {
-        $isActive
-            .map { [weak self] isActive in
-                guard let self, isActive else { return Just(NowPlaying.empty).eraseToAnyPublisher() }
+        Publishers.CombineLatest($isActive, queuePublisher)
+            .map { [weak self] isActive, queue in
+                guard let self, isActive, !queue.isActive else { return Just(NowPlaying.empty).eraseToAnyPublisher() }
                 return Publishers.CombineLatest(
                     metadataPublisher,
                     nowPlayingInfoPlaybackPublisher()
                 )
-                .map { NowPlaying(metadata: $0, playbackInfo: $1) }
+                .map { NowPlaying.filled(metadata: $0, playbackInfo: $1) }
                 .eraseToAnyPublisher()
             }
             .switchToLatest()

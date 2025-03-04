@@ -15,6 +15,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
     private static func nowPlayingInfoPublisher(for player: Player) -> AnyPublisher<NowPlaying.Info, Never> {
         player.nowPlayingPublisher()
             .map(\.info)
+            .removeDuplicates(by: ~~)
             .eraseToAnyPublisher()
     }
 
@@ -29,7 +30,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
     func testToggleActive() {
         let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
         expectAtLeastSimilarPublished(
-            values: [[:], [MPNowPlayingInfoPropertyIsLiveStream: false]],
+            values: [[:], ["title": ""], ["title": "title"]],
             from: Self.nowPlayingInfoPublisher(for: player)
         ) {
             player.isActive = true
