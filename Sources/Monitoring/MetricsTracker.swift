@@ -120,6 +120,10 @@ public extension MetricsTracker {
 private extension MetricsTracker {
     func startData(from events: [MetricEvent]) -> MetricStartData {
         MetricStartData(
+            application: .init(
+                id: Self.applicationId,
+                version: Self.applicationVersion
+            ),
             device: .init(
                 id: Self.deviceId,
                 model: Self.deviceModel,
@@ -134,8 +138,7 @@ private extension MetricsTracker {
             media: .init(
                 assetUrl: metadata?.assetUrl,
                 id: configuration.identifier,
-                metadataUrl: metadata?.metadataUrl,
-                origin: Bundle.main.bundleIdentifier
+                metadataUrl: metadata?.metadataUrl
             ),
             qoeTimings: .init(events: events),
             qosTimings: .init(events: events)
@@ -218,6 +221,16 @@ private extension MetricsTracker {
 
         MetricHitListener.capture(payload)
     }
+}
+
+private extension MetricsTracker {
+    static let applicationId: String? = {
+        Bundle.main.bundleIdentifier
+    }()
+
+    static let applicationVersion: String? = {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    }()
 }
 
 private extension MetricsTracker {

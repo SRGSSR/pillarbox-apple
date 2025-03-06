@@ -8,6 +8,7 @@ import Foundation
 import PillarboxPlayer
 
 struct MetricStartData: Encodable {
+    let application: Application
     let device: Device
     let os: OperatingSystem
     let screen: Screen
@@ -18,6 +19,11 @@ struct MetricStartData: Encodable {
 }
 
 extension MetricStartData {
+    struct Application: Encodable {
+        let id: String?
+        let version: String?
+    }
+
     struct Device: Encodable {
         let id: String?
         let model: String
@@ -28,7 +34,6 @@ extension MetricStartData {
         let assetUrl: URL?
         let id: String?
         let metadataUrl: URL?
-        let origin: String?
     }
 
     struct OperatingSystem: Encodable {
