@@ -84,6 +84,8 @@ private struct MediaSelectionMenuContent: View {
 @available(iOS 16.0, tvOS 17.0, *)
 private struct SettingsMenuContent: View {
     let player: Player
+    let speeds: Set<Float>
+    let action: (SettingsUpdate) -> Void
 
     var body: some View {
         playbackSpeedMenu()
@@ -93,7 +95,9 @@ private struct SettingsMenuContent: View {
 
     private func playbackSpeedMenu() -> some View {
         Menu {
-            player.playbackSpeedMenu()
+            player.playbackSpeedMenu(speeds: speeds) { speed in
+                action(.playbackSpeed(speed))
+            }
         } label: {
             Label {
                 Text("Playback Speed", bundle: .module, comment: "Playback setting menu title")
@@ -105,7 +109,7 @@ private struct SettingsMenuContent: View {
 
     private func audibleMediaSelectionMenu() -> some View {
         Menu {
-            player.mediaSelectionMenu(characteristic: .audible)
+            mediaSelectionMenuContent(characteristic: .audible)
         } label: {
             Label {
                 Text("Languages", bundle: .module, comment: "Playback setting menu title")
@@ -117,7 +121,7 @@ private struct SettingsMenuContent: View {
 
     private func legibleMediaSelectionMenu() -> some View {
         Menu {
-            player.mediaSelectionMenu(characteristic: .legible)
+            mediaSelectionMenuContent(characteristic: .legible)
         } label: {
             Label {
                 Text("Subtitles", bundle: .module, comment: "Playback setting menu title")
@@ -126,23 +130,36 @@ private struct SettingsMenuContent: View {
             }
         }
     }
+
+    private func mediaSelectionMenuContent(characteristic: AVMediaCharacteristic) -> some View {
+        player.mediaSelectionMenu(characteristic: characteristic) { option in
+            action(.mediaSelection(characteristic: characteristic, option: option))
+        }
+    }
 }
 
 @available(iOS 16.0, tvOS 17.0, *)
 public extension Player {
     /// Returns content for a standard player settings menu.
     ///
+    /// - Parameters:
+    ///    - speeds: The offered playback speeds.
+    ///    - action: The action to perform when the user interacts with an item from the menu.
+    ///
     /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
     /// behavior.
     ///
-    func standardSettingsMenu() -> some View {
-        SettingsMenuContent(player: self)
+    func standardSettingsMenu(
+        speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2],
+        action: @escaping (_ update: SettingsUpdate) -> Void = { _ in }
+    ) -> some View {
+        SettingsMenuContent(player: self, speeds: speeds, action: action)
     }
 
     /// Returns content for a playback speed menu.
     ///
     /// - Parameters:
-    ///    - speeds: The offered speeds.
+    ///    - speeds: The offered playback speeds.
     ///    - action: The action to perform when the user interacts with an item from the menu.
     ///
     /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
