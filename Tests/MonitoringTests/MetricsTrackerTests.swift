@@ -179,6 +179,10 @@ final class MetricsTrackerTests: MonitoringTestCase {
 
                 let data = payload.data
 
+                let application = data.application
+                expect(application.id).notTo(beNil())
+                expect(application.version).notTo(beNil())
+
                 let device = data.device
                 expect(device.id).notTo(beNil())
                 expect(device.model).notTo(beNil())
@@ -188,7 +192,6 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 expect(media.assetUrl).to(equal(URL(string: "https://localhost/asset.m3u8")))
                 expect(media.id).to(equal("identifier"))
                 expect(media.metadataUrl).to(equal(URL(string: "https://localhost/metadata.json")))
-                expect(media.origin).notTo(beNil())
 
                 let os = data.os
                 expect(os.name).notTo(beNil())

@@ -120,6 +120,10 @@ public extension MetricsTracker {
 private extension MetricsTracker {
     func startData(from events: [MetricEvent]) -> MetricStartData {
         MetricStartData(
+            application: .init(
+                id: Self.applicationId,
+                version: Self.applicationVersion
+            ),
             device: .init(
                 id: Self.deviceId,
                 model: Self.deviceModel,
@@ -134,8 +138,7 @@ private extension MetricsTracker {
             media: .init(
                 assetUrl: metadata?.assetUrl,
                 id: configuration.identifier,
-                metadataUrl: metadata?.metadataUrl,
-                origin: Bundle.main.bundleIdentifier
+                metadataUrl: metadata?.metadataUrl
             ),
             qoeTimings: .init(events: events),
             qosTimings: .init(events: events)
@@ -145,10 +148,12 @@ private extension MetricsTracker {
     func errorData(from error: Error) -> MetricErrorData {
         let error = error as NSError
         return MetricErrorData(
+            audio: Self.languageCode(from: properties, for: .audible),
             message: error.localizedDescription,
             name: "\(error.domain)(\(error.code))",
             position: Self.position(from: properties),
             positionTimestamp: Self.positionTimestamp(from: properties),
+            subtitles: Self.languageCode(from: properties, for: .legible),
             url: URL(string: properties?.metrics?.uri),
             vpn: Self.isUsingVirtualPrivateNetwork()
         )
@@ -158,6 +163,7 @@ private extension MetricsTracker {
         let metrics = properties.metrics
         return MetricStatusData(
             airplay: properties.isExternalPlaybackActive,
+            audio: Self.languageCode(from: properties, for: .audible),
             bandwidth: metrics?.observedBitrate,
             bitrate: metrics?.indicatedBitrate,
             bufferedDuration: Self.bufferedDuration(from: properties),
@@ -171,6 +177,7 @@ private extension MetricsTracker {
                 duration: stallDuration.toMilliseconds
             ),
             streamType: Self.streamType(from: properties),
+            subtitles: Self.languageCode(from: properties, for: .legible),
             url: metrics?.uri
         )
     }
@@ -218,6 +225,16 @@ private extension MetricsTracker {
 
         MetricHitListener.capture(payload)
     }
+}
+
+private extension MetricsTracker {
+    static let applicationId: String? = {
+        Bundle.main.bundleIdentifier
+    }()
+
+    static let applicationVersion: String? = {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    }()
 }
 
 private extension MetricsTracker {
@@ -307,6 +324,15 @@ private extension MetricsTracker {
         properties.seekableTimeRange.duration.toMilliseconds
     }
 
+    static func languageCode(from properties: TrackerProperties?, for characteristic: AVMediaCharacteristic) -> String? {
+        if case let .on(option) = properties?.currentMediaOption(for: characteristic) {
+            return languageCode(from: option)
+        }
+        else {
+            return nil
+        }
+    }
+
     static func isUsingVirtualPrivateNetwork() -> Bool {
         // Source: https://blog.tarkalabs.com/the-ultimate-vpn-detection-guide-for-ios-and-android-313b521186cb
         guard let proxySettings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
@@ -316,5 +342,9 @@ private extension MetricsTracker {
         return scopedSettings.keys.contains { key in
             key == "tap" || key == "ppp" || key.contains("tun") || key.contains("ipsec")
         }
+    }
+
+    private static func languageCode(from option: AVMediaSelectionOption?) -> String? {
+        option?.locale?.language.languageCode?.identifier
     }
 }

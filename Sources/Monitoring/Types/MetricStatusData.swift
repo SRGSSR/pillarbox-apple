@@ -6,6 +6,7 @@
 
 struct MetricStatusData: Encodable {
     let airplay: Bool
+    let audio: String?
     let bandwidth: Double?
     let bitrate: Double?
     let bufferedDuration: Int?
@@ -16,6 +17,7 @@ struct MetricStatusData: Encodable {
     let positionTimestamp: Int?
     let stall: Stall
     let streamType: String?
+    let subtitles: String?
     let url: String?
 }
 
