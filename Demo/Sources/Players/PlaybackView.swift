@@ -126,9 +126,12 @@ private struct MainView: View {
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
-        .gesture(toggleGesture(), including: toggleGestureMask)
         .gesture(magnificationGesture(), including: magnificationGestureMask)
-        .simultaneousGesture(visibilityResetGesture())
+        .tapGestures(
+            onSingleTap: visibilityTracker.toggle,
+            onLeftDoubleTap: { player.skipBackward() },
+            onRightDoubleTap: { player.skipForward() }
+        )
         .supportsHighSpeed(!isMonoscopic, for: player)
     }
 
