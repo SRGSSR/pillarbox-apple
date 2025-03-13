@@ -52,6 +52,52 @@ private struct ScaleEffect17: ViewModifier {
     }
 }
 
+private struct TapGesturesModifier: ViewModifier {
+    let onSingleTap: () -> Void
+    let onLeftDoubleTap: () -> Void
+    let onRightDoubleTap: () -> Void
+
+    @State private var tapTask: DispatchWorkItem?
+
+    private var singleTap: some Gesture {
+        TapGesture(count: 1)
+            .onEnded {
+                let task = DispatchWorkItem(block: onSingleTap)
+                tapTask = task
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: task)
+            }
+    }
+
+    private var leftDoubleTap: some Gesture {
+        TapGesture(count: 2)
+            .onEnded {
+                tapTask?.cancel()
+                onLeftDoubleTap()
+            }
+    }
+
+    private var rightDoubleTap: some Gesture {
+        TapGesture(count: 2)
+            .onEnded {
+                tapTask?.cancel()
+                onRightDoubleTap()
+            }
+    }
+
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+            HStack(spacing: 0) {
+                Color.white.opacity(0.001)
+                    .gesture(leftDoubleTap)
+                Color.white.opacity(0.001)
+                    .gesture(rightDoubleTap)
+            }
+        }
+        .gesture(singleTap)
+    }
+}
+
 extension View {
     /// Prevents touch propagation to views located below the receiver.
     func preventsTouchPropagation() -> some View {
@@ -110,5 +156,11 @@ extension View {
         else {
             self
         }
+    }
+}
+
+extension View {
+    func tapGestures(onSingleTap: @escaping () -> Void, onLeftDoubleTap: @escaping () -> Void, onRightDoubleTap: @escaping () -> Void) -> some View {
+        modifier(TapGesturesModifier(onSingleTap: onSingleTap, onLeftDoubleTap: onLeftDoubleTap, onRightDoubleTap: onRightDoubleTap))
     }
 }
