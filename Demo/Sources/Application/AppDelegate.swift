@@ -18,7 +18,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     // swiftlint:disable:next discouraged_optional_collection
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        try? AVAudioSession.sharedInstance().setCategory(.playback)
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
         UserDefaults.registerDefaults()
         configureShowTime()
         configureDataProvider()
