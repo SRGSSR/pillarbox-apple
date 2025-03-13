@@ -74,7 +74,7 @@ private struct MainView: View {
     }
 
     private var toggleGestureMask: GestureMask {
-        !isInteracting ? .all : .subviews
+        !isInteracting && !skipTracker.isActive ? .all : .subviews
     }
 
     private var magnificationGestureMask: GestureMask {
@@ -127,12 +127,12 @@ private struct MainView: View {
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
-        // TODO: Use isEnabled?
+        .skipGesture(.forward, tracker: skipTracker) {
+            player.skipForward()
+        }
+        // TODO: Use isEnabled flag?
         .gesture(toggleGesture(), including: toggleGestureMask)
         .gesture(magnificationGesture(), including: magnificationGestureMask)
-        .skipGesture(.forward, tracker: skipTracker) {
-            print("--> forward")
-        }
         .simultaneousGesture(visibilityResetGesture())
         .supportsHighSpeed(!isMonoscopic, for: player)
     }

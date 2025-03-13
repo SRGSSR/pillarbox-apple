@@ -30,7 +30,7 @@ public final class SkipTracker: ObservableObject {
 
     private let trigger = Trigger()
 
-    var isEnabled: Bool {
+    public var isActive: Bool {
         if case .idle = state {
             return false
         }
@@ -101,8 +101,8 @@ private struct SkipModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .simultaneousGesture(singleTapGesture(), isEnabled: tracker.isEnabled)
-            .simultaneousGesture(doubleTapGesture())
+            .gesture(doubleTapGesture())
+            .simultaneousGesture(singleTapGesture(), isEnabled: tracker.isActive)
     }
 
     private func singleTapGesture() -> some Gesture {
