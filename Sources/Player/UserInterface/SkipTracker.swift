@@ -20,10 +20,24 @@ public enum Skip {
 }
 
 public final class SkipTracker: ObservableObject {
-    @Published private(set) var isEnabled = false
+    public enum State {
+        case idle
+        case backward(Int)
+        case forward(Int)
+    }
+
+    @Published public private(set) var state: State = .idle
 
     private let trigger = Trigger()
-    private var lastSkip: Skip? = nil
+
+    var isEnabled: Bool {
+        if case .idle = state {
+            return false
+        }
+        else {
+            return true
+        }
+    }
 
     public init(delay: TimeInterval = 0.4)  {
         trigger.signal(activatedBy: TriggerId.reset)
@@ -33,23 +47,45 @@ public final class SkipTracker: ObservableObject {
                     .first()
             }
             .switchToLatest()
-            .map { _ in false }
-            .assign(to: &$isEnabled)
+            .map { _ in .idle }
+            .assign(to: &$state)
     }
 
-    func enable(for skip: Skip) {
-        if let lastSkip, lastSkip != skip {
-            isEnabled = false
-        }
-        else {
-            isEnabled = true
+    func singleTap(for skip: Skip, action: () -> Void) {
+        switch (state, skip) {
+        case let (.backward(count), .backward):
+            state = .backward(count + 1)
+            perform(action: action)
+        case let (.forward(count), .forward):
+            state = .forward(count + 1)
+            perform(action: action)
+        default:
+            break
         }
     }
 
-    func skip(_ skip: Skip, action: () -> Void) {
+    func doubleTap(for skip: Skip, action: () -> Void) {
+        switch (state, skip) {
+        case (.forward, .forward), (.backward, .backward):
+            break
+        case (.idle, .backward):
+            state = .backward(1)
+            perform(action: action)
+        case (.idle, .forward):
+            state = .forward(1)
+            perform(action: action)
+        case (.forward, .backward):
+            state = .backward(0)
+            perform(action: action)
+        case (.backward, .forward):
+            state = .forward(0)
+            perform(action: action)
+        }
+    }
+
+    private func perform(action: () -> Void) {
         action()
         reset()
-        lastSkip = skip
     }
 
     private func reset() {
@@ -66,21 +102,20 @@ private struct SkipModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .simultaneousGesture(singleTapGesture(), isEnabled: tracker.isEnabled)
-            .simultaneousGesture(doubleTapGesture(), isEnabled: !tracker.isEnabled)
+            .simultaneousGesture(doubleTapGesture())
     }
 
     private func singleTapGesture() -> some Gesture {
         TapGesture()
             .onEnded {
-                tracker.skip(skip, action: action)
+                tracker.singleTap(for: skip, action: action)
             }
     }
 
     private func doubleTapGesture() -> some Gesture {
         TapGesture(count: 2)
             .onEnded {
-                tracker.enable(for: skip)
-                tracker.skip(skip, action: action)
+                tracker.doubleTap(for: skip, action: action)
             }
     }
 }
@@ -95,17 +130,31 @@ private struct SkipPreview: View {
     @StateObject var tracker = SkipTracker()
 
     var body: some View {
-        HStack {
-            Color.red
-                .skipGesture(.backward, tracker: tracker) {
-                    print("--> back")
-                }
-            Color.yellow
-                .skipGesture(.forward, tracker: tracker) {
-                    print("--> forward")
-                }
+        VStack {
+            HStack {
+                Color.red
+                    .skipGesture(.backward, tracker: tracker) {
+                        print("--> back")
+                    }
+                Color.yellow
+                    .skipGesture(.forward, tracker: tracker) {
+                        print("--> forward")
+                    }
+            }
+            Text(status)
         }
         .ignoresSafeArea()
+    }
+
+    private var status: String {
+        switch tracker.state {
+        case .idle:
+            "Idle"
+        case let .backward(count):
+            "-\(count)"
+        case let .forward(count):
+            "+\(count)"
+        }
     }
 }
 
