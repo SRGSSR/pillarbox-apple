@@ -57,30 +57,50 @@ private struct TapGesturesModifier: ViewModifier {
     let onLeftDoubleTap: () -> Void
     let onRightDoubleTap: () -> Void
 
-    @State private var tapTask: DispatchWorkItem?
+    @State private var singleTapTask: DispatchWorkItem?
+    @State private var doubleTapTask: DispatchWorkItem?
+    @State private var doubleTapCount: Int = 2
 
     private var singleTap: some Gesture {
         TapGesture(count: 1)
             .onEnded {
                 let task = DispatchWorkItem(block: onSingleTap)
-                tapTask = task
+                singleTapTask = task
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: task)
             }
     }
 
     private var leftDoubleTap: some Gesture {
-        TapGesture(count: 2)
+        TapGesture(count: doubleTapCount)
             .onEnded {
-                tapTask?.cancel()
+                singleTapTask?.cancel()
+                doubleTapTask?.cancel()
+
                 onLeftDoubleTap()
+                doubleTapCount = 1
+
+                let task = DispatchWorkItem {
+                    doubleTapCount = 2
+                }
+                doubleTapTask = task
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
             }
     }
 
     private var rightDoubleTap: some Gesture {
-        TapGesture(count: 2)
+        TapGesture(count: doubleTapCount)
             .onEnded {
-                tapTask?.cancel()
+                singleTapTask?.cancel()
+                doubleTapTask?.cancel()
+
                 onRightDoubleTap()
+                doubleTapCount = 1
+
+                let task = DispatchWorkItem {
+                    doubleTapCount = 2
+                }
+                doubleTapTask = task
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
             }
     }
 
