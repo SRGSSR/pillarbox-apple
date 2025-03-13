@@ -60,12 +60,14 @@ private struct TapGesturesModifier: ViewModifier {
     @State private var singleTapTask: DispatchWorkItem?
     @State private var doubleTapTask: DispatchWorkItem?
     @State private var doubleTapCount: Int = 2
+    @State private var allowsHitTesting = true
 
     private var singleTap: some Gesture {
         TapGesture(count: 1)
             .onEnded {
                 let task = DispatchWorkItem(block: onSingleTap)
                 singleTapTask = task
+                allowsHitTesting = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: task)
             }
     }
@@ -81,6 +83,7 @@ private struct TapGesturesModifier: ViewModifier {
 
                 let task = DispatchWorkItem {
                     doubleTapCount = 2
+                    allowsHitTesting = true
                 }
                 doubleTapTask = task
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
@@ -98,23 +101,36 @@ private struct TapGesturesModifier: ViewModifier {
 
                 let task = DispatchWorkItem {
                     doubleTapCount = 2
+                    allowsHitTesting = true
                 }
                 doubleTapTask = task
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
             }
     }
 
-    func body(content: Content) -> some View {
-        ZStack {
-            content
-            HStack(spacing: 0) {
-                Color.white.opacity(0.001)
-                    .gesture(leftDoubleTap)
-                Color.white.opacity(0.001)
-                    .gesture(rightDoubleTap)
+    private var initialDoubleTap: some Gesture {
+        TapGesture(count: 2)
+            .onEnded {
+                allowsHitTesting = false
             }
-        }
-        .gesture(singleTap)
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .gesture(initialDoubleTap)
+            .allowsHitTesting(allowsHitTesting)
+            .overlay {
+                HStack(spacing: 0) {
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .gesture(leftDoubleTap)
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .gesture(rightDoubleTap)
+                }
+                .allowsHitTesting(!allowsHitTesting)
+            }
+            .gesture(singleTap)
     }
 }
 

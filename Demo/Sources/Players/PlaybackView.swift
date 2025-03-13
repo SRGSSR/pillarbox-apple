@@ -128,8 +128,14 @@ private struct MainView: View {
         .readLayout(into: $layoutInfo)
         .tapGestures(
             onSingleTap: visibilityTracker.toggle,
-            onLeftDoubleTap: { player.skipBackward() },
-            onRightDoubleTap: { player.skipForward() }
+            onLeftDoubleTap: {
+                player.skipBackward()
+                visibilityTracker.reset()
+            },
+            onRightDoubleTap: {
+                player.skipForward()
+                visibilityTracker.reset()
+            }
         )
         .gesture(magnificationGesture(), including: magnificationGestureMask)
         .supportsHighSpeed(!isMonoscopic, for: player)
