@@ -22,6 +22,7 @@ private struct MainView: View {
 
     @StateObject private var visibilityTracker = VisibilityTracker()
     @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1), limit: 90)
+    @StateObject private var skipTracker = SkipTracker()
 
     @State private var layoutInfo: LayoutInfo = .none
     @State private var isPresentingMetrics = false
@@ -126,8 +127,12 @@ private struct MainView: View {
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
+        // TODO: Use isEnabled?
         .gesture(toggleGesture(), including: toggleGestureMask)
         .gesture(magnificationGesture(), including: magnificationGestureMask)
+        .skipGesture(.forward, tracker: skipTracker) {
+            print("--> forward")
+        }
         .simultaneousGesture(visibilityResetGesture())
         .supportsHighSpeed(!isMonoscopic, for: player)
     }
