@@ -101,7 +101,7 @@ private struct SkipModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .gesture(tapGesture())
+            .simultaneousGesture(tapGesture())
     }
 
     private func tapGesture() -> some Gesture {
