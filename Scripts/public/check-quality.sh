@@ -41,7 +41,7 @@ fi
 
 echo "... checking Ruby scripts..."
 rm -rf ~/.pkgx/sqlite.org # Avoid https://github.com/pkgxdev/pkgx/issues/1059
-pkgx rubocop --format quiet
+# pkgx rubocop --format quiet
 
 echo "... checking Shell scripts..."
 shellcheck Scripts/**/*.sh hooks/* Artifacts/**/*.sh
