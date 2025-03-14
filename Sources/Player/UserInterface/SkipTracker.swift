@@ -101,21 +101,18 @@ private struct SkipModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .gesture(doubleTapGesture())
-            .simultaneousGesture(singleTapGesture(), isEnabled: tracker.isActive)
+            .gesture(tapGesture())
     }
 
-    private func singleTapGesture() -> some Gesture {
-        TapGesture()
+    private func tapGesture() -> some Gesture {
+        TapGesture(count: tracker.isActive ? 1 : 2)
             .onEnded {
-                tracker.singleTap(for: skip, action: action)
-            }
-    }
-
-    private func doubleTapGesture() -> some Gesture {
-        TapGesture(count: 2)
-            .onEnded {
-                tracker.doubleTap(for: skip, action: action)
+                if tracker.isActive {
+                    tracker.singleTap(for: skip, action: action)
+                }
+                else {
+                    tracker.doubleTap(for: skip, action: action)
+                }
             }
     }
 }
