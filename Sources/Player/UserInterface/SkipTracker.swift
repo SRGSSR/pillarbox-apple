@@ -108,24 +108,14 @@ public final class SkipTracker: ObservableObject {
 
     private func update(request: Request, with skip: Skip) -> Request {
         switch (request, skip) {
-        case let (.backward(count), .backward):
-            return .backward(count + 1)
-        case let (.forward(count), .forward):
-            return .forward(count + 1)
-        case let (.backward(count), .forward):
-            if count >= self.count {
-                return .forward(self.count)
-            }
-            else {
-                return .forward(1)
-            }
-        case let (.forward(count), .backward):
-            if count >= self.count {
-                return .backward(self.count)
-            }
-            else {
-                return .backward(1)
-            }
+        case let (.backward(requestCount), .backward):
+            return .backward(requestCount + 1)
+        case let (.forward(requestCount), .forward):
+            return .forward(requestCount + 1)
+        case let (.backward(requestCount), .forward):
+            return .forward(requestCount >= count ? count : 1)
+        case let (.forward(requestCount), .backward):
+            return .backward(requestCount >= count ? count : 1)
         }
     }
 
