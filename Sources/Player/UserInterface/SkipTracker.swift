@@ -34,14 +34,7 @@ public final class SkipTracker: ObservableObject {
 
     /// The current tracker state.
     public var state: State {
-        switch request {
-        case let .backward(requestCount):
-            guard let interval = interval(forRequestCount: requestCount, skip: .backward) else { return .idle}
-            return .skippingBackward(interval)
-        case let .forward(requestCount):
-            guard let interval = interval(forRequestCount: requestCount, skip: .forward) else { return .idle }
-            return .skippingForward(interval)
-        }
+        state(from: request)
     }
 
     private let count: Int
@@ -81,6 +74,17 @@ public final class SkipTracker: ObservableObject {
         }
     }
 
+    private func state(from request: Request) -> State {
+        switch request {
+        case let .backward(requestCount):
+            guard let interval = interval(forRequestCount: requestCount, skip: .backward) else { return .idle}
+            return .skippingBackward(interval)
+        case let .forward(requestCount):
+            guard let interval = interval(forRequestCount: requestCount, skip: .forward) else { return .idle }
+            return .skippingForward(interval)
+        }
+    }
+
     /// Request a skip in a given direction.
     ///
     /// - Parameter skip: The skip direction.
@@ -88,6 +92,14 @@ public final class SkipTracker: ObservableObject {
     public func requestSkip(_ skip: Skip) -> Bool {
         guard let player, Self.canRequest(skip, for: player) else { return false }
         request = update(request: request, with: skip)
+        switch state(from: request) {
+        case .skippingBackward:
+            player.skipBackward()
+        case .skippingForward:
+            player.skipForward()
+        case .idle:
+            break
+        }
         reset()
         return true
     }
