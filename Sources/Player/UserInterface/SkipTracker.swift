@@ -6,6 +6,7 @@
 
 import Combine
 import Foundation
+import PillarboxCore
 import SwiftUI
 
 /// A skip.
@@ -27,7 +28,34 @@ public final class SkipTracker: ObservableObject {
     @Published public var player: Player?
 
     /// The current tracker state.
-    @Published public private(set) var state: State = .idle
+    public var state: State {
+        guard let player else { return .idle }
+        switch request {
+        case let .backward(requestCount):
+            guard let interval = Self.skipInterval(
+                forRequestCount: requestCount,
+                count: count,
+                interval: player.configuration.backwardSkipInterval
+            ) else {
+                return .idle
+            }
+            return .skippingBackward(interval)
+        case let .forward(requestCount):
+            guard let interval = Self.skipInterval(
+                forRequestCount: requestCount,
+                count: count,
+                interval: player.configuration.forwardSkipInterval
+            ) else {
+                return .idle
+            }
+            return .skippingForward(interval)
+        }
+    }
+
+    private let count: Int
+    private let trigger = Trigger()
+
+    @Published private var request: Request = .none
 
     /// Create a tracker managing skips.
     ///
@@ -35,12 +63,74 @@ public final class SkipTracker: ObservableObject {
     ///   - count: The required number of requests which to be made to enable skip mode.
     ///   - delay: The delay after which skip mode is disabled.
     public init(count: Int = 2, delay: TimeInterval = 0.4) {
+        // swiftlint:disable:next empty_count
+        assert(count > 0 && delay > 0)
+        self.count = count
+        configureIdlePublisher(delay: delay)
+    }
+
+    private static func canRequest(_ skip: Skip, for player: Player) -> Bool {
+        switch skip {
+        case .backward:
+            return player.canSkipBackward()
+        case .forward:
+            return player.canSkipForward()
+        }
+    }
+
+    private static func skipInterval(forRequestCount requestCount: Int, count: Int, interval: TimeInterval) -> TimeInterval? {
+        guard requestCount >= count else { return nil }
+        return Double(requestCount - count + 1) * interval
     }
 
     /// Request a skip in a given direction.
     ///
     /// - Parameter skip: The skip direction.
-    public func requestSkip(_ skip: Skip) {
+    @discardableResult
+    public func requestSkip(_ skip: Skip) -> Bool {
+        guard let player, Self.canRequest(skip, for: player) else { return false }
+        request = update(request: request, with: skip)
+        reset()
+        return true
+    }
+
+    private func configureIdlePublisher(delay: TimeInterval) {
+        trigger.signal(activatedBy: TriggerId.reset)
+            .map { _ in
+                Timer.publish(every: delay, on: .main, in: .common)
+                    .autoconnect()
+                    .first()
+            }
+            .switchToLatest()
+            .map { _ in .none }
+            .assign(to: &$request)
+    }
+
+    private func update(request: Request, with skip: Skip) -> Request {
+        switch (request, skip) {
+        case let (.backward(count), .backward):
+            return .backward(count + 1)
+        case let (.forward(count), .forward):
+            return .forward(count + 1)
+        case let (.backward(count), .forward):
+            if count >= self.count {
+                return .forward(self.count)
+            }
+            else {
+                return .forward(1)
+            }
+        case let (.forward(count), .backward):
+            if count >= self.count {
+                return .backward(self.count)
+            }
+            else {
+                return .backward(1)
+            }
+        }
+    }
+
+    private func reset() {
+        trigger.activate(for: TriggerId.reset)
     }
 }
 
@@ -55,6 +145,21 @@ public extension SkipTracker {
 
         /// Skipping forward.
         case skippingForward(TimeInterval)
+    }
+}
+
+private extension SkipTracker {
+    enum Request {
+        case backward(Int)
+        case forward(Int)
+
+        static var none: Self {
+            .backward(0)
+        }
+    }
+
+    enum TriggerId {
+        case reset
     }
 }
 
