@@ -22,6 +22,7 @@ private struct MainView: View {
 
     @StateObject private var visibilityTracker = VisibilityTracker()
     @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1), limit: 90)
+    @StateObject private var skipTracker = SkipTracker()
 
     @State private var layoutInfo: LayoutInfo = .none
     @State private var isPresentingMetrics = false
@@ -72,14 +73,6 @@ private struct MainView: View {
         layoutInfo.isOverCurrentContext ? selectedGravity : .resizeAspect
     }
 
-    private var toggleGestureMask: GestureMask {
-        !isInteracting ? .all : .subviews
-    }
-
-    private var magnificationGestureMask: GestureMask {
-        layoutInfo.isOverCurrentContext ? .all : .subviews
-    }
-
     private var isUserInterfaceHidden: Bool {
         visibilityTracker.isUserInterfaceHidden && !shouldKeepControlsAlwaysVisible && !player.canReplay()
     }
@@ -113,23 +106,36 @@ private struct MainView: View {
             .onEnded(visibilityTracker.reset)
     }
 
+    private func skipGesture(in geometry: GeometryProxy) -> some Gesture {
+        SpatialTapGesture()
+            .onEnded { value in
+                if skipTracker.requestSkip(value.location.x < geometry.size.width / 2 ? .backward : .forward) {
+                    visibilityTracker.hide()
+                }
+            }
+    }
+
     private func main() -> some View {
-        ZStack {
-            video()
-                .accessibilityElement()
-                .accessibilityLabel("Video")
-                .accessibilityHint("Double tap to toggle controls")
-                .accessibilityAction(.default, visibilityTracker.toggle)
-                .accessibilityHidden(shouldKeepControlsAlwaysVisible)
-            controls()
+        GeometryReader { geometry in
+            ZStack {
+                video()
+                    .accessibilityElement()
+                    .accessibilityLabel("Video")
+                    .accessibilityHint("Double tap to toggle controls")
+                    .accessibilityAction(.default, visibilityTracker.toggle)
+                    .accessibilityHidden(shouldKeepControlsAlwaysVisible)
+                controls()
+            }
+            .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
+            .gesture(magnificationGesture(), isEnabled: layoutInfo.isOverCurrentContext)
+            .simultaneousGesture(visibilityResetGesture())
+            .simultaneousGesture(skipGesture(in: geometry))
+            .gesture(toggleGesture(), isEnabled: !isInteracting)
+            .supportsHighSpeed(!isMonoscopic, for: player)
         }
         .ignoresSafeArea()
-        .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
-        .gesture(toggleGesture(), including: toggleGestureMask)
-        .gesture(magnificationGesture(), including: magnificationGestureMask)
-        .simultaneousGesture(visibilityResetGesture())
-        .supportsHighSpeed(!isMonoscopic, for: player)
+        .bind(skipTracker, to: player)
     }
 
     private func metadata() -> some View {

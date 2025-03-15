@@ -88,19 +88,20 @@ public final class SkipTracker: ObservableObject {
     /// Request a skip in a given direction.
     ///
     /// - Parameter skip: The skip direction.
+    /// - Returns: `true` iff the request could be fulfilled.
     @discardableResult
     public func requestSkip(_ skip: Skip) -> Bool {
         guard let player, Self.canRequest(skip, for: player) else { return false }
         request = update(request: request, with: skip)
+        reset()
         switch state(from: request) {
         case .skippingBackward:
             player.skipBackward()
         case .skippingForward:
             player.skipForward()
         case .idle:
-            break
+            return false
         }
-        reset()
         return true
     }
 

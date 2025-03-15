@@ -15,12 +15,8 @@ struct ContentView: View {
             .gravity(gravity)
             .readLayout(into: $layoutInfo)
             .padding(50)
-            .gesture(magnificationGesture(), including: magnificationGestureMask)
+            .gesture(magnificationGesture(), isEnabled: layoutInfo.isOverCurrentContext)
             .onAppear(perform: player.play)
-    }
-
-    private var magnificationGestureMask: GestureMask {
-        layoutInfo.isOverCurrentContext ? .all : .subviews
     }
 
     private func magnificationGesture() -> some Gesture {
