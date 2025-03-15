@@ -46,7 +46,7 @@ public final class SkipTracker: ObservableObject {
 
 public extension SkipTracker {
     /// A skip tracker state.
-    enum State {
+    enum State: Equatable {
         /// Idle.
         case idle
 
