@@ -19,7 +19,8 @@ public enum Skip {
     case forward
 }
 
-// TODO: Possibly bound to a player to adjust behavior based on player state
+// TODO: Possibly bound to a player to adjust behavior based on player state. E.g. increase counter only if player says
+//       that it can skip!
 public final class SkipTracker: ObservableObject {
     public enum State {
         case idle
