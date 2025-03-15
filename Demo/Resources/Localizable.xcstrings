@@ -7,6 +7,22 @@
     "-" : {
 
     },
+    "-%lfs" : {
+
+    },
+    "-%llds" : {
+
+    },
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
     "%g× %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -17,6 +33,12 @@
           }
         }
       }
+    },
+    "+%lfs" : {
+
+    },
+    "+%llds" : {
+
     },
     "Action at item end" : {
 
