@@ -105,14 +105,17 @@ private struct SkipModifier: ViewModifier {
     }
 
     private func tapGesture() -> some Gesture {
-        TapGesture(count: tracker.isActive ? 1 : 2)
-            .onEnded {
+        SpatialTapGesture(count: tracker.isActive ? 1 : 2)
+            .onEnded { _ in
                 if tracker.isActive {
                     tracker.singleTap(for: skip, action: action)
                 }
                 else {
                     tracker.doubleTap(for: skip, action: action)
                 }
+            }
+            .onEnded { _ in
+                print("--> closure 2")
             }
     }
 }
