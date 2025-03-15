@@ -51,7 +51,16 @@ public final class SkipTracker: ObservableObject {
             .assign(to: &$state)
     }
 
-    func singleTap(for skip: Skip, action: () -> Void) {
+    func tap(for skip: Skip, action: () -> Void) {
+        if isActive {
+            singleTap(for: skip, action: action)
+        }
+        else {
+            doubleTap(for: skip, action: action)
+        }
+    }
+
+    private func singleTap(for skip: Skip, action: () -> Void) {
         switch (state, skip) {
         case let (.backward(count), .backward):
             state = .backward(count + 1)
@@ -64,7 +73,7 @@ public final class SkipTracker: ObservableObject {
         }
     }
 
-    func doubleTap(for skip: Skip, action: () -> Void) {
+    private func doubleTap(for skip: Skip, action: () -> Void) {
         switch (state, skip) {
         case (.forward, .forward), (.backward, .backward):
             break
@@ -107,12 +116,7 @@ private struct SkipModifier: ViewModifier {
     private func tapGesture() -> some Gesture {
         SpatialTapGesture(count: tracker.isActive ? 1 : 2)
             .onEnded { _ in
-                if tracker.isActive {
-                    tracker.singleTap(for: skip, action: action)
-                }
-                else {
-                    tracker.doubleTap(for: skip, action: action)
-                }
+                tracker.tap(for: skip, action: action)
             }
             .onEnded { _ in
                 print("--> closure 2")
