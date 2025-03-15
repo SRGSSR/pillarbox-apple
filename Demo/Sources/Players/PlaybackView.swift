@@ -82,7 +82,7 @@ private struct MainView: View {
     }
 
     private var isUserInterfaceHidden: Bool {
-        (visibilityTracker.isUserInterfaceHidden && !shouldKeepControlsAlwaysVisible && !player.canReplay()) || skipTracker.isActive
+        visibilityTracker.isUserInterfaceHidden && !shouldKeepControlsAlwaysVisible && !player.canReplay()
     }
 
     private var title: String? {
