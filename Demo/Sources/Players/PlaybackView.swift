@@ -132,7 +132,24 @@ private struct MainView: View {
             .simultaneousGesture(skipGesture(in: geometry))
             .gesture(toggleGesture(), isEnabled: !isInteracting)
             .supportsHighSpeed(!isMonoscopic, for: player)
+            .overlay(alignment: .center) {
+                if case let .skippingBackward(interval) = skipTracker.state {
+                    Text("-\(Int(interval))s")
+                        .bold()
+                        .offset(x: -geometry.size.width / 4)
+                        .contentTransition(.numericText())
+                }
+            }
+            .overlay(alignment: .center) {
+                if case let .skippingForward(interval) = skipTracker.state {
+                    Text("+\(Int(interval))s")
+                        .bold()
+                        .offset(x: geometry.size.width / 4)
+                        .contentTransition(.numericText())
+                }
+            }
         }
+        .animation(.defaultLinear, value: skipTracker.state)
         .ignoresSafeArea()
         .readLayout(into: $layoutInfo)
         .bind(skipTracker, to: player)
