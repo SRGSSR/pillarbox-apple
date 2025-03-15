@@ -20,13 +20,22 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.state).to(equal(.idle))
     }
 
-    func testRequestWithDvrStream() {
+    func testFulfilledRequest() {
         let skipTracker = SkipTracker()
-        let player = Player(item: PlayerItem.simple(url: Stream.dvr.url))
+        let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
         expect(player.playbackState).toEventually(equal(.paused))
-        expect(skipTracker.requestSkip(.forward)).to(beFalse())
+        expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
+    }
+
+    func testUnfulfilledRequest() {
+        let skipTracker = SkipTracker()
+        let player = Player(item: PlayerItem.simple(url: Stream.live.url))
+        skipTracker.player = player
+        expect(player.playbackState).toEventually(equal(.paused))
+        expect(skipTracker.requestSkip(.backward)).to(beFalse())
+        expect(skipTracker.requestSkip(.backward)).to(beFalse())
     }
 
     func testIdenticalRequests() {
@@ -34,7 +43,7 @@ final class SkipTrackerTests: TestCase {
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
         expect(player.playbackState).toEventually(equal(.paused))
-        expect(skipTracker.requestSkip(.backward)).to(beTrue())
+        expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.state).to(equal(.idle))
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
         expect(skipTracker.state).to(equal(.skippingBackward(10)))
@@ -47,9 +56,9 @@ final class SkipTrackerTests: TestCase {
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
         expect(player.playbackState).toEventually(equal(.paused))
-        expect(skipTracker.requestSkip(.backward)).to(beTrue())
+        expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.state).to(equal(.idle))
-        expect(skipTracker.requestSkip(.forward)).to(beTrue())
+        expect(skipTracker.requestSkip(.forward)).to(beFalse())
         expect(skipTracker.state).to(equal(.idle))
         expect(skipTracker.requestSkip(.forward)).to(beTrue())
         expect(skipTracker.state).to(equal(.skippingForward(10)))
@@ -64,9 +73,9 @@ final class SkipTrackerTests: TestCase {
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
         expect(player.playbackState).toEventually(equal(.paused))
-        expect(skipTracker.requestSkip(.backward)).to(beTrue())
+        expect(skipTracker.requestSkip(.backward)).to(beFalse())
         wait(for: .milliseconds(200))
-        expect(skipTracker.requestSkip(.backward)).to(beTrue())
+        expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.state).to(equal(.idle))
     }
 
@@ -75,7 +84,7 @@ final class SkipTrackerTests: TestCase {
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
         expect(player.playbackState).toEventually(equal(.paused))
-        expect(skipTracker.requestSkip(.backward)).to(beTrue())
+        expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
         expect(skipTracker.state).to(equal(.skippingBackward(10)))
         wait(for: .milliseconds(200))
@@ -87,7 +96,7 @@ final class SkipTrackerTests: TestCase {
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
         expect(player.playbackState).toEventually(equal(.paused))
-        expect(skipTracker.requestSkip(.forward)).to(beTrue())
+        expect(skipTracker.requestSkip(.forward)).to(beFalse())
         expect(skipTracker.requestSkip(.forward)).to(beTrue())
         expect(player.time().seconds).toEventually(beGreaterThan(5))
     }
@@ -111,7 +120,7 @@ final class SkipTrackerTests: TestCase {
 
         let skipTracker = SkipTracker()
         skipTracker.player = player1
-        expect(skipTracker.requestSkip(.backward)).to(beTrue())
+        expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
         expect(skipTracker.state).to(equal(.skippingBackward(10)))
 
