@@ -103,40 +103,12 @@ public final class SkipTracker: ObservableObject {
     }
 }
 
-private struct SkipModifier: ViewModifier {
-    let skip: Skip
-    let action: () -> Void
-
-    @ObservedObject var tracker: SkipTracker
-
-    func body(content: Content) -> some View {
-        content
-            .simultaneousGesture(tapGesture())
-    }
-
-    private func tapGesture() -> some Gesture {
-        SpatialTapGesture(count: tracker.isActive ? 1 : 2)
-            .onEnded { _ in
-                tracker.tap(for: skip, action: action)
-            }
-            .onEnded { _ in
-                print("--> closure 2")
-            }
-    }
-}
-
-public extension View {
-    func skipGesture(_ skip: Skip, tracker: SkipTracker, action: @escaping () -> Void) -> some View {
-        modifier(SkipModifier(skip: skip, action: action, tracker: tracker))
-    }
-}
-
 public func SkipGesture(
     tracker: SkipTracker,
     player: Player,
     coordinateSpace: CoordinateSpace = .local,
     resolver: @escaping (CGPoint) -> Skip
-) -> some Gesture {
+) -> _EndedGesture<SpatialTapGesture> {
     SpatialTapGesture(count: tracker.isActive ? 1 : 2, coordinateSpace: coordinateSpace)
         .onEnded { value in
             let skip = resolver(value.location)
@@ -158,15 +130,16 @@ private struct SkipPreview: View {
 
     var body: some View {
         VStack {
-            HStack {
-                Color.red
-                    .skipGesture(.backward, tracker: tracker) {
-                        print("--> back")
+            GeometryReader { proxy in
+                HStack(spacing: 0) {
+                    Color.red
+                    Color.yellow
+                }
+                .gesture(
+                    SkipGesture(tracker: tracker, player: Player()) { point in
+                        point.x < proxy.size.width / 2 ? .backward : .forward
                     }
-                Color.yellow
-                    .skipGesture(.forward, tracker: tracker) {
-                        print("--> forward")
-                    }
+                )
             }
             Text(status)
         }

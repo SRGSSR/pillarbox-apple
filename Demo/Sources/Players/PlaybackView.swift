@@ -115,26 +115,33 @@ private struct MainView: View {
     }
 
     private func main() -> some View {
-        ZStack {
-            video()
-                .accessibilityElement()
-                .accessibilityLabel("Video")
-                .accessibilityHint("Double tap to toggle controls")
-                .accessibilityAction(.default, visibilityTracker.toggle)
-                .accessibilityHidden(shouldKeepControlsAlwaysVisible)
-            controls()
+        GeometryReader { proxy in
+            ZStack {
+                video()
+                    .accessibilityElement()
+                    .accessibilityLabel("Video")
+                    .accessibilityHint("Double tap to toggle controls")
+                    .accessibilityAction(.default, visibilityTracker.toggle)
+                    .accessibilityHidden(shouldKeepControlsAlwaysVisible)
+                controls()
+            }
+            .ignoresSafeArea()
+            .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
+            .readLayout(into: $layoutInfo)
+            .gesture(
+                SkipGesture(tracker: skipTracker, player: player) { point in
+                    point.x < proxy.size.width / 2 ? .backward : .forward
+                }
+                .onEnded { value in
+                    print("--> interact at \(value.location)")
+                }
+            )
+            // TODO: Use isEnabled flag?
+            .gesture(toggleGesture(), including: toggleGestureMask)
+            .gesture(magnificationGesture(), including: magnificationGestureMask)
+            .simultaneousGesture(visibilityResetGesture())
+            .supportsHighSpeed(!isMonoscopic, for: player)
         }
-        .ignoresSafeArea()
-        .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
-        .readLayout(into: $layoutInfo)
-        .skipGesture(.forward, tracker: skipTracker) {
-            player.skipForward()
-        }
-        // TODO: Use isEnabled flag?
-        .gesture(toggleGesture(), including: toggleGestureMask)
-        .gesture(magnificationGesture(), including: magnificationGestureMask)
-        .simultaneousGesture(visibilityResetGesture())
-        .supportsHighSpeed(!isMonoscopic, for: player)
     }
 
     private func metadata() -> some View {
