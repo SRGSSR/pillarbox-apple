@@ -13,14 +13,14 @@ import PillarboxStreams
 
 #if os(iOS)
 final class SkipTrackerTests: TestCase {
-    func testEmptyPlayer() {
+    func testRequestsWithEmptyPlayer() {
         let skipTracker = SkipTracker()
         expect(skipTracker.requestSkip(.forward)).to(beFalse())
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.state).to(equal(.idle))
     }
 
-    func testRequestSucceedsWhenSeekPossible() {
+    func testRequestWithDvrStream() {
         let skipTracker = SkipTracker()
         let player = Player(item: PlayerItem.simple(url: Stream.dvr.url))
         skipTracker.player = player
@@ -29,7 +29,7 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
     }
 
-    func testIdenticalSkips() {
+    func testIdenticalRequests() {
         let skipTracker = SkipTracker()
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
@@ -42,7 +42,7 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.state).to(equal(.skippingBackward(20)))
     }
 
-    func testMixedSkips() {
+    func testMixedRequests() {
         let skipTracker = SkipTracker()
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
@@ -59,7 +59,7 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.state).to(equal(.skippingBackward(20)))
     }
 
-    func testCannotTriggerAfterDelay() {
+    func testSpacedRequests() {
         let skipTracker = SkipTracker(delay: 0.1)
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
@@ -80,6 +80,16 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.state).to(equal(.skippingBackward(10)))
         wait(for: .milliseconds(200))
         expect(skipTracker.state).to(equal(.idle))
+    }
+
+    func testPlayerPosition() {
+        let skipTracker = SkipTracker()
+        let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
+        skipTracker.player = player
+        expect(player.playbackState).toEventually(equal(.paused))
+        expect(skipTracker.requestSkip(.forward)).to(beTrue())
+        expect(skipTracker.requestSkip(.forward)).to(beTrue())
+        expect(player.time().seconds).toEventually(beGreaterThan(5))
     }
 
     func testInvalidCount() {
