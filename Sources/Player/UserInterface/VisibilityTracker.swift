@@ -94,6 +94,16 @@ public final class VisibilityTracker: ObservableObject {
         togglePublisher.send(!isUserInterfaceHidden)
     }
 
+    /// Shows the user interface.
+    public func show() {
+        togglePublisher.send(false)
+    }
+
+    /// Hides the user interface.
+    public func hide() {
+        togglePublisher.send(true)
+    }
+
     /// Resets user interface auto hide delay.
     public func reset() {
         guard !isUserInterfaceHidden else { return }
