@@ -25,7 +25,12 @@ public final class SkipTracker: ObservableObject {
     /// The player to attach.
     ///
     /// Use `View.bind(_:to:)` in SwiftUI code.
-    @Published public var player: Player?
+    public var player: Player? {
+        didSet {
+            guard player != oldValue else { return }
+            request = .none
+        }
+    }
 
     /// The current tracker state.
     public var state: State {

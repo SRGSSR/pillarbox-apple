@@ -7,6 +7,7 @@
 @testable import PillarboxPlayer
 
 import Nimble
+import ObjectiveC
 import PillarboxCircumspect
 import PillarboxStreams
 
@@ -92,12 +93,20 @@ final class SkipTrackerTests: TestCase {
     }
 
     func testPlayerChangeResetsTracking() {
-    }
+        let player1 = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
+        expect(player1.playbackState).toEventually(equal(.paused))
 
-    func testDeallocation() {
-    }
+        let player2 = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
+        expect(player2.playbackState).toEventually(equal(.paused))
 
-    func testDeallocationWhilePlaying() {
+        let skipTracker = SkipTracker()
+        skipTracker.player = player1
+        expect(skipTracker.requestSkip(.backward)).to(beTrue())
+        expect(skipTracker.requestSkip(.backward)).to(beTrue())
+        expect(skipTracker.state).to(equal(.skippingBackward(10)))
+
+        skipTracker.player = player2
+        expect(skipTracker.state).to(equal(.idle))
     }
 }
 #endif
