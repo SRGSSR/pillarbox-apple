@@ -19,6 +19,7 @@ public enum Skip {
     case forward
 }
 
+// TODO: Possibly bound to a player to adjust behavior based on player state
 public final class SkipTracker: ObservableObject {
     public enum State {
         case idle
@@ -128,6 +129,28 @@ public extension View {
     func skipGesture(_ skip: Skip, tracker: SkipTracker, action: @escaping () -> Void) -> some View {
         modifier(SkipModifier(skip: skip, action: action, tracker: tracker))
     }
+}
+
+public func SkipGesture(
+    tracker: SkipTracker,
+    player: Player,
+    coordinateSpace: CoordinateSpace = .local,
+    resolver: @escaping (CGPoint) -> Skip
+) -> some Gesture {
+    SpatialTapGesture(count: tracker.isActive ? 1 : 2, coordinateSpace: coordinateSpace)
+        .onEnded { value in
+            let skip = resolver(value.location)
+            switch skip {
+            case .backward:
+                tracker.tap(for: .backward) {
+                    player.skipBackward()
+                }
+            case .forward:
+                tracker.tap(for: .forward) {
+                    player.skipForward()
+                }
+            }
+        }
 }
 
 private struct SkipPreview: View {
