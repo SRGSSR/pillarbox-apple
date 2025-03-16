@@ -27,6 +27,11 @@ public final class SkipTracker: ObservableObject {
     public var activeState: State? {
         activeState(from: state)
     }
+    
+    /// A Boolean that describes whether skipping is currently active.
+    public var isActive: Bool {
+        activeState != nil
+    }
 
     private let count: Int
     private let trigger = Trigger()
@@ -45,15 +50,6 @@ public final class SkipTracker: ObservableObject {
         configureIdlePublisher(delay: delay)
     }
 
-    private static func canRequest(_ skip: Skip, for player: Player) -> Bool {
-        switch skip {
-        case .backward:
-            return player.canSkipBackward()
-        case .forward:
-            return player.canSkipForward()
-        }
-    }
-
     private func activeState(from requestState: State?) -> State? {
         guard let requestState, requestState.count >= count else { return nil }
         return .init(skip: requestState.skip, count: requestState.count - count + 1)
@@ -65,17 +61,12 @@ public final class SkipTracker: ObservableObject {
     /// - Returns: `true` iff the request could be fulfilled.
     @discardableResult
     public func requestSkip(_ skip: Skip) -> Bool {
-        guard let player, Self.canRequest(skip, for: player) else { return false }
+        guard let player, player.canSkip(skip) else { return false }
         state = update(state: state, with: skip)
         reset()
 
         guard let activeState = activeState(from: state) else { return false }
-        switch activeState.skip {
-        case .backward:
-            player.skipBackward()
-        case .forward:
-            player.skipForward()
-        }
+        player.skip(activeState.skip)
         return true
     }
 
