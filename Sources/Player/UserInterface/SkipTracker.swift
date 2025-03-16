@@ -50,9 +50,9 @@ public final class SkipTracker: ObservableObject {
         configureIdlePublisher(delay: delay)
     }
 
-    private func activeState(from requestState: State?) -> State? {
-        guard let requestState, requestState.count >= count else { return nil }
-        return .init(skip: requestState.skip, count: requestState.count - count + 1)
+    private func activeState(from state: State?) -> State? {
+        guard let state, state.count >= count else { return nil }
+        return .init(skip: state.skip, count: state.count - count + 1)
     }
 
     /// Request a skip in a given direction.
