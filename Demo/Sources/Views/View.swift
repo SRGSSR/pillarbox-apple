@@ -71,6 +71,7 @@ private struct TapGesturesModifier: ViewModifier {
                 let task = DispatchWorkItem {
                     doubleTapCount = 2
                     allowsHitTesting = true
+                    doubleTapTask = nil
                 }
                 doubleTapTask = task
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
@@ -88,6 +89,7 @@ private struct TapGesturesModifier: ViewModifier {
                 let task = DispatchWorkItem {
                     doubleTapCount = 2
                     allowsHitTesting = true
+                    doubleTapTask = nil
                 }
                 doubleTapTask = task
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
