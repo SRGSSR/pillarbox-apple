@@ -136,6 +136,7 @@ private struct MainView: View {
                 if case let .skippingBackward(interval) = skipTracker.state {
                     Text("-\(Int(interval))s")
                         .bold()
+                        .foregroundStyle(.white)
                         .offset(x: -geometry.size.width / 4)
                         .contentTransition(.numericText())
                 }
@@ -144,6 +145,7 @@ private struct MainView: View {
                 if case let .skippingForward(interval) = skipTracker.state {
                     Text("+\(Int(interval))s")
                         .bold()
+                        .foregroundStyle(.white)
                         .offset(x: geometry.size.width / 4)
                         .contentTransition(.numericText())
                 }
