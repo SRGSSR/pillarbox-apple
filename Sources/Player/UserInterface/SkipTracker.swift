@@ -28,19 +28,19 @@ public final class SkipTracker: ObservableObject {
     public var player: Player? {
         didSet {
             guard player != oldValue else { return }
-            request = .none
+            state = nil
         }
     }
 
-    /// The current tracker state.
-    public var state: State {
-        state(from: request)
+    /// The current active state, if any.
+    public var activeState: State? {
+        activeState(from: state)
     }
 
     private let count: Int
     private let trigger = Trigger()
 
-    @Published private var request: Request = .none
+    @Published private var state: State?
 
     /// Create a tracker managing skips.
     ///
@@ -63,26 +63,9 @@ public final class SkipTracker: ObservableObject {
         }
     }
 
-    private func interval(forRequestCount requestCount: Int, skip: Skip) -> TimeInterval? {
-        guard let player, requestCount >= count else { return nil }
-        let overshoot = requestCount - count + 1
-        switch skip {
-        case .backward:
-            return Double(overshoot) * player.configuration.backwardSkipInterval
-        case .forward:
-            return Double(overshoot) * player.configuration.forwardSkipInterval
-        }
-    }
-
-    private func state(from request: Request) -> State {
-        switch request {
-        case let .backward(requestCount):
-            guard let interval = interval(forRequestCount: requestCount, skip: .backward) else { return .idle}
-            return .skippingBackward(interval)
-        case let .forward(requestCount):
-            guard let interval = interval(forRequestCount: requestCount, skip: .forward) else { return .idle }
-            return .skippingForward(interval)
-        }
+    private func activeState(from requestState: State?) -> State? {
+        guard let requestState, requestState.count >= count else { return nil }
+        return .init(skip: requestState.skip, count: requestState.count - count + 1)
     }
 
     /// Request a skip in a given direction.
@@ -92,15 +75,15 @@ public final class SkipTracker: ObservableObject {
     @discardableResult
     public func requestSkip(_ skip: Skip) -> Bool {
         guard let player, Self.canRequest(skip, for: player) else { return false }
-        request = update(request: request, with: skip)
+        state = update(state: state, with: skip)
         reset()
-        switch state(from: request) {
-        case .skippingBackward:
+
+        guard let activeState = activeState(from: state) else { return false }
+        switch activeState.skip {
+        case .backward:
             player.skipBackward()
-        case .skippingForward:
+        case .forward:
             player.skipForward()
-        case .idle:
-            return false
         }
         return true
     }
@@ -113,20 +96,22 @@ public final class SkipTracker: ObservableObject {
                     .first()
             }
             .switchToLatest()
-            .map { _ in .none }
-            .assign(to: &$request)
+            .map { _ in nil }
+            .assign(to: &$state)
     }
 
-    private func update(request: Request, with skip: Skip) -> Request {
-        switch (request, skip) {
-        case let (.backward(requestCount), .backward):
-            return .backward(requestCount + 1)
-        case let (.forward(requestCount), .forward):
-            return .forward(requestCount + 1)
-        case let (.backward(requestCount), .forward):
-            return .forward(requestCount >= count ? count : 1)
-        case let (.forward(requestCount), .backward):
-            return .backward(requestCount >= count ? count : 1)
+    private func update(state: State?, with skip: Skip) -> State {
+        guard let state else {
+            return .init(skip: skip, count: 1)
+        }
+        if skip == state.skip {
+            return .init(skip: skip, count: state.count + 1)
+        }
+        else if state.count >= count {
+            return .init(skip: skip, count: count)
+        }
+        else {
+            return .init(skip: skip, count: 1)
         }
     }
 
@@ -136,29 +121,13 @@ public final class SkipTracker: ObservableObject {
 }
 
 public extension SkipTracker {
-    /// A skip tracker state.
-    enum State: Equatable {
-        /// Idle.
-        case idle
-
-        /// Skipping backward.
-        case skippingBackward(TimeInterval)
-
-        /// Skipping forward.
-        case skippingForward(TimeInterval)
+    struct State: Equatable {
+        public let skip: Skip
+        public let count: Int
     }
 }
 
 private extension SkipTracker {
-    enum Request {
-        case backward(Int)
-        case forward(Int)
-
-        static var none: Self {
-            .backward(0)
-        }
-    }
-
     enum TriggerId {
         case reset
     }

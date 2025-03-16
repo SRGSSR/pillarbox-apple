@@ -133,28 +133,35 @@ private struct MainView: View {
             .gesture(toggleGesture(), isEnabled: !isInteracting)
             .supportsHighSpeed(!isMonoscopic, for: player)
             .overlay(alignment: .center) {
-                if case let .skippingBackward(interval) = skipTracker.state {
-                    Text("-\(Int(interval))s")
-                        .bold()
-                        .foregroundStyle(.white)
-                        .offset(x: -geometry.size.width / 4)
-                        .contentTransition(.numericText())
-                }
-            }
-            .overlay(alignment: .center) {
-                if case let .skippingForward(interval) = skipTracker.state {
-                    Text("+\(Int(interval))s")
-                        .bold()
-                        .foregroundStyle(.white)
-                        .offset(x: geometry.size.width / 4)
-                        .contentTransition(.numericText())
+                if let state = skipTracker.activeState {
+                    skipOverlay(for: state, in: geometry)
                 }
             }
         }
-        .animation(.defaultLinear, value: skipTracker.state)
+        .animation(.defaultLinear, value: skipTracker.activeState)
         .ignoresSafeArea()
         .readLayout(into: $layoutInfo)
         .bind(skipTracker, to: player)
+    }
+
+    // TODO: Skip APIs should use skip enum (add player methods, keep existing methods; add to player configuration
+    //       as well)
+    @ViewBuilder
+    private func skipOverlay(for state: SkipTracker.State, in geometry: GeometryProxy) -> some View {
+        switch state.skip {
+        case .backward:
+            Text("-\(Int(state.count))s")
+                .bold()
+                .foregroundStyle(.white)
+                .offset(x: -geometry.size.width / 4)
+                .contentTransition(.numericText())
+        case .forward:
+            Text("+\(Int(state.count))s")
+                .bold()
+                .foregroundStyle(.white)
+                .offset(x: geometry.size.width / 4)
+                .contentTransition(.numericText())
+        }
     }
 
     private func metadata() -> some View {
@@ -382,7 +389,7 @@ private struct SkipBackwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipBackward() && skipTracker.state == .idle ? 1 : 0)
+        .opacity(player.canSkipBackward() && skipTracker.activeState == nil ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipBackward())
         .keyboardShortcut("s", modifiers: [])
         .hoverEffect()
@@ -406,7 +413,7 @@ private struct SkipForwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipForward() && skipTracker.state == .idle ? 1 : 0)
+        .opacity(player.canSkipForward() && skipTracker.activeState == nil ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipForward())
         .keyboardShortcut("d", modifiers: [])
         .hoverEffect()
