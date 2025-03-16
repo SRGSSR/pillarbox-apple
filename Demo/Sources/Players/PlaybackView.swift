@@ -294,7 +294,7 @@ private struct MainView: View {
                 Color(white: 0, opacity: 0.5)
                     .simultaneousGesture(skipGesture(in: geometry))
                     .ignoresSafeArea()
-                ControlsView(player: player, progressTracker: progressTracker)
+                ControlsView(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
             }
             .opacity(shouldHideInterface ? 0 : 1)
         }
@@ -355,12 +355,13 @@ private struct SkipButton: View {
 private struct ControlsView: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @ObservedObject var skipTracker: SkipTracker
 
     var body: some View {
         HStack(spacing: 30) {
-            SkipBackwardButton(player: player, progressTracker: progressTracker)
+            SkipBackwardButton(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
             PlaybackButton(player: player)
-            SkipForwardButton(player: player, progressTracker: progressTracker)
+            SkipForwardButton(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
         }
         ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
@@ -371,6 +372,7 @@ private struct ControlsView: View {
 private struct SkipBackwardButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @ObservedObject var skipTracker: SkipTracker
 
     var body: some View {
         Button(action: skipBackward) {
@@ -380,7 +382,7 @@ private struct SkipBackwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipBackward() ? 1 : 0)
+        .opacity(player.canSkipBackward() && skipTracker.state == .idle ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipBackward())
         .keyboardShortcut("s", modifiers: [])
         .hoverEffect()
@@ -394,6 +396,7 @@ private struct SkipBackwardButton: View {
 private struct SkipForwardButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @ObservedObject var skipTracker: SkipTracker
 
     var body: some View {
         Button(action: skipForward) {
@@ -403,7 +406,7 @@ private struct SkipForwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipForward() ? 1 : 0)
+        .opacity(player.canSkipForward() && skipTracker.state == .idle ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipForward())
         .keyboardShortcut("d", modifiers: [])
         .hoverEffect()
