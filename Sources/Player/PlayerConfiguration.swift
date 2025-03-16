@@ -66,7 +66,7 @@ public struct PlayerConfiguration {
     }
 
     /// The skip interval for some direction, in seconds.
-    public func skipInterval(_ skip: Skip) -> TimeInterval {
+    public func interval(forSkip skip: Skip) -> TimeInterval {
         switch skip {
         case .backward:
             return backwardSkipInterval
