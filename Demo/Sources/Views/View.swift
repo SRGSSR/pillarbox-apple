@@ -80,7 +80,7 @@ private struct TapGesturesModifier: ViewModifier {
             .gesture(initialDoubleTap)
             .allowsHitTesting(allowsHitTesting)
             .overlay {
-                HStack(spacing: 0) {
+                HStack(spacing: 100) {
                     Color.clear
                         .contentShape(Rectangle())
                         .gesture(leftDoubleTap)
