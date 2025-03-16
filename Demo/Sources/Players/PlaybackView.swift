@@ -126,16 +126,7 @@ private struct MainView: View {
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
-        .tapGestures(
-            onLeftDoubleTap: {
-                player.skipBackward()
-                visibilityTracker.reset()
-            },
-            onRightDoubleTap: {
-                player.skipForward()
-                visibilityTracker.reset()
-            }
-        )
+        .doubleTapGestures(player: player, visibilityTracker: visibilityTracker)
         .onTapGesture(perform: visibilityTracker.toggle)
         .gesture(magnificationGesture(), including: magnificationGestureMask)
         .supportsHighSpeed(!isMonoscopic, for: player)
@@ -296,6 +287,41 @@ private struct MainView: View {
             .contentShape(Rectangle())
             .foregroundColor(.white)
             .padding(60)
+    }
+}
+
+private extension View {
+    func doubleTapGestures(player: Player, visibilityTracker: VisibilityTracker) -> some View {
+        tapGestures(
+            onLeftDoubleTap: {
+                player.skipBackward()
+                if !visibilityTracker.isUserInterfaceHidden {
+                    visibilityTracker.toggle()
+                }
+            },
+            leftView: { taps in
+                ZStack {
+                    LinearGradient(colors: [.white.opacity(0.2), .clear], startPoint: .leading, endPoint: .trailing)
+                    Text(verbatim: "-\(taps * Int(player.configuration.backwardSkipInterval))")
+                        .font(.title)
+                        .bold()
+                }
+            },
+            onRightDoubleTap: {
+                player.skipForward()
+                if !visibilityTracker.isUserInterfaceHidden {
+                    visibilityTracker.toggle()
+                }
+            },
+            rightView: { taps in
+                ZStack {
+                    LinearGradient(colors: [.clear, .white.opacity(0.2)], startPoint: .leading, endPoint: .trailing)
+                    Text(verbatim: "+\(taps * Int(player.configuration.forwardSkipInterval))")
+                        .font(.title)
+                        .bold()
+                }
+            }
+        )
     }
 }
 

@@ -52,26 +52,51 @@ private struct ScaleEffect17: ViewModifier {
     }
 }
 
-private struct TapGesturesModifier: ViewModifier {
+private struct TapGesturesModifier<Left, Right>: ViewModifier where Left: View, Right: View {
     let onLeftDoubleTap: () -> Void
+    let leftView: (_ numberOfTaps: Int) -> Left
     let onRightDoubleTap: () -> Void
+    let rightView: (_ numberOfTaps: Int) -> Right
 
     @State private var doubleTapTask: DispatchWorkItem?
     @State private var doubleTapCount: Int = 2
     @State private var allowsHitTesting = true
+    @State private var totalTapCount = 0
 
     private var leftDoubleTap: some Gesture {
-        doubleTapGesture(perform: onLeftDoubleTap)
+        doubleTapGesture {
+            onLeftDoubleTap()
+            if totalTapCount > 0 {
+                totalTapCount = 0
+            }
+            totalTapCount -= 1
+        }
     }
 
     private var rightDoubleTap: some Gesture {
-        doubleTapGesture(perform: onRightDoubleTap)
+        doubleTapGesture {
+            onRightDoubleTap()
+            if totalTapCount < 0 {
+                totalTapCount = 0
+            }
+            totalTapCount += 1
+        }
     }
 
     private var initialDoubleTap: some Gesture {
         TapGesture(count: 2)
             .onEnded {
                 allowsHitTesting = false
+                doubleTapTask?.cancel()
+
+                let task = DispatchWorkItem {
+                    doubleTapCount = 2
+                    totalTapCount = 0
+                    allowsHitTesting = true
+                    doubleTapTask = nil
+                }
+                doubleTapTask = task
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
             }
     }
 
@@ -84,9 +109,21 @@ private struct TapGesturesModifier: ViewModifier {
                     Color.clear
                         .contentShape(Rectangle())
                         .gesture(leftDoubleTap)
+                        .overlay {
+                            if totalTapCount < 0 {
+                                leftView(abs(totalTapCount))
+                                    .allowsHitTesting(false)
+                            }
+                        }
                     Color.clear
                         .contentShape(Rectangle())
                         .gesture(rightDoubleTap)
+                        .overlay {
+                            if totalTapCount > 0 {
+                                rightView(abs(totalTapCount))
+                                    .allowsHitTesting(false)
+                            }
+                        }
                 }
                 .allowsHitTesting(!allowsHitTesting)
             }
@@ -102,6 +139,7 @@ private struct TapGesturesModifier: ViewModifier {
 
                 let task = DispatchWorkItem {
                     doubleTapCount = 2
+                    totalTapCount = 0
                     allowsHitTesting = true
                     doubleTapTask = nil
                 }
@@ -173,7 +211,19 @@ extension View {
 }
 
 extension View {
-    func tapGestures(onLeftDoubleTap: @escaping () -> Void, onRightDoubleTap: @escaping () -> Void) -> some View {
-        modifier(TapGesturesModifier(onLeftDoubleTap: onLeftDoubleTap, onRightDoubleTap: onRightDoubleTap))
+    func tapGestures(
+        onLeftDoubleTap: @escaping () -> Void,
+        leftView: @escaping (_ numberOfTaps: Int) -> some View,
+        onRightDoubleTap: @escaping () -> Void,
+        rightView: @escaping (_ numberOfTaps: Int) -> some View
+    ) -> some View {
+        modifier(
+            TapGesturesModifier(
+                onLeftDoubleTap: onLeftDoubleTap,
+                leftView: leftView,
+                onRightDoubleTap: onRightDoubleTap,
+                rightView: rightView
+            )
+        )
     }
 }
