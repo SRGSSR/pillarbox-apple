@@ -89,32 +89,6 @@ private struct MainView: View {
         player.metadata.viewport == .monoscopic
     }
 
-    private func toggleGesture() -> some Gesture {
-        TapGesture()
-            .onEnded(visibilityTracker.toggle)
-    }
-
-    private func magnificationGesture() -> some Gesture {
-        MagnificationGesture()
-            .onChanged { scale in
-                selectedGravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
-            }
-    }
-
-    private func visibilityResetGesture() -> some Gesture {
-        TapGesture()
-            .onEnded(visibilityTracker.reset)
-    }
-
-    private func skipGesture(in geometry: GeometryProxy) -> some Gesture {
-        SpatialTapGesture()
-            .onEnded { value in
-                if skipTracker.requestSkip(value.location.x < geometry.size.width / 2 ? .backward : .forward) {
-                    visibilityTracker.hide()
-                }
-            }
-    }
-
     private func main() -> some View {
         GeometryReader { geometry in
             ZStack {
@@ -300,40 +274,6 @@ private struct MainView: View {
             .contentShape(Rectangle())
             .foregroundColor(.white)
             .padding(60)
-    }
-
-    @ViewBuilder
-    private func skipOverlay(skipTracker: SkipTracker, in geometry: GeometryProxy) -> some View {
-        if let state = skipTracker.activeState {
-            Group {
-                switch state.skip {
-                case .backward:
-                    backwardSkipOverlay(count: state.count, in: geometry)
-                case .forward:
-                    forwardSkipOverlay(count: state.count, in: geometry)
-                }
-            }
-            .bold()
-            .foregroundStyle(.white)
-            .labelStyle(.vertical)
-            .contentTransition(.numericText())
-        }
-    }
-
-    private func backwardSkipOverlay(count: Int, in geometry: GeometryProxy) -> some View {
-        Label(
-            "-\(Int(Double(count) * player.configuration.backwardSkipInterval))s",
-            systemImage: "backward.fill"
-        )
-        .offset(x: -geometry.size.width / 4)
-    }
-
-    private func forwardSkipOverlay(count: Int, in geometry: GeometryProxy) -> some View {
-        Label(
-            "+\(Int(Double(count) * player.configuration.forwardSkipInterval))s",
-            systemImage: "forward.fill"
-        )
-        .offset(x: geometry.size.width / 4)
     }
 }
 
@@ -1058,6 +998,70 @@ extension PlaybackView {
         var view = self
         view.supportsPictureInPicture = supportsPictureInPicture
         return view
+    }
+}
+
+private extension MainView {
+    func toggleGesture() -> some Gesture {
+        TapGesture()
+            .onEnded(visibilityTracker.toggle)
+    }
+
+    func magnificationGesture() -> some Gesture {
+        MagnificationGesture()
+            .onChanged { scale in
+                selectedGravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
+            }
+    }
+
+    func visibilityResetGesture() -> some Gesture {
+        TapGesture()
+            .onEnded(visibilityTracker.reset)
+    }
+
+    func skipGesture(in geometry: GeometryProxy) -> some Gesture {
+        SpatialTapGesture()
+            .onEnded { value in
+                if skipTracker.requestSkip(value.location.x < geometry.size.width / 2 ? .backward : .forward) {
+                    visibilityTracker.hide()
+                }
+            }
+    }
+}
+
+private extension MainView {
+    @ViewBuilder
+    func skipOverlay(skipTracker: SkipTracker, in geometry: GeometryProxy) -> some View {
+        if let state = skipTracker.activeState {
+            Group {
+                switch state.skip {
+                case .backward:
+                    backwardSkipOverlay(count: state.count, in: geometry)
+                case .forward:
+                    forwardSkipOverlay(count: state.count, in: geometry)
+                }
+            }
+            .bold()
+            .foregroundStyle(.white)
+            .labelStyle(.vertical)
+            .contentTransition(.numericText())
+        }
+    }
+
+    private func backwardSkipOverlay(count: Int, in geometry: GeometryProxy) -> some View {
+        Label(
+            "-\(Int(Double(count) * player.configuration.backwardSkipInterval))s",
+            systemImage: "backward.fill"
+        )
+        .offset(x: -geometry.size.width / 4)
+    }
+
+    private func forwardSkipOverlay(count: Int, in geometry: GeometryProxy) -> some View {
+        Label(
+            "+\(Int(Double(count) * player.configuration.forwardSkipInterval))s",
+            systemImage: "forward.fill"
+        )
+        .offset(x: geometry.size.width / 4)
     }
 }
 

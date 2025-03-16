@@ -27,7 +27,7 @@ public final class SkipTracker: ObservableObject {
     public var activeState: State? {
         activeState(from: state)
     }
-    
+
     /// A Boolean that describes whether skipping is currently active.
     public var isActive: Bool {
         activeState != nil
@@ -103,8 +103,12 @@ public final class SkipTracker: ObservableObject {
 }
 
 public extension SkipTracker {
+    /// The state of skip tracking.
     struct State: Equatable {
+        /// The current skip direction.
         public let skip: Skip
+
+        /// The number of requests in the skip direction.
         public let count: Int
     }
 }
