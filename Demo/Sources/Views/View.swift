@@ -61,39 +61,11 @@ private struct TapGesturesModifier: ViewModifier {
     @State private var allowsHitTesting = true
 
     private var leftDoubleTap: some Gesture {
-        TapGesture(count: doubleTapCount)
-            .onEnded {
-                doubleTapTask?.cancel()
-
-                onLeftDoubleTap()
-                doubleTapCount = 1
-
-                let task = DispatchWorkItem {
-                    doubleTapCount = 2
-                    allowsHitTesting = true
-                    doubleTapTask = nil
-                }
-                doubleTapTask = task
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
-            }
+        doubleTapGesture(perform: onLeftDoubleTap)
     }
 
     private var rightDoubleTap: some Gesture {
-        TapGesture(count: doubleTapCount)
-            .onEnded {
-                doubleTapTask?.cancel()
-
-                onRightDoubleTap()
-                doubleTapCount = 1
-
-                let task = DispatchWorkItem {
-                    doubleTapCount = 2
-                    allowsHitTesting = true
-                    doubleTapTask = nil
-                }
-                doubleTapTask = task
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
-            }
+        doubleTapGesture(perform: onRightDoubleTap)
     }
 
     private var initialDoubleTap: some Gesture {
@@ -117,6 +89,24 @@ private struct TapGesturesModifier: ViewModifier {
                         .gesture(rightDoubleTap)
                 }
                 .allowsHitTesting(!allowsHitTesting)
+            }
+    }
+
+    private func doubleTapGesture(perform action: @escaping () -> Void) -> some Gesture {
+        TapGesture(count: doubleTapCount)
+            .onEnded {
+                doubleTapTask?.cancel()
+
+                action()
+                doubleTapCount = 1
+
+                let task = DispatchWorkItem {
+                    doubleTapCount = 2
+                    allowsHitTesting = true
+                    doubleTapTask = nil
+                }
+                doubleTapTask = task
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
             }
     }
 }
