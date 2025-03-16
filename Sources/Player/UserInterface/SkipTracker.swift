@@ -9,15 +9,6 @@ import Foundation
 import PillarboxCore
 import SwiftUI
 
-/// A skip.
-public enum Skip {
-    /// Backward skip.
-    case backward
-
-    /// Forward skip.
-    case forward
-}
-
 /// An observable object managing skips.
 @available(iOS 16, *)
 @available(tvOS, unavailable)
