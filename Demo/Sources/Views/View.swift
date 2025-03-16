@@ -53,29 +53,16 @@ private struct ScaleEffect17: ViewModifier {
 }
 
 private struct TapGesturesModifier: ViewModifier {
-    let onSingleTap: () -> Void
     let onLeftDoubleTap: () -> Void
     let onRightDoubleTap: () -> Void
 
-    @State private var singleTapTask: DispatchWorkItem?
     @State private var doubleTapTask: DispatchWorkItem?
     @State private var doubleTapCount: Int = 2
     @State private var allowsHitTesting = true
 
-    private var singleTap: some Gesture {
-        TapGesture(count: 1)
-            .onEnded {
-                let task = DispatchWorkItem(block: onSingleTap)
-                singleTapTask = task
-                allowsHitTesting = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: task)
-            }
-    }
-
     private var leftDoubleTap: some Gesture {
         TapGesture(count: doubleTapCount)
             .onEnded {
-                singleTapTask?.cancel()
                 doubleTapTask?.cancel()
 
                 onLeftDoubleTap()
@@ -93,7 +80,6 @@ private struct TapGesturesModifier: ViewModifier {
     private var rightDoubleTap: some Gesture {
         TapGesture(count: doubleTapCount)
             .onEnded {
-                singleTapTask?.cancel()
                 doubleTapTask?.cancel()
 
                 onRightDoubleTap()
@@ -130,7 +116,6 @@ private struct TapGesturesModifier: ViewModifier {
                 }
                 .allowsHitTesting(!allowsHitTesting)
             }
-            .gesture(singleTap)
     }
 }
 
@@ -196,7 +181,7 @@ extension View {
 }
 
 extension View {
-    func tapGestures(onSingleTap: @escaping () -> Void, onLeftDoubleTap: @escaping () -> Void, onRightDoubleTap: @escaping () -> Void) -> some View {
-        modifier(TapGesturesModifier(onSingleTap: onSingleTap, onLeftDoubleTap: onLeftDoubleTap, onRightDoubleTap: onRightDoubleTap))
+    func tapGestures(onLeftDoubleTap: @escaping () -> Void, onRightDoubleTap: @escaping () -> Void) -> some View {
+        modifier(TapGesturesModifier(onLeftDoubleTap: onLeftDoubleTap, onRightDoubleTap: onRightDoubleTap))
     }
 }
