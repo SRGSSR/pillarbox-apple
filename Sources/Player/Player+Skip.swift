@@ -28,6 +28,18 @@ public extension Player {
         }
     }
 
+    /// Checks whether skipping in some direction is possible.
+    ///
+    /// - Returns: `true` if possible.
+    func canSkip(_ skip: Skip) -> Bool {
+        switch skip {
+        case .backward:
+            return canSkipBackward()
+        case .forward:
+            return canSkipForward()
+        }
+    }
+
     /// Skips backward.
     ///
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs whether the skip
@@ -42,6 +54,19 @@ public extension Player {
     ///   could finish without being cancelled.
     func skipForward(completion: @escaping (Bool) -> Void = { _ in }) {
         skip(withInterval: forwardSkipTime, toleranceBefore: .zero, toleranceAfter: .positiveInfinity, completion: completion)
+    }
+
+    /// Skips in a given direction.
+    ///
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs whether the skip
+    ///   could finish without being cancelled.
+    func skip(_ skip: Skip, completion: @escaping (Bool) -> Void = { _ in }) {
+        switch skip {
+        case .backward:
+            skipBackward(completion: completion)
+        case .forward:
+            skipForward(completion: completion)
+        }
     }
 }
 
