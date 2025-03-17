@@ -87,6 +87,7 @@ private struct TapGesturesModifier<Left, Right>: ViewModifier where Left: View, 
         TapGesture(count: 2)
             .onEnded {
                 allowsHitTesting = false
+                doubleTapCount = 1
                 doubleTapTask?.cancel()
 
                 let task = DispatchWorkItem {
@@ -135,7 +136,6 @@ private struct TapGesturesModifier<Left, Right>: ViewModifier where Left: View, 
                 doubleTapTask?.cancel()
 
                 action()
-                doubleTapCount = 1
 
                 let task = DispatchWorkItem {
                     doubleTapCount = 2
