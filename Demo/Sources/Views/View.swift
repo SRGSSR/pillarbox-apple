@@ -127,6 +127,7 @@ private struct TapGesturesModifier<Left, Right>: ViewModifier where Left: View, 
                         }
                 }
                 .allowsHitTesting(!allowsHitTesting)
+                .ignoresSafeArea()
             }
     }
 
