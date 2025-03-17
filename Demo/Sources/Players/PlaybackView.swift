@@ -300,11 +300,13 @@ private extension View {
                 }
             },
             leftView: { taps in
-                ZStack {
-                    LinearGradient(colors: [.white.opacity(0.2), .clear], startPoint: .leading, endPoint: .trailing)
-                    Text(verbatim: "-\(taps * Int(player.configuration.backwardSkipInterval))")
-                        .font(.title)
-                        .bold()
+                if player.canSkipBackward() {
+                    ZStack {
+                        LinearGradient(colors: [.white.opacity(0.2), .clear], startPoint: .leading, endPoint: .trailing)
+                        Text(verbatim: "-\(taps * Int(player.configuration.backwardSkipInterval))")
+                            .font(.title)
+                            .bold()
+                    }
                 }
             },
             onRightDoubleTap: {
@@ -314,11 +316,13 @@ private extension View {
                 }
             },
             rightView: { taps in
-                ZStack {
-                    LinearGradient(colors: [.clear, .white.opacity(0.2)], startPoint: .leading, endPoint: .trailing)
-                    Text(verbatim: "+\(taps * Int(player.configuration.forwardSkipInterval))")
-                        .font(.title)
-                        .bold()
+                if player.canSkipForward() {
+                    ZStack {
+                        LinearGradient(colors: [.clear, .white.opacity(0.2)], startPoint: .leading, endPoint: .trailing)
+                        Text(verbatim: "+\(taps * Int(player.configuration.forwardSkipInterval))")
+                            .font(.title)
+                            .bold()
+                    }
                 }
             }
         )

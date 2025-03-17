@@ -214,9 +214,9 @@ extension View {
 extension View {
     func tapGestures(
         onLeftDoubleTap: @escaping () -> Void,
-        leftView: @escaping (_ numberOfTaps: Int) -> some View,
+        @ViewBuilder leftView: @escaping (_ numberOfTaps: Int) -> some View,
         onRightDoubleTap: @escaping () -> Void,
-        rightView: @escaping (_ numberOfTaps: Int) -> some View
+        @ViewBuilder rightView: @escaping (_ numberOfTaps: Int) -> some View
     ) -> some View {
         modifier(
             TapGesturesModifier(
