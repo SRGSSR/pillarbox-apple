@@ -48,16 +48,10 @@ private struct InformationSectionContent: View {
     }
 
     private func cell(_ name: LocalizedStringKey, value: String) -> some View {
-        HStack {
-            Text(name)
-            Spacer()
+        LabeledContent(name) {
             Text(value)
                 .monospacedDigit()
-                .lineLimit(1)
-                .foregroundColor(.secondary)
         }
-        .accessibilityElement()
-        .accessibilityLabel("\(Text(name)), \(value)")
     }
 }
 
@@ -109,16 +103,10 @@ private struct ExperienceStartupTimesSectionContent: View {
     }
 
     private func cell(_ name: LocalizedStringKey, value: String) -> some View {
-        HStack {
-            Text(name)
-            Spacer()
+        LabeledContent(name) {
             Text(value)
                 .monospacedDigit()
-                .lineLimit(1)
-                .foregroundColor(.secondary)
         }
-        .accessibilityElement()
-        .accessibilityLabel("\(Text(name)), \(value)")
     }
 }
 
@@ -146,16 +134,10 @@ private struct ServiceStartupTimesSectionContent: View {
     }
 
     private func cell(_ name: LocalizedStringKey, value: String) -> some View {
-        HStack {
-            Text(name)
-            Spacer()
+        LabeledContent(name) {
             Text(value)
                 .monospacedDigit()
-                .lineLimit(1)
-                .foregroundColor(.secondary)
         }
-        .accessibilityElement()
-        .accessibilityLabel("\(Text(name)), \(value)")
     }
 }
 

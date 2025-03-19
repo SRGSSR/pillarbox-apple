@@ -13,11 +13,8 @@ private struct UrlCacheView: View {
     var body: some View {
         HStack {
             Button(action: clearUrlCache) {
-                HStack {
-                    Text("Clear URL cache")
-                    Spacer()
+                LabeledContent("Clear URL cache") {
                     Text(urlCacheSize)
-                        .font(.footnote)
                         .foregroundColor(.red)
                 }
             }
@@ -52,16 +49,7 @@ private struct InfoCell: View {
     }
 
     private func content() -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            Text(value)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.trailing)
-                .lineLimit(2)
-        }
-        .accessibilityElement()
-        .accessibilityLabel("\(Text(title)), \(value)")
+        LabeledContent(title, value: value)
     }
 }
 
@@ -257,9 +245,7 @@ struct SettingsView: View {
             }
         }
 #else
-        HStack {
-            Text(key)
-            Spacer()
+        LabeledContent(key) {
             numberTextField(value: value)
         }
 #endif
