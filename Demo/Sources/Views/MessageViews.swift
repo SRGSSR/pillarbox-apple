@@ -11,12 +11,15 @@ protocol Refreshable {
 }
 
 enum MessageIcon {
+    case none
     case error
     case empty
     case system(String)
 
-    var systemName: String {
+    var systemName: String? {
         switch self {
+        case .none:
+            return nil
         case .error:
             return "exclamationmark.bubble"
         case .empty:
@@ -24,23 +27,6 @@ enum MessageIcon {
         case let .system(name):
             return name
         }
-    }
-}
-
-struct MessageView: View {
-    let message: String
-    let icon: MessageIcon
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: icon.systemName)
-                .resizable()
-                .frame(width: 90, height: 90)
-            Text(message)
-                .multilineTextAlignment(.center)
-                .padding()
-        }
-        .foregroundColor(.secondary)
     }
 }
 
@@ -61,4 +47,42 @@ struct RefreshableMessageView<Model>: View where Model: Refreshable {
         .focusable()
 #endif
     }
+}
+
+struct MessageView: View {
+    let message: String
+    let icon: MessageIcon
+
+    var body: some View {
+        VStack(spacing: 16) {
+            if let systemName = icon.systemName {
+                Image(systemName: systemName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundStyle(.secondary)
+                    .frame(height: 40)
+            }
+            Text(message)
+                .font(.title2)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+#Preview("None") {
+    MessageView(message: "No items", icon: .none)
+}
+
+#Preview("Error") {
+    MessageView(message: "No items", icon: .error)
+}
+
+#Preview("Empty") {
+    MessageView(message: "No items", icon: .empty)
+}
+
+#Preview("System") {
+    MessageView(message: "Not connected", icon: .system("wifi"))
 }

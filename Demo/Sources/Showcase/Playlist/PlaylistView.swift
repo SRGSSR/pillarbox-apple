@@ -60,7 +60,6 @@ private struct Toolbar: View {
             nextButton()
         }
         .padding()
-        .frame(maxWidth: .infinity)
         .sheet(isPresented: $isSelectionPresented) {
             PlaylistSelectionView(model: model)
         }
@@ -147,9 +146,7 @@ struct PlaylistView: View {
 #if os(iOS)
             if model.layout != .maximized {
                 Toolbar(model: model)
-                List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
-                    MediaCell(media: media)
-                }
+                list()
             }
 #endif
         }
@@ -160,6 +157,20 @@ struct PlaylistView: View {
         }
         .enabledForInAppPictureInPicture(persisting: model)
         .tracked(name: "playlist")
+    }
+
+    @ViewBuilder
+    private func list() -> some View {
+        ZStack {
+            if !model.medias.isEmpty {
+                List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
+                    MediaCell(media: media)
+                }
+            }
+            else {
+                MessageView(message: "No items", icon: .none)
+            }
+        }
     }
 }
 
