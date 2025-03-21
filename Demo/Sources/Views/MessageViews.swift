@@ -30,6 +30,25 @@ enum MessageIcon {
     }
 }
 
+struct RefreshableMessageView<Model>: View where Model: Refreshable {
+    let model: Model
+    let message: String
+    let icon: MessageIcon
+
+    var body: some View {
+        GeometryReader { geometry in
+            ScrollView {
+                MessageView(message: message, icon: icon)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+            }
+            .refreshable { await model.refresh() }
+        }
+#if os(tvOS)
+        .focusable()
+#endif
+    }
+}
+
 struct MessageView: View {
     let message: String
     let icon: MessageIcon
@@ -49,25 +68,6 @@ struct MessageView: View {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-struct RefreshableMessageView<Model>: View where Model: Refreshable {
-    let model: Model
-    let message: String
-    let icon: MessageIcon
-
-    var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
-                MessageView(message: message, icon: icon)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-            }
-            .refreshable { await model.refresh() }
-        }
-#if os(tvOS)
-        .focusable()
-#endif
     }
 }
 
