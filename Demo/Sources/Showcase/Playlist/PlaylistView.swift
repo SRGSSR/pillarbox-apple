@@ -60,7 +60,6 @@ private struct Toolbar: View {
             nextButton()
         }
         .padding()
-        .frame(maxWidth: .infinity)
         .sheet(isPresented: $isSelectionPresented) {
             PlaylistSelectionView(model: model)
         }
