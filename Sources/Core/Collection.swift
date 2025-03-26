@@ -9,8 +9,8 @@ public extension Collection where Element: Hashable {
     ///
     /// - Returns: The array without duplicate items.
     func removeDuplicates() -> [Element] {
-        var itemDictionary = [Element: Bool]()
-        return filter { itemDictionary.updateValue(true, forKey: $0) == nil }
+        var elements = [Element: Bool]()
+        return filter { elements.updateValue(true, forKey: $0) == nil }
     }
 }
 
