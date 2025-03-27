@@ -48,10 +48,8 @@ struct PlaylistSelectionView: View {
 
     var body: some View {
         NavigationView {
-            List(selection: $selectedMedias) {
-                ForEach(Self.medias, id: \.self) { media in
-                    Text(media.title)
-                }
+            List(Self.medias, id: \.self, selection: $selectedMedias) { media in
+                Text(media.title)
             }
             .environment(\.editMode, .constant(.active))
             .navigationBarTitle("Add content")
