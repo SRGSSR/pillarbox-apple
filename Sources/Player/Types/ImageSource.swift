@@ -15,6 +15,9 @@ private enum TriggerId {
 private let kSession = URLSession(configuration: .default)
 
 /// An image source.
+///
+/// An image source is opaque and not meant for direct image extraction. To display an image from a source, use
+/// ``LazyImage`` in SwiftUI or ``LazyUIImage(source:)`` in UIKit.
 public struct ImageSource: Equatable {
     enum Kind: Equatable {
         case none
