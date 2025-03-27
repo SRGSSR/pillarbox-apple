@@ -47,23 +47,21 @@ struct PlaylistSelectionView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationView {
-            List(Self.medias, id: \.self, selection: $selectedMedias) { media in
-                Text(media.title)
-            }
-            .environment(\.editMode, .constant(.active))
-            .navigationBarTitle("Add content")
+        List(Self.medias, id: \.self, selection: $selectedMedias) { media in
+            Text(media.title)
+        }
+        .environment(\.editMode, .constant(.active))
+        .navigationBarTitle("Add content")
 #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.inline)
 #endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", action: cancel)
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Add", action: add)
-                        .disabled(selectedMedias.isEmpty)
-                }
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel", action: cancel)
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Add", action: add)
+                    .disabled(selectedMedias.isEmpty)
             }
         }
         .tracked(name: "selection", levels: ["playlist"])

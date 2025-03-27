@@ -61,7 +61,9 @@ private struct Toolbar: View {
         }
         .padding()
         .sheet(isPresented: $isSelectionPresented) {
-            PlaylistSelectionView(model: model)
+            NavigationStack {
+                PlaylistSelectionView(model: model)
+            }
         }
     }
 
