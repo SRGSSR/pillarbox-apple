@@ -43,6 +43,12 @@ public final class PictureInPicture {
     public func startIfPossible() {
         custom.start()
     }
+
+    /// Stop Picture if Picture if running.
+    public func stop() {
+        custom.stop()
+        system.stop()
+    }
 }
 
 extension PictureInPicture: PictureInPictureDelegate {
