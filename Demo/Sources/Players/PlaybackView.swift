@@ -791,7 +791,7 @@ private struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View,
     }
 
     private func toolbarContent() -> some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
+        ToolbarItem(placement: .cancellationAction) {
             Button("Hide", action: close)
         }
     }
