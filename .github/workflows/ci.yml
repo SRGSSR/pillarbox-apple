@@ -28,6 +28,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install yeetd
+        # yamllint disable rule:line-length
+        run: |
+          wget https://github.com/biscuitehh/yeetd/releases/download/1.0/yeetd-normal.pkg
+          sudo installer -pkg yeetd-normal.pkg -target /
+          rm -rf yeetd-normal.pkg
+          yeetd &
+        # yamllint enable rule:line-length
+
       - name: Run tests
         run: make test-${{ matrix.platform }}
 
