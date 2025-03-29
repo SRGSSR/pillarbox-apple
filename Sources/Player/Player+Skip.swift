@@ -57,9 +57,11 @@ public extension Player {
     }
 
     /// Skips in a given direction.
-    ///
-    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs whether the skip
-    ///   could finish without being cancelled.
+    /// 
+    /// - Parameters:
+    ///   - skip: The skip direction.
+    ///   - completion: A completion called when skipping ends. The provided Boolean informs whether the skip
+    ///     could finish without being cancelled.
     func skip(_ skip: Skip, completion: @escaping (Bool) -> Void = { _ in }) {
         switch skip {
         case .backward:

@@ -137,6 +137,6 @@
 
 ### Integrating with SwiftUI Menus
 
-- ``mediaSelectionMenu(characteristic:)``
-- ``playbackSpeedMenu(speeds:)``
-- ``standardSettingsMenu()``
+- ``mediaSelectionMenu(characteristic:action:)``
+- ``playbackSpeedMenu(speeds:action:)``
+- ``standardSettingsMenu(speeds:action:)``
