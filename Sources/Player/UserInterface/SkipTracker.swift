@@ -41,7 +41,7 @@ public final class SkipTracker: ObservableObject {
     /// Create a tracker managing skips.
     ///
     /// - Parameters:
-    ///   - count: The required number of requests which to be made to enable skip mode.
+    ///   - count: The number of requests required to enable skip mode.
     ///   - delay: The delay after which skip mode is disabled.
     public init(count: Int = 2, delay: TimeInterval = 0.4) {
         // swiftlint:disable:next empty_count
