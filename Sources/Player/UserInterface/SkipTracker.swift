@@ -96,15 +96,15 @@ public final class SkipTracker: ObservableObject {
         let count = counter.value - minimumCount + 1
         switch counter.skip {
         case .backward:
-            return .skippingBackward(.init(
+            return .skippingBackward(
                 count: count,
-                timeInterval: Double(count) * player.configuration.backwardSkipInterval
-            ))
+                interval: Double(count) * player.configuration.backwardSkipInterval
+            )
         case .forward:
-            return .skippingForward(.init(
+            return .skippingForward(
                 count: count,
-                timeInterval: Double(count) * player.configuration.forwardSkipInterval
-            ))
+                interval: Double(count) * player.configuration.forwardSkipInterval
+            )
         }
     }
 
@@ -135,24 +135,14 @@ public extension SkipTracker {
         case inactive
 
         /// Skipping backward.
-        case skippingBackward(Info)
+        case skippingBackward(count: Int, interval: TimeInterval)
 
         /// Skipping forward.
-        case skippingForward(Info)
+        case skippingForward(count: Int, interval: TimeInterval)
 
         var isSkipping: Bool {
             self != .inactive
         }
-    }
-
-    /// Skip information.
-    // TOOD: Remove, provide inline info to state directly
-    struct Info: Equatable {
-        /// The number of skips accumulated.
-        public let count: Int
-
-        /// The corresponding accumulated time interval.
-        public let timeInterval: TimeInterval
     }
 }
 
