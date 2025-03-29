@@ -110,7 +110,7 @@ private struct MainView: View {
                 skipOverlay(skipTracker: skipTracker, in: geometry)
             }
         }
-        .animation(.defaultLinear, value: skipTracker.activeState)
+        .animation(.defaultLinear, value: skipTracker.state)
         .ignoresSafeArea()
         .readLayout(into: $layoutInfo)
         .bind(skipTracker, to: player)
@@ -341,7 +341,7 @@ private struct SkipBackwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipBackward() && !skipTracker.isActive ? 1 : 0)
+        .opacity(player.canSkipBackward() && !skipTracker.isSkipping ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipBackward())
         .keyboardShortcut("s", modifiers: [])
         .hoverEffect()
@@ -365,7 +365,7 @@ private struct SkipForwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipForward() && !skipTracker.isActive ? 1 : 0)
+        .opacity(player.canSkipForward() && !skipTracker.isSkipping ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipForward())
         .keyboardShortcut("d", modifiers: [])
         .hoverEffect()
@@ -1032,20 +1032,20 @@ private extension MainView {
 private extension MainView {
     @ViewBuilder
     func skipOverlay(skipTracker: SkipTracker, in geometry: GeometryProxy) -> some View {
-        if let state = skipTracker.activeState {
-            Group {
-                switch state.skip {
-                case .backward:
-                    backwardSkipOverlay(count: state.count, in: geometry)
-                case .forward:
-                    forwardSkipOverlay(count: state.count, in: geometry)
-                }
+        Group {
+            switch skipTracker.state {
+            case let .skippingBackward(info):
+                backwardSkipOverlay(count: info.count, in: geometry)
+            case let .skippingForward(info):
+                forwardSkipOverlay(count: info.count, in: geometry)
+            case .inactive:
+                EmptyView()
             }
-            .bold()
-            .foregroundStyle(.white)
-            .labelStyle(.vertical)
-            .contentTransition(.numericText())
         }
+        .bold()
+        .foregroundStyle(.white)
+        .labelStyle(.vertical)
+        .contentTransition(.numericText())
     }
 
     private func backwardSkipOverlay(count: Int, in geometry: GeometryProxy) -> some View {
