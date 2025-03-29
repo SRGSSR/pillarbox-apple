@@ -1034,9 +1034,11 @@ private extension MainView {
         Group {
             switch skipTracker.state {
             case let .skippingBackward(count: _, interval: interval):
-                backwardSkipOverlay(interval: interval, in: geometry)
+                Label("-\(Int(interval))s", systemImage: "backward.fill")
+                    .offset(x: -geometry.size.width / 4)
             case let .skippingForward(count: _, interval: interval):
-                forwardSkipOverlay(interval: interval, in: geometry)
+                Label("+\(Int(interval))s", systemImage: "forward.fill")
+                    .offset(x: geometry.size.width / 4)
             case .inactive:
                 EmptyView()
             }
@@ -1045,16 +1047,6 @@ private extension MainView {
         .foregroundStyle(.white)
         .labelStyle(.vertical)
         .contentTransition(.numericText())
-    }
-
-    private func backwardSkipOverlay(interval: TimeInterval, in geometry: GeometryProxy) -> some View {
-        Label("-\(Int(interval))s", systemImage: "backward.fill")
-            .offset(x: -geometry.size.width / 4)
-    }
-
-    private func forwardSkipOverlay(interval: TimeInterval, in geometry: GeometryProxy) -> some View {
-        Label("+\(Int(interval))s", systemImage: "forward.fill")
-            .offset(x: geometry.size.width / 4)
     }
 }
 
