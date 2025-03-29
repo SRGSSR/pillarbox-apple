@@ -50,17 +50,6 @@ public final class SkipTracker: ObservableObject {
         configureIdlePublisher(delay: delay)
     }
 
-    private func state(from counter: Counter?) -> State {
-        guard let counter, counter.value >= minimumCount else { return .inactive }
-        let info = Info(count: counter.value - minimumCount + 1, timeInterval: 0)
-        switch counter.skip {
-        case .backward:
-            return .skippingBackward(info)
-        case .forward:
-            return .skippingForward(info)
-        }
-    }
-
     /// Requests a skip backward.
     ///
     /// - Returns: `true` iff the request could be fulfilled.
@@ -114,6 +103,17 @@ public final class SkipTracker: ObservableObject {
         }
         else {
             return .init(skip: skip, value: 1)
+        }
+    }
+
+    private func state(from counter: Counter?) -> State {
+        guard let counter, counter.value >= minimumCount else { return .inactive }
+        let info = Info(count: counter.value - minimumCount + 1, timeInterval: 0)
+        switch counter.skip {
+        case .backward:
+            return .skippingBackward(info)
+        case .forward:
+            return .skippingForward(info)
         }
     }
 
