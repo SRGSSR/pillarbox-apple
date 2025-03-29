@@ -1033,10 +1033,10 @@ private extension MainView {
     func skipOverlay(skipTracker: SkipTracker, in geometry: GeometryProxy) -> some View {
         Group {
             switch skipTracker.state {
-            case let .skippingBackward(count: _, interval: interval):
+            case let .skippingBackward(interval):
                 Label("-\(Int(interval))s", systemImage: "backward.fill")
                     .offset(x: -geometry.size.width / 4)
-            case let .skippingForward(count: _, interval: interval):
+            case let .skippingForward(interval):
                 Label("+\(Int(interval))s", systemImage: "forward.fill")
                     .offset(x: geometry.size.width / 4)
             case .inactive:

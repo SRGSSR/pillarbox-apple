@@ -46,9 +46,9 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.state).to(equal(.inactive))
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
-        expect(skipTracker.state).to(equal(.skippingBackward(count: 1, interval: 10)))
+        expect(skipTracker.state).to(equal(.skippingBackward(10)))
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
-        expect(skipTracker.state).to(equal(.skippingBackward(count: 2, interval: 20)))
+        expect(skipTracker.state).to(equal(.skippingBackward(20)))
     }
 
     func testMixedRequests() {
@@ -61,11 +61,11 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.requestSkip(.forward)).to(beFalse())
         expect(skipTracker.state).to(equal(.inactive))
         expect(skipTracker.requestSkip(.forward)).to(beTrue())
-        expect(skipTracker.state).to(equal(.skippingForward(count: 1, interval: 10)))
+        expect(skipTracker.state).to(equal(.skippingForward(10)))
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
-        expect(skipTracker.state).to(equal(.skippingBackward(count: 1, interval: 10)))
+        expect(skipTracker.state).to(equal(.skippingBackward(10)))
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
-        expect(skipTracker.state).to(equal(.skippingBackward(count: 2, interval: 20)))
+        expect(skipTracker.state).to(equal(.skippingBackward(20)))
     }
 
     func testSpacedRequests() {
@@ -86,7 +86,7 @@ final class SkipTrackerTests: TestCase {
         expect(player.playbackState).toEventually(equal(.paused))
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
-        expect(skipTracker.state).to(equal(.skippingBackward(count: 1, interval: 10)))
+        expect(skipTracker.state).to(equal(.skippingBackward(10)))
         wait(for: .milliseconds(200))
         expect(skipTracker.state).to(equal(.inactive))
     }
@@ -122,7 +122,7 @@ final class SkipTrackerTests: TestCase {
         skipTracker.player = player1
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
-        expect(skipTracker.state).to(equal(.skippingBackward(count: 1, interval: 10)))
+        expect(skipTracker.state).to(equal(.skippingBackward(10)))
 
         skipTracker.player = player2
         expect(skipTracker.state).to(equal(.inactive))
