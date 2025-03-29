@@ -1030,7 +1030,6 @@ private extension MainView {
 }
 
 private extension MainView {
-    @ViewBuilder
     func skipOverlay(skipTracker: SkipTracker, in geometry: GeometryProxy) -> some View {
         Group {
             switch skipTracker.state {
