@@ -91,23 +91,6 @@ public final class SkipTracker: ObservableObject {
             .assign(to: &$counter)
     }
 
-    private static func state(counter: Counter?, minimumCount: Int, player: Player?) -> State {
-        guard let player, let counter, counter.value >= minimumCount else { return .inactive }
-        let count = counter.value - minimumCount + 1
-        switch counter.skip {
-        case .backward:
-            return .skippingBackward(
-                count: count,
-                interval: Double(count) * player.configuration.backwardSkipInterval
-            )
-        case .forward:
-            return .skippingForward(
-                count: count,
-                interval: Double(count) * player.configuration.forwardSkipInterval
-            )
-        }
-    }
-
     private func updateCounter(_ counter: Counter?, with skip: Skip) -> Counter {
         guard let counter else {
             return .init(skip: skip, value: 1)
@@ -142,6 +125,23 @@ public extension SkipTracker {
 
         var isSkipping: Bool {
             self != .inactive
+        }
+    }
+
+    private static func state(counter: Counter?, minimumCount: Int, player: Player?) -> State {
+        guard let player, let counter, counter.value >= minimumCount else { return .inactive }
+        let count = counter.value - minimumCount + 1
+        switch counter.skip {
+        case .backward:
+            return .skippingBackward(
+                count: count,
+                interval: Double(count) * player.configuration.backwardSkipInterval
+            )
+        case .forward:
+            return .skippingForward(
+                count: count,
+                interval: Double(count) * player.configuration.forwardSkipInterval
+            )
         }
     }
 }
