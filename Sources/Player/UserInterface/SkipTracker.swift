@@ -118,10 +118,10 @@ public extension SkipTracker {
         case inactive
 
         /// Skipping backward.
-        case skippingBackward(count: Int, interval: TimeInterval)
+        case skippingBackward(TimeInterval)
 
         /// Skipping forward.
-        case skippingForward(count: Int, interval: TimeInterval)
+        case skippingForward(TimeInterval)
 
         var isSkipping: Bool {
             self != .inactive
@@ -133,15 +133,9 @@ public extension SkipTracker {
         let count = counter.value - minimumCount + 1
         switch counter.skip {
         case .backward:
-            return .skippingBackward(
-                count: count,
-                interval: Double(count) * player.configuration.backwardSkipInterval
-            )
+            return .skippingBackward(Double(count) * player.configuration.backwardSkipInterval)
         case .forward:
-            return .skippingForward(
-                count: count,
-                interval: Double(count) * player.configuration.forwardSkipInterval
-            )
+            return .skippingForward(Double(count) * player.configuration.forwardSkipInterval)
         }
     }
 }
