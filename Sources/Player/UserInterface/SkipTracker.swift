@@ -147,6 +147,8 @@ public final class SkipTracker: ObservableObject {
     }
 }
 
+@available(iOS 16, *)
+@available(tvOS, unavailable)
 public extension SkipTracker {
     /// The current tracker state.
     enum State: Equatable {
@@ -180,6 +182,8 @@ public extension SkipTracker {
     }
 }
 
+@available(iOS 16, *)
+@available(tvOS, unavailable)
 private extension SkipTracker {
     struct Counter: Equatable {
         let skip: Skip

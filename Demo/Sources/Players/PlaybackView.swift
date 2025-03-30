@@ -1001,6 +1001,8 @@ extension PlaybackView {
     }
 }
 
+#if os(iOS)
+
 private extension MainView {
     func toggleGesture() -> some Gesture {
         TapGesture()
@@ -1049,6 +1051,8 @@ private extension MainView {
         .contentTransition(.numericText())
     }
 }
+
+#endif
 
 private extension Player {
     func skippableTimeRange(at time: CMTime) -> TimeRange? {
