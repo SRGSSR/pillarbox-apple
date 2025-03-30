@@ -23,7 +23,7 @@ import SwiftUI
 /// - Triggers a skip in the most recently requested direction.
 /// - Performs additional skips for each subsequent request within the same interval.
 ///
-/// ### Key Benefits
+/// ### Key benefits
 ///
 /// This implementation optimizes the user experience:
 ///
@@ -43,6 +43,8 @@ import SwiftUI
 ///    backward (``SkipTracker/requestSkipBackward()``) or forward (``SkipTracker/requestSkipForward()``).
 /// 4. Use ``SkipTracker/state-swift.property`` to update the UI dynamically when fast seeking is active, such as displaying lightweight
 ///    overlays indicating the skip direction and total accumulated skip interval.
+///
+/// > Note: For step-by-step integration instructions have a look at the associated <doc:supporting-skip-gestures> tutorial.
 @available(iOS 16, *)
 @available(tvOS, unavailable)
 public final class SkipTracker: ObservableObject {
