@@ -76,8 +76,8 @@ public final class SkipTracker: ObservableObject {
     /// Create a tracker managing skips.
     ///
     /// - Parameters:
-    ///   - count: The number of requests required to enable skip mode.
-    ///   - delay: The delay after which skip mode is disabled.
+    ///   - count: The number of requests required to enable skipping.
+    ///   - delay: The delay after which skipping is disabled.
     public init(count: Int = 2, delay: TimeInterval = 0.4) {
         // swiftlint:disable:next empty_count
         assert(count > 0 && delay > 0)
@@ -104,6 +104,7 @@ public final class SkipTracker: ObservableObject {
     /// Request a skip in a given direction.
     ///
     /// - Parameter skip: The skip direction.
+    /// - Returns: `true` iff the request could be fulfilled.
     @discardableResult
     public func requestSkip(_ skip: Skip) -> Bool {
         guard let player, player.canSkip(skip) else { return false }
@@ -153,9 +154,13 @@ public extension SkipTracker {
         case inactive
 
         /// Skipping backward.
+        ///
+        /// The total accumulated interval in seconds is provided as associated value.
         case skippingBackward(TimeInterval)
 
         /// Skipping forward.
+        ///
+        /// The total accumulated interval in seconds is provided as associated value.
         case skippingForward(TimeInterval)
 
         var isSkipping: Bool {
