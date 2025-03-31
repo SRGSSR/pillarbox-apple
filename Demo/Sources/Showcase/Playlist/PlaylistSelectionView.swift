@@ -44,11 +44,16 @@ struct PlaylistSelectionView: View {
     let model: PlaylistViewModel
 
     @State private var selectedMedias: Set<Media> = []
+    @State private var selectedInsertionOption: InsertionOption = .append
+    @State private var multiplier = 1
+
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        List(Self.medias, id: \.self, selection: $selectedMedias) { media in
-            Text(media.title)
+        VStack {
+            picker()
+            list()
+            stepper()
         }
         .environment(\.editMode, .constant(.active))
         .navigationBarTitle("Add content")
@@ -67,12 +72,69 @@ struct PlaylistSelectionView: View {
         .tracked(name: "selection", levels: ["playlist"])
     }
 
+    private func picker() -> some View {
+        Picker("Insertion options", selection: $selectedInsertionOption) {
+            ForEach(InsertionOption.allCases, id: \.self) { option in
+                Text(option.name)
+                    .tag(option)
+            }
+        }
+        .pickerStyle(.segmented)
+        .padding(.horizontal)
+        .padding(.bottom)
+    }
+
+    private func list() -> some View {
+        List(Self.medias, id: \.self, selection: $selectedMedias) { media in
+            Text(media.title)
+        }
+    }
+
+    private func stepper() -> some View {
+        Stepper(value: $multiplier, in: 1...100) {
+            LabeledContent("Multiplier", value: "×\(multiplier)")
+        }
+        .padding()
+    }
+
     private func cancel() {
         dismiss()
     }
 
     private func add() {
-        model.add(Array(selectedMedias))
+        let medias = Array(repeating: selectedMedias, count: multiplier).flatMap(\.self)
+        switch selectedInsertionOption {
+        case .prepend:
+            model.prepend(medias)
+        case .insertBefore:
+            model.insert(medias, before: model.currentMedia)
+        case .insertAfter:
+            model.insert(medias, after: model.currentMedia)
+        case .append:
+            model.append(medias)
+        }
         dismiss()
+    }
+}
+
+private extension PlaylistSelectionView {
+    enum InsertionOption: CaseIterable {
+        case prepend
+        case insertBefore
+        case insertAfter
+        case append
+
+        var name: LocalizedStringKey {
+            switch self {
+            case .prepend:
+                "Prepend"
+            case .insertBefore:
+                "Insert before"
+            case .insertAfter:
+                "Insert after"
+            case .append:
+                "Append"
+            }
+        }
     }
 }

@@ -110,6 +110,7 @@ struct PlaylistView: View {
                 MessageView(message: "No items", icon: .none)
             }
         }
+        .animation(.linear, value: model.medias)
     }
 }
 

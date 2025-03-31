@@ -69,8 +69,32 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         return items
     }
 
-    func add(_ medias: [Media]) {
-        self.medias.append(contentsOf: medias)
+    func prepend(_ medias: [Media]) {
+        insert(medias, before: nil)
+    }
+
+    func insert(_ medias: [Media], before: Media?) {
+        if let before {
+            guard let beforeIndex = self.medias.firstIndex(of: before) else { return }
+            self.medias.insert(contentsOf: medias, at: beforeIndex)
+        }
+        else {
+            self.medias.insert(contentsOf: medias, at: 0)
+        }
+    }
+
+    func insert(_ medias: [Media], after: Media?) {
+        if let after {
+            guard let index = self.medias.firstIndex(of: after) else { return }
+            self.medias.insert(contentsOf: medias, at: self.medias.index(after: index))
+        }
+        else {
+            self.medias.append(contentsOf: medias)
+        }
+    }
+
+    func append(_ medias: [Media]) {
+        insert(medias, after: nil)
     }
 
     func play() {
