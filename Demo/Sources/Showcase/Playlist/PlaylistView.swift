@@ -91,7 +91,7 @@ struct PlaylistView: View {
         }
         .animation(.defaultLinear, value: model.layout)
         .onAppear {
-            model.medias = medias
+            model.entries = medias.map { .init(media: $0) }
             model.play()
         }
         .enabledForInAppPictureInPicture(persisting: model)
@@ -101,16 +101,16 @@ struct PlaylistView: View {
     @ViewBuilder
     private func list() -> some View {
         ZStack {
-            if !model.medias.isEmpty {
-                List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
-                    MediaCell(media: media)
+            if !model.isEmpty {
+                List($model.entries, id: \.self, editActions: .all, selection: $model.currentEntry) { $entry in
+                    MediaCell(media: entry.media)
                 }
             }
             else {
                 MessageView(message: "No items", icon: .none)
             }
         }
-        .animation(.linear, value: model.medias)
+        .animation(.linear, value: model.entries)
     }
 }
 
