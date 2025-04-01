@@ -6,7 +6,6 @@
 
 import Combine
 import Foundation
-import OrderedCollections
 import PillarboxPlayer
 
 final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
@@ -15,62 +14,43 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     @Published var layout: PlaybackView.Layout = .minimized
 
-    @Published private var items = OrderedDictionary<Media, PlayerItem>() {
+    @Published var entries: [PlaylistEntry] = [] {
         didSet {
-            player.items = items.values.elements
+            player.items = entries.map(\.item)
         }
     }
 
-    @Published var currentMedia: Media? {
+    @Published var currentEntry: PlaylistEntry? {
         didSet {
-            guard let currentMedia, let currentItem = items[currentMedia] else { return }
-            player.currentItem = currentItem
-        }
-    }
-
-    var medias: [Media] {
-        get {
-            Array(items.keys)
-        }
-        set {
-            items = Self.updated(initialItems: items, with: newValue)
+            player.currentItem = currentEntry?.item
         }
     }
 
     var isEmpty: Bool {
-        player.items.isEmpty
+        entries.isEmpty
     }
 
     init() {
-        configureCurrentMediaPublisher()
+        configureCurrentEntryPublisher()
         configureLimitsPublisher()
     }
 
-    private static func updated(
-        initialItems: OrderedDictionary<Media, PlayerItem>,
-        with medias: [Media]
-    ) -> OrderedDictionary<Media, PlayerItem> {
-        var items = initialItems
-        let changes = medias.difference(from: initialItems.keys).inferringMoves()
-        changes.forEach { change in
-            switch change {
-            case let .insert(offset: offset, element: element, associatedWith: associatedWith):
-                if let associatedWith {
-                    let previousPlayerItem = initialItems.elements[associatedWith].value
-                    items.updateValue(previousPlayerItem, forKey: element, insertingAt: offset)
-                }
-                else {
-                    items.updateValue(element.item(), forKey: element, insertingAt: offset)
-                }
-            case let .remove(offset: offset, element: _, associatedWith: _):
-                items.remove(at: offset)
-            }
-        }
-        return items
+    func prepend(_ entries: [PlaylistEntry]) {
+        self.entries.insert(contentsOf: entries, at: 0)
     }
 
-    func add(_ medias: [Media]) {
-        self.medias.append(contentsOf: medias)
+    func insertBeforeCurrent(_ entries: [PlaylistEntry]) {
+        guard let currentEntry, let index = self.entries.firstIndex(of: currentEntry) else { return }
+        self.entries.insert(contentsOf: entries, at: index)
+    }
+
+    func insertAfterCurrent(_ entries: [PlaylistEntry]) {
+        guard let currentEntry, let index = self.entries.firstIndex(of: currentEntry) else { return }
+        self.entries.insert(contentsOf: entries, at: self.entries.index(after: index))
+    }
+
+    func append(_ entries: [PlaylistEntry]) {
+        self.entries.append(contentsOf: entries)
     }
 
     func play() {
@@ -79,20 +59,19 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     func shuffle() {
-        items.shuffle()
+        entries.shuffle()
     }
 
     func trash() {
-        medias = []
+        entries = []
     }
 
-    private func configureCurrentMediaPublisher() {
-        player.$currentItem
-            .map { [weak self] item in
-                guard let self, let item else { return nil }
-                return media(for: item)
+    private func configureCurrentEntryPublisher() {
+        Publishers.CombineLatest(player.$currentItem, $entries)
+            .map { item, entries in
+                entries.first { $0.item == item }
             }
-            .assign(to: &$currentMedia)
+            .assign(to: &$currentEntry)
     }
 
     private func configureLimitsPublisher() {
@@ -101,7 +80,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
             .store(in: &cancellables)
     }
 
-    private func media(for item: PlayerItem) -> Media? {
-        items.first { $0.value == item }?.key
+    private func entry(for item: PlayerItem) -> PlaylistEntry? {
+        entries.first { $0.item == item }
     }
 }

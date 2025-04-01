@@ -28,7 +28,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     private func configureShowTime() {
         UserDefaults.standard.publisher(for: \.presenterModeEnabled)
-            .receiveOnMainThread()
             .sink { isEnabled in
                 ShowTime.enabled = isEnabled ? .always : .never
             }
@@ -37,7 +36,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     private func configureDataProvider() {
         UserDefaults.standard.publisher(for: \.serverSetting)
-            .receiveOnMainThread()
             .sink { serverSetting in
                 SRGDataProvider.current = serverSetting.dataProvider
             }
