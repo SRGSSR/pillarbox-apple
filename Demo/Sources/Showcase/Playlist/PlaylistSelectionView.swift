@@ -101,7 +101,7 @@ struct PlaylistSelectionView: View {
     }
 
     private func add() {
-        let entries = Array(repeating: selectedMedias, count: multiplier).flatMap(\.self).map { PlaylistEntry(media: $0) }
+        let entries = Array(repeating: selectedMedias, count: multiplier).flatMap(\.self).map(PlaylistEntry.init)
         switch selectedInsertionOption {
         case .prepend:
             model.prepend(entries)
