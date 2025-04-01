@@ -6,6 +6,7 @@
 
 import SwiftUI
 
+@available(tvOS, unavailable)
 struct PlaylistSelectionView: View {
     static let medias = [
         URLMedia.onDemandVideoHLS,
@@ -57,9 +58,7 @@ struct PlaylistSelectionView: View {
         }
         .environment(\.editMode, .constant(.active))
         .navigationBarTitle("Add content")
-#if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
-#endif
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel", action: cancel)
@@ -117,6 +116,7 @@ struct PlaylistSelectionView: View {
     }
 }
 
+@available(tvOS, unavailable)
 private extension PlaylistSelectionView {
     enum InsertionOption: CaseIterable {
         case prepend
