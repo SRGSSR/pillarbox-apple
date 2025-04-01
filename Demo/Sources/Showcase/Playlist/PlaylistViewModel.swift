@@ -31,7 +31,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     init() {
-        configureCurrentMediaPublisher()
+        configureCurrentEntryPublisher()
         configureLimitsPublisher()
     }
 
@@ -66,11 +66,10 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         entries = []
     }
 
-    private func configureCurrentMediaPublisher() {
-        player.$currentItem
-            .map { [weak self] item in
-                guard let self, let item else { return nil }
-                return entry(for: item)
+    private func configureCurrentEntryPublisher() {
+        Publishers.CombineLatest(player.$currentItem, $entries)
+            .map { item, entries in
+                entries.first { $0.item == item }
             }
             .assign(to: &$currentEntry)
     }
