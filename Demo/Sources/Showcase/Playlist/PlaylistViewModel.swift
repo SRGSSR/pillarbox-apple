@@ -22,7 +22,12 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     @Published var currentEntry: PlaylistEntry? {
         didSet {
-            player.currentItem = currentEntry?.item
+            // TODO: Workaround for 'Publishing changes from within view updates' warnings triggered when a published
+            //       property is used as `List` selection. Remove when fixed by Apple or after migration to Observation.
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                player.currentItem = currentEntry?.item
+            }
         }
     }
 
