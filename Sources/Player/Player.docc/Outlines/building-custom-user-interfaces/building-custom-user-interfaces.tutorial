@@ -22,6 +22,7 @@
         @TutorialReference(tutorial: tracking-progress)
         @TutorialReference(tutorial: tracking-visibility)
         @TutorialReference(tutorial: supporting-pinch-to-zoom)
+        @TutorialReference(tutorial: supporting-skip-gestures)
     }
     
     @Chapter(name: "Iterating on custom user interfaces") {

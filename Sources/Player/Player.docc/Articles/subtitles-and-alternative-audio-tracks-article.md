@@ -41,8 +41,8 @@ To override default preferences, call ``Player/setMediaSelection(preferredLangua
 
 For most playback user interfaces, all you need is a way to let users switch subtitles or audio tracks:
 
-- To replicate the standard system player experience, use ``Player/standardSettingsMenu()`` and embed its result in a [Menu](https://developer.apple.com/documentation/swiftui/menu). This menu includes options for media selection and playback speed.
-- To customize menus further, use ``Player/mediaSelectionMenu(characteristic:)`` to retrieve a submenu for a specific characteristic.
+- To replicate the standard system player experience, use ``Player/standardSettingsMenu(speeds:action:)`` and embed its result in a [Menu](https://developer.apple.com/documentation/swiftui/menu). This menu includes options for media selection and playback speed.
+- To customize menus further, use ``Player/mediaSelectionMenu(characteristic:action:)`` to retrieve a submenu for a specific characteristic.
 - For complete control, use the media selection APIs to build a fully custom interface.
 
 ### Stream packaging requirements

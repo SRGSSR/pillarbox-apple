@@ -64,4 +64,14 @@ public struct PlayerConfiguration {
         self.forwardSkipInterval = forwardSkipInterval
         self.allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
     }
+
+    /// The skip interval for some direction, in seconds.
+    public func interval(forSkip skip: Skip) -> TimeInterval {
+        switch skip {
+        case .backward:
+            return backwardSkipInterval
+        case .forward:
+            return forwardSkipInterval
+        }
+    }
 }

@@ -128,6 +128,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``LazyImage``
 - ``LazyUIImage(source:)``
 - ``ProgressTracker``
+- ``SkipTracker``
 - ``SystemVideoView``
 - ``VideoView``
 - ``Viewport``

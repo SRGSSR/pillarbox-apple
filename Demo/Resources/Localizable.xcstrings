@@ -7,6 +7,9 @@
     "-" : {
 
     },
+    "-%llds" : {
+
+    },
     "%g× %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -17,6 +20,9 @@
           }
         }
       }
+    },
+    "+%llds" : {
+
     },
     "Action at item end" : {
 

@@ -22,6 +22,7 @@ private struct MainView: View {
 
     @StateObject private var visibilityTracker = VisibilityTracker()
     @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1), limit: 90)
+    @StateObject private var skipTracker = SkipTracker()
 
     @State private var layoutInfo: LayoutInfo = .none
     @State private var isPresentingMetrics = false
@@ -72,14 +73,6 @@ private struct MainView: View {
         layoutInfo.isOverCurrentContext ? selectedGravity : .resizeAspect
     }
 
-    private var toggleGestureMask: GestureMask {
-        !isInteracting ? .all : .subviews
-    }
-
-    private var magnificationGestureMask: GestureMask {
-        layoutInfo.isOverCurrentContext ? .all : .subviews
-    }
-
     private var isUserInterfaceHidden: Bool {
         visibilityTracker.isUserInterfaceHidden && !shouldKeepControlsAlwaysVisible && !player.canReplay()
     }
@@ -96,40 +89,31 @@ private struct MainView: View {
         player.metadata.viewport == .monoscopic
     }
 
-    private func toggleGesture() -> some Gesture {
-        TapGesture()
-            .onEnded(visibilityTracker.toggle)
-    }
-
-    private func magnificationGesture() -> some Gesture {
-        MagnificationGesture()
-            .onChanged { scale in
-                selectedGravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
-            }
-    }
-
-    private func visibilityResetGesture() -> some Gesture {
-        TapGesture()
-            .onEnded(visibilityTracker.reset)
-    }
-
     private func main() -> some View {
-        ZStack {
-            video()
-                .accessibilityElement()
-                .accessibilityLabel("Video")
-                .accessibilityHint("Double tap to toggle controls")
-                .accessibilityAction(.default, visibilityTracker.toggle)
-                .accessibilityHidden(shouldKeepControlsAlwaysVisible)
-            controls()
+        GeometryReader { geometry in
+            ZStack {
+                video()
+                    .simultaneousGesture(skipGesture(in: geometry))
+                    .accessibilityElement()
+                    .accessibilityLabel("Video")
+                    .accessibilityHint("Double tap to toggle controls")
+                    .accessibilityAction(.default, visibilityTracker.toggle)
+                    .accessibilityHidden(shouldKeepControlsAlwaysVisible)
+                controls()
+            }
+            .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
+            .gesture(magnificationGesture(), isEnabled: layoutInfo.isOverCurrentContext)
+            .simultaneousGesture(visibilityResetGesture())
+            .gesture(toggleGesture(), isEnabled: !isInteracting)
+            .supportsHighSpeed(!isMonoscopic, for: player)
+            .overlay(alignment: .center) {
+                skipOverlay(skipTracker: skipTracker, in: geometry)
+            }
         }
+        .animation(.defaultLinear, value: skipTracker.state)
         .ignoresSafeArea()
-        .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
-        .gesture(toggleGesture(), including: toggleGestureMask)
-        .gesture(magnificationGesture(), including: magnificationGestureMask)
-        .simultaneousGesture(visibilityResetGesture())
-        .supportsHighSpeed(!isMonoscopic, for: player)
+        .bind(skipTracker, to: player)
     }
 
     private func metadata() -> some View {
@@ -264,12 +248,15 @@ private struct MainView: View {
     }
 
     private func controls() -> some View {
-        ZStack {
-            Color(white: 0, opacity: 0.5)
-                .ignoresSafeArea()
-            ControlsView(player: player, progressTracker: progressTracker)
+        GeometryReader { geometry in
+            ZStack {
+                Color(white: 0, opacity: 0.5)
+                    .simultaneousGesture(skipGesture(in: geometry))
+                    .ignoresSafeArea()
+                ControlsView(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
+            }
+            .opacity(shouldHideInterface ? 0 : 1)
         }
-        .opacity(shouldHideInterface ? 0 : 1)
     }
 
     private func skipButton() -> some View {
@@ -327,12 +314,13 @@ private struct SkipButton: View {
 private struct ControlsView: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @ObservedObject var skipTracker: SkipTracker
 
     var body: some View {
         HStack(spacing: 30) {
-            SkipBackwardButton(player: player, progressTracker: progressTracker)
+            SkipBackwardButton(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
             PlaybackButton(player: player)
-            SkipForwardButton(player: player, progressTracker: progressTracker)
+            SkipForwardButton(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
         }
         ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
@@ -343,6 +331,7 @@ private struct ControlsView: View {
 private struct SkipBackwardButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @ObservedObject var skipTracker: SkipTracker
 
     var body: some View {
         Button(action: skipBackward) {
@@ -352,7 +341,7 @@ private struct SkipBackwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipBackward() ? 1 : 0)
+        .opacity(player.canSkipBackward() && !skipTracker.isSkipping ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipBackward())
         .keyboardShortcut("s", modifiers: [])
         .hoverEffect()
@@ -366,6 +355,7 @@ private struct SkipBackwardButton: View {
 private struct SkipForwardButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @ObservedObject var skipTracker: SkipTracker
 
     var body: some View {
         Button(action: skipForward) {
@@ -375,7 +365,7 @@ private struct SkipForwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipForward() ? 1 : 0)
+        .opacity(player.canSkipForward() && !skipTracker.isSkipping ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipForward())
         .keyboardShortcut("d", modifiers: [])
         .hoverEffect()
@@ -1010,6 +1000,59 @@ extension PlaybackView {
         return view
     }
 }
+
+#if os(iOS)
+
+private extension MainView {
+    func toggleGesture() -> some Gesture {
+        TapGesture()
+            .onEnded(visibilityTracker.toggle)
+    }
+
+    func magnificationGesture() -> some Gesture {
+        MagnificationGesture()
+            .onChanged { scale in
+                selectedGravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
+            }
+    }
+
+    func visibilityResetGesture() -> some Gesture {
+        TapGesture()
+            .onEnded(visibilityTracker.reset)
+    }
+
+    func skipGesture(in geometry: GeometryProxy) -> some Gesture {
+        SpatialTapGesture()
+            .onEnded { value in
+                if skipTracker.requestSkip(value.location.x < geometry.size.width / 2 ? .backward : .forward) {
+                    visibilityTracker.hide()
+                }
+            }
+    }
+}
+
+private extension MainView {
+    func skipOverlay(skipTracker: SkipTracker, in geometry: GeometryProxy) -> some View {
+        Group {
+            switch skipTracker.state {
+            case let .skippingBackward(interval):
+                Label("-\(Int(interval))s", systemImage: "backward.fill")
+                    .offset(x: -geometry.size.width / 4)
+            case let .skippingForward(interval):
+                Label("+\(Int(interval))s", systemImage: "forward.fill")
+                    .offset(x: geometry.size.width / 4)
+            case .inactive:
+                EmptyView()
+            }
+        }
+        .bold()
+        .foregroundStyle(.white)
+        .labelStyle(.vertical)
+        .contentTransition(.numericText())
+    }
+}
+
+#endif
 
 private extension Player {
     func skippableTimeRange(at time: CMTime) -> TimeRange? {

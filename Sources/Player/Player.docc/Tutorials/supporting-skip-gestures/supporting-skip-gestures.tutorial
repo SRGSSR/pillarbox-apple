@@ -1,0 +1,65 @@
+@Tutorial(time: 15) {
+    @Intro(title: "Supporting skip gestures") {
+        Enable intuitive skip gestures to let users navigate forward and backward efficiently.
+
+        Skip gestures, widely adopted by apps like YouTube, offer a fast and natural way for users to move through content by tapping multiple times in the desired direction.
+
+        @Image(source: supporting-skip-gestures-intro, alt: "Illustration showing a skip icon.")
+    }
+    
+    @Section(title: "Implement a tap gesture to trigger skips") {
+        @ContentAndMedia {
+            Start with a basic video player interface. Implement a skip gesture that allows users to navigate forward and backward by tapping multiple times in quick succession.
+        }
+        
+        @Steps {
+            @Step {
+                Replace your existing `ContentView` implementation with the provided code.
+
+                This implementation starts with a simple video playback interface.
+
+                @Code(name: "ContentView.swift", file: supporting-skip-gestures-1-1.swift) {
+                    @Image(source: supporting-skip-gestures-1-1, alt: "A screenshot of an iPhone playing a video.")
+                }
+            }
+            
+            @Step {
+                Integrate a `SpatialTapGesture` to detect single taps and their locations. Use a `GeometryReader` to allow the gesture to access the parent view's geometry.
+
+                @Code(name: "ContentView.swift", file: supporting-skip-gestures-1-2.swift)
+            }
+            
+            @Step {
+                Create a ``SkipTracker`` instance, store it as a `@StateObject` in `ContentView`, and bind it to the player. Implement the gesture's `onEnded(_:)` method to detect taps on the left and right halves of the screen, triggering backward and forward skips accordingly.
+
+                Run the project and test by tapping multiple times in the left and right halves of the screen to confirm that the skip gesture works as expected.
+
+                @Code(name: "ContentView.swift", file: supporting-skip-gestures-1-3.swift)
+            }
+        }
+    }
+        
+    @Section(title: "Enhance skip gestures with feedback") {
+        @ContentAndMedia {
+            Improve the user experience by providing visual feedback when a skip gesture is triggered.
+        }
+        
+        @Steps {
+            @Step {
+                Add an overlay that can access the surrounding geometry.
+
+                @Code(name: "ContentView.swift", file: supporting-skip-gestures-2-1.swift, previousFile: supporting-skip-gestures-1-3.swift)
+            }
+            
+            @Step {
+                Display the total accumulated skip interval in the corresponding half of the screen.
+
+                Run the project and test by tapping multiple times in the left and right halves of the screen. A label should now appear, indicating the total skip duration.
+
+                @Code(name: "ContentView.swift", file: supporting-skip-gestures-2-2.swift) {
+                    @Image(source: supporting-skip-gestures-2-2, alt: "A screenshot of an iPhone playing a video.")
+                }
+            }
+        }
+    }
+}
