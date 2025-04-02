@@ -49,6 +49,14 @@ public final class PictureInPicture {
         custom.stop()
         system.stop()
     }
+
+    /// Close Picture in Picture.
+    ///
+    /// Restoration will not be made.
+    public func close() {
+        persisted = nil
+        stop()
+    }
 }
 
 extension PictureInPicture: PictureInPictureDelegate {
