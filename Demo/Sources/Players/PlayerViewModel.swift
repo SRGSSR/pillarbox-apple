@@ -8,7 +8,7 @@ import Combine
 import Foundation
 import PillarboxPlayer
 
-final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
+final class PlayerViewModel: ObservableObject {
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
@@ -39,5 +39,27 @@ final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
         UserDefaults.standard.limitsPublisher()
             .assign(to: \.limits, on: player)
             .store(in: &cancellables)
+    }
+}
+
+extension PlayerViewModel: PictureInPicturePersistable {
+    func pictureInPictureWillStart() {
+        print("--> will start")
+    }
+
+    func pictureInPictureDidStart() {
+        print("--> did start")
+    }
+
+    func pictureInPictureWillStop() {
+        print("--> will stop")
+    }
+
+    func pictureInPictureDidStop() {
+        print("--> did stop")
+    }
+
+    func pictureInPictureDidClose() {
+        print("--> did close")
     }
 }
