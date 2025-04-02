@@ -92,7 +92,9 @@ struct PlaylistView: View {
         }
         .animation(.defaultLinear, value: model.layout)
         .onAppear {
-            model.entries = medias.map { .init(media: $0) }
+            if model.isEmpty {
+                model.entries = medias.map { .init(media: $0) }
+            }
             model.play()
         }
         .enabledForInAppPictureInPicture(persisting: model)
