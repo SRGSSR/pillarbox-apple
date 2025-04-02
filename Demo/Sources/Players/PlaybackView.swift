@@ -105,13 +105,13 @@ private struct MainView: View {
             .gesture(magnificationGesture(), isEnabled: layoutInfo.isOverCurrentContext)
             .simultaneousGesture(visibilityResetGesture())
             .gesture(toggleGesture(), isEnabled: !isInteracting)
-            .supportsHighSpeed(!isMonoscopic, for: player)
             .overlay(alignment: .center) {
                 skipOverlay(skipTracker: skipTracker, in: geometry)
             }
         }
         .animation(.defaultLinear, value: skipTracker.state)
         .ignoresSafeArea()
+        .supportsHighSpeed(!isMonoscopic, for: player)
         .readLayout(into: $layoutInfo)
         .bind(skipTracker, to: player)
     }
