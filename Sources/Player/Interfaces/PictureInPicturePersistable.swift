@@ -17,13 +17,10 @@ public protocol PictureInPicturePersistable: AnyObject {
     func pictureInPictureDidStart()
 
     /// Called when Picture in Picture is about to stop.
-    func pictureInPictureWillStop()
+    func pictureInPictureWillStop(closed: Bool)
 
     /// Called when Picture in Picture has stopped.
-    func pictureInPictureDidStop()
-
-    /// Called when Picture is Picture has been closed from its overlay.
-    func pictureInPictureDidClose()
+    func pictureInPictureDidStop(closed: Bool)
 }
 
 public extension PictureInPicturePersistable {
@@ -39,11 +36,8 @@ public extension PictureInPicturePersistable {
     func pictureInPictureDidStart() {}
 
     /// Default implementation. Does nothing.
-    func pictureInPictureWillStop() {}
+    func pictureInPictureWillStop(closed: Bool) {}
 
     /// Default implementation. Does nothing.
-    func pictureInPictureDidStop() {}
-
-    /// Default implementation. Does nothing.
-    func pictureInPictureDidClose() {}
+    func pictureInPictureDidStop(closed: Bool) {}
 }

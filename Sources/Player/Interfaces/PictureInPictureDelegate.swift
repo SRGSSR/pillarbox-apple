@@ -27,8 +27,17 @@ public protocol PictureInPictureDelegate: AnyObject {
     func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void)
 
     /// Called when Picture in Picture is about to stop.
-    func pictureInPictureWillStop()
+    func pictureInPictureWillStop(closed: Bool)
 
     /// Called when Picture in Picture has stopped.
+    func pictureInPictureDidStop(closed: Bool)
+}
+
+protocol _PictureInPictureDelegate: AnyObject {
+    func pictureInPictureWillStart()
+    func pictureInPictureDidStart()
+    func pictureInPictureControllerFailedToStart(with error: Error)
+    func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void)
+    func pictureInPictureWillStop()
     func pictureInPictureDidStop()
 }

@@ -25,7 +25,7 @@ final class SystemPictureInPicture: NSObject {
     private var playerViewController: AVPlayerViewController?
     private var hostViewControllers: OrderedSet<PictureInPictureHostViewController> = []
 
-    weak var delegate: PictureInPictureDelegate?
+    weak var delegate: _PictureInPictureDelegate?
     private var referenceCount = 0
 
     func stop() {
