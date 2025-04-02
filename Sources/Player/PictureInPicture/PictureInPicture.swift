@@ -27,6 +27,7 @@ public final class PictureInPicture {
     // Strong to retain when acquired.
     private(set) var persisted: PictureInPicturePersistable?
 
+    private var isClosed = false
     private var isRestored = false
 
     private init() {
@@ -56,7 +57,7 @@ public final class PictureInPicture {
     ///
     /// The ``PictureInPictureDelegate/pictureInPictureRestoreUserInterfaceForStop(with:)`` method is not called.
     public func close() {
-        persisted = nil
+        isClosed = true
         stop()
     }
 }
@@ -83,7 +84,7 @@ extension PictureInPicture: PictureInPictureDelegate {
 
     // swiftlint:disable:next missing_docs
     public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
-        guard persisted != nil else {
+        guard !isClosed else {
             completion(true)
             return
         }
@@ -115,6 +116,7 @@ extension PictureInPicture: PictureInPictureDelegate {
         if !isRestored {
             persisted?.pictureInPictureDidClose()
         }
+        isClosed = false
         isRestored = false
         persisted = nil
     }
