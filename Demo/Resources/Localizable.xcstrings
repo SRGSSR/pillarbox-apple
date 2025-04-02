@@ -78,6 +78,9 @@
     "Close" : {
 
     },
+    "Close PiP" : {
+
+    },
     "Color" : {
 
     },
@@ -343,6 +346,9 @@
 
     },
     "Stop" : {
+
+    },
+    "Stop PiP" : {
 
     },
     "Swap" : {
