@@ -77,7 +77,7 @@ private struct Toolbar: View {
 struct PlaylistView: View {
     let medias: [Media]
 
-    @StateObject private var model = PlaylistViewModel.persisted ?? PlaylistViewModel()
+    @StateObject private var model = PlaylistViewModel.persisted(forIdentifier: "playlist") ?? PlaylistViewModel()
 
     var body: some View {
         VStack(spacing: 0) {

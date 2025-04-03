@@ -27,7 +27,7 @@ private struct PresentedView: View {
 struct TransitionPiPView: View {
     let media: Media
 
-    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
+    @StateObject private var model = PlayerViewModel.persisted(forIdentifier: "transition") ?? PlayerViewModel(identifier: "transition")
 
     @State private var supportsPictureInPicture = true
     @State private var isPresented = false

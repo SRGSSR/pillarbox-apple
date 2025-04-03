@@ -8,7 +8,7 @@ import Combine
 import Foundation
 import PillarboxPlayer
 
-final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
+final class PlaylistViewModel: ObservableObject {
     let player = Player(configuration: .standard)
     private var cancellables = Set<AnyCancellable>()
 
@@ -82,5 +82,11 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
 
     private func entry(for item: PlayerItem) -> PlaylistEntry? {
         entries.first { $0.item == item }
+    }
+}
+
+extension PlaylistViewModel: PictureInPicturePersistable {
+    var identifier: String {
+        "playlist"
     }
 }

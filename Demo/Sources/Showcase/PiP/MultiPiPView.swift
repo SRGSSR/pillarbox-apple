@@ -12,7 +12,7 @@ struct MultiPiPView: View {
     let media2: Media
     let isSystemPlayer: Bool
 
-    @StateObject private var model = MultiPiPViewModel.persisted ?? MultiPiPViewModel()
+    @StateObject private var model = MultiPiPViewModel.persisted(forIdentifier: "multipip") ?? MultiPiPViewModel()
 
     var body: some View {
         VStack {

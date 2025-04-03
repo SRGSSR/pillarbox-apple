@@ -8,7 +8,7 @@ import Combine
 import Foundation
 import PillarboxPlayer
 
-final class MultiPiPViewModel: ObservableObject, PictureInPicturePersistable {
+final class MultiPiPViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     @Published var media1: Media? {
@@ -56,5 +56,11 @@ final class MultiPiPViewModel: ObservableObject, PictureInPicturePersistable {
         UserDefaults.standard.limitsPublisher()
             .assign(to: \.limits, on: player2)
             .store(in: &cancellables)
+    }
+}
+
+extension MultiPiPViewModel: PictureInPicturePersistable {
+    var identifier: String {
+        "multipip"
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct TwinsPiPView: View {
     let media: Media
 
-    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
+    @StateObject private var model = PlayerViewModel.persisted(forIdentifier: "twins") ?? PlayerViewModel(identifier: "twins")
 
     @State private var topSupportsPictureInPicture = true
     @State private var bottomSupportsPictureInPicture = true

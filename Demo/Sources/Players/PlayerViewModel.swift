@@ -9,6 +9,8 @@ import Foundation
 import PillarboxPlayer
 
 final class PlayerViewModel: ObservableObject {
+    let identifier: String
+
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
@@ -26,7 +28,8 @@ final class PlayerViewModel: ObservableObject {
     let player = Player(configuration: .standard)
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
+    init(identifier: String) {
+        self.identifier = identifier
         configureLimitsPublisher()
     }
 

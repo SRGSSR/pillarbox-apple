@@ -11,7 +11,7 @@ import SwiftUI
 struct SystemPlayerView: View {
     let media: Media
 
-    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
+    @StateObject private var model = PlayerViewModel.persisted(forIdentifier: "system") ?? PlayerViewModel(identifier: "system")
     private var supportsPictureInPicture = false
 
     var body: some View {

@@ -159,7 +159,7 @@ private struct MainView: View {
 struct PlayerView: View {
     let media: Media
 
-    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
+    @StateObject private var model = PlayerViewModel.persisted(forIdentifier: "player") ?? PlayerViewModel(identifier: "player")
 
     private var supportsPictureInPicture = false
 

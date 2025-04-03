@@ -124,6 +124,10 @@ final class MultiViewModel: ObservableObject {
 }
 
 extension MultiViewModel: PictureInPicturePersistable {
+    var identifier: String {
+        "multi"
+    }
+
     func pictureInPictureDidStart() {
         inactivePlayer.pause()
     }

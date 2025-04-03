@@ -10,6 +10,8 @@
 /// notified about the Picture in Picture lifecycle, e.g to perform some bookkeeping work or to pause / resume
 /// processes.
 public protocol PictureInPicturePersistable: AnyObject {
+    var identifier: String { get }
+
     /// Called when Picture in Picture is about to start.
     func pictureInPictureWillStart()
 
@@ -25,8 +27,18 @@ public protocol PictureInPicturePersistable: AnyObject {
 
 public extension PictureInPicturePersistable {
     /// The currently persisted instance, if any.
-    static var persisted: Self? {
-        PictureInPicture.shared.persisted as? Self
+    static func persisted(forIdentifier identifier: String) -> Self? {
+        if let currentIdentifier = PictureInPicture.shared.identifier {
+            if identifier == currentIdentifier {
+                return PictureInPicture.shared.persisted as? Self
+            }
+            else {
+                return nil
+            }
+        }
+        else {
+            return PictureInPicture.shared.persisted as? Self
+        }
     }
 
     /// Default implementation. Does nothing.

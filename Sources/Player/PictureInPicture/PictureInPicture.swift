@@ -26,6 +26,7 @@ public final class PictureInPicture {
 
     // Strong to retain when acquired.
     private(set) var persisted: PictureInPicturePersistable?
+    private(set) var identifier: String?
 
     private var isClosed = false
 
@@ -67,6 +68,8 @@ extension PictureInPicture: PictureInPictureDelegate {
         delegate?.pictureInPictureWillStart()
 
         persisted = persistable
+        identifier = persistable?.identifier
+
         persisted?.pictureInPictureWillStart()
     }
 
@@ -114,5 +117,6 @@ extension PictureInPicture: PictureInPictureDelegate {
         persisted?.pictureInPictureDidStop()
         isClosed = false
         persisted = nil
+        identifier = nil
     }
 }
