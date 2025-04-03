@@ -91,6 +91,7 @@ extension PictureInPicture: _PictureInPictureDelegate {
         }
         isRestored = true
         if let delegate {
+            print("--> restore with delegate")
             delegate.pictureInPictureRestoreUserInterfaceForStop { finished in
                 // The Picture in Picture overlay restoration animation should always occur slightly after the playback
                 // user interface restoration animation starts, otherwise the restoration animation will be dropped (likely
@@ -101,6 +102,7 @@ extension PictureInPicture: _PictureInPictureDelegate {
             }
         }
         else {
+            print("--> restore without delegate")
             completion(true)
         }
     }
