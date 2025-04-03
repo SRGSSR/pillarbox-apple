@@ -16,7 +16,7 @@ final class CustomPictureInPicture: NSObject {
     private let controller = AVPictureInPictureController(playerLayer: .init())
     private var hostViews: OrderedSet<PictureInPictureHostView> = []
 
-    weak var delegate: _PictureInPictureDelegate?
+    weak var delegate: PictureInPictureDelegate?
 
     private var videoLayerView: VideoLayerView?
 

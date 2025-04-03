@@ -27,7 +27,6 @@ public final class PictureInPicture {
     // Strong to retain when acquired.
     private(set) var persisted: PictureInPicturePersistable?
 
-    private var isRestored = false
     private var isClosed = false
 
     private init() {
@@ -49,7 +48,6 @@ public final class PictureInPicture {
     ///
     /// The ``PictureInPictureDelegate/pictureInPictureRestoreUserInterfaceForStop(with:)`` method is called.
     public func stop() {
-        isRestored = true
         custom.stop()
         system.stop()
     }
@@ -63,7 +61,7 @@ public final class PictureInPicture {
     }
 }
 
-extension PictureInPicture: _PictureInPictureDelegate {
+extension PictureInPicture: PictureInPictureDelegate {
     // swiftlint:disable:next missing_docs
     public func pictureInPictureWillStart() {
         delegate?.pictureInPictureWillStart()
@@ -89,7 +87,6 @@ extension PictureInPicture: _PictureInPictureDelegate {
             completion(true)
             return
         }
-        isRestored = true
         if let delegate {
             print("--> restore with delegate")
             delegate.pictureInPictureRestoreUserInterfaceForStop { finished in
@@ -109,16 +106,15 @@ extension PictureInPicture: _PictureInPictureDelegate {
 
     // swiftlint:disable:next missing_docs
     public func pictureInPictureWillStop() {
-        delegate?.pictureInPictureWillStop(closed: isClosed || !isRestored)
-        persisted?.pictureInPictureWillStop(closed: isClosed || !isRestored)
+        delegate?.pictureInPictureWillStop()
+        persisted?.pictureInPictureWillStop()
     }
 
     // swiftlint:disable:next missing_docs
     public func pictureInPictureDidStop() {
-        delegate?.pictureInPictureDidStop(closed: isClosed || !isRestored)
-        persisted?.pictureInPictureDidStop(closed: isClosed || !isRestored)
+        delegate?.pictureInPictureDidStop()
+        persisted?.pictureInPictureDidStop()
         isClosed = false
-        isRestored = false
         persisted = nil
     }
 }

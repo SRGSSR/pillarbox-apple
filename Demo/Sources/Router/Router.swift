@@ -78,9 +78,9 @@ extension Router: PictureInPictureDelegate {
         }
     }
 
-    func pictureInPictureWillStop(closed: Bool) {}
+    func pictureInPictureWillStop() {}
 
-    func pictureInPictureDidStop(closed: Bool) {
+    func pictureInPictureDidStop() {
         previousPresented = nil
     }
 }

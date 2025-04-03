@@ -51,11 +51,11 @@ extension PlayerViewModel: PictureInPicturePersistable {
         print("--> did start")
     }
 
-    func pictureInPictureWillStop(closed: Bool) {
-        print("--> will stop, closed = \(closed)")
+    func pictureInPictureWillStop() {
+        print("--> will stop")
     }
 
-    func pictureInPictureDidStop(closed: Bool) {
-        print("--> did stop, closed = \(closed)")
+    func pictureInPictureDidStop() {
+        print("--> did stop")
     }
 }
