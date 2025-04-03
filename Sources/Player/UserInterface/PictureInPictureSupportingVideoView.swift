@@ -10,6 +10,7 @@ import SwiftUI
 struct PictureInPictureSupportingVideoView: UIViewRepresentable {
     let player: Player
     let gravity: AVLayerVideoGravity
+    let restorationIdentifier: (any Hashable)?
 
     static func dismantleUIView(_ uiView: PictureInPictureHostView, coordinator: Void) {
         PictureInPicture.shared.custom.dismantleHostView(uiView)
@@ -22,5 +23,6 @@ struct PictureInPictureSupportingVideoView: UIViewRepresentable {
     func updateUIView(_ uiView: PictureInPictureHostView, context: Context) {
         uiView.player = player.queuePlayer
         uiView.gravity = gravity
+        PictureInPicture.shared.custom.restorationIdentifier = restorationIdentifier
     }
 }

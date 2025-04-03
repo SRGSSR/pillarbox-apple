@@ -20,6 +20,9 @@ final class CustomPictureInPicture: NSObject {
 
     private var videoLayerView: VideoLayerView?
 
+    var restorationIdentifier: (any Hashable)?
+    var isClosed = false
+
     override init() {
         super.init()
         controller?.delegate = self
@@ -31,6 +34,11 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func stop() {
+        controller?.stopPictureInPicture()
+    }
+
+    func close() {
+        isClosed = true
         controller?.stopPictureInPicture()
     }
 
@@ -81,12 +89,15 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func onAppear(with player: AVPlayer, supportsPictureInPicture: Bool) {
+    func onAppear(with player: AVPlayer, supportsPictureInPicture: Bool, restorationIdentifier: (any Hashable)?) {
         if !supportsPictureInPicture {
             detach(with: player)
         }
-        else {
+        else if self.restorationIdentifier?.hashValue == restorationIdentifier?.hashValue {
             stop()
+        }
+        else {
+            close()
         }
     }
 
@@ -128,6 +139,10 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         _ pictureInPictureController: AVPictureInPictureController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
+        guard !isClosed else {
+            completionHandler(true)
+            return
+        }
         if let delegate {
             delegate.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
         }
