@@ -16,6 +16,7 @@ public struct VideoView: View {
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
+    private var restorationIdentifier: (any Hashable)?
     private var orientation: SCNQuaternion = .monoscopicDefault
 
     // swiftlint:disable:next missing_docs
@@ -85,6 +86,12 @@ public extension VideoView {
     func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> VideoView {
         var view = self
         view.supportsPictureInPicture = supportsPictureInPicture
+        return view
+    }
+
+    func restorationIdentifier(_ restorationIdentifier: some Hashable) -> VideoView {
+        var view = self
+        view.restorationIdentifier = restorationIdentifier
         return view
     }
 
