@@ -51,9 +51,8 @@ public final class PictureInPicture {
 
     /// Stop Picture if Picture if running.
     public func stop() {
-        pictureInPictureRestoreUserInterfaceForStop { _ in
-            self._stop()
-        }
+        pictureInPictureRestoreUserInterfaceForStop { _ in }
+        _stop()
     }
 
     /// Closes the Picture in Picture.
