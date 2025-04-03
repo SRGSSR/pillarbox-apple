@@ -44,12 +44,21 @@ public final class PictureInPicture {
         custom.start()
     }
 
+    func _stop() {
+        custom.stop()
+        system.stop()
+    }
+
     /// Stop Picture if Picture if running.
     public func stop() {
         pictureInPictureRestoreUserInterfaceForStop { _ in
-            self.custom.stop()
-            self.system.stop()
+            self._stop()
         }
+    }
+
+    /// Closes the Picture in Picture.
+    public func close() {
+        _stop()
     }
 }
 
