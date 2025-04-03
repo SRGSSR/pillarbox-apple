@@ -27,7 +27,7 @@ public final class PictureInPicture {
     // Strong to retain when acquired.
     private(set) var persisted: PictureInPicturePersistable?
 
-    private var isRestored = false
+    private var isClosed = false
 
     private init() {
         custom.delegate = self
@@ -46,14 +46,17 @@ public final class PictureInPicture {
 
     /// Stop Picture if Picture if running.
     public func stop() {
-        custom.stop()
-        system.stop()
+        pictureInPictureRestoreUserInterfaceForStop { _ in
+            self.custom.stop()
+            self.system.stop()
+        }
     }
 }
 
 extension PictureInPicture: PictureInPictureDelegate {
     // swiftlint:disable:next missing_docs
     public func pictureInPictureWillStart() {
+        print("P--> wstart")
         delegate?.pictureInPictureWillStart()
 
         persisted = persistable
@@ -62,18 +65,20 @@ extension PictureInPicture: PictureInPictureDelegate {
 
     // swiftlint:disable:next missing_docs
     public func pictureInPictureDidStart() {
+        print("P--> dstart")
         delegate?.pictureInPictureDidStart()
         persisted?.pictureInPictureDidStart()
     }
 
     // swiftlint:disable:next missing_docs
     public func pictureInPictureControllerFailedToStart(with error: Error) {
+        print("P--> f")
         delegate?.pictureInPictureControllerFailedToStart(with: error)
     }
 
     // swiftlint:disable:next missing_docs
     public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
-        isRestored = true
+        guard !isClosed else { return }
         if let delegate {
             delegate.pictureInPictureRestoreUserInterfaceForStop { finished in
                 // The Picture in Picture overlay restoration animation should always occur slightly after the playback
@@ -91,17 +96,17 @@ extension PictureInPicture: PictureInPictureDelegate {
 
     // swiftlint:disable:next missing_docs
     public func pictureInPictureWillStop() {
+        print("P--> wstop")
+        isClosed = true
         delegate?.pictureInPictureWillStop()
         persisted?.pictureInPictureWillStop()
     }
 
     // swiftlint:disable:next missing_docs
     public func pictureInPictureDidStop() {
+        print("P--> dstop")
+        isClosed = false
         delegate?.pictureInPictureDidStop()
-        if !isRestored {
-            persisted?.pictureInPictureDidClose()
-        }
-        isRestored = false
         persisted = nil
     }
 }
