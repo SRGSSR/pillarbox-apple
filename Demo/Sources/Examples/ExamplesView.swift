@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import PillarboxPlayer
 import SwiftUI
 
 // Behavior: h-exp, v-hug
@@ -167,24 +166,6 @@ struct ExamplesView: View {
 #if os(iOS)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    PictureInPicture.shared.close()
-                } label: {
-                    Text("Close PiP")
-                }
-
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    PictureInPicture.shared.stop()
-                } label: {
-                    Text("Stop PiP")
-                }
-
-            }
-        }
 #else
         .ignoresSafeArea(.all, edges: .horizontal)
 #endif
