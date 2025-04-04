@@ -27,7 +27,7 @@ public final class PictureInPicture {
     // Strong to retain when acquired.
     private(set) var persisted: PictureInPicturePersistable?
 
-    private var isRestored = false
+    private var isClosed = false
 
     private init() {
         custom.delegate = self
@@ -45,9 +45,19 @@ public final class PictureInPicture {
     }
 
     /// Stop Picture if Picture if running.
+    ///
+    /// The ``PictureInPictureDelegate/pictureInPictureRestoreUserInterfaceForStop(with:)`` method is called.
     public func stop() {
         custom.stop()
         system.stop()
+    }
+
+    /// Close Picture in Picture.
+    ///
+    /// The ``PictureInPictureDelegate/pictureInPictureRestoreUserInterfaceForStop(with:)`` method is not called.
+    public func close() {
+        isClosed = true
+        stop()
     }
 }
 
@@ -73,7 +83,10 @@ extension PictureInPicture: PictureInPictureDelegate {
 
     // swiftlint:disable:next missing_docs
     public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
-        isRestored = true
+        guard !isClosed else {
+            completion(true)
+            return
+        }
         if let delegate {
             delegate.pictureInPictureRestoreUserInterfaceForStop { finished in
                 // The Picture in Picture overlay restoration animation should always occur slightly after the playback
@@ -98,10 +111,8 @@ extension PictureInPicture: PictureInPictureDelegate {
     // swiftlint:disable:next missing_docs
     public func pictureInPictureDidStop() {
         delegate?.pictureInPictureDidStop()
-        if !isRestored {
-            persisted?.pictureInPictureDidClose()
-        }
-        isRestored = false
+        persisted?.pictureInPictureDidStop()
+        isClosed = false
         persisted = nil
     }
 }
