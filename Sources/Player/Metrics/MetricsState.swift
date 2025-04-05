@@ -7,21 +7,31 @@
 import AVFoundation
 
 struct MetricsState: Equatable {
-    static let empty = Self(with: [], at: .invalid)
+    private static let nonCacheableEventCount = 2
+
+    static let empty = Self(time: .invalid, event: nil, cache: .empty, total: .zero)
 
     private let time: CMTime
     private let event: AccessLogEvent?
+    private let cache: MetricsCache
     private let total: MetricsValues
 
-    init(with events: [AccessLogEvent], at time: CMTime) {
-        self.time = time
-        self.event = events.last
-        self.total = events.reduce(.zero) { $0 + .values(from: $1) }
+    func adding(events: [AccessLogEvent], at time: CMTime) -> Self {
+        let updatedCache = cache.adding(events: events.dropLast(Self.nonCacheableEventCount))
+        let updatedTotal = events
+            .prefix(Self.nonCacheableEventCount)
+            .reduce(updatedCache.total) { $0 + .values(from: $1) }
+        return .init(time: time, event: events.last, cache: updatedCache, total: updatedTotal)
     }
 
-    init?(from item: AVPlayerItem) {
+    func updated(for item: AVPlayerItem) -> Self? {
         guard let events = item.accessLog()?.events, !events.isEmpty else { return nil }
-        self.init(with: events.map { AccessLogEvent($0) }, at: item.currentTime())
+        return adding(
+            events: events
+                .prefix(max(events.count - cache.count, 0))
+                .map { AccessLogEvent($0) },
+            at: item.currentTime()
+        )
     }
 
     func metrics(from state: Self) -> Metrics {

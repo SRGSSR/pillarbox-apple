@@ -12,7 +12,7 @@ import Nimble
 final class MetricsStateTests: TestCase {
     // swiftlint:disable:next function_body_length
     func testMetrics() {
-        let state = MetricsState(with: [
+        let state = MetricsState.empty.adding(events: [
             .init(
                 uri: "uri",
                 serverAddress: "serverAddress",

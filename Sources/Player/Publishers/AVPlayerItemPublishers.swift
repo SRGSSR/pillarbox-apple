@@ -11,16 +11,17 @@ import PillarboxCore
 
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        Publishers.CombineLatest7(
+        Publishers.CombineLatest8(
             statusPublisher(),
             publisher(for: \.presentationSize),
             mediaSelectionPropertiesPublisher(),
             timePropertiesPublisher(),
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher(),
-            isStalledPublisher()
+            isStalledPublisher(),
+            metricsStatePublisher()
         )
-        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, isStalled in
+        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, isStalled, metricsState in
             let isKnown = (status != .unknown)
             return .init(
                 itemProperties: .init(
@@ -29,7 +30,8 @@ extension AVPlayerItem {
                     duration: isKnown ? duration : .invalid,
                     minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                     presentationSize: isKnown ? presentationSize : nil,
-                    isStalled: isStalled
+                    isStalled: isStalled,
+                    metricsState: metricsState
                 ),
                 mediaSelectionProperties: mediaSelectionProperties,
                 timeProperties: isKnown ? timeProperties : .empty
@@ -199,7 +201,9 @@ extension AVPlayerItem {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.newAccessLogEntryNotification, object: self)
             .compactMap { $0.object as? AVPlayerItem }
             .prepend(self)
-            .compactMap { .init(from: $0) }
+            .scan(.empty) { initial, next in
+                initial.updated(for: next) ?? initial
+            }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

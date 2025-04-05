@@ -14,7 +14,8 @@ struct ItemProperties: Equatable {
         duration: .invalid,
         minimumTimeOffsetFromLive: .invalid,
         presentationSize: nil,
-        isStalled: false
+        isStalled: false,
+        metricsState: .empty
     )
 
     let item: AVPlayerItem?
@@ -26,6 +27,7 @@ struct ItemProperties: Equatable {
     let presentationSize: CGSize?
 
     let isStalled: Bool
+    let metricsState: MetricsState
 }
 
 extension ItemProperties {
@@ -41,7 +43,7 @@ extension ItemProperties {
     }
 
     func metrics() -> Metrics? {
-        guard let item, item.isLoaded, let state = MetricsState(from: item) else { return nil }
+        guard let item, item.isLoaded, let state = metricsState.updated(for: item) else { return nil }
         return state.metrics(from: .empty)
     }
 }
