@@ -12,10 +12,10 @@ public struct CommandersActPageView {
     /// The page type (e.g., _Article_).
     public let type: String
 
-    /// Additional information associated with the page view.
+    /// The page levels.
     public let levels: [String]
 
-    /// The page levels.
+    /// Additional information associated with the page view.
     public let labels: [String: String]
 
     /// Creates a Commanders Act page view.
@@ -23,8 +23,8 @@ public struct CommandersActPageView {
     /// - Parameters:
     ///   - name: The page name.
     ///   - type: The page type (e.g., _Article_).
-    ///   - labels: Additional information associated with the page view.
     ///   - levels: The page levels.
+    ///   - labels: Additional information associated with the page view.
     ///
     /// Custom labels which might accidentally override official labels will be ignored.
     public init(name: String, type: String, levels: [String] = [], labels: [String: String] = [:]) {
