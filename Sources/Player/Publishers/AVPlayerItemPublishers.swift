@@ -9,6 +9,8 @@ import Combine
 import MediaAccessibility
 import PillarboxCore
 
+private let kQueue = DispatchQueue(label: "ch.srgssr.metrics")
+
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         Publishers.CombineLatest8(
@@ -201,10 +203,12 @@ extension AVPlayerItem {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.newAccessLogEntryNotification, object: self)
             .compactMap { $0.object as? AVPlayerItem }
             .prepend(self)
+            .receive(on: kQueue)
             .scan(.empty) { initial, next in
                 initial.updated(for: next) ?? initial
             }
             .removeDuplicates()
+            .receiveOnMainThread()
             .eraseToAnyPublisher()
     }
 }
