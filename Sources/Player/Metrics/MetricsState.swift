@@ -28,7 +28,7 @@ struct MetricsState: Equatable {
         guard let events = item.accessLog()?.events, !events.isEmpty else { return nil }
         return adding(
             events: events
-                .prefix(max(events.count - cache.count, 0))
+                .suffix(max(events.count - cache.count, 0))
                 .map { AccessLogEvent($0) },
             at: item.currentTime()
         )
