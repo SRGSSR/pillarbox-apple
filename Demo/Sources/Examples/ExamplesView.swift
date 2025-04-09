@@ -174,9 +174,39 @@ struct ExamplesView: View {
     @ViewBuilder
     private func content() -> some View {
         MediaEntryView()
+        lsvsSections()
         srgSections()
         thirdPartySections()
         miscellaneousSections()
+    }
+
+    private func lsvsSections() -> some View {
+        section(
+            title: "LSVS",
+            medias: [
+                .init(
+                    title: "Origin (no DVR)",
+                    type: .encryptedUrl(
+                        "https://15595674c0604ed6.mediapackage.eu-central-1.amazonaws.com/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8",
+                        certificateUrl: "https://srg.stage.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=stage"
+                    )
+                ),
+                .init(
+                    title: "Akamai Staging (no DVR)",
+                    type: .encryptedUrl(
+                        "https://rsila1-lsvs-1080p.akamaized-staging.net/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8",
+                        certificateUrl: "https://srg.stage.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=stage"
+                    )
+                ),
+                .init(
+                    title: "Akamai Staging (2h DVR)",
+                    type: .encryptedUrl(
+                        "https://rsila1-lsvs-1080p.akamaized-staging.net/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8?dw=7200",
+                        certificateUrl: "https://srg.stage.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=stage"
+                    )
+                ),
+            ]
+        )
     }
 
     @ViewBuilder
