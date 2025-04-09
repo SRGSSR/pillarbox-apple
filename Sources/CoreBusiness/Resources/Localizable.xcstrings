@@ -71,6 +71,9 @@
         }
       }
     },
+    "This content cannot be played while using a VPN or a proxy." : {
+      "comment" : "Blocking reason description message"
+    },
     "This content is not available anymore." : {
       "comment" : "Blocking reason description message",
       "localizations" : {
