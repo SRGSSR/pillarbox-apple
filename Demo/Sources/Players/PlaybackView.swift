@@ -93,7 +93,7 @@ private struct MainView: View {
         GeometryReader { geometry in
             ZStack {
                 video()
-                    .simultaneousGesture(skipGesture(in: geometry))
+                    .gesture(skipGesture(in: geometry))
                     .accessibilityElement()
                     .accessibilityLabel("Video")
                     .accessibilityHint("Double tap to toggle controls")
@@ -104,7 +104,7 @@ private struct MainView: View {
             .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
             .gesture(magnificationGesture(), isEnabled: layoutInfo.isOverCurrentContext)
             .simultaneousGesture(visibilityResetGesture())
-            .gesture(toggleGesture(), isEnabled: !isInteracting)
+            .simultaneousGesture(toggleGesture(), isEnabled: !isInteracting)
             .overlay(alignment: .center) {
                 skipOverlay(skipTracker: skipTracker, in: geometry)
             }
