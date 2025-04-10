@@ -8,7 +8,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   check-quality:
     name: 🔎 Check quality
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
 
   tests:
     name: 🧪 Tests
-    runs-on: macos-latest
+    runs-on: macos-15
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -41,7 +41,7 @@ jobs:
 
   build-demos:
     name: 🔨 Builds
-    runs-on: macos-latest
+    runs-on: macos-15
     strategy:
       matrix:
         platform: [ios, tvos]
