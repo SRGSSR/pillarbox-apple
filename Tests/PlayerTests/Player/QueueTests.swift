@@ -35,7 +35,6 @@ final class QueueTests: TestCase {
     func testFailingUnavailableItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item)
-        // Item is consumed by `AVQueuePlayer` for some reason.
         expect(player.urls).toEventually(beEmpty())
         expect(player.currentItem).to(equal(item))
     }
@@ -80,7 +79,6 @@ final class QueueTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.unavailable.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        // Item is consumed by `AVQueuePlayer` for some reason.
         expect(player.urls).toEventually(beEmpty())
         expect(player.currentItem).to(equal(item1))
     }
@@ -89,9 +87,7 @@ final class QueueTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.unauthorized.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        expect(player.urls).toEventually(equal([
-            Stream.unauthorized.url
-        ]))
+        expect(player.urls).toEventually(beEmpty())
         expect(player.currentItem).to(equal(item1))
     }
 
@@ -99,9 +95,7 @@ final class QueueTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.unavailableMp3.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        expect(player.urls).toEventually(equal([
-            Stream.unavailableMp3.url
-        ]))
+        expect(player.urls).toEventually(beEmpty())
         expect(player.currentItem).to(equal(item1))
     }
 
