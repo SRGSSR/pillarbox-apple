@@ -1,12 +1,13 @@
 {
+  "originHash" : "ebf1c67ba73a9cbd9227deda54b8c80412594646e2210cbe7388e9597cec6815",
   "pins" : [
     {
       "identity" : "comscore-swift-package-manager",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
       "state" : {
-        "revision" : "adeebce59de7017eb0abe2b6a74346ca8371ffcc",
-        "version" : "6.14.0"
+        "revision" : "56d8a44c387fee1f7ef1786f13f8960b85109d31",
+        "version" : "6.14.1"
       }
     },
     {
@@ -41,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CommandersAct/iOSV5.git",
       "state" : {
-        "revision" : "24ffbad1da8467b615958be9d0dd1e92c4396699",
-        "version" : "5.4.12"
+        "revision" : "62e3c97f4e38a3f61bd85608ba9d4d4af3abacfd",
+        "version" : "5.4.14"
       }
     },
     {
@@ -50,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble.git",
       "state" : {
-        "revision" : "f3bedd7c2a858f4513e7d004def200a69238db2f",
-        "version" : "13.6.2"
+        "revision" : "7795df4fff1a9cd231fe4867ae54f4dc5f5734f9",
+        "version" : "13.7.1"
       }
     },
     {
@@ -64,5 +65,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
