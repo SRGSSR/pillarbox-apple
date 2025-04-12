@@ -93,7 +93,7 @@ private struct MainView: View {
         GeometryReader { geometry in
             ZStack {
                 video()
-                    .simultaneousGesture(skipGesture(in: geometry))
+                    .optionalNestedSimultaneousGesture(skipGesture(in: geometry))
                     .accessibilityElement()
                     .accessibilityLabel("Video")
                     .accessibilityHint("Double tap to toggle controls")
@@ -251,7 +251,7 @@ private struct MainView: View {
         GeometryReader { geometry in
             ZStack {
                 Color(white: 0, opacity: 0.5)
-                    .simultaneousGesture(skipGesture(in: geometry))
+                    .optionalNestedSimultaneousGesture(skipGesture(in: geometry))
                     .ignoresSafeArea()
                 ControlsView(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
             }
