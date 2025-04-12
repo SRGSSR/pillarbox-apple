@@ -102,9 +102,9 @@ private struct MainView: View {
                 controls()
             }
             .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
+            .gesture(toggleGesture(), isEnabled: !isInteracting)
             .simultaneousGesture(magnificationGesture(), isEnabled: layoutInfo.isOverCurrentContext)
             .simultaneousGesture(visibilityResetGesture())
-            .gesture(toggleGesture(), isEnabled: !isInteracting)
             .overlay(alignment: .center) {
                 skipOverlay(skipTracker: skipTracker, in: geometry)
             }
