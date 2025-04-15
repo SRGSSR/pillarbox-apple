@@ -103,7 +103,7 @@ struct PlaylistView: View {
 
     @ViewBuilder
     private func list() -> some View {
-        ZStack {
+        Group {
             if !model.isEmpty {
                 List($model.entries, id: \.self, editActions: .all, selection: $model.currentEntry) { $entry in
                     MediaCell(media: entry.media)

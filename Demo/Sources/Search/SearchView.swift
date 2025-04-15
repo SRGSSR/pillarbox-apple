@@ -13,7 +13,7 @@ struct SearchView: View {
     @EnvironmentObject private var router: Router
 
     var body: some View {
-        ZStack {
+        Group {
             switch model.state {
             case .empty:
                 MessageView(message: "Enter something to search.", icon: .system("magnifyingglass"))

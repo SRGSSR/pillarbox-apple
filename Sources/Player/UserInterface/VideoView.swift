@@ -20,10 +20,10 @@ public struct VideoView: View {
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
-        ZStack {
+        Group {
             switch player.metadata.viewport {
             case .standard:
-                ZStack {
+                Group {
                     if supportsPictureInPicture {
                         PictureInPictureSupportingVideoView(player: player, gravity: gravity)
                             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in

@@ -227,7 +227,7 @@ private struct MainView: View {
     }
 
     private func video() -> some View {
-        ZStack {
+        Group {
             if player.mediaType == .audio {
                 artwork(for: player.metadata.imageSource)
             }
@@ -937,7 +937,7 @@ struct PlaybackView: View {
     private var supportsPictureInPicture = false
 
     var body: some View {
-        ZStack {
+        Group {
             if let error = player.error {
                 ErrorView(description: error.localizedDescription, player: player)
             }

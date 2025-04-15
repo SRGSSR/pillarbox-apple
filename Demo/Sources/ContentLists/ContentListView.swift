@@ -129,7 +129,7 @@ struct ContentListView: View {
     @StateObject private var model = ContentListViewModel()
 
     var body: some View {
-        ZStack {
+        Group {
             switch model.state {
             case .loading:
                 ProgressView()
