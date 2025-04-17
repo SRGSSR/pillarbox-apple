@@ -90,7 +90,9 @@ struct SettingsView: View {
     }
 
     private var applicationIdentifier: String? {
-        let applicationIdentifier = Bundle.main.infoDictionary!["TestFlightApplicationIdentifier"] as! String
+        guard let applicationIdentifier = Bundle.main.infoDictionary?["TestFlightApplicationIdentifier"] as? String else {
+            return nil
+        }
         return !applicationIdentifier.isEmpty ? applicationIdentifier : nil
     }
 
@@ -109,17 +111,20 @@ struct SettingsView: View {
 #endif
     }
 
-    private static func testFlightUrl(forApplicationIdentifier applicationIdentifier: String) -> URL? {
-        var url = URL("itms-beta://beta.itunes.apple.com/v1/app/")
-            .appending(path: applicationIdentifier)
+    static func testFlightUrl(forApplicationIdentifier applicationIdentifier: String) -> URL? {
+        let url = URL(string: "itms-beta://beta.itunes.apple.com/v1/app/")!.appending(path: applicationIdentifier)
 #if os(iOS)
-        if !UIApplication.shared.canOpenURL(url) {
-            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
-            components.scheme = "https"
-            url = components.url!
+        if UIApplication.shared.canOpenURL(url) {
+            return url
         }
-#endif
+        else {
+            guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
+            components.scheme = "https"
+            return components.url
+        }
+#else
         return url
+#endif
     }
 
     @ViewBuilder
