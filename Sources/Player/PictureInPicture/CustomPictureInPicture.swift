@@ -23,7 +23,7 @@ final class CustomPictureInPicture: NSObject {
     override init() {
         super.init()
         controller?.delegate = self
-#if os(ios)
+#if os(iOS)
         controller?.canStartPictureInPictureAutomaticallyFromInline = true
 #endif
         configureIsPossiblePublisher()
