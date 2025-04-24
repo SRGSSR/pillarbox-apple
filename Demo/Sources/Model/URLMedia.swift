@@ -13,8 +13,10 @@ private let kBitmovinImageUrl = URL("""
 private let kUnifiedStreamingImageUrl1 = URL("https://mango.blender.org/wp-content/gallery/4k-renders/01_thom_celia_bridge.jpg")
 private let kUnifiedStreamingImageUrl2 = URL("https://website-storage.unified-streaming.com/images/_1200x630_crop_center-center_none/default-facebook.png")
 
-// Apple streams are found at https://developer.apple.com/streaming/examples/
-// Unified Streaming streams are found at https://demo.unified-streaming.com/k8s/features/stable/#!/hls
+// Stream sources:
+//   - Apple: https://developer.apple.com/streaming/examples/
+//   - Unified Streaming: https://demo.unified-streaming.com/k8s/features/stable/#!/hls
+//   - BBC: https://rdmedia.bbc.co.uk/testcard/simulcast/
 // swiftlint:disable:next type_body_length
 enum URLMedia {
     static let onDemandVideoHLS = Media(
