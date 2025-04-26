@@ -40,6 +40,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
                     state = value
                 }
         )
+        .preventsTouchPropagation()
     }
 
     /// Creates a slider to select a value from a given range.
