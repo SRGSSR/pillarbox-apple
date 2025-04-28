@@ -71,6 +71,41 @@
         }
       }
     },
+    "This content cannot be played while using a VPN or a proxy." : {
+      "comment" : "Blocking reason description message",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Inhalt ist mit VPN oder Proxy nicht abspielbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content cannot be played while using a VPN or a proxy."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce contenu ne peut pas être lu avec un VPN ou un proxy."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo contenuto non può essere riprodotto con VPN o proxy."
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quest cuntegn na po betg vegnir reproducì cun VPN ni proxy activà."
+          }
+        }
+      }
+    },
     "This content is not available anymore." : {
       "comment" : "Blocking reason description message",
       "localizations" : {
