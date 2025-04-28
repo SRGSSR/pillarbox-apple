@@ -37,7 +37,7 @@ public extension MediaComposition {
         case unknown = "UNKNOWN"
 
         /// VPN or proxy detected.
-        case vpnOrProxy = "VPNPROXYDETECTED"
+        case vpnOrProxyDetected = "VPNORPROXYDETECTED"
 
         /// The standard description for the blocking reason.
         public var description: String {
@@ -96,7 +96,7 @@ public extension MediaComposition {
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
-            case .vpnOrProxy:
+            case .vpnOrProxyDetected:
                 return String(
                     localized: "This content cannot be played while using a VPN or a proxy.",
                     bundle: .module,
