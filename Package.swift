@@ -58,7 +58,7 @@ let package = Package(
                 .linkedFramework("AdSupport")
             ],
             plugins: [
-                .plugin(name: "PackageInfoPlugin")
+                .plugin(name: "PillarboxPackageInfoPlugin")
             ]
         ),
         .target(
@@ -79,7 +79,7 @@ let package = Package(
                 .process("Resources")
             ],
             plugins: [
-                .plugin(name: "PackageInfoPlugin")
+                .plugin(name: "PillarboxPackageInfoPlugin")
             ]
         ),
         .target(
@@ -112,7 +112,7 @@ let package = Package(
                 .process("Resources")
             ],
             plugins: [
-                .plugin(name: "PackageInfoPlugin")
+                .plugin(name: "PillarboxPackageInfoPlugin")
             ]
         ),
         .target(
@@ -122,12 +122,12 @@ let package = Package(
                 .process("Resources")
             ]
         ),
-        .binaryTarget(name: "PackageInfo", path: "Artifacts/PackageInfo.artifactbundle"),
+        .binaryTarget(name: "PillarboxPackageInfo", path: "Artifacts/PackageInfo.artifactbundle"),
         .plugin(
-            name: "PackageInfoPlugin",
+            name: "PillarboxPackageInfoPlugin",
             capability: .buildTool(),
             dependencies: [
-                .target(name: "PackageInfo")
+                .target(name: "PillarboxPackageInfo")
             ]
         ),
         .testTarget(
