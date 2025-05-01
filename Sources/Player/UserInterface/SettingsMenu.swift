@@ -148,7 +148,6 @@ public extension Player {
     ///
     /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
     /// behavior.
-    ///
     func standardSettingsMenu(
         speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2],
         action: @escaping (_ update: SettingsUpdate) -> Void = { _ in }
