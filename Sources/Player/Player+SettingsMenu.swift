@@ -84,7 +84,7 @@ private struct MediaSelectionMenuContent: View {
 @available(iOS 16.0, tvOS 17.0, *)
 private struct SettingsMenuContent: View {
     @ObservedObject var player: Player
-    
+
     let speeds: Set<Float>
     let action: (SettingsUpdate) -> Void
 
@@ -112,9 +112,9 @@ private struct SettingsMenuContent: View {
         Menu {
             mediaSelectionMenuContent(characteristic: .audible)
         } label: {
-            Label {
+            Button(action: {}) {
                 Text("Languages", bundle: .module, comment: "Playback setting menu title")
-            } icon: {
+                Text(player.selectedMediaOption(for: .audible).displayName)
                 Image(systemName: "waveform.circle")
             }
         }
@@ -124,9 +124,9 @@ private struct SettingsMenuContent: View {
         Menu {
             mediaSelectionMenuContent(characteristic: .legible)
         } label: {
-            Label {
+            Button(action: {}) {
                 Text("Subtitles", bundle: .module, comment: "Playback setting menu title")
-            } icon: {
+                Text(player.selectedMediaOption(for: .legible).displayName)
                 Image(systemName: "captions.bubble")
             }
         }
