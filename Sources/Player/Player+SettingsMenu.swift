@@ -83,7 +83,8 @@ private struct MediaSelectionMenuContent: View {
 
 @available(iOS 16.0, tvOS 17.0, *)
 private struct SettingsMenuContent: View {
-    let player: Player
+    @ObservedObject var player: Player
+    
     let speeds: Set<Float>
     let action: (SettingsUpdate) -> Void
 
@@ -99,9 +100,9 @@ private struct SettingsMenuContent: View {
                 action(.playbackSpeed(speed))
             }
         } label: {
-            Label {
+            Button(action: {}) {
                 Text("Playback Speed", bundle: .module, comment: "Playback setting menu title")
-            } icon: {
+                Text("\(player.playbackSpeed.wrappedValue, specifier: "%g×")", comment: "Speed multiplier")
                 Image(systemName: "speedometer")
             }
         }
