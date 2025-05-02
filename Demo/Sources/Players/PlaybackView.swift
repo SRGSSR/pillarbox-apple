@@ -483,9 +483,9 @@ private struct QualityMenu: View {
             }
             .pickerStyle(.inline)
         } label: {
-            Label {
+            Button(action: {}) {
                 Text("Quality")
-            } icon: {
+                Text(qualitySetting.name)
                 Image(systemName: "person.and.background.dotted")
             }
         }

@@ -83,7 +83,8 @@ private struct MediaSelectionMenuContent: View {
 
 @available(iOS 16.0, tvOS 17.0, *)
 private struct SettingsMenuContent: View {
-    let player: Player
+    @ObservedObject var player: Player
+
     let speeds: Set<Float>
     let action: (SettingsUpdate) -> Void
 
@@ -99,9 +100,9 @@ private struct SettingsMenuContent: View {
                 action(.playbackSpeed(speed))
             }
         } label: {
-            Label {
+            Button(action: {}) {
                 Text("Playback Speed", bundle: .module, comment: "Playback setting menu title")
-            } icon: {
+                Text("\(player.playbackSpeed.wrappedValue, specifier: "%g×")", comment: "Speed multiplier")
                 Image(systemName: "speedometer")
             }
         }
@@ -111,9 +112,9 @@ private struct SettingsMenuContent: View {
         Menu {
             mediaSelectionMenuContent(characteristic: .audible)
         } label: {
-            Label {
+            Button(action: {}) {
                 Text("Languages", bundle: .module, comment: "Playback setting menu title")
-            } icon: {
+                Text(player.selectedMediaOption(for: .audible).displayName)
                 Image(systemName: "waveform.circle")
             }
         }
@@ -123,9 +124,9 @@ private struct SettingsMenuContent: View {
         Menu {
             mediaSelectionMenuContent(characteristic: .legible)
         } label: {
-            Label {
+            Button(action: {}) {
                 Text("Subtitles", bundle: .module, comment: "Playback setting menu title")
-            } icon: {
+                Text(player.selectedMediaOption(for: .legible).displayName)
                 Image(systemName: "captions.bubble")
             }
         }
@@ -148,7 +149,6 @@ public extension Player {
     ///
     /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
     /// behavior.
-    ///
     func standardSettingsMenu(
         speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2],
         action: @escaping (_ update: SettingsUpdate) -> Void = { _ in }
