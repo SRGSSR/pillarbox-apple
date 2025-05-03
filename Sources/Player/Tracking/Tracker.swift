@@ -77,11 +77,7 @@ final class Tracker {
     }
 
     private func configurePublishers() {
-        $playerItem
-            .map { [player] playerItem in
-                playerItem.propertiesPublisher(with: player)
-            }
-            .switchToLatest()
+        player.propertiesPublisher(withPlayerItemPropertiesPublisher: playerItemPropertiesPublisher())
             .handleEvents(receiveOutput: { [weak self] properties in
                 self?.updateTrackersProperties(to: properties)
             }, receiveCompletion: nil)
@@ -93,6 +89,13 @@ final class Tracker {
                 self?.updateTrackersMetricEvents(to: events)
             }
             .store(in: &cancellables)
+    }
+
+    private func playerItemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
+        $playerItem
+            .map { $0.propertiesPublisher() }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 
     deinit {

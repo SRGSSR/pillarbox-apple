@@ -97,12 +97,7 @@ public final class Player: ObservableObject, Equatable {
     /// When implementing a custom SwiftUI user interface, you should use `View.onReceive(player:assign:to:)` to read
     /// fast-paced property changes into corresponding local bindings.
     public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
-        currentPlayerItemPublisher()
-            .map { [queuePlayer] item in
-                guard let item else { return Just(PlayerProperties.empty).eraseToAnyPublisher() }
-                return item.propertiesPublisher(with: queuePlayer)
-            }
-            .switchToLatest()
+        queuePlayer.propertiesPublisher(withPlayerItemPropertiesPublisher: currentPlayerItemPropertiesPublisher())
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()
