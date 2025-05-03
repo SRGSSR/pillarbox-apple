@@ -23,6 +23,13 @@ final class PlayerTests: TestCase {
         expect(weakPlayer).to(beNil())
     }
 
+    func testEmptyPlayerChangeObservation() {
+        let player = Player()
+        expectChange(from: player) {
+            player.togglePlayPause()
+        }
+    }
+
     func testTimesWhenEmpty() {
         let player = Player()
         expect(player.time()).toAlways(equal(.invalid), until: .seconds(1))
