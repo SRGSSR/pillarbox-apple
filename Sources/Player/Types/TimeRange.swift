@@ -7,9 +7,9 @@
 import CoreMedia
 
 /// Represents a time range.
-public struct TimeRange: Hashable, Equatable {
+public struct TimeRange: Hashable {
     /// The range type.
-    public enum Kind: Hashable, Equatable {
+    public enum Kind: Hashable {
         /// Credits.
         case credits(Credits)
 
