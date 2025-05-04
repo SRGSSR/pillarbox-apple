@@ -67,7 +67,6 @@ Before submitting your app to production, validate it, especially after signific
 ### Page Views
 
 - <doc:page-views-article>
-- <doc:web-content-tracking-article>
 
 - ``CommandersActPageView``
 - ``ContainerPageViewTracking``
