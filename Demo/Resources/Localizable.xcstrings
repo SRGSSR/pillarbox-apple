@@ -21,6 +21,12 @@
         }
       }
     },
+    "%lf seconds" : {
+
+    },
+    "%lld seconds" : {
+
+    },
     "+%llds" : {
 
     },
@@ -55,6 +61,9 @@
 
     },
     "Automatic" : {
+
+    },
+    "Backward by" : {
 
     },
     "Blue" : {
@@ -130,6 +139,9 @@
 
     },
     "Font size" : {
+
+    },
+    "Forward by" : {
 
     },
     "Frame drops" : {
@@ -319,6 +331,9 @@
 
     },
     "Skip" : {
+
+    },
+    "Skips" : {
 
     },
     "Smart navigation" : {

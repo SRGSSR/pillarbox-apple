@@ -17,6 +17,8 @@ extension UserDefaults {
         case presenterModeEnabled
         case smartNavigationEnabled
         case seekBehaviorSetting
+        case skipBackwardSetting
+        case skipForwardSetting
         case serverSetting
         case qualitySetting
     }
@@ -42,6 +44,14 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: DemoSettingKey.seekBehaviorSetting.rawValue)) ?? .immediate
     }
 
+    @objc dynamic var skipBackwardSetting: TimeInterval {
+        double(forKey: DemoSettingKey.skipBackwardSetting.rawValue)
+    }
+
+    @objc dynamic var skipForwardSetting: TimeInterval {
+        double(forKey: DemoSettingKey.skipForwardSetting.rawValue)
+    }
+
     @objc dynamic var serverSetting: ServerSetting {
         .init(rawValue: integer(forKey: DemoSettingKey.serverSetting.rawValue)) ?? .production
     }
@@ -54,6 +64,8 @@ extension UserDefaults {
         UserDefaults.standard.register(defaults: [
             DemoSettingKey.presenterModeEnabled.rawValue: false,
             DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.immediate.rawValue,
+            DemoSettingKey.skipBackwardSetting.rawValue: 10,
+            DemoSettingKey.skipForwardSetting.rawValue: 10,
             DemoSettingKey.smartNavigationEnabled.rawValue: true,
             DemoSettingKey.serverSetting.rawValue: ServerSetting.production.rawValue,
             DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue
