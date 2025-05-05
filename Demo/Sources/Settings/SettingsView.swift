@@ -63,11 +63,11 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
-    @AppStorage(UserDefaults.DemoSettingKey.skipBackwardSetting.rawValue)
-    private var skipBackwardSetting: TimeInterval = 10
+    @AppStorage(UserDefaults.DemoSettingKey.backwardSkipInterval.rawValue)
+    private var backwardSkipInterval: TimeInterval = 10
 
-    @AppStorage(UserDefaults.DemoSettingKey.skipForwardSetting.rawValue)
-    private var skipForwardSetting: TimeInterval = 10
+    @AppStorage(UserDefaults.DemoSettingKey.forwardSkipInterval.rawValue)
+    private var forwardSkipInterval: TimeInterval = 10
 
     @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
     private var qualitySetting: QualitySetting = .high
@@ -180,8 +180,8 @@ extension SettingsView {
 
     private func skipsSection() -> some View {
         Section {
-            skipPicker("Backward by", selection: $skipBackwardSetting)
-            skipPicker("Forward by", selection: $skipForwardSetting)
+            skipPicker("Backward by", selection: $backwardSkipInterval)
+            skipPicker("Forward by", selection: $forwardSkipInterval)
         } header: {
              Text("Skips")
                 .headerStyle()

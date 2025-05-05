@@ -13,8 +13,8 @@ extension PlayerConfiguration {
         return .init(
             usesExternalPlaybackWhileMirroring: !userDefaults.presenterModeEnabled,
             navigationMode: userDefaults.smartNavigationEnabled ? .smart(interval: 3) : .immediate,
-            backwardSkipInterval: userDefaults.skipBackwardSetting,
-            forwardSkipInterval: userDefaults.skipForwardSetting
+            backwardSkipInterval: userDefaults.backwardSkipInterval,
+            forwardSkipInterval: userDefaults.forwardSkipInterval
         )
     }
 
