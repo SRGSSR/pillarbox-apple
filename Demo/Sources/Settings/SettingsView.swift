@@ -63,6 +63,12 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
+    @AppStorage(UserDefaults.DemoSettingKey.backwardSkipInterval.rawValue)
+    private var backwardSkipInterval: TimeInterval = 10
+
+    @AppStorage(UserDefaults.DemoSettingKey.forwardSkipInterval.rawValue)
+    private var forwardSkipInterval: TimeInterval = 10
+
     @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
     private var qualitySetting: QualitySetting = .high
 
@@ -81,21 +87,6 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.PlaybackHudSettingKey.yOffset.rawValue, store: .playbackHud)
     private var playbackHudYOffset = UserDefaults.playbackHudDefaultHudYOffset
 
-    private var version: String {
-        Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
-    }
-
-    private var buildVersion: String {
-        Bundle.main.infoDictionary!["CFBundleVersion"] as! String
-    }
-
-    private var applicationIdentifier: String? {
-        guard let applicationIdentifier = Bundle.main.infoDictionary?["TestFlightApplicationIdentifier"] as? String else {
-            return nil
-        }
-        return !applicationIdentifier.isEmpty ? applicationIdentifier : nil
-    }
-
     var body: some View {
         Form {
             content()
@@ -110,7 +101,26 @@ struct SettingsView: View {
         .ignoresSafeArea(.all, edges: .horizontal)
 #endif
     }
+}
 
+extension SettingsView {
+    private var version: String {
+        Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+    }
+
+    private var buildVersion: String {
+        Bundle.main.infoDictionary!["CFBundleVersion"] as! String
+    }
+
+    private var applicationIdentifier: String? {
+        guard let applicationIdentifier = Bundle.main.infoDictionary?["TestFlightApplicationIdentifier"] as? String else {
+            return nil
+        }
+        return !applicationIdentifier.isEmpty ? applicationIdentifier : nil
+    }
+}
+
+extension SettingsView {
     static func testFlightUrl(forApplicationIdentifier applicationIdentifier: String) -> URL? {
         let url = URL(string: "itms-beta://beta.itunes.apple.com/v1/app/")!.appending(path: applicationIdentifier)
 #if os(iOS)
@@ -131,6 +141,9 @@ struct SettingsView: View {
     private func content() -> some View {
         applicationSection()
         playerSection()
+#if os(iOS)
+        skipsSection()
+#endif
         debuggingSection()
         playbackHudSection()
 #if os(iOS)
@@ -165,10 +178,32 @@ struct SettingsView: View {
         }
     }
 
+    private func skipsSection() -> some View {
+        Section {
+            skipPicker("Backward by", selection: $backwardSkipInterval)
+            skipPicker("Forward by", selection: $forwardSkipInterval)
+        } header: {
+             Text("Skips")
+                .headerStyle()
+        }
+    }
+
     private func seekBehaviorPicker() -> some View {
         Picker("Seek behavior", selection: $seekBehaviorSetting) {
             ForEach(SeekBehaviorSetting.allCases, id: \.self) { setting in
                 Text(setting.name).tag(setting)
+            }
+        }
+#if os(tvOS)
+        .pickerStyle(.navigationLink)
+#endif
+    }
+
+    private func skipPicker(_ titleKey: LocalizedStringKey, selection: Binding<TimeInterval>) -> some View {
+        Picker(titleKey, selection: selection) {
+            ForEach([TimeInterval]([5, 7, 10, 15, 30, 45, 60, 75, 90]), id: \.self) { interval in
+                Text("\(Int(interval)) seconds")
+                    .tag(interval)
             }
         }
 #if os(tvOS)

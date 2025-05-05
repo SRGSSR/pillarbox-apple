@@ -12,7 +12,9 @@ extension PlayerConfiguration {
         let userDefaults = UserDefaults.standard
         return .init(
             usesExternalPlaybackWhileMirroring: !userDefaults.presenterModeEnabled,
-            navigationMode: userDefaults.smartNavigationEnabled ? .smart(interval: 3) : .immediate
+            navigationMode: userDefaults.smartNavigationEnabled ? .smart(interval: 3) : .immediate,
+            backwardSkipInterval: userDefaults.backwardSkipInterval,
+            forwardSkipInterval: userDefaults.forwardSkipInterval
         )
     }
 

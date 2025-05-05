@@ -30,6 +30,7 @@ public extension Player {
 
     /// Checks whether skipping in some direction is possible.
     ///
+    /// - Parameter skip: The skip direction.
     /// - Returns: `true` if possible.
     func canSkip(_ skip: Skip) -> Bool {
         switch skip {
