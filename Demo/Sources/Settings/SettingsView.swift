@@ -141,7 +141,9 @@ extension SettingsView {
     private func content() -> some View {
         applicationSection()
         playerSection()
+#if os(iOS)
         skipsSection()
+#endif
         debuggingSection()
         playbackHudSection()
 #if os(iOS)
