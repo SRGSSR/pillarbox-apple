@@ -39,28 +39,6 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func propertiesPublisher(with player: QueuePlayer) -> AnyPublisher<PlayerProperties, Never> {
-        Publishers.CombineLatest3(
-            propertiesPublisher(),
-            player.playbackPropertiesPublisher(),
-            player.seekTimePublisher()
-        )
-        .map { playerItemProperties, playbackProperties, seekTime in
-            .init(
-                coreProperties: .init(
-                    itemProperties: playerItemProperties.itemProperties,
-                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
-                    playbackProperties: playbackProperties
-                ),
-                timeProperties: playerItemProperties.timeProperties,
-                isEmpty: playerItemProperties.isEmpty,
-                seekTime: seekTime
-            )
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
     private func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
         Publishers.CombineLatest3(
             publisher(for: \.loadedTimeRanges),

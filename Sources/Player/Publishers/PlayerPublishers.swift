@@ -16,4 +16,14 @@ extension Player {
     func currentPlayerItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
         queuePublisher.slice(at: \.itemState.item)
     }
+
+    func currentPlayerItemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
+        currentPlayerItemPublisher()
+            .map { item in
+                guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
+                return item.propertiesPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
 }
