@@ -335,12 +335,9 @@ private struct SkipBackwardButton: View {
 
     var body: some View {
         Button(action: skipBackward) {
-            Image(
-                systemName: "gobackward.\(Int(player.configuration.backwardSkipInterval))",
-                placeholder: "gobackward"
-            )
-            .resizable()
-            .tint(.white)
+            Image.goBackward(withInterval: player.configuration.backwardSkipInterval)
+                .resizable()
+                .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
@@ -362,12 +359,9 @@ private struct SkipForwardButton: View {
 
     var body: some View {
         Button(action: skipForward) {
-            Image(
-                systemName: "goforward.\(Int(player.configuration.forwardSkipInterval))",
-                placeholder: "goforward"
-            )
-            .resizable()
-            .tint(.white)
+            Image.goForward(withInterval: player.configuration.forwardSkipInterval)
+                .resizable()
+                .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)

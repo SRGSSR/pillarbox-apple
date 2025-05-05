@@ -4,15 +4,25 @@
 //  License information is available from the LICENSE file.
 //
 
+import PillarboxPlayer
 import SwiftUI
 
 extension Image {
-    init(systemName: String, placeholder: String) {
-        if let uiImage = UIImage(systemName: systemName)?.withRenderingMode(.alwaysTemplate) {
-            self = Image(uiImage: uiImage)
+    static func goBackward(withInterval interval: TimeInterval) -> Self {
+        if let uiImage = UIImage(systemName: "gobackward.\(Int(interval))") {
+            return Image(uiImage: uiImage.withRenderingMode(.alwaysTemplate))
         }
         else {
-            self = Image(systemName: placeholder)
+            return Image(systemName: "gobackward.minus")
+        }
+    }
+
+    static func goForward(withInterval interval: TimeInterval) -> Self {
+        if let uiImage = UIImage(systemName: "goforward.\(Int(interval))") {
+            return Image(uiImage: uiImage.withRenderingMode(.alwaysTemplate))
+        }
+        else {
+            return Image(systemName: "goforward.plus")
         }
     }
 }
