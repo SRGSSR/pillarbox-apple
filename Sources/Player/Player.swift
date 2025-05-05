@@ -88,8 +88,8 @@ public final class Player: ObservableObject, Equatable {
 
     /// A shared publisher providing player property updates as a consolidated stream.
     ///
-    /// Rarely changing player properties, like `mediaType` or `streamType`, can be directly observed and read from
-    /// a `Player` instance. Properties which change more often, like `isSeeking` or `buffer`, require an explicit
+    /// Rarely changing player properties, like `mediaType` or `presentationSize`, can be directly observed and read
+    /// from a `Player` instance. Properties which change more often, like `isSeeking` or `buffer`, require an explicit
     /// subscription to be read. You have to register to the `propertiesPublisher` update stream, possibly restricting
     /// observation to a key path using `Publisher.slice(at:)`. Current property values are automatically published
     /// upon subscription.
