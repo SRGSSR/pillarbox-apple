@@ -463,13 +463,12 @@ private extension Player {
     }
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
-        Publishers.CombineLatest3(
+        Publishers.CombineLatest(
             queuePublisher,
-            propertiesPublisher,
-            $isActive
+            propertiesPublisher
         )
         .receiveOnMainThread()
-        .sink { [weak self] queue, properties, _ in
+        .sink { [weak self] queue, properties in
             guard let self else { return }
             let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live
             let hasError = queue.error != nil
