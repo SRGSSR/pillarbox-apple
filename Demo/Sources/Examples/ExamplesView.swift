@@ -207,7 +207,7 @@ struct ExamplesView: View {
         section(title: "Corner cases", medias: model.cornerCaseMedias)
     }
 
-    private func section(title: String, medias: [Media]) -> some View {
+    private func section(title: LocalizedStringKey, medias: [Media]) -> some View {
         CustomSection(title) {
             ForEach(medias, id: \.self) { media in
                 Cell(title: media.title, subtitle: media.subtitle, imageUrl: media.imageUrl) {

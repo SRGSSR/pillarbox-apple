@@ -50,7 +50,7 @@ private struct MediaSelectionMenuContent: View {
     private var title: String {
         switch characteristic {
         case .audible:
-            "Languages"
+            "Audio"
         case .legible:
             "Subtitles"
         default:
@@ -113,7 +113,7 @@ private struct SettingsMenuContent: View {
             mediaSelectionMenuContent(characteristic: .audible)
         } label: {
             Button(action: {}) {
-                Text("Languages", bundle: .module, comment: "Playback setting menu title")
+                Text("Audio", bundle: .module, comment: "Playback setting menu title")
                 Text(player.selectedMediaOption(for: .audible).displayName)
                 Image(systemName: "waveform.circle")
             }
