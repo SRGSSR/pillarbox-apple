@@ -56,9 +56,6 @@ public final class Player: ObservableObject, Equatable {
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
-    // swiftlint:disable:next private_subject
-    let isActivePublisher = CurrentValueSubject<Bool, Never>(false)
-
     var isActive: Bool {
         get {
             isActivePublisher.value
@@ -207,10 +204,13 @@ public final class Player: ObservableObject, Equatable {
     var commandRegistrations: [any RemoteCommandRegistrable] = []
 
     // swiftlint:disable:next private_subject
-    var desiredPlaybackSpeedPublisher = PassthroughSubject<Float, Never>()
+    let isActivePublisher = CurrentValueSubject<Bool, Never>(false)
 
     // swiftlint:disable:next private_subject
-    var textStyleRulesPublisher = CurrentValueSubject<[AVTextStyleRule], Never>([])
+    let desiredPlaybackSpeedPublisher = PassthroughSubject<Float, Never>()
+
+    // swiftlint:disable:next private_subject
+    let textStyleRulesPublisher = CurrentValueSubject<[AVTextStyleRule], Never>([])
 
     /// Creates a player with a given item queue.
     ///
