@@ -56,15 +56,19 @@ public final class Player: ObservableObject, Equatable {
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
-    @Published var isActive = false {
-        didSet {
-            if isActive {
+    var isActive: Bool {
+        get {
+            isActivePublisher.value
+        }
+        set {
+            if newValue {
                 nowPlayingSession.becomeActiveIfPossible()
                 queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
             }
             else {
                 queuePlayer.allowsExternalPlayback = false
             }
+            isActivePublisher.send(newValue)
         }
     }
 
@@ -200,10 +204,13 @@ public final class Player: ObservableObject, Equatable {
     var commandRegistrations: [any RemoteCommandRegistrable] = []
 
     // swiftlint:disable:next private_subject
-    var desiredPlaybackSpeedPublisher = PassthroughSubject<Float, Never>()
+    let isActivePublisher = CurrentValueSubject<Bool, Never>(false)
 
     // swiftlint:disable:next private_subject
-    var textStyleRulesPublisher = CurrentValueSubject<[AVTextStyleRule], Never>([])
+    let desiredPlaybackSpeedPublisher = PassthroughSubject<Float, Never>()
+
+    // swiftlint:disable:next private_subject
+    let textStyleRulesPublisher = CurrentValueSubject<[AVTextStyleRule], Never>([])
 
     /// Creates a player with a given item queue.
     ///
@@ -463,13 +470,12 @@ private extension Player {
     }
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
-        Publishers.CombineLatest3(
+        Publishers.CombineLatest(
             queuePublisher,
-            propertiesPublisher,
-            $isActive
+            propertiesPublisher
         )
         .receiveOnMainThread()
-        .sink { [weak self] queue, properties, _ in
+        .sink { [weak self] queue, properties in
             guard let self else { return }
             let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live
             let hasError = queue.error != nil
