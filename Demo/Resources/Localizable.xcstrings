@@ -4,14 +4,10 @@
     " in Switzerland" : {
 
     },
-    "-" : {
-
-    },
     "-%llds" : {
 
     },
     "%g× %@" : {
-      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -21,13 +17,13 @@
         }
       }
     },
-    "%lf seconds" : {
-
-    },
     "%lld seconds" : {
 
     },
     "+%llds" : {
+
+    },
+    "360° videos" : {
 
     },
     "Action at item end" : {
@@ -51,7 +47,13 @@
     "Append" : {
 
     },
+    "Apple streams" : {
+
+    },
     "Application" : {
+
+    },
+    "Aspect ratios" : {
 
     },
     "Asset" : {
@@ -64,6 +66,12 @@
 
     },
     "Backward by" : {
+
+    },
+    "BBC Test Card streams" : {
+
+    },
+    "Bitmovin streams" : {
 
     },
     "Blue" : {
@@ -96,10 +104,16 @@
     "Continues if possible" : {
 
     },
+    "Corner cases" : {
+
+    },
     "Curr. %.02f Mbps" : {
 
     },
     "Current position" : {
+
+    },
+    "Custom Player and Picture in Picture (PiP) support" : {
 
     },
     "Data volume" : {
@@ -220,15 +234,21 @@
 
     },
     "Metrics" : {
-      "comment" : "Playback setting menu title"
+
     },
     "Min. %.02f Mbps" : {
+
+    },
+    "Miscellaneous player features (using Pillarbox)" : {
 
     },
     "Mode" : {
 
     },
     "Multiplier" : {
+
+    },
+    "Mux streams" : {
 
     },
     "Next" : {
@@ -270,6 +290,9 @@
     "Picture in Picture" : {
 
     },
+    "Picture in Picture Corner Cases" : {
+
+    },
     "Play" : {
 
     },
@@ -295,6 +318,9 @@
 
     },
     "Project" : {
+
+    },
+    "Protected streams (URNs)" : {
 
     },
     "Quality" : {
@@ -342,6 +368,9 @@
     "Source code" : {
 
     },
+    "SRG SSR streams (URNs)" : {
+
+    },
     "Stalls" : {
 
     },
@@ -369,7 +398,16 @@
     "System player (using Pillarbox)" : {
 
     },
+    "System Player and Picture in Picture (PiP) support" : {
+
+    },
     "TestFlight builds" : {
+
+    },
+    "Third-party streams" : {
+
+    },
+    "Time ranges" : {
 
     },
     "Top" : {
@@ -393,6 +431,12 @@
     "Type" : {
 
     },
+    "Unbuffered streams" : {
+
+    },
+    "Unified Streaming streams" : {
+
+    },
     "URI" : {
 
     },
@@ -403,9 +447,6 @@
 
     },
     "URL with SRG SSR token protection" : {
-
-    },
-    "URN" : {
 
     },
     "URN (Production)" : {
@@ -421,6 +462,9 @@
 
     },
     "Value" : {
+
+    },
+    "Various streams (URLs)" : {
 
     },
     "Version information" : {

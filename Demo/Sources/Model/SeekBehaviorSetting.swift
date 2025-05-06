@@ -4,14 +4,14 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import SwiftUI
 
 @objc
 enum SeekBehaviorSetting: Int, CaseIterable {
     case immediate
     case deferred
 
-    var name: String {
+    var name: LocalizedStringKey {
         switch self {
         case .immediate:
             return "Immediate"
