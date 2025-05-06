@@ -56,15 +56,22 @@ public final class Player: ObservableObject, Equatable {
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
-    @Published var isActive = false {
-        didSet {
-            if isActive {
+    // swiftlint:disable:next private_subject
+    let isActivePublisher = CurrentValueSubject<Bool, Never>(false)
+
+    var isActive: Bool {
+        get {
+            isActivePublisher.value
+        }
+        set {
+            if newValue {
                 nowPlayingSession.becomeActiveIfPossible()
                 queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
             }
             else {
                 queuePlayer.allowsExternalPlayback = false
             }
+            isActivePublisher.send(newValue)
         }
     }
 
