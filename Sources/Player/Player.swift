@@ -56,7 +56,7 @@ public final class Player: ObservableObject, Equatable {
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
-    private var isActive: Bool {
+    var isActive: Bool {
         get {
             isActivePublisher.value
         }
