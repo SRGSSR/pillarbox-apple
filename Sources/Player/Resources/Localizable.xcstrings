@@ -36,6 +36,17 @@
         }
       }
     },
+    "Audio" : {
+      "comment" : "Playback setting menu title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        }
+      }
+    },
     "Auto (Recommended)" : {
       "comment" : "Subtitle selection option",
       "localizations" : {
@@ -102,41 +113,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "E%lld"
-          }
-        }
-      }
-    },
-    "Languages" : {
-      "comment" : "Playback setting menu title",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sprachen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Languages"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langues"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lingue"
-          }
-        },
-        "rm" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Linguas"
           }
         }
       }
