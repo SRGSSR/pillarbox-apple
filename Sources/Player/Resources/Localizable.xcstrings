@@ -48,7 +48,7 @@
       }
     },
     "Auto (Recommended)" : {
-      "comment" : "Subtitle selection option",
+      "comment" : "Media selection option",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -118,7 +118,7 @@
       }
     },
     "Off" : {
-      "comment" : "Subtitle selection option",
+      "comment" : "Media selection option",
       "localizations" : {
         "de" : {
           "stringUnit" : {
