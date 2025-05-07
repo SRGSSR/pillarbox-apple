@@ -72,11 +72,13 @@ struct PlaylistSelectionView: View {
     }
 
     private func picker() -> some View {
-        Picker("Insertion options", selection: $selectedInsertionOption) {
+        Picker(selection: $selectedInsertionOption) {
             ForEach(InsertionOption.allCases, id: \.self) { option in
                 Text(option.name)
                     .tag(option)
             }
+        } label: {
+            EmptyView()
         }
         .pickerStyle(.segmented)
         .padding(.horizontal)

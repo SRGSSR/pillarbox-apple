@@ -476,10 +476,12 @@ private struct QualityMenu: View {
 
     var body: some View {
         Menu {
-            Picker("Quality", selection: $qualitySetting) {
+            Picker(selection: $qualitySetting) {
                 ForEach(QualitySetting.allCases, id: \.self) { quality in
                     Text(quality.name).tag(quality)
                 }
+            } label: {
+                EmptyView()
             }
             .pickerStyle(.inline)
         } label: {
