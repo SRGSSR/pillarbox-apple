@@ -30,10 +30,12 @@ struct TwinsView: View {
             }
             .background(.black)
 
-            Picker("Mode", selection: $mode) {
+            Picker(selection: $mode) {
                 Text("Both").tag(Mode.both)
                 Text("Top").tag(Mode.top)
                 Text("Bottom").tag(Mode.bottom)
+            } label: {
+                EmptyView()
             }
             .pickerStyle(.segmented)
             .padding()
