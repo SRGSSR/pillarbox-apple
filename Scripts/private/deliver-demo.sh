@@ -40,7 +40,7 @@ fi
 
 install_tools
 
-echo -e "Delivering demo $CONFIGURATION build for $PLATFORM..."
+echo -e "Delivering_ demo $CONFIGURATION build for $PLATFORM..."
 bundle config set path '.bundle'
 bundle install
 bundle exec fastlane "deliver_demo_${CONFIGURATION}_${PLATFORM}"
