@@ -12,7 +12,7 @@ function usage {
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
     set -a
-    eval "$(pkgx +ruby +bundle +xcodes)"
+    eval "$(pkgx +ruby@3.3.0 +bundle +xcodes)"
     set +a
 }
 
