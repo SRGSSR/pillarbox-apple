@@ -45,7 +45,8 @@ public struct MediaComposition: Decodable {
 
 extension MediaComposition {
     func chapters(relatedTo chapter: Chapter) -> [Chapter] {
-        chapters.filter { $0.fullLengthUrn == chapter.urn && $0.mediaType == chapter.mediaType }
+        guard chapter.contentType == .episode else { return [] }
+        return chapters.filter { $0.fullLengthUrn == chapter.urn && $0.mediaType == chapter.mediaType }
     }
 
     func chapter(for urn: String) -> Chapter? {
