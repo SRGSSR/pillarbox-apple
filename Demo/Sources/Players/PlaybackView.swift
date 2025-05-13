@@ -690,7 +690,7 @@ private struct TimeSlider: View {
             .clipShape(.capsule)
             .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
             .opacity(isVisible ? 1 : 0)
-            .animation(.defaultLinear, values: progressTracker.isInteracting, buffer)
+            .animation(.defaultLinear, value: progressTracker.isInteracting)
         }
         .onEditingChanged { isEditing in
             progressTracker.isInteracting = isEditing
@@ -721,6 +721,7 @@ private struct TimeSlider: View {
         Color.white
             .opacity(0.3)
             .frame(width: CGFloat(buffer) * width)
+            .animation(.defaultLinear, value: buffer)
     }
 
     private func sliderTrack(progress: CGFloat, width: CGFloat) -> some View {
