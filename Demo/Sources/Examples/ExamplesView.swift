@@ -174,13 +174,14 @@ struct ExamplesView: View {
     @ViewBuilder
     private func content() -> some View {
         MediaEntryView()
-        lsvsSections()
+        lsvsSingleKeySections()
+        lsvsMultiKeySections()
         srgSections()
         thirdPartySections()
         miscellaneousSections()
     }
 
-    private func lsvsSections() -> some View {
+    private func lsvsSingleKeySections() -> some View {
         section(
             title: "LSVS",
             medias: [
@@ -199,6 +200,29 @@ struct ExamplesView: View {
                     title: "DRM Fairplay (CDN)",
                     type: .encryptedUrl(
                         "https://rsila1-lsvs-1080p.akamaized-staging.net/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8",
+                        certificateUrl: "https://srg.stage.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=stage"
+                    )
+                )
+            ]
+        )
+    }
+
+    private func lsvsMultiKeySections() -> some View {
+        section(
+            title: "LSVS",
+            medias: [
+                .init(
+                    title: "No-DRM Preview",
+                    type: .url("https://vqqb7x.egress.ahg76l.mediapackagev2.eu-central-1.amazonaws.com/out/v1/TEST-channel-group-lsvs/scs-lsvs-mediapackage-ch-fhd/hls-cmaf-no-drm/hls-index.m3u8")
+                ),
+                .init(
+                    title: "No-DRM Preview (LL)",
+                    type: .url("https://vqqb7x.egress.ahg76l.mediapackagev2.eu-central-1.amazonaws.com/out/v1/TEST-channel-group-lsvs/scs-lsvs-mediapackage-ch-fhd/hls-cmaf-no-drm/ll-index.m3u8")
+                ),
+                .init(
+                    title: "DRM Fairplay (Origin)",
+                    type: .encryptedUrl(
+                        "https://vqqb7x.egress.ahg76l.mediapackagev2.eu-central-1.amazonaws.com/out/v1/TEST-channel-group-lsvs/scs-lsvs-mediapackage-ch-fhd/hls-cmaf-fairplay/index.m3u8",
                         certificateUrl: "https://srg.stage.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=stage"
                     )
                 )
