@@ -71,10 +71,10 @@ public final class ProgressTracker: ObservableObject {
 
     /// The current progress.
     ///
-    /// Returns a value between 0 and 1. The progress might be different from the actual player progress during
+    /// Returns a value in ``range``. The progress might be different from the actual player progress during
     /// user interaction.
     ///
-    /// This property returns 0 when no progress information is available. Use `isProgressAvailable` to check whether
+    /// This property returns 0 when no progress information is available. Use ``isProgressAvailable`` to check whether
     /// progress is available or not.
     public var progress: Float {
         get {
