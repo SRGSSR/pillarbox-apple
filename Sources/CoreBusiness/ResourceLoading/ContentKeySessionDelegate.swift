@@ -21,6 +21,8 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
             return nil
         }
 
+        print("--> DRM key: \(skdUrlString)")
+
         components.scheme = "https"
         guard let url = components.url else { return nil }
 
