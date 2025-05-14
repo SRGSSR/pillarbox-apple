@@ -198,7 +198,7 @@ struct ExamplesView: View {
                 .init(
                     title: "DRM Fairplay (CDN)",
                     type: .encryptedUrl(
-                        "https://rsila1-lsvs-1080p.akamaized.net/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8",
+                        "https://rsila1-lsvs-1080p.akamaized-staging.net/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8",
                         certificateUrl: "https://srg.stage.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=stage"
                     )
                 )
