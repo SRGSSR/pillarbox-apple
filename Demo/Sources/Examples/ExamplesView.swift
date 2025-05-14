@@ -185,26 +185,23 @@ struct ExamplesView: View {
             title: "LSVS",
             medias: [
                 .init(
-                    title: "Origin (no DVR)",
+                    title: "No-DRM Preview",
+                    type: .url("https://15595674c0604ed6.mediapackage.eu-central-1.amazonaws.com/out/v1/1c4c8ea6929f4119b9714afa6f38962a/index.m3u8")
+                ),
+                .init(
+                    title: "DRM Fairplay (Origin)",
                     type: .encryptedUrl(
                         "https://15595674c0604ed6.mediapackage.eu-central-1.amazonaws.com/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8",
                         certificateUrl: "https://srg.stage.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=stage"
                     )
                 ),
                 .init(
-                    title: "Akamai Staging (no DVR)",
+                    title: "DRM Fairplay (CDN)",
                     type: .encryptedUrl(
-                        "https://rsila1-lsvs-1080p.akamaized-staging.net/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8",
+                        "https://rsila1-lsvs-1080p.akamaized.net/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8",
                         certificateUrl: "https://srg.stage.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=stage"
                     )
-                ),
-                .init(
-                    title: "Akamai Staging (2h DVR)",
-                    type: .encryptedUrl(
-                        "https://rsila1-lsvs-1080p.akamaized-staging.net/out/v1/9e92cc93401845729b937b8ae195898f/index.m3u8?dw=7200",
-                        certificateUrl: "https://srg.stage.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=stage"
-                    )
-                ),
+                )
             ]
         )
     }
