@@ -11,6 +11,7 @@ import Nimble
 import OrderedCollections
 import PillarboxCircumspect
 import PillarboxStreams
+import XCTest
 
 private class QueuePlayerMock: QueuePlayer {
     var seeks: Int = 0
@@ -22,8 +23,10 @@ private class QueuePlayerMock: QueuePlayer {
 }
 
 final class QueuePlayerSeekTests: TestCase {
-    func testNotificationsForSeekWithInvalidTime() {
-        guard nimbleThrowAssertionsAvailable() else { return }
+    func testNotificationsForSeekWithInvalidTime() throws {
+        guard nimbleThrowAssertionsAvailable() else {
+            throw XCTSkip("Skipped due to missing throw assertion test support.")
+        }
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         expect { player.seek(to: .invalid) }.to(throwAssertion())

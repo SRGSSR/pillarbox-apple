@@ -35,15 +35,19 @@ final class RangeReplaceableCollectionTests: XCTestCase {
         expect(array).to(equalDiff([1, 2, 3, 4, 5, 6, 7]))
     }
 
-    func testMoveFromInvalidIndex() {
-        guard nimbleThrowAssertionsAvailable() else { return }
+    func testMoveFromInvalidIndex() throws {
+        guard nimbleThrowAssertionsAvailable() else {
+            throw XCTSkip("Skipped due to missing throw assertion test support.")
+        }
         var array = [1, 2, 3, 4, 5, 6, 7]
         expect(array.move(from: -1, to: 2)).to(throwAssertion())
         expect(array.move(from: 8, to: 2)).to(throwAssertion())
     }
 
-    func testMoveToInvalidIndex() {
-        guard nimbleThrowAssertionsAvailable() else { return }
+    func testMoveToInvalidIndex() throws {
+        guard nimbleThrowAssertionsAvailable() else {
+            throw XCTSkip("Skipped due to missing throw assertion test support.")
+        }
         var array = [1, 2, 3, 4, 5, 6, 7]
         expect(array.move(from: 2, to: -1)).to(throwAssertion())
         expect(array.move(from: 2, to: 8)).to(throwAssertion())

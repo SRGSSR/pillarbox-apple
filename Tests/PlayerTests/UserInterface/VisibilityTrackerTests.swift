@@ -10,6 +10,7 @@ import Nimble
 import ObjectiveC
 import PillarboxCircumspect
 import PillarboxStreams
+import XCTest
 
 #if os(iOS)
 final class VisibilityTrackerTests: TestCase {
@@ -124,8 +125,10 @@ final class VisibilityTrackerTests: TestCase {
         expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue())
     }
 
-    func testInvalidDelay() {
-        guard nimbleThrowAssertionsAvailable() else { return }
+    func testInvalidDelay() throws {
+        guard nimbleThrowAssertionsAvailable() else {
+            throw XCTSkip("Skipped due to missing throw assertion test support.")
+        }
         expect(VisibilityTracker(delay: -5)).to(throwAssertion())
     }
 
