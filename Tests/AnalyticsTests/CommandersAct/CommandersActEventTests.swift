@@ -9,6 +9,7 @@
 import Nimble
 import PillarboxCircumspect
 import TCServerSide
+import XCTest
 
 final class CommandersActEventTests: CommandersActTestCase {
     func testMergingWithGlobals() {
@@ -35,8 +36,10 @@ final class CommandersActEventTests: CommandersActTestCase {
         ]))
     }
 
-    func testBlankName() {
-        guard nimbleThrowAssertionsAvailable() else { return }
+    func testBlankName() throws {
+        guard nimbleThrowAssertionsAvailable() else {
+            throw XCTSkip("Skipped due to missing throw assertion test support.")
+        }
         expect(Analytics.shared.sendEvent(commandersAct: .init(name: " "))).to(throwAssertion())
     }
 

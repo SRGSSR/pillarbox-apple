@@ -8,6 +8,7 @@
 
 import Nimble
 import PillarboxCircumspect
+import XCTest
 
 final class CommandersActPageViewTests: CommandersActTestCase {
     func testMergingWithGlobals() {
@@ -77,13 +78,17 @@ final class CommandersActPageViewTests: CommandersActTestCase {
         }
     }
 
-    func testBlankTitle() {
-        guard nimbleThrowAssertionsAvailable() else { return }
+    func testBlankTitle() throws {
+        guard nimbleThrowAssertionsAvailable() else {
+            throw XCTSkip("Skipped due to missing throw assertion test support.")
+        }
         expect(Analytics.shared.trackPageView(commandersAct: .init(name: " ", type: "type"))).to(throwAssertion())
     }
 
-    func testBlankType() {
-        guard nimbleThrowAssertionsAvailable() else { return }
+    func testBlankType() throws {
+        guard nimbleThrowAssertionsAvailable() else {
+            throw XCTSkip("Skipped due to missing throw assertion test support.")
+        }
         expect(Analytics.shared.trackPageView(commandersAct: .init(name: "name", type: " "))).to(throwAssertion())
     }
 

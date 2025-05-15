@@ -10,6 +10,7 @@ import Nimble
 import ObjectiveC
 import PillarboxCircumspect
 import PillarboxStreams
+import XCTest
 
 #if os(iOS)
 final class SkipTrackerTests: TestCase {
@@ -101,13 +102,17 @@ final class SkipTrackerTests: TestCase {
         expect(player.time().seconds).toEventually(beGreaterThan(5))
     }
 
-    func testInvalidCount() {
-        guard nimbleThrowAssertionsAvailable() else { return }
+    func testInvalidCount() throws {
+        guard nimbleThrowAssertionsAvailable() else {
+            throw XCTSkip("Skipped due to missing throw assertion test support.")
+        }
         expect(SkipTracker(delay: 0)).to(throwAssertion())
     }
 
-    func testInvalidDelay() {
-        guard nimbleThrowAssertionsAvailable() else { return }
+    func testInvalidDelay() throws {
+        guard nimbleThrowAssertionsAvailable() else {
+            throw XCTSkip("Skipped due to missing throw assertion test support.")
+        }
         expect(SkipTracker(count: 0)).to(throwAssertion())
     }
 
