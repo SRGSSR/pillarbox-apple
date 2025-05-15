@@ -8,14 +8,20 @@
 
 import AVFAudio
 import Nimble
+import XCTest
 
 final class AVAudioSessionNotificationTests: TestCase {
     override func setUp() {
-        AVAudioSession.enableUpdateNotifications()
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, policy: .default, options: [])
+        if #unavailable(iOS 18, tvOS 18) {
+            AVAudioSession.enableUpdateNotifications()
+            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, policy: .default, options: [])
+        }
     }
 
     func testUpdateWithSetCategoryModePolicyOptions() throws {
+        if #available(iOS 18, tvOS 18, *) {
+            throw XCTSkip("Skipped on iOS/tvOS 18 and later.")
+        }
         let audioSession = AVAudioSession.sharedInstance()
         expect {
             try audioSession.setCategory(.playback, mode: .default, policy: .default, options: [.duckOthers])
@@ -25,6 +31,9 @@ final class AVAudioSessionNotificationTests: TestCase {
     }
 
     func testNoUpdateWithSetCategoryModePolicyOptions() throws {
+        if #available(iOS 18, tvOS 18, *) {
+            throw XCTSkip("Skipped on iOS/tvOS 18 and later.")
+        }
         let audioSession = AVAudioSession.sharedInstance()
         expect {
             try audioSession.setCategory(.playback, mode: .default, policy: .default, options: [])
@@ -34,6 +43,9 @@ final class AVAudioSessionNotificationTests: TestCase {
     }
 
     func testUpdateWithSetCategoryModeOptions() throws {
+        if #available(iOS 18, tvOS 18, *) {
+            throw XCTSkip("Skipped on iOS/tvOS 18 and later.")
+        }
         let audioSession = AVAudioSession.sharedInstance()
         expect {
             try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers])
@@ -43,6 +55,9 @@ final class AVAudioSessionNotificationTests: TestCase {
     }
 
     func testNoUpdateWithSetCategoryModeOptions() throws {
+        if #available(iOS 18, tvOS 18, *) {
+            throw XCTSkip("Skipped on iOS/tvOS 18 and later.")
+        }
         let audioSession = AVAudioSession.sharedInstance()
         expect {
             try audioSession.setCategory(.playback, mode: .default, options: [])
@@ -52,6 +67,9 @@ final class AVAudioSessionNotificationTests: TestCase {
     }
 
     func testUpdateWithSetCategoryOptions() throws {
+        if #available(iOS 18, tvOS 18, *) {
+            throw XCTSkip("Skipped on iOS/tvOS 18 and later.")
+        }
         let audioSession = AVAudioSession.sharedInstance()
         expect {
             try audioSession.setCategory(.playback, options: [.duckOthers])
@@ -61,6 +79,9 @@ final class AVAudioSessionNotificationTests: TestCase {
     }
 
     func testNoUpdateWithSetCategoryOptions() throws {
+        if #available(iOS 18, tvOS 18, *) {
+            throw XCTSkip("Skipped on iOS/tvOS 18 and later.")
+        }
         let audioSession = AVAudioSession.sharedInstance()
         expect {
             try audioSession.setCategory(.playback, options: [])
