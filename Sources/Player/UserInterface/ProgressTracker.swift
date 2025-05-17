@@ -83,7 +83,7 @@ public final class ProgressTracker: ObservableObject {
         set {
             guard _progress != nil else { return }
             _progress = Self.validProgress(newValue, in: range)
-            guard seekBehavior == .immediate else { return }
+            guard seeksImmediately() else { return }
             seek(to: newValue, optimal: true)
         }
     }
@@ -197,7 +197,7 @@ public final class ProgressTracker: ObservableObject {
     }
 
     private func pausePlaybackIfNeeded(with player: Player?) {
-        guard let player, player.playbackState == .playing, seekBehavior == .immediate else { return }
+        guard let player, player.playbackState == .playing, seeksImmediately() else { return }
         player.pause()
         wasPaused = true
     }
@@ -206,6 +206,11 @@ public final class ProgressTracker: ObservableObject {
         guard let player, wasPaused else { return }
         player.play()
         wasPaused = false
+    }
+
+    private func seeksImmediately() -> Bool {
+        guard let player else { return false }
+        return seekBehavior == .immediate && player.mediaType == .video
     }
 }
 
