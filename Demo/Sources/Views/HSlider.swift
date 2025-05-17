@@ -76,7 +76,8 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
             .onChanged { value in
                 onChanged(with: value, in: geometry)
             }
-            .onEnded { _ in
+            .onEnded { value in
+                onChanged(with: value, in: geometry)
                 onEnded(in: geometry)
             }
     }
