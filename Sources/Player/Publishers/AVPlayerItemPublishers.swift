@@ -173,17 +173,6 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
-    func metricsStatePublisher() -> AnyPublisher<MetricsState, Never> {
-        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newAccessLogEntryNotification, object: self)
-            .compactMap { $0.object as? AVPlayerItem }
-            .prepend(self)
-            .compactMap { .init(from: $0) }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-}
-
-extension AVPlayerItem {
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Publishers.Merge4(
             assetMetricEventPublisher(),
