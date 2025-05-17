@@ -34,13 +34,13 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
                     update(for: value, in: geometry)
                 }
         }
+        .preventsTouchPropagation()
         .gesture(
             DragGesture(minimumDistance: 0)
                 .updating($gestureValue) { value, state, _ in
                     state = value
                 }
         )
-        .preventsTouchPropagation()
     }
 
     /// Creates a slider to select a value from a given range.
