@@ -8,13 +8,13 @@ import SwiftUI
 
 @objc
 enum SeekBehaviorSetting: Int, CaseIterable {
-    case immediate
+    case optimal
     case deferred
 
     var name: LocalizedStringKey {
         switch self {
-        case .immediate:
-            return "Immediate"
+        case .optimal:
+            return "Optimal"
         case .deferred:
             return "Deferred"
         }

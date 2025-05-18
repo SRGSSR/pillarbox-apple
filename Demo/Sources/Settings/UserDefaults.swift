@@ -33,15 +33,15 @@ extension UserDefaults {
 
     var seekBehavior: SeekBehavior {
         switch seekBehaviorSetting {
-        case .immediate:
-            return .immediate
+        case .optimal:
+            return .optimal
         case .deferred:
             return .deferred
         }
     }
 
     @objc dynamic var seekBehaviorSetting: SeekBehaviorSetting {
-        .init(rawValue: integer(forKey: DemoSettingKey.seekBehaviorSetting.rawValue)) ?? .immediate
+        .init(rawValue: integer(forKey: DemoSettingKey.seekBehaviorSetting.rawValue)) ?? .optimal
     }
 
     @objc dynamic var backwardSkipInterval: TimeInterval {
@@ -63,7 +63,7 @@ extension UserDefaults {
     private static func registerDefaultDemoSettings() {
         UserDefaults.standard.register(defaults: [
             DemoSettingKey.presenterModeEnabled.rawValue: false,
-            DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.immediate.rawValue,
+            DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.optimal.rawValue,
             DemoSettingKey.backwardSkipInterval.rawValue: 10,
             DemoSettingKey.forwardSkipInterval.rawValue: 10,
             DemoSettingKey.smartNavigationEnabled.rawValue: true,

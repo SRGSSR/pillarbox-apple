@@ -61,7 +61,7 @@ struct SettingsView: View {
     private var isSmartNavigationEnabled = true
 
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
-    private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
+    private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
 
     @AppStorage(UserDefaults.DemoSettingKey.backwardSkipInterval.rawValue)
     private var backwardSkipInterval: TimeInterval = 10

@@ -22,7 +22,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
     func testImmediateSeek() {
         let progressTracker = ProgressTracker(
             interval: CMTime(value: 1, timescale: 4),
-            seekBehavior: .immediate
+            seekBehavior: .optimal
         )
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
