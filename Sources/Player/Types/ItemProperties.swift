@@ -38,8 +38,8 @@ extension ItemProperties {
         return nil
     }
 
-    func metrics() -> Metrics? {
-        guard let item, item.isLoaded, let state = MetricsState(from: item) else { return nil }
+    func metrics() async -> Metrics? {
+        guard let item, item.isLoaded, let state = await MetricsState.state(from: item) else { return nil }
         return state.metrics(from: .empty)
     }
 }

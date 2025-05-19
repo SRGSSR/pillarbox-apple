@@ -43,8 +43,8 @@ extension CoreProperties {
         itemProperties.date()
     }
 
-    func metrics() -> Metrics? {
-        itemProperties.metrics()
+    func metrics() async -> Metrics? {
+        await itemProperties.metrics()
     }
 }
 

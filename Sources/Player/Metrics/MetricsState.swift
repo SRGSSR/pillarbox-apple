@@ -19,8 +19,9 @@ struct MetricsState: Equatable {
         self.total = events.reduce(.zero) { $0 + .values(from: $1) }
     }
 
-    init?(from item: AVPlayerItem) {
-        return nil
+    static func state(from item: AVPlayerItem) async -> Self? {
+        guard let events = item.accessLog()?.events, !events.isEmpty else { return nil }
+        return self.init(with: events.map { AccessLogEvent($0) }, at: item.currentTime())
     }
 
     func metrics(from state: Self) -> Metrics {
