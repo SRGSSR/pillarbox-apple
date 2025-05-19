@@ -18,6 +18,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
 
     @State private var isInteracting = false
     @State private var initialProgress: Value = 0
+
     @GestureState private var gestureValue: DragGesture.Value?
 
     private var progress: Value {
@@ -30,17 +31,16 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
             content(.init(progress), geometry.size.width)
                 // Use center alignment instead of top leading alignment used by `GeometryReader`.
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .preventsTouchPropagation()
+                .gesture(dragGesture(in: geometry))
                 .onChange(of: gestureValue) { value in
-                    update(for: value, in: geometry)
+                    // Gesture cancellation can only be detected via gesture value observation,
+                    // see https://developer.apple.com/documentation/swiftui/adding-interactivity-with-gestures#Update-transient-UI-state
+                    if value == nil {
+                        onEnded(in: geometry)
+                    }
                 }
         }
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .updating($gestureValue) { value, state, _ in
-                    state = value
-                }
-        )
-        .preventsTouchPropagation()
     }
 
     /// Creates a slider to select a value from a given range.
@@ -68,22 +68,36 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         ((value - bounds.lowerBound) / (bounds.upperBound - bounds.lowerBound)).clamped(to: bounds)
     }
 
-    private func update(for value: DragGesture.Value?, in geometry: GeometryProxy) {
-        if let value {
-            onDragging()
-            if !isInteracting {
-                isInteracting = true
-                initialProgress = progress
-                onEditingChanged(true)
+    private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
+        DragGesture(minimumDistance: 0)
+            .updating($gestureValue) { value, state, _ in
+                state = value
             }
-            let delta = (geometry.size.width != 0) ? Value(value.translation.width / geometry.size.width) : 0
-            self.value = Self.value(for: initialProgress + delta, in: bounds)
+            .onChanged { value in
+                onChanged(with: value, in: geometry)
+            }
+            .onEnded { value in
+                onChanged(with: value, in: geometry)
+                onEnded(in: geometry)
+            }
+    }
+
+    private func onChanged(with value: DragGesture.Value, in geometry: GeometryProxy) {
+        onDragging()
+        if !isInteracting {
+            isInteracting = true
+            initialProgress = progress
+            onEditingChanged(true)
         }
-        else {
-            initialProgress = 0
-            isInteracting = false
-            onEditingChanged(false)
-        }
+        let delta = (geometry.size.width != 0) ? Value(value.translation.width / geometry.size.width) : 0
+        self.value = Self.value(for: initialProgress + delta, in: bounds)
+    }
+
+    private func onEnded(in geometry: GeometryProxy) {
+        guard isInteracting else { return }
+        initialProgress = 0
+        isInteracting = false
+        onEditingChanged(false)
     }
 }
 
