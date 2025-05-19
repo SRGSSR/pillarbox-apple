@@ -14,7 +14,7 @@ public enum SeekBehavior {
 
     /// Defers progress updates until the seek operation completes.
     ///
-    /// Typically used for video content where immediate feedback isn’t necessary or when using alternatives
-    /// like sprite sheets for seek previews.
+    /// Typically used in situations where immediate feedback isn’t necessary or when using alternatives like
+    /// sprite sheets for seek previews at the user interface level.
     case deferred
 }
