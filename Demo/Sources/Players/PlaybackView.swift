@@ -29,12 +29,15 @@ private struct MainView: View {
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
 
+    @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
+    private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
+
     private var prioritizesVideoDevices: Bool {
         player.mediaType == .video
     }
 
     private var shouldHideInterface: Bool {
-        isUserInterfaceHidden || (isInteracting && !shouldKeepControlsAlwaysVisible)
+        isUserInterfaceHidden || (isInteracting && seekBehaviorSetting == .optimal && !shouldKeepControlsAlwaysVisible)
     }
 
     private var shouldKeepControlsAlwaysVisible: Bool {

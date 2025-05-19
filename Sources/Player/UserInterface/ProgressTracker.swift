@@ -83,7 +83,7 @@ public final class ProgressTracker: ObservableObject {
         set {
             guard _progress != nil else { return }
             _progress = Self.validProgress(newValue, in: range)
-            guard seekBehavior == .immediate else { return }
+            guard supportsOptimalSeekBehavior() else { return }
             seek(to: newValue, optimal: true)
         }
     }
@@ -124,7 +124,7 @@ public final class ProgressTracker: ObservableObject {
     ///   - seekBehavior: The seek behavior to apply.
     ///
     /// Additional updates will happen when time jumps or when playback starts or stops.
-    public init(interval: CMTime, seekBehavior: SeekBehavior = .immediate) {
+    public init(interval: CMTime, seekBehavior: SeekBehavior = .optimal) {
         self.seekBehavior = seekBehavior
         $player
             .removeDuplicates()
@@ -197,7 +197,7 @@ public final class ProgressTracker: ObservableObject {
     }
 
     private func pausePlaybackIfNeeded(with player: Player?) {
-        guard let player, player.playbackState == .playing, seekBehavior == .immediate else { return }
+        guard let player, player.playbackState == .playing, supportsOptimalSeekBehavior() else { return }
         player.pause()
         wasPaused = true
     }
@@ -206,6 +206,11 @@ public final class ProgressTracker: ObservableObject {
         guard let player, wasPaused else { return }
         player.play()
         wasPaused = false
+    }
+
+    private func supportsOptimalSeekBehavior() -> Bool {
+        guard let player else { return false }
+        return seekBehavior == .optimal && player.mediaType == .video
     }
 }
 
