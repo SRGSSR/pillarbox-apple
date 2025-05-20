@@ -182,7 +182,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// A Boolean value whether the player should play content when possible.
+    /// A Boolean value indicating whether the player should play content when possible.
     public var shouldPlay: Bool {
         get {
             queuePlayer.rate != 0
