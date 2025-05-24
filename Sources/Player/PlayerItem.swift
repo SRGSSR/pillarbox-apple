@@ -22,6 +22,7 @@ private enum TriggerId: Hashable {
 /// - Encrypted assets which require a FairPlay content key session.
 public final class PlayerItem: Hashable {
     private static let trigger = Trigger()
+    private static let queue = DispatchQueue(label: "ch.srgssr.player_item")
 
     @Published private(set) var content: AssetContent
     private let trackerAdapters: [any PlayerItemTracking]
@@ -289,40 +290,47 @@ extension PlayerItem {
     }
 
     func enableTrackers(matchingBehavior behavior: TrackingBehavior, for player: AVPlayer) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.enable(for: player)
+        Self.queue.async {
+            self.trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+                adapter.enable(for: player)
+            }
         }
     }
 
     func updateTrackersProperties(matchingBehavior behavior: TrackingBehavior, to properties: PlayerProperties) {
-        Task { @MainActor in
+        let time = properties.time()
+        Self.queue.async {
             let trackerProperties = TrackerProperties(
                 playerProperties: properties,
-                time: properties.time(),
+                time: time,
                 date: properties.date(),
-                metrics: await properties.metrics()
+                metrics: properties.metrics()
             )
-            trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+            self.trackerAdapters(matchingBehavior: behavior).forEach { adapter in
                 adapter.updateProperties(to: trackerProperties)
             }
         }
     }
 
     func updateTrackersMetricEvents(matchingBehavior behavior: TrackingBehavior, to events: [MetricEvent]) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.updateMetricEvents(to: events)
+        Self.queue.async {
+            self.trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+                adapter.updateMetricEvents(to: events)
+            }
         }
     }
 
     func disableTrackers(matchingBehavior behavior: TrackingBehavior, with properties: PlayerProperties) {
-        Task { @MainActor in
+        let time = properties.time()
+        Self.queue.async {
             let trackerProperties = TrackerProperties(
                 playerProperties: properties,
-                time: properties.time(),
+                time: time,
                 date: properties.date(),
-                metrics: await properties.metrics()
+                metrics: properties.metrics()
             )
-            trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+            // TODO: Should use date() / time() vs. time to extrapolate date that was not captured
+            self.trackerAdapters(matchingBehavior: behavior).forEach { adapter in
                 adapter.disable(with: trackerProperties)
             }
         }

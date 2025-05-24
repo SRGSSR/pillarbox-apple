@@ -317,8 +317,8 @@ public extension Player {
     /// to ``Metrics/total``.
     ///
     /// > Important: Metrics are reset when toggling external playback.
-    func metrics() async -> Metrics? {
-        await properties.metrics()
+    func metrics() -> Metrics? {
+        properties.metrics()
     }
 }
 

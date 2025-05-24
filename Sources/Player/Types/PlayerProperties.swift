@@ -125,8 +125,8 @@ extension PlayerProperties {
         coreProperties.date()
     }
 
-    func metrics() async -> Metrics? {
-        await coreProperties.metrics()
+    func metrics() -> Metrics? {
+        coreProperties.metrics()
     }
 }
 

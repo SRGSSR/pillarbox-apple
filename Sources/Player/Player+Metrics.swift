@@ -47,13 +47,7 @@ public extension Player {
         .map { [queuePlayer] item, _ -> AnyPublisher<[Metrics], Never> in
             guard let item, item.isLoaded else { return Just([]).eraseToAnyPublisher() }
             return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
-                .map { _ in
-                    AsyncPublisher {
-                        await MetricsState.state(from: item)
-                    }
-                    .compactMap(\.self)
-                }
-                .switchToLatest()
+                .compactMap { _ in MetricsState.state(from: item) }
                 .withPrevious(MetricsState.empty)
                 .map { $0.current.metrics(from: $0.previous) }
                 .scan([]) { ($0 + [$1]).suffix(limit) }
