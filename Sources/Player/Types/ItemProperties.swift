@@ -38,7 +38,10 @@ extension ItemProperties {
         item?.currentDate()
     }
 
-    // TODO: Should document performance considerations
+    // TODO: Should document performance considerations. Idea:
+    //   - Make the call async (usual closure). Capture the time() before, then use the time() after and the date() to return
+    //     the date() at the time of the call. This way the value is correct, corresponds to the calling site but is delivered
+    //     a bit later (this handles seek origin position correctly).
     func metrics() -> Metrics? {
         guard let item, item.isLoaded, let state = MetricsState.state(from: item) else { return nil }
         return state.metrics(from: .empty)
