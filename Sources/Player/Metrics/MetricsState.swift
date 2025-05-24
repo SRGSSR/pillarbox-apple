@@ -20,8 +20,7 @@ struct MetricsState: Equatable {
     }
 
     init?(from item: AVPlayerItem) {
-        guard let events = item.accessLog()?.events, !events.isEmpty else { return nil }
-        self.init(with: events.map { AccessLogEvent($0) }, at: item.currentTime())
+        return nil
     }
 
     func metrics(from state: Self) -> Metrics {
