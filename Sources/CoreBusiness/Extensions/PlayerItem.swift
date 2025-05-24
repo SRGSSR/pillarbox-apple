@@ -31,7 +31,7 @@ public extension PlayerItem {
             publisher: publisher(forUrn: urn, server: server, configuration: configuration),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
-                //CommandersActTracker.adapter { $0.analyticsMetadata },
+                CommandersActTracker.adapter { $0.analyticsMetadata },
                 MetricsTracker.adapter(
                     configuration: .init(
                         identifier: urn,
