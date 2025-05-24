@@ -30,14 +30,15 @@ struct ItemProperties: Equatable {
 
 extension ItemProperties {
     func time() -> CMTime {
-        guard let item else { return .invalid }
-        return item.currentTime()
+        item?.currentTime() ?? .invalid
     }
 
+    // TODO: Should document performance considerations
     func date() -> Date? {
-        return nil
+        item?.currentDate()
     }
 
+    // TODO: Should document performance considerations
     func metrics() -> Metrics? {
         guard let item, item.isLoaded, let state = MetricsState.state(from: item) else { return nil }
         return state.metrics(from: .empty)
