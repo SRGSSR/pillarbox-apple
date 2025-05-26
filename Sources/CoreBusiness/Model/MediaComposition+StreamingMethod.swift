@@ -22,12 +22,6 @@ public extension MediaComposition {
         /// Real-Time Messaging Protocol.
         case rtmp = "RTMP"
 
-        /// Streaming served over HTTP.
-        case http = "HTTP"
-
-        /// Streaming served over HTTPS.
-        case https = "HTTPS"
-
         /// Dynamic Adaptive Streaming over HTTP.
         case dash = "DASH"
 
@@ -35,6 +29,6 @@ public extension MediaComposition {
         case unknown = "UNKNOWN"
 
         /// The supported streaming methods on Apple platforms.
-        public static let supportedMethods: [Self] = [.hls, .https, .http, .m3uPlaylist, .progressive]
+        public static let supportedMethods: [Self] = [.hls, .m3uPlaylist, .progressive]
     }
 }
