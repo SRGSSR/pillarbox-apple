@@ -19,14 +19,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Add Apple certificate
-        run: |
-          Scripts/private/add-apple-certificate.sh \
-          $RUNNER_TEMP \
-          ${{ secrets.KEYCHAIN_PASSWORD }} \
-          ${{ secrets.APPLE_DEV_CERTIFICATE }} \
-          ${{ secrets.APPLE_DEV_CERTIFICATE_PASSWORD }}
-
       - name: Configure environment
         run: |
           Scripts/private/configure-environment.sh \

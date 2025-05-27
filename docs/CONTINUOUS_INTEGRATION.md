@@ -6,18 +6,6 @@ Continuous integration is performed using GitHub Actions. Worflows require a few
 
 Some information is kept confidential and stored in secrets.
 
-### Apple developer certificate
-
-An Apple developer certificate exported from Xcode, and protected by a password, is required. More information is available from the [GitHub documentation](https://docs.github.com/en/actions/use-cases-and-examples/deploying/installing-an-apple-certificate-on-macos-runners-for-xcode-development):
-
-- `APPLE_DEV_CERTIFICATE`: The certificate `p12` file converted to Base64 can be copied to the clipboard with:
-
-    ```shell
-    base64 -i developer_certificate.p12 | pbcopy
-    ```
-
-- `APPLE_DEV_CERTIFICATE_PASSWORD`: The password used to protect the developer certificate.
-
 ### App Store Connect API key
 
 An [App Store Connect API key](https://appstoreconnect.apple.com/access/integrations/api) is required for automatic provisioning:
@@ -34,7 +22,6 @@ An [App Store Connect API key](https://appstoreconnect.apple.com/access/integrat
 ### Other secrets
 
 - `TEAM_ID`: The team ID.
-- `KEYCHAIN_PASSWORD`: An arbitrary password used to create a local keychain to store certificates on GitHub runners. This password is only used to prevent secrets from being easily read from this keychain, should it somehow leak from a GitHub-hosted agent.
 
 ## Environment variables
 
