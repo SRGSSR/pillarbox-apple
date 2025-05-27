@@ -115,7 +115,7 @@ struct PlaybackView: View {
 
     ```swift
     struct PlayerInterface: View {
-        @State var player = Player(item: .urn("urn:rts:video:13444390"))
+        @State private var player = Player(item: .urn("urn:rts:video:13444390"))
 
         var body: some View {
             // Not updated when the player publishes changes
