@@ -9,6 +9,7 @@ import TCServerSide
 final class CommandersActService {
     private var serverSide: ServerSide?
     private var vendor: Vendor?
+    private let queue = DispatchQueue(label: "ch.srgssr.commanders-act-service")
 
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
@@ -40,7 +41,9 @@ final class CommandersActService {
             event.addNonBlankAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
         AnalyticsListener.capture(event)
-        serverSide.execute(event)
+        queue.async {
+            serverSide.execute(event)
+        }
     }
 
     func sendEvent(_ event: CommandersActEvent) {
@@ -49,7 +52,9 @@ final class CommandersActService {
             customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
         }
         AnalyticsListener.capture(customEvent)
-        serverSide.execute(customEvent)
+        queue.async {
+            serverSide.execute(customEvent)
+        }
     }
 }
 
