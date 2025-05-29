@@ -93,7 +93,10 @@ let package = Package(
             path: "Sources/Monitoring",
             resources: [
                 .process("Resources")
-            ]
+            ],
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency")
+            ],
         ),
         .target(
             name: "PillarboxCircumspect",
