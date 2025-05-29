@@ -169,6 +169,15 @@ public extension Publisher where Failure == Never {
             object?[keyPath: keyPath] = value
         }
     }
+    
+    /// Attaches a subscriber with async closure-based behavior to a publisher that never fails.
+    func asyncSink(receiveValue: @escaping ((Self.Output) async throws -> Void)) -> AnyCancellable {
+        sink { value in
+            Task {
+                try await receiveValue(value)
+            }
+        }
+    }
 }
 
 public extension Publisher {
