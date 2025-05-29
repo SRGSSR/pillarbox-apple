@@ -297,15 +297,17 @@ extension PlayerItem {
     }
 
     func updateTrackersProperties(matchingBehavior behavior: TrackingBehavior, to properties: PlayerProperties) {
-        // TODO: Build properties once
+        let adapters = trackerAdapters(matchingBehavior: behavior)
+        guard !adapters.isEmpty else { return }
+        let trackerProperties = TrackerProperties(
+            playerProperties: properties,
+            time: properties.time(),
+            date: properties.date(),
+            metrics: properties.metrics()
+        )
         Task {
             await trackerAdapters(matchingBehavior: behavior).asyncForEach { adapter in
-                await adapter.updateProperties(to: .init(
-                    playerProperties: properties,
-                    time: properties.time(),
-                    date: properties.date(),
-                    metrics: properties.metrics()
-                ))
+                await adapter.updateProperties(to: trackerProperties)
             }
         }
     }
@@ -319,15 +321,17 @@ extension PlayerItem {
     }
 
     func disableTrackers(matchingBehavior behavior: TrackingBehavior, with properties: PlayerProperties) {
-        // TODO: Build properties once
+        let adapters = trackerAdapters(matchingBehavior: behavior)
+        guard !adapters.isEmpty else { return }
+        let trackerProperties = TrackerProperties(
+            playerProperties: properties,
+            time: properties.time(),
+            date: properties.date(),
+            metrics: properties.metrics()
+        )
         Task {
             await trackerAdapters(matchingBehavior: behavior).asyncForEach { adapter in
-                await adapter.disable(with: .init(
-                    playerProperties: properties,
-                    time: properties.time(),
-                    date: properties.date(),
-                    metrics: properties.metrics()
-                ))
+                await adapter.disable(with: trackerProperties)
             }
         }
     }
