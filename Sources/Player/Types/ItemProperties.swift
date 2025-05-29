@@ -34,6 +34,7 @@ extension ItemProperties {
     }
 
     func date() async -> Date? {
+        // Accessing the `currentDate()` calls to the media service daemon and is potentially costly.
         item?.currentDate()
     }
 
