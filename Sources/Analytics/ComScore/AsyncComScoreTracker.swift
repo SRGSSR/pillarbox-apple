@@ -13,7 +13,7 @@ import PillarboxPlayer
 /// This tracker implements streaming measurements according to Mediapulse official specifications.
 ///
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
-public final class AsyncComScoreTracker: AsyncPlayerItemTracker {
+public actor AsyncComScoreTracker: AsyncPlayerItemTracker {
     private lazy var streamingAnalytics = ComScoreStreamingAnalytics()
     private var metadata: [String: String] = [:]
 
