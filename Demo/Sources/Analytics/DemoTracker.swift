@@ -8,7 +8,7 @@ import AVFoundation
 import os
 import PillarboxPlayer
 
-final class DemoTracker: PlayerItemTracker {
+final actor DemoTracker: PlayerItemTracker {
     struct Metadata {
         let title: String
     }
