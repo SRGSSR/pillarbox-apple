@@ -307,7 +307,7 @@ extension PlayerItem {
                 date: properties.date(),
                 metrics: properties.metrics()
             )
-            await trackerAdapters(matchingBehavior: behavior).asyncForEach { adapter in
+            await adapters.asyncForEach { adapter in
                 await adapter.updateProperties(to: trackerProperties)
             }
         }
@@ -332,7 +332,7 @@ extension PlayerItem {
                 date: properties.date(),        // TODO: Rebase on time based on time()
                 metrics: properties.metrics()
             )
-            await trackerAdapters(matchingBehavior: behavior).asyncForEach { adapter in
+            await adapters.asyncForEach { adapter in
                 await adapter.disable(with: trackerProperties)
             }
         }
