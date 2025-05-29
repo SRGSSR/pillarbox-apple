@@ -11,7 +11,7 @@ import PillarboxPlayer
 import UIKit
 
 /// A tracker gathering metrics for Pillarbox monitoring platform.
-public final class MetricsTracker: PlayerItemTracker {
+public actor MetricsTracker: PlayerItemTracker {
     private let configuration: Configuration
     private let stopwatch = Stopwatch()
 
@@ -121,20 +121,27 @@ private extension MetricsTracker {
     func startData(from events: [MetricEvent]) -> MetricStartData {
         MetricStartData(
             application: .init(
-                id: Self.applicationId,
-                version: Self.applicationVersion
+                id: Application.identifier,
+                version: Application.version
             ),
             device: .init(
-                id: Self.deviceId,
-                model: Self.deviceModel,
-                type: Self.deviceType
+                id: Device.identifier,
+                model: Device.model,
+                type: Device.type.rawValue
             ),
-            os: .init(name: UIDevice.current.systemName, version: UIDevice.current.systemVersion),
+            os: .init(
+                name: System.name,
+                version: System.version
+            ),
             screen: .init(
-                width: Int(UIScreen.main.nativeBounds.width),
-                height: Int(UIScreen.main.nativeBounds.height)
+                width: Screen.width,
+                height: Screen.height
             ),
-            player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
+            player: .init(
+                name: "Pillarbox",
+                platform: "Apple",
+                version: Player.version
+            ),
             media: .init(
                 assetUrl: metadata?.assetUrl,
                 id: configuration.identifier,
@@ -225,16 +232,11 @@ private extension MetricsTracker {
 
         MetricHitListener.capture(payload)
     }
-}
 
-private extension MetricsTracker {
-    static let applicationId: String? = {
-        Bundle.main.bundleIdentifier
-    }()
-
-    static let applicationVersion: String? = {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-    }()
+    func sendHeartbeat() {
+        guard let properties else { return }
+        sendEvent(name: .heartbeat, data: statusData(from: properties))
+    }
 }
 
 private extension MetricsTracker {
@@ -243,9 +245,9 @@ private extension MetricsTracker {
             .autoconnect()
             .map { _ in }
             .prepend(())
-            .sink { [weak self] _ in
-                guard let self, let properties else { return }
-                sendEvent(name: .heartbeat, data: statusData(from: properties))
+            .asyncSink { [weak self] in
+                guard let self else { return }
+                await sendHeartbeat()
             }
             .store(in: &cancellables)
     }
@@ -253,36 +255,6 @@ private extension MetricsTracker {
     func stopHeartbeat() {
         cancellables = []
     }
-}
-
-private extension MetricsTracker {
-    static let deviceId: String? = {
-        UIDevice.current.identifierForVendor?.uuidString.lowercased()
-    }()
-
-    static let deviceModel: String = {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        return withUnsafePointer(to: &systemInfo.machine.0) { pointer in
-            String(cString: pointer)
-        }
-    }()
-
-    static let deviceType: String = {
-        guard !ProcessInfo.processInfo.isRunningOnMac else { return "Computer" }
-        switch UIDevice.current.userInterfaceIdiom {
-        case .phone:
-            return "Phone"
-        case .pad:
-            return "Tablet"
-        case .tv:
-            return "TV"
-        case .vision:
-            return "Headset"
-        default:
-            return "Phone"
-        }
-    }()
 }
 
 private extension MetricsTracker {

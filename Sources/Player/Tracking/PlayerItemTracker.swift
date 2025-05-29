@@ -9,7 +9,7 @@ import AVFoundation
 /// A protocol for custom player item tracking implementation.
 ///
 /// For more information about implementing custom trackers please read <doc:tracking-article>.
-public protocol PlayerItemTracker: AnyObject {
+public protocol PlayerItemTracker: Actor {
     /// A type describing the configuration required by the tracker.
     ///
     /// Use `Void` if no configuration is required.
@@ -95,7 +95,7 @@ public extension PlayerItemTracker {
 
 public extension PlayerItemTracker where Configuration == Void {
     /// Creates an adapter for the receiver.
-    /// 
+    ///
     /// - Parameters:
     ///   - behavior: The tracking behavior.
     ///   - mapper: A closure that maps an item metadata to tracker metadata.
