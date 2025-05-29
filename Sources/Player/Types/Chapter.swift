@@ -10,7 +10,7 @@ import UIKit
 
 /// A chapter representation.
 public struct Chapter: Equatable {
-    private static let placeholderImage: UIImage = {
+    private static let placeholderImage = {
         let rect = CGRect(x: 0, y: 0, width: 16, height: 9)
         let renderer = UIGraphicsImageRenderer(bounds: rect)
         return renderer.image { context in

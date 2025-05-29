@@ -212,7 +212,7 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static let jsonEncoder: JSONEncoder = {
+    static let jsonEncoder = {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         return encoder
