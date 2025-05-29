@@ -9,7 +9,7 @@
 import AVFoundation
 import Combine
 
-final class PlayerItemTrackerMock: PlayerItemTracker {
+actor PlayerItemTrackerMock: PlayerItemTracker {
     typealias StatePublisher = PassthroughSubject<State, Never>
 
     enum State: Equatable {

@@ -9,7 +9,7 @@
 import AVFoundation
 import Combine
 
-final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
+actor TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
     typealias StatePublisher = PassthroughSubject<State, Never>
 
     enum State: Equatable {
