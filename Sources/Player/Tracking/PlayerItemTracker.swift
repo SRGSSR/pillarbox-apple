@@ -31,7 +31,6 @@ public protocol PlayerItemTracker: Actor {
     /// team their session identifier, obtained with ``Player/currentSessionIdentifiers(trackedBy:)``. This way your
     /// customer support team can inspect the data associated with the user session and help the user understand the
     /// issues they might experience.
-    // TODO: Should better be nonisolated
     var sessionIdentifier: String? { get }
 
     /// Creates the tracker.
