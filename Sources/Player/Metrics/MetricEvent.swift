@@ -91,14 +91,14 @@ extension MetricEvent.Kind: CustomStringConvertible {
 }
 
 extension MetricEvent: CustomStringConvertible {
-    private static let dateFormatter: DateFormatter = {
+    private static let dateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         return formatter
     }()
 
-    private static let durationFormatter: DateComponentsFormatter = {
+    private static let durationFormatter = {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
         formatter.zeroFormattingBehavior = .pad

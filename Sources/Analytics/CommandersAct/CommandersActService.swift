@@ -54,7 +54,7 @@ final class CommandersActService {
 }
 
 extension CommandersActService {
-    private static var device: String = {
+    private static let device = {
         guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop" }
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:

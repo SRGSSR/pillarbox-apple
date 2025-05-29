@@ -587,21 +587,21 @@ private struct TimeBar: View {
 }
 
 private struct TimeSlider: View {
-    private static let shortFormatter: DateComponentsFormatter = {
+    private static let shortFormatter = {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.second, .minute]
         formatter.zeroFormattingBehavior = .pad
         return formatter
     }()
 
-    private static let longFormatter: DateComponentsFormatter = {
+    private static let longFormatter = {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.second, .minute, .hour]
         formatter.zeroFormattingBehavior = .pad
         return formatter
     }()
 
-    private static let timeFormatter: DateFormatter = {
+    private static let timeFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .medium

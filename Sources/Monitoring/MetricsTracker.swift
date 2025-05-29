@@ -205,7 +205,7 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static let jsonEncoder: JSONEncoder = {
+    static let jsonEncoder = {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         return encoder
@@ -228,13 +228,8 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static let applicationId: String? = {
-        Bundle.main.bundleIdentifier
-    }()
-
-    static let applicationVersion: String? = {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-    }()
+    static let applicationId = Bundle.main.bundleIdentifier
+    static let applicationVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 }
 
 private extension MetricsTracker {
@@ -256,11 +251,9 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static let deviceId: String? = {
-        UIDevice.current.identifierForVendor?.uuidString.lowercased()
-    }()
+    static let deviceId = UIDevice.current.identifierForVendor?.uuidString.lowercased()
 
-    static let deviceModel: String = {
+    static let deviceModel = {
         var systemInfo = utsname()
         uname(&systemInfo)
         return withUnsafePointer(to: &systemInfo.machine.0) { pointer in
@@ -268,7 +261,7 @@ private extension MetricsTracker {
         }
     }()
 
-    static let deviceType: String = {
+    static let deviceType = {
         guard !ProcessInfo.processInfo.isRunningOnMac else { return "Computer" }
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
