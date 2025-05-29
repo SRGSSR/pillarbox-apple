@@ -34,12 +34,11 @@ extension ItemProperties {
     }
 
     func date() async -> Date? {
-        // Accessing the `currentDate()` calls to the media service daemon and is potentially costly.
-        item?.currentDate()
+        await item?.asyncCurrentDate()
     }
 
     func metrics() async -> Metrics? {
-        guard let item, item.isLoaded, let state = MetricsState(from: item) else { return nil }
+        guard let item, item.isLoaded, let state = await MetricsState(from: item) else { return nil }
         return state.metrics(from: .empty)
     }
 }

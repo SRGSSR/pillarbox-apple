@@ -19,10 +19,8 @@ struct MetricsState: Equatable {
         self.total = events.reduce(.zero) { $0 + .values(from: $1) }
     }
 
-    /// > Warning: Accessing the `accessLog()` calls to the media service daemon and is potentially costly. Call on
-    /// > background threads.
-    init?(from item: AVPlayerItem) {
-        guard let events = item.accessLog()?.events, !events.isEmpty else { return nil }
+    init?(from item: AVPlayerItem) async {
+        guard let events = await item.asyncAccessLog()?.events, !events.isEmpty else { return nil }
         self.init(with: events.map { AccessLogEvent($0) }, at: item.currentTime())
     }
 

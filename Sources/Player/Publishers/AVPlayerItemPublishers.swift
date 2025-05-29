@@ -173,6 +173,14 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
+    func metricsStatePublisher() -> AnyPublisher<MetricsState, Never> {
+        AsyncPublisher {
+            await MetricsState(from: self)
+        }
+        .compactMap(\.self)
+        .eraseToAnyPublisher()
+    }
+
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Publishers.Merge4(
             assetMetricEventPublisher(),

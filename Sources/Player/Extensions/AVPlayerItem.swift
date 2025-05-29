@@ -7,11 +7,28 @@
 import AVFoundation
 import AVKit
 
+private let kItemQueue = DispatchQueue(label: "ch.srgssr.player-item")
 private var kIdKey: Void?
 
 extension AVPlayerItem {
     var timeRange: CMTimeRange {
         TimeProperties.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+    }
+
+    func asyncCurrentDate() async -> Date? {
+        await withCheckedContinuation { continuation in
+            kItemQueue.async {
+                continuation.resume(returning: self.currentDate())
+            }
+        }
+    }
+
+    func asyncAccessLog() async -> AVPlayerItemAccessLog? {
+        await withCheckedContinuation { continuation in
+            kItemQueue.async {
+                continuation.resume(returning: self.accessLog())
+            }
+        }
     }
 }
 
