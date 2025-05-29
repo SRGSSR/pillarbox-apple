@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
+private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource-loader")
 
 /// An item which stores its own custom resource loader delegate.
 final class ResourceLoadedPlayerItem: AVPlayerItem {
