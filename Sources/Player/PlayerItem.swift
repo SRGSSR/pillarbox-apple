@@ -289,44 +289,56 @@ extension PlayerItem {
     }
 
     func enableTrackers(matchingBehavior behavior: TrackingBehavior, for player: AVPlayer) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.enable(for: player)
+        Task {
+            await trackerAdapters(matchingBehavior: behavior).asyncForEach { adapter in
+                await adapter.enable(for: player)
+            }
         }
     }
 
     func updateTrackersProperties(matchingBehavior behavior: TrackingBehavior, to properties: PlayerProperties) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.updateProperties(to: .init(
-                playerProperties: properties,
-                time: properties.time(),
-                date: properties.date(),
-                metrics: properties.metrics()
-            ))
+        // TODO: Build properties once
+        Task {
+            await trackerAdapters(matchingBehavior: behavior).asyncForEach { adapter in
+                await adapter.updateProperties(to: .init(
+                    playerProperties: properties,
+                    time: properties.time(),
+                    date: properties.date(),
+                    metrics: properties.metrics()
+                ))
+            }
         }
     }
 
     func updateTrackersMetricEvents(matchingBehavior behavior: TrackingBehavior, to events: [MetricEvent]) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.updateMetricEvents(to: events)
+        Task {
+            await trackerAdapters(matchingBehavior: behavior).asyncForEach { adapter in
+                await adapter.updateMetricEvents(to: events)
+            }
         }
     }
 
     func disableTrackers(matchingBehavior behavior: TrackingBehavior, with properties: PlayerProperties) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.disable(with: .init(
-                playerProperties: properties,
-                time: properties.time(),
-                date: properties.date(),
-                metrics: properties.metrics()
-            ))
+        // TODO: Build properties once
+        Task {
+            await trackerAdapters(matchingBehavior: behavior).asyncForEach { adapter in
+                await adapter.disable(with: .init(
+                    playerProperties: properties,
+                    time: properties.time(),
+                    date: properties.date(),
+                    metrics: properties.metrics()
+                ))
+            }
         }
     }
 
     func sessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {
-        trackerAdapters.compactMap(\.registration)
-            .filter { $0.type == type }
-            .map(\.sessionIdentifier)
-            .sorted()
+        // FIXME:
+//        trackerAdapters.compactMap(\.registration)
+//            .filter { $0.type == type }
+//            .map(\.sessionIdentifier)
+//            .sorted()
+        []
     }
 }
 

@@ -8,10 +8,10 @@ import AVFoundation
 
 protocol PlayerItemTracking {
     var behavior: TrackingBehavior { get }
-    var registration: TrackingRegistration? { get }
+    var registration: TrackingRegistration? { get async }
 
-    func enable(for player: AVPlayer)
-    func updateProperties(to properties: TrackerProperties)
-    func updateMetricEvents(to events: [MetricEvent])
-    func disable(with properties: TrackerProperties)
+    func enable(for player: AVPlayer) async
+    func updateProperties(to properties: TrackerProperties) async
+    func updateMetricEvents(to events: [MetricEvent]) async
+    func disable(with properties: TrackerProperties) async
 }

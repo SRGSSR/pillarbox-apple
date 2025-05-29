@@ -24,7 +24,9 @@ public struct TrackerAdapter<M> {
         let tracker = trackerType.init(configuration: configuration)
         update = { metadata in
             if let mapper {
-                tracker.updateMetadata(to: mapper(metadata))
+                Task {
+                    await tracker.updateMetadata(to: mapper(metadata))
+                }
             }
         }
         self.tracker = tracker
@@ -38,23 +40,25 @@ public struct TrackerAdapter<M> {
 
 extension TrackerAdapter: PlayerItemTracking {
     var registration: TrackingRegistration? {
-        guard let sessionIdentifier = tracker.sessionIdentifier else { return nil }
-        return .init(type: type(of: tracker), sessionIdentifier: sessionIdentifier)
+        get async {
+            guard let sessionIdentifier = await tracker.sessionIdentifier else { return nil }
+            return .init(type: type(of: tracker), sessionIdentifier: sessionIdentifier)
+        }
     }
 
-    func enable(for player: AVPlayer) {
-        tracker.enable(for: player)
+    func enable(for player: AVPlayer) async {
+        await tracker.enable(for: player)
     }
 
-    func updateProperties(to properties: TrackerProperties) {
-        tracker.updateProperties(to: properties)
+    func updateProperties(to properties: TrackerProperties) async {
+        await tracker.updateProperties(to: properties)
     }
 
-    func updateMetricEvents(to events: [MetricEvent]) {
-        tracker.updateMetricEvents(to: events)
+    func updateMetricEvents(to events: [MetricEvent]) async {
+        await tracker.updateMetricEvents(to: events)
     }
 
-    func disable(with properties: TrackerProperties) {
-        tracker.disable(with: properties)
+    func disable(with properties: TrackerProperties) async {
+        await tracker.disable(with: properties)
     }
 }
