@@ -121,12 +121,12 @@ extension PlayerProperties {
         coreProperties.time()
     }
 
-    func date() -> Date? {
-        coreProperties.date()
+    func date() async -> Date? {
+        await coreProperties.date()
     }
 
-    func metrics() -> Metrics? {
-        coreProperties.metrics()
+    func metrics() async -> Metrics? {
+        await coreProperties.metrics()
     }
 }
 

@@ -30,17 +30,14 @@ struct ItemProperties: Equatable {
 
 extension ItemProperties {
     func time() -> CMTime {
-        guard let item else { return .invalid }
-        return item.currentTime()
+        item?.currentTime() ?? .invalid
     }
 
-    func date() -> Date? {
-        // Check cached duration validity first. This avoids potentially costly date retrieval when playing some
-        // content (e.g., MP3).
-        duration.isValid ? item?.currentDate() : nil
+    func date() async -> Date? {
+        item?.currentDate()
     }
 
-    func metrics() -> Metrics? {
+    func metrics() async -> Metrics? {
         guard let item, item.isLoaded, let state = MetricsState(from: item) else { return nil }
         return state.metrics(from: .empty)
     }

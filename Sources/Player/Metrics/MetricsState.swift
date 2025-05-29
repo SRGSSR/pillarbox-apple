@@ -18,7 +18,8 @@ struct MetricsState: Equatable {
         self.event = events.last
         self.total = events.reduce(.zero) { $0 + .values(from: $1) }
     }
-
+    
+    /// > Warning: Access log retrieval is costly. Call on a background thread/task.
     init?(from item: AVPlayerItem) {
         guard let events = item.accessLog()?.events, !events.isEmpty else { return nil }
         self.init(with: events.map { AccessLogEvent($0) }, at: item.currentTime())

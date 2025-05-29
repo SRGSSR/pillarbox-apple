@@ -306,8 +306,8 @@ public extension Player {
     /// The current date.
     ///
     /// The date is `nil` when no date information is available from the stream.
-    func date() -> Date? {
-        properties.date()
+    func date() async -> Date? {
+        await properties.date()
     }
 
     /// The current player metrics, if available.
@@ -317,8 +317,8 @@ public extension Player {
     /// to ``Metrics/total``.
     ///
     /// > Important: Metrics are reset when toggling external playback.
-    func metrics() -> Metrics? {
-        properties.metrics()
+    func metrics() async -> Metrics? {
+        await properties.metrics()
     }
 }
 
