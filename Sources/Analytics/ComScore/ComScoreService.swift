@@ -8,9 +8,7 @@ import ComScore
 import Foundation
 
 struct ComScoreService {
-    private var applicationVersion: String {
-        Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
-    }
+    private static let applicationVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
 
     func start(with configuration: Analytics.Configuration, globals: ComScoreGlobals?) {
         let publisherConfiguration = SCORPublisherConfiguration { builder in
@@ -25,11 +23,11 @@ struct ComScoreService {
         if let comScoreConfiguration = SCORAnalytics.configuration() {
             comScoreConfiguration.addClient(with: publisherConfiguration)
 
-            comScoreConfiguration.applicationVersion = applicationVersion
+            comScoreConfiguration.applicationVersion = Self.applicationVersion
             comScoreConfiguration.preventAdSupportUsage = true
             comScoreConfiguration.addPersistentLabels([
                 "mp_brand": configuration.vendor.rawValue,
-                "mp_v": applicationVersion
+                "mp_v": Self.applicationVersion
             ])
             if let globals {
                 comScoreConfiguration.addStartLabels(globals.labels)
