@@ -305,7 +305,7 @@ extension PlayerItem {
             let trackerProperties = TrackerProperties(
                 playerProperties: properties,
                 time: time,
-                date: properties.date(),
+                date: properties.date(at: time),
                 metrics: properties.metrics()
             )
             adapters.forEach { adapter in
@@ -330,7 +330,7 @@ extension PlayerItem {
             let trackerProperties = TrackerProperties(
                 playerProperties: properties,
                 time: time,
-                date: properties.date(),
+                date: properties.date(at: time),
                 metrics: properties.metrics()
             )
             adapters.forEach { adapter in
