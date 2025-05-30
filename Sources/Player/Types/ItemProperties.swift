@@ -30,8 +30,7 @@ struct ItemProperties: Equatable {
 
 extension ItemProperties {
     func time() -> CMTime {
-        guard let item else { return .invalid }
-        return item.currentTime()
+        item?.currentTime() ?? .invalid
     }
 
     func date() -> Date? {
