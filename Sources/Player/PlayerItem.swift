@@ -25,6 +25,7 @@ public final class PlayerItem: Hashable {
 
     @Published private(set) var content: AssetContent
     private let trackerAdapters: [any PlayerItemTracking]
+    private let queue = DispatchQueue(label: "ch.srgssr.player-item")
 
     let id = UUID()
 
@@ -289,36 +290,46 @@ extension PlayerItem {
     }
 
     func enableTrackers(matchingBehavior behavior: TrackingBehavior, for player: AVPlayer) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.enable(for: player)
+        queue.async {
+            self.trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+                adapter.enable(for: player)
+            }
         }
     }
 
     func updateTrackersProperties(matchingBehavior behavior: TrackingBehavior, to properties: PlayerProperties) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.updateProperties(to: .init(
-                playerProperties: properties,
-                time: properties.time(),
-                date: properties.date(),
-                metrics: properties.metrics()
-            ))
+        let time = properties.time()
+        queue.async {
+            self.trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+                adapter.updateProperties(to: .init(
+                    playerProperties: properties,
+                    time: time,
+                    date: properties.date(),
+                    metrics: properties.metrics()
+                ))
+            }
         }
     }
 
     func updateTrackersMetricEvents(matchingBehavior behavior: TrackingBehavior, to events: [MetricEvent]) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.updateMetricEvents(to: events)
+        queue.async {
+            self.trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+                adapter.updateMetricEvents(to: events)
+            }
         }
     }
 
     func disableTrackers(matchingBehavior behavior: TrackingBehavior, with properties: PlayerProperties) {
-        trackerAdapters(matchingBehavior: behavior).forEach { adapter in
-            adapter.disable(with: .init(
-                playerProperties: properties,
-                time: properties.time(),
-                date: properties.date(),
-                metrics: properties.metrics()
-            ))
+        let time = properties.time()
+        queue.async {
+            self.trackerAdapters(matchingBehavior: behavior).forEach { adapter in
+                adapter.disable(with: .init(
+                    playerProperties: properties,
+                    time: time,
+                    date: properties.date(),
+                    metrics: properties.metrics()
+                ))
+            }
         }
     }
 
