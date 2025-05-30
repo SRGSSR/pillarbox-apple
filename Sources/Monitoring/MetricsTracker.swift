@@ -232,6 +232,11 @@ private extension MetricsTracker {
 
         MetricHitListener.capture(payload)
     }
+
+    func sendHeartbeat() {
+        guard let properties else { return }
+        sendEvent(name: .heartbeat, data: statusData(from: properties))
+    }
 }
 
 private extension MetricsTracker {
@@ -246,8 +251,7 @@ private extension MetricsTracker {
             .map { _ in }
             .prepend(())
             .sink { [weak self] _ in
-                guard let self, let properties else { return }
-                sendEvent(name: .heartbeat, data: statusData(from: properties))
+                self?.sendHeartbeat()
             }
             .store(in: &cancellables)
     }
