@@ -41,6 +41,8 @@ public protocol PlayerItemTracker: AnyObject {
     /// A method called when the tracker is enabled for a player.
     ///
     /// - Parameter player: The player for which the tracker must be enabled.
+    ///
+    /// > Important: This method is called on a background thread.
     func enable(for player: AVPlayer)
 
     /// A method called when metadata is updated.
@@ -48,6 +50,8 @@ public protocol PlayerItemTracker: AnyObject {
     /// - Parameter metadata: The updated metadata.
     ///
     /// This method is always called, whether the tracker is currently active or not.
+    ///
+    /// > Important: This method is called on a background thread.
     func updateMetadata(to metadata: Metadata)
 
     /// A method called when player properties have changed.
@@ -56,6 +60,8 @@ public protocol PlayerItemTracker: AnyObject {
     ///
     /// This method can be called quite often, but only when the tracker is active. Implementations should avoid
     /// performing significant work unnecessarily.
+    ///
+    /// > Important: This method is called on a background thread.
     func updateProperties(to properties: TrackerProperties)
 
     /// A method called when metric events are updated.
@@ -63,11 +69,15 @@ public protocol PlayerItemTracker: AnyObject {
     /// - Parameter events: All events that have currently been recorded for the item.
     ///
     /// This method is only called when the tracker is active.
+    ///
+    /// > Important: This method is called on a background thread.
     func updateMetricEvents(to events: [MetricEvent])
 
     /// A method called when the tracker is disabled.
     ///
     /// - Parameter properties: The updated properties.
+    ///
+    /// > Important: This method is called on a background thread.
     func disable(with properties: TrackerProperties)
 }
 
