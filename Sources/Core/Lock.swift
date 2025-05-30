@@ -6,7 +6,7 @@
 
 import Foundation
 
-func withLock<T>(_ lock: NSLocking, execute: () -> T) -> T {
+public func withLock<T>(_ lock: NSLocking, execute: () -> T) -> T {
     lock.lock()
     let result = execute()
     lock.unlock()
