@@ -129,12 +129,19 @@ private extension MetricsTracker {
                 model: Self.deviceModel,
                 type: Self.deviceType
             ),
-            os: .init(name: UIDevice.current.systemName, version: UIDevice.current.systemVersion),
+            os: .init(
+                name: UIDevice.current.systemName,
+                version: UIDevice.current.systemVersion
+            ),
             screen: .init(
                 width: Int(UIScreen.main.nativeBounds.width),
                 height: Int(UIScreen.main.nativeBounds.height)
             ),
-            player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
+            player: .init(
+                name: "Pillarbox",
+                platform: "Apple",
+                version: Player.version
+            ),
             media: .init(
                 assetUrl: metadata?.assetUrl,
                 id: configuration.identifier,
