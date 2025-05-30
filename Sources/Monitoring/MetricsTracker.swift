@@ -12,21 +12,23 @@ import UIKit
 
 /// A tracker gathering metrics for Pillarbox monitoring platform.
 public final class MetricsTracker: PlayerItemTracker {
-    private let configuration: Configuration
-    private let stopwatch = Stopwatch()
-
     private var metadata: Metadata?
     private var properties: TrackerProperties?
 
     private var session = TrackingSession()
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
-
     private var cancellables = Set<AnyCancellable>()
+
+    private let configuration: Configuration
+    private let stopwatch = Stopwatch()
+    private let lock = NSRecursiveLock()
 
     // swiftlint:disable:next missing_docs
     public var sessionIdentifier: String? {
-        session.id
+        withLock(lock) {
+            session.id
+        }
     }
 
     // swiftlint:disable:next missing_docs
@@ -39,43 +41,58 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: Metadata) {
-        self.metadata = metadata
+        withLock(lock) {
+            self.metadata = metadata
+        }
     }
 
     // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: TrackerProperties) {
-        self.properties = properties
-        updateStopwatch(with: properties)
+        withLock(lock) {
+            self.properties = properties
+            updateStopwatch(with: properties)
+        }
     }
 
     // swiftlint:disable:next cyclomatic_complexity missing_docs
     public func updateMetricEvents(to events: [MetricEvent]) {
-        switch events.last?.kind {
-        case .asset:
-            reset(with: properties)
-            session.start()
-            sendEvent(name: .start, data: startData(from: events))
-            startHeartbeat()
-        case .stall:
-            stallDate = .now
-        case .resumeAfterStall:
-            guard let stallDate else { break }
-            stallDuration += Date.now.timeIntervalSince(stallDate)
-        case let .failure(error):
-            if !session.isStarted {
+        withLock(lock) {
+            switch events.last?.kind {
+            case .asset:
+                reset(with: properties)
                 session.start()
                 sendEvent(name: .start, data: startData(from: events))
+                startHeartbeat()
+            case .stall:
+                stallDate = .now
+            case .resumeAfterStall:
+                guard let stallDate else { break }
+                stallDuration += Date.now.timeIntervalSince(stallDate)
+            case let .failure(error):
+                if !session.isStarted {
+                    session.start()
+                    sendEvent(name: .start, data: startData(from: events))
+                }
+                sendEvent(name: .error, data: errorData(from: error))
+                session.stop()
+            default:
+                break
             }
-            sendEvent(name: .error, data: errorData(from: error))
-            session.stop()
-        default:
-            break
         }
     }
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
-        reset(with: properties)
+        withLock(lock) {
+            reset(with: properties)
+        }
+    }
+
+    private func sendHeartbeat() {
+        withLock(lock) {
+            guard let properties else { return }
+            sendEvent(name: .heartbeat, data: statusData(from: properties))
+        }
     }
 }
 
@@ -231,11 +248,6 @@ private extension MetricsTracker {
         URLSession.shared.dataTask(with: request).resume()
 
         MetricHitListener.capture(payload)
-    }
-
-    func sendHeartbeat() {
-        guard let properties else { return }
-        sendEvent(name: .heartbeat, data: statusData(from: properties))
     }
 }
 

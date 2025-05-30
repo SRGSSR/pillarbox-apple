@@ -12,10 +12,11 @@ import Foundation
 /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
 /// any relevant completion.
 public final class ReplaySubject<Output, Failure>: Subject where Failure: Error {
-    private let buffer: LimitedBuffer<Output>
-    private var completion: Subscribers.Completion<Failure>?
-    private let lock = NSRecursiveLock()
     var subscriptions: [ReplaySubscription] = []
+    private var completion: Subscribers.Completion<Failure>?
+
+    private let buffer: LimitedBuffer<Output>
+    private let lock = NSRecursiveLock()
 
     /// Creates a subject able to buffer the provided number of values.
     ///
