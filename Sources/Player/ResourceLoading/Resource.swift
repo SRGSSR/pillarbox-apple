@@ -8,7 +8,7 @@ import AVFoundation
 import os
 
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
-private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content_key_session")
+private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content-key-session")
 
 enum Resource {
     case simple(url: URL)

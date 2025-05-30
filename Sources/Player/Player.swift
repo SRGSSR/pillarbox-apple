@@ -130,7 +130,7 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
-    /// A Boolean setting whether the audio output of the player must be muted.
+    /// A Boolean setting indicating whether the audio output of the player must be muted.
     public var isMuted: Bool {
         get {
             properties.isMuted

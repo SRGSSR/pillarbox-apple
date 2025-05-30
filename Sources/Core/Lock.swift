@@ -6,7 +6,8 @@
 
 import Foundation
 
-func withLock<T>(_ lock: NSLocking, execute: () -> T) -> T {
+/// Automatically manages a lock around the code to execute.
+public func withLock<T>(_ lock: NSLocking, execute: () -> T) -> T {
     lock.lock()
     let result = execute()
     lock.unlock()

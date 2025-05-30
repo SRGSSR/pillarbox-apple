@@ -18,9 +18,10 @@ import PillarboxPlayer
 public final class CommandersActTracker: PlayerItemTracker {
     private var metadata: [String: String] = [:]
     private var lastEvent: Event = .none
+
     private let stopwatch = Stopwatch()
     private let heartbeat = CommandersActHeartbeat()
-    private var cancellable: AnyCancellable?
+    private let lock = NSRecursiveLock()
 
     // swiftlint:disable:next missing_docs
     public init(configuration: Void) {}
@@ -30,24 +31,28 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: [String: String]) {
-        self.metadata = metadata
+        withLock(lock) {
+            self.metadata = metadata
+        }
     }
 
     // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: TrackerProperties) {
-        if properties.isSeeking {
-            notify(.seek, properties: properties)
-        }
-        else {
-            switch properties.playbackState {
-            case .playing:
-                notify(.play, properties: properties)
-            case .paused:
-                notify(.pause, properties: properties)
-            case .ended:
-                notify(.eof, properties: properties)
-            default:
-                break
+        withLock(lock) {
+            if properties.isSeeking {
+                notify(.seek, properties: properties)
+            }
+            else {
+                switch properties.playbackState {
+                case .playing:
+                    notify(.play, properties: properties)
+                case .paused:
+                    notify(.pause, properties: properties)
+                case .ended:
+                    notify(.eof, properties: properties)
+                default:
+                    break
+                }
             }
         }
     }
@@ -57,8 +62,10 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
-        notify(.stop, properties: properties)
-        reset()
+        withLock(lock) {
+            notify(.stop, properties: properties)
+            reset()
+        }
     }
 }
 
