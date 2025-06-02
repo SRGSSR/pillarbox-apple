@@ -12,21 +12,23 @@ import UIKit
 
 /// A tracker gathering metrics for Pillarbox monitoring platform.
 public final class MetricsTracker: PlayerItemTracker {
-    private let configuration: Configuration
-    private let stopwatch = Stopwatch()
-
     private var metadata: Metadata?
     private var properties: TrackerProperties?
 
     private var session = TrackingSession()
     private var stallDate: Date?
     private var stallDuration: TimeInterval = 0
-
     private var cancellables = Set<AnyCancellable>()
+
+    private let configuration: Configuration
+    private let stopwatch = Stopwatch()
+    private let lock = NSRecursiveLock()
 
     // swiftlint:disable:next missing_docs
     public var sessionIdentifier: String? {
-        session.id
+        withLock(lock) {
+            session.id
+        }
     }
 
     // swiftlint:disable:next missing_docs
@@ -39,43 +41,58 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: Metadata) {
-        self.metadata = metadata
+        withLock(lock) {
+            self.metadata = metadata
+        }
     }
 
     // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: TrackerProperties) {
-        self.properties = properties
-        updateStopwatch(with: properties)
+        withLock(lock) {
+            self.properties = properties
+            updateStopwatch(with: properties)
+        }
     }
 
     // swiftlint:disable:next cyclomatic_complexity missing_docs
     public func updateMetricEvents(to events: [MetricEvent]) {
-        switch events.last?.kind {
-        case .asset:
-            reset(with: properties)
-            session.start()
-            sendEvent(name: .start, data: startData(from: events))
-            startHeartbeat()
-        case .stall:
-            stallDate = .now
-        case .resumeAfterStall:
-            guard let stallDate else { break }
-            stallDuration += Date.now.timeIntervalSince(stallDate)
-        case let .failure(error):
-            if !session.isStarted {
+        withLock(lock) {
+            switch events.last?.kind {
+            case .asset:
+                reset(with: properties)
                 session.start()
                 sendEvent(name: .start, data: startData(from: events))
+                startHeartbeat()
+            case .stall:
+                stallDate = .now
+            case .resumeAfterStall:
+                guard let stallDate else { break }
+                stallDuration += Date.now.timeIntervalSince(stallDate)
+            case let .failure(error):
+                if !session.isStarted {
+                    session.start()
+                    sendEvent(name: .start, data: startData(from: events))
+                }
+                sendEvent(name: .error, data: errorData(from: error))
+                session.stop()
+            default:
+                break
             }
-            sendEvent(name: .error, data: errorData(from: error))
-            session.stop()
-        default:
-            break
         }
     }
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
-        reset(with: properties)
+        withLock(lock) {
+            reset(with: properties)
+        }
+    }
+
+    private func sendHeartbeat() {
+        withLock(lock) {
+            guard let properties else { return }
+            sendEvent(name: .heartbeat, data: statusData(from: properties))
+        }
     }
 }
 
@@ -129,12 +146,19 @@ private extension MetricsTracker {
                 model: Self.deviceModel,
                 type: Self.deviceType
             ),
-            os: .init(name: UIDevice.current.systemName, version: UIDevice.current.systemVersion),
+            os: .init(
+                name: UIDevice.current.systemName,
+                version: UIDevice.current.systemVersion
+            ),
             screen: .init(
                 width: Int(UIScreen.main.nativeBounds.width),
                 height: Int(UIScreen.main.nativeBounds.height)
             ),
-            player: .init(name: "Pillarbox", platform: "Apple", version: Player.version),
+            player: .init(
+                name: "Pillarbox",
+                platform: "Apple",
+                version: Player.version
+            ),
             media: .init(
                 assetUrl: metadata?.assetUrl,
                 id: configuration.identifier,
@@ -205,7 +229,7 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static let jsonEncoder: JSONEncoder = {
+    static let jsonEncoder = {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         return encoder
@@ -228,13 +252,8 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static let applicationId: String? = {
-        Bundle.main.bundleIdentifier
-    }()
-
-    static let applicationVersion: String? = {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-    }()
+    static let applicationId = Bundle.main.bundleIdentifier
+    static let applicationVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
 }
 
 private extension MetricsTracker {
@@ -244,8 +263,7 @@ private extension MetricsTracker {
             .map { _ in }
             .prepend(())
             .sink { [weak self] _ in
-                guard let self, let properties else { return }
-                sendEvent(name: .heartbeat, data: statusData(from: properties))
+                self?.sendHeartbeat()
             }
             .store(in: &cancellables)
     }
@@ -256,11 +274,9 @@ private extension MetricsTracker {
 }
 
 private extension MetricsTracker {
-    static let deviceId: String? = {
-        UIDevice.current.identifierForVendor?.uuidString.lowercased()
-    }()
+    static let deviceId = UIDevice.current.identifierForVendor?.uuidString.lowercased()
 
-    static let deviceModel: String = {
+    static let deviceModel = {
         var systemInfo = utsname()
         uname(&systemInfo)
         return withUnsafePointer(to: &systemInfo.machine.0) { pointer in
@@ -268,7 +284,7 @@ private extension MetricsTracker {
         }
     }()
 
-    static let deviceType: String = {
+    static let deviceType = {
         guard !ProcessInfo.processInfo.isRunningOnMac else { return "Computer" }
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:

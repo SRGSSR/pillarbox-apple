@@ -11,7 +11,7 @@ import SwiftUI
 private struct ChapterCell: View {
     private static let width: CGFloat = 200
 
-    private static let durationFormatter: DateComponentsFormatter = {
+    private static let durationFormatter = {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.second, .minute]
         formatter.zeroFormattingBehavior = .pad

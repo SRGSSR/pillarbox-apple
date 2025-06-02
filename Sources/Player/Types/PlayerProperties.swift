@@ -128,6 +128,11 @@ extension PlayerProperties {
     func metrics() -> Metrics? {
         coreProperties.metrics()
     }
+
+    func date(at otherTime: CMTime) -> Date? {
+        guard let date = coreProperties.date() else { return nil }
+        return date.addingTimeInterval((otherTime - time()).seconds)
+    }
 }
 
 extension PlayerProperties {
