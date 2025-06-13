@@ -182,21 +182,6 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// A Boolean value whether the player should play content when possible.
-    public var shouldPlay: Bool {
-        get {
-            queuePlayer.rate != 0
-        }
-        set {
-            if newValue {
-                queuePlayer.rate = queuePlayer.defaultRate
-            }
-            else {
-                queuePlayer.rate = 0
-            }
-        }
-    }
-
     let queuePlayer = QueuePlayer()
     let nowPlayingSession: MPNowPlayingSession
 
@@ -292,33 +277,6 @@ public final class Player: ObservableObject, Equatable {
         // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 
         // see https://github.com/SRGSSR/pillarbox-apple/issues/520
         queuePlayer.volume = 0
-    }
-}
-
-public extension Player {
-    /// The current time.
-    ///
-    /// Returns `.invalid` when the time is unknown.
-    func time() -> CMTime {
-        properties.time()
-    }
-
-    /// The current date.
-    ///
-    /// The date is `nil` when no date information is available from the stream.
-    func date() -> Date? {
-        properties.date()
-    }
-
-    /// The current player metrics, if available.
-    ///
-    /// Each call to this function might return different results reflecting the most recent metrics available. The
-    /// included ``Metrics/increment`` collates data from the entire playback session and is therefore always equal
-    /// to ``Metrics/total``.
-    ///
-    /// > Important: Metrics are reset when toggling external playback.
-    func metrics() -> Metrics? {
-        properties.metrics()
     }
 }
 
