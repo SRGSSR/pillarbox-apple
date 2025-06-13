@@ -448,6 +448,7 @@ private struct SettingsMenu: View {
             player.standardSettingsMenu()
             QualityMenu(player: player)
             metricsMenu()
+            RoutePickerView.routePickerMenu()
         } label: {
             Image(systemName: "ellipsis.circle")
                 .font(.system(size: 20))
