@@ -83,33 +83,44 @@ extension ReplaySubject {
         private var subscriber: AnySubscriber<Output, Failure>?
         private var buffer = DemandBuffer<Output>()
         private var pendingValues: [Output] = []
+        private let lock = NSRecursiveLock()
 
         init<S>(subscriber: S, values: [Output]) where S: Subscriber, S.Input == Output, S.Failure == Failure {
             self.subscriber = AnySubscriber(subscriber)
         }
 
         func request(_ demand: Subscribers.Demand) {
-            process(buffer.request(demand))
+            withLock(lock) {
+                process(buffer.request(demand))
+            }
         }
 
         func append(_ value: Output) {
-            pendingValues += buffer.append(value)
+            withLock(lock) {
+                pendingValues += buffer.append(value)
+            }
         }
 
         func send() {
-            let values = pendingValues
-            pendingValues = []
-            process(values)
+            withLock(lock) {
+                let values = pendingValues
+                pendingValues = []
+                process(values)
+            }
         }
 
         func send(completion: Subscribers.Completion<Failure>) {
-            process(completion: completion)
+            withLock(lock) {
+                process(completion: completion)
+            }
         }
 
         func cancel() {
-            subscriber = nil
-            onCancel?()
-            onCancel = nil
+            withLock(lock) {
+                subscriber = nil
+                onCancel?()
+                onCancel = nil
+            }
         }
 
         private func process(_ values: [Output]) {
