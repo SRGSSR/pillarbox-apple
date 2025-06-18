@@ -32,6 +32,7 @@ extension AsyncPublisher {
 
         private let buffer = DemandBuffer<Output>()
         private var task: Task<Void, Never>?
+        private let lock = NSRecursiveLock()
 
         init(subscriber: S, operation: @escaping () async throws(Failure) -> Output) {
             self.subscriber = subscriber
@@ -39,32 +40,42 @@ extension AsyncPublisher {
         }
 
         private func send(_ output: Output) {
-            process(buffer.append(output))
+            withLock(lock) {
+                process(buffer.append(output))
+            }
         }
 
         private func performOperation() async {
             do {
                 send(try await operation())
-                subscriber?.receive(completion: .finished)
+                withLock(lock) {
+                    subscriber?.receive(completion: .finished)
+                }
             }
             catch {
-                subscriber?.receive(completion: .failure(error))
+                withLock(lock) {
+                    subscriber?.receive(completion: .failure(error))
+                }
             }
         }
 
         func request(_ demand: Subscribers.Demand) {
-            if task == nil {
-                task = Task {
-                    await performOperation()
+            withLock(lock) {
+                if task == nil {
+                    task = Task {
+                        await performOperation()
+                    }
                 }
+                process(buffer.request(demand))
             }
-            process(buffer.request(demand))
         }
 
         func cancel() {
-            task?.cancel()
-            task = nil
-            subscriber = nil
+            withLock(lock) {
+                task?.cancel()
+                task = nil
+                subscriber = nil
+            }
         }
 
         private func process(_ values: [Output]) {
