@@ -33,6 +33,8 @@ For optimal compatibility with the ``PillarboxPlayer`` framework, certain specif
 - **CC:** Use the `CLOSED-CAPTIONS` type and set `AUTOSELECT` to `YES`.
 - **SDH:** Use the `SUBTITLES` type with the `public.accessibility.transcribes-spoken-dialog` and `public.accessibility.describes-music-and-sound` characteristics, and set `AUTOSELECT` to `YES`.
 
+> Note: If no closed caption content is available, you should [explicitly declare](https://developer.apple.com/library/archive/qa/qa1801/_index.html) this in the playlist by adding `CLOSED-CAPTIONS=NONE` to the `EXT-X-STREAM-INF` tag. This prevents the player from showing a CC option unnecessarily, particularly when no subtitles are present either.
+
 #### Troubleshooting rendition selection
 
 If renditions are not handled as expected:
