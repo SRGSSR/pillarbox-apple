@@ -46,16 +46,13 @@ extension AsyncPublisher {
         }
 
         private func performOperation() async {
+            guard let subscriber = withLock(lock, execute: { subscriber }) else { return }
             do {
                 send(try await operation())
-                withLock(lock) {
-                    subscriber?.receive(completion: .finished)
-                }
+                subscriber.receive(completion: .finished)
             }
             catch {
-                withLock(lock) {
-                    subscriber?.receive(completion: .failure(error))
-                }
+                subscriber.receive(completion: .failure(error))
             }
         }
 
@@ -79,7 +76,7 @@ extension AsyncPublisher {
         }
 
         private func process(_ values: [Output]) {
-            guard let subscriber else { return }
+            guard let subscriber = withLock(lock, execute: { subscriber }) else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)
                 request(demand)
