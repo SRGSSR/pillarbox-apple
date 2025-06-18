@@ -16,7 +16,7 @@ public final class DemandBuffer<T> {
     private(set) var values = Deque<T>()
     private(set) var requested: Subscribers.Demand = .none
 
-    private let lock = NSRecursiveLock()
+    private let lock = NSLock()
 
     /// Creates a buffer initially containing the provided values.
     public init(_ values: [T]) {
