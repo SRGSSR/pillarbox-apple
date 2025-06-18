@@ -44,6 +44,7 @@ extension _BoundaryTimePublisher {
 
         private let buffer = DemandBuffer<Void>()
         private var timeObserver: Any?
+        private let lock = NSRecursiveLock()
 
         init(subscriber: S, player: AVPlayer, times: [CMTime], queue: DispatchQueue) {
             self.subscriber = subscriber
@@ -53,25 +54,31 @@ extension _BoundaryTimePublisher {
         }
 
         func request(_ demand: Subscribers.Demand) {
-            if timeObserver == nil {
-                let timeValues = times.map { NSValue(time: $0) }
-                timeObserver = player.addBoundaryTimeObserver(forTimes: timeValues, queue: queue) { [weak self] in
-                    self?.send()
+            withLock(lock) {
+                if timeObserver == nil {
+                    let timeValues = times.map { NSValue(time: $0) }
+                    timeObserver = player.addBoundaryTimeObserver(forTimes: timeValues, queue: queue) { [weak self] in
+                        self?.send()
+                    }
                 }
+                process(buffer.request(demand))
             }
-            process(buffer.request(demand))
         }
 
         private func send() {
-            process(buffer.append(()))
+            withLock(lock) {
+                process(buffer.append(()))
+            }
         }
 
         func cancel() {
-            if let timeObserver {
-                player.removeTimeObserver(timeObserver)
-                self.timeObserver = nil
+            withLock(lock) {
+                if let timeObserver {
+                    player.removeTimeObserver(timeObserver)
+                    self.timeObserver = nil
+                }
+                subscriber = nil
             }
-            subscriber = nil
         }
 
         private func process(_ values: [Void]) {
