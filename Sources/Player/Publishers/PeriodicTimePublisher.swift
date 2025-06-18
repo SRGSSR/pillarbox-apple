@@ -45,6 +45,7 @@ extension _PeriodicTimePublisher {
 
         private let buffer = DemandBuffer<CMTime>()
         private var timeObserver: Any?
+        private let lock = NSRecursiveLock()
 
         init(subscriber: S, player: AVPlayer, interval: CMTime, queue: DispatchQueue) {
             self.subscriber = subscriber
@@ -54,24 +55,30 @@ extension _PeriodicTimePublisher {
         }
 
         func request(_ demand: Subscribers.Demand) {
-            if timeObserver == nil {
-                timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
-                    self?.send(time)
+            withLock(lock) {
+                if timeObserver == nil {
+                    timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
+                        self?.send(time)
+                    }
                 }
+                process(buffer.request(demand))
             }
-            process(buffer.request(demand))
         }
 
         private func send(_ time: CMTime) {
-            process(buffer.append(time))
+            withLock(lock) {
+                process(buffer.append(time))
+            }
         }
 
         func cancel() {
-            if let timeObserver {
-                player.removeTimeObserver(timeObserver)
-                self.timeObserver = nil
+            withLock(lock) {
+                if let timeObserver {
+                    player.removeTimeObserver(timeObserver)
+                    self.timeObserver = nil
+                }
+                subscriber = nil
             }
-            subscriber = nil
         }
 
         private func process(_ values: [CMTime]) {
