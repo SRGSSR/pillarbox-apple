@@ -82,7 +82,7 @@ extension _BoundaryTimePublisher {
         }
 
         private func process(_ values: [Void]) {
-            guard let subscriber else { return }
+            guard let subscriber = withLock(lock, execute: { subscriber }) else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)
                 request(demand)

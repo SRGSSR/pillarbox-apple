@@ -28,7 +28,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     // swiftlint:disable:next missing_docs
     public func send(_ value: Output) {
         withLock(lock) {
-            guard self.completion == nil else { return }
+            guard completion == nil else { return }
             buffer.append(value)
             subscriptions.forEach { subscription in
                 subscription.append(value)
@@ -57,20 +57,23 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
     // swiftlint:disable:next missing_docs
     public func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
+        let values = withLock(lock, execute: { buffer.values })
+        let subscription = ReplaySubscription(subscriber: subscriber, values: values)
         withLock(lock) {
-            let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
             subscription.onCancel = { [weak self] in
                 guard let self else { return }
                 subscriptions.removeAll { $0 === subscription }
             }
-            buffer.values.forEach { value in
+            values.forEach { value in
                 subscription.append(value)
                 subscription.send()
             }
-            subscriber.receive(subscription: subscription)
-            if let completion {
-                subscription.send(completion: completion)
-            }
+        }
+        subscriber.receive(subscription: subscription)
+        if let completion = withLock(lock, execute: { completion }) {
+            subscription.send(completion: completion)
+        }
+        withLock(lock) {
             subscriptions.append(subscription)
         }
     }
@@ -110,9 +113,8 @@ extension ReplaySubject {
         }
 
         func send(completion: Subscribers.Completion<Failure>) {
-            withLock(lock) {
-                process(completion: completion)
-            }
+            guard let subscriber = withLock(lock, execute: { subscriber }) else { return }
+            subscriber.receive(completion: completion)
         }
 
         func cancel() {
@@ -124,16 +126,11 @@ extension ReplaySubject {
         }
 
         private func process(_ values: [Output]) {
-            guard let subscriber else { return }
+            guard let subscriber = withLock(lock, execute: { subscriber }) else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)
                 request(demand)
             }
-        }
-
-        private func process(completion: Subscribers.Completion<Failure>?) {
-            guard let subscriber, let completion else { return }
-            subscriber.receive(completion: completion)
         }
     }
 }
