@@ -63,10 +63,10 @@ extension UserDefaults {
     private static func registerDefaultDemoSettings() {
         UserDefaults.standard.register(defaults: [
             DemoSettingKey.presenterModeEnabled.rawValue: false,
+            DemoSettingKey.smartNavigationEnabled.rawValue: true,
             DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.optimal.rawValue,
             DemoSettingKey.backwardSkipInterval.rawValue: 10,
             DemoSettingKey.forwardSkipInterval.rawValue: 10,
-            DemoSettingKey.smartNavigationEnabled.rawValue: true,
             DemoSettingKey.serverSetting.rawValue: ServerSetting.production.rawValue,
             DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue
         ])
