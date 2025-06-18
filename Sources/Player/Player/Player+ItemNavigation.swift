@@ -135,21 +135,21 @@ private extension Player {
         return nextIndex < items.endIndex ? nextIndex : afterIndex()
     }
 
-    func afterIndex() -> Int? {
-        switch repeatMode {
-        case .off, .one:
-            return nil
-        case .all:
-            return items.startIndex
-        }
-    }
-
     func beforeIndex() -> Int? {
         switch repeatMode {
         case .off, .one:
             return nil
         case .all:
             return items.index(before: items.endIndex)
+        }
+    }
+
+    func afterIndex() -> Int? {
+        switch repeatMode {
+        case .off, .one:
+            return nil
+        case .all:
+            return items.startIndex
         }
     }
 }
