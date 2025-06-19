@@ -7,6 +7,7 @@
 import Combine
 import DequeModule
 import Foundation
+import os
 
 /// A thread-safe buffer managing items demanded by a `Subscriber` in a Combine `Subscription`.
 ///
@@ -16,7 +17,7 @@ public final class DemandBuffer<T> {
     private(set) var values = Deque<T>()
     private(set) var requested: Subscribers.Demand = .none
 
-    private let lock = NSLock()
+    private let lock = OSAllocatedUnfairLock()
 
     /// Creates a buffer initially containing the provided values.
     public init(_ values: [T]) {
