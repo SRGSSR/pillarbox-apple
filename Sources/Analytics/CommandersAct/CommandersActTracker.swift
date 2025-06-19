@@ -31,14 +31,14 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: [String: String]) {
-        withLock(lock) {
+        lock.withLock {
             self.metadata = metadata
         }
     }
 
     // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: TrackerProperties) {
-        withLock(lock) {
+        lock.withLock {
             if properties.isSeeking {
                 notify(.seek, properties: properties)
             }
@@ -62,7 +62,7 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
-        withLock(lock) {
+        lock.withLock {
             notify(.stop, properties: properties)
             reset()
         }
