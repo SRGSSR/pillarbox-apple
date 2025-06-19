@@ -14,9 +14,8 @@ import os
 /// The buffer can be used when implementing a subscription so that items can be kept if needed while waiting for a
 /// subscriber demand.
 public final class DemandBuffer<T> {
-    private(set) var values = Deque<T>()
-    private(set) var requested: Subscribers.Demand = .none
-
+    private var values = Deque<T>()
+    private var requested: Subscribers.Demand = .none
     private let lock = OSAllocatedUnfairLock()
 
     /// Creates a buffer initially containing the provided values.
