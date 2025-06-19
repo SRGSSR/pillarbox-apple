@@ -55,7 +55,7 @@ extension _PeriodicTimePublisher {
         }
 
         func request(_ demand: Subscribers.Demand) {
-            withLock(lock) {
+            lock.withLock {
                 if timeObserver == nil {
                     timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
                         self?.send(time)
@@ -66,13 +66,13 @@ extension _PeriodicTimePublisher {
         }
 
         private func send(_ time: CMTime) {
-            withLock(lock) {
+            lock.withLock {
                 process(buffer.append(time))
             }
         }
 
         func cancel() {
-            withLock(lock) {
+            lock.withLock {
                 if let timeObserver {
                     player.removeTimeObserver(timeObserver)
                     self.timeObserver = nil
@@ -82,7 +82,7 @@ extension _PeriodicTimePublisher {
         }
 
         private func process(_ values: [CMTime]) {
-            guard let subscriber = withLock(lock, execute: { subscriber }) else { return }
+            guard let subscriber = lock.withLock({ subscriber }) else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)
                 request(demand)

@@ -25,14 +25,14 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func enable(for player: AVPlayer) {
-        withLock(lock) {
+        lock.withLock {
             createPlaybackSession()
         }
     }
 
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: [String: String]) {
-        withLock(lock) {
+        lock.withLock {
             self.metadata = metadata
             setMetadata(metadata)
         }
@@ -40,7 +40,7 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: TrackerProperties) {
-        withLock(lock) {
+        lock.withLock {
             guard !metadata.isEmpty else { return }
 
             AnalyticsListener.capture(streamingAnalytics.configuration())
@@ -67,7 +67,7 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
-        withLock(lock) {
+        lock.withLock {
             streamingAnalytics = ComScoreStreamingAnalytics()
         }
     }

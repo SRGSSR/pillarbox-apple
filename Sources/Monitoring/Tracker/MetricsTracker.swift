@@ -26,7 +26,7 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public var sessionIdentifier: String? {
-        withLock(lock) {
+        lock.withLock {
             session.id
         }
     }
@@ -41,14 +41,14 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: Metadata) {
-        withLock(lock) {
+        lock.withLock {
             self.metadata = metadata
         }
     }
 
     // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: TrackerProperties) {
-        withLock(lock) {
+        lock.withLock {
             self.properties = properties
             updateStopwatch(with: properties)
         }
@@ -56,7 +56,7 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next cyclomatic_complexity missing_docs
     public func updateMetricEvents(to events: [MetricEvent]) {
-        withLock(lock) {
+        lock.withLock {
             switch events.last?.kind {
             case .asset:
                 reset(with: properties)
@@ -83,13 +83,13 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
-        withLock(lock) {
+        lock.withLock {
             reset(with: properties)
         }
     }
 
     private func sendHeartbeat() {
-        withLock(lock) {
+        lock.withLock {
             guard let properties else { return }
             sendEvent(name: .heartbeat, data: statusData(from: properties.current()))
         }

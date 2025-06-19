@@ -25,7 +25,7 @@ public final class DemandBuffer<T> {
 
     /// Appends a value to the buffer, returning values that should be returned to the subscriber as a result.
     public func append(_ value: T) -> [T] {
-        withLock(lock) {
+        lock.withLock {
             switch requested {
             case .unlimited:
                 return [value]
@@ -38,7 +38,7 @@ public final class DemandBuffer<T> {
 
     /// Updates the demand, returning values that should be returned to the subscriber as a result.
     public func request(_ demand: Subscribers.Demand) -> [T] {
-        withLock(lock) {
+        lock.withLock {
             requested += demand
             return flush()
         }
