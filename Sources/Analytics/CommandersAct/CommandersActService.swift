@@ -14,7 +14,7 @@ final class CommandersActService {
     private let lock = NSRecursiveLock()
 
     func start(with configuration: Analytics.Configuration) {
-        withLock(lock) {
+        lock.withLock {
             vendor = configuration.vendor
 
             if let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey.rawValue) {
@@ -33,7 +33,7 @@ final class CommandersActService {
     }
 
     func trackPageView(_ pageView: CommandersActPageView) {
-        withLock(lock) {
+        lock.withLock {
             guard let serverSide, let event = TCPageViewEvent(type: pageView.type) else { return }
             pageView.labels.forEach { key, value in
                 event.addAdditionalProperty(key, withStringValue: value)
@@ -51,7 +51,7 @@ final class CommandersActService {
     }
 
     func sendEvent(_ event: CommandersActEvent) {
-        withLock(lock) {
+        lock.withLock {
             guard let serverSide, let customEvent = TCCustomEvent(name: event.name) else { return }
             event.labels.forEach { key, value in
                 customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)

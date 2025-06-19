@@ -54,7 +54,7 @@ extension _BoundaryTimePublisher {
         }
 
         func request(_ demand: Subscribers.Demand) {
-            withLock(lock) {
+            lock.withLock {
                 if timeObserver == nil {
                     let timeValues = times.map { NSValue(time: $0) }
                     timeObserver = player.addBoundaryTimeObserver(forTimes: timeValues, queue: queue) { [weak self] in
@@ -66,13 +66,13 @@ extension _BoundaryTimePublisher {
         }
 
         private func send() {
-            withLock(lock) {
+            lock.withLock {
                 process(buffer.append(()))
             }
         }
 
         func cancel() {
-            withLock(lock) {
+            lock.withLock {
                 if let timeObserver {
                     player.removeTimeObserver(timeObserver)
                     self.timeObserver = nil
@@ -82,7 +82,7 @@ extension _BoundaryTimePublisher {
         }
 
         private func process(_ values: [Void]) {
-            guard let subscriber = withLock(lock, execute: { subscriber }) else { return }
+            guard let subscriber = lock.withLock({ subscriber }) else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)
                 request(demand)
