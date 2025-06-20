@@ -12,7 +12,7 @@ import Foundation
 /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
 /// any relevant completion.
 public final class ReplaySubject<Output, Failure>: Subject where Failure: Error {
-    fileprivate var subscriptions: [ReplaySubscription] = []
+    var subscriptions: [ReplaySubscription] = []
     private var completion: Subscribers.Completion<Failure>?
 
     private let buffer: LimitedBuffer<Output>
@@ -81,7 +81,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     }
 }
 
-private extension ReplaySubject {
+extension ReplaySubject {
     final class ReplaySubscription: Subscription {
         var onCancel: (() -> Void)?
 
