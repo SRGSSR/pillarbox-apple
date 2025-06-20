@@ -36,8 +36,8 @@ extension Publishers {
     }
 }
 
-extension _PeriodicTimePublisher {
-    private final class PeriodicTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
+private extension _PeriodicTimePublisher {
+    final class PeriodicTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
         private var subscriber: S?
         private let player: AVPlayer
         private let interval: CMTime
