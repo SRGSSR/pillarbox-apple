@@ -29,4 +29,9 @@ public class RecursiveLock<State>: @unchecked Sendable {
     public func locked() -> State {
         withLock(\.self)
     }
+
+    /// Update the stored object through the lock.
+    public func setLocked(_ state: State) {
+        withLock { $0 = state }
+    }
 }
