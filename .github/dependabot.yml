@@ -27,3 +27,5 @@ updates:
       packages:
         patterns:
           - "*"
+    ignore:
+      - dependency-name: "Difference"
