@@ -43,12 +43,14 @@ extension AsyncPublisher {
         }
 
         private func performOperation() async {
-            guard let subscriber = subscriber.locked() else { return }
             do {
-                send(try await operation())
+                let output = try await operation()
+                guard let subscriber = subscriber.locked() else { return }
+                send(output)
                 subscriber.receive(completion: .finished)
             }
             catch {
+                guard let subscriber = subscriber.locked() else { return }
                 subscriber.receive(completion: .failure(error))
             }
         }
