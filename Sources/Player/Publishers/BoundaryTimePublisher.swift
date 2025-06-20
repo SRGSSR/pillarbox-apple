@@ -37,52 +37,50 @@ extension Publishers {
 
 private extension _BoundaryTimePublisher {
     final class BoundaryTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
-        private var subscriber: S?
+        private let subscriber: RecursiveLock<S?>
         private let player: AVPlayer
-        private let times: [CMTime]
+        private let times: [NSValue]
         private let queue: DispatchQueue
 
         private let buffer = DemandBuffer<Void>()
-        private var timeObserver: Any?
-        private let lock = NSRecursiveLock()
+        private let timeObserver: RecursiveLock<Any?> = .init(initialState: nil)
 
         init(subscriber: S, player: AVPlayer, times: [CMTime], queue: DispatchQueue) {
-            self.subscriber = subscriber
+            self.subscriber = .init(initialState: subscriber)
             self.player = player
-            self.times = times
+            self.times = times.map { NSValue(time: $0) }
             self.queue = queue
         }
 
         func request(_ demand: Subscribers.Demand) {
-            lock.withLock {
+            timeObserver.withLock { timeObserver in
                 if timeObserver == nil {
-                    let timeValues = times.map { NSValue(time: $0) }
-                    timeObserver = player.addBoundaryTimeObserver(forTimes: timeValues, queue: queue) { [weak self] in
+                    timeObserver = player.addBoundaryTimeObserver(forTimes: times, queue: queue) { [weak self] in
                         self?.send()
                     }
                 }
-                process(buffer.request(demand))
             }
+            process(buffer.request(demand))
         }
 
         private func send() {
-            lock.withLock {
-                process(buffer.append(()))
-            }
+            process(buffer.append(()))
         }
 
         func cancel() {
-            lock.withLock {
+            timeObserver.withLock { timeObserver in
                 if let timeObserver {
                     player.removeTimeObserver(timeObserver)
-                    self.timeObserver = nil
                 }
+                timeObserver = nil
+            }
+            subscriber.withLock { subscriber in
                 subscriber = nil
             }
         }
 
         private func process(_ values: [Void]) {
-            guard let subscriber = lock.withLock({ subscriber }) else { return }
+            guard let subscriber = subscriber.locked() else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)
                 request(demand)
