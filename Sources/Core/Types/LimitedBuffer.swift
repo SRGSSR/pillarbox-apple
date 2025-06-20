@@ -24,7 +24,9 @@ final class LimitedBuffer<T> {
         guard size > 0 else { return }
         _values.withLock { values in
             values.append(t)
-            values = values.suffix(size)
+            if values.count > size {
+                values.removeFirst(values.count - size)
+            }
         }
     }
 }
