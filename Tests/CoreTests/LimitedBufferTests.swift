@@ -31,7 +31,7 @@ final class LimitedBufferTests: XCTestCase {
 
     func testThreadSafety() {
         let buffer = LimitedBuffer<Int>(size: 100)
-        for i in 0..<1000 {
+        for i in 0..<10000 {
             DispatchQueue.global().async {
                 buffer.append(i)
             }
