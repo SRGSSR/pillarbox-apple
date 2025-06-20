@@ -52,8 +52,8 @@ public final class DemandBuffer<T> {
 
 private extension DemandBuffer {
     struct State {
-        var values: Deque<T>
-        var requested: Subscribers.Demand
+        private(set) var values: Deque<T>
+        private(set) var requested: Subscribers.Demand
 
         init(values: [T]) {
             self.values = .init(values)
