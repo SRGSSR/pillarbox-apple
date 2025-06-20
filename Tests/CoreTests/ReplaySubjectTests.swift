@@ -71,7 +71,7 @@ final class ReplaySubjectTests: XCTestCase {
 
         _ = subject.sink { _ in }
 
-        expect(subject.subscriptions).to(beEmpty())
+        expect(subject.isEmpty).to(beTrue())
     }
 
     func testNewValuesWithMultipleSubscribers() {
