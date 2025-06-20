@@ -9,11 +9,10 @@ import os
 /// A thread-safe buffer able to hold a maximum number of values.
 final class LimitedBuffer<T> {
     private let size: Int
-
-    private let state = OSAllocatedUnfairLock(initialState: [T]())
+    private let _values = OSAllocatedUnfairLock(initialState: [T]())
 
     var values: [T] {
-        state.withLock { $0 }
+        _values.withLock(\.self)
     }
 
     init(size: Int) {
@@ -23,7 +22,7 @@ final class LimitedBuffer<T> {
 
     func append(_ t: T) {
         guard size > 0 else { return }
-        state.withLock { values in
+        _values.withLock { values in
             values.append(t)
             values = values.suffix(size)
         }

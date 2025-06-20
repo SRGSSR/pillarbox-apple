@@ -50,8 +50,8 @@ public final class DemandBuffer<T> {
     }
 }
 
-extension DemandBuffer {
-    private struct State {
+private extension DemandBuffer {
+    struct State {
         var values: Deque<T>
         var requested: Subscribers.Demand
 
