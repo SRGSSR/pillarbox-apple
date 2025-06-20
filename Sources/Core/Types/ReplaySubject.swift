@@ -59,15 +59,15 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     public func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
         let values = lock.withLock { buffer.values }
         let subscription = ReplaySubscription(subscriber: subscriber, values: values)
-        lock.withLock {
-            subscription.onCancel = { [weak self] in
-                guard let self else { return }
-                subscriptions.removeAll { $0 === subscription }
+        subscription.onCancel = { [weak self] in
+            guard let self else { return }
+            lock.withLock {
+                self.subscriptions.removeAll { $0 === subscription }
             }
-            values.forEach { value in
-                subscription.append(value)
-                subscription.send()
-            }
+        }
+        values.forEach { value in
+            subscription.append(value)
+            subscription.send()
         }
         subscriber.receive(subscription: subscription)
         if let completion = lock.withLock({ completion }) {
