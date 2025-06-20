@@ -14,23 +14,32 @@ import os
 /// The buffer can be used when implementing a subscription so that items can be kept if needed while waiting for a
 /// subscriber demand.
 public final class DemandBuffer<T> {
-    private var values = Deque<T>()
-    private var requested: Subscribers.Demand = .none
+    private var _values = Deque<T>()
+    private var _requested: Subscribers.Demand = .none
+
     private let lock = OSAllocatedUnfairLock()
+
+    var values: Deque<T> {
+        lock.withLock { _values }
+    }
+
+    var requested: Subscribers.Demand {
+        lock.withLock { _requested }
+    }
 
     /// Creates a buffer initially containing the provided values.
     public init(_ values: [T]) {
-        self.values = .init(values)
+        _values = .init(values)
     }
 
     /// Appends a value to the buffer, returning values that should be returned to the subscriber as a result.
     public func append(_ value: T) -> [T] {
         lock.withLock {
-            switch requested {
+            switch _requested {
             case .unlimited:
                 return [value]
             default:
-                values.append(value)
+                _values.append(value)
                 return flush()
             }
         }
@@ -39,16 +48,16 @@ public final class DemandBuffer<T> {
     /// Updates the demand, returning values that should be returned to the subscriber as a result.
     public func request(_ demand: Subscribers.Demand) -> [T] {
         lock.withLock {
-            requested += demand
+            _requested += demand
             return flush()
         }
     }
 
     private func flush() -> [T] {
         var values = [T]()
-        while requested > 0, let value = self.values.popFirst() {
+        while _requested > 0, let value = _values.popFirst() {
             values.append(value)
-            requested -= 1
+            _requested -= 1
         }
         return values
     }
