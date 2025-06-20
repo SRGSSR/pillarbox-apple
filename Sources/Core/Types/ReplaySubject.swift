@@ -29,7 +29,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     public func send(_ value: Output) {
         guard lock.withLock({ self.completion }) == nil else { return }
         buffer.append(value)
-        
+
         let subscriptions = lock.withLock { self.subscriptions }
         subscriptions.forEach { subscription in
             subscription.append(value)
