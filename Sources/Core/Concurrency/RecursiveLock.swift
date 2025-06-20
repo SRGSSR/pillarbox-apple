@@ -6,6 +6,8 @@
 
 import Foundation
 
+// TODO: Use L: NSLocking, probably do not need recursive lock in periodic/boundary publishers
+
 /// A wrapper around a recursive lock that locks around accesses to a stored object.
 public class RecursiveLock<State>: @unchecked Sendable {
     private var state: State
