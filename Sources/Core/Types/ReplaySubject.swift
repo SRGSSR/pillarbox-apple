@@ -27,15 +27,15 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
     // swiftlint:disable:next missing_docs
     public func send(_ value: Output) {
-        lock.withLock {
-            guard completion == nil else { return }
-            buffer.append(value)
-            subscriptions.forEach { subscription in
-                subscription.append(value)
-            }
-            subscriptions.forEach { subscription in
-                subscription.send()
-            }
+        guard lock.withLock({ self.completion }) == nil else { return }
+        buffer.append(value)
+        
+        let subscriptions = lock.withLock { self.subscriptions }
+        subscriptions.forEach { subscription in
+            subscription.append(value)
+        }
+        subscriptions.forEach { subscription in
+            subscription.send()
         }
     }
 
@@ -44,9 +44,11 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
         lock.withLock {
             guard self.completion == nil else { return }
             self.completion = completion
-            subscriptions.forEach { subscription in
-                subscription.send(completion: completion)
-            }
+        }
+
+        let subscriptions = lock.withLock { self.subscriptions }
+        subscriptions.forEach { subscription in
+            subscription.send(completion: completion)
         }
     }
 
