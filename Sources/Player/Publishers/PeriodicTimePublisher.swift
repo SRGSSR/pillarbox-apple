@@ -75,9 +75,7 @@ private extension _PeriodicTimePublisher {
                 }
                 timeObserver = nil
             }
-            subscriber.withLock { subscriber in
-                subscriber = nil
-            }
+            subscriber.setLocked(nil)
         }
 
         private func process(_ values: [CMTime]) {

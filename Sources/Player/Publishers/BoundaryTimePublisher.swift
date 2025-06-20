@@ -74,9 +74,7 @@ private extension _BoundaryTimePublisher {
                 }
                 timeObserver = nil
             }
-            subscriber.withLock { subscriber in
-                subscriber = nil
-            }
+            subscriber.setLocked(nil)
         }
 
         private func process(_ values: [Void]) {
