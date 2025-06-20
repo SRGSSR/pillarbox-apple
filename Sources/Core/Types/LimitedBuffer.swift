@@ -6,14 +6,10 @@
 
 import os
 
-/// A thread-safe buffer able to hold a maximum number of values.
-final class LimitedBuffer<T> {
+private final class UnsafeLimitedBuffer<T> {
     private let size: Int
-    private let state = OSAllocatedUnfairLock(initialState: State(values: []))
 
-    var values: [T] {
-        state.withLock(\.values)
-    }
+    private(set) var values = [T]()
 
     init(size: Int) {
         assert(size >= 0)
@@ -22,21 +18,28 @@ final class LimitedBuffer<T> {
 
     func append(_ t: T) {
         guard size > 0 else { return }
-        state.withLock { state in
-            state.append(t, withLimit: size)
+        values.append(t)
+        if values.count > size {
+            values.removeFirst(values.count - size)
         }
     }
 }
 
-private extension LimitedBuffer {
-    struct State {
-        private(set) var values = [T]()
+/// A thread-safe buffer able to hold a maximum number of values.
+final class LimitedBuffer<T> {
+    private let buffer: OSAllocatedUnfairLock<UnsafeLimitedBuffer<T>>
 
-        mutating func append(_ t: T, withLimit limit: Int) {
-            values.append(t)
-            if values.count > limit {
-                values.removeFirst(values.count - limit)
-            }
+    var values: [T] {
+        buffer.withLock(\.values)
+    }
+
+    init(size: Int) {
+        buffer = .init(initialState: .init(size: size))
+    }
+
+    func append(_ t: T) {
+        buffer.withLock { buffer in
+            buffer.append(t)
         }
     }
 }
