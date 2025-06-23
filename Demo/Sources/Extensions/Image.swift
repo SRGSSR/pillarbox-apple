@@ -9,8 +9,9 @@ import SwiftUI
 
 extension Image {
     static func goBackward(withInterval interval: TimeInterval) -> Self {
-        if let uiImage = UIImage(systemName: "gobackward.\(Int(interval))") {
-            return Image(uiImage: uiImage.withRenderingMode(.alwaysTemplate))
+        let imageName = "gobackward.\(Int(interval))"
+        if UIImage(systemName: imageName) != nil {
+            return Image(systemName: imageName)
         }
         else {
             return Image(systemName: "gobackward.minus")
@@ -18,8 +19,9 @@ extension Image {
     }
 
     static func goForward(withInterval interval: TimeInterval) -> Self {
-        if let uiImage = UIImage(systemName: "goforward.\(Int(interval))") {
-            return Image(uiImage: uiImage.withRenderingMode(.alwaysTemplate))
+        let imageName = "goforward.\(Int(interval))"
+        if UIImage(systemName: imageName) != nil {
+            return Image(systemName: imageName)
         }
         else {
             return Image(systemName: "goforward.plus")

@@ -325,6 +325,7 @@ private struct ControlsView: View {
             PlaybackButton(player: player)
             SkipForwardButton(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
         }
+        .preventsTouchPropagation()
         ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
         .bind(progressTracker, to: player)
