@@ -20,39 +20,36 @@ public final class CommandersActTracker: PlayerItemTracker {
     private var lastEvent: Event = .none
 
     private let stopwatch = Stopwatch()
-    private let heartbeat = CommandersActHeartbeat()
-    private let lock = NSRecursiveLock()
+    private let heartbeat: CommandersActHeartbeat
 
     // swiftlint:disable:next missing_docs
-    public init(configuration: Void) {}
+    public init(configuration: Void, queue: DispatchQueue) {
+        heartbeat = .init(queue: queue)
+    }
 
     // swiftlint:disable:next missing_docs
     public func enable(for player: AVPlayer) {}
 
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: [String: String]) {
-        lock.withLock {
-            self.metadata = metadata
-        }
+        self.metadata = metadata
     }
 
     // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: TrackerProperties) {
-        lock.withLock {
-            if properties.isSeeking {
-                notify(.seek, properties: properties)
-            }
-            else {
-                switch properties.playbackState {
-                case .playing:
-                    notify(.play, properties: properties)
-                case .paused:
-                    notify(.pause, properties: properties)
-                case .ended:
-                    notify(.eof, properties: properties)
-                default:
-                    break
-                }
+        if properties.isSeeking {
+            notify(.seek, properties: properties)
+        }
+        else {
+            switch properties.playbackState {
+            case .playing:
+                notify(.play, properties: properties)
+            case .paused:
+                notify(.pause, properties: properties)
+            case .ended:
+                notify(.eof, properties: properties)
+            default:
+                break
             }
         }
     }
@@ -62,10 +59,8 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
-        lock.withLock {
-            notify(.stop, properties: properties)
-            reset()
-        }
+        notify(.stop, properties: properties)
+        reset()
     }
 }
 
@@ -87,7 +82,7 @@ private extension CommandersActTracker {
 
     func sendEventIfNeeded(event: Event, properties: TrackerProperties) {
         guard event != lastEvent else { return }
-
+        
         switch (lastEvent, event) {
         case (.pause, .seek), (.pause, .eof), (.seek, .pause), (.seek, .eof), (.stop, _):
             break

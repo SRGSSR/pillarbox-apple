@@ -16,7 +16,7 @@ final class DemoTracker: PlayerItemTracker {
     private static let logger = Logger(category: "DemoTracker")
     private let id = UUID()
 
-    init(configuration: Void) {
+    init(configuration: Void, queue: DispatchQueue) {
         Self.logger.debug("Init demo tracker \(self.id)")
     }
 
