@@ -82,7 +82,7 @@ private extension CommandersActTracker {
 
     func sendEventIfNeeded(event: Event, properties: TrackerProperties) {
         guard event != lastEvent else { return }
-        
+
         switch (lastEvent, event) {
         case (.pause, .seek), (.pause, .eof), (.seek, .pause), (.seek, .eof), (.stop, _):
             break

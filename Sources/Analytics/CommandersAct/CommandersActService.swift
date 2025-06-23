@@ -8,28 +8,6 @@ import os
 import PillarboxCore
 import TCServerSide
 
-final class CommandersActService {
-    private let service: OSAllocatedUnfairLock<UnsafeCommandersActService> = .init(initialState: .init())
-
-    func start(with configuration: Analytics.Configuration) {
-        service.withLock { service in
-            service.start(with: configuration)
-        }
-    }
-
-    func trackPageView(_ pageView: CommandersActPageView) {
-        service.withLock { service in
-            service.trackPageView(pageView)
-        }
-    }
-
-    func sendEvent(_ event: CommandersActEvent) {
-        service.withLock { service in
-            service.sendEvent(event)
-        }
-    }
-}
-
 private final class UnsafeCommandersActService {
     private var serverSide: ServerSide?
     private var vendor: Vendor?
@@ -74,6 +52,28 @@ private final class UnsafeCommandersActService {
         }
         AnalyticsListener.capture(customEvent)
         serverSide.execute(customEvent)
+    }
+}
+
+final class CommandersActService {
+    private let service: OSAllocatedUnfairLock<UnsafeCommandersActService> = .init(initialState: .init())
+
+    func start(with configuration: Analytics.Configuration) {
+        service.withLock { service in
+            service.start(with: configuration)
+        }
+    }
+
+    func trackPageView(_ pageView: CommandersActPageView) {
+        service.withLock { service in
+            service.trackPageView(pageView)
+        }
+    }
+
+    func sendEvent(_ event: CommandersActEvent) {
+        service.withLock { service in
+            service.sendEvent(event)
+        }
     }
 }
 
