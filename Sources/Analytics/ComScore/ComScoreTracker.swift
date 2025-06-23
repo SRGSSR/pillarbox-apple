@@ -20,7 +20,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     private var previousRate: Float = -1
 
     // swiftlint:disable:next missing_docs
-    public init(configuration: Void) {}
+    public init(configuration: Void, queue: DispatchQueue) {}
 
     // swiftlint:disable:next missing_docs
     public func enable(for player: AVPlayer) {
