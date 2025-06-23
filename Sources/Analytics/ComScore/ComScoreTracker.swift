@@ -51,7 +51,7 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyBufferStart()
         case (false, false):
             streamingAnalytics.notifyBufferStop()
-            if previousRate != properties.rate {
+            if previousRate != properties.rate, properties.playbackState == .playing {
                 streamingAnalytics.notifyChangePlaybackRate(properties.rate)
                 previousRate = properties.rate
             }
