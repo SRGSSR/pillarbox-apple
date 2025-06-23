@@ -32,7 +32,7 @@ public final class MetricsTracker: PlayerItemTracker {
     }
 
     // swiftlint:disable:next missing_docs
-    public init(configuration: Configuration) {
+    public init(configuration: Configuration, queue: DispatchQueue) {
         self.configuration = configuration
     }
 
