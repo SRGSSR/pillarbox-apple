@@ -14,6 +14,7 @@ public struct TrackerAdapter<M> {
 
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
+    private let queue = DispatchQueue(label: "ch.srgssr.tracker-adapter")
 
     init<T>(
         trackerType: T.Type,
@@ -21,7 +22,7 @@ public struct TrackerAdapter<M> {
         behavior: TrackingBehavior,
         mapper: ((M) -> T.Metadata)?
     ) where T: PlayerItemTracker {
-        let tracker = trackerType.init(configuration: configuration)
+        let tracker = trackerType.init(configuration: configuration, queue: queue)
         update = { metadata in
             if let mapper {
                 tracker.updateMetadata(to: mapper(metadata))
@@ -43,18 +44,26 @@ extension TrackerAdapter: PlayerItemTracking {
     }
 
     func enable(for player: AVPlayer) {
-        tracker.enable(for: player)
+        queue.async {
+            tracker.enable(for: player)
+        }
     }
 
     func updateProperties(to properties: TrackerProperties) {
-        tracker.updateProperties(to: properties)
+        queue.async {
+            tracker.updateProperties(to: properties)
+        }
     }
 
     func updateMetricEvents(to events: [MetricEvent]) {
-        tracker.updateMetricEvents(to: events)
+        queue.async {
+            tracker.updateMetricEvents(to: events)
+        }
     }
 
     func disable(with properties: TrackerProperties) {
-        tracker.disable(with: properties)
+        queue.async {
+            tracker.disable(with: properties)
+        }
     }
 }
