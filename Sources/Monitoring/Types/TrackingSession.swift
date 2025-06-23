@@ -5,22 +5,53 @@
 //
 
 import Foundation
+import os
 
-struct TrackingSession {
+private final class UnsafeTrackingSession {
     private(set) var id: String?
     private(set) var isStarted = false
 
-    mutating func start() {
+    func start() {
         id = UUID().uuidString.lowercased()
         isStarted = true
     }
 
-    mutating func stop() {
+    func stop() {
         isStarted = false
     }
 
-    mutating func reset() {
+    func reset() {
         id = nil
         isStarted = false
+    }
+}
+
+final class TrackingSession {
+    private let session = OSAllocatedUnfairLock(initialState: UnsafeTrackingSession())
+
+    var id: String? {
+        session.withLock(\.id)
+    }
+
+    var isStarted: Bool {
+        session.withLock(\.isStarted)
+    }
+
+    func start() {
+        session.withLock { session in
+            session.start()
+        }
+    }
+
+    func stop() {
+        session.withLock { session in
+            session.stop()
+        }
+    }
+
+    func reset() {
+        session.withLock { session in
+            session.reset()
+        }
     }
 }
