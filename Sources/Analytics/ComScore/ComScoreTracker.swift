@@ -15,50 +15,47 @@ import PillarboxPlayer
 ///
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class ComScoreTracker: PlayerItemTracker {
-    private let lock = NSRecursiveLock()
-
-    private lazy var streamingAnalytics = ComScoreStreamingAnalytics()
+    private lazy var streamingAnalytics = SCORStreamingAnalytics()
     private var metadata: [String: String] = [:]
+    private var previousRate: Float = -1
 
     // swiftlint:disable:next missing_docs
     public init(configuration: Void) {}
 
     // swiftlint:disable:next missing_docs
     public func enable(for player: AVPlayer) {
-        lock.withLock {
-            createPlaybackSession()
-        }
+        createPlaybackSession()
     }
 
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: [String: String]) {
-        lock.withLock {
-            self.metadata = metadata
-            setMetadata(metadata)
-        }
+        self.metadata = metadata
+        setMetadata(metadata)
     }
 
     // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: TrackerProperties) {
-        lock.withLock {
-            guard !metadata.isEmpty else { return }
+        guard !metadata.isEmpty else { return }
 
-            AnalyticsListener.capture(streamingAnalytics.configuration())
-            streamingAnalytics.setPlaybackPosition(from: properties)
+        AnalyticsListener.capture(streamingAnalytics.configuration())
+        streamingAnalytics.setPlaybackPosition(from: properties)
 
-            switch (properties.isSeeking, properties.isBuffering) {
-            case (true, true):
-                streamingAnalytics.notifySeekStart()
-                streamingAnalytics.notifyBufferStart()
-            case (true, false):
-                streamingAnalytics.notifySeekStart()
-                streamingAnalytics.notifyBufferStop()
-            case (false, true):
-                streamingAnalytics.notifyBufferStart()
-            case (false, false):
-                streamingAnalytics.notifyBufferStop()
-                streamingAnalytics.notifyEvent(for: properties.playbackState, at: properties.rate)
+        switch (properties.isSeeking, properties.isBuffering) {
+        case (true, true):
+            streamingAnalytics.notifySeekStart()
+            streamingAnalytics.notifyBufferStart()
+        case (true, false):
+            streamingAnalytics.notifySeekStart()
+            streamingAnalytics.notifyBufferStop()
+        case (false, true):
+            streamingAnalytics.notifyBufferStart()
+        case (false, false):
+            streamingAnalytics.notifyBufferStop()
+            if previousRate != properties.rate {
+                streamingAnalytics.notifyChangePlaybackRate(properties.rate)
+                previousRate = properties.rate
             }
+            streamingAnalytics.notifyEvent(for: properties.playbackState)
         }
     }
 
@@ -67,9 +64,8 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
-        lock.withLock {
-            streamingAnalytics = ComScoreStreamingAnalytics()
-        }
+        streamingAnalytics = SCORStreamingAnalytics()
+        previousRate = -1
     }
 }
 
