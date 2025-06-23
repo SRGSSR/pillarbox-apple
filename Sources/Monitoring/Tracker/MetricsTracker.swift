@@ -12,6 +12,9 @@ import UIKit
 
 /// A tracker gathering metrics for Pillarbox monitoring platform.
 public final class MetricsTracker: PlayerItemTracker {
+    private let configuration: Configuration
+    private let queue: DispatchQueue
+
     private var metadata: Metadata?
     private var properties: TrackerProperties?
 
@@ -20,20 +23,17 @@ public final class MetricsTracker: PlayerItemTracker {
     private var stallDuration: TimeInterval = 0
     private var cancellables = Set<AnyCancellable>()
 
-    private let configuration: Configuration
     private let stopwatch = Stopwatch()
-    private let lock = NSRecursiveLock()
 
     // swiftlint:disable:next missing_docs
     public var sessionIdentifier: String? {
-        lock.withLock {
-            session.id
-        }
+        session.id
     }
 
     // swiftlint:disable:next missing_docs
     public init(configuration: Configuration, queue: DispatchQueue) {
         self.configuration = configuration
+        self.queue = queue
     }
 
     // swiftlint:disable:next missing_docs
@@ -41,58 +41,48 @@ public final class MetricsTracker: PlayerItemTracker {
 
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: Metadata) {
-        lock.withLock {
-            self.metadata = metadata
-        }
+        self.metadata = metadata
     }
 
     // swiftlint:disable:next missing_docs
     public func updateProperties(to properties: TrackerProperties) {
-        lock.withLock {
-            self.properties = properties
-            updateStopwatch(with: properties)
-        }
+        self.properties = properties
+        updateStopwatch(with: properties)
     }
 
     // swiftlint:disable:next cyclomatic_complexity missing_docs
     public func updateMetricEvents(to events: [MetricEvent]) {
-        lock.withLock {
-            switch events.last?.kind {
-            case .asset:
-                reset(with: properties)
+        switch events.last?.kind {
+        case .asset:
+            reset(with: properties)
+            session.start()
+            sendEvent(name: .start, data: startData(from: events))
+            startHeartbeat()
+        case .stall:
+            stallDate = .now
+        case .resumeAfterStall:
+            guard let stallDate else { break }
+            stallDuration += Date.now.timeIntervalSince(stallDate)
+        case let .failure(error):
+            if !session.isStarted {
                 session.start()
                 sendEvent(name: .start, data: startData(from: events))
-                startHeartbeat()
-            case .stall:
-                stallDate = .now
-            case .resumeAfterStall:
-                guard let stallDate else { break }
-                stallDuration += Date.now.timeIntervalSince(stallDate)
-            case let .failure(error):
-                if !session.isStarted {
-                    session.start()
-                    sendEvent(name: .start, data: startData(from: events))
-                }
-                sendEvent(name: .error, data: errorData(from: error))
-                session.stop()
-            default:
-                break
             }
+            sendEvent(name: .error, data: errorData(from: error))
+            session.stop()
+        default:
+            break
         }
     }
 
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
-        lock.withLock {
-            reset(with: properties)
-        }
+        reset(with: properties)
     }
 
     private func sendHeartbeat() {
-        lock.withLock {
-            guard let properties else { return }
-            sendEvent(name: .heartbeat, data: statusData(from: properties.current()))
-        }
+        guard let properties else { return }
+        sendEvent(name: .heartbeat, data: statusData(from: properties.current()))
     }
 }
 
@@ -262,6 +252,7 @@ private extension MetricsTracker {
             .autoconnect()
             .map { _ in }
             .prepend(())
+            .receive(on: queue)
             .sink { [weak self] _ in
                 self?.sendHeartbeat()
             }

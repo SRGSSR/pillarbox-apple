@@ -56,7 +56,7 @@ private final class UnsafeCommandersActService {
 }
 
 final class CommandersActService {
-    private let service: OSAllocatedUnfairLock<UnsafeCommandersActService> = .init(initialState: .init())
+    private let service = OSAllocatedUnfairLock(initialState: UnsafeCommandersActService())
 
     func start(with configuration: Analytics.Configuration) {
         service.withLock { service in
