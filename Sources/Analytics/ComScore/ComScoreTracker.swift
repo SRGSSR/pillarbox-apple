@@ -17,7 +17,7 @@ import PillarboxPlayer
 public final class ComScoreTracker: PlayerItemTracker {
     private lazy var streamingAnalytics = SCORStreamingAnalytics()
     private var metadata: [String: String] = [:]
-    private var previousRate: Float = -1
+    private var rate: Float = -1
 
     // swiftlint:disable:next missing_docs
     public init(configuration: Void, queue: DispatchQueue) {}
@@ -51,11 +51,7 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyBufferStart()
         case (false, false):
             streamingAnalytics.notifyBufferStop()
-            if previousRate != properties.rate, properties.playbackState == .playing {
-                streamingAnalytics.notifyChangePlaybackRate(properties.rate)
-                previousRate = properties.rate
-            }
-            streamingAnalytics.notifyEvent(for: properties.playbackState)
+            streamingAnalytics.notifyEvent(with: properties, rate: &rate)
         }
     }
 
@@ -65,7 +61,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     // swiftlint:disable:next missing_docs
     public func disable(with properties: TrackerProperties) {
         streamingAnalytics = SCORStreamingAnalytics()
-        previousRate = -1
+        rate = -1
     }
 }
 
