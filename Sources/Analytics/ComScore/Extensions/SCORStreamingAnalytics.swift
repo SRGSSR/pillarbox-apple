@@ -21,9 +21,10 @@ extension SCORStreamingAnalytics {
         properties.endOffset().timeInterval().toMilliseconds
     }
 
-    func notifyEvent(for playbackState: PlaybackState) {
-        switch playbackState {
+    func notifyEvent(with properties: TrackerProperties, rate: inout Float) {
+        switch properties.playbackState {
         case .playing:
+            notifyChangePlaybackRate(to: properties.rate, from: &rate)
             notifyPlay()
         case .paused:
             notifyPause()
@@ -42,5 +43,11 @@ extension SCORStreamingAnalytics {
         else {
             start(fromPosition: Self.position(from: properties))
         }
+    }
+
+    private func notifyChangePlaybackRate(to rate: Float, from previousRate: inout Float) {
+        guard previousRate != rate else { return }
+        notifyChangePlaybackRate(rate)
+        previousRate = rate
     }
 }
