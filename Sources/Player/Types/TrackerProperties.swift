@@ -7,6 +7,9 @@
 import AVFoundation
 
 /// A type describing properties accessible to tracker implementations.
+///
+/// Properties reflect time, date and metrics at the time of their capture. Updated values can be obtained by calling
+/// `current()`.
 public struct TrackerProperties {
     private let playerProperties: PlayerProperties
 
@@ -28,6 +31,16 @@ public struct TrackerProperties {
         self.time = time
         self.date = date
         self.metrics = metrics
+    }
+
+    /// Returns properties updated to match the current state.
+    public func current() -> Self {
+        .init(
+            playerProperties: playerProperties,
+            time: playerProperties.time(),
+            date: playerProperties.date(),
+            metrics: playerProperties.metrics()
+        )
     }
 }
 
