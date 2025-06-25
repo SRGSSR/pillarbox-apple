@@ -91,7 +91,7 @@ public final class MetricsTracker: PlayerItemTracker {
     private func sendHeartbeat() {
         withLock(lock) {
             guard let properties else { return }
-            sendEvent(name: .heartbeat, data: statusData(from: properties))
+            sendEvent(name: .heartbeat, data: statusData(from: properties.current()))
         }
     }
 }

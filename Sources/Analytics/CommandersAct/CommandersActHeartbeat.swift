@@ -45,7 +45,7 @@ final class CommandersActHeartbeat {
         guard let properties else { return }
         Analytics.shared.sendEvent(commandersAct: .init(
             name: event.rawValue,
-            labels: labels(properties)
+            labels: labels(properties.current())
         ))
     }
 }
