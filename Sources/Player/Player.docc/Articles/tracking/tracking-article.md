@@ -26,7 +26,7 @@ The ``PlayerItemTracker`` protocol uses two associated types to define the data 
 
 After defining the associated types, implement the tracker lifecycle methods to manage its behavior:
 
-1. ``PlayerItemTracker/init(configuration:queue:)`` is called when the tracker and its item are created. This initializer receives the configuration instance defined earlier.
+1. ``PlayerItemTracker/init(configuration:queue:)`` is called when a tracker and its associated item are created. This initializer receives the previously defined configuration instance, along with a background serial queue on which the tracker’s methods will be executed.
 2. ``PlayerItemTracker/enable(for:)`` is called when the associated item becomes active. Use this method to integrate with the player, possibly leveraging the provided `AVPlayer` instance for third-party SDK integration if needed.
 3. ``PlayerItemTracker/updateMetadata(to:)`` is called when metadata is delivered. The method receives an instance of the tracker-specific metadata type defined earlier.
 4. ``PlayerItemTracker/updateProperties(to:)`` is called to reflect changes to player properties. As properties can update frequently, ensure this implementation is highly efficient.
