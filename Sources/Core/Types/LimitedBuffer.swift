@@ -6,7 +6,7 @@
 
 import os
 
-private final class UnsafeLimitedBuffer<T> {
+private final class UnprotectedLimitedBuffer<T> {
     private let size: Int
 
     private(set) var values = [T]()
@@ -27,7 +27,7 @@ private final class UnsafeLimitedBuffer<T> {
 
 /// A thread-safe buffer able to hold a maximum number of values.
 final class LimitedBuffer<T> {
-    private let buffer: OSAllocatedUnfairLock<UnsafeLimitedBuffer<T>>
+    private let buffer: OSAllocatedUnfairLock<UnprotectedLimitedBuffer<T>>
 
     var values: [T] {
         buffer.withLock(\.values)
