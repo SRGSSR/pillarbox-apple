@@ -8,7 +8,7 @@ import os
 import PillarboxCore
 import TCServerSide
 
-private final class UnsafeCommandersActService {
+private final class UnprotectedCommandersActService {
     private var serverSide: ServerSide?
     private var vendor: Vendor?
 
@@ -56,7 +56,7 @@ private final class UnsafeCommandersActService {
 }
 
 final class CommandersActService {
-    private let service = OSAllocatedUnfairLock(initialState: UnsafeCommandersActService())
+    private let service = OSAllocatedUnfairLock(initialState: UnprotectedCommandersActService())
 
     func start(with configuration: Analytics.Configuration) {
         service.withLock { service in
@@ -77,7 +77,7 @@ final class CommandersActService {
     }
 }
 
-private extension UnsafeCommandersActService {
+private extension UnprotectedCommandersActService {
     static let device = {
         guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop" }
         switch UIDevice.current.userInterfaceIdiom {
