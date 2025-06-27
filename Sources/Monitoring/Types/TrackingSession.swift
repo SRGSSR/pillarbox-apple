@@ -7,7 +7,7 @@
 import Foundation
 import os
 
-private final class UnsafeTrackingSession {
+private final class UncheckedTrackingSession {
     private(set) var id: String?
     private(set) var isStarted = false
 
@@ -27,7 +27,7 @@ private final class UnsafeTrackingSession {
 }
 
 final class TrackingSession {
-    private let session = OSAllocatedUnfairLock(initialState: UnsafeTrackingSession())
+    private let session = OSAllocatedUnfairLock(initialState: UncheckedTrackingSession())
 
     var id: String? {
         session.withLock(\.id)

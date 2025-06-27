@@ -9,7 +9,7 @@ import DequeModule
 import Foundation
 import os
 
-private final class UnsafeDemandBuffer<T> {
+private final class UnprotectedDemandBuffer<T> {
     private(set) var values: Deque<T>
     private(set) var requested: Subscribers.Demand
 
@@ -48,7 +48,7 @@ private final class UnsafeDemandBuffer<T> {
 /// The buffer can be used when implementing a subscription so that items can be kept if needed while waiting for a
 /// subscriber demand.
 public final class DemandBuffer<T> {
-    private let buffer: OSAllocatedUnfairLock<UnsafeDemandBuffer<T>>
+    private let buffer: OSAllocatedUnfairLock<UnprotectedDemandBuffer<T>>
 
     var values: Deque<T> {
         buffer.withLock(\.values)
