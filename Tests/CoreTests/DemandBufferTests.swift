@@ -71,8 +71,11 @@ final class DemandBufferTests: XCTestCase {
     }
 
     func testThreadSafety() {
-        let buffer = DemandBuffer([0...1000])
-        for _ in 0..<100 {
+        let buffer = DemandBuffer([])
+        for i in 0..<1000 {
+            DispatchQueue.global().async {
+                _ = buffer.append(i)
+            }
             DispatchQueue.global().async {
                 _ = buffer.request(.unlimited)
             }

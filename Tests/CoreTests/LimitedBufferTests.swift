@@ -28,4 +28,16 @@ final class LimitedBufferTests: XCTestCase {
         buffer.append(3)
         expect(buffer.values).to(equalDiff([2, 3]))
     }
+
+    func testThreadSafety() {
+        let buffer = LimitedBuffer<Int>(size: 100)
+        for i in 0..<10000 {
+            DispatchQueue.global().async {
+                buffer.append(i)
+            }
+            DispatchQueue.global().async {
+                _ = buffer.values
+            }
+        }
+    }
 }

@@ -36,27 +36,29 @@ extension Publishers {
     }
 }
 
-extension _PeriodicTimePublisher {
-    private final class PeriodicTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
-        private var subscriber: S?
+private extension _PeriodicTimePublisher {
+    final class PeriodicTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
+        private let subscriber: RecursiveLock<S?>
         private let player: AVPlayer
         private let interval: CMTime
         private let queue: DispatchQueue
 
         private let buffer = DemandBuffer<CMTime>()
-        private var timeObserver: Any?
+        private let timeObserver: RecursiveLock<Any?> = .init(initialState: nil)
 
         init(subscriber: S, player: AVPlayer, interval: CMTime, queue: DispatchQueue) {
-            self.subscriber = subscriber
+            self.subscriber = .init(initialState: subscriber)
             self.player = player
             self.interval = interval
             self.queue = queue
         }
 
         func request(_ demand: Subscribers.Demand) {
-            if timeObserver == nil {
-                timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
-                    self?.send(time)
+            timeObserver.withLock { timeObserver in
+                if timeObserver == nil {
+                    timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
+                        self?.send(time)
+                    }
                 }
             }
             process(buffer.request(demand))
@@ -67,15 +69,17 @@ extension _PeriodicTimePublisher {
         }
 
         func cancel() {
-            if let timeObserver {
-                player.removeTimeObserver(timeObserver)
-                self.timeObserver = nil
+            timeObserver.withLock { timeObserver in
+                if let timeObserver {
+                    player.removeTimeObserver(timeObserver)
+                }
+                timeObserver = nil
             }
-            subscriber = nil
+            subscriber.setLocked(nil)
         }
 
         private func process(_ values: [CMTime]) {
-            guard let subscriber else { return }
+            guard let subscriber = subscriber.locked() else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)
                 request(demand)
