@@ -35,7 +35,7 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         let (certificateData, _) = try await session.httpData(from: certificateUrl)
         let contentKeyRequestData = try await keyRequest.makeStreamingContentKeyRequestData(
             forApp: certificateData,
-            contentIdentifier: Data("content_id".utf8)
+            contentIdentifier: contentIdentifier(from: keyRequest)
         )
         guard let contentKeyContextRequest = Self.contentKeyContextRequest(
             from: keyRequest.identifier,
@@ -47,7 +47,15 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         return contentKeyContextData
     }
 
+    func contentKeySession(_ session: AVContentKeySession, didProvideRenewingContentKeyRequest keyRequest: AVContentKeyRequest) {
+        contentKeySession(session, process: keyRequest)
+    }
+
     func contentKeySession(_ session: AVContentKeySession, didProvide keyRequest: AVContentKeyRequest) {
+        contentKeySession(session, process: keyRequest)
+    }
+
+    private func contentKeySession(_ session: AVContentKeySession, process keyRequest: AVContentKeyRequest) {
         Task {
             do {
                 let responseData = try await contentKeyResponseData(for: keyRequest)
@@ -57,5 +65,24 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
                 keyRequest.processContentKeyResponseErrorReliably(error)
             }
         }
+    }
+
+    func contentKeySession(_ session: AVContentKeySession, shouldRetry keyRequest: AVContentKeyRequest, reason retryReason: AVContentKeyRequest.RetryReason) -> Bool {
+        print("--> retry with reason \(retryReason)")
+        return false
+    }
+
+    func contentKeySession(_ session: AVContentKeySession, contentKeyRequest keyRequest: AVContentKeyRequest, didFailWithError err: any Error) {
+        print("--> did fail with \(err)")
+    }
+
+    private func contentIdentifier(from keyRequest: AVContentKeyRequest) -> Data? {
+        guard let identifier = keyRequest.identifier as? String,
+              let components = URLComponents(string: identifier),
+              let contentIdentifier = components.queryItems?.first(where: { $0.name == "contentId" })?.value else {
+            return nil
+        }
+        print("--> content id: \(contentIdentifier)")
+        return Data(contentIdentifier.utf8)
     }
 }
