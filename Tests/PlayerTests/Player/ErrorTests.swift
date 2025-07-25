@@ -46,4 +46,10 @@ final class ErrorTests: TestCase {
         player.removeAllItems()
         expect(player.error).toEventually(beNil())
     }
+
+    func testNotBusyWhenError() {
+        let player = Player(item: .simple(url: Stream.unavailable.url))
+        expect(player.error).toEventuallyNot(beNil())
+        expect(player.properties.isBusy).to(beFalse())
+    }
 }
