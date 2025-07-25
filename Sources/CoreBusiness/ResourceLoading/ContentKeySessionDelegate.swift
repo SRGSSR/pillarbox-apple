@@ -5,9 +5,12 @@
 //
 
 import AVFoundation
+import os
 import PillarboxPlayer
 
 final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
+    private static let logger = Logger(category: "ContentKeySessionDelegate")
+
     private let certificateUrl: URL
     private let session = URLSession(configuration: .default)
 
@@ -48,11 +51,50 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
     }
 
     func contentKeySession(_ session: AVContentKeySession, didProvideRenewingContentKeyRequest keyRequest: AVContentKeyRequest) {
+        Self.logger.info("--> didProvideRenewingContentKeyRequest: \(keyRequest)")
         contentKeySession(session, process: keyRequest)
     }
 
     func contentKeySession(_ session: AVContentKeySession, didProvide keyRequest: AVContentKeyRequest) {
+        Self.logger.info("--> didProvide: \(keyRequest)")
         contentKeySession(session, process: keyRequest)
+    }
+
+    func contentKeySession(_ session: AVContentKeySession, shouldRetry keyRequest: AVContentKeyRequest, reason retryReason: AVContentKeyRequest.RetryReason) -> Bool {
+        switch retryReason {
+        case .timedOut:
+            Self.logger.info("--> shouldRetry and will (timeout) for: \(keyRequest)")
+            return true
+        case .receivedResponseWithExpiredLease:
+            Self.logger.info("--> shouldRetry and will (expired lease) for: \(keyRequest)")
+            return true
+        case .receivedObsoleteContentKey:
+            Self.logger.info("--> shouldRetry and will (obsolete) for: \(keyRequest)")
+            return true
+        default:
+            Self.logger.info("--> shouldRetry but won't (other: \(retryReason.rawValue) for: \(keyRequest)")
+            return false
+        }
+    }
+
+    func contentKeySession(_ session: AVContentKeySession, contentKeyRequest keyRequest: AVContentKeyRequest, didFailWithError err: any Error) {
+        Self.logger.info("--> didFail for: \(keyRequest) with \(err)")
+    }
+
+    func contentKeySession(_ session: AVContentKeySession, contentKeyRequestDidSucceed keyRequest: AVContentKeyRequest) {
+        Self.logger.info("--> didSuceeed for: \(keyRequest)")
+    }
+
+    func contentKeySessionDidGenerateExpiredSessionReport(_ session: AVContentKeySession) {
+        Self.logger.info("--> didGenerateExpiredSessionReport")
+    }
+
+    func contentKeySessionContentProtectionSessionIdentifierDidChange(_ session: AVContentKeySession) {
+        Self.logger.info("--> protectionSessionIdentifierDidChange")
+    }
+
+    func contentKeySession(_ session: AVContentKeySession, externalProtectionStatusDidChangeFor contentKey: AVContentKey) {
+        Self.logger.info("--> externalProtectionStatusDidChangeFor for \(contentKey)")
     }
 
     private func contentKeySession(_ session: AVContentKeySession, process keyRequest: AVContentKeyRequest) {
@@ -61,19 +103,12 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
                 let responseData = try await contentKeyResponseData(for: keyRequest)
                 let response = AVContentKeyResponse(fairPlayStreamingKeyResponseData: responseData)
                 keyRequest.processContentKeyResponse(response)
+                Self.logger.info("--> processContentKeyResponse with \(response)")
             } catch {
+                Self.logger.info("--> processContentKeyResponseError with \(error)")
                 keyRequest.processContentKeyResponseErrorReliably(error)
             }
         }
-    }
-
-    func contentKeySession(_ session: AVContentKeySession, shouldRetry keyRequest: AVContentKeyRequest, reason retryReason: AVContentKeyRequest.RetryReason) -> Bool {
-        print("--> retry with reason \(retryReason)")
-        return false
-    }
-
-    func contentKeySession(_ session: AVContentKeySession, contentKeyRequest keyRequest: AVContentKeyRequest, didFailWithError err: any Error) {
-        print("--> did fail with \(err)")
     }
 
     private func contentIdentifier(from keyRequest: AVContentKeyRequest) -> Data? {
@@ -82,7 +117,7 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
               let contentIdentifier = components.queryItems?.first(where: { $0.name == "contentId" })?.value else {
             return nil
         }
-        print("--> content id: \(contentIdentifier)")
+        Self.logger.info("--> content identifier: \(contentIdentifier)")
         return Data(contentIdentifier.utf8)
     }
 }
