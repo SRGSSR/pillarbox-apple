@@ -34,11 +34,21 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         return request
     }
 
+    private static func contentIdentifier(from keyRequest: AVContentKeyRequest) -> Data? {
+        guard let identifier = keyRequest.identifier as? String,
+              let components = URLComponents(string: identifier),
+              let contentIdentifier = components.queryItems?.first(where: { $0.name == "contentId" })?.value else {
+            return nil
+        }
+        Self.logger.info("--> content identifier: \(contentIdentifier)")
+        return Data(contentIdentifier.utf8)
+    }
+
     private func contentKeyResponseData(for keyRequest: AVContentKeyRequest) async throws -> Data {
         let (certificateData, _) = try await session.httpData(from: certificateUrl)
         let contentKeyRequestData = try await keyRequest.makeStreamingContentKeyRequestData(
             forApp: certificateData,
-            contentIdentifier: contentIdentifier(from: keyRequest)
+            contentIdentifier: Self.contentIdentifier(from: keyRequest)
         )
         guard let contentKeyContextRequest = Self.contentKeyContextRequest(
             from: keyRequest.identifier,
@@ -98,6 +108,9 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
     }
 
     private func contentKeySession(_ session: AVContentKeySession, process keyRequest: AVContentKeyRequest) {
+        // ?? Try to avoid several tasks here?
+
+        // TODO 2:
         Task {
             do {
                 let responseData = try await contentKeyResponseData(for: keyRequest)
@@ -109,15 +122,5 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
                 keyRequest.processContentKeyResponseErrorReliably(error)
             }
         }
-    }
-
-    private func contentIdentifier(from keyRequest: AVContentKeyRequest) -> Data? {
-        guard let identifier = keyRequest.identifier as? String,
-              let components = URLComponents(string: identifier),
-              let contentIdentifier = components.queryItems?.first(where: { $0.name == "contentId" })?.value else {
-            return nil
-        }
-        Self.logger.info("--> content identifier: \(contentIdentifier)")
-        return Data(contentIdentifier.utf8)
     }
 }
