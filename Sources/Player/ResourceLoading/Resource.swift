@@ -17,34 +17,34 @@ enum Resource {
 
     private static let logger = Logger(category: "Resource")
 
-    private func asset(for url: URL, with configuration: PlayerConfiguration) -> AVURLAsset {
+    private func asset(for url: URL, with playerConfiguration: PlayerConfiguration, and playbackConfiguration: PlaybackConfiguration) -> AVURLAsset {
         .init(url: url, options: [
-            AVURLAssetAllowsConstrainedNetworkAccessKey: configuration.allowsConstrainedNetworkAccess,
-            "AVURLAssetHTTPHeaderFieldsKey": configuration.urlAssetHTTPHeaderFields
+            AVURLAssetAllowsConstrainedNetworkAccessKey: playerConfiguration.allowsConstrainedNetworkAccess,
+            "AVURLAssetHTTPHeaderFieldsKey": playbackConfiguration.urlAssetHTTPHeaderFields
         ])
     }
 
-    func playerItem(configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
-        let item = unlimitedPlayerItem(configuration: configuration)
+    func playerItem(playerConfiguration: PlayerConfiguration, playbackConfiguration: PlaybackConfiguration, limits: PlayerLimits) -> AVPlayerItem {
+        let item = unlimitedPlayerItem(playerConfiguration: playerConfiguration, playbackConfiguration: playbackConfiguration)
         limits.apply(to: item)
         return item
     }
 
-    private func unlimitedPlayerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
+    private func unlimitedPlayerItem(playerConfiguration: PlayerConfiguration, playbackConfiguration: PlaybackConfiguration) -> AVPlayerItem {
         switch self {
         case let .simple(url: url):
-            return AVPlayerItem(asset: asset(for: url, with: configuration))
+            return AVPlayerItem(asset: asset(for: url, with: playerConfiguration, and: playbackConfiguration))
         case let .custom(url: url, delegate: delegate):
             return ResourceLoadedPlayerItem(
-                asset: asset(for: url, with: configuration),
+                asset: asset(for: url, with: playerConfiguration, and: playbackConfiguration),
                 resourceLoaderDelegate: delegate
             )
         case let .encrypted(url: url, delegate: delegate):
 #if targetEnvironment(simulator)
             Self.logger.error("FairPlay-encrypted assets cannot be played in the simulator")
-            return AVPlayerItem(asset: asset(for: url, with: configuration))
+            return AVPlayerItem(asset: asset(for: url, with: playerConfiguration, and: playbackConfiguration))
 #else
-            let asset = asset(for: url, with: configuration)
+            let asset = asset(for: url, with: playerConfiguration, and: playbackConfiguration)
             kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
             kContentKeySession.addContentKeyRecipient(asset)
             kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)

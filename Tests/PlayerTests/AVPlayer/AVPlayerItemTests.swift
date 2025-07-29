@@ -35,7 +35,8 @@ final class AVPlayerItemTests: TestCase {
                 repeatMode: .off,
                 length: .max,
                 reload: false,
-                configuration: .default,
+                playerConfiguration: .default,
+                playbackConfiguration: .default,
                 limits: .none
             )
             .compactMap(\.url)
@@ -60,7 +61,8 @@ final class AVPlayerItemTests: TestCase {
                 repeatMode: .one,
                 length: .max,
                 reload: false,
-                configuration: .default,
+                playerConfiguration: .default,
+                playbackConfiguration: .default,
                 limits: .none
             )
             .compactMap(\.url)
@@ -86,7 +88,8 @@ final class AVPlayerItemTests: TestCase {
                 repeatMode: .all,
                 length: .max,
                 reload: false,
-                configuration: .default,
+                playerConfiguration: .default,
+                playbackConfiguration: .default,
                 limits: .none
             )
             .compactMap(\.url)

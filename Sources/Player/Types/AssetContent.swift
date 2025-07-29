@@ -21,10 +21,16 @@ struct AssetContent {
         .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
-    func playerItem(reload: Bool = false, configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
+    func playerItem(
+        reload: Bool = false,
+        playerConfiguration: PlayerConfiguration,
+        playbackConfiguration: PlaybackConfiguration,
+        limits: PlayerLimits
+    ) -> AVPlayerItem {
         if reload, resource.isFailing {
             let item = Resource.loading.playerItem(
-                configuration: configuration,
+                playerConfiguration: playerConfiguration,
+                playbackConfiguration: playbackConfiguration,
                 limits: limits
             )
             .withId(id)
@@ -36,7 +42,8 @@ struct AssetContent {
         }
         else {
             let item = resource.playerItem(
-                configuration: configuration,
+                playerConfiguration: playerConfiguration,
+                playbackConfiguration: playbackConfiguration,
                 limits: limits
             )
             .withId(id)

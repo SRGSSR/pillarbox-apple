@@ -22,12 +22,17 @@ struct ItemSource {
         .init(content: content, item: nil)
     }
 
-    func playerItem(reload: Bool, configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
+    func playerItem(
+        reload: Bool,
+        playerConfiguration: PlayerConfiguration,
+        playbackConfiguration: PlaybackConfiguration,
+        limits: PlayerLimits
+    ) -> AVPlayerItem {
         if let item {
             return item.updated(with: content)
         }
         else {
-            return content.playerItem(reload: reload, configuration: configuration, limits: limits)
+            return content.playerItem(reload: reload, playerConfiguration: playerConfiguration, playbackConfiguration: playbackConfiguration, limits: limits)
         }
     }
 }

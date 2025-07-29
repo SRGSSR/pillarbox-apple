@@ -29,15 +29,20 @@ public struct PlaybackConfiguration {
     /// disruption.
     public let preferredForwardBufferDuration: TimeInterval
 
+    /// A dictionary of custom HTTP header fields to be used when loading a player content.
+    public let urlAssetHTTPHeaderFields: [String: String]
+
     /// Creates a playback configuration.
     public init(
         position: Position = at(.zero),
         automaticallyPreservesTimeOffsetFromLive: Bool = false,
-        preferredForwardBufferDuration: TimeInterval = 0
+        preferredForwardBufferDuration: TimeInterval = 0,
+        urlAssetHTTPHeaderFields: [String: String] = [:]
     ) {
         self.position = position
         self.automaticallyPreservesTimeOffsetFromLive = automaticallyPreservesTimeOffsetFromLive
         self.preferredForwardBufferDuration = preferredForwardBufferDuration
+        self.urlAssetHTTPHeaderFields = urlAssetHTTPHeaderFields
     }
 
     func apply(to item: AVPlayerItem, with metadata: PlayerMetadata) {

@@ -19,7 +19,6 @@ final class PlayerConfigurationTests: TestCase {
         expect(configuration.forwardSkipInterval).to(equal(10))
         expect(configuration.preloadedItems).to(equal(2))
         expect(configuration.allowsConstrainedNetworkAccess).to(beTrue())
-        expect(configuration.urlAssetHTTPHeaderFields).to(beEmpty())
     }
 
     func testCustomValues() {
@@ -30,8 +29,7 @@ final class PlayerConfigurationTests: TestCase {
             navigationMode: .immediate,
             backwardSkipInterval: 42,
             forwardSkipInterval: 47,
-            allowsConstrainedNetworkAccess: false,
-            urlAssetHTTPHeaderFields: ["Content-Type": "custom"]
+            allowsConstrainedNetworkAccess: false
         )
         expect(configuration.allowsExternalPlayback).to(beFalse())
         expect(configuration.usesExternalPlaybackWhileMirroring).to(beTrue())
@@ -40,6 +38,5 @@ final class PlayerConfigurationTests: TestCase {
         expect(configuration.backwardSkipInterval).to(equal(42))
         expect(configuration.forwardSkipInterval).to(equal(47))
         expect(configuration.allowsConstrainedNetworkAccess).to(beFalse())
-        expect(configuration.urlAssetHTTPHeaderFields).to(equal(["Content-Type": "custom"]))
     }
 }

@@ -41,7 +41,9 @@ extension Player {
                     currentItem: buffer.item,
                     repeatMode: repeatMode,
                     length: buffer.length,
-                    configuration: self.configuration,
+                    playerConfiguration: self.configuration,
+                    playbackConfiguration: current.elements
+                        .map(\.content.configuration)[safeIndex: current.index ?? 0] ?? .default, // TODO: Should be improved!
                     limits: self.limits
                 )
             }
