@@ -44,6 +44,9 @@ public struct PlayerConfiguration {
     /// background videos used purely for visual enhancement.
     public let allowsConstrainedNetworkAccess: Bool
 
+    /// A dictionary of custom HTTP header fields to be used when loading a player content.
+    public let urlAssetHTTPHeaderFields: [String: String]
+
     /// Creates a player configuration.
     public init(
         allowsExternalPlayback: Bool = true,
@@ -52,7 +55,8 @@ public struct PlayerConfiguration {
         navigationMode: NavigationMode = .smart(interval: 3),
         backwardSkipInterval: TimeInterval = 10,
         forwardSkipInterval: TimeInterval = 10,
-        allowsConstrainedNetworkAccess: Bool = true
+        allowsConstrainedNetworkAccess: Bool = true,
+        urlAssetHTTPHeaderFields: [String: String] = [:]
     ) {
         assert(backwardSkipInterval > 0)
         assert(forwardSkipInterval > 0)
@@ -63,6 +67,7 @@ public struct PlayerConfiguration {
         self.backwardSkipInterval = backwardSkipInterval
         self.forwardSkipInterval = forwardSkipInterval
         self.allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
+        self.urlAssetHTTPHeaderFields = urlAssetHTTPHeaderFields
     }
 
     /// The skip interval for some direction, in seconds.

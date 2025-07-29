@@ -19,7 +19,8 @@ enum Resource {
 
     private func asset(for url: URL, with configuration: PlayerConfiguration) -> AVURLAsset {
         .init(url: url, options: [
-            AVURLAssetAllowsConstrainedNetworkAccessKey: configuration.allowsConstrainedNetworkAccess
+            AVURLAssetAllowsConstrainedNetworkAccessKey: configuration.allowsConstrainedNetworkAccess,
+            "AVURLAssetHTTPHeaderFieldsKey": configuration.urlAssetHTTPHeaderFields
         ])
     }
 
