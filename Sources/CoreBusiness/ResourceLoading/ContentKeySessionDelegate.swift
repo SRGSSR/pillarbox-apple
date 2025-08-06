@@ -31,11 +31,20 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         return request
     }
 
+    private static func contentIdentifier(from keyRequest: AVContentKeyRequest) -> Data? {
+        guard let identifier = keyRequest.identifier as? String,
+              let components = URLComponents(string: identifier),
+              let contentIdentifier = components.queryItems?.first(where: { $0.name == "contentId" })?.value else {
+            return nil
+        }
+        return Data(contentIdentifier.utf8)
+    }
+
     private func contentKeyResponseData(for keyRequest: AVContentKeyRequest) async throws -> Data {
         let (certificateData, _) = try await session.httpData(from: certificateUrl)
         let contentKeyRequestData = try await keyRequest.makeStreamingContentKeyRequestData(
             forApp: certificateData,
-            contentIdentifier: Data("content_id".utf8)
+            contentIdentifier: Self.contentIdentifier(from: keyRequest)
         )
         guard let contentKeyContextRequest = Self.contentKeyContextRequest(
             from: keyRequest.identifier,
@@ -47,7 +56,15 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         return contentKeyContextData
     }
 
+    func contentKeySession(_ session: AVContentKeySession, didProvideRenewingContentKeyRequest keyRequest: AVContentKeyRequest) {
+        contentKeySession(session, process: keyRequest)
+    }
+
     func contentKeySession(_ session: AVContentKeySession, didProvide keyRequest: AVContentKeyRequest) {
+        contentKeySession(session, process: keyRequest)
+    }
+
+    private func contentKeySession(_ session: AVContentKeySession, process keyRequest: AVContentKeyRequest) {
         Task {
             do {
                 let responseData = try await contentKeyResponseData(for: keyRequest)
