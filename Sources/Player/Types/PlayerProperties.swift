@@ -44,7 +44,7 @@ public extension PlayerProperties {
 
     /// A Boolean describing whether the player is currently buffering.
     var isBuffering: Bool {
-        !isEmpty && !timeProperties.isPlaybackLikelyToKeepUp
+        !isEmpty && !timeProperties.isPlaybackLikelyToKeepUp && coreProperties.itemProperties.item?.error == nil
     }
 
     /// A Boolean describing whether the player is currently busy (buffering or seeking).
