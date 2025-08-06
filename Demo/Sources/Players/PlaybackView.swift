@@ -102,7 +102,7 @@ private struct MainView: View {
             ZStack {
                 video()
                     .simultaneousGesture(toggleGesture(), isEnabled: isToggleGestureEnabled)
-                    .optionalNestedSimultaneousGesture(skipGesture(in: geometry))
+                    .simultaneousGesture(skipGesture(in: geometry))
                     .accessibilityElement()
                     .accessibilityLabel("Video")
                     .accessibilityHint("Double tap to toggle controls")
@@ -260,7 +260,7 @@ private struct MainView: View {
             ZStack {
                 Color(white: 0, opacity: 0.5)
                     .simultaneousGesture(toggleGesture(), isEnabled: isToggleGestureEnabled)
-                    .optionalNestedSimultaneousGesture(skipGesture(in: geometry))
+                    .simultaneousGesture(skipGesture(in: geometry))
                     .ignoresSafeArea()
                 ControlsView(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
             }
