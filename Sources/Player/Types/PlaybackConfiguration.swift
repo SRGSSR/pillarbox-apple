@@ -19,7 +19,7 @@ public struct PlaybackConfiguration {
     /// - Live edge for a livestream supporting DVR.
     ///
     /// Note that starting at the default position is always efficient, no matter which tolerances have been requested.
-    public let position: Position
+    public let position: () -> Position
 
     /// A Boolean value that indicates whether the player preserves its time offset from the live time after a
     /// buffering operation.
@@ -31,7 +31,7 @@ public struct PlaybackConfiguration {
 
     /// Creates a playback configuration.
     public init(
-        position: Position = at(.zero),
+        position: @escaping @autoclosure () -> Position = at(.zero),
         automaticallyPreservesTimeOffsetFromLive: Bool = false,
         preferredForwardBufferDuration: TimeInterval = 0
     ) {
@@ -41,8 +41,9 @@ public struct PlaybackConfiguration {
     }
 
     func apply(to item: AVPlayerItem, with metadata: PlayerMetadata) {
-        let position = position.after(metadata.blockedTimeRanges) ?? position
-        item.seek(to: position.time, toleranceBefore: position.toleranceBefore, toleranceAfter: position.toleranceAfter, completionHandler: nil)
+        let position = position()
+        let seekPosition = position.after(metadata.blockedTimeRanges) ?? position
+        item.seek(to: seekPosition.time, toleranceBefore: seekPosition.toleranceBefore, toleranceAfter: seekPosition.toleranceAfter, completionHandler: nil)
         item.automaticallyPreservesTimeOffsetFromLive = automaticallyPreservesTimeOffsetFromLive
         item.preferredForwardBufferDuration = preferredForwardBufferDuration
     }
