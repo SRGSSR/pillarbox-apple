@@ -75,4 +75,17 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
             }
         }
     }
+
+    func contentKeySession(
+        _ session: AVContentKeySession,
+        shouldRetry keyRequest: AVContentKeyRequest,
+        reason retryReason: AVContentKeyRequest.RetryReason
+    ) -> Bool {
+        switch retryReason {
+        case .receivedObsoleteContentKey, .receivedResponseWithExpiredLease, .timedOut:
+            return true
+        default:
+            return false
+        }
+    }
 }
