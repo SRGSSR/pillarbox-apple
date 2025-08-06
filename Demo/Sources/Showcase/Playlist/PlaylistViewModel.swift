@@ -79,8 +79,4 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
             .assign(to: \.limits, on: player)
             .store(in: &cancellables)
     }
-
-    private func entry(for item: PlayerItem) -> PlaylistEntry? {
-        entries.first { $0.item == item }
-    }
 }

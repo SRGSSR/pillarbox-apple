@@ -134,6 +134,6 @@ private extension PlayerItem {
         // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
         // livestreams cannot be paused and resumed in the past, as requested by business people.
         guard resource.streamType == .live else { return configuration }
-        return .init(position: configuration.position, automaticallyPreservesTimeOffsetFromLive: true, preferredForwardBufferDuration: 1)
+        return .init(automaticallyPreservesTimeOffsetFromLive: true, preferredForwardBufferDuration: 1)
     }
 }
