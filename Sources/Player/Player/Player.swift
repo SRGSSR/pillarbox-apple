@@ -273,7 +273,9 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
     }
 
-    public func resume(_ position: Position) {
+    public func seek(_ position: Position, in item: PlayerItem) {
+        guard items.contains(item) else { return }
+        currentItem = item
         resumePosition = position
     }
 

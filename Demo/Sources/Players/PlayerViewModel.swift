@@ -14,11 +14,11 @@ final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
             guard media != oldValue else { return }
             if let item = media?.item() {
                 player.items = [item]
+                player.seek(at(.init(value: 17, timescale: 1)), in: item)
             }
             else {
                 player.removeAllItems()
             }
-            player.resume(at(.init(value: 17, timescale: 1)))
         }
     }
 
