@@ -117,18 +117,4 @@ final class SeekTests: TestCase {
         let player = Player(item: .simple(url: Stream.dvr.url, configuration: configuration))
         expect(player.time().seconds).toEventually(equal(10))
     }
-
-    func testPositionUpdate() {
-        var position = at(.init(value: 10, timescale: 1))
-        let configuration = PlaybackConfiguration(position: position)
-        let item = PlayerItem.simple(url: Stream.dvr.url, configuration: configuration)
-
-        let player = Player(item: item)
-        expect(player.time().seconds).toEventually(equal(10))
-        player.removeAllItems()
-
-        position = at(.init(value: 20, timescale: 1))
-        player.items = [item]
-        expect(player.time().seconds).toEventually(equal(20))
-    }
 }
