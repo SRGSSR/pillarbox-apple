@@ -17,6 +17,8 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var entries: [PlaylistEntry] = [] {
         didSet {
             player.items = entries.map(\.item)
+            player.currentItem = player.items[safeIndex: 2]
+            player.resume(at(.init(value: 17, timescale: 1)))
         }
     }
 

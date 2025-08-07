@@ -197,6 +197,8 @@ public final class Player: ObservableObject, Equatable {
     // swiftlint:disable:next private_subject
     let textStyleRulesPublisher = CurrentValueSubject<[AVTextStyleRule], Never>([])
 
+    var resumePosition: Position?
+
     /// Creates a player with a given item queue.
     ///
     /// - Parameters:
@@ -269,6 +271,10 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
+    }
+
+    public func resume(_ position: Position) {
+        resumePosition = position
     }
 
     deinit {

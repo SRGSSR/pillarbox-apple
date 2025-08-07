@@ -18,6 +18,7 @@ final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
             else {
                 player.removeAllItems()
             }
+            player.resume(at(.init(value: 17, timescale: 1)))
         }
     }
 
