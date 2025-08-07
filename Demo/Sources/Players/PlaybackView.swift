@@ -37,11 +37,16 @@ private struct MainView: View {
     }
 
     private var shouldHideInterface: Bool {
-        isUserInterfaceHidden || (isInteracting && seekBehaviorSetting == .optimal && !shouldKeepControlsAlwaysVisible)
+        !shouldKeepControlsAlwaysVisible &&
+            (isUserInterfaceHidden || (isInteracting && seekBehaviorSetting == .optimal) || skipTracker.isSkipping)
     }
 
     private var shouldKeepControlsAlwaysVisible: Bool {
         player.isExternalPlaybackActive || player.mediaType != .video
+    }
+
+    private var isToggleGestureEnabled: Bool {
+        !isInteracting && !skipTracker.isSkipping
     }
 
     var body: some View {
@@ -96,7 +101,8 @@ private struct MainView: View {
         GeometryReader { geometry in
             ZStack {
                 video()
-                    .optionalNestedSimultaneousGesture(skipGesture(in: geometry))
+                    .simultaneousGesture(toggleGesture(), isEnabled: isToggleGestureEnabled)
+                    .simultaneousGesture(skipGesture(in: geometry))
                     .accessibilityElement()
                     .accessibilityLabel("Video")
                     .accessibilityHint("Double tap to toggle controls")
@@ -105,7 +111,6 @@ private struct MainView: View {
                 controls()
             }
             .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
-            .gesture(toggleGesture(), isEnabled: !isInteracting)
             .simultaneousGesture(magnificationGesture(), isEnabled: layoutInfo.isOverCurrentContext)
             .simultaneousGesture(visibilityResetGesture())
             .overlay(alignment: .center) {
@@ -254,7 +259,8 @@ private struct MainView: View {
         GeometryReader { geometry in
             ZStack {
                 Color(white: 0, opacity: 0.5)
-                    .optionalNestedSimultaneousGesture(skipGesture(in: geometry))
+                    .simultaneousGesture(toggleGesture(), isEnabled: isToggleGestureEnabled)
+                    .simultaneousGesture(skipGesture(in: geometry))
                     .ignoresSafeArea()
                 ControlsView(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
             }

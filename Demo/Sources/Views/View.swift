@@ -86,21 +86,6 @@ extension View {
     }
 }
 
-@available(tvOS, unavailable)
-extension View {
-    /// Support for simultaneous gestures applied on nested hierarchies has been improved in iOS 18 so that all gestures
-    /// are correctly triggered.
-    @ViewBuilder
-    func optionalNestedSimultaneousGesture<T>(_ gesture: T, isEnabled: Bool = true) -> some View where T: Gesture {
-        if #available(iOS 18, *) {
-            simultaneousGesture(gesture, isEnabled: isEnabled)
-        }
-        else {
-            self
-        }
-    }
-}
-
 extension View {
     func headerStyle() -> some View {
 #if os(tvOS)
