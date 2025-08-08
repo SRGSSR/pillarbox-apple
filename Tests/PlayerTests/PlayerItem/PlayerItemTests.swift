@@ -21,7 +21,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
-        let playerItem = item.content.playerItem(configuration: .default, limits: .none)
+        let playerItem = item.content.playerItem(configuration: .default, limits: .none, resumePosition: nil)
         expect(playerItem.preferredForwardBufferDuration).to(equal(0))
         expect(playerItem.preferredPeakBitRate).to(equal(0))
         expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(0))
@@ -33,14 +33,18 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url, configuration: .init(preferredForwardBufferDuration: 4))
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
-        expect(item.content.playerItem(configuration: .default, limits: .none).preferredForwardBufferDuration).to(equal(4))
+        expect(item.content.playerItem(
+            configuration: .default,
+            limits: .none,
+            resumePosition: nil
+        ).preferredForwardBufferDuration).to(equal(4))
     }
 
     func testSimpleItemWithLimits() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
-        let playerItem = item.content.playerItem(configuration: .default, limits: Self.limits)
+        let playerItem = item.content.playerItem(configuration: .default, limits: Self.limits, resumePosition: nil)
         expect(playerItem.preferredPeakBitRate).to(equal(100))
         expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(200))
         expect(playerItem.preferredMaximumResolution).to(equal(.init(width: 100, height: 200)))
@@ -52,7 +56,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.custom(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
-        let playerItem = item.content.playerItem(configuration: .default, limits: .none)
+        let playerItem = item.content.playerItem(configuration: .default, limits: .none, resumePosition: nil)
         expect(playerItem.preferredForwardBufferDuration).to(equal(0))
         expect(playerItem.preferredPeakBitRate).to(equal(0))
         expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(0))
@@ -71,7 +75,8 @@ final class PlayerItemTests: TestCase {
         expect(item.content.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
         expect(item.content.playerItem(
             configuration: .default,
-            limits: .none
+            limits: .none,
+            resumePosition: nil
         ).preferredForwardBufferDuration).to(equal(4))
     }
 
@@ -80,7 +85,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.custom(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
-        let playerItem = item.content.playerItem(configuration: .default, limits: Self.limits)
+        let playerItem = item.content.playerItem(configuration: .default, limits: Self.limits, resumePosition: nil)
         expect(playerItem.preferredPeakBitRate).to(equal(100))
         expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(200))
         expect(playerItem.preferredMaximumResolution).to(equal(.init(width: 100, height: 200)))
@@ -92,7 +97,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.encrypted(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
-        let playerItem = item.content.playerItem(configuration: .default, limits: .none)
+        let playerItem = item.content.playerItem(configuration: .default, limits: .none, resumePosition: nil)
         expect(playerItem.preferredForwardBufferDuration).to(equal(0))
         expect(playerItem.preferredPeakBitRate).to(equal(0))
         expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(0))
@@ -111,7 +116,8 @@ final class PlayerItemTests: TestCase {
         expect(item.content.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
         expect(item.content.playerItem(
             configuration: .default,
-            limits: .none
+            limits: .none,
+            resumePosition: nil
         ).preferredForwardBufferDuration).to(equal(4))
     }
 
@@ -120,7 +126,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.encrypted(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.content.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
-        let playerItem = item.content.playerItem(configuration: .default, limits: Self.limits)
+        let playerItem = item.content.playerItem(configuration: .default, limits: Self.limits, resumePosition: nil)
         expect(playerItem.preferredPeakBitRate).to(equal(100))
         expect(playerItem.preferredPeakBitRateForExpensiveNetworks).to(equal(200))
         expect(playerItem.preferredMaximumResolution).to(equal(.init(width: 100, height: 200)))

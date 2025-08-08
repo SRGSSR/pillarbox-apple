@@ -21,7 +21,12 @@ struct AssetContent {
         .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
-    func playerItem(reload: Bool = false, configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
+    func playerItem(
+        reload: Bool = false,
+        configuration: PlayerConfiguration,
+        limits: PlayerLimits,
+        resumePosition: Position?
+    ) -> AVPlayerItem {
         if reload, resource.isFailing {
             let item = Resource.loading.playerItem(
                 configuration: configuration,
@@ -30,7 +35,7 @@ struct AssetContent {
             .withId(id)
             .updated(with: self)
 
-            configure(item: item)
+            configure(item: item, resumePosition: resumePosition)
             PlayerItem.reload(for: id)
             return item
         }
@@ -42,13 +47,13 @@ struct AssetContent {
             .withId(id)
             .updated(with: self)
 
-            configure(item: item)
+            configure(item: item, resumePosition: resumePosition)
             PlayerItem.load(for: id)
             return item
         }
     }
 
-    private func configure(item: AVPlayerItem) {
-        configuration.apply(to: item, with: metadata)
+    private func configure(item: AVPlayerItem, resumePosition: Position?) {
+        configuration.apply(to: item, with: metadata, resumePosition: resumePosition)
     }
 }
