@@ -24,5 +24,6 @@ public extension Player {
     /// > Note: To consistently start playback of an item at a specific position, use ``PlaybackConfiguration.position``
     ///   instead. Calling ``resume(_:in:)`` overrides this setting temporarily.
     func resume(_ position: Position, in item: PlayerItem) {
+        resumeContext = .init(position: position, in: item)
     }
 }
