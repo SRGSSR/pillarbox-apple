@@ -33,6 +33,7 @@ extension AVPlayerItem {
     ///   - length: The maximum number of items to return.
     ///   - configuration: The player configuration.
     ///   - limits: Limits applied by the player.
+    ///   - resumeState: The state to resume from.
     /// - Returns: The list of player items to load into the player.
     static func playerItems(
         for currentContents: [AssetContent],

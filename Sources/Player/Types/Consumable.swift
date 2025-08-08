@@ -7,7 +7,11 @@
 final class Consumable<T> {
     private var value: T?
 
-    init(value: T?) {
+    var isEmpty: Bool {
+        value == nil
+    }
+
+    init(value: T? = nil) {
         self.value = value
     }
 
