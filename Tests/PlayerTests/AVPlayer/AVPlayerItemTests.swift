@@ -37,7 +37,7 @@ final class AVPlayerItemTests: TestCase {
                 reload: false,
                 configuration: .default,
                 limits: .none,
-                resumeContext: nil
+                resumeState: nil
             )
             .compactMap(\.url)
         }
@@ -63,7 +63,7 @@ final class AVPlayerItemTests: TestCase {
                 reload: false,
                 configuration: .default,
                 limits: .none,
-                resumeContext: nil
+                resumeState: nil
             )
             .compactMap(\.url)
         }
@@ -90,7 +90,7 @@ final class AVPlayerItemTests: TestCase {
                 reload: false,
                 configuration: .default,
                 limits: .none,
-                resumeContext: nil
+                resumeState: nil
             )
             .compactMap(\.url)
         }

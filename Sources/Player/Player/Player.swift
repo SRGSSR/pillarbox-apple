@@ -187,7 +187,7 @@ public final class Player: ObservableObject, Equatable {
 
     var cancellables = Set<AnyCancellable>()
     var commandRegistrations: [any RemoteCommandRegistrable] = []
-    var resumeContext: ResumeContext?
+    var resumeState: ResumeState?
 
     // swiftlint:disable:next private_subject
     let isActivePublisher = CurrentValueSubject<Bool, Never>(false)

@@ -42,11 +42,11 @@ extension AVPlayerItem {
         length: Int,
         configuration: PlayerConfiguration,
         limits: PlayerLimits,
-        resumeContext: ResumeContext?
+        resumeState: ResumeState?
     ) -> [AVPlayerItem] {
         let sources = itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem)
         let updatedSources = updatedItemSources(sources, repeatMode: repeatMode, firstContent: currentContents.first)
-        return playerItems(from: updatedSources, length: length, reload: false, configuration: configuration, limits: limits, resumeContext: resumeContext)
+        return playerItems(from: updatedSources, length: length, reload: false, configuration: configuration, limits: limits, resumeState: resumeState)
     }
 
     private static func updatedItemSources(_ sources: [ItemSource], repeatMode: RepeatMode, firstContent: AssetContent?) -> [ItemSource] {
@@ -97,11 +97,11 @@ extension AVPlayerItem {
         reload: Bool,
         configuration: PlayerConfiguration,
         limits: PlayerLimits,
-        resumeContext: ResumeContext?
+        resumeState: ResumeState?
     ) -> [AVPlayerItem] {
         let afterContents = items.suffix(from: index).map(\.content)
         let sources = updatedItemSources(newItemSources(from: afterContents), repeatMode: repeatMode, firstContent: items.first?.content)
-        return playerItems(from: sources, length: length, reload: reload, configuration: configuration, limits: limits, resumeContext: resumeContext)
+        return playerItems(from: sources, length: length, reload: reload, configuration: configuration, limits: limits, resumeState: resumeState)
     }
 
     private static func playerItems(
@@ -110,11 +110,11 @@ extension AVPlayerItem {
         reload: Bool,
         configuration: PlayerConfiguration,
         limits: PlayerLimits,
-        resumeContext: ResumeContext?
+        resumeState: ResumeState?
     ) -> [AVPlayerItem] {
         sources
             .prefix(length)
-            .map { $0.playerItem(reload: reload, configuration: configuration, limits: limits, resumePosition: resumeContext?.position) }
+            .map { $0.playerItem(reload: reload, configuration: configuration, limits: limits, resumePosition: resumeState?.position) }
     }
 
     private static func newItemSources(from contents: [AssetContent]) -> [ItemSource] {
