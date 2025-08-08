@@ -31,7 +31,8 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max,
             configuration: .default,
-            limits: .none
+            limits: .none,
+            resumeContext: nil
         )
         expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("C")]))
     }
@@ -51,7 +52,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             .test(id: "B"),
             .test(id: "C")
         ]
-        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none)
+        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none, resumePosition: nil)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
@@ -59,7 +60,8 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max,
             configuration: .default,
-            limits: .none
+            limits: .none,
+            resumeContext: nil
         )
         expect(items.map(\.id)).to(equalDiff([UUID("3"), UUID("B"), UUID("C")]))
         expect(items.first).to(equal(currentItem))
@@ -80,7 +82,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             .test(id: "C"),
             currentItemContent
         ]
-        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none)
+        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none, resumePosition: nil)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
@@ -88,7 +90,8 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max,
             configuration: .default,
-            limits: .none
+            limits: .none,
+            resumeContext: nil
         )
         expect(items.map(\.id)).to(equalDiff([UUID("3")]))
         expect(items.first).to(equal(currentItem))
@@ -103,7 +106,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             .test(id: "A"),
             .test(id: "B")
         ]
-        let unknownItem = AssetContent.test(id: "1").playerItem(configuration: .default, limits: .none)
+        let unknownItem = AssetContent.test(id: "1").playerItem(configuration: .default, limits: .none, resumePosition: nil)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
@@ -111,7 +114,8 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max,
             configuration: .default,
-            limits: .none
+            limits: .none,
+            resumeContext: nil
         )
         expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
     }
@@ -129,7 +133,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             otherContent,
             .test(id: "C")
         ]
-        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none)
+        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none, resumePosition: nil)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
@@ -137,7 +141,8 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max,
             configuration: .default,
-            limits: .none
+            limits: .none,
+            resumeContext: nil
         )
         expect(items.map(\.id)).to(equalDiff([UUID("2"), UUID("C")]))
     }
@@ -154,7 +159,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             .test(id: "2"),
             .test(id: "3")
         ]
-        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none)
+        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none, resumePosition: nil)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
@@ -162,7 +167,8 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: .max,
             configuration: .default,
-            limits: .none
+            limits: .none,
+            resumeContext: nil
         )
         expect(items.map(\.id)).to(equalDiff([UUID("1"), UUID("2"), UUID("3")]))
         expect(items.first).to(equal(currentItem))
@@ -182,7 +188,8 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             repeatMode: .off,
             length: 2,
             configuration: .default,
-            limits: .none
+            limits: .none,
+            resumeContext: nil
         )
         expect(items.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
     }
