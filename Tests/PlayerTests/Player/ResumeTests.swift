@@ -29,10 +29,16 @@ final class ResumeTests: TestCase {
         expect(player.time()).toEventually(equal(time))
     }
 
-    func testResumeInCurrentItemDuringPlayback() {
+    func testResumeInCurrentItem() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expect(player.playbackState).toEventually(equal(.paused))
+        let time = CMTime(value: 11, timescale: 1)
+        player.resume(at(time), in: item)
+        expect(player.time()).toEventually(equal(time))
     }
 
-    func testResumeInNonCurrentItemDuringPlayback() {
+    func testResumeInNonCurrentItem() {
     }
 
     func testResumeInUnknownItem() {
