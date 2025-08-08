@@ -6,7 +6,7 @@
 
 import Foundation
 
-struct ResumeContext {
+struct ResumeState {
     let position: Position
     let itemId: UUID
 

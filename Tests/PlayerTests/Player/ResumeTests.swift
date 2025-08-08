@@ -10,7 +10,7 @@ import CoreMedia
 import Nimble
 import PillarboxStreams
 
-// TODO: Check resumeContext against nil/not-nil to verify cleanup
+// TODO: Check resumeState against nil/not-nil to verify cleanup
 
 final class ResumeTests: TestCase {
     func testResumeInFirstItemAtCreationTime() {

@@ -43,7 +43,7 @@ extension Player {
                     length: buffer.length,
                     configuration: configuration,
                     limits: limits,
-                    resumeContext: resumeContext
+                    resumeState: resumeState
                 )
             }
             .removeDuplicates()
