@@ -29,7 +29,7 @@ public extension Player {
             seek(position)
         }
         else {
-            resumeState = .init(position: position, in: item)
+            resumeState = .init(position: position, id: item.id)
             currentItem = item
         }
     }

@@ -6,12 +6,24 @@
 
 import Foundation
 
-struct ResumeState {
-    let position: Position
-    let itemId: UUID
+final class ResumeState {
+    var position: Position?
+    let id: UUID
 
-    init(position: Position, in item: PlayerItem) {
+    var isEmpty: Bool {
+        position == nil
+    }
+
+    init(position: Position, id: UUID) {
         self.position = position
-        self.itemId = item.id
+        self.id = id
+    }
+
+    func position(for id: UUID) -> Position? {
+        guard self.id == id else { return nil }
+        defer {
+            position = nil
+        }
+        return position
     }
 }
