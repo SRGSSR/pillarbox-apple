@@ -20,6 +20,13 @@ final class ResumeTests: TestCase {
     }
 
     func testResumeInSecondItemAtCreationTime() {
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        let time = CMTime(value: 11, timescale: 1)
+        player.resume(at(time), in: item2)
+        expect(player.currentItem).to(equal(item2))
+        expect(player.time()).toEventually(equal(time))
     }
 
     func testResumeInCurrentItemDuringPlayback() {
