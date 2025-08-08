@@ -11,14 +11,14 @@ public struct PlaybackConfiguration {
     /// The default configuration.
     public static let `default` = Self()
 
-    /// The position to start playback at.
+    /// The position to consistently start playback of the item at.
     ///
-    /// When the position time is `.zero`, playback efficiently starts at the default position:
+    /// If `.zero` is provided, playback starts efficiently at the default position:
     ///
-    /// - Zero for an on-demand stream.
-    /// - Live edge for a livestream supporting DVR.
+    /// - Zero for on-demand streams.
+    /// - Live edge for DVR-enabled livestreams.
     ///
-    /// Note that starting at the default position is always efficient, no matter which tolerances have been requested.
+    /// > Note: Resuming at the default position is always efficient, regardless of the requested tolerances.
     public let position: Position
 
     /// A Boolean value that indicates whether the player preserves its time offset from the live time after a
