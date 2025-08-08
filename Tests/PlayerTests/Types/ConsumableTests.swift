@@ -9,9 +9,20 @@
 import Nimble
 
 final class ConsumableTests: TestCase {
+    func testEmpty() {
+        let consumable = Consumable<Int>()
+        expect(consumable.isEmpty).to(beTrue())
+    }
+
+    func testNonEmpty() {
+        let consumable = Consumable(value: 1)
+        expect(consumable.isEmpty).to(beFalse())
+    }
+
     func testTake() {
         let consumable = Consumable(value: 1)
         expect(consumable.take()).to(equal(1))
+        expect(consumable.isEmpty).to(beTrue())
     }
 
     func testConsecutiveTake() {
@@ -21,8 +32,9 @@ final class ConsumableTests: TestCase {
     }
 
     func testStore() {
-        let consumable = Consumable(value: 1)
+        let consumable = Consumable<Int>()
         consumable.store(2)
+        expect(consumable.isEmpty).to(beFalse())
         expect(consumable.take()).to(equal(2))
     }
 }
