@@ -33,6 +33,7 @@ extension AVPlayerItem {
     ///   - length: The maximum number of items to return.
     ///   - configuration: The player configuration.
     ///   - limits: Limits applied by the player.
+    ///   - resumeState: The state to resume from.
     /// - Returns: The list of player items to load into the player.
     static func playerItems(
         for currentContents: [AssetContent],
@@ -41,11 +42,12 @@ extension AVPlayerItem {
         repeatMode: RepeatMode,
         length: Int,
         configuration: PlayerConfiguration,
+        resumeState: ResumeState?,
         limits: PlayerLimits
     ) -> [AVPlayerItem] {
         let sources = itemSources(for: currentContents, replacing: previousContents, currentItem: currentItem)
         let updatedSources = updatedItemSources(sources, repeatMode: repeatMode, firstContent: currentContents.first)
-        return playerItems(from: updatedSources, length: length, reload: false, configuration: configuration, limits: limits)
+        return playerItems(from: updatedSources, length: length, reload: false, configuration: configuration, resumeState: resumeState, limits: limits)
     }
 
     private static func updatedItemSources(_ sources: [ItemSource], repeatMode: RepeatMode, firstContent: AssetContent?) -> [ItemSource] {
@@ -95,11 +97,12 @@ extension AVPlayerItem {
         length: Int,
         reload: Bool,
         configuration: PlayerConfiguration,
+        resumeState: ResumeState?,
         limits: PlayerLimits
     ) -> [AVPlayerItem] {
         let afterContents = items.suffix(from: index).map(\.content)
         let sources = updatedItemSources(newItemSources(from: afterContents), repeatMode: repeatMode, firstContent: items.first?.content)
-        return playerItems(from: sources, length: length, reload: reload, configuration: configuration, limits: limits)
+        return playerItems(from: sources, length: length, reload: reload, configuration: configuration, resumeState: resumeState, limits: limits)
     }
 
     private static func playerItems(
@@ -107,12 +110,13 @@ extension AVPlayerItem {
         length: Int,
         reload: Bool,
         configuration: PlayerConfiguration,
+        resumeState: ResumeState?,
         limits: PlayerLimits
     ) -> [AVPlayerItem] {
         sources
             .prefix(length)
             .map { source in
-                let item = source.playerItem(reload: reload, configuration: configuration)
+                let item = source.playerItem(reload: reload, configuration: configuration, resumeState: resumeState)
                 limits.apply(to: item)
                 return item
             }

@@ -21,22 +21,22 @@ struct AssetContent {
         .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
-    private func playerItem(for resource: Resource, configuration: PlayerConfiguration) -> AVPlayerItem {
+    private func playerItem(for resource: Resource, configuration: PlayerConfiguration, resumeState: ResumeState?) -> AVPlayerItem {
         let item = resource.playerItem(configuration: configuration)
             .withId(id)
             .updated(with: self)
-        self.configuration.apply(to: item, metadata: metadata, resumeState: nil /*TODO*/)
+        self.configuration.apply(to: item, metadata: metadata, resumeState: resumeState)
         return item
     }
 
-    func playerItem(reload: Bool, configuration: PlayerConfiguration) -> AVPlayerItem {
+    func playerItem(reload: Bool, configuration: PlayerConfiguration, resumeState: ResumeState?) -> AVPlayerItem {
         if reload, resource.isFailing {
             PlayerItem.reload(for: id)
-            return playerItem(for: Resource.loading, configuration: configuration)
+            return playerItem(for: Resource.loading, configuration: configuration, resumeState: resumeState)
         }
         else {
             PlayerItem.load(for: id)
-            return playerItem(for: resource, configuration: configuration)
+            return playerItem(for: resource, configuration: configuration, resumeState: resumeState)
         }
     }
 }

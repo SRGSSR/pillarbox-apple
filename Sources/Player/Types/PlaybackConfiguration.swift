@@ -48,7 +48,12 @@ public struct PlaybackConfiguration {
     func apply(to item: AVPlayerItem, metadata: PlayerMetadata, resumeState: ResumeState?) {
         let position = Self.resumePosition(item: item, resumeState: resumeState) ?? position
         let seekPosition = position.after(metadata.blockedTimeRanges) ?? position
-        item.seek(to: seekPosition.time, toleranceBefore: seekPosition.toleranceBefore, toleranceAfter: seekPosition.toleranceAfter, completionHandler: nil)
+        item.seek(
+            to: seekPosition.time,
+            toleranceBefore: seekPosition.toleranceBefore,
+            toleranceAfter: seekPosition.toleranceAfter,
+            completionHandler: nil
+        )
         item.automaticallyPreservesTimeOffsetFromLive = automaticallyPreservesTimeOffsetFromLive
         item.preferredForwardBufferDuration = preferredForwardBufferDuration
     }
