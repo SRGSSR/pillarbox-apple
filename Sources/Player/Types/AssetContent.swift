@@ -25,7 +25,7 @@ struct AssetContent {
         let item = resource.playerItem(configuration: configuration)
             .withId(id)
             .updated(with: self)
-        self.configuration.apply(to: item, metadata: metadata)
+        self.configuration.apply(to: item, metadata: metadata, resumeState: nil /*TODO*/)
         return item
     }
 

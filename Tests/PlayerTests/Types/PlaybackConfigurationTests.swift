@@ -39,7 +39,7 @@ final class PlaybackConfigurationTests: TestCase {
             preferredForwardBufferDuration: 11
         )
         let playerItem = AVPlayerItem(url: Stream.onDemand.url)
-        configuration.apply(to: playerItem, metadata: .init())
+        configuration.apply(to: playerItem, metadata: .init(), resumeState: nil)
         expect(playerItem.currentTime()).to(equal(time))
         expect(playerItem.automaticallyPreservesTimeOffsetFromLive).to(beTrue())
         expect(playerItem.preferredForwardBufferDuration).to(equal(11))
@@ -53,7 +53,8 @@ final class PlaybackConfigurationTests: TestCase {
             to: playerItem,
             metadata: .init(timeRanges: [
                 .init(kind: .blocked, start: .init(value: 2, timescale: 1), end: blockedTimeRangeEnd)
-            ])
+            ]),
+            resumeState: nil
         )
         expect(playerItem.currentTime()).to(equal(blockedTimeRangeEnd))
     }
