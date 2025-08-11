@@ -40,9 +40,15 @@ public struct PlaybackConfiguration {
         self.preferredForwardBufferDuration = preferredForwardBufferDuration
     }
 
+    private static func resumePosition(item: AVPlayerItem, resumeState: ResumeState?) -> Position? {
+        guard item.isLoaded, let id = item.id else { return nil }
+        return resumeState?.position(for: id)
+    }
+
     func apply(to item: AVPlayerItem, metadata: PlayerMetadata, resumeState: ResumeState?) {
-        let position = position.after(metadata.blockedTimeRanges) ?? position
-        item.seek(to: position.time, toleranceBefore: position.toleranceBefore, toleranceAfter: position.toleranceAfter, completionHandler: nil)
+        let position = Self.resumePosition(item: item, resumeState: resumeState) ?? position
+        let seekPosition = position.after(metadata.blockedTimeRanges) ?? position
+        item.seek(to: seekPosition.time, toleranceBefore: seekPosition.toleranceBefore, toleranceAfter: seekPosition.toleranceAfter, completionHandler: nil)
         item.automaticallyPreservesTimeOffsetFromLive = automaticallyPreservesTimeOffsetFromLive
         item.preferredForwardBufferDuration = preferredForwardBufferDuration
     }

@@ -7,8 +7,8 @@
 import Foundation
 
 final class ResumeState {
-    var position: Position?
-    let id: UUID
+    private var position: Position?
+    private let id: UUID
 
     var isEmpty: Bool {
         position == nil
