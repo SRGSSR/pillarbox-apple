@@ -23,13 +23,7 @@ enum Resource {
         ])
     }
 
-    func playerItem(configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
-        let item = unlimitedPlayerItem(configuration: configuration)
-        limits.apply(to: item)
-        return item
-    }
-
-    private func unlimitedPlayerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
+    func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
         switch self {
         case let .simple(url: url):
             return AVPlayerItem(asset: asset(for: url, with: configuration))
