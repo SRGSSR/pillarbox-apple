@@ -51,7 +51,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             .test(id: "B"),
             .test(id: "C")
         ]
-        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none)
+        let currentItem = currentItemContent.playerItem(reload: false, configuration: .default, limits: .none)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
@@ -80,7 +80,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             .test(id: "C"),
             currentItemContent
         ]
-        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none)
+        let currentItem = currentItemContent.playerItem(reload: false, configuration: .default, limits: .none)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
@@ -103,7 +103,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             .test(id: "A"),
             .test(id: "B")
         ]
-        let unknownItem = AssetContent.test(id: "1").playerItem(configuration: .default, limits: .none)
+        let unknownItem = AssetContent.test(id: "1").playerItem(reload: false, configuration: .default, limits: .none)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
@@ -129,7 +129,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             otherContent,
             .test(id: "C")
         ]
-        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none)
+        let currentItem = currentItemContent.playerItem(reload: false, configuration: .default, limits: .none)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,
@@ -154,7 +154,7 @@ final class AVPlayerItemRepeatOffUpdateTests: TestCase {
             .test(id: "2"),
             .test(id: "3")
         ]
-        let currentItem = currentItemContent.playerItem(configuration: .default, limits: .none)
+        let currentItem = currentItemContent.playerItem(reload: false, configuration: .default, limits: .none)
         let items = AVPlayerItem.playerItems(
             for: currentContents,
             replacing: previousContents,

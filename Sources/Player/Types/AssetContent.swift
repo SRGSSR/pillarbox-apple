@@ -21,34 +21,26 @@ struct AssetContent {
         .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
-    func playerItem(reload: Bool = false, configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
-        if reload, resource.isFailing {
-            let item = Resource.loading.playerItem(
-                configuration: configuration,
-                limits: limits
-            )
-            .withId(id)
-            .updated(with: self)
+    private func playerItem(for resource: Resource, configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
+        let item = resource.playerItem(
+            configuration: configuration,
+            limits: limits
+        )
+        .withId(id)
+        .updated(with: self)
 
-            configure(item: item)
-            PlayerItem.reload(for: id)
-            return item
-        }
-        else {
-            let item = resource.playerItem(
-                configuration: configuration,
-                limits: limits
-            )
-            .withId(id)
-            .updated(with: self)
-
-            configure(item: item)
-            PlayerItem.load(for: id)
-            return item
-        }
+        self.configuration.apply(to: item, with: metadata)
+        return item
     }
 
-    private func configure(item: AVPlayerItem) {
-        configuration.apply(to: item, with: metadata)
+    func playerItem(reload: Bool, configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
+        if reload, resource.isFailing {
+            PlayerItem.reload(for: id)
+            return playerItem(for: Resource.loading, configuration: configuration, limits: limits)
+        }
+        else {
+            PlayerItem.load(for: id)
+            return playerItem(for: resource, configuration: configuration, limits: limits)
+        }
     }
 }
