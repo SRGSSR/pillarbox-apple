@@ -22,13 +22,10 @@ struct AssetContent {
     }
 
     private func playerItem(for resource: Resource, configuration: PlayerConfiguration, limits: PlayerLimits) -> AVPlayerItem {
-        let item = resource.playerItem(
-            configuration: configuration,
-            limits: limits
-        )
-        .withId(id)
-        .updated(with: self)
-
+        let item = resource.playerItem(configuration: configuration)
+            .withId(id)
+            .updated(with: self)
+        limits.apply(to: item)
         self.configuration.apply(to: item, with: metadata)
         return item
     }
