@@ -21,7 +21,7 @@ public extension Player {
     /// This method can be used not only during active playback, but also to set the initial item and position for a
     /// player immediately after creation.
     ///
-    /// > Note: To consistently start playback of an item at a specific position, use ``PlaybackConfiguration.position``
+    /// > Note: To consistently start playback of an item at a specific position, use ``PlaybackConfiguration/position``
     ///   instead. Calling ``resume(_:in:)`` overrides this setting temporarily.
     func resume(_ position: Position, in item: PlayerItem) {
         guard items.contains(item) else { return }
