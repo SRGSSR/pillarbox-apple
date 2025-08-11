@@ -111,7 +111,11 @@ extension AVPlayerItem {
     ) -> [AVPlayerItem] {
         sources
             .prefix(length)
-            .map { $0.playerItem(reload: reload, configuration: configuration, limits: limits) }
+            .map { source in
+                let item = source.playerItem(reload: reload, configuration: configuration)
+                limits.apply(to: item)
+                return item
+            }
     }
 
     private static func newItemSources(from contents: [AssetContent]) -> [ItemSource] {
