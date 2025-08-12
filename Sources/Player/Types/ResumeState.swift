@@ -10,10 +10,6 @@ final class ResumeState {
     private var position: Position?
     private let id: UUID
 
-    var isEmpty: Bool {
-        position == nil
-    }
-
     init(position: Position, id: UUID) {
         self.position = position
         self.id = id
