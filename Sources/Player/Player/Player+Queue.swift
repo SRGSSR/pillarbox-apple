@@ -42,6 +42,7 @@ extension Player {
                     repeatMode: repeatMode,
                     length: buffer.length,
                     configuration: self.configuration,
+                    resumeState: resumeState,
                     limits: self.limits
                 )
             }

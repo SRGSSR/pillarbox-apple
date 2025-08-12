@@ -69,6 +69,10 @@
 - ``seek(to:completion:)-2ypz8``
 - ``seek(to:completion:)-1tbeq``
 
+### Resuming
+
+- ``resume(_:in:)``
+
 ### Skipping Through Media
 
 - ``canSkipBackward()``

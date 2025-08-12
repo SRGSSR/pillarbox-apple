@@ -36,6 +36,7 @@ public extension Player {
                 length: configuration.preloadedItems,
                 reload: true,
                 configuration: configuration,
+                resumeState: resumeState,
                 limits: limits
             )
         )
@@ -69,6 +70,7 @@ public extension Player {
                 length: configuration.preloadedItems,
                 reload: true,
                 configuration: configuration,
+                resumeState: resumeState,
                 limits: limits
             )
         )
@@ -94,6 +96,7 @@ extension Player {
                     length: configuration.preloadedItems,
                     reload: true,
                     configuration: configuration,
+                    resumeState: resumeState,
                     limits: limits
                 )
                 queuePlayer.replaceItems(with: playerItems)
@@ -116,6 +119,7 @@ extension Player {
             repeatMode: repeatMode,
             length: configuration.preloadedItems,
             configuration: configuration,
+            resumeState: resumeState,
             limits: limits
         )
         queuePlayer.replaceItems(with: items)
