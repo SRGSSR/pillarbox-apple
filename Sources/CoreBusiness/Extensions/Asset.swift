@@ -19,9 +19,18 @@ extension Asset {
     }
 
     static func encrypted(url: URL, certificateUrl: URL, metadata: M, configuration: PlaybackConfiguration) -> Self {
-        .encrypted(
+        // FIXME: An issue affects `AVContentKeySession`, preventing key request creation after several hours (FB19383686).
+        //        In the meantime we use a `.custom` asset but when the issue has been fixed we should use an `.encrypted`
+        //        asset (removing `IrdetoResourceLoaderDelegate` in the process).
+        // .encrypted(
+        //     url: url,
+        //     delegate: IrdetoContentKeySessionDelegate(certificateUrl: certificateUrl),
+        //     metadata: metadata,
+        //     configuration: configuration
+        // )
+        .custom(
             url: url,
-            delegate: IrdetoContentKeySessionDelegate(certificateUrl: certificateUrl),
+            delegate: IrdetoResourceLoaderDelegate(certificateUrl: certificateUrl),
             metadata: metadata,
             configuration: configuration
         )
