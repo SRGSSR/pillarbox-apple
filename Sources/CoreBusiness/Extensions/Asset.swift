@@ -21,7 +21,7 @@ extension Asset {
     static func encrypted(url: URL, certificateUrl: URL, metadata: M, configuration: PlaybackConfiguration) -> Self {
         .encrypted(
             url: url,
-            delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl),
+            delegate: IrdetoContentKeySessionDelegate(certificateUrl: certificateUrl),
             metadata: metadata,
             configuration: configuration
         )

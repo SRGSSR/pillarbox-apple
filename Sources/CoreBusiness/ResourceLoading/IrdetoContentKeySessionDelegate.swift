@@ -7,7 +7,7 @@
 import AVFoundation
 import PillarboxPlayer
 
-final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
+final class IrdetoContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
     private let certificateUrl: URL
     private let session = URLSession(configuration: .default)
 
