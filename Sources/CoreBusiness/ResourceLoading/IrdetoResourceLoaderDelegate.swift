@@ -28,6 +28,6 @@ final class IrdetoResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegat
     }
 
     private func processRequest(_ loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        return false
+        false
     }
 }

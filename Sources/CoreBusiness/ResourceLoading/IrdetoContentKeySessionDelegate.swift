@@ -15,38 +15,13 @@ final class IrdetoContentKeySessionDelegate: NSObject, AVContentKeySessionDelega
         self.certificateUrl = certificateUrl
     }
 
-    private static func contentKeyContextRequest(from identifier: Any?, httpBody: Data) -> URLRequest? {
-        guard let skdUrlString = identifier as? String,
-              var components = URLComponents(string: skdUrlString) else {
-            return nil
-        }
-
-        components.scheme = "https"
-        guard let url = components.url else { return nil }
-
-        var request = URLRequest(url: url)
-        request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-        request.httpBody = httpBody
-        return request
-    }
-
-    private static func contentIdentifier(from keyRequest: AVContentKeyRequest) -> Data? {
-        guard let identifier = keyRequest.identifier as? String,
-              let components = URLComponents(string: identifier),
-              let contentIdentifier = components.queryItems?.first(where: { $0.name == "contentId" })?.value else {
-            return nil
-        }
-        return Data(contentIdentifier.utf8)
-    }
-
     private func contentKeyResponseData(for keyRequest: AVContentKeyRequest) async throws -> Data {
         let (certificateData, _) = try await session.httpData(from: certificateUrl)
         let contentKeyRequestData = try await keyRequest.makeStreamingContentKeyRequestData(
             forApp: certificateData,
-            contentIdentifier: Self.contentIdentifier(from: keyRequest)
+            contentIdentifier: Irdeto.contentIdentifier(from: keyRequest)
         )
-        guard let contentKeyContextRequest = Self.contentKeyContextRequest(
+        guard let contentKeyContextRequest = Irdeto.contentKeyContextRequest(
             from: keyRequest.identifier,
             httpBody: contentKeyRequestData
         ) else {
