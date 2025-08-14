@@ -12,7 +12,8 @@ private var kUsesContentKeySession = false
 /// Sets whether encrypted assets are delivered using modern content key session APIs or legacy APIs.
 ///
 /// > Important: This setting is reserved to the Pillarbox development team. Please never modify.
-@_spi(Private) public func setUsesContentKeySession(_ usesContentKeySession: Bool) {
+@_spi(Private)
+public func _setUsesContentKeySession(_ usesContentKeySession: Bool) {
     kUsesContentKeySession = usesContentKeySession
 }
 
