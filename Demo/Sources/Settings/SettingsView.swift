@@ -73,7 +73,7 @@ struct SettingsView: View {
     private var qualitySetting: QualitySetting = .high
 
     @AppStorage(UserDefaults.DemoSettingKey.contentKeySessionEnabled.rawValue)
-    private var isContentKeySessionEnabled: Bool = false
+    private var isContentKeySessionEnabled = false
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.enabled.rawValue, store: .playbackHud)
     private var playbackHudEnabled = false
@@ -227,7 +227,10 @@ extension SettingsView {
 
     private func debuggingSection() -> some View {
         Section {
-            Toggle("Use content key session", isOn: $isContentKeySessionEnabled)
+            Toggle(isOn: $isContentKeySessionEnabled) {
+                Text("Use content key session")
+                Text("Manages FairPlay decryption keys with modern APIs.").font(.footnote)
+            }
             Button(action: simulateMemoryWarning) {
                 Text("Simulate memory warning")
                     .frame(maxWidth: .infinity, alignment: .leading)
