@@ -15,11 +15,11 @@ final class IrdetoResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegat
     }
 
     private func contentKeyResponseData(for loadingRequest: AVAssetResourceLoadingRequest) async throws -> Data {
-        let (certificateData, _) = try await session.httpData(from: certificateUrl)
         guard let identifier = loadingRequest.request.url?.absoluteString,
               let contentIdentifier = Irdeto.contentIdentifier(from: identifier) else {
             throw DRMError.missingContentKeyContext
         }
+        let (certificateData, _) = try await session.httpData(from: certificateUrl)
         let contentKeyRequestData = try loadingRequest.streamingContentKeyRequestData(
           forApp: certificateData,
           contentIdentifier: contentIdentifier
