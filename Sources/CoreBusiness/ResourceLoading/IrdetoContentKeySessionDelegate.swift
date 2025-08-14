@@ -17,12 +17,15 @@ final class IrdetoContentKeySessionDelegate: NSObject, AVContentKeySessionDelega
 
     private func contentKeyResponseData(for keyRequest: AVContentKeyRequest) async throws -> Data {
         let (certificateData, _) = try await session.httpData(from: certificateUrl)
+        guard let identifier = keyRequest.identifier as? String else {
+            throw DRMError.missingContentKeyContext
+        }
         let contentKeyRequestData = try await keyRequest.makeStreamingContentKeyRequestData(
             forApp: certificateData,
-            contentIdentifier: Irdeto.contentIdentifier(from: keyRequest)
+            contentIdentifier: Irdeto.contentIdentifier(from: identifier)
         )
         guard let contentKeyContextRequest = Irdeto.contentKeyContextRequest(
-            from: keyRequest.identifier,
+            from: identifier,
             httpBody: contentKeyRequestData
         ) else {
             throw DRMError.missingContentKeyContext
