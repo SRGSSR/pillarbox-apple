@@ -15,7 +15,7 @@ final class CommandersActHeartbeatTests: CommandersActTestCase {
     private var cancellables = Set<AnyCancellable>()
 
     private static func player(from stream: PillarboxStreams.Stream, into cancellables: inout Set<AnyCancellable>) -> Player {
-        let heartbeat = CommandersActHeartbeat(delay: 0.1, posInterval: 0.1, uptimeInterval: 0.2)
+        let heartbeat = CommandersActHeartbeat(delay: 0.1, posInterval: 0.1, uptimeInterval: 0.2, queue: .main)
         let player = Player(item: .simple(url: stream.url))
         player.propertiesPublisher
             .sink { properties in
