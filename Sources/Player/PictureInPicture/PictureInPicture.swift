@@ -44,7 +44,7 @@ public final class PictureInPicture {
         custom.start()
     }
 
-    /// Stop Picture if Picture if running.
+    /// Gracefully stops Picture if Picture if running.
     ///
     /// The ``PictureInPictureDelegate/pictureInPictureRestoreUserInterfaceForStop(with:)`` method is called.
     public func stop() {
@@ -52,7 +52,7 @@ public final class PictureInPicture {
         system.stop()
     }
 
-    /// Close Picture in Picture.
+    /// Closes Picture in Picture.
     ///
     /// The ``PictureInPictureDelegate/pictureInPictureRestoreUserInterfaceForStop(with:)`` method is not called.
     public func close() {
