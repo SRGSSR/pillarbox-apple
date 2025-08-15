@@ -135,7 +135,7 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
             delegate.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
         }
         else {
-            completionHandler(true)
+            completionHandler(false)
         }
     }
 
