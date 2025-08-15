@@ -84,7 +84,7 @@ extension PictureInPicture: PictureInPictureDelegate {
     // swiftlint:disable:next missing_docs
     public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
         guard !isClosed else {
-            completion(true)
+            completion(false)
             return
         }
         if let delegate {
@@ -98,7 +98,7 @@ extension PictureInPicture: PictureInPictureDelegate {
             }
         }
         else {
-            completion(true)
+            completion(false)
         }
     }
 

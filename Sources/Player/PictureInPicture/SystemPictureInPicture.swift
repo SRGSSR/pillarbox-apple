@@ -113,7 +113,7 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
             delegate.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
         }
         else {
-            completionHandler(true)
+            completionHandler(false)
         }
     }
 
