@@ -40,7 +40,6 @@ enum Resource {
             let asset = asset(for: url, with: configuration)
             kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
             kContentKeySession.addContentKeyRecipient(asset)
-            kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
             return AVPlayerItem(asset: asset)
 #endif
         }

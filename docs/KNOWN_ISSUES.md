@@ -137,3 +137,11 @@ When multiple player instances are used and one of them has been made active, th
 ### Workaround
 
 No workaround is available yet.
+
+## DRM content fails to play after extended background time
+
+If the app stays in the background for an extended period (around 24 hours) without being terminated, playback of DRM-protected content may consistently fail.
+
+### Workaround
+
+Instead of using an encrypted `PlayerItem`, create a custom player item and handle key loading via an `AVAssetResourceLoaderDelegate`.

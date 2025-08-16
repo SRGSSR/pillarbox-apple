@@ -7,7 +7,7 @@
 import AVFoundation
 import PillarboxPlayer
 
-final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
+final class IrdetoContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
     private let certificateUrl: URL
     private let session = URLSession(configuration: .default)
 
@@ -15,30 +15,17 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         self.certificateUrl = certificateUrl
     }
 
-    private static func contentKeyContextRequest(from identifier: Any?, httpBody: Data) -> URLRequest? {
-        guard let skdUrlString = identifier as? String,
-              var components = URLComponents(string: skdUrlString) else {
-            return nil
-        }
-
-        components.scheme = "https"
-        guard let url = components.url else { return nil }
-
-        var request = URLRequest(url: url)
-        request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-        request.httpBody = httpBody
-        return request
-    }
-
     private func contentKeyResponseData(for keyRequest: AVContentKeyRequest) async throws -> Data {
         let (certificateData, _) = try await session.httpData(from: certificateUrl)
+        guard let identifier = keyRequest.identifier as? String else {
+            throw DRMError.missingContentKeyContext
+        }
         let contentKeyRequestData = try await keyRequest.makeStreamingContentKeyRequestData(
             forApp: certificateData,
-            contentIdentifier: Data("content_id".utf8)
+            contentIdentifier: Irdeto.contentIdentifier(from: identifier)
         )
-        guard let contentKeyContextRequest = Self.contentKeyContextRequest(
-            from: keyRequest.identifier,
+        guard let contentKeyContextRequest = Irdeto.contentKeyContextRequest(
+            from: identifier,
             httpBody: contentKeyRequestData
         ) else {
             throw DRMError.missingContentKeyContext
@@ -47,7 +34,15 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         return contentKeyContextData
     }
 
+    func contentKeySession(_ session: AVContentKeySession, didProvideRenewingContentKeyRequest keyRequest: AVContentKeyRequest) {
+        contentKeySession(session, process: keyRequest)
+    }
+
     func contentKeySession(_ session: AVContentKeySession, didProvide keyRequest: AVContentKeyRequest) {
+        contentKeySession(session, process: keyRequest)
+    }
+
+    private func contentKeySession(_ session: AVContentKeySession, process keyRequest: AVContentKeyRequest) {
         Task {
             do {
                 let responseData = try await contentKeyResponseData(for: keyRequest)
@@ -56,6 +51,19 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
             } catch {
                 keyRequest.processContentKeyResponseErrorReliably(error)
             }
+        }
+    }
+
+    func contentKeySession(
+        _ session: AVContentKeySession,
+        shouldRetry keyRequest: AVContentKeyRequest,
+        reason retryReason: AVContentKeyRequest.RetryReason
+    ) -> Bool {
+        switch retryReason {
+        case .receivedObsoleteContentKey, .receivedResponseWithExpiredLease, .timedOut:
+            return true
+        default:
+            return false
         }
     }
 }
