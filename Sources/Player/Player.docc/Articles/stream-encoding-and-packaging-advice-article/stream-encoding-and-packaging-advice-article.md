@@ -33,17 +33,19 @@ For optimal compatibility with the ``PillarboxPlayer`` framework, certain specif
 - **CC:** Use the `CLOSED-CAPTIONS` type and set `AUTOSELECT` to `YES`.
 - **SDH:** Use the `SUBTITLES` type with the `public.accessibility.transcribes-spoken-dialog` and `public.accessibility.describes-music-and-sound` characteristics, and set `AUTOSELECT` to `YES`.
 
+Within a group of renditions (`EXT-X-MEDIA` tags with the same `TYPE` and `GROUP-ID`), tags that share the same `LANGUAGE` value must be ordered from most general (fewest or no `CHARACTERISTICS`) to most specific (the most `CHARACTERISTICS`). This ordering ensures that when no accessibility preferences are set, Pillarbox’s ``Player/setMediaSelection(preferredLanguages:for:)`` will match the general tags first.
+
 > Note: If no closed caption content is available, you should [explicitly declare](https://developer.apple.com/library/archive/qa/qa1801/_index.html) this in the playlist by adding `CLOSED-CAPTIONS=NONE` to the `EXT-X-STREAM-INF` tag. This prevents the player from showing a CC option unnecessarily, particularly when no subtitles are present either.
 
 #### Troubleshooting rendition selection
 
-If renditions are not handled as expected:
+If renditions are not handled correctly (e.g., automatic selection does not work as intended, or the selected value seems incorrect):
 
-1. **Validate the Master Playlist:** Confirm attributes like `AUTOSELECT`, `FORCED`, and accessibility characteristics are correctly set.
+1. **Validate the Master Playlist:** Confirm attributes like `AUTOSELECT`, `FORCED`, and accessibility characteristics are correctly set. Within each language of a rendition group, ensure that tags without `CHARACTERISTICS` come first, followed by those with `CHARACTERISTICS`.
 2. **Check System Settings**: Ensure the device’s system settings are configured with appropriate:
     - **Languages:** List and order preferred languages correctly.
     - **Accessibility Settings:** Enable or disable AD and SDH/CC preferences as needed.
-3. **Inspect your Code:** Verify that ``Player/setMediaSelection(preferredLanguages:for:)`` is not overriding automatic selection.
+3. **Inspect your Code:** Make sure ``Player/setMediaSelection(preferredLanguages:for:)`` isn’t accidentally overriding the automatic selection when it shouldn’t.
 
 > Tip: Refer to the _Inspecting and testing streams_ section for useful troubleshooting tools.
 
