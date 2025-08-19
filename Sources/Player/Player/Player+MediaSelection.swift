@@ -114,6 +114,10 @@ public extension Player {
     ///
     /// This method can be used to override the default media option selection for some characteristic, e.g., to start
     /// playback with a predefined language for audio and / or subtitles.
+    ///
+    /// > Important: Media selection only works when HLS playlists are correctly formatted. If selection does not behave
+    ///   as expected, see the troubleshooting section in <doc:stream-encoding-and-packaging-advice-article> to identify
+    ///   which requirements may not have been met.
     func setMediaSelection(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
         if let item = queuePlayer.currentItem {
             properties.mediaSelectionProperties.reset(for: characteristic, in: item)
