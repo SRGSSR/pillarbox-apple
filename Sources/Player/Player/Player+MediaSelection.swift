@@ -123,11 +123,25 @@ public extension Player {
         if let item = queuePlayer.currentItem {
             properties.mediaSelectionProperties.reset(for: characteristic, in: item)
         }
-        let selectionCriteria = AVPlayerMediaSelectionCriteria(
-            preferredLanguages: languages,
-            preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
-        )
-        queuePlayer.setMediaSelectionCriteria(selectionCriteria, forMediaCharacteristic: characteristic)
+        if !languages.isEmpty {
+            let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
+                preferredLanguages: Self.preferredLanguages(for: characteristic),
+                preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
+            )
+            queuePlayer.setMediaSelectionCriteria(
+                selectionCriteria.selectionCriteria(byAdding: languages),
+                forMediaCharacteristic: characteristic
+            )
+        }
+        else {
+            queuePlayer.setMediaSelectionCriteria(
+                AVPlayerMediaSelectionCriteria(
+                    preferredLanguages: [],
+                    preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
+                ),
+                forMediaCharacteristic: characteristic
+            )
+        }
     }
 
     /// Resets media selection preferred languages for the specified media characteristic.
