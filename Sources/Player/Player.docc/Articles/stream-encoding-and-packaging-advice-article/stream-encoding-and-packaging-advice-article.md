@@ -33,7 +33,7 @@ For optimal compatibility with the ``PillarboxPlayer`` framework, certain specif
 - **CC:** Use the `CLOSED-CAPTIONS` type and set `AUTOSELECT` to `YES`.
 - **SDH:** Use the `SUBTITLES` type with the `public.accessibility.transcribes-spoken-dialog` and `public.accessibility.describes-music-and-sound` characteristics, and set `AUTOSELECT` to `YES`.
 
-Within a group of renditions (`EXT-X-MEDIA` tags with the same `TYPE` and `GROUP-ID`), tags that share the same `LANGUAGE` value must be ordered from most general (fewest or no `CHARACTERISTICS`) to most specific (the most `CHARACTERISTICS`). This ordering ensures that when no accessibility preferences are set, Pillarbox’s ``Player/setMediaSelection(preferredLanguages:for:)`` will match the general tags first.
+Within a group of renditions (`EXT-X-MEDIA` tags with the same `TYPE` and `GROUP-ID`), tags that share the same `LANGUAGE` value must be [ordered](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Multivariant-Playlist) from most general (fewest or no `CHARACTERISTICS`) to most specific (the most `CHARACTERISTICS`). This ordering ensures that when no accessibility preferences are set, Pillarbox’s ``Player/setMediaSelection(preferredLanguages:for:)`` will match the general tags first.
 
 > Note: If no closed caption content is available, you should [explicitly declare](https://developer.apple.com/library/archive/qa/qa1801/_index.html) this in the playlist by adding `CLOSED-CAPTIONS=NONE` to the `EXT-X-STREAM-INF` tag. This prevents the player from showing a CC option unnecessarily, particularly when no subtitles are present either.
 
