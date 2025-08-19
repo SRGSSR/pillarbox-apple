@@ -113,7 +113,8 @@ public extension Player {
     ///     include `.audible`, `.legible`, and `.visual`.
     ///
     /// This method can be used to override the default media option selection for some characteristic, e.g., to start
-    /// playback with a predefined language for audio and/or subtitles.
+    /// playback with a predefined language for audio and/or subtitles. Accessibility preferences are automatically
+    /// applied to pick the best matching option.
     ///
     /// > Important: Media selection only works when HLS playlists are correctly formatted. If selection does not behave
     ///   as expected, see the troubleshooting section in <doc:stream-encoding-and-packaging-advice-article> to identify
