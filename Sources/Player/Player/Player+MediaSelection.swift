@@ -108,7 +108,7 @@ public extension Player {
     /// - Parameters:
     ///   - languages: An Array of strings containing language identifiers, in order of desirability, that are
     ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T
-    ///     language codes.
+    ///     language codes. Use an empty list to prefer no language selection if possible.
     ///   - characteristic: The media characteristic for which the selection criteria are to be applied. Supported values
     ///     include `.audible`, `.legible`, and `.visual`.
     ///
@@ -127,6 +127,13 @@ public extension Player {
             preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
         )
         queuePlayer.setMediaSelectionCriteria(selectionCriteria, forMediaCharacteristic: characteristic)
+    }
+
+    /// Resets media selection preferred languages for the specified media characteristic.
+    ///
+    /// This method removes any overrides, returning the behavior to default media option selection.
+    func resetMediaSelectionPreferredLanguages(for characteristic: AVMediaCharacteristic) {
+        queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
     }
 
     /// Returns media selection preferred languages for the specified media characteristic.

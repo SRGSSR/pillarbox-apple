@@ -134,7 +134,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
     }
 
-    func testAudibleMediaSelectionReset() {
+    func testEmptyAudibleMediaSelection() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         player.setMediaSelection(preferredLanguages: ["fr"], for: .audible)
         expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
@@ -142,11 +142,31 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
     }
 
-    func testLegibleMediaSelectionReset() {
+    func testEmptyLegibleMediaSelection() {
+        MediaAccessibilityDisplayType.alwaysOn(languageCode: "ja").apply()
+
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
         player.setMediaSelection(preferredLanguages: [], for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
+    }
+
+    func testAudibleMediaSelectionReset() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelection(preferredLanguages: ["fr"], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
+        player.resetMediaSelectionPreferredLanguages(for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
+    }
+
+    func testLegibleMediaSelectionReset() {
+        MediaAccessibilityDisplayType.alwaysOn(languageCode: "ja").apply()
+
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
+        expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
+        player.resetMediaSelectionPreferredLanguages(for: .legible)
+        expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
     }
 }
