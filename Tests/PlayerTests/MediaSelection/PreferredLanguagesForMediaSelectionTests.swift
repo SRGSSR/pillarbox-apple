@@ -135,6 +135,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
 
     func testSelectLegibleOffOptionWithPreferredLanguage() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
         player.setMediaSelection(preferredLanguages: ["en"], for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("en"))
@@ -145,6 +146,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
 
     func testSelectLegibleAutomaticOptionWithPreferredLanguage() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
         player.setMediaSelection(preferredLanguages: ["en"], for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("en"))
@@ -155,6 +157,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
 
     func testSelectLegibleOffOptionWithEmptyLanguages() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
         player.setMediaSelection(preferredLanguages: [], for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
@@ -165,6 +168,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
 
     func testSelectLegibleOptionWithEmptyLanguages() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
         player.setMediaSelection(preferredLanguages: [], for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
@@ -178,6 +182,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
 
     func testSelectLegibleAutomaticOptionWithEmptyLanguages() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
         player.setMediaSelection(preferredLanguages: [], for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
