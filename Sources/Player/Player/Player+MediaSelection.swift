@@ -53,11 +53,11 @@ public extension Player {
     ///
     /// You can use `mediaSelectionCharacteristics` to retrieve available characteristics.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        guard let selection = properties.mediaSelectionProperties.selection, let selector = mediaSelector(for: characteristic) else {
+        guard let selector = mediaSelector(for: characteristic) else {
             return .off
         }
         let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic)
-        let option = selector.selectedMediaOption(in: selection, with: selectionCriteria)
+        let option = selector.selectedMediaOption(in: properties.mediaSelectionProperties.selection, with: selectionCriteria)
         return selector.supports(mediaSelectionOption: option) ? option : .off
     }
 

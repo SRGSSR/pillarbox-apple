@@ -22,7 +22,7 @@ protocol MediaSelector {
     /// - Returns: The selected media option.
     ///
     /// Use available information to refine the choice of the selected media option to return.
-    func selectedMediaOption(in selection: AVMediaSelection, with selectionCriteria: AVPlayerMediaSelectionCriteria?) -> MediaSelectionOption
+    func selectedMediaOption(in selection: AVMediaSelection?, with selectionCriteria: AVPlayerMediaSelectionCriteria?) -> MediaSelectionOption
 
     /// Selects the provided option, applying it on the specified item.
     ///

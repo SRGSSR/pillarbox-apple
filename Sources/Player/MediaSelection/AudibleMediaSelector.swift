@@ -15,8 +15,11 @@ struct AudibleMediaSelector: MediaSelector {
         return options.count > 1 ? options.map { .on($0) } : []
     }
 
-    func selectedMediaOption(in selection: AVMediaSelection, with selectionCriteria: AVPlayerMediaSelectionCriteria?) -> MediaSelectionOption {
-        if let option = selection.selectedMediaOption(in: group) {
+    func selectedMediaOption(
+        in selection: AVMediaSelection?,
+        with selectionCriteria: AVPlayerMediaSelectionCriteria?
+    ) -> MediaSelectionOption {
+        if let option = selection?.selectedMediaOption(in: group) {
             return .on(option)
         }
         else {

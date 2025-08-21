@@ -21,11 +21,14 @@ struct LegibleMediaSelector: MediaSelector {
         return options
     }
 
-    func selectedMediaOption(in selection: AVMediaSelection, with selectionCriteria: AVPlayerMediaSelectionCriteria?) -> MediaSelectionOption {
-        if selectionCriteria == nil {
+    func selectedMediaOption(
+        in selection: AVMediaSelection?,
+        with selectionCriteria: AVPlayerMediaSelectionCriteria?
+    ) -> MediaSelectionOption {
+        guard let preferredLanguages = selectionCriteria?.preferredLanguages, !preferredLanguages.isEmpty else {
             return persistedMediaOption(in: selection)
         }
-        else if let option = selection.selectedMediaOption(in: group) {
+        if let option = selection?.selectedMediaOption(in: group) {
             return .on(option)
         }
         else {
@@ -33,10 +36,10 @@ struct LegibleMediaSelector: MediaSelector {
         }
     }
 
-    private func persistedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
+    private func persistedMediaOption(in selection: AVMediaSelection?) -> MediaSelectionOption {
         switch MACaptionAppearanceGetDisplayType(.user) {
         case .alwaysOn:
-            if let option = selection.selectedMediaOption(in: group) {
+            if let option = selection?.selectedMediaOption(in: group) {
                 return .on(option)
             }
             else {
