@@ -135,10 +135,7 @@ public extension Player {
         }
         else {
             queuePlayer.setMediaSelectionCriteria(
-                AVPlayerMediaSelectionCriteria(
-                    preferredLanguages: [],
-                    preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
-                ),
+                AVPlayerMediaSelectionCriteria(preferredLanguages: [], preferredMediaCharacteristics: []),
                 forMediaCharacteristic: characteristic
             )
         }
