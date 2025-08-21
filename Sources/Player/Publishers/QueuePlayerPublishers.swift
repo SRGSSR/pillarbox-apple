@@ -57,4 +57,10 @@ extension QueuePlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
+
+    func mediaSelectionCriteriaUpdatePublisher() -> AnyPublisher<Void, Never> {
+        Self.notificationCenter.weakPublisher(for: .didUpdateMediaSelectionCriteria, object: self)
+            .map { _ in () }
+            .eraseToAnyPublisher()
+    }
 }

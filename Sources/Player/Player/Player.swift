@@ -222,6 +222,7 @@ public final class Player: ObservableObject, Equatable {
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
         configureAudioSessionPublisher()
+        configureMediaSelectionCriteriaPublisher()
     }
 
     /// Creates a player with a single item in its queue.
@@ -340,6 +341,14 @@ private extension Player {
                 }
                 .store(in: &cancellables)
         }
+    }
+
+    func configureMediaSelectionCriteriaPublisher() {
+        queuePlayer.mediaSelectionCriteriaUpdatePublisher()
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
     }
 
     func updateTracker(with items: QueueItems?) {

@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Nimble
+import PillarboxCircumspect
 import PillarboxStreams
 
 final class PreferredLanguagesForMediaSelectionTests: TestCase {
@@ -168,5 +169,14 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
         player.resetMediaSelectionPreferredLanguages(for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
+    }
+
+    func testMediaSelectionUpdatePublishesPlayerUpdate() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.play()
+        expect(player.time().seconds).toEventually(beGreaterThan(1))
+        expectChange(from: player, timeout: .milliseconds(500)) {
+            player.setMediaSelection(preferredLanguages: [], for: .legible)
+        }
     }
 }
