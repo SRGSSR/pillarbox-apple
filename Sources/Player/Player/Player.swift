@@ -345,7 +345,6 @@ private extension Player {
 
     func configureMediaSelectionCriteriaPublisher() {
         queuePlayer.mediaSelectionCriteriaUpdatePublisher()
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.objectWillChange.send()
             }
