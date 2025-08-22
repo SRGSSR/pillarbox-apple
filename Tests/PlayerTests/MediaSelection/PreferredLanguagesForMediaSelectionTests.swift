@@ -180,7 +180,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         expect(player.selectedMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
     }
 
-    func testSelectLegibleAutomaticOptionWithEmptyLanguages() {
+    func testSelectLegibleAutomaticOptionWithEmptyLegibleLanguages() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
@@ -189,6 +189,21 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
 
         player.select(mediaOption: .automatic, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
+    }
+
+    func testSelectLegibleAutomaticOptionWithEmptyAudibleAndLegibleLanguages() {
+        MediaAccessibilityDisplayType.alwaysOn(languageCode: "ja").apply()
+
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
+
+        player.setMediaSelection(preferredLanguages: [], for: .audible)
+        player.setMediaSelection(preferredLanguages: [], for: .legible)
+        expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
+
+        player.select(mediaOption: .automatic, for: .legible)
+        expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
+        expect(player.currentMediaOption(for: .legible)).toNever(haveLanguageIdentifier("ja"), until: .seconds(1))
     }
 
     func testAudibleMediaSelectionReset() {

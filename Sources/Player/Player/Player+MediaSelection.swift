@@ -14,6 +14,15 @@ public extension Player {
         properties.mediaSelectionProperties.characteristics
     }
 
+    private static func emptyMediaSelectionCriteria(for characteristic: AVMediaCharacteristic) -> AVPlayerMediaSelectionCriteria? {
+        switch characteristic {
+        case .legible:
+            return .init(preferredLanguages: [], preferredMediaCharacteristics: [])
+        default:
+            return nil
+        }
+    }
+
     private static func preferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
         switch characteristic {
         case .legible:
@@ -134,10 +143,7 @@ public extension Player {
             )
         }
         else {
-            queuePlayer.setMediaSelectionCriteria(
-                AVPlayerMediaSelectionCriteria(preferredLanguages: [], preferredMediaCharacteristics: []),
-                forMediaCharacteristic: characteristic
-            )
+            queuePlayer.setMediaSelectionCriteria(Self.emptyMediaSelectionCriteria(for: characteristic), forMediaCharacteristic: characteristic)
         }
     }
 
