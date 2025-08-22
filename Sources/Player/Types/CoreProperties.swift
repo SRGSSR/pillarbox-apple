@@ -12,7 +12,7 @@ struct CoreProperties: Equatable {
     let itemProperties: ItemProperties
     let mediaSelectionProperties: MediaSelectionProperties
     let playbackProperties: PlaybackProperties
-    let mediaSelectionCriteria: [AVMediaCharacteristic: AVPlayerMediaSelectionCriteria?]
+    let mediaSelectionCriteria: [AVMediaCharacteristic: AVPlayerMediaSelectionCriteria]
 }
 
 // MARK: ItemProperties

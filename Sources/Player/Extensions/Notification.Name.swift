@@ -10,6 +10,7 @@ enum SeekNotificationKey: String {
     case time
 }
 
+// swiftlint:disable:next type_name
 enum MediaSelectionCriteriaUpdateNotificationKey: String {
     case mediaSelection
 }

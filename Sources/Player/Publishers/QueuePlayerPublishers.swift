@@ -60,12 +60,15 @@ extension QueuePlayer {
         .eraseToAnyPublisher()
     }
 
-    func mediaSelectionCriteriaPublisher() -> AnyPublisher<[AVMediaCharacteristic: AVPlayerMediaSelectionCriteria?], Never> {
+    func mediaSelectionCriteriaPublisher() -> AnyPublisher<[AVMediaCharacteristic: AVPlayerMediaSelectionCriteria], Never> {
         Self.notificationCenter.weakPublisher(for: .didUpdateMediaSelectionCriteria, object: self)
             .map { notification in
+                // swiftlint:disable:next line_length
                 notification.userInfo?[MediaSelectionCriteriaUpdateNotificationKey.mediaSelection] as? [AVMediaCharacteristic: AVPlayerMediaSelectionCriteria?] ?? [:]
             }
             .prepend(mediaSelectionCriteria)
+            .map { $0.compactMapValues(\.self) }
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }

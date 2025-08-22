@@ -9,6 +9,7 @@
 import AVFoundation
 import PillarboxCircumspect
 
+// swiftlint:disable:next type_name
 final class QueuePlayerMediaSelectionCriteriaPublisherTests: TestCase {
     func testDefault() {
         let player = QueuePlayer()
@@ -57,9 +58,7 @@ final class QueuePlayerMediaSelectionCriteriaPublisherTests: TestCase {
         )
         player.setMediaSelectionCriteria(criteria, forMediaCharacteristic: .legible)
         expectAtLeastEqualPublishedNext(
-            values: [
-                [.legible: nil]
-            ],
+            values: [[:]],
             from: player.mediaSelectionCriteriaPublisher()
         ) {
             player.setMediaSelectionCriteria(nil, forMediaCharacteristic: .legible)
