@@ -24,7 +24,7 @@ extension QueuePlayer {
         return Publishers.Merge(
             notificationCenter.weakPublisher(for: .willSeek, object: self)
                 .map { notification in
-                    notification.userInfo?[SeekKey.time] as? CMTime
+                    notification.userInfo?[SeekNotificationKey.time] as? CMTime
                 },
             notificationCenter.weakPublisher(for: .didSeek, object: self)
                 .map { _ in nil }
@@ -37,17 +37,19 @@ extension QueuePlayer {
     func propertiesPublisher(
         withPlayerItemPropertiesPublisher playerItemPropertiesPublisher: AnyPublisher<PlayerItemProperties, Never>
     ) -> AnyPublisher<PlayerProperties, Never> {
-        Publishers.CombineLatest3(
+        Publishers.CombineLatest4(
             playerItemPropertiesPublisher,
             playbackPropertiesPublisher(),
-            seekTimePublisher()
+            seekTimePublisher(),
+            mediaSelectionCriteriaPublisher()
         )
-        .map { playerItemProperties, playbackProperties, seekTime in
+        .map { playerItemProperties, playbackProperties, seekTime, mediaSelectionCriteria in
             PlayerProperties(
                 coreProperties: .init(
                     itemProperties: playerItemProperties.itemProperties,
                     mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
-                    playbackProperties: playbackProperties
+                    playbackProperties: playbackProperties,
+                    mediaSelectionCriteria: mediaSelectionCriteria
                 ),
                 timeProperties: playerItemProperties.timeProperties,
                 isEmpty: playerItemProperties.isEmpty,
@@ -58,9 +60,12 @@ extension QueuePlayer {
         .eraseToAnyPublisher()
     }
 
-    func mediaSelectionCriteriaUpdatePublisher() -> AnyPublisher<Void, Never> {
+    func mediaSelectionCriteriaPublisher() -> AnyPublisher<[AVMediaCharacteristic: AVPlayerMediaSelectionCriteria?], Never> {
         Self.notificationCenter.weakPublisher(for: .didUpdateMediaSelectionCriteria, object: self)
-            .map { _ in () }
+            .map { notification in
+                notification.userInfo?[MediaSelectionCriteriaUpdateNotificationKey.mediaSelection] as? [AVMediaCharacteristic: AVPlayerMediaSelectionCriteria?] ?? [:]
+            }
+            .prepend(mediaSelectionCriteria)
             .eraseToAnyPublisher()
     }
 }

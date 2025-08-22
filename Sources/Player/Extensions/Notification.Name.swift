@@ -6,8 +6,12 @@
 
 import Foundation
 
-enum SeekKey: String {
+enum SeekNotificationKey: String {
     case time
+}
+
+enum MediaSelectionCriteriaUpdateNotificationKey: String {
+    case mediaSelection
 }
 
 extension Notification.Name {

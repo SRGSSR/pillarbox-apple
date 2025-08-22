@@ -50,7 +50,7 @@ final class QueuePlayerSeekTests: TestCase {
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
@@ -68,10 +68,10 @@ final class QueuePlayerSeekTests: TestCase {
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time1]),
             Notification(name: .didSeek, object: player),
 
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time2]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
@@ -91,8 +91,8 @@ final class QueuePlayerSeekTests: TestCase {
                 expect(finished).to(beTrue())
             }
         }.toEventually(postNotifications(equalDiff([
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time1]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time2]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
@@ -112,8 +112,8 @@ final class QueuePlayerSeekTests: TestCase {
                 expect(finished).to(beTrue())
             }
         }.toEventually(postNotifications(equalDiff([
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time1]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time2]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
@@ -210,7 +210,7 @@ final class QueuePlayerSeekTests: TestCase {
                 QueuePlayer.notificationCenter.post(name: notificationName, object: self)
             }
         }.toEventually(postNotifications(equalDiff([
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time]),
             Notification(name: .didSeek, object: player),
             Notification(name: notificationName, object: self)
         ]), from: QueuePlayer.notificationCenter))
@@ -233,8 +233,8 @@ final class QueuePlayerSeekTests: TestCase {
                 QueuePlayer.notificationCenter.post(name: notificationName2, object: self)
             }
         }.toEventually(postNotifications(equalDiff([
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time1]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time2]),
             Notification(name: notificationName1, object: self),
             Notification(name: .didSeek, object: player),
             Notification(name: notificationName2, object: self)
