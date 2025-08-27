@@ -4,14 +4,15 @@
 //  License information is available from the LICENSE file.
 //
 
-import CoreMedia
+import AVFoundation
 
 struct CoreProperties: Equatable {
-    static let empty = Self(itemProperties: .empty, mediaSelectionProperties: .empty, playbackProperties: .empty)
+    static let empty = Self(itemProperties: .empty, mediaSelectionProperties: .empty, playbackProperties: .empty, mediaSelectionCriteria: [:])
 
     let itemProperties: ItemProperties
     let mediaSelectionProperties: MediaSelectionProperties
     let playbackProperties: PlaybackProperties
+    let mediaSelectionCriteria: [AVMediaCharacteristic: AVPlayerMediaSelectionCriteria]
 }
 
 // MARK: ItemProperties

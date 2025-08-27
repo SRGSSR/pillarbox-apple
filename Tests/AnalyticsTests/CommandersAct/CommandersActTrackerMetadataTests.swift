@@ -84,7 +84,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             ]
         ))
 
-        player.setMediaSelection(preferredLanguages: ["fr"], for: .audible)
+        player.setMediaSelectionPreference(.on(languages: "fr"), for: .audible)
         player.play()
         expect(player.playbackState).toEventually(equal(.playing))
 
@@ -127,7 +127,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             ]
         ))
 
-        player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
+        player.setMediaSelectionPreference(.on(languages: "fr"), for: .legible)
         player.play()
         expect(player.playbackState).toEventually(equal(.playing))
 

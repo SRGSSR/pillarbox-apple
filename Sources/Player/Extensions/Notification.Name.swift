@@ -6,11 +6,17 @@
 
 import Foundation
 
-enum SeekKey: String {
+enum SeekNotificationKey: String {
     case time
+}
+
+// swiftlint:disable:next type_name
+enum MediaSelectionCriteriaUpdateNotificationKey: String {
+    case mediaSelection
 }
 
 extension Notification.Name {
     static let willSeek = Notification.Name("PillarboxPlayer_willSeekNotification")
     static let didSeek = Notification.Name("PillarboxPlayer_didSeekNotification")
+    static let didUpdateMediaSelectionCriteria = Notification.Name("PillarboxPlayer_didUpdateMediaSelectionCriteriaNotification")
 }

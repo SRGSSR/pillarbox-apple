@@ -33,7 +33,7 @@ Use the following APIs to manage media selection programmatically:
 
 ``Player`` automatically selects the best combination of audio tracks and subtitles based on system language, accessibility settings, and available renditions.
 
-To override default preferences, call ``Player/setMediaSelection(preferredLanguages:for:)``. Preferences can be updated during playback or configured beforehand, which is useful if your app includes a custom language preference setting that should take precedence over system defaults.
+To override default preferences, call ``Player/setMediaSelectionPreference(_:for:)``. Preferences can be updated during playback or configured beforehand, which is useful if your app includes a custom language preference setting that should take precedence over system defaults.
 
 > Note: In most cases, rely on system defaults. They optimize user experience by incorporating accessibility preferences and recent user selections from other media apps.
 

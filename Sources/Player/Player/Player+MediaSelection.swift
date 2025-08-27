@@ -14,6 +14,15 @@ public extension Player {
         properties.mediaSelectionProperties.characteristics
     }
 
+    private static func emptyMediaSelectionCriteria(for characteristic: AVMediaCharacteristic) -> AVPlayerMediaSelectionCriteria? {
+        switch characteristic {
+        case .legible:
+            return .init(preferredLanguages: [], preferredMediaCharacteristics: [])
+        default:
+            return nil
+        }
+    }
+
     private static func preferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
         switch characteristic {
         case .legible:
@@ -53,11 +62,11 @@ public extension Player {
     ///
     /// You can use `mediaSelectionCharacteristics` to retrieve available characteristics.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        guard let selection = properties.mediaSelectionProperties.selection, let selector = mediaSelector(for: characteristic) else {
+        guard let selector = mediaSelector(for: characteristic) else {
             return .off
         }
         let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic)
-        let option = selector.selectedMediaOption(in: selection, with: selectionCriteria)
+        let option = selector.selectedMediaOption(in: properties.mediaSelectionProperties.selection, with: selectionCriteria)
         return selector.supports(mediaSelectionOption: option) ? option : .off
     }
 
@@ -103,26 +112,29 @@ public extension Player {
         properties.currentMediaOption(for: characteristic)
     }
 
-    /// Sets media selection preferred languages for the specified media characteristic.
+    /// Sets desired media selection preference for the specified media characteristic.
     ///
     /// - Parameters:
-    ///   - languages: An Array of strings containing language identifiers, in order of desirability, that are
-    ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T
-    ///     language codes.
-    ///   - characteristic: The media characteristic for which the selection criteria are to be applied. Supported values
+    ///   - preference: The preference to apply.
+    ///   - characteristic: The media characteristic for which the preference must be applied. Supported values
     ///     include `.audible`, `.legible`, and `.visual`.
     ///
     /// This method can be used to override the default media option selection for some characteristic, e.g., to start
-    /// playback with a predefined language for audio and / or subtitles.
+    /// playback with a predefined language for audio and/or subtitles.
     ///
     /// > Important: Media selection only works when HLS playlists are correctly formatted. If selection does not behave
     ///   as expected, see the troubleshooting section in <doc:stream-encoding-and-packaging-advice-article> to identify
     ///   which requirements may not have been met.
-    func setMediaSelection(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
+    func setMediaSelectionPreference(_ preference: MediaSelectionPreference, for characteristic: AVMediaCharacteristic) {
         if let item = queuePlayer.currentItem {
             properties.mediaSelectionProperties.reset(for: characteristic, in: item)
         }
-        if !languages.isEmpty {
+        switch preference.kind {
+        case .automatic:
+            queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
+        case .off:
+            queuePlayer.setMediaSelectionCriteria(Self.emptyMediaSelectionCriteria(for: characteristic), forMediaCharacteristic: characteristic)
+        case let .on(languages: languages):
             let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
                 preferredLanguages: Self.preferredLanguages(for: characteristic),
                 preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
@@ -132,20 +144,6 @@ public extension Player {
                 forMediaCharacteristic: characteristic
             )
         }
-        else {
-            queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
-        }
-    }
-
-    /// Returns media selection preferred languages for the specified media characteristic.
-    ///
-    /// - Parameter characteristic: The characteristic.
-    func mediaSelectionPreferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
-        guard let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic),
-              let preferredLanguages = selectionCriteria.preferredLanguages else {
-            return []
-        }
-        return preferredLanguages
     }
 
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {

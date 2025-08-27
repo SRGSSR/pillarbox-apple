@@ -59,13 +59,13 @@ private extension Player {
             kCMTextMarkupAttribute_ItalicStyle: true
         ])
         textStyleRules = [textStyleRule]
-        setMediaSelection(preferredLanguages: [language], for: .legible)
+        setMediaSelectionPreference(.on(languages: language), for: .legible)
         isMuted = true
     }
 
     func disableSilentPlayback() {
         textStyleRules = []
-        setMediaSelection(preferredLanguages: [], for: .legible)
+        setMediaSelectionPreference(.off, for: .legible)
         isMuted = false
     }
 }
