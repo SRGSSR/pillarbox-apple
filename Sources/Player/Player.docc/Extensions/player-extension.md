@@ -108,10 +108,9 @@
 - ``mediaOption(for:)``
 - ``mediaSelectionCharacteristics``
 - ``mediaSelectionOptions(for:)``
-- ``mediaSelectionPreferredLanguages(for:)``
 - ``select(mediaOption:for:)``
 - ``selectedMediaOption(for:)``
-- ``setMediaSelection(preferredLanguages:for:)``
+- ``setMediaSelectionPreference(_:for:)``
 
 ### Controlling Playback Speed
 
