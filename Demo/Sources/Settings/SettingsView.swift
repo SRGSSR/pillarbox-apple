@@ -161,6 +161,10 @@ extension SettingsView {
                 Text("Presenter mode")
                 Text("Displays touches for presentation purposes.").font(.footnote)
             }
+            Button(action: openSettings) {
+                Text("Open settings")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
         } header: {
             Text("Application")
                 .headerStyle()
@@ -351,6 +355,10 @@ extension SettingsView {
         }
     }
 #endif
+
+    private func openSettings() {
+        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+    }
 
     private func simulateMemoryWarning() {
         UIApplication.shared.perform(Selector(("_performMemoryWarning")))
