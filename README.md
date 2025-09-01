@@ -21,9 +21,9 @@ Pillarbox player provides all essential playback features you might expect:
 
 - Audio and video (standard / monoscopic 360°) playback.
 - Support for on-demand and live streams (with or without DVR).
-- First-class integration with SwiftUI to create the stunning playback user experience that your application deserves.
+- First-class integration with SwiftUI.
 - Integration with the standard system playback user experience, both on iOS and tvOS.
-- Playlist management including bidirectional navigation.
+- Playlist management.
 - Support for alternative audio tracks, Audio Description, subtitles, CC and SDH, all tightly integrated with standard system accessibility features.
 - Metadata and chapter support.
 - AirPlay compatibility.
