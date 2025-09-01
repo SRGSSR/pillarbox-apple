@@ -21,12 +21,15 @@ For optimal compatibility with the ``PillarboxPlayer`` framework, certain specif
 #### Audio renditions
 
 - Include the `public.accessibility.describes-video` characteristic for audio description [renditions](https://datatracker.ietf.org/doc/html/rfc8216#section-4.3.4.1).
+- Set the `DEFAULT` attribute to `YES` **only** for the rendition that should be selected when the user has not made an explicit choice.
 - Set the `AUTOSELECT` attribute to `YES` for all renditions to enable automatic selection.
 
 #### Subtitle renditions
 
 - **Unforced Subtitles:** Set `AUTOSELECT` to `YES` for `SUBTITLES` and `CLOSED-CAPTIONS` renditions to allow selection in _Automatic_ mode.
 - **Forced Subtitles:** [Ensure](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Subtitles) `FORCED` and `AUTOSELECT` are set to `YES`. ``Player`` adheres to [Apple's' recommendations](https://developer.apple.com/library/archive/releasenotes/AudioVideo/RN-AVFoundation/index.html#//apple_ref/doc/uid/TP40010717-CH1-DontLinkElementID_3) and never returns forced subtitles for explicit user selection.
+
+> Note: In general, players should not display subtitles by default unless the user has explicitly chosen them. For this reason, subtitle renditions should avoid setting `DEFAULT` to `YES`.
 
 #### Closed Captions (CC) and Subtitles for the Deaf or Hard-of-Hearing (SDH)
 
