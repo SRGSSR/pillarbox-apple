@@ -79,7 +79,6 @@ public final class SkipTracker: ObservableObject {
     ///   - count: The number of requests required to enable skipping.
     ///   - delay: The delay after which skipping is disabled.
     public init(count: Int = 2, delay: TimeInterval = 0.4) {
-        // swiftlint:disable:next empty_count
         assert(count > 0 && delay > 0)
         minimumCount = count
         configureIdlePublisher(delay: delay)
