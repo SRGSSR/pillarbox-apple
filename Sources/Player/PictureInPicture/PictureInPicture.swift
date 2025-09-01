@@ -44,7 +44,7 @@ public final class PictureInPicture {
         custom.start()
     }
 
-    /// Stop Picture if Picture if running.
+    /// Gracefully stops Picture if Picture if running.
     ///
     /// The ``PictureInPictureDelegate/pictureInPictureRestoreUserInterfaceForStop(with:)`` method is called.
     public func stop() {
@@ -52,7 +52,7 @@ public final class PictureInPicture {
         system.stop()
     }
 
-    /// Close Picture in Picture.
+    /// Closes Picture in Picture.
     ///
     /// The ``PictureInPictureDelegate/pictureInPictureRestoreUserInterfaceForStop(with:)`` method is not called.
     public func close() {
@@ -84,7 +84,7 @@ extension PictureInPicture: PictureInPictureDelegate {
     // swiftlint:disable:next missing_docs
     public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
         guard !isClosed else {
-            completion(true)
+            completion(false)
             return
         }
         if let delegate {
@@ -98,7 +98,7 @@ extension PictureInPicture: PictureInPictureDelegate {
             }
         }
         else {
-            completion(true)
+            completion(false)
         }
     }
 
