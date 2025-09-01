@@ -180,7 +180,6 @@ file_header:
     \/\/  Copyright \(c\) SRG SSR. All rights reserved.
     \/\/
     \/\/  License information is available from the LICENSE file.
-    \/\/
 
 file_length:
   warning: 1000
