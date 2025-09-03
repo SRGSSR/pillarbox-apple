@@ -16,14 +16,32 @@ enum TokenError: Error {
     case malformedParameters
 }
 
-struct DataError: LocalizedError {
-    static let noResourceAvailable = Self(errorDescription: String(
-        localized: "No playable resources could be found.",
-        bundle: .module,
-        comment: "Generic error message returned when no playable resources could be found"
-    ))
+/// Data error.
+public enum DataError: LocalizedError {
+    /// Blocked content.
+    case blocked(reason: MediaComposition.BlockingReason)
 
-    let errorDescription: String?
+    /// HTTP error.
+    case http(statusCode: Int)
+
+    /// Missing resource.
+    case noResourceAvailable
+
+    // swiftlint:disable:next missing_docs
+    public var errorDescription: String? {
+        switch self {
+        case let .blocked(reason):
+            reason.description
+        case let .http(statusCode):
+            HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode)
+        case .noResourceAvailable:
+            String(
+                localized: "No playable resources could be found.",
+                bundle: .module,
+                comment: "Generic error message returned when no playable resources could be found"
+            )
+        }
+    }
 
     static func http(from response: URLResponse) -> Self? {
         guard let httpResponse = response as? HTTPURLResponse else { return nil }
@@ -31,11 +49,6 @@ struct DataError: LocalizedError {
     }
 
     static func http(withStatusCode statusCode: Int) -> Self? {
-        guard statusCode >= 400 else { return nil }
-        return .init(errorDescription: HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode))
-    }
-
-    static func blocked(withMessage message: String) -> Self {
-        .init(errorDescription: message)
+        statusCode >= 400 ? .http(statusCode: statusCode) : nil
     }
 }
