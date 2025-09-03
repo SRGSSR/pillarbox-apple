@@ -12,6 +12,8 @@ import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
+private struct MockError: Error {}
+
 final class ErrorTests: TestCase {
     private static func errorCodePublisher(for player: Player) -> AnyPublisher<URLError.Code?, Never> {
         player.$error
@@ -51,5 +53,10 @@ final class ErrorTests: TestCase {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expect(player.error).toEventuallyNot(beNil())
         expect(player.properties.isBusy).to(beFalse())
+    }
+
+    func testErrorType() {
+        let player = Player(item: .failing(with: MockError(), after: 0.1))
+        expect(player.error is MockError).toEventually(beTrue())
     }
 }
