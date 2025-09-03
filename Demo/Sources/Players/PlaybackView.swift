@@ -934,7 +934,7 @@ private struct ErrorView: View {
             return "18.circle.fill"
         case .commercial:
             return "megaphone.fill"
-        case .endDate:
+        case .endDate, .startDate:
             return "clock.fill"
         case .geoblocked:
             return "globe.europe.africa.fill"
@@ -942,12 +942,10 @@ private struct ErrorView: View {
             return "newspaper.fill"
         case .legal:
             return "hand.raised.fill"
-        case .startDate:
-            return "key.icloud.fill"
         case .unknown:
             return "exclamationmark.triangle.fill"
         case .vpnOrProxyDetected:
-            return "network.slash"
+            return "key.icloud.fill"
         }
     }
 
