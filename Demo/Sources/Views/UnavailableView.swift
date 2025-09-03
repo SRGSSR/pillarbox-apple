@@ -16,7 +16,8 @@ private struct ContentUnavailableViewIOS16<Label, Description>: View where Label
             title()
             subtitle()
         }
-        .offset(y: -10)
+        .padding(.top, 15)
+        .padding([.horizontal, .bottom], 30)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
