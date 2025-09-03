@@ -58,7 +58,7 @@ struct UnavailableView<Label, Description>: View where Label: View, Description:
     let description: () -> Description
 
     var body: some View {
-        if #available(iOS 17.0, *) {
+        if #available(iOS 17.0, tvOS 17.0, *) {
             ContentUnavailableView(label: label, description: description)
         }
         else {
@@ -87,7 +87,7 @@ struct UnavailableView<Label, Description>: View where Label: View, Description:
     }
 }
 
-@available(iOS 17, *)
+@available(iOS 17, tvOS 17, *)
 #Preview("iOS 17.0+") {
     ContentUnavailableView {
         Label {
