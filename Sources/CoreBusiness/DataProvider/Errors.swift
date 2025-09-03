@@ -12,10 +12,6 @@ struct DRMError: LocalizedError {
     let errorDescription: String?
 }
 
-enum TokenError: Error {
-    case malformedParameters
-}
-
 /// Data error.
 public enum DataError: LocalizedError {
     /// Blocked content.

@@ -6,6 +6,10 @@
 
 import AVFoundation
 
+private enum TokenError: Error {
+    case malformedParameters
+}
+
 final class AkamaiResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     private static let tokenServiceUrl = URL(string: "https://tp.srgssr.ch/akahd/token")!
     private static let session = URLSession(configuration: .default)
