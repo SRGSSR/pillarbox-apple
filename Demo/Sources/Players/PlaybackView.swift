@@ -998,6 +998,7 @@ struct PlaybackView: View {
                 UnavailableView {
                     Text("No content")
                 }
+                .foregroundStyle(.white)
                 .overlay(alignment: .topLeading) {
                     CloseButton(topBarStyle: true)
                 }
