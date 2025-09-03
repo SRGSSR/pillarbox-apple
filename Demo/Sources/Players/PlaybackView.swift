@@ -6,6 +6,7 @@
 
 import AVFoundation
 import CoreMedia
+import PillarboxCoreBusiness
 import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
@@ -914,7 +915,7 @@ private struct PlaybackButton: View {
 }
 
 private struct ErrorView: View {
-    let description: String
+    let error: Error
     @ObservedObject var player: Player
 
     private var subtitle: String? {
@@ -926,7 +927,7 @@ private struct ErrorView: View {
     var body: some View {
         VStack {
             PlaybackButton(player: player)
-            PlaybackMessageView(title: description, subtitle: subtitle)
+            PlaybackMessageView(title: error.localizedDescription, subtitle: subtitle)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .topLeading) {
@@ -951,7 +952,7 @@ struct PlaybackView: View {
     var body: some View {
         ZStack {
             if let error = player.error {
-                ErrorView(description: error.localizedDescription, player: player)
+                ErrorView(error: error, player: player)
             }
             else if !player.items.isEmpty {
                 mainView()
