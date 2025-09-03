@@ -11,6 +11,8 @@ import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
+private struct MockError: Error {}
+
 final class PlayerTests: TestCase {
     func testDeallocation() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -76,7 +78,7 @@ final class PlayerTests: TestCase {
     }
 
     func testNoMetricsWhenFailed() {
-        let player = Player(item: .failing(loadedAfter: 0.1))
+        let player = Player(item: .failing(with: MockError(), after: 0.1))
         expect(player.metrics()).toAlways(beNil(), until: .seconds(1))
     }
 }
