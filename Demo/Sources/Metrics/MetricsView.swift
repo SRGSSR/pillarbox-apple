@@ -150,8 +150,13 @@ struct MetricsView: View {
                 list()
             }
             else {
-                MessageView(message: "No metrics", icon: .system("chart.bar"))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                UnavailableView {
+                    Label {
+                        Text("No metrics")
+                    } icon: {
+                        Image(systemName: "chart.bar")
+                    }
+                }
             }
         }
         .transaction { $0.animation = nil }

@@ -110,7 +110,9 @@ struct PlaylistView: View {
                 }
             }
             else {
-                MessageView(message: "No items", icon: .none)
+                UnavailableView {
+                    Text("No items")
+                }
             }
         }
         .animation(.linear, value: model.entries)

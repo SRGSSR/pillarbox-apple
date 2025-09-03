@@ -136,11 +136,19 @@ struct ContentListView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .accessibilityHidden(true)
             case let .loaded(contents: contents) where contents.isEmpty:
-                RefreshableMessageView(model: model, message: "No content.", icon: .empty)
+                UnavailableRefreshableView(model: model) {
+                    Text("No items")
+                }
             case let .loaded(contents: contents):
                 LoadedView(model: model, contents: contents)
             case let .failed(error):
-                RefreshableMessageView(model: model, message: error.localizedDescription, icon: .error)
+                UnavailableRefreshableView(model: model) {
+                    Label {
+                        Text(error.localizedDescription)
+                    } icon: {
+                        Image(systemName: "exclamationmark.bubble")
+                    }
+                }
             }
         }
         .animation(.defaultLinear, value: model.state)

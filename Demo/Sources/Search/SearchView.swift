@@ -16,14 +16,26 @@ struct SearchView: View {
         ZStack {
             switch model.state {
             case .empty:
-                MessageView(message: "Enter something to search.", icon: .system("magnifyingglass"))
+                UnavailableView {
+                    Label {
+                        Text("Enter something to search.")
+                    } icon: {
+                        Image(systemName: "magnifyingglass")
+                    }
+                }
             case .loading:
                 ProgressView()
                     .accessibilityHidden(true)
             case let .loaded(medias: medias):
                 loadedView(medias)
             case let .failed(error):
-                RefreshableMessageView(model: model, message: error.localizedDescription, icon: .error)
+                UnavailableRefreshableView(model: model) {
+                    Label {
+                        Text(error.localizedDescription)
+                    } icon: {
+                        Image(systemName: "exclamationmark.bubble")
+                    }
+                }
             }
         }
         .animation(.defaultLinear, value: model.state)
@@ -73,7 +85,13 @@ struct SearchView: View {
             .scrollDismissesKeyboard(.immediately)
         }
         else {
-            RefreshableMessageView(model: model, message: "No results.", icon: .empty)
+            UnavailableRefreshableView(model: model) {
+                Label {
+                    Text("No results.")
+                } icon: {
+                    Image(systemName: "circle.slash")
+                }
+            }
         }
     }
 }
