@@ -6,10 +6,6 @@
 
 import AVFoundation
 
-private enum TokenError: Error {
-    case malformedParameters
-}
-
 final class AkamaiResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     private static let tokenServiceUrl = URL(string: "https://tp.srgssr.ch/akahd/token")!
     private static let session = URLSession(configuration: .default)
@@ -40,22 +36,12 @@ final class AkamaiResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegat
         return components.url
     }
 
-    private static func safeTokenizeUrl(_ url: URL) async -> URL {
-        guard let tokenizedUrl = try? await tokenizeUrl(url) else { return url }
-        return tokenizedUrl
-    }
-
-    private static func tokenizeUrl(_ url: URL) async throws -> URL {
-        guard let requestUrl = tokenRequestUrl(for: url) else {
-            throw TokenError.malformedParameters
-        }
-        let (data, response) = try await session.httpData(from: requestUrl)
-        if let httpError = DataError.http(from: response) {
-            throw httpError
-        }
-        guard let tokenPayload = try? JSONDecoder().decode(TokenPayload.self, from: data),
+    private static func tokenizeUrl(_ url: URL) async -> URL {
+        guard let requestUrl = tokenRequestUrl(for: url),
+              let (data, _) = try? await session.httpData(from: requestUrl),
+              let tokenPayload = try? JSONDecoder().decode(TokenPayload.self, from: data),
               let tokenizedUrl = mergeQueryItems(tokenPayload.token.queryItems(), into: url) else {
-            throw TokenError.malformedParameters
+            return url
         }
         return tokenizedUrl
     }
@@ -79,7 +65,7 @@ final class AkamaiResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegat
             return false
         }
         Task {
-            let tokenizedUrl = await Self.safeTokenizeUrl(url)
+            let tokenizedUrl = await Self.tokenizeUrl(url)
             loadingRequest.redirect(to: tokenizedUrl)
             loadingRequest.finishLoading()
         }
