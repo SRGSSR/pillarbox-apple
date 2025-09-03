@@ -59,4 +59,9 @@ final class ErrorTests: TestCase {
         let player = Player(item: .failing(with: MockError(), after: 0.1))
         expect(player.error is MockError).toEventually(beTrue())
     }
+
+    func testUnavailableErrorType() {
+        let player = Player(item: .unavailable(with: MockError(), after: 0.1))
+        expect(player.error is MockError).toEventually(beTrue())
+    }
 }

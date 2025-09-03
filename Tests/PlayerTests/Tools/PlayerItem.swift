@@ -54,4 +54,10 @@ extension PlayerItem {
             .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher)
     }
+
+    static func unavailable(with error: Error, after delay: TimeInterval) -> Self {
+        let publisher = Just(Asset.unavailable(with: error, metadata: ()))
+            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
+        return .init(publisher: publisher)
+    }
 }

@@ -27,7 +27,7 @@ struct Queue {
     }
 
     var error: Error? {
-        item?.content.error ?? itemState.error
+        item?.content.resource.error ?? itemState.error
     }
 
     var isActive: Bool {

@@ -12,27 +12,25 @@ struct AssetContent {
     let metadata: PlayerMetadata
     let configuration: PlaybackConfiguration
     let dateInterval: DateInterval?
-    let error: Error?
 
-    private init(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, dateInterval: DateInterval?, error: Error?) {
+    private init(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, dateInterval: DateInterval?) {
         self.id = id
         self.resource = resource
         self.metadata = metadata
         self.configuration = configuration
         self.dateInterval = dateInterval
-        self.error = error
     }
 
     static func loaded(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, dateInterval: DateInterval?) -> Self {
-        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, dateInterval: dateInterval, error: nil)
+        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, dateInterval: dateInterval)
     }
 
     static func loading(id: UUID) -> Self {
-        .init(id: id, resource: .loading, metadata: .empty, configuration: .default, dateInterval: nil, error: nil)
+        .init(id: id, resource: .loading, metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
     static func failing(id: UUID, error: Error) -> Self {
-        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, dateInterval: nil, error: error)
+        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
     private func playerItem(for resource: Resource, configuration: PlayerConfiguration, resumeState: ResumeState?) -> AVPlayerItem {
