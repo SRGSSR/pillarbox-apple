@@ -76,7 +76,7 @@ struct UnavailableView<Label, Description>: View where Label: View, Description:
     }
 }
 
-#Preview("iOS 16.0") {
+#Preview("16.0") {
     ContentUnavailableViewOS16 {
         Label {
             Text(verbatim: "title")
@@ -89,7 +89,7 @@ struct UnavailableView<Label, Description>: View where Label: View, Description:
 }
 
 @available(iOS 17, tvOS 17, *)
-#Preview("iOS 17.0+") {
+#Preview("17.0+") {
     ContentUnavailableView {
         Label {
             Text(verbatim: "title")
