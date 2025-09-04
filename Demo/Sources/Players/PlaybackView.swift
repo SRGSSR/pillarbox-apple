@@ -924,9 +924,11 @@ private struct ErrorView: View {
         .contentShape(.rect)
         .onTapGesture(perform: player.replay)
         .accessibilityAddTraits(.isButton)
+#if os(iOS)
         .overlay(alignment: .topLeading) {
             CloseButton(topBarStyle: true)
         }
+#endif
     }
 
     // swiftlint:disable:next cyclomatic_complexity
