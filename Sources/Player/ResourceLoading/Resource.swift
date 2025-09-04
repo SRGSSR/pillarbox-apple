@@ -17,6 +17,16 @@ enum Resource {
 
     private static let logger = Logger(category: "Resource")
 
+    var error: Error? {
+        switch self {
+        case let .custom(_, delegate: delegate):
+            guard let failedDelegate = delegate as? FailedResourceLoaderDelegate else { return nil }
+            return failedDelegate.error
+        default:
+            return nil
+        }
+    }
+
     private func asset(for url: URL, with configuration: PlayerConfiguration) -> AVURLAsset {
         .init(url: url, options: [
             AVURLAssetAllowsConstrainedNetworkAccessKey: configuration.allowsConstrainedNetworkAccess

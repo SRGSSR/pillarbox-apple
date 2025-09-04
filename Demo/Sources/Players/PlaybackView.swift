@@ -6,6 +6,7 @@
 
 import AVFoundation
 import CoreMedia
+import PillarboxCoreBusiness
 import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
@@ -833,34 +834,6 @@ private struct MainSystemView: View {
 
 #endif
 
-private struct PlaybackMessageView: View {
-    let title: String
-    let subtitle: String?
-
-    var body: some View {
-        VStack {
-            Text(title)
-                .foregroundColor(.white)
-                .font(.body)
-            if let subtitle {
-                Text(subtitle)
-                    .foregroundColor(Color(uiColor: .lightGray))
-                    .font(.subheadline)
-#if os(iOS)
-                    .textSelection(.enabled)
-#endif
-            }
-        }
-        .padding()
-        .multilineTextAlignment(.center)
-    }
-
-    init(title: String, subtitle: String? = nil) {
-        self.title = title
-        self.subtitle = subtitle
-    }
-}
-
 private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
@@ -914,24 +887,96 @@ private struct PlaybackButton: View {
 }
 
 private struct ErrorView: View {
-    let description: String
+    let error: Error
     @ObservedObject var player: Player
 
     private var subtitle: String? {
         let sessionIdentifiers = player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)
         guard !sessionIdentifiers.isEmpty else { return nil }
-        return  "Monitoring: \(sessionIdentifiers.joined(separator: ", "))"
+        return "Monitoring: \(sessionIdentifiers.joined(separator: ", "))"
+    }
+
+    private var imageName: String {
+        switch error {
+        case let error as DataError:
+            switch error {
+            case let .blocked(reason: reason):
+                return Self.imageName(for: reason)
+            case .http:
+                return "cloud.fill"
+            case .noResourceAvailable:
+                return "exclamationmark.triangle.fill"
+            }
+        case let error as NSError where error.domain == NSURLErrorDomain && error.code == URLError.notConnectedToInternet.rawValue:
+            return "network.slash"
+        default:
+            return "exclamationmark.triangle.fill"
+        }
     }
 
     var body: some View {
-        VStack {
-            PlaybackButton(player: player)
-            PlaybackMessageView(title: description, subtitle: subtitle)
+        VStack(spacing: 0) {
+            messageView()
+            retryView()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .foregroundStyle(.white)
+        .contentShape(.rect)
+        .onTapGesture(perform: player.replay)
+        .accessibilityAddTraits(.isButton)
+#if os(iOS)
         .overlay(alignment: .topLeading) {
             CloseButton(topBarStyle: true)
         }
+#endif
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    private static func imageName(for reason: MediaComposition.BlockingReason) -> String {
+        switch reason {
+        case .ageRating12:
+            return "12.circle.fill"
+        case .ageRating18:
+            return "18.circle.fill"
+        case .commercial:
+            return "megaphone.fill"
+        case .endDate, .startDate:
+            return "clock.fill"
+        case .geoblocked:
+            return "globe.europe.africa.fill"
+        case .journalistic:
+            return "newspaper.fill"
+        case .legal:
+            return "hand.raised.fill"
+        case .unknown:
+            return "exclamationmark.triangle.fill"
+        case .vpnOrProxyDetected:
+            return "key.icloud.fill"
+        }
+    }
+
+    private func messageView() -> some View {
+        UnavailableView {
+            Label {
+                Text(error.localizedDescription)
+            } icon: {
+                Image(systemName: imageName)
+            }
+        } description: {
+            if let subtitle {
+                Text(subtitle)
+                    .foregroundStyle(.secondary)
+#if os(iOS)
+                    .textSelection(.enabled)
+#endif
+            }
+        }
+    }
+
+    private func retryView() -> some View {
+        Text("Tap to retry")
+            .font(.callout)
+            .padding(.bottom)
     }
 }
 
@@ -951,18 +996,20 @@ struct PlaybackView: View {
     var body: some View {
         ZStack {
             if let error = player.error {
-                ErrorView(description: error.localizedDescription, player: player)
+                ErrorView(error: error, player: player)
             }
             else if !player.items.isEmpty {
                 mainView()
                     .persistentSystemOverlays(.hidden)
             }
             else {
-                PlaybackMessageView(title: "No content")
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .overlay(alignment: .topLeading) {
-                        CloseButton(topBarStyle: true)
-                    }
+                UnavailableView {
+                    Text("No content")
+                }
+                .foregroundStyle(.white)
+                .overlay(alignment: .topLeading) {
+                    CloseButton(topBarStyle: true)
+                }
             }
         }
         .background(.black)

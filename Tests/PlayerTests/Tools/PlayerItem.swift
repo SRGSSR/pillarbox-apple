@@ -10,11 +10,6 @@ import Combine
 import Foundation
 import PillarboxStreams
 
-enum MediaMock: String {
-    case media1
-    case media2
-}
-
 extension PlayerItem {
     static func mock(
         url: URL,
@@ -54,26 +49,15 @@ extension PlayerItem {
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
-    static func webServiceMock(media: MediaMock, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
-        let url = URL(string: "http://localhost:8123/json/\(media).json")!
-        return webServiceMock(url: url, trackerAdapters: trackerAdapters)
+    static func failing(with error: Error, after delay: TimeInterval) -> Self {
+        let publisher = Fail<Asset<Void>, Error>(error: error)
+            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
+        return .init(publisher: publisher)
     }
 
-    static func failing(
-        loadedAfter delay: TimeInterval,
-        trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []
-    ) -> Self {
-        let url = URL(string: "http://localhost:8123/missing.json")!
-        return webServiceMock(url: url, trackerAdapters: trackerAdapters)
-    }
-
-    private static func webServiceMock(url: URL, trackerAdapters: [TrackerAdapter<AssetMetadataMock>]) -> Self {
-        let publisher = URLSession(configuration: .default).dataTaskPublisher(for: url)
-            .map(\.data)
-            .decode(type: AssetMetadataMock.self, decoder: JSONDecoder())
-            .map { metadata in
-                Asset.simple(url: Stream.onDemand.url, metadata: metadata)
-            }
-        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
+    static func unavailable(with error: Error, after delay: TimeInterval) -> Self {
+        let publisher = Just(Asset.unavailable(with: error, metadata: ()))
+            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
+        return .init(publisher: publisher)
     }
 }

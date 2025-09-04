@@ -13,6 +13,18 @@ struct AssetContent {
     let configuration: PlaybackConfiguration
     let dateInterval: DateInterval?
 
+    private init(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, dateInterval: DateInterval?) {
+        self.id = id
+        self.resource = resource
+        self.metadata = metadata
+        self.configuration = configuration
+        self.dateInterval = dateInterval
+    }
+
+    static func loaded(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, dateInterval: DateInterval?) -> Self {
+        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, dateInterval: dateInterval)
+    }
+
     static func loading(id: UUID) -> Self {
         .init(id: id, resource: .loading, metadata: .empty, configuration: .default, dateInterval: nil)
     }

@@ -17,6 +17,14 @@ struct AssetMetadataMock: Decodable {
 }
 
 extension AssetMetadataMock: AssetMetadata {
+    static var title1: Self {
+        .init(title: "title1")
+    }
+
+    static var title2: Self {
+        .init(title: "title2")
+    }
+
     var playerMetadata: PlayerMetadata {
         .init(title: title, subtitle: subtitle)
     }

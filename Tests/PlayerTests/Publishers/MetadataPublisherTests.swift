@@ -62,16 +62,16 @@ final class MetadataPublisherTests: TestCase {
     }
 
     func testNetworkItemReloading() {
-        let player = Player(item: .webServiceMock(media: .media1))
+        let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .title1))
         expectAtLeastEqualPublished(
-            values: [nil, "Title 1"],
+            values: [nil, "title1"],
             from: Self.titlePublisherTest(for: player)
         )
         expectAtLeastEqualPublishedNext(
-            values: [nil, "Title 2"],
+            values: [nil, "title2"],
             from: Self.titlePublisherTest(for: player)
         ) {
-            player.items = [.webServiceMock(media: .media2)]
+            player.items = [.mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .title2)]
         }
     }
 

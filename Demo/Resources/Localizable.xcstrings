@@ -8,6 +8,7 @@
 
     },
     "%g× %@" : {
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -170,6 +171,9 @@
     "Enabled" : {
 
     },
+    "Enter something to search." : {
+
+    },
     "Event log" : {
 
     },
@@ -270,6 +274,18 @@
 
     },
     "Next" : {
+
+    },
+    "No content" : {
+
+    },
+    "No items" : {
+
+    },
+    "No metrics" : {
+
+    },
+    "No results." : {
 
     },
     "None" : {
@@ -423,6 +439,9 @@
 
     },
     "System Player and Picture in Picture (PiP) support" : {
+
+    },
+    "Tap to retry" : {
 
     },
     "TestFlight builds" : {

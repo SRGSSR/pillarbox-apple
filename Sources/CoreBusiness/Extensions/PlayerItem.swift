@@ -108,7 +108,7 @@ private extension PlayerItem {
 
     private static func asset(metadata: MediaMetadata, configuration: PlaybackConfiguration, dataProvider: DataProvider) -> Asset<MediaMetadata> {
         if let blockingReason = metadata.blockingReason {
-            return .unavailable(with: DataError.blocked(withMessage: blockingReason.description), metadata: metadata)
+            return .unavailable(with: DataError.blocked(reason: blockingReason), metadata: metadata)
         }
         guard let resource = metadata.resource else {
             return .unavailable(with: DataError.noResourceAvailable, metadata: metadata)

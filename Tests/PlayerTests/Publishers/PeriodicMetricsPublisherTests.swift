@@ -10,6 +10,8 @@ import Combine
 import PillarboxCircumspect
 import PillarboxStreams
 
+private struct MockError: Error {}
+
 final class PeriodicMetricsPublisherTests: TestCase {
     func testEmpty() {
         let player = Player()
@@ -60,7 +62,7 @@ final class PeriodicMetricsPublisherTests: TestCase {
     }
 
     func testFailure() {
-        let item = PlayerItem.failing(loadedAfter: 0.1)
+        let item = PlayerItem.failing(with: MockError(), after: 0.1)
         let player = Player(item: item)
         expectAtLeastEqualPublished(
             values: [0],

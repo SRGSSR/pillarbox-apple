@@ -27,7 +27,7 @@ struct Queue {
     }
 
     var error: Error? {
-        itemState.error
+        item?.content.resource.error ?? itemState.error
     }
 
     var isActive: Bool {
@@ -44,10 +44,10 @@ struct Queue {
     }
 
     static func buffer(from previous: Self, to current: Self, length: Int) -> QueueBuffer? {
-        if let previousItem = previous.playerItem, previous.error != nil, previous.index != nil {
+        if let previousItem = previous.playerItem, previousItem.error != nil, previous.index != nil {
             return .init(item: previousItem, length: 1)
         }
-        else if let currentItem = current.playerItem, current.error != nil {
+        else if let currentItem = current.playerItem, currentItem.error != nil {
             return .init(item: currentItem, length: 1)
         }
         else if let currentItem = current.playerItem {
