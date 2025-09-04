@@ -915,11 +915,15 @@ private struct ErrorView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             messageView()
-            PlaybackButton(player: player)
+            retryView()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .foregroundStyle(.white)
+        .contentShape(.rect)
+        .onTapGesture(perform: player.replay)
+        .accessibilityAddTraits(.isButton)
         .overlay(alignment: .topLeading) {
             CloseButton(topBarStyle: true)
         }
@@ -965,8 +969,12 @@ private struct ErrorView: View {
 #endif
             }
         }
-        .foregroundStyle(.white)
-        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func retryView() -> some View {
+        Text("Tap to retry")
+            .font(.callout)
+            .padding(.bottom)
     }
 }
 
