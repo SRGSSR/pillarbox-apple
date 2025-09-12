@@ -31,6 +31,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
     - <doc:tracking-article>
     - <doc:metrics-article>
     - <doc:optimization-article>
+    - <doc:google-cast-article>
 }
 
 ### Asset Resource Loading
