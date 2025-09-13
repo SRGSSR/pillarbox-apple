@@ -1,13 +1,13 @@
 {
-  "originHash" : "8db40c4bd24b3d1a7499a9962e02b88f97e80908880b5ae3fdf0bc35e9a93e26",
+  "originHash" : "876c41a59f384fdac0754bbbbdf438a7843515c522de4d775b96a765b1487fdd",
   "pins" : [
     {
       "identity" : "comscore-swift-package-manager",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
       "state" : {
-        "revision" : "56d8a44c387fee1f7ef1786f13f8960b85109d31",
-        "version" : "6.14.1"
+        "revision" : "a56decdcf19228ae2b4b35a4836768bb1cfaa6b1",
+        "version" : "6.15.0"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CommandersAct/iOSV5.git",
       "state" : {
-        "revision" : "62e3c97f4e38a3f61bd85608ba9d4d4af3abacfd",
-        "version" : "5.4.14"
+        "revision" : "a4c2621326b115f254e2193f2fd5a678d48fd8eb",
+        "version" : "5.4.17"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SRGSSR/srgdataprovider-apple.git",
       "state" : {
-        "revision" : "7e8243cd50a87b6c57666f617155e2e9cd26a847",
-        "version" : "19.0.9"
+        "revision" : "f11afc707ae186ec29b599a5b1fdd92d1864d067",
+        "version" : "19.0.10"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
-        "version" : "1.1.4"
+        "revision" : "8c0c0a8b49e080e54e5e328cc552821ff07cd341",
+        "version" : "1.2.1"
       }
     }
   ],
