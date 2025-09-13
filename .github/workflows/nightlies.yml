@@ -8,7 +8,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   deliver-demo-nightlies:
     name: 🌙 Nightlies
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 30
     strategy:
       matrix:
