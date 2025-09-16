@@ -113,3 +113,72 @@ A newly created player begins in a paused state. To start playback, call ``Playe
 To support video playback in the background, set the [`audiovisualBackgroundPlaybackPolicy`](https://developer.apple.com/documentation/avfoundation/avplayer/3787548-audiovisualbackgroundplaybackpol) to `.continuesIfPossible`.
 
 However, implementing <doc:picture-in-picture-article> generally offers a better user experience for video content compared to background playback. In such cases, it’s recommended to keep the default `.automatic` setting.
+
+## Playlist
+
+The ``Player`` supports queue-based playback, allowing you to manage multiple player item in a playlist. You can load multiple items at once, append or prepend items, and navigate through the queue with ease.
+
+### Managing items
+
+The playback queue can be accessed via the ``Player/items`` property. You can modify the queue using the API to append, prepend, insert, or remove items as needed.
+
+``Player/prepend(_:)``
+
+@TabNavigator {
+    @Tab("Append/Prepend Items") {
+        Add new items to the front or back of the queue.
+
+        ```swift
+        player.prepend(.simple(url: URL(string: "https://server.com/stream_1.m3u8")!))
+        player.appendItem(.simple(url: URL(string: "https://server.com/stream_3.m3u8")!))
+        ```
+    }
+    
+    @Tab("Insert Items") {
+        Insert before or after the current item in the queue.
+
+        ```swift
+        player.insert(.simple(url: URL(string: "https://server.com/stream_0.m3u8")!), before: currentItem)
+        player.insert(.simple(url: URL(string: "https://server.com/stream_2.m3u8")!), after: currentItem)
+        ```
+    }
+    
+    @Tab("Remove Items") {
+        Remove a specific item or clear the entire queue.
+
+        ```swift
+        player.remove(player.items.first!)
+        player.removeAllItems()
+        ```
+    }
+}
+
+### Navigating
+
+You can programmatically navigate through the playlist, moving forward to the next item or backward to the previous item as needed.
+
+> Important: When the last item in the queue is consumed with ``Player/repeatMode`` ``RepeatMode/off``, the ``Player`` stops and the items are cleared automatically.
+
+@TabNavigator {
+    @Tab("Next Item") {
+        Checks whether we can advance, and if so, moves to the next item.
+
+        ```swift
+        if player.canAdvanceToNextItem() {
+            player.advanceToNextItem()
+        }
+        ```
+    }
+    
+    @Tab("Previous Item") {
+        Checks whether we can return, and if so, moves to the previous item.
+
+        ```swift
+        if player.canReturnToPreviousItem() {
+            player.returnToPreviousItem()
+        }
+        ```
+    }
+}
+
+> Note: When ``Player/repeatMode`` is set to ``RepeatMode/all``, both ``Player/advanceToNextItem()`` and ``Player/returnToPreviousItem()`` wrap around the queue. This means that returning from the first item moves to the last item, and advancing from the last item moves to the first. These methods ignore the ``PlayerConfiguration/navigationMode`` set in ``Player/configuration``. To respect the navigation rules from the configuration, use ``Player/returnToPrevious()`` and ``Player/advanceToNext()`` instead.
