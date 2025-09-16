@@ -57,6 +57,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - <doc:playback-speed-article>
 - <doc:state-observation-article>
 - <doc:subtitles-and-alternative-audio-tracks-article>
+- <doc:google-cast-article>
 
 - ``Asset``
 - ``MediaSelectionOption``
@@ -123,6 +124,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 ### User Interface
 
 - <doc:creating-basic-user-interface>
+- <doc:optimization-article>
 
 - ``ContextualAction``
 - ``LayoutInfo``
