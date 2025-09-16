@@ -61,15 +61,19 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 - ``Asset``
 - ``MediaSelectionOption``
+- ``MediaSelectionPreference``
 - ``MediaType``
 - ``NavigationMode``
 - ``PlaybackState``
 - ``Player``
 - ``PlayerConfiguration``
 - ``PlayerItem``
+- ``PlayerLimits``
 - ``PlayerProperties``
 - ``Position``
+- ``RepeatMode``
 - ``SeekBehavior``
+- ``Skip``
 - ``StreamType``
 
 ### Metadata
@@ -110,6 +114,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 - ``PlayerItemTracker``
 - ``TrackerAdapter``
+- ``TrackerProperties``
 - ``TrackingBehavior``
 
 ### Metrics
@@ -131,6 +136,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``LazyImage``
 - ``LazyUIImage(source:)``
 - ``ProgressTracker``
+- ``SettingsUpdate``
 - ``SkipTracker``
 - ``SystemVideoView``
 - ``VideoView``
