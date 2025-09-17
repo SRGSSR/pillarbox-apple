@@ -15,12 +15,13 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         var player: Player?
         expectAtLeastHits(
             play { labels in
+                expect(labels.consent_services).to(equal("service1,service2,service3"))
+                expect(labels.media_airplay_on).to(beFalse())
+                expect(labels.media_audio_track).to(equal("UND"))
                 expect(labels.media_player_display).to(equal("Pillarbox"))
                 expect(labels.media_player_version).to(equal(PackageInfo.version))
-                expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_title).to(equal("name"))
-                expect(labels.media_audio_track).to(equal("UND"))
-                expect(labels.consent_services).to(equal("service1,service2,service3"))
+                expect(labels.media_volume).notTo(beNil())
             }
         ) {
              player = Player(item: .simple(
