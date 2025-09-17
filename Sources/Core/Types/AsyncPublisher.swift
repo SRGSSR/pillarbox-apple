@@ -27,14 +27,14 @@ public struct AsyncPublisher<Output, Failure>: Publisher where Failure: Error {
 
 extension AsyncPublisher {
     private final class AsyncPublisherSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
-        private var subscriber: S?
+        private let subscriber: RecursiveLock<S?>
         private let operation: () async throws(Failure) -> Output
 
         private let buffer = DemandBuffer<Output>()
-        private var task: Task<Void, Never>?
+        private let task: RecursiveLock<Task<Void, Never>?> = .init(initialState: nil)
 
         init(subscriber: S, operation: @escaping () async throws(Failure) -> Output) {
-            self.subscriber = subscriber
+            self.subscriber = .init(initialState: subscriber)
             self.operation = operation
         }
 
@@ -44,31 +44,38 @@ extension AsyncPublisher {
 
         private func performOperation() async {
             do {
-                send(try await operation())
-                subscriber?.receive(completion: .finished)
+                let output = try await operation()
+                guard let subscriber = subscriber.locked() else { return }
+                send(output)
+                subscriber.receive(completion: .finished)
             }
             catch {
-                subscriber?.receive(completion: .failure(error))
+                guard let subscriber = subscriber.locked() else { return }
+                subscriber.receive(completion: .failure(error))
             }
         }
 
         func request(_ demand: Subscribers.Demand) {
-            if task == nil {
-                task = Task {
-                    await performOperation()
+            task.withLock { task in
+                if task == nil {
+                    task = Task {
+                        await performOperation()
+                    }
                 }
             }
             process(buffer.request(demand))
         }
 
         func cancel() {
-            task?.cancel()
-            task = nil
-            subscriber = nil
+            task.withLock { task in
+                task?.cancel()
+                task = nil
+            }
+            subscriber.setLocked(nil)
         }
 
         private func process(_ values: [Output]) {
-            guard let subscriber else { return }
+            guard let subscriber = subscriber.locked() else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)
                 request(demand)
