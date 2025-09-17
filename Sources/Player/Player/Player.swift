@@ -443,8 +443,12 @@ private extension Player {
             nowPlayingSession.remoteCommandCenter.changePlaybackPositionCommand.isEnabled = !hasError
 
             let items = Deque(queue.elements.map(\.item))
-            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: queue.item, in: items, streamType: properties.streamType)
-            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: queue.item, in: items)
+            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturnToItem(
+                before: queue.item,
+                in: items,
+                streamType: properties.streamType
+            )
+            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvanceToItem(after: queue.item, in: items)
         }
         .store(in: &cancellables)
     }

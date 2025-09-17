@@ -122,12 +122,12 @@ struct PlaylistView: View {
 @available(tvOS, unavailable)
 private extension Toolbar {
     func previousButton() -> some View {
-        Button(action: player.returnToPrevious) {
+        Button(action: player.returnToPreviousItem) {
             Image(systemName: "arrow.left")
         }
         .hoverEffect()
         .accessibilityLabel("Previous")
-        .disabled(!player.canReturnToPrevious())
+        .disabled(!player.canReturnToPreviousItem())
     }
 
     func managementButtons() -> some View {
@@ -140,12 +140,12 @@ private extension Toolbar {
     }
 
     func nextButton() -> some View {
-        Button(action: player.advanceToNext) {
+        Button(action: player.advanceToNextItem) {
             Image(systemName: "arrow.right")
         }
         .hoverEffect()
         .accessibilityLabel("Next")
-        .disabled(!player.canAdvanceToNext())
+        .disabled(!player.canAdvanceToNextItem())
     }
 }
 
