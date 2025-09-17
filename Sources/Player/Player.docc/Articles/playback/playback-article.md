@@ -174,8 +174,8 @@ You can programmatically navigate through the playlist, moving forward to the ne
         Checks whether we can advance, and if so, moves to the next item.
 
         ```swift
-        if player.canAdvanceToNextItem() {
-            player.advanceToNextItem()
+        if player.canAdvanceToNext() {
+            player.advanceToNext()
         }
         ```
     }
@@ -184,11 +184,9 @@ You can programmatically navigate through the playlist, moving forward to the ne
         Checks whether we can return, and if so, moves to the previous item.
 
         ```swift
-        if player.canReturnToPreviousItem() {
-            player.returnToPreviousItem()
+        if player.canReturnToPrevious() {
+            player.returnToPrevious()
         }
         ```
     }
 }
-
-> Note: When ``Player/repeatMode`` is set to ``RepeatMode/all``, both ``Player/advanceToNextItem()`` and ``Player/returnToPreviousItem()`` wrap around the queue. This means that returning from the first item moves to the last item, and advancing from the last item moves to the first. These methods ignore the ``PlayerConfiguration/navigationMode`` set in ``Player/configuration``. To respect the navigation rules from the configuration, use ``Player/returnToPrevious()`` and ``Player/advanceToNext()`` instead.

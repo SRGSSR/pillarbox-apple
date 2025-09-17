@@ -7,25 +7,11 @@
 import AVFoundation
 import DequeModule
 
-public extension Player {
-    /// Checks whether returning to the previous item in the queue is possible.
-    ///
-    /// - Returns: `true` if possible.
-    ///
-    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``.
-    ///
-    /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
+extension Player {
     func canReturnToPreviousItem() -> Bool {
         canReturnToItem(before: currentItem, in: storedItems)
     }
 
-    /// Returns to the previous item in the queue.
-    ///
-    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``.
-    ///
-    /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func returnToPreviousItem() {
         guard let index = index(before: currentItem, in: storedItems) else { return }
         queuePlayer.replaceItems(
@@ -42,24 +28,10 @@ public extension Player {
         )
     }
 
-    /// Checks whether moving to the next item in the queue is possible.
-    ///
-    /// - Returns: `true` if possible.
-    ///
-    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``.
-    ///
-    /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func canAdvanceToNextItem() -> Bool {
         canAdvanceToItem(after: currentItem, in: storedItems)
     }
 
-    /// Moves to the next item in the queue.
-    ///
-    /// The behavior of this method is adjusted to wrap around both ends of the item queue when ``Player/repeatMode``
-    /// has been set to ``RepeatMode/all``.
-    ///
-    /// > Important: Ignores the ``PlayerConfiguration/navigationMode`` set in the ``Player/configuration``.
     func advanceToNextItem() {
         guard let index = index(after: currentItem, in: storedItems) else { return }
         queuePlayer.replaceItems(
