@@ -9,64 +9,72 @@
 import Nimble
 import PillarboxStreams
 
-final class NavigationSmartForwardChecksTests: TestCase {
-    func testCanAdvanceForOnDemandWithNextItem() {
+final class ItemNavigationSmartForwardTests: TestCase {
+    func testAdvanceForOnDemandWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canAdvanceToNextItem()).to(beTrue())
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
     }
 
-    func testCannotAdvanceForOnDemandWithoutNextItem() {
+    func testAdvanceForOnDemandWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canAdvanceToNextItem()).to(beFalse())
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item))
     }
 
-    func testCanAdvanceForLiveWithNextItem() {
+    func testAdvanceForLiveWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.live.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.live))
-        expect(player.canAdvanceToNextItem()).to(beTrue())
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
     }
 
-    func testCannotAdvanceForLiveWithoutNextItem() {
+    func testAdvanceForLiveWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
-        expect(player.canAdvanceToNextItem()).to(beFalse())
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item))
     }
 
-    func testCanAdvanceForDvrWithNextItem() {
+    func testAdvanceForDvrWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.dvr.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.dvr))
-        expect(player.canAdvanceToNextItem()).to(beTrue())
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
     }
 
-    func testCannotAdvanceForDvrWithoutNextItem() {
+    func testAdvanceForDvrWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
-        expect(player.canAdvanceToNextItem()).to(beFalse())
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item))
     }
 
-    func testCanAdvanceForUnknownWithNextItem() {
+    func testAdvanceForUnknownWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.unavailable.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).to(equal(.unknown))
-        expect(player.canAdvanceToNextItem()).to(beTrue())
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
     }
 
-    func testCannotAdvanceForUnknownWithoutNextItem() {
+    func testAdvanceForUnknownWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item)
         expect(player.streamType).to(equal(.unknown))
-        expect(player.canAdvanceToNextItem()).to(beFalse())
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item))
     }
 }

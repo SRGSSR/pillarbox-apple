@@ -10,7 +10,7 @@ import CoreMedia
 import Nimble
 import PillarboxStreams
 
-final class NavigationSmartBackwardTests: TestCase {
+final class ItemNavigationSmartBackwardTests: TestCase {
     func testReturnForOnDemandAtBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)

@@ -9,7 +9,7 @@
 import Nimble
 import PillarboxStreams
 
-final class NavigationForwardChecksTests: TestCase {
+final class ItemNavigationForwardChecksTests: TestCase {
     func testCanAdvanceToNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)

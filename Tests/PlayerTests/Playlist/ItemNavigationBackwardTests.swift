@@ -10,45 +10,56 @@ import CoreMedia
 import Nimble
 import PillarboxStreams
 
-final class NavigationBackwardChecksTests: TestCase {
+final class ItemNavigationBackwardTests: TestCase {
     private static func configuration() -> PlayerConfiguration {
         .init(navigationMode: .immediate)
     }
 
-    func testCanReturnToPreviousItem() {
+    func testReturnToPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         player.advanceToNextItem()
-        expect(player.canReturnToPreviousItem()).to(beTrue())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item1))
     }
 
-    func testCannotReturnToPreviousItemAtFront() {
+    func testReturnToPreviousItemAtFront() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        expect(player.canReturnToPreviousItem()).to(beFalse())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item1))
     }
 
-    func testCannotReturnToPreviousItemWhenEmpty() {
-        let player = Player()
-        expect(player.canReturnToPreviousItem()).to(beFalse())
+    func testReturnToPreviousItemOnFailedItem() {
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.unavailable.url)
+        let item3 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item1))
     }
 
     func testWrapAtFrontWithRepeatAll() {
-        let player = Player(item: .simple(url: Stream.onDemand.url))
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
         player.repeatMode = .all
-        expect(player.canReturnToPreviousItem()).to(beTrue())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item2))
     }
 
-    func testCannotReturnForOnDemandAtBeginningWithoutPreviousItem() {
+    func testReturnForOnDemandAtBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item, configuration: Self.configuration())
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canReturnToPreviousItem()).to(beFalse())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item))
     }
 
-    func testCanReturnForOnDemandNearBeginningWithoutPreviousItem() {
+    func testReturnForOnDemandNearBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item, configuration: Self.configuration())
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -59,19 +70,22 @@ final class NavigationBackwardChecksTests: TestCase {
             }
         }
 
-        expect(player.canReturnToPreviousItem()).to(beFalse())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item))
+        expect(player.time()).toNever(equal(.zero), until: .seconds(3))
     }
 
-    func testCanReturnForOnDemandAtBeginningWithPreviousItem() {
+    func testReturnForOnDemandAtBeginningWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canReturnToPreviousItem()).to(beTrue())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item1))
     }
 
-    func testCanReturnForOnDemandNotAtBeginning() {
+    func testReturnForOnDemandNotAtBeginning() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
@@ -83,55 +97,77 @@ final class NavigationBackwardChecksTests: TestCase {
                 done()
             }
         }
-
-        expect(player.canReturnToPreviousItem()).to(beTrue())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item1))
+        expect(player.time()).toEventually(equal(.zero))
     }
 
-    func testCanReturnForLiveWithPreviousItem() {
+    func testReturnForLiveWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.live))
-        expect(player.canReturnToPreviousItem()).to(beTrue())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item1))
     }
 
-    func testCannotReturnForLiveWithoutPreviousItem() {
+    func testReturnForLiveWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item, configuration: Self.configuration())
         expect(player.streamType).toEventually(equal(.live))
-        expect(player.canReturnToPreviousItem()).to(beFalse())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item))
     }
 
-    func testCanReturnForDvrWithPreviousItem() {
+    func testReturnForDvrWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.dvr))
-        expect(player.canReturnToPreviousItem()).to(beTrue())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item1))
     }
 
-    func testCannotReturnForDvrWithoutPreviousItem() {
+    func testReturnForDvrWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item, configuration: Self.configuration())
         expect(player.streamType).toEventually(equal(.dvr))
-        expect(player.canReturnToPreviousItem()).to(beFalse())
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item))
     }
 
-    func testCanReturnForUnknownWithPreviousItem() {
+    func testReturnForUnknownWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
-        expect(player.streamType).to(equal(.unknown))
-        expect(player.canReturnToPreviousItem()).to(beTrue())
+        expect(player.streamType).toEventually(equal(.unknown))
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item1))
     }
 
-    func testCannotReturnForUnknownWithoutPreviousItem() {
+    func testReturnForUnknownWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item, configuration: Self.configuration())
-        expect(player.streamType).to(equal(.unknown))
-        expect(player.canReturnToPreviousItem()).to(beFalse())
+        expect(player.streamType).toEventually(equal(.unknown))
+        player.returnToPreviousItem()
+        expect(player.currentItem).to(equal(item))
+    }
+
+    func testPlayerPreloadedItemCount() {
+        let player = Player(items: [
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.squareOnDemand.url),
+            PlayerItem.simple(url: Stream.mediumOnDemand.url),
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.shortOnDemand.url)
+        ])
+        player.advanceToNextItem()
+        player.returnToPreviousItem()
+
+        let items = player.queuePlayer.items()
+        expect(items).to(haveCount(player.configuration.preloadedItems))
     }
 }
