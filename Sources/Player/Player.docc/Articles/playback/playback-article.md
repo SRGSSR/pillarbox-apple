@@ -169,8 +169,6 @@ The playback queue can be accessed via the ``Player/items`` property. You can mo
 
 You can programmatically navigate through the playlist, moving forward to the next item or backward to the previous item as needed.
 
-> Important: When the last item in the queue is consumed with ``Player/repeatMode`` ``RepeatMode/off``, the ``Player`` stops and the items are cleared automatically.
-
 @TabNavigator {
     @Tab("Next Item") {
         Checks whether we can advance, and if so, moves to the next item.
