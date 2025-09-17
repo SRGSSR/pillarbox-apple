@@ -26,12 +26,13 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 @Links(visualStyle: detailedGrid) {
     - <doc:playback-article>
-    - <doc:state-observation-article>
+    - <doc:user-interface-article>
     - <doc:metadata-article>
     - <doc:tracking-article>
     - <doc:metrics-article>
-    - <doc:optimization-article>
     - <doc:google-cast-article>
+    - <doc:state-observation-article>
+    - <doc:optimization-article>
 }
 
 ### Asset Resource Loading
@@ -122,6 +123,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 ### User Interface
 
+- <doc:user-interface-article>
 - <doc:creating-basic-user-interface>
 
 - ``ContextualAction``
