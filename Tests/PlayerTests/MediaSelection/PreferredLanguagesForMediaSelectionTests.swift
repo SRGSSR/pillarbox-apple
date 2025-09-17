@@ -111,7 +111,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         player.setMediaSelectionPreference(.on(languages: "it"), for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("it"))
 
-        player.returnToPrevious()
+        player.returnToPreviousItem()
         expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
     }
 

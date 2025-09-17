@@ -19,7 +19,7 @@ final class NavigationBackwardTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item, configuration: Self.configuration())
         expect(player.streamType).toEventually(equal(.onDemand))
-        player.returnToPrevious()
+        player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item))
     }
 
@@ -34,7 +34,7 @@ final class NavigationBackwardTests: TestCase {
             }
         }
 
-        player.returnToPrevious()
+        player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item))
         expect(player.time()).toNever(equal(.zero), until: .seconds(3))
     }
@@ -45,7 +45,7 @@ final class NavigationBackwardTests: TestCase {
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
-        player.returnToPrevious()
+        player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item1))
     }
 
@@ -61,7 +61,7 @@ final class NavigationBackwardTests: TestCase {
                 done()
             }
         }
-        player.returnToPrevious()
+        player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item1))
         expect(player.time()).toEventually(equal(.zero))
     }
@@ -129,7 +129,7 @@ final class NavigationBackwardTests: TestCase {
             PlayerItem.simple(url: Stream.shortOnDemand.url)
         ])
         player.advanceToNextItem()
-        player.returnToPrevious()
+        player.returnToPreviousItem()
 
         let items = player.queuePlayer.items()
         expect(items).to(haveCount(player.configuration.preloadedItems))

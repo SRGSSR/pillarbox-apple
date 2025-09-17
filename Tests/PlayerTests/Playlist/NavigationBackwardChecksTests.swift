@@ -19,7 +19,7 @@ final class NavigationBackwardChecksTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item, configuration: Self.configuration())
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canReturnToPrevious()).to(beFalse())
+        expect(player.canReturnToPreviousItem()).to(beFalse())
     }
 
     func testCanReturnForOnDemandNearBeginningWithoutPreviousItem() {
@@ -33,7 +33,7 @@ final class NavigationBackwardChecksTests: TestCase {
             }
         }
 
-        expect(player.canReturnToPrevious()).to(beFalse())
+        expect(player.canReturnToPreviousItem()).to(beFalse())
     }
 
     func testCanReturnForOnDemandAtBeginningWithPreviousItem() {
@@ -42,7 +42,7 @@ final class NavigationBackwardChecksTests: TestCase {
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canReturnToPrevious()).to(beTrue())
+        expect(player.canReturnToPreviousItem()).to(beTrue())
     }
 
     func testCanReturnForOnDemandNotAtBeginning() {
@@ -58,7 +58,7 @@ final class NavigationBackwardChecksTests: TestCase {
             }
         }
 
-        expect(player.canReturnToPrevious()).to(beTrue())
+        expect(player.canReturnToPreviousItem()).to(beTrue())
     }
 
     func testCanReturnForLiveWithPreviousItem() {
@@ -67,14 +67,14 @@ final class NavigationBackwardChecksTests: TestCase {
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.live))
-        expect(player.canReturnToPrevious()).to(beTrue())
+        expect(player.canReturnToPreviousItem()).to(beTrue())
     }
 
     func testCannotReturnForLiveWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item, configuration: Self.configuration())
         expect(player.streamType).toEventually(equal(.live))
-        expect(player.canReturnToPrevious()).to(beFalse())
+        expect(player.canReturnToPreviousItem()).to(beFalse())
     }
 
     func testCanReturnForDvrWithPreviousItem() {
@@ -83,14 +83,14 @@ final class NavigationBackwardChecksTests: TestCase {
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.dvr))
-        expect(player.canReturnToPrevious()).to(beTrue())
+        expect(player.canReturnToPreviousItem()).to(beTrue())
     }
 
     func testCannotReturnForDvrWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item, configuration: Self.configuration())
         expect(player.streamType).toEventually(equal(.dvr))
-        expect(player.canReturnToPrevious()).to(beFalse())
+        expect(player.canReturnToPreviousItem()).to(beFalse())
     }
 
     func testCanReturnForUnknownWithPreviousItem() {
@@ -99,13 +99,13 @@ final class NavigationBackwardChecksTests: TestCase {
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
         expect(player.streamType).to(equal(.unknown))
-        expect(player.canReturnToPrevious()).to(beTrue())
+        expect(player.canReturnToPreviousItem()).to(beTrue())
     }
 
     func testCannotReturnForUnknownWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item, configuration: Self.configuration())
         expect(player.streamType).to(equal(.unknown))
-        expect(player.canReturnToPrevious()).to(beFalse())
+        expect(player.canReturnToPreviousItem()).to(beFalse())
     }
 }

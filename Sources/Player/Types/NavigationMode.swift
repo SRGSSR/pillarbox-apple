@@ -10,15 +10,15 @@ import Foundation
 ///
 /// Controls the way items in a playback queue are navigated when the following navigation APIs are used:
 ///
-///   - ``Player/returnToPrevious()``
-///   - ``Player/advanceToNext()``
+///   - ``Player/returnToPreviousItem()``
+///   - ``Player/advanceToNextItem()``
 public enum NavigationMode: Equatable {
     /// Immediate navigation.
     case immediate
 
     /// Smart navigation.
     ///
-    /// Makes ``Player/returnToPrevious()`` jump to the start position of the current item when within the first
+    /// Makes ``Player/returnToPreviousItem()`` jump to the start position of the current item when within the first
     /// seconds of playback (as defined by the associated interval), otherwise returns to the previous item.
     ///
     /// > Note: This behavior is only meaningful for on-demand streams.

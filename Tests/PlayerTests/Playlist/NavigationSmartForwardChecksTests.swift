@@ -15,14 +15,14 @@ final class NavigationSmartForwardChecksTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.live.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canAdvanceToNext()).to(beTrue())
+        expect(player.canAdvanceToNextItem()).to(beTrue())
     }
 
     func testCannotAdvanceForOnDemandWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canAdvanceToNext()).to(beFalse())
+        expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 
     func testCanAdvanceForLiveWithNextItem() {
@@ -30,14 +30,14 @@ final class NavigationSmartForwardChecksTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.live))
-        expect(player.canAdvanceToNext()).to(beTrue())
+        expect(player.canAdvanceToNextItem()).to(beTrue())
     }
 
     func testCannotAdvanceForLiveWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
-        expect(player.canAdvanceToNext()).to(beFalse())
+        expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 
     func testCanAdvanceForDvrWithNextItem() {
@@ -45,14 +45,14 @@ final class NavigationSmartForwardChecksTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.dvr))
-        expect(player.canAdvanceToNext()).to(beTrue())
+        expect(player.canAdvanceToNextItem()).to(beTrue())
     }
 
     func testCannotAdvanceForDvrWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
-        expect(player.canAdvanceToNext()).to(beFalse())
+        expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 
     func testCanAdvanceForUnknownWithNextItem() {
@@ -60,13 +60,13 @@ final class NavigationSmartForwardChecksTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).to(equal(.unknown))
-        expect(player.canAdvanceToNext()).to(beTrue())
+        expect(player.canAdvanceToNextItem()).to(beTrue())
     }
 
     func testCannotAdvanceForUnknownWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item)
         expect(player.streamType).to(equal(.unknown))
-        expect(player.canAdvanceToNext()).to(beFalse())
+        expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 }

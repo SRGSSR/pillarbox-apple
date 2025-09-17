@@ -174,8 +174,8 @@ You can programmatically navigate through the playlist, moving forward to the ne
         Checks whether we can advance, and if so, moves to the next item.
 
         ```swift
-        if player.canAdvanceToNext() {
-            player.advanceToNext()
+        if player.canAdvanceToNextItem() {
+            player.advanceToNextItem()
         }
         ```
     }
@@ -184,8 +184,8 @@ You can programmatically navigate through the playlist, moving forward to the ne
         Checks whether we can return, and if so, moves to the previous item.
 
         ```swift
-        if player.canReturnToPrevious() {
-            player.returnToPrevious()
+        if player.canReturnToPreviousItem() {
+            player.returnToPreviousItem()
         }
         ```
     }

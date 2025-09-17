@@ -92,11 +92,11 @@
 
 ### Navigating Between Items
 
-- ``advanceToNext()``
-- ``canAdvanceToNext()``
-- ``canReturnToPrevious()``
+- ``advanceToNextItem()``
+- ``canAdvanceToNextItem()``
+- ``canReturnToPreviousItem()``
 - ``currentItem``
-- ``returnToPrevious()``
+- ``returnToPreviousItem()``
 
 ### Managing Media Selection
 

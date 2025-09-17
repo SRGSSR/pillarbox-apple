@@ -15,7 +15,7 @@ final class NavigationSmartBackwardTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
-        player.returnToPrevious()
+        player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item))
     }
 
@@ -30,7 +30,7 @@ final class NavigationSmartBackwardTests: TestCase {
             }
         }
 
-        player.returnToPrevious()
+        player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item))
         expect(player.time()).toEventually(equal(.zero))
     }
@@ -41,7 +41,7 @@ final class NavigationSmartBackwardTests: TestCase {
         let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
-        player.returnToPrevious()
+        player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item1))
     }
 
@@ -57,7 +57,7 @@ final class NavigationSmartBackwardTests: TestCase {
                 done()
             }
         }
-        player.returnToPrevious()
+        player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item2))
         expect(player.time()).toEventually(equal(.zero))
     }
