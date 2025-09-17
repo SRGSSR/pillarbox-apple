@@ -114,7 +114,7 @@ To support video playback in the background, set the [`audiovisualBackgroundPlay
 
 However, implementing <doc:picture-in-picture-article> generally offers a better user experience for video content compared to background playback. In such cases, it’s recommended to keep the default `.automatic` setting.
 
-## Playlist
+## Manage playlists
 
 The ``Player`` supports queue-based playback, allowing you to manage multiple player item in a playlist. You can load multiple items at once, append or prepend items, and navigate through the queue with ease.
 
