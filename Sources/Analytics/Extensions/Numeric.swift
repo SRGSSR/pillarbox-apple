@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-extension Numeric {
-    var toMilliseconds: Self {
-        self * 1000
+extension Double {
+    var toMilliseconds: Int {
+        Int((self * 1000).rounded())
     }
 }

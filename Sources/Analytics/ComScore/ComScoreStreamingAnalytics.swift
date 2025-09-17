@@ -20,15 +20,15 @@ final class ComScoreStreamingAnalytics: SCORStreamingAnalytics {
 
 extension ComScoreStreamingAnalytics {
     private static func duration(from properties: TrackerProperties) -> Int {
-        Int(properties.seekableTimeRange.duration.timeInterval().toMilliseconds)
+        properties.seekableTimeRange.duration.timeInterval().toMilliseconds
     }
 
     private static func position(from properties: TrackerProperties) -> Int {
-        Int(properties.time.timeInterval().toMilliseconds)
+        properties.time.timeInterval().toMilliseconds
     }
 
     private static func offset(from properties: TrackerProperties) -> Int {
-        Int(properties.endOffset().timeInterval().toMilliseconds)
+        properties.endOffset().timeInterval().toMilliseconds
     }
 
     func notifyEvent(for playbackState: PlaybackState, at rate: Float) {
