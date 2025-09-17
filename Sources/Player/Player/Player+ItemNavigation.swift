@@ -30,11 +30,11 @@ public extension Player {
         if shouldSeekToStartTime() {
             seek(near(.zero))
         }
-        else if let index = index(before: currentItem, in: storedItems) {
+        else if let previousIndex = index(before: currentItem, in: storedItems) {
             queuePlayer.replaceItems(
                 with: AVPlayerItem.playerItems(
                     from: Array(storedItems),
-                    after: index,
+                    after: previousIndex,
                     repeatMode: repeatMode,
                     length: configuration.preloadedItems,
                     reload: true,
@@ -107,7 +107,7 @@ private extension Player {
         case .immediate:
             return false
         case let .smart(interval: interval):
-            return (streamType == .onDemand && isAwayFromStartTime(withInterval: interval)) || !canReturnToPreviousItem()
+            return (streamType == .onDemand && isAwayFromStartTime(withInterval: interval)) || index(before: currentItem, in: storedItems) == nil
         }
     }
 }
