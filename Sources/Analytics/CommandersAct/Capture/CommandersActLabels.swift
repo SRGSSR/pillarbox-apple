@@ -8,10 +8,11 @@
 ///
 /// Mainly used for development-oriented purposes (e.g., unit testing).
 public struct CommandersActLabels: Decodable {
+    private let _media_airplay_on: String?
     private let _media_position: String?
+    private let _media_subtitles_on: String?
     private let _media_timeshift: String?
     private let _media_volume: String?
-    private let _media_subtitles_on: String?
 
     let event_name: String?
     let listener_session_id: String?
@@ -83,6 +84,15 @@ public struct CommandersActLabels: Decodable {
 
     // MARK: Streaming labels
 
+    /// The value of `media_airplay_on`.
+    public var media_airplay_on: Bool? {
+        // swiftlint:disable:previous discouraged_optional_boolean
+        extract(\._media_airplay_on)
+    }
+
+    /// The value of `media_audio_track`.
+    public var media_audio_track: String?
+
     /// The value of `media_player_display`.
     public let media_player_display: String?
 
@@ -94,6 +104,15 @@ public struct CommandersActLabels: Decodable {
         extract(\._media_position)
     }
 
+    /// The value of `media_subtitles_on`.
+    public var media_subtitles_on: Bool? {
+        // swiftlint:disable:previous discouraged_optional_boolean
+        extract(\._media_subtitles_on)
+    }
+
+    /// The value of `media_subtitle_selection`.
+    public var media_subtitle_selection: String?
+
     /// The value of `media_timeshift`.
     public var media_timeshift: Int? {
         extract(\._media_timeshift)
@@ -104,18 +123,6 @@ public struct CommandersActLabels: Decodable {
         extract(\._media_volume)
     }
 
-    /// The value of `media_subtitles_on`.
-    public var media_subtitles_on: Bool? {
-        // swiftlint:disable:previous discouraged_optional_boolean
-        extract(\._media_subtitles_on)
-    }
-
-    /// The value of `media_subtitle_selection`.
-    public var media_subtitle_selection: String?
-
-    /// The value of `media_audio_track`.
-    public var media_audio_track: String?
-
     private func extract<T>(_ keyPath: KeyPath<Self, String?>) -> T? where T: LosslessStringConvertible {
         guard let value = self[keyPath: keyPath] else { return nil }
         return .init(value)
@@ -124,10 +131,11 @@ public struct CommandersActLabels: Decodable {
 
 private extension CommandersActLabels {
     enum CodingKeys: String, CodingKey {
+        case _media_airplay_on = "media_airplay_on"
         case _media_position = "media_position"
+        case _media_subtitles_on = "media_subtitles_on"
         case _media_timeshift = "media_timeshift"
         case _media_volume = "media_volume"
-        case _media_subtitles_on = "media_subtitles_on"
         case context
         case event_name
         case listener_session_id
@@ -150,10 +158,10 @@ private extension CommandersActLabels {
         case navigation_level_9
         case page_type
         case page_name
+        case media_audio_track
         case media_player_display
         case media_player_version
         case media_subtitle_selection
-        case media_audio_track
         case user
     }
 }
