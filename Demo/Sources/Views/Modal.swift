@@ -29,7 +29,7 @@ private struct PresentedModifier: ViewModifier {
         content
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .preventsTouchPropagation()
-            .gesture(
+            .simultaneousGesture(
                 DragGesture(minimumDistance: distance)
                     .onEnded { value in
                         guard value.translation.height > distance else { return }

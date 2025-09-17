@@ -19,7 +19,7 @@ To deliver a seamless user experience, ``Player`` offers robust media selection 
 
 ### Manage media selection programmatically
 
-Media selection is a core property of a ``Player`` instance and is automatically published, as detailed in <doc:state-observation-article>. SwiftUI views observing a Player instance will automatically update when media selection options or the current selection changes.
+Media selection is a core property of a ``Player`` instance and is automatically published, as detailed in <doc:state-observation-article>. SwiftUI views observing a ``Player`` instance will automatically update when media selection options or the current selection changes.
 
 Use the following APIs to manage media selection programmatically:
 
