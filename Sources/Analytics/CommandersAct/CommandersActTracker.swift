@@ -121,6 +121,7 @@ private extension CommandersActTracker {
         labels["media_audiodescription_on"] = audioDescription(from: properties)
         labels["media_subtitles_on"] = subtitleOn(from: properties)
         labels["media_subtitle_selection"] = subtitleSelection(from: properties)
+        labels["media_airplay_on"] = externalPlaybackActive(from: properties)
 
         switch properties.streamType {
         case .onDemand:
@@ -168,6 +169,10 @@ private extension CommandersActTracker {
         else {
             return "false"
         }
+    }
+
+    func externalPlaybackActive(from properties: TrackerProperties) -> String {
+        properties.isExternalPlaybackActive ? "true" : "false"
     }
 
     func subtitleSelection(from properties: TrackerProperties) -> String? {
