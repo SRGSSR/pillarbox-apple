@@ -165,7 +165,7 @@ The playback queue can be accessed via the ``Player/items`` property. You can mo
     }
 }
 
-### Navigating
+### Navigate items
 
 You can programmatically navigate through the playlist, moving forward to the next item or backward to the previous item as needed.
 
