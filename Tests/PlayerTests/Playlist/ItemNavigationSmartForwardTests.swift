@@ -9,13 +9,13 @@
 import Nimble
 import PillarboxStreams
 
-final class NavigationForwardTests: TestCase {
+final class ItemNavigationSmartForwardTests: TestCase {
     func testAdvanceForOnDemandWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.onDemand))
-        player.advanceToNext()
+        player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
     }
 
@@ -23,7 +23,7 @@ final class NavigationForwardTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
-        player.advanceToNext()
+        player.advanceToNextItem()
         expect(player.currentItem).to(equal(item))
     }
 
@@ -32,7 +32,7 @@ final class NavigationForwardTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.live))
-        player.advanceToNext()
+        player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
     }
 
@@ -40,7 +40,7 @@ final class NavigationForwardTests: TestCase {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
-        player.advanceToNext()
+        player.advanceToNextItem()
         expect(player.currentItem).to(equal(item))
     }
 
@@ -49,7 +49,7 @@ final class NavigationForwardTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).toEventually(equal(.dvr))
-        player.advanceToNext()
+        player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
     }
 
@@ -57,7 +57,7 @@ final class NavigationForwardTests: TestCase {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
-        player.advanceToNext()
+        player.advanceToNextItem()
         expect(player.currentItem).to(equal(item))
     }
 
@@ -66,7 +66,7 @@ final class NavigationForwardTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.streamType).to(equal(.unknown))
-        player.advanceToNext()
+        player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
     }
 
@@ -74,7 +74,7 @@ final class NavigationForwardTests: TestCase {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item)
         expect(player.streamType).to(equal(.unknown))
-        player.advanceToNext()
+        player.advanceToNextItem()
         expect(player.currentItem).to(equal(item))
     }
 }

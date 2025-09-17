@@ -46,8 +46,8 @@ You can initialize a player with or without media items. Since ``Player`` confor
         ```swift
         struct PlayerView: View {
             @StateObject private var player = Player(items: [
-                .simple(url: URL(string: "https://server.com/stream_1.m3u8")!),
-                .simple(url: URL(string: "https://server.com/stream_2.m3u8")!)
+                .simple(url: URL(string: "https://server.com/stream.m3u8")!),
+                .simple(url: URL(string: "https://server.com/stream.m3u8")!)
             ])
         }
         ```
@@ -113,3 +113,80 @@ A newly created player begins in a paused state. To start playback, call ``Playe
 To support video playback in the background, set the [`audiovisualBackgroundPlaybackPolicy`](https://developer.apple.com/documentation/avfoundation/avplayer/3787548-audiovisualbackgroundplaybackpol) to `.continuesIfPossible`.
 
 However, implementing <doc:picture-in-picture-article> generally offers a better user experience for video content compared to background playback. In such cases, it’s recommended to keep the default `.automatic` setting.
+
+## Manage playlists
+
+The ``Player`` supports queue-based playback, allowing you to manage multiple player item in a playlist. You can load multiple items at once, append or prepend items, and navigate through the queue with ease.
+
+### Add and remove items
+
+The playback queue can be accessed via the ``Player/items`` property. You can modify the queue using the API to append, prepend, insert, or remove items as needed.
+
+@TabNavigator {
+    @Tab("Append") {
+        Add a new item to the back of the queue.
+
+        ```swift
+        player.append(.simple(url: URL(string: "https://server.com/stream.m3u8")!))
+        ```
+    }
+    
+    @Tab("Prepend") {
+        Add a new item to the front of the queue.
+
+        ```swift
+        player.prepend(.simple(url: URL(string: "https://server.com/stream.m3u8")!))
+        ```
+    }
+    
+    @Tab("Insert") {
+        Insert before or after an `item` in the queue.
+
+        ```swift
+        player.insert(.simple(url: URL(string: "https://server.com/stream_1.m3u8")!), before: item)
+        player.insert(.simple(url: URL(string: "https://server.com/stream_2.m3u8")!), after: item)
+        ```
+    }
+    
+    @Tab("Remove") {
+        Remove a specific `item` from the queue.
+
+        ```swift
+        player.remove(item)
+        ```
+    }
+    
+    @Tab("Remove All") {
+        Clear the entire queue.
+
+        ```swift
+        player.removeAllItems()
+        ```
+    }
+}
+
+### Navigate items
+
+You can programmatically navigate through the playlist, moving forward to the next item or backward to the previous item as needed.
+
+@TabNavigator {
+    @Tab("Next Item") {
+        Checks whether we can advance, and if so, moves to the next item.
+
+        ```swift
+        if player.canAdvanceToNextItem() {
+            player.advanceToNextItem()
+        }
+        ```
+    }
+    
+    @Tab("Previous Item") {
+        Checks whether we can return, and if so, moves to the previous item.
+
+        ```swift
+        if player.canReturnToPreviousItem() {
+            player.returnToPreviousItem()
+        }
+        ```
+    }
+}

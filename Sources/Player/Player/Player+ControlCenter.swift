@@ -68,7 +68,7 @@ private extension Player {
     func previousTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = false
         return nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
-            self?.returnToPrevious()
+            self?.returnToPreviousItem()
             return .success
         }
     }
@@ -76,7 +76,7 @@ private extension Player {
     func nextTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = false
         return nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
-            self?.advanceToNext()
+            self?.advanceToNextItem()
             return .success
         }
     }

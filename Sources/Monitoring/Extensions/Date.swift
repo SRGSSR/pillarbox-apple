@@ -8,6 +8,6 @@ import Foundation
 
 extension Date {
     var timestamp: Int {
-        Int((timeIntervalSince1970 * 1000).rounded())
+        timeIntervalSince1970.toMilliseconds
     }
 }

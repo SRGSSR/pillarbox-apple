@@ -140,7 +140,7 @@ private extension CommandersActTracker {
 
     func volume(from properties: TrackerProperties) -> String {
         guard !properties.isMuted else { return "0" }
-        return String(Int(AVAudioSession.sharedInstance().outputVolume * 100))
+        return String(Int((AVAudioSession.sharedInstance().outputVolume * 100).rounded()))
     }
 
     func audioTrack(from properties: TrackerProperties) -> String {
@@ -180,15 +180,15 @@ private extension CommandersActTracker {
     }
 
     func mediaPosition(from properties: TrackerProperties) -> Int {
-        Int(properties.time.timeInterval())
+        Int(properties.time.timeInterval().rounded())
     }
 
     func playbackDuration() -> Int {
-        Int(stopwatch.time())
+        Int(stopwatch.time().rounded())
     }
 
     func timeshiftOffset(from properties: TrackerProperties) -> Int {
-        Int(properties.endOffset().timeInterval())
+        Int(properties.endOffset().timeInterval().rounded())
     }
 
     func languageCode(from option: AVMediaSelectionOption?) -> String {
