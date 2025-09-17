@@ -13,7 +13,7 @@ Deliver intuitive playback experiences.
 
 ## System video view
 
-``SystemVideoView`` is a SwiftUI view that delivers Apple’s built-in playback experience, powered by ``Player``. If your app does not require a custom playback interface—or if you want to stay as close as possible to the native experience—integrating this view is straightforward:
+``SystemVideoView`` is a SwiftUI view that delivers Apple's built-in playback experience, powered by ``Player``. If your app does not require a custom playback interface—or if you want to stay as close as possible to the native experience—integrating this view is straightforward:
 
 ```swift
 struct PlayerView: View {
