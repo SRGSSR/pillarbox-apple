@@ -118,7 +118,7 @@ However, implementing <doc:picture-in-picture-article> generally offers a better
 
 The ``Player`` supports queue-based playback, allowing you to manage multiple player item in a playlist. You can load multiple items at once, append or prepend items, and navigate through the queue with ease.
 
-### Managing items
+### Add and remove items
 
 The playback queue can be accessed via the ``Player/items`` property. You can modify the queue using the API to append, prepend, insert, or remove items as needed.
 
