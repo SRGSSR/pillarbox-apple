@@ -46,8 +46,8 @@ You can initialize a player with or without media items. Since ``Player`` confor
         ```swift
         struct PlayerView: View {
             @StateObject private var player = Player(items: [
-                .simple(url: URL(string: "https://server.com/stream_1.m3u8")!),
-                .simple(url: URL(string: "https://server.com/stream_2.m3u8")!)
+                .simple(url: URL(string: "https://server.com/stream.m3u8")!),
+                .simple(url: URL(string: "https://server.com/stream.m3u8")!)
             ])
         }
         ```
@@ -122,32 +122,44 @@ The ``Player`` supports queue-based playback, allowing you to manage multiple pl
 
 The playback queue can be accessed via the ``Player/items`` property. You can modify the queue using the API to append, prepend, insert, or remove items as needed.
 
-``Player/prepend(_:)``
-
 @TabNavigator {
-    @Tab("Append/Prepend Items") {
-        Add new items to the front or back of the queue.
+    @Tab("Append") {
+        Add a new item to the back of the queue.
 
         ```swift
-        player.prepend(.simple(url: URL(string: "https://server.com/stream_1.m3u8")!))
-        player.appendItem(.simple(url: URL(string: "https://server.com/stream_3.m3u8")!))
+        player.append(.simple(url: URL(string: "https://server.com/stream.m3u8")!))
         ```
     }
     
-    @Tab("Insert Items") {
-        Insert before or after the current item in the queue.
+    @Tab("Prepend") {
+        Add a new item to the front of the queue.
 
         ```swift
-        player.insert(.simple(url: URL(string: "https://server.com/stream_0.m3u8")!), before: currentItem)
-        player.insert(.simple(url: URL(string: "https://server.com/stream_2.m3u8")!), after: currentItem)
+        player.prepend(.simple(url: URL(string: "https://server.com/stream.m3u8")!))
         ```
     }
     
-    @Tab("Remove Items") {
-        Remove a specific item or clear the entire queue.
+    @Tab("Insert") {
+        Insert before or after an `item` in the queue.
 
         ```swift
-        player.remove(player.items.first!)
+        player.insert(.simple(url: URL(string: "https://server.com/stream_1.m3u8")!), before: item)
+        player.insert(.simple(url: URL(string: "https://server.com/stream_2.m3u8")!), after: item)
+        ```
+    }
+    
+    @Tab("Remove") {
+        Remove a specific `item` from the queue.
+
+        ```swift
+        player.remove(item)
+        ```
+    }
+    
+    @Tab("Remove All") {
+        Clear the entire queue.
+
+        ```swift
         player.removeAllItems()
         ```
     }
