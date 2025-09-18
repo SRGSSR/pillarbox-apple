@@ -7,16 +7,23 @@
 @testable import PillarboxPlayer
 
 import AVFoundation
+import Combine
 import PillarboxCircumspect
 import PillarboxStreams
 
 final class ResourceItemTests: TestCase {
+    private static func isPlaybackLikelyToKeepUpPublisher(for item: AVPlayerItem) -> AnyPublisher<Bool, Never> {
+        item.publisher(for: \.isPlaybackLikelyToKeepUp)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     func testNativePlayerItem() {
         let item = Resource.simple(url: Stream.onDemand.url).playerItem(configuration: .default)
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true],
-            from: item.publisher(for: \.isPlaybackLikelyToKeepUp)
+            from: Self.isPlaybackLikelyToKeepUpPublisher(for: item)
         )
     }
 
@@ -25,7 +32,7 @@ final class ResourceItemTests: TestCase {
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false],
-            from: item.publisher(for: \.isPlaybackLikelyToKeepUp)
+            from: Self.isPlaybackLikelyToKeepUpPublisher(for: item)
         )
     }
 
