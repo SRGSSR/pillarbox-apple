@@ -57,8 +57,8 @@ enum URNMedia {
     static let expired = Media(
         title: "Expired URN",
         subtitle: "Content that is not available anymore",
-        imageUrl: "https://www.rts.ch/2022/09/20/09/57/13365589.image/16x9",
-        type: .urn("urn:rts:video:13382911")
+        imageUrl: "https://img.rts.ch/medias/2025/image/1odgvu-28972957.image",
+        type: .urn("urn:rts:video:39d80746-d3ec-36e6-ac03-6584f0f7090d")
     )
     static let unknown = Media(
         title: "Unknown URN",
