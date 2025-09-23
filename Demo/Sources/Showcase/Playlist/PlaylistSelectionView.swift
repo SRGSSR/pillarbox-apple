@@ -35,6 +35,7 @@ struct PlaylistSelectionView: View {
         URLMedia.uhdVideoHLS,
         URNMedia.gothard_360,
         URLMedia.bitmovin_360,
+        URLMedia.apple_360,
         URLMedia.unauthorized,
         URLMedia.unknown,
         URLMedia.unavailableMp3,

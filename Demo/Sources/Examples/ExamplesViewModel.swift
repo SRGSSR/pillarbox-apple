@@ -116,7 +116,8 @@ final class ExamplesViewModel: ObservableObject {
 
     let threeSixtyMedias = [
         URNMedia.gothard_360,
-        URLMedia.bitmovin_360
+        URLMedia.bitmovin_360,
+        URLMedia.apple_360
     ]
 
     let unbufferedMedias = [

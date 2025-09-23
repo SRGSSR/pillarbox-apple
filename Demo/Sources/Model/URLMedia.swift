@@ -438,4 +438,9 @@ enum URLMedia {
         imageUrl: "https://www.rts.ch/2017/02/24/11/43/8414076.image/16x9",
         type: .monoscopicUrl("https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8")
     )
+    static let apple_360 = Media(
+        title: "Apple 360°",
+        imageUrl: kAppleImageUrl,
+        type: .monoscopicUrl("https://devstreaming-cdn.apple.com/videos/streaming/examples/immersive-media/360Lighthouse/mvp.m3u8")
+    )
 }

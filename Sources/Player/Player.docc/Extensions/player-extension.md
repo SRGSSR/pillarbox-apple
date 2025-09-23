@@ -13,6 +13,7 @@
 - ``audiovisualBackgroundPlaybackPolicy``
 - ``configuration``
 - ``isMuted``
+- ``limits``
 - ``repeatMode``
 - ``shouldPlay``
 - ``textStyleRules``
@@ -75,9 +76,11 @@
 
 ### Skipping Through Media
 
+- ``canSkip(_:)``
 - ``canSkipBackward()``
 - ``canSkipForward()``
 - ``canSkipToDefault()``
+- ``skip(_:completion:)``
 - ``skipBackward(completion:)``
 - ``skipForward(completion:)``
 - ``skipToDefault(completion:)``
