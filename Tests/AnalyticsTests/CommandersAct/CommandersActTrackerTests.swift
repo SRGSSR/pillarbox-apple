@@ -103,7 +103,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
                 CommandersActTracker.adapter { _ in .test }
             ]
         ))
-        player?.setDesiredPlaybackSpeed(2)
+        player?.playbackSpeed = 2
 
         player?.play()
         expect(player?.time().seconds).toEventually(beGreaterThan(2))

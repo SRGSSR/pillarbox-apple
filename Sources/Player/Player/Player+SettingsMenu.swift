@@ -15,7 +15,7 @@ private struct PlaybackSpeedMenuContent: View {
     @ObservedObject var player: Player
 
     var body: some View {
-        Picker(selection: selection) {
+        Picker(selection: $player.playbackSpeed) {
             ForEach(playbackSpeeds, id: \.self) { speed in
                 Text("\(speed, specifier: "%g×")", bundle: .module, comment: "Speed multiplier").tag(speed)
             }
@@ -34,9 +34,9 @@ private struct PlaybackSpeedMenuContent: View {
 
     private var selection: Binding<Float> {
         .init {
-            player.playbackSpeed.wrappedValue
+            player.playbackSpeed
         } set: { newValue in
-            player.playbackSpeed.wrappedValue = newValue
+            player.playbackSpeed = newValue
             action(newValue)
         }
     }
@@ -95,7 +95,7 @@ private struct SettingsMenuContent: View {
         } label: {
             Button(action: {}) {
                 Text("Playback Speed", bundle: .module, comment: "Playback setting menu title")
-                Text("\(player.playbackSpeed.wrappedValue, specifier: "%g×")", bundle: .module, comment: "Speed multiplier")
+                Text("\(player.playbackSpeed, specifier: "%g×")", bundle: .module, comment: "Speed multiplier")
                 Image(systemName: "speedometer")
             }
         }

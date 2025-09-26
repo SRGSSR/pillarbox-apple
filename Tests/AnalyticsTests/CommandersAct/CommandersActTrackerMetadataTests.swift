@@ -30,7 +30,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                     CommandersActTracker.adapter { _ in .test }
                 ]
             ))
-            player?.setDesiredPlaybackSpeed(0.5)
+            player?.playbackSpeed = 0.5
             player?.play()
         }
     }

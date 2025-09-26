@@ -24,7 +24,7 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
                 expect(labels.ns_st_rt).to(equal(200))
             }
         ) {
-            player.setDesiredPlaybackSpeed(2)
+            player.playbackSpeed = 2
             player.play()
         }
     }
@@ -44,7 +44,7 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
                 expect(labels.ns_st_rt).to(equal(200))
             }
         ) {
-            player.setDesiredPlaybackSpeed(2)
+            player.playbackSpeed = 2
         }
     }
 
@@ -59,7 +59,7 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
         expect(player.playbackState).toEventually(equal(.playing))
 
         expectNoHits(during: .milliseconds(500)) {
-            player.setDesiredPlaybackSpeed(1)
+            player.playbackSpeed = 1
         }
     }
 }
