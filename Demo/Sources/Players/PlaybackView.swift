@@ -496,11 +496,8 @@ private struct QualityMenu: View {
             }
             .pickerStyle(.inline)
         } label: {
-            Button(action: {}) {
-                Text("Quality")
-                Text(qualitySetting.name)
-                Image(systemName: "person.and.background.dotted")
-            }
+            Label("Quality", systemImage: "person.and.background.dotted")
+            Text(qualitySetting.name)
         }
     }
 }
