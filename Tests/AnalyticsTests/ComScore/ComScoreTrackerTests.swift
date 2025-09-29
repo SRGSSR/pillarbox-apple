@@ -184,7 +184,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 expect(labels.ns_st_rt).to(equal(200))
             }
         ) {
-            player.setDesiredPlaybackSpeed(2)
+            player.playbackSpeed = 2
             player.play()
         }
     }

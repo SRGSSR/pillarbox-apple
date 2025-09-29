@@ -9,33 +9,22 @@ import CoreMedia
 import SwiftUI
 
 public extension Player {
-    /// The currently applicable playback speed.
-    var effectivePlaybackSpeed: Float {
-        _playbackSpeed.effectiveValue
-    }
-
     /// The currently allowed playback speed range.
     var playbackSpeedRange: ClosedRange<Float> {
         _playbackSpeed.effectiveRange
     }
 
     /// A binding to read and write the current playback speed.
-    var playbackSpeed: Binding<Float> {
-        .init {
-            self.effectivePlaybackSpeed
-        } set: { newValue in
-            self.setDesiredPlaybackSpeed(newValue)
-        }
-    }
-
-    /// Sets the desired playback speed.
-    ///
-    /// - Parameter playbackSpeed: The playback speed. The default value is 1.
     ///
     /// This value might not be applied immediately or might not be applicable at all. You must check
     /// `effectivePlaybackSpeed` to obtain the actually applied speed.
-    func setDesiredPlaybackSpeed(_ playbackSpeed: Float) {
-        desiredPlaybackSpeedPublisher.send(playbackSpeed)
+    var playbackSpeed: Float {
+        get {
+            _playbackSpeed.effectiveValue
+        }
+        set {
+            desiredPlaybackSpeedPublisher.send(newValue)
+        }
     }
 }
 

@@ -18,7 +18,7 @@ final class ComScoreTrackerPlaybackSpeedTests: ComScoreTestCase {
                 ComScoreTracker.adapter { _ in .test }
             ]
         ))
-        player.setDesiredPlaybackSpeed(0.5)
+        player.playbackSpeed = 0.5
 
         expectAtLeastHits(
             play { labels in

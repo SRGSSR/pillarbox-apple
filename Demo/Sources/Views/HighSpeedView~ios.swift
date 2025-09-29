@@ -67,11 +67,11 @@ private struct HighSpeedView<Content>: View where Content: View {
     var body: some View {
         HighSpeedGestureView(content: content) { finished in
             if !finished {
-                speed = player.effectivePlaybackSpeed
-                player.setDesiredPlaybackSpeed(highSpeed)
+                speed = player.playbackSpeed
+                player.playbackSpeed = highSpeed
             }
             else if let speed {
-                player.setDesiredPlaybackSpeed(speed)
+                player.playbackSpeed = speed
                 self.speed = nil
             }
         }

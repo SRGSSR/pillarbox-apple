@@ -45,7 +45,7 @@ private extension SystemVideoViewCoordinator {
     ) -> [UIMenuElement] {
         let speedActions = allowedSpeeds(from: range).sorted().map { allowedSpeed in
             UIAction(title: String(format: "%g×", allowedSpeed), state: speed == allowedSpeed ? .on : .off) { [weak player] action in
-                player?.playbackSpeed.wrappedValue = allowedSpeed
+                player?.playbackSpeed = allowedSpeed
                 action.state = .on
             }
         }
