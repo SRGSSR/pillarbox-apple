@@ -5,7 +5,7 @@
 //
 
 /// A mode setting how a player repeats playback of items in its queue.
-public enum RepeatMode {
+public enum RepeatMode: CaseIterable {
     /// Disabled.
     case off
 
