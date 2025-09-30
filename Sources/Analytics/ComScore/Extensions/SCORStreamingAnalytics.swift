@@ -8,17 +8,7 @@ import ComScore
 import CoreMedia
 import PillarboxPlayer
 
-final class ComScoreStreamingAnalytics: SCORStreamingAnalytics {
-    private var oldRate: Float?
-
-    override func notifyChangePlaybackRate(_ newRate: Float) {
-        guard oldRate != newRate else { return }
-        super.notifyChangePlaybackRate(newRate)
-        oldRate = newRate
-    }
-}
-
-extension ComScoreStreamingAnalytics {
+extension SCORStreamingAnalytics {
     private static func duration(from properties: TrackerProperties) -> Int {
         properties.seekableTimeRange.duration.timeInterval().toMilliseconds
     }
@@ -31,10 +21,10 @@ extension ComScoreStreamingAnalytics {
         properties.endOffset().timeInterval().toMilliseconds
     }
 
-    func notifyEvent(for playbackState: PlaybackState, at rate: Float) {
-        switch playbackState {
+    func notifyEvent(with properties: TrackerProperties, rate: inout Float) {
+        switch properties.playbackState {
         case .playing:
-            notifyChangePlaybackRate(rate)
+            notifyChangePlaybackRate(to: properties.rate, from: &rate)
             notifyPlay()
         case .paused:
             notifyPause()
@@ -53,5 +43,11 @@ extension ComScoreStreamingAnalytics {
         else {
             start(fromPosition: Self.position(from: properties))
         }
+    }
+
+    private func notifyChangePlaybackRate(to rate: Float, from previousRate: inout Float) {
+        guard previousRate != rate else { return }
+        notifyChangePlaybackRate(rate)
+        previousRate = rate
     }
 }

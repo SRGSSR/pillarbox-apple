@@ -12,11 +12,15 @@ import Foundation
 /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
 /// any relevant completion.
 public final class ReplaySubject<Output, Failure>: Subject where Failure: Error {
-    var subscriptions: [ReplaySubscription] = []
-    private var completion: Subscribers.Completion<Failure>?
-
     private let buffer: LimitedBuffer<Output>
-    private let lock = NSRecursiveLock()
+
+    private let subscriptions: RecursiveLock<[ReplaySubscription]> = .init(initialState: [])
+    private let completion: RecursiveLock<Subscribers.Completion<Failure>?> = .init(initialState: nil)
+
+    /// For use in tests only
+    var isEmpty: Bool {
+        subscriptions.withLock(\.isEmpty)
+    }
 
     /// Creates a subject able to buffer the provided number of values.
     ///
@@ -27,26 +31,28 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
     // swiftlint:disable:next missing_docs
     public func send(_ value: Output) {
-        withLock(lock) {
-            guard self.completion == nil else { return }
-            buffer.append(value)
-            subscriptions.forEach { subscription in
-                subscription.append(value)
-            }
-            subscriptions.forEach { subscription in
-                subscription.send()
-            }
+        guard completion.locked() == nil else { return }
+        buffer.append(value)
+
+        let subscriptions = subscriptions.locked()
+        subscriptions.forEach { subscription in
+            subscription.append(value)
+        }
+        subscriptions.forEach { subscription in
+            subscription.send()
         }
     }
 
     // swiftlint:disable:next missing_docs
     public func send(completion: Subscribers.Completion<Failure>) {
-        withLock(lock) {
-            guard self.completion == nil else { return }
-            self.completion = completion
-            subscriptions.forEach { subscription in
-                subscription.send(completion: completion)
-            }
+        self.completion.withLock { _completion in
+            guard _completion == nil else { return }
+            _completion = completion
+        }
+
+        let subscriptions = subscriptions.locked()
+        subscriptions.forEach { subscription in
+            subscription.send(completion: completion)
         }
     }
 
@@ -57,35 +63,40 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
     // swiftlint:disable:next missing_docs
     public func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
-        withLock(lock) {
-            let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
-            subscription.onCancel = { [weak self] in
-                guard let self else { return }
-                subscriptions.removeAll { $0 === subscription }
-            }
-            buffer.values.forEach { value in
-                subscription.append(value)
-                subscription.send()
-            }
-            subscriber.receive(subscription: subscription)
-            if let completion {
-                subscription.send(completion: completion)
-            }
+        let subscription = ReplaySubscription(subscriber: subscriber) { [weak self] subscription in
+            self?.removeSubscription(subscription)
+        }
+        buffer.values.forEach { value in
+            subscription.append(value)
+            subscription.send()
+        }
+        subscriber.receive(subscription: subscription)
+        if let completion = completion.locked() {
+            subscription.send(completion: completion)
+        }
+        subscriptions.withLock { subscriptions in
             subscriptions.append(subscription)
+        }
+    }
+
+    private func removeSubscription(_ subscription: ReplaySubscription) {
+        subscriptions.withLock { subscriptions in
+            subscriptions.removeAll { $0 === subscription }
         }
     }
 }
 
 extension ReplaySubject {
     final class ReplaySubscription: Subscription {
-        var onCancel: (() -> Void)?
+        private let subscriber: RecursiveLock<AnySubscriber<Output, Failure>?>
+        private let onCancel: RecursiveLock<((ReplaySubscription) -> Void)?>
 
-        private var subscriber: AnySubscriber<Output, Failure>?
-        private var buffer = DemandBuffer<Output>()
-        private var pendingValues: [Output] = []
+        private let buffer = DemandBuffer<Output>()
+        private let pendingValues: RecursiveLock<[Output]> = .init(initialState: [])
 
-        init<S>(subscriber: S, values: [Output]) where S: Subscriber, S.Input == Output, S.Failure == Failure {
-            self.subscriber = AnySubscriber(subscriber)
+        init<S>(subscriber: S, onCancel: @escaping (ReplaySubscription) -> Void) where S: Subscriber, S.Input == Output, S.Failure == Failure {
+            self.subscriber = .init(initialState: AnySubscriber(subscriber))
+            self.onCancel = .init(initialState: onCancel)
         }
 
         func request(_ demand: Subscribers.Demand) {
@@ -93,36 +104,41 @@ extension ReplaySubject {
         }
 
         func append(_ value: Output) {
-            pendingValues += buffer.append(value)
+            pendingValues.withLock { pendingValues in
+                pendingValues += buffer.append(value)
+            }
         }
 
         func send() {
-            let values = pendingValues
-            pendingValues = []
+            let values = pendingValues.withLock { pendingValues in
+                let values = pendingValues
+                pendingValues = []
+                return values
+            }
             process(values)
         }
 
         func send(completion: Subscribers.Completion<Failure>) {
-            process(completion: completion)
+            guard let subscriber = subscriber.locked() else { return }
+            subscriber.receive(completion: completion)
         }
 
         func cancel() {
-            subscriber = nil
-            onCancel?()
-            onCancel = nil
+            subscriber.setLocked(nil)
+            onCancel.withLock { [weak self] onCancel in
+                if let self {
+                    onCancel?(self)
+                }
+                onCancel = nil
+            }
         }
 
         private func process(_ values: [Output]) {
-            guard let subscriber else { return }
+            guard let subscriber = subscriber.locked() else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)
                 request(demand)
             }
-        }
-
-        private func process(completion: Subscribers.Completion<Failure>?) {
-            guard let subscriber, let completion else { return }
-            subscriber.receive(completion: completion)
         }
     }
 }

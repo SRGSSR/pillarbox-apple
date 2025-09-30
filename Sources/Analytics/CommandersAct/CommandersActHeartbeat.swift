@@ -12,14 +12,16 @@ final class CommandersActHeartbeat {
     private let delay: TimeInterval
     private let posInterval: TimeInterval
     private let uptimeInterval: TimeInterval
+    private let queue: DispatchQueue
 
     private var properties: TrackerProperties?
     private var cancellable: AnyCancellable?
 
-    init(delay: TimeInterval = 30, posInterval: TimeInterval = 30, uptimeInterval: TimeInterval = 60) {
+    init(delay: TimeInterval = 30, posInterval: TimeInterval = 30, uptimeInterval: TimeInterval = 60, queue: DispatchQueue) {
         self.delay = delay
         self.posInterval = posInterval
         self.uptimeInterval = uptimeInterval
+        self.queue = queue
     }
 
     func update(with properties: TrackerProperties, labels: @escaping (TrackerProperties) -> [String: String]) {
@@ -28,6 +30,7 @@ final class CommandersActHeartbeat {
         if properties.playbackState == .playing {
             guard cancellable == nil else { return }
             cancellable = Self.eventPublisher(for: properties, delay: delay, posInterval: posInterval, uptimeInterval: uptimeInterval)
+                .receive(on: queue)
                 .sink { [weak self] event in
                     self?.sendEvent(event, labels: labels)
                 }

@@ -36,13 +36,13 @@ public protocol PlayerItemTracker: AnyObject {
     /// Creates the tracker.
     ///
     /// - Parameter configuration: The tracker configuration.
-    init(configuration: Configuration)
+    init(configuration: Configuration, queue: DispatchQueue)
 
     /// A method called when the tracker is enabled for a player.
     ///
     /// - Parameter player: The player for which the tracker must be enabled.
     ///
-    /// > Important: This method is called on a background thread.
+    /// > Important: This method is called on a background serial queue.
     func enable(for player: AVPlayer)
 
     /// A method called when metadata is updated.
@@ -51,7 +51,7 @@ public protocol PlayerItemTracker: AnyObject {
     ///
     /// This method is always called, whether the tracker is currently active or not.
     ///
-    /// > Important: This method is called on a background thread.
+    /// > Important: This method is called on a background serial queue.
     func updateMetadata(to metadata: Metadata)
 
     /// A method called when player properties have changed.
@@ -61,7 +61,7 @@ public protocol PlayerItemTracker: AnyObject {
     /// This method can be called quite often, but only when the tracker is active. Implementations should avoid
     /// performing significant work unnecessarily.
     ///
-    /// > Important: This method is called on a background thread.
+    /// > Important: This method is called on a background serial queue.
     func updateProperties(to properties: TrackerProperties)
 
     /// A method called when metric events are updated.
@@ -70,14 +70,14 @@ public protocol PlayerItemTracker: AnyObject {
     ///
     /// This method is only called when the tracker is active.
     ///
-    /// > Important: This method is called on a background thread.
+    /// > Important: This method is called on a background serial queue.
     func updateMetricEvents(to events: [MetricEvent])
 
     /// A method called when the tracker is disabled.
     ///
     /// - Parameter properties: The updated properties.
     ///
-    /// > Important: This method is called on a background thread.
+    /// > Important: This method is called on a background serial queue.
     func disable(with properties: TrackerProperties)
 }
 

@@ -17,14 +17,14 @@ final class TrackingSessionTests: XCTestCase {
     }
 
     func testStart() {
-        var session = TrackingSession()
+        let session = TrackingSession()
         session.start()
         expect(session.id).notTo(beNil())
         expect(session.isStarted).to(beTrue())
     }
 
     func testStop() {
-        var session = TrackingSession()
+        let session = TrackingSession()
         session.start()
         session.stop()
         expect(session.id).notTo(beNil())
@@ -32,7 +32,7 @@ final class TrackingSessionTests: XCTestCase {
     }
 
     func testReset() {
-        var session = TrackingSession()
+        let session = TrackingSession()
         session.start()
         session.reset()
         expect(session.id).to(beNil())

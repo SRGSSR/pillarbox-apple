@@ -25,7 +25,7 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
 
     private let configuration: Configuration
 
-    init(configuration: Configuration) {
+    init(configuration: Configuration, queue: DispatchQueue) {
         self.configuration = configuration
     }
 

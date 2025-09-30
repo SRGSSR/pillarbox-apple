@@ -7,50 +7,74 @@
 import Combine
 import DequeModule
 import Foundation
+import os
+
+private final class UnprotectedDemandBuffer<T> {
+    private(set) var values: Deque<T>
+    private(set) var requested: Subscribers.Demand
+
+    init(values: [T]) {
+        self.values = .init(values)
+        self.requested = .none
+    }
+
+    func append(_ value: T) -> [T] {
+        switch requested {
+        case .unlimited:
+            return [value]
+        default:
+            values.append(value)
+            return flush()
+        }
+    }
+
+    func request(_ demand: Subscribers.Demand) -> [T] {
+        requested += demand
+        return flush()
+    }
+
+    func flush() -> [T] {
+        var flushedValues = [T]()
+        while requested > 0, let value = values.popFirst() {
+            flushedValues.append(value)
+            requested -= 1
+        }
+        return flushedValues
+    }
+}
 
 /// A thread-safe buffer managing items demanded by a `Subscriber` in a Combine `Subscription`.
 ///
 /// The buffer can be used when implementing a subscription so that items can be kept if needed while waiting for a
 /// subscriber demand.
 public final class DemandBuffer<T> {
-    private(set) var values = Deque<T>()
-    private(set) var requested: Subscribers.Demand = .none
+    private let buffer: OSAllocatedUnfairLock<UnprotectedDemandBuffer<T>>
 
-    private let lock = NSRecursiveLock()
+    var values: Deque<T> {
+        buffer.withLock(\.values)
+    }
+
+    var requested: Subscribers.Demand {
+        buffer.withLock(\.requested)
+    }
 
     /// Creates a buffer initially containing the provided values.
     public init(_ values: [T]) {
-        self.values = .init(values)
+        buffer = .init(initialState: .init(values: values))
     }
 
     /// Appends a value to the buffer, returning values that should be returned to the subscriber as a result.
     public func append(_ value: T) -> [T] {
-        withLock(lock) {
-            switch requested {
-            case .unlimited:
-                return [value]
-            default:
-                values.append(value)
-                return flush()
-            }
+        buffer.withLock { buffer in
+            buffer.append(value)
         }
     }
 
     /// Updates the demand, returning values that should be returned to the subscriber as a result.
     public func request(_ demand: Subscribers.Demand) -> [T] {
-        withLock(lock) {
-            requested += demand
-            return flush()
+        buffer.withLock { buffer in
+            buffer.request(demand)
         }
-    }
-
-    private func flush() -> [T] {
-        var values = [T]()
-        while requested > 0, let value = self.values.popFirst() {
-            values.append(value)
-            requested -= 1
-        }
-        return values
     }
 }
 
