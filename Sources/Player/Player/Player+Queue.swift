@@ -49,11 +49,4 @@ extension Player {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
-
-    func queueErrorPublisher() -> AnyPublisher<Error?, Never> {
-        queuePublisher
-            .map(\.error)
-            .removeDuplicates { $0 as? NSError == $1 as? NSError }
-            .eraseToAnyPublisher()
-    }
 }
