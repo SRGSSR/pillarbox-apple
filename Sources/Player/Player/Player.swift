@@ -185,6 +185,8 @@ public final class Player: ObservableObject, Equatable {
     let queuePlayer = QueuePlayer()
     let nowPlayingSession: MPNowPlayingSession
 
+    private let dummyNowPlayingSession = MPNowPlayingSession(players: [AVPlayer()])
+
     var cancellables = Set<AnyCancellable>()
     var commandRegistrations: [any RemoteCommandRegistrable] = []
     var resumeState: ResumeState?
@@ -254,6 +256,7 @@ public final class Player: ObservableObject, Equatable {
     /// is called on a different player instance or when the player gets destroyed.
     public func resignActive() {
         guard Self.currentPlayer == self else { return }
+        dummyNowPlayingSession.becomeActiveIfPossible()
         isActive = false
         Self.currentPlayer = nil
     }
