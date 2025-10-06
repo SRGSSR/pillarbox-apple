@@ -43,4 +43,17 @@ final class NowPlayingInfoPublisherTests: TestCase {
             player.isActive = false
         }
     }
+
+    func testPlayerError() {
+        let player = Player(
+            item: .mock(url: Stream.unavailable.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title"))
+        )
+        expectAtLeastSimilarPublished(
+            values: [[:], ["title": ""], ["title": "title"], [:]],
+            from: Self.nowPlayingInfoPublisher(for: player)
+        ) {
+            player.isActive = true
+            player.play()
+        }
+    }
 }
