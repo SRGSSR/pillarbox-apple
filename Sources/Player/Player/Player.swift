@@ -66,6 +66,7 @@ public final class Player: NSObject, ObservableObject {
                 queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
             }
             else {
+                dummyNowPlayingSession.becomeActiveIfPossible()
                 queuePlayer.allowsExternalPlayback = false
             }
             isActivePublisher.send(newValue)
@@ -261,7 +262,6 @@ public final class Player: NSObject, ObservableObject {
     /// is called on a different player instance or when the player gets destroyed.
     public func resignActive() {
         guard Self.currentPlayer == self else { return }
-        dummyNowPlayingSession.becomeActiveIfPossible()
         isActive = false
         Self.currentPlayer = nil
     }
@@ -464,6 +464,11 @@ private extension Player {
 
 extension Player: MPNowPlayingSessionDelegate {
     public func nowPlayingSessionDidChangeActive(_ nowPlayingSession: MPNowPlayingSession) {
-        print("--> isActive: \(nowPlayingSession.isActive)")
+        if nowPlayingSession.isActive {
+            installRemoteCommands()
+        }
+        else {
+            uninstallRemoteCommands()
+        }
     }
 }

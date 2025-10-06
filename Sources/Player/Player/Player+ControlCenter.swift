@@ -10,27 +10,13 @@ import MediaPlayer
 extension Player {
     func updateControlCenter(nowPlaying: NowPlaying) {
         if !nowPlaying.isEmpty {
-            if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
-                uninstallRemoteCommands()
-                installRemoteCommands()
-            }
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlaying.info
         }
         else {
-            uninstallRemoteCommands()
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
         }
     }
 
-    func uninstallRemoteCommands() {
-        commandRegistrations.forEach { registration in
-            nowPlayingSession.remoteCommandCenter.unregister(registration)
-        }
-        commandRegistrations = []
-    }
-}
-
-private extension Player {
     func installRemoteCommands() {
         commandRegistrations = [
             playRegistration(),
@@ -44,6 +30,15 @@ private extension Player {
         ]
     }
 
+    func uninstallRemoteCommands() {
+        commandRegistrations.forEach { registration in
+            nowPlayingSession.remoteCommandCenter.unregister(registration)
+        }
+        commandRegistrations = []
+    }
+}
+
+private extension Player {
     func playRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
             self?.play()
