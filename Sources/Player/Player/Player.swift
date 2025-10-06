@@ -11,7 +11,7 @@ import MediaPlayer
 import PillarboxCore
 
 /// An observable audio / video player maintaining its items as a double-ended queue.
-public final class Player: ObservableObject, Equatable {
+public final class Player: NSObject, ObservableObject {
     private static weak var currentPlayer: Player?
 
     /// The player version.
@@ -214,7 +214,12 @@ public final class Player: ObservableObject, Equatable {
 #else
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
 #endif
+
         self.configuration = configuration
+
+        super.init()
+
+        nowPlayingSession.delegate = self
 
         configurePlayer()
         configurePublishedPropertyPublishers()
@@ -454,5 +459,11 @@ private extension Player {
             nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvanceToItem(after: queue.item, in: items)
         }
         .store(in: &cancellables)
+    }
+}
+
+extension Player: MPNowPlayingSessionDelegate {
+    public func nowPlayingSessionDidChangeActive(_ nowPlayingSession: MPNowPlayingSession) {
+        print("--> isActive: \(nowPlayingSession.isActive)")
     }
 }
