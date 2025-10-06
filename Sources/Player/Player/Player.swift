@@ -12,8 +12,6 @@ import PillarboxCore
 
 /// An observable audio / video player maintaining its items as a double-ended queue.
 public final class Player: NSObject, ObservableObject {
-    private static weak var currentPlayer: Player?
-
     /// The player version.
     public static let version = PackageInfo.version
 
@@ -62,11 +60,11 @@ public final class Player: NSObject, ObservableObject {
         }
         set {
             if newValue {
-                nowPlayingSession.becomeActiveIfPossible()
+                installRemoteCommands()
                 queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
             }
             else {
-                dummyNowPlayingSession.becomeActiveIfPossible()
+                uninstallRemoteCommands()
                 queuePlayer.allowsExternalPlayback = false
             }
             isActivePublisher.send(newValue)
@@ -250,10 +248,7 @@ public final class Player: NSObject, ObservableObject {
     ///
     /// At most one player can be active at any time.
     public func becomeActive() {
-        guard Self.currentPlayer != self else { return }
-        Self.currentPlayer?.isActive = false
-        isActive = true
-        Self.currentPlayer = self
+        nowPlayingSession.becomeActiveIfPossible()
     }
 
     /// Disables AirPlay and Control Center integration for the receiver.
@@ -261,9 +256,7 @@ public final class Player: NSObject, ObservableObject {
     /// Does nothing if the receiver is currently inactive. Calling `resignActive()` is superfluous when `becomeActive()`
     /// is called on a different player instance or when the player gets destroyed.
     public func resignActive() {
-        guard Self.currentPlayer == self else { return }
-        isActive = false
-        Self.currentPlayer = nil
+        dummyNowPlayingSession.becomeActiveIfPossible()
     }
 
     /// The list of current sessions managed by trackers of a specific type.
@@ -464,11 +457,6 @@ private extension Player {
 
 extension Player: MPNowPlayingSessionDelegate {
     public func nowPlayingSessionDidChangeActive(_ nowPlayingSession: MPNowPlayingSession) {
-        if nowPlayingSession.isActive {
-            installRemoteCommands()
-        }
-        else {
-            uninstallRemoteCommands()
-        }
+        isActive = nowPlayingSession.isActive
     }
 }
