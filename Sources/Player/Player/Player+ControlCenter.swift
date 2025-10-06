@@ -127,9 +127,9 @@ extension Player {
     }
 
     func nowPlayingPublisher() -> AnyPublisher<NowPlaying, Never> {
-        Publishers.CombineLatest(isActivePublisher, queuePublisher)
-            .map { [weak self] isActive, queue in
-                guard let self, isActive, !queue.isActive, queue.error == nil else { return Just(NowPlaying.empty).eraseToAnyPublisher() }
+        queuePublisher
+            .map { [weak self] queue in
+                guard let self, !queue.isActive, queue.error == nil else { return Just(NowPlaying.empty).eraseToAnyPublisher() }
                 return Publishers.CombineLatest(
                     metadataPublisher,
                     nowPlayingInfoPlaybackPublisher()
