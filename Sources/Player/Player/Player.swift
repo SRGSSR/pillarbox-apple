@@ -189,8 +189,6 @@ public final class Player: ObservableObject, Equatable {
     let queuePlayer = QueuePlayer()
     let nowPlayingSession: MPNowPlayingSession
 
-    private let dummyNowPlayingSession = MPNowPlayingSession(players: [AVPlayer()])
-
     var cancellables = Set<AnyCancellable>()
     var resumeState: ResumeState?
 
@@ -214,6 +212,9 @@ public final class Player: ObservableObject, Equatable {
 #else
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
 #endif
+
+        // A session might be activated automatically by default. Avoid it.
+        nowPlayingSession.resignActive()
 
         self.configuration = configuration
 
@@ -254,7 +255,7 @@ public final class Player: ObservableObject, Equatable {
     /// Does nothing if the receiver is currently inactive. Calling `resignActive()` is superfluous when `becomeActive()`
     /// is called on a different player instance or when the player gets destroyed.
     public func resignActive() {
-        dummyNowPlayingSession.becomeActiveIfPossible()
+        nowPlayingSession.resignActive()
     }
 
     /// The list of current sessions managed by trackers of a specific type.
