@@ -323,8 +323,8 @@ private struct SkipButton: View {
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
-    @ObservedObject var progressTracker: ProgressTracker
-    @ObservedObject var skipTracker: SkipTracker
+    let progressTracker: ProgressTracker
+    let skipTracker: SkipTracker
 
     var body: some View {
         HStack(spacing: 30) {
@@ -333,9 +333,7 @@ private struct ControlsView: View {
             SkipForwardButton(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
         }
         .preventsTouchPropagation()
-        ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
-        .bind(progressTracker, to: player)
     }
 }
 
@@ -356,6 +354,7 @@ private struct SkipBackwardButton: View {
         .animation(.defaultLinear, value: player.canSkipBackward())
         .keyboardShortcut("s", modifiers: [])
         .hoverEffect()
+        ._debugBodyCounter(color: .green)
     }
 
     private func skipBackward() {
@@ -380,6 +379,7 @@ private struct SkipForwardButton: View {
         .animation(.defaultLinear, value: player.canSkipForward())
         .keyboardShortcut("d", modifiers: [])
         .hoverEffect()
+        ._debugBodyCounter(color: .green)
     }
 
     private func skipForward() {
