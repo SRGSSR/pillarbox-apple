@@ -31,7 +31,7 @@ struct Queue {
     }
 
     var isActive: Bool {
-        playerItem == nil
+        playerItem != nil && error == nil
     }
 
     private var playerItem: AVPlayerItem? {
