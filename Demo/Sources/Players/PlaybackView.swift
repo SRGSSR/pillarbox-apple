@@ -335,7 +335,6 @@ private struct ControlsView: View {
         .preventsTouchPropagation()
         ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
-        .bind(progressTracker, to: player)
     }
 }
 
