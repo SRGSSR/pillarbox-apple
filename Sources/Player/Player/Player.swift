@@ -11,7 +11,7 @@ import MediaPlayer
 import PillarboxCore
 
 /// An observable audio / video player maintaining its items as a double-ended queue.
-public final class Player: NSObject, ObservableObject {
+public final class Player: ObservableObject, Equatable {
     /// The player version.
     public static let version = PackageInfo.version
 
@@ -54,8 +54,9 @@ public final class Player: NSObject, ObservableObject {
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
-    var isActive = false {
+    private var isActive = false {
         didSet {
+            guard isActive != oldValue else { return }
             if isActive {
                 installRemoteCommands()
                 queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
@@ -209,10 +210,6 @@ public final class Player: NSObject, ObservableObject {
 
         self.configuration = configuration
 
-        super.init()
-
-        nowPlayingSession.delegate = self
-
         configurePlayer()
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
@@ -221,6 +218,7 @@ public final class Player: NSObject, ObservableObject {
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
         configureAudioSessionPublisher()
+        configureIsActivePublisher()
     }
 
     /// Creates a player with a single item in its queue.
@@ -317,7 +315,8 @@ private extension Player {
             }
             .store(in: &cancellables)
 
-        metadataPublisher.slice(at: \.blockedTimeRanges)
+        metadataPublisher
+            .slice(at: \.blockedTimeRanges)
             .assign(to: \.blockedTimeRanges, on: queuePlayer)
             .store(in: &cancellables)
     }
@@ -334,6 +333,13 @@ private extension Player {
                 }
                 .store(in: &cancellables)
         }
+    }
+
+    func configureIsActivePublisher() {
+        nowPlayingSession.publisher(for: \.isActive)
+            .removeDuplicates()
+            .weakAssign(to: \.isActive, on: self)
+            .store(in: &cancellables)
     }
 
     func updateTracker(with items: QueueItems?) {
@@ -445,11 +451,5 @@ private extension Player {
             nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvanceToItem(after: queue.item, in: items)
         }
         .store(in: &cancellables)
-    }
-}
-
-extension Player: MPNowPlayingSessionDelegate {
-    public func nowPlayingSessionDidChangeActive(_ nowPlayingSession: MPNowPlayingSession) {
-        isActive = nowPlayingSession.isActive
     }
 }
