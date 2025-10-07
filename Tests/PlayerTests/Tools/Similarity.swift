@@ -49,14 +49,6 @@ extension Resource: Similar {
     }
 }
 
-extension NowPlaying.Info: Similar {
-    // swiftlint:disable:next missing_docs
-    public static func ~~ (lhs: Self, rhs: Self) -> Bool {
-        // swiftlint:disable:next legacy_objc_type
-        NSDictionary(dictionary: lhs).isEqual(to: rhs)
-    }
-}
-
 extension MetricEvent: Similar {
     // swiftlint:disable:next missing_docs
     public static func ~~ (lhs: MetricEvent, rhs: MetricEvent) -> Bool {
