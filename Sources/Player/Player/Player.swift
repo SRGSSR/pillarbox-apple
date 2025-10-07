@@ -54,12 +54,9 @@ public final class Player: NSObject, ObservableObject {
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
-    var isActive: Bool {
-        get {
-            isActivePublisher.value
-        }
-        set {
-            if newValue {
+    var isActive = false {
+        didSet {
+            if isActive {
                 installRemoteCommands()
                 queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
             }
@@ -67,7 +64,6 @@ public final class Player: NSObject, ObservableObject {
                 uninstallRemoteCommands()
                 queuePlayer.allowsExternalPlayback = false
             }
-            isActivePublisher.send(newValue)
         }
     }
 
@@ -189,9 +185,6 @@ public final class Player: NSObject, ObservableObject {
     var cancellables = Set<AnyCancellable>()
     var commandRegistrations: [any RemoteCommandRegistrable] = []
     var resumeState: ResumeState?
-
-    // swiftlint:disable:next private_subject
-    let isActivePublisher = CurrentValueSubject<Bool, Never>(false)
 
     // swiftlint:disable:next private_subject
     let desiredPlaybackSpeedPublisher = PassthroughSubject<Float, Never>()
