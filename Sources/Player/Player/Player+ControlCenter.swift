@@ -126,8 +126,6 @@ extension Player {
                 .map { metadata, playbackInfo in
                     metadata.nowPlayingInfo
                         .merging(playbackInfo) { _, new in new }
-                        // For proper Control Center integration at least one metadata key must be filled.
-                        .merging([MPMediaItemPropertyTitle: ""]) { old, _ in old }
                 }
                 .eraseToAnyPublisher()
             }
