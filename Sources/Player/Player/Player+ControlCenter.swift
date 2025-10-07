@@ -9,12 +9,7 @@ import MediaPlayer
 
 extension Player {
     func updateControlCenter(nowPlaying: NowPlaying) {
-        if !nowPlaying.isEmpty {
-            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlaying.info
-        }
-        else {
-            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
-        }
+        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = !nowPlaying.isEmpty ? nowPlaying.info : nil
     }
 
     func installRemoteCommands() {
