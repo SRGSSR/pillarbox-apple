@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import MediaPlayer
 
 extension MPNowPlayingSession {
@@ -11,5 +12,11 @@ extension MPNowPlayingSession {
 
     func resignActive() {
         Self.unusedSession.becomeActiveIfPossible()
+    }
+
+    func isActivePublisher() -> AnyPublisher<Bool, Never> {
+        publisher(for: \.isActive)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 }

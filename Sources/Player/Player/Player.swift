@@ -344,8 +344,7 @@ private extension Player {
     }
 
     func configureIsActivePublisher() {
-        nowPlayingSession.publisher(for: \.isActive)
-            .removeDuplicates()
+        nowPlayingSession.isActivePublisher()
             .weakAssign(to: \.isActive, on: self)
             .store(in: &cancellables)
     }
@@ -437,13 +436,14 @@ private extension Player {
     }
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest3(
             queuePublisher,
-            propertiesPublisher
+            propertiesPublisher,
+            nowPlayingSession.isActivePublisher()
         )
         .receiveOnMainThread()
-        .sink { [weak self] queue, properties in
-            guard let self else { return }
+        .sink { [weak self] queue, properties, isActive in
+            guard let self, isActive else { return }
             let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live
             let hasError = queue.error != nil
             nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled && !hasError && canSkipForward()
