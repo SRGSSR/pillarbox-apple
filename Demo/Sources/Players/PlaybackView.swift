@@ -175,7 +175,7 @@ private struct MainView: View {
                 }
             }
         }
-        .preventsTouchPropagation()
+        .contentShape(.rect)
         .opacity(isUserInterfaceHidden ? 0 : 1)
     }
 
@@ -190,25 +190,34 @@ private struct MainView: View {
 
     private func topBar() -> some View {
         HStack {
-            HStack(spacing: 20) {
-                CloseButton()
-                if supportsPictureInPicture {
-                    PiPButton()
-                }
-                routePickerView()
-            }
-            .opacity(shouldHideInterface ? 0 : 1)
+            topLeadingButtons()
             Spacer()
-            HStack(spacing: 20) {
-                LoadingIndicator(player: player)
-                if !shouldHideInterface {
-                    VolumeButton(player: player)
-                }
-            }
+            topTrailingButtons()
         }
         .topBarStyle()
-        .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+
+    private func topLeadingButtons() -> some View {
+        HStack(spacing: 20) {
+            CloseButton()
+            if supportsPictureInPicture {
+                PiPButton()
+            }
+            routePickerView()
+        }
+        .opacity(shouldHideInterface ? 0 : 1)
+        .contentShape(.rect)
+    }
+
+    private func topTrailingButtons() -> some View {
+        HStack(spacing: 20) {
+            LoadingIndicator(player: player)
+            if !shouldHideInterface {
+                VolumeButton(player: player)
+            }
+        }
+        .contentShape(.rect)
     }
 
     private func sliderBackground() -> some View {
@@ -332,7 +341,6 @@ private struct ControlsView: View {
             PlaybackButton(player: player)
             SkipForwardButton(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
         }
-        .preventsTouchPropagation()
         .animation(.defaultLinear, value: player.playbackState)
     }
 }
