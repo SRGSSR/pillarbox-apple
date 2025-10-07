@@ -7,9 +7,11 @@
 import Combine
 import MediaPlayer
 
+typealias NowPlayingInfo = [String: Any]
+
 extension Player {
-    func updateControlCenter(nowPlaying: NowPlaying) {
-        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = !nowPlaying.isEmpty ? nowPlaying.info : nil
+    func updateControlCenter(nowPlayingInfo: NowPlayingInfo) {
+        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
 
     func installRemoteCommands() {
@@ -96,10 +98,10 @@ private extension Player {
 }
 
 extension Player {
-    private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+    private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         propertiesPublisher
             .map { [weak queuePlayer] properties in
-                var nowPlayingInfo = NowPlaying.Info()
+                var nowPlayingInfo = NowPlayingInfo()
                 if properties.streamType != .unknown {
                     nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
                     if let time = properties.seekTime ?? queuePlayer?.currentTime(), time.isValid {
@@ -113,15 +115,20 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    func nowPlayingPublisher() -> AnyPublisher<NowPlaying, Never> {
+    func nowPlayingInfoPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         queuePublisher
             .map { [weak self] queue in
-                guard let self, queue.isActive else { return Just(NowPlaying.empty).eraseToAnyPublisher() }
+                guard let self, queue.isActive else { return Just(NowPlayingInfo()).eraseToAnyPublisher() }
                 return Publishers.CombineLatest(
                     metadataPublisher,
                     nowPlayingInfoPlaybackPublisher()
                 )
-                .map { NowPlaying.filled(metadata: $0, playbackInfo: $1) }
+                .map { metadata, playbackInfo in
+                    metadata.nowPlayingInfo
+                        .merging(playbackInfo) { _, new in new }
+                        // For proper Control Center integration at least one metadata key must be filled.
+                        .merging([MPMediaItemPropertyTitle: ""]) { old, _ in old }
+                }
                 .eraseToAnyPublisher()
             }
             .switchToLatest()

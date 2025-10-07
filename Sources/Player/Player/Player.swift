@@ -427,10 +427,10 @@ private extension Player {
 
 private extension Player {
     func configureControlCenterMetadataUpdatePublisher() {
-        nowPlayingPublisher()
+        nowPlayingInfoPublisher()
             .receiveOnMainThread()
-            .sink { [weak self] nowPlaying in
-                self?.updateControlCenter(nowPlaying: nowPlaying)
+            .sink { [weak self] nowPlayingInfo in
+                self?.updateControlCenter(nowPlayingInfo: nowPlayingInfo)
             }
             .store(in: &cancellables)
     }

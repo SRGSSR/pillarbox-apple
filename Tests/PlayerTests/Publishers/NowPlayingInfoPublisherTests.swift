@@ -13,7 +13,7 @@ import PillarboxStreams
 
 final class NowPlayingInfoPublisherTests: TestCase {
     private static func nowPlayingInfoPublisher(for player: Player) -> AnyPublisher<NowPlaying.Info, Never> {
-        player.nowPlayingPublisher()
+        player.nowPlayingInfoPublisher()
             .map(\.info)
             .removeDuplicates(by: ~~)
             .eraseToAnyPublisher()
