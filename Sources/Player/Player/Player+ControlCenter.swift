@@ -31,9 +31,6 @@ extension Player {
     }
 
     func uninstallRemoteCommands() {
-        commandRegistrations.forEach { registration in
-            nowPlayingSession.remoteCommandCenter.unregister(registration)
-        }
         commandRegistrations = []
     }
 }

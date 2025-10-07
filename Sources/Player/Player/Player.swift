@@ -178,13 +178,20 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    var commandRegistrations: [any RemoteCommandRegistrable] = [] {
+        willSet {
+            commandRegistrations.forEach { registration in
+                nowPlayingSession.remoteCommandCenter.unregister(registration)
+            }
+        }
+    }
+
     let queuePlayer = QueuePlayer()
     let nowPlayingSession: MPNowPlayingSession
 
     private let dummyNowPlayingSession = MPNowPlayingSession(players: [AVPlayer()])
 
     var cancellables = Set<AnyCancellable>()
-    var commandRegistrations: [any RemoteCommandRegistrable] = []
     var resumeState: ResumeState?
 
     // swiftlint:disable:next private_subject
