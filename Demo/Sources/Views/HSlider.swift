@@ -31,7 +31,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
             content(.init(progress), geometry.size.width)
                 // Use center alignment instead of top leading alignment used by `GeometryReader`.
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .preventsTouchPropagation()
+                .contentShape(.rect)
                 .gesture(dragGesture(in: geometry))
                 .onChange(of: gestureValue) { value in
                     // Gesture cancellation can only be detected via gesture value observation,

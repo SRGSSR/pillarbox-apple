@@ -175,7 +175,7 @@ private struct MainView: View {
                 }
             }
         }
-        .preventsTouchPropagation()
+        .contentShape(.rect)
         .opacity(isUserInterfaceHidden ? 0 : 1)
     }
 
@@ -190,25 +190,34 @@ private struct MainView: View {
 
     private func topBar() -> some View {
         HStack {
-            HStack(spacing: 20) {
-                CloseButton()
-                if supportsPictureInPicture {
-                    PiPButton()
-                }
-                routePickerView()
-            }
-            .opacity(shouldHideInterface ? 0 : 1)
+            topLeadingButtons()
             Spacer()
-            HStack(spacing: 20) {
-                LoadingIndicator(player: player)
-                if !shouldHideInterface {
-                    VolumeButton(player: player)
-                }
-            }
+            topTrailingButtons()
         }
         .topBarStyle()
-        .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+
+    private func topLeadingButtons() -> some View {
+        HStack(spacing: 20) {
+            CloseButton()
+            if supportsPictureInPicture {
+                PiPButton()
+            }
+            routePickerView()
+        }
+        .opacity(shouldHideInterface ? 0 : 1)
+        .contentShape(.rect)
+    }
+
+    private func topTrailingButtons() -> some View {
+        HStack(spacing: 20) {
+            LoadingIndicator(player: player)
+            if !shouldHideInterface {
+                VolumeButton(player: player)
+            }
+        }
+        .contentShape(.rect)
     }
 
     private func sliderBackground() -> some View {
@@ -323,8 +332,8 @@ private struct SkipButton: View {
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
-    @ObservedObject var progressTracker: ProgressTracker
-    @ObservedObject var skipTracker: SkipTracker
+    let progressTracker: ProgressTracker
+    let skipTracker: SkipTracker
 
     var body: some View {
         HStack(spacing: 30) {
@@ -332,10 +341,7 @@ private struct ControlsView: View {
             PlaybackButton(player: player)
             SkipForwardButton(player: player, progressTracker: progressTracker, skipTracker: skipTracker)
         }
-        .preventsTouchPropagation()
-        ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
-        .bind(progressTracker, to: player)
     }
 }
 
@@ -356,6 +362,7 @@ private struct SkipBackwardButton: View {
         .animation(.defaultLinear, value: player.canSkipBackward())
         .keyboardShortcut("s", modifiers: [])
         .hoverEffect()
+        ._debugBodyCounter(color: .green)
     }
 
     private func skipBackward() {
@@ -380,6 +387,7 @@ private struct SkipForwardButton: View {
         .animation(.defaultLinear, value: player.canSkipForward())
         .keyboardShortcut("d", modifiers: [])
         .hoverEffect()
+        ._debugBodyCounter(color: .green)
     }
 
     private func skipForward() {

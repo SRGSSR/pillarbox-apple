@@ -438,8 +438,8 @@ private extension Player {
             guard let self else { return }
             let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live
             let hasError = queue.error != nil
-            nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled && !hasError && canSkipForward()
-            nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled && !hasError && canSkipBackward()
+            nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled && !hasError && canSkipBackward()
+            nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled && !hasError && canSkipForward()
             nowPlayingSession.remoteCommandCenter.changePlaybackPositionCommand.isEnabled = !hasError
 
             let items = Deque(queue.elements.map(\.item))
