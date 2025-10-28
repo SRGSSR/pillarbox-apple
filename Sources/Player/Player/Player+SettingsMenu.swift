@@ -15,7 +15,7 @@ private struct PlaybackSpeedMenuContent: View {
     @ObservedObject var player: Player
 
     var body: some View {
-        Picker(selection: $player.playbackSpeed) {
+        Picker(selection: selection) {
             ForEach(playbackSpeeds, id: \.self) { speed in
                 Text("\(speed, specifier: "%g×")", bundle: .module, comment: "Speed multiplier").tag(speed)
             }
