@@ -15,7 +15,7 @@ private struct PlaybackSpeedMenuContent: View {
     @ObservedObject var player: Player
 
     var body: some View {
-        Picker(selection: $player.playbackSpeed) {
+        Picker(selection: selection) {
             ForEach(playbackSpeeds, id: \.self) { speed in
                 Text("\(speed, specifier: "%g×")", bundle: .module, comment: "Speed multiplier").tag(speed)
             }
@@ -76,10 +76,10 @@ private struct MediaSelectionMenuContent: View {
 
 @available(iOS 16.0, tvOS 17.0, *)
 private struct SettingsMenuContent: View {
-    @ObservedObject var player: Player
-
     let speeds: Set<Float>
     let action: (SettingsUpdate) -> Void
+
+    @ObservedObject var player: Player
 
     var body: some View {
         playbackSpeedMenu()
@@ -149,7 +149,7 @@ public extension Player {
         speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2],
         action: @escaping (_ update: SettingsUpdate) -> Void = { _ in }
     ) -> some View {
-        SettingsMenuContent(player: self, speeds: speeds, action: action)
+        SettingsMenuContent(speeds: speeds, action: action, player: self)
     }
 
     /// Returns content for a playback speed menu.
