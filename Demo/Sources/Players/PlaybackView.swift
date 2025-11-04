@@ -15,6 +15,7 @@ import SwiftUI
 
 #if os(iOS)
 
+// swiftlint:disable:next type_body_length
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
