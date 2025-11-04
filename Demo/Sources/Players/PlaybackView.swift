@@ -182,7 +182,12 @@ private struct MainView: View {
     private func bottomButtons() -> some View {
         HStack(spacing: 20) {
             LiveButton(player: player, progressTracker: progressTracker)
-            SettingsMenu(player: player, isPresentingMetrics: $isPresentingMetrics, gravity: $selectedGravity)
+            SettingsMenu(
+                player: player,
+                isOverCurrentContext: layoutInfo.isOverCurrentContext,
+                isPresentingMetrics: $isPresentingMetrics,
+                gravity: $selectedGravity
+            )
             FullScreenButton(layout: $layout)
         }
         .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
@@ -457,6 +462,7 @@ private struct VolumeButton: View {
 
 private struct SettingsMenu: View {
     let player: Player
+    let isOverCurrentContext: Bool
 
     @Binding var isPresentingMetrics: Bool
     @Binding var gravity: AVLayerVideoGravity
@@ -465,7 +471,9 @@ private struct SettingsMenu: View {
         Menu {
             player.standardSettingsMenu()
             QualityMenu(player: player)
-            player.gravityMenu(for: $gravity)
+            if isOverCurrentContext {
+                player.gravityMenu(for: $gravity)
+            }
             metricsMenu()
         } label: {
             Image(systemName: "ellipsis.circle")
