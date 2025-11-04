@@ -84,18 +84,20 @@ private struct GravityMenuContent: View {
     @ObservedObject var player: Player
 
     var body: some View {
-        Menu {
-            Picker(selection: $gravity) {
-                ForEach(Self.gravities, id: \.self) { gravity in
-                    Text(Self.description(for: gravity)).tag(gravity)
+        if player.mediaType == .video {
+            Menu {
+                Picker(selection: $gravity) {
+                    ForEach(Self.gravities, id: \.self) { gravity in
+                        Text(Self.description(for: gravity)).tag(gravity)
+                    }
+                } label: {
+                    EmptyView()
                 }
+                .pickerStyle(.inline)
             } label: {
-                EmptyView()
+                Label("Display", systemImage: "arrow.up.left.and.arrow.down.right")
+                Text(Self.description(for: gravity))
             }
-            .pickerStyle(.inline)
-        } label: {
-            Label("Display", systemImage: "arrow.up.left.and.arrow.down.right")
-            Text(Self.description(for: gravity))
         }
     }
 
