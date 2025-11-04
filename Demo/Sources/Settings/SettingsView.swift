@@ -343,6 +343,10 @@ extension SettingsView {
     private func linksSection() -> some View {
         Section("Links") {
             Button("Website") { UIApplication.shared.open(.website) }
+                .swipeActions {
+                    Button("Monitoring") { UIApplication.shared.open(.monitoring) }
+                        .tint(.purple)
+                }
             Button("Source code") { UIApplication.shared.open(.apple) }
                 .swipeActions {
                     Button("Web") { UIApplication.shared.open(.web) }
@@ -351,8 +355,10 @@ extension SettingsView {
                         .tint(.green)
                 }
             Button("GitHub project") { UIApplication.shared.open(.project) }
-            Button("Documentation") { UIApplication.shared.open(.documentation) }
-            Button("Monitoring (requires sign-in)") { UIApplication.shared.open(.monitoring) }
+                .swipeActions {
+                    Button("Documentation") { UIApplication.shared.open(.documentation) }
+                        .tint(.purple)
+                }
             Button("Swift Package Index") { UIApplication.shared.open(.swiftPackageIndex) }
             Button("Castor (Google Cast SDK)") { UIApplication.shared.open(.castor) }
         }
