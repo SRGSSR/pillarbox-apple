@@ -159,6 +159,9 @@
     "Delete all" : {
 
     },
+    "Display" : {
+
+    },
     "Displays touches for presentation purposes." : {
 
     },
@@ -183,6 +186,9 @@
     "Examples" : {
 
     },
+    "Fit-to-screen" : {
+
+    },
     "Font size" : {
 
     },
@@ -190,6 +196,9 @@
 
     },
     "Frame drops" : {
+
+    },
+    "Full-screen" : {
 
     },
     "GitHub project" : {

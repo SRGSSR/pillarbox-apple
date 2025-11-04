@@ -182,7 +182,7 @@ private struct MainView: View {
     private func bottomButtons() -> some View {
         HStack(spacing: 20) {
             LiveButton(player: player, progressTracker: progressTracker)
-            SettingsMenu(player: player, isPresentingMetrics: $isPresentingMetrics)
+            SettingsMenu(player: player, isPresentingMetrics: $isPresentingMetrics, gravity: $selectedGravity)
             FullScreenButton(layout: $layout)
         }
         .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
@@ -457,12 +457,15 @@ private struct VolumeButton: View {
 
 private struct SettingsMenu: View {
     let player: Player
+
     @Binding var isPresentingMetrics: Bool
+    @Binding var gravity: AVLayerVideoGravity
 
     var body: some View {
         Menu {
             player.standardSettingsMenu()
             QualityMenu(player: player)
+            GravityMenu(gravity: $gravity)
             metricsMenu()
         } label: {
             Image(systemName: "ellipsis.circle")
@@ -506,6 +509,37 @@ private struct QualityMenu: View {
         } label: {
             Label("Quality", systemImage: "person.and.background.dotted")
             Text(qualitySetting.name)
+        }
+    }
+}
+
+private struct GravityMenu: View {
+    static let gravities: [AVLayerVideoGravity] = [.resizeAspect, .resizeAspectFill]
+
+    @Binding var gravity: AVLayerVideoGravity
+
+    var body: some View {
+        Menu {
+            Picker(selection: $gravity) {
+                ForEach(Self.gravities, id: \.self) { gravity in
+                    Text(Self.description(for: gravity)).tag(gravity)
+                }
+            } label: {
+                EmptyView()
+            }
+            .pickerStyle(.inline)
+        } label: {
+            Label("Display", systemImage: "arrow.up.left.and.arrow.down.right")
+            Text(Self.description(for: gravity))
+        }
+    }
+
+    private static func description(for gravity: AVLayerVideoGravity) -> LocalizedStringKey {
+        switch gravity {
+        case .resizeAspectFill:
+            "Full-screen"
+        default:
+            "Fit-to-screen"
         }
     }
 }
