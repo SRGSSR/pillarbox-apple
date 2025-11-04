@@ -32,7 +32,7 @@ jobs:
         run: make test-${{ matrix.platform }}
 
       - name: Publish report
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: always()
         with:
           report_paths: 'fastlane/test_output/*.xml'
