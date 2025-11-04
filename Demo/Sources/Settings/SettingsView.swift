@@ -342,16 +342,19 @@ extension SettingsView {
 #if os(iOS)
     private func linksSection() -> some View {
         Section("Links") {
-            Button("Project") { UIApplication.shared.open(.project) }
+            Button("Website") { UIApplication.shared.open(.website) }
             Button("Source code") { UIApplication.shared.open(.apple) }
                 .swipeActions {
                     Button("Web") { UIApplication.shared.open(.web) }
                         .tint(.purple)
-                    Button("Documentation") { UIApplication.shared.open(.documentation) }
-                        .tint(.red)
                     Button("Android") { UIApplication.shared.open(.android) }
                         .tint(.green)
                 }
+            Button("GitHub project") { UIApplication.shared.open(.project) }
+            Button("Documentation") { UIApplication.shared.open(.documentation) }
+            Button("Monitoring (requires sign-in)") { UIApplication.shared.open(.monitoring) }
+            Button("Swift Package Index") { UIApplication.shared.open(.swiftPackageIndex) }
+            Button("Castor (Google Cast SDK)") { UIApplication.shared.open(.castor) }
         }
     }
 #endif

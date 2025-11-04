@@ -114,6 +114,9 @@
     "Cancel" : {
 
     },
+    "Castor (Google Cast SDK)" : {
+
+    },
     "Clear URL cache" : {
 
     },
@@ -187,6 +190,9 @@
 
     },
     "Frame drops" : {
+
+    },
+    "GitHub project" : {
 
     },
     "Green" : {
@@ -265,6 +271,9 @@
 
     },
     "Miscellaneous player features (using Pillarbox)" : {
+
+    },
+    "Monitoring (requires sign-in)" : {
 
     },
     "Multiplier" : {
@@ -357,9 +366,6 @@
     "Previous" : {
 
     },
-    "Project" : {
-
-    },
     "Protected streams (URNs)" : {
 
     },
@@ -430,6 +436,9 @@
 
     },
     "Swap" : {
+
+    },
+    "Swift Package Index" : {
 
     },
     "System player (using AVPlayer)" : {
@@ -520,6 +529,9 @@
 
     },
     "Web" : {
+
+    },
+    "Website" : {
 
     },
     "White" : {
