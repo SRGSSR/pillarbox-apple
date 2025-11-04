@@ -45,7 +45,7 @@ Token-protected content cannot be played on old Apple TV 3rd generation devices.
 
 No workaround is available yet.
 
-## Media type is unknown when playback is started after an AirPlay session has been established (FB5464600)
+## Media type is unknown when playback is started after an AirPlay session has been established (FB5464600, FB20914272)
 
 The media type is `.unknown` if playback is started after an AirPlay session has been established. A correct value is delivered when AirPlay is enabled after playback has already been started, though.
 
@@ -95,7 +95,7 @@ When casting a player to AirPlay while other players are playing other content l
 
 Pause players playing content locally.
 
-## Presentation size cannot be determined when AirPlay is enabled (FB12080967)
+## Presentation size cannot be determined when AirPlay is enabled (FB12080967, FB20914272)
 
 When AirPlay is activated the value of the `AVPlayerItem.presentationSize` property is always zero. It is therefore not possible to tell whether a video or audio is played when AirPlay is enabled.
 
