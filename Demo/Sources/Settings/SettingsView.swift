@@ -150,7 +150,7 @@ extension SettingsView {
         debuggingSection()
         playbackHudSection()
 #if os(iOS)
-        gitHubSection()
+        linksSection()
 #endif
         versionSection()
     }
@@ -340,16 +340,16 @@ extension SettingsView {
     }
 
 #if os(iOS)
-    private func gitHubSection() -> some View {
-        Section("GitHub") {
-            Button("Project") { GitHub.open(.project) }
-            Button("Source code") { GitHub.open(.apple) }
+    private func linksSection() -> some View {
+        Section("Links") {
+            Button("Project") { UIApplication.shared.open(.project) }
+            Button("Source code") { UIApplication.shared.open(.apple) }
                 .swipeActions {
-                    Button("Web") { GitHub.open(.web) }
+                    Button("Web") { UIApplication.shared.open(.web) }
                         .tint(.purple)
-                    Button("Documentation") { GitHub.open(.documentation) }
+                    Button("Documentation") { UIApplication.shared.open(.documentation) }
                         .tint(.red)
-                    Button("Android") { GitHub.open(.android) }
+                    Button("Android") { UIApplication.shared.open(.android) }
                         .tint(.green)
                 }
         }
