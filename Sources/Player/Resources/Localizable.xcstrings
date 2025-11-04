@@ -106,6 +106,9 @@
         }
       }
     },
+    "Display" : {
+
+    },
     "E%lld" : {
       "comment" : "Short episode information",
       "localizations" : {
@@ -140,6 +143,12 @@
           }
         }
       }
+    },
+    "Fit-to-screen" : {
+
+    },
+    "Full-screen" : {
+
     },
     "Off" : {
       "comment" : "Media selection option",
