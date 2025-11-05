@@ -76,7 +76,7 @@ private struct MediaSelectionMenuContent: View {
 
 @available(iOS 16.0, tvOS 17.0, *)
 private struct GravityMenuContent: View {
-    static let gravities: [AVLayerVideoGravity] = [.resizeAspect, .resizeAspectFill]
+    private static let gravities: [AVLayerVideoGravity] = [.resizeAspect, .resizeAspectFill]
 
     @Binding var gravity: AVLayerVideoGravity
     let action: (AVLayerVideoGravity) -> Void
