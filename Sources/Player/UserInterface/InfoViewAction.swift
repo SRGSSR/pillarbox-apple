@@ -7,8 +7,6 @@
 import UIKit
 
 /// Action which show up in the info tab.
-@available(iOS, unavailable)
-@available(tvOS 16, *)
 public struct InfoViewAction {
     /// Short display title.
     public let title: String
@@ -29,5 +27,13 @@ public struct InfoViewAction {
         self.title = title
         self.image = image
         self.handler = handler
+    }
+}
+
+extension UIAction {
+    static func from(_ action: InfoViewAction) -> UIAction {
+        UIAction(title: action.title, image: action.image, identifier: .init(rawValue: action.title)) { _ in
+            action.handler()
+        }
     }
 }

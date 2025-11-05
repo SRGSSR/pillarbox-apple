@@ -15,6 +15,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
     private var contextualActions: [UIAction] = []
+    private var infoViewActions: InfoViewActions = .system
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -24,6 +25,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     player: player,
                     gravity: gravity,
                     contextualActions: contextualActions,
+                    infoViewActions: infoViewActions,
                     videoOverlay: videoOverlay
                 )
             }
@@ -32,6 +34,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     player: player,
                     gravity: gravity,
                     contextualActions: contextualActions,
+                    infoViewActions: infoViewActions,
                     videoOverlay: videoOverlay
                 )
             }
@@ -103,6 +106,17 @@ public extension SystemVideoView {
                 action.handler()
             }
         }
+        return view
+    }
+
+    /// Actions to display in the info tab.
+    ///
+    /// - Parameter actions: An enum of actions to display in the info tab.
+    @available(iOS, unavailable)
+    @available(tvOS 16, *)
+    func infoViewActions(_ actions: InfoViewActions) -> SystemVideoView {
+        var view = self
+        view.infoViewActions = actions
         return view
     }
 }
