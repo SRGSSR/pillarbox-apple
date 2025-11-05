@@ -107,7 +107,7 @@
       }
     },
     "Display" : {
-
+      "comment" : "Playback setting menu title"
     },
     "E%lld" : {
       "comment" : "Short episode information",
@@ -145,10 +145,10 @@
       }
     },
     "Fit-to-screen" : {
-
+      "comment" : "Display option"
     },
     "Full-screen" : {
-
+      "comment" : "Display option"
     },
     "Off" : {
       "comment" : "Media selection option",

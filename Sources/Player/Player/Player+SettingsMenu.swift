@@ -88,25 +88,29 @@ private struct GravityMenuContent: View {
             Menu {
                 Picker(selection: $gravity) {
                     ForEach(Self.gravities, id: \.self) { gravity in
-                        Text(Self.description(for: gravity)).tag(gravity)
+                        Self.description(for: gravity).tag(gravity)
                     }
                 } label: {
                     EmptyView()
                 }
                 .pickerStyle(.inline)
             } label: {
-                Label("Display", systemImage: "arrow.up.left.and.arrow.down.right")
-                Text(Self.description(for: gravity))
+                Label {
+                    Text("Display", bundle: .module, comment: "Playback setting menu title")
+                } icon: {
+                    Image(systemName: "arrow.up.left.and.arrow.down.right")
+                }
+                Self.description(for: gravity)
             }
         }
     }
 
-    private static func description(for gravity: AVLayerVideoGravity) -> LocalizedStringKey {
+    private static func description(for gravity: AVLayerVideoGravity) -> Text {
         switch gravity {
         case .resizeAspectFill:
-            "Full-screen"
+            return Text("Full-screen", bundle: .module, comment: "Display option")
         default:
-            "Fit-to-screen"
+            return Text("Fit-to-screen", bundle: .module, comment: "Display option")
         }
     }
 }
