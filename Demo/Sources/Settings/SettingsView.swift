@@ -150,7 +150,7 @@ extension SettingsView {
         debuggingSection()
         playbackHudSection()
 #if os(iOS)
-        gitHubSection()
+        linksSection()
 #endif
         versionSection()
     }
@@ -340,18 +340,27 @@ extension SettingsView {
     }
 
 #if os(iOS)
-    private func gitHubSection() -> some View {
-        Section("GitHub") {
-            Button("Project") { GitHub.open(.project) }
-            Button("Source code") { GitHub.open(.apple) }
+    private func linksSection() -> some View {
+        Section("Links") {
+            Button("Website") { UIApplication.shared.open(.website) }
                 .swipeActions {
-                    Button("Web") { GitHub.open(.web) }
+                    Button("Monitoring") { UIApplication.shared.open(.monitoring) }
                         .tint(.purple)
-                    Button("Documentation") { GitHub.open(.documentation) }
-                        .tint(.red)
-                    Button("Android") { GitHub.open(.android) }
+                }
+            Button("Source code") { UIApplication.shared.open(.apple) }
+                .swipeActions {
+                    Button("Web") { UIApplication.shared.open(.web) }
+                        .tint(.purple)
+                    Button("Android") { UIApplication.shared.open(.android) }
                         .tint(.green)
                 }
+            Button("GitHub project") { UIApplication.shared.open(.project) }
+                .swipeActions {
+                    Button("Documentation") { UIApplication.shared.open(.documentation) }
+                        .tint(.purple)
+                }
+            Button("Swift Package Index") { UIApplication.shared.open(.swiftPackageIndex) }
+            Button("Castor (Google Cast SDK)") { UIApplication.shared.open(.castor) }
         }
     }
 #endif
