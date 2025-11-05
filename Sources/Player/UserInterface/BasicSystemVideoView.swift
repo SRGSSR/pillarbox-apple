@@ -11,6 +11,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
+    let infoViewActions: InfoViewActions
     let videoOverlay: VideoOverlay
 
     func makeCoordinator() -> SystemVideoViewCoordinator {
@@ -33,7 +34,25 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
         uiViewController.contextualActions = contextualActions
+        configureInfoViewActions(for: uiViewController)
 #endif
         context.coordinator.player = player
+    }
+
+    @available(iOS, unavailable)
+    @available(tvOS 16, *)
+    private func configureInfoViewActions(for uiViewController: AVPlayerViewController) {
+        switch infoViewActions {
+        case .system:
+            return
+        case .empty:
+            uiViewController.infoViewActions = []
+        case let .first(action):
+            uiViewController.infoViewActions = [UIAction.from(action)]
+        case let .last(action):
+            uiViewController.infoViewActions.append(UIAction.from(action))
+        case let .pair(firstAction, lastAction):
+            uiViewController.infoViewActions = [firstAction, lastAction].map(UIAction.from)
+        }
     }
 }
