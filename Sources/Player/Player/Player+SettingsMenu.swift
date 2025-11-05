@@ -86,7 +86,7 @@ private struct GravityMenuContent: View {
     var body: some View {
         if player.mediaType == .video {
             Menu {
-                Picker(selection: $gravity) {
+                Picker(selection: selection) {
                     ForEach(Self.gravities, id: \.self) { gravity in
                         Self.description(for: gravity).tag(gravity)
                     }
@@ -102,6 +102,15 @@ private struct GravityMenuContent: View {
                 }
                 Self.description(for: gravity)
             }
+        }
+    }
+
+    private var selection: Binding<AVLayerVideoGravity> {
+        .init {
+            gravity
+        } set: { newValue in
+            gravity = newValue
+            action(newValue)
         }
     }
 
