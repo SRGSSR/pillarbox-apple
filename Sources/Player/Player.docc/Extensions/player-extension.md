@@ -113,10 +113,8 @@
 
 ### Controlling Playback Speed
 
-- ``effectivePlaybackSpeed``
 - ``playbackSpeed``
 - ``playbackSpeedRange``
-- ``setDesiredPlaybackSpeed(_:)``
 
 ### Accessing Player Internals
 
@@ -140,5 +138,6 @@
 ### Integrating with SwiftUI Menus
 
 - ``mediaSelectionMenu(characteristic:action:)``
+- ``gravityMenu(for:action:)``
 - ``playbackSpeedMenu(speeds:action:)``
 - ``standardSettingsMenu(speeds:action:)``
