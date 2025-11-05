@@ -232,7 +232,7 @@ public extension Player {
     /// The returned view is intended for use as the content of a `Menu`. Using it for any other purpose results in
     /// undefined behavior.
     func gravityMenu(
-        for gravity: Binding<AVLayerVideoGravity>,
+        updating gravity: Binding<AVLayerVideoGravity>,
         action: @escaping (_ gravity: AVLayerVideoGravity) -> Void = { _ in }
     ) -> some View {
         GravityMenuContent(gravity: gravity, action: action, player: self)
