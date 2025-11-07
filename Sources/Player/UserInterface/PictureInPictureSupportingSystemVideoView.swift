@@ -12,7 +12,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
-    let infoViewActions: InfoViewActions
+    let infoViewActions: [InfoViewActions]
     let videoOverlay: VideoOverlay
 
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: SystemVideoViewCoordinator) {
@@ -26,6 +26,11 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
         let controller = PictureInPicture.shared.system.makeHostViewController(for: player)
         context.coordinator.controller = controller.playerViewController
+#if os(tvOS)
+        if let playerViewController = controller.playerViewController {
+            context.coordinator.systemInfoViewActions = playerViewController.infoViewActions
+        }
+#endif
         return controller
     }
 
@@ -35,25 +40,10 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
         uiViewController.playerViewController?.setVideoOverlay(videoOverlay)
 #if os(tvOS)
         uiViewController.playerViewController?.contextualActions = contextualActions
-        configureInfoViewActions(for: uiViewController.playerViewController)
+        if !infoViewActions.isEmpty {
+            uiViewController.playerViewController?.infoViewActions = infoViewActions.toUIActions(using: context.coordinator.systemInfoViewActions)
+        }
 #endif
         context.coordinator.player = player
-    }
-
-    @available(iOS, unavailable)
-    @available(tvOS 16, *)
-    private func configureInfoViewActions(for uiViewController: AVPlayerViewController?) {
-        switch infoViewActions {
-        case .system:
-            return
-        case .empty:
-            uiViewController?.infoViewActions = []
-        case let .first(action):
-            uiViewController?.infoViewActions = [UIAction.from(action)]
-        case let .last(action):
-            uiViewController?.infoViewActions.append(UIAction.from(action))
-        case let .pair(firstAction, lastAction):
-            uiViewController?.infoViewActions = [firstAction, lastAction].map(UIAction.from)
-        }
     }
 }
