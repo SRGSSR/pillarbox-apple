@@ -6,7 +6,7 @@
 
 import UIKit
 
-/// Action which show up in the info tab.
+/// Represents a single action displayed in the info view of a tvOS player.
 public struct InfoViewAction {
     /// Short display title.
     public let title: String
@@ -30,10 +30,10 @@ public struct InfoViewAction {
     }
 }
 
-extension UIAction {
-    static func from(_ action: InfoViewAction) -> UIAction {
-        UIAction(title: action.title, image: action.image, identifier: .init(rawValue: action.title)) { _ in
-            action.handler()
+extension InfoViewAction {
+    func toUIAction() -> UIAction {
+        UIAction(title: title, image: image, identifier: .init(rawValue: title)) { _ in
+            handler()
         }
     }
 }

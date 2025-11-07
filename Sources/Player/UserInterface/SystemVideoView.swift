@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import AVKit
 import SwiftUI
 
 /// A view providing the standard system playback user experience.
@@ -15,7 +16,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
     private var contextualActions: [UIAction] = []
-    private var infoViewActions: InfoViewActions = .system
+    private var infoViewActions: [InfoViewActions] = []
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -109,14 +110,15 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Actions to display in the info tab.
+    /// Actions to display in the info tab of a tvOS player.
     ///
-    /// - Parameter actions: An enum of actions to display in the info tab.
+    /// - Parameter actions: A closure returning an array of `InfoViewActions` using
+    ///   a result builder for declarative syntax.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
-    func infoViewActions(_ actions: InfoViewActions) -> SystemVideoView {
+    func infoViewActions(@InfoViewActionsBuilder _ actions: () -> [InfoViewActions]) -> SystemVideoView {
         var view = self
-        view.infoViewActions = actions
+        view.infoViewActions = actions()
         return view
     }
 }
