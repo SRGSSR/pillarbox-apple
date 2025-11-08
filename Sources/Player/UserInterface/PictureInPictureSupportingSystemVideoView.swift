@@ -12,7 +12,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
-    let infoViewActions: [InfoViewActions]
+    let infoViewActions: InfoViewActions?
     let videoOverlay: VideoOverlay
 
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: SystemVideoViewCoordinator) {
@@ -40,8 +40,11 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
         uiViewController.playerViewController?.setVideoOverlay(videoOverlay)
 #if os(tvOS)
         uiViewController.playerViewController?.contextualActions = contextualActions
-        if !infoViewActions.isEmpty {
-            uiViewController.playerViewController?.infoViewActions = infoViewActions.toUIActions(using: context.coordinator.systemInfoViewActions)
+        if let infoViewActions {
+            uiViewController.playerViewController?.infoViewActions = infoViewActions.toUIActions(
+                dismissing: uiViewController.playerViewController,
+                defaultActions: context.coordinator.systemInfoViewActions
+            )
         }
 #endif
         context.coordinator.player = player

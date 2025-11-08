@@ -4,36 +4,38 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVKit
 import UIKit
 
-/// Represents a single action displayed in the info view of a tvOS player.
-public struct InfoViewAction {
-    /// Short display title.
-    public let title: String
+/// Represents an action that can be displayed in an info view of a tvOS player.
+public enum InfoViewAction {
+    /// Uses the default system-provided action.
+    case system
 
-    /// Image that can appear next to this action.
-    public let image: UIImage?
+    /// Displays no action in the info view.
+    case none
 
-    /// The handler to invoke.
-    public let handler: () -> Void
-
-    /// Creates a new info view action.
+    /// Displays a custom action in the info view.
     ///
     /// - Parameters:
-    ///   - title: Short display title.
-    ///   - image: Image that can appear next to this action.
-    ///   - handler: The handler to invoke.
-    public init(title: String, image: UIImage? = nil, handler: @escaping () -> Void) {
-        self.title = title
-        self.image = image
-        self.handler = handler
-    }
+    ///   - title: The title of the action button.
+    ///   - image: An optional image displayed next to the title.
+    ///   - handler: The closure executed when the user selects the action.
+    case custom(title: String, image: UIImage? = nil, handler: () -> Void)
 }
 
 extension InfoViewAction {
-    func toUIAction() -> UIAction {
-        UIAction(title: title, image: image, identifier: .init(rawValue: title)) { _ in
-            handler()
+    func toUIAction(dismissing playerViewController: AVPlayerViewController?, defaultAction: UIAction?) -> UIAction? {
+        switch self {
+        case .system:
+            return defaultAction
+        case .none:
+            return nil
+        case let .custom(title, image, handler):
+            return UIAction(title: title, image: image) { _ in
+                playerViewController?.dismiss(animated: true)
+                handler()
+            }
         }
     }
 }

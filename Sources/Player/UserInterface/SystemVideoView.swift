@@ -16,7 +16,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
     private var contextualActions: [UIAction] = []
-    private var infoViewActions: [InfoViewActions] = []
+    private var infoViewActions: InfoViewActions?
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -110,15 +110,29 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Actions to display in the info tab of a tvOS player.
+    /// Actions displayed in the info tab of the tvOS player.
     ///
-    /// - Parameter actions: A closure returning an array of `InfoViewActions` using
-    ///   a result builder for declarative syntax.
+    /// Use `InfoView.Top { ... }` and `InfoView.Bottom { ... }` within the builder
+    /// to declaratively define actions.
+    ///
+    /// ```swift
+    /// view.infoViewActions {
+    ///     InfoView.Top {
+    ///         .custom(title: "Watch Later") { ... }
+    ///     }
+    ///     InfoView.Bottom {
+    ///         .system
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// - Parameter builder: A closure that returns an `InfoViewActions` built using the `InfoViewActionsBuilder`.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
-    func infoViewActions(@InfoViewActionsBuilder _ actions: () -> [InfoViewActions]) -> SystemVideoView {
+    func infoViewActions(@InfoViewActionsBuilder _ builder: () -> InfoViewActions) -> SystemVideoView {
         var view = self
-        view.infoViewActions = actions()
+        let builder = builder()
+        view.infoViewActions = .init(top: builder.top, bottom: builder.bottom)
         return view
     }
 }
