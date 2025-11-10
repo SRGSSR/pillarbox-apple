@@ -25,15 +25,15 @@ public enum InfoViewAction {
 }
 
 extension InfoViewAction {
-    func toUIAction(dismissing playerViewController: AVPlayerViewController?, defaultAction: UIAction?) -> UIAction? {
+    func toUIAction(dismissing playerViewController: AVPlayerViewController) -> UIAction? {
         switch self {
         case .system:
-            return defaultAction
+            return nil // TODO: We should manage this case.
         case .none:
             return nil
         case let .custom(title, image, handler):
             return UIAction(title: title, image: image) { _ in
-                playerViewController?.dismiss(animated: true)
+                playerViewController.dismiss(animated: true)
                 handler()
             }
         }

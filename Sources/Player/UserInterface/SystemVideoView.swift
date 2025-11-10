@@ -16,7 +16,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
     private var contextualActions: [UIAction] = []
-    private var infoViewActions: InfoViewActions?
+    private var infoViewActions: [InfoViewAction] = []
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -129,10 +129,9 @@ public extension SystemVideoView {
     /// - Parameter builder: A closure that returns an `InfoViewActions` built using the `InfoViewActionsBuilder`.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
-    func infoViewActions(@InfoViewActionsBuilder _ builder: () -> InfoViewActions) -> SystemVideoView {
+    func infoViewActions(@InfoViewActionsBuilder _ builder: () -> [InfoViewAction]) -> SystemVideoView {
         var view = self
-        let builder = builder()
-        view.infoViewActions = .init(top: builder.top, bottom: builder.bottom)
+        view.infoViewActions = builder()
         return view
     }
 }

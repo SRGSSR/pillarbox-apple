@@ -8,12 +8,12 @@
 ///
 /// ```swift
 /// InfoViewActions {
-///     InfoView.Top {
+///     InfoView.Action {
 ///         .custom(title: "Watch Later", image: UIImage(systemName: "eyeglasses")) {
 ///             print("Watch Later")
 ///         }
 ///     }
-///     InfoView.Bottom {
+///     InfoView.Action {
 ///         .system
 ///     }
 /// }
@@ -21,19 +21,21 @@
 @resultBuilder
 public enum InfoViewActionsBuilder {
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ components: Any...) -> InfoViewActions {
-        let top = components.compactMap { $0 as? InfoView.Top }.last
-        let bottom = components.compactMap { $0 as? InfoView.Bottom }.last
-        return InfoViewActions(top: top?.action ?? .none, bottom: bottom?.action ?? .none)
+    public static func buildBlock() -> [InfoViewAction] {
+        []
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildExpression(_ expression: InfoView.Top) -> InfoView.Top {
-        expression
+    public static func buildBlock(_ first: InfoView.Action) -> [InfoViewAction] {
+        [first.action]
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildExpression(_ expression: InfoView.Bottom) -> InfoView.Bottom {
-        expression
+    public static func buildBlock(_ first: InfoView.Action, _ second: InfoView.Action) -> [InfoViewAction] {
+        [first.action, second.action]
+    }
+
+    public static func buildOptional(_ component: [InfoViewAction]?) -> [InfoViewAction] {
+        component ?? []
     }
 }

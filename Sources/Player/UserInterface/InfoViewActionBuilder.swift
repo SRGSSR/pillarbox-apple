@@ -25,6 +25,10 @@ public enum InfoViewActionBuilder {
         expression
     }
 
+    public static func buildOptional(_ component: InfoViewAction?) -> InfoViewAction {
+        component ?? .none
+    }
+
     // swiftlint:disable:next missing_docs
     public static func buildEither(first component: InfoViewAction) -> InfoViewAction {
         component

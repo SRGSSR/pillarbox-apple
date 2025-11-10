@@ -12,7 +12,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
-    let infoViewActions: InfoViewActions?
+    let infoViewActions: [InfoViewAction]
     let videoOverlay: VideoOverlay
 
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: SystemVideoViewCoordinator) {
@@ -26,27 +26,19 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
         let controller = PictureInPicture.shared.system.makeHostViewController(for: player)
         context.coordinator.controller = controller.playerViewController
-#if os(tvOS)
-        if let playerViewController = controller.playerViewController {
-            context.coordinator.systemInfoViewActions = playerViewController.infoViewActions
-        }
-#endif
         return controller
     }
 
     func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
-        uiViewController.playerViewController?.player = player.systemPlayer
-        uiViewController.playerViewController?.videoGravity = gravity
-        uiViewController.playerViewController?.setVideoOverlay(videoOverlay)
+        if let playerViewController = uiViewController.playerViewController {
+            playerViewController.player = player.systemPlayer
+            playerViewController.videoGravity = gravity
+            playerViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-        uiViewController.playerViewController?.contextualActions = contextualActions
-        if let infoViewActions {
-            uiViewController.playerViewController?.infoViewActions = infoViewActions.toUIActions(
-                dismissing: uiViewController.playerViewController,
-                defaultActions: context.coordinator.systemInfoViewActions
-            )
-        }
+            playerViewController.contextualActions = contextualActions
+            playerViewController.infoViewActions = infoViewActions.compactMap { $0.toUIAction(dismissing: playerViewController) }
 #endif
+        }
         context.coordinator.player = player
     }
 }

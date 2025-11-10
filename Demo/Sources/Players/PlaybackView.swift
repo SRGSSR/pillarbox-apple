@@ -840,8 +840,8 @@ private struct MainSystemView: View {
     }
 
     @InfoViewActionsBuilder
-    func infoViewActions() -> InfoViewActions {
-        InfoView.Top {
+    func infoViewActions() -> [InfoViewAction] {
+        InfoView.Action {
             if player.canSkipToDefault(), streamType == .dvr {
                 .custom(title: "Back to live", image: UIImage(systemName: "goforward")) {
                     player.skipToDefault()
