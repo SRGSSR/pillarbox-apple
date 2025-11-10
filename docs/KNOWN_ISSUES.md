@@ -145,3 +145,12 @@ If the app stays in the background for an extended period (around 24 hours) with
 ### Workaround
 
 Instead of using an encrypted `PlayerItem`, create a custom player item and handle key loading via an `AVAssetResourceLoaderDelegate`.
+
+## Device auto-lock may not be prevented during video playback (FB20938762)
+
+On iOS 26 and later, the device screen may dim and eventually auto-lock during video playback, even when `preventsDisplaySleepDuringVideoPlayback` is set to `true` for an `AVPlayer` (the default behavior).
+
+### Workaround
+
+This issue is caused by a Picture in Picture regression introduced in iOS 26.  
+Avoid dynamically changing the value of `VideoView.supportsPictureInPicture(_:)` or `SystemVideoView.supportsPictureInPicture(_:)` while a video view is visible.
