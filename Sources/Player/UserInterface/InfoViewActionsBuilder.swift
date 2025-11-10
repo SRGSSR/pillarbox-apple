@@ -4,36 +4,56 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A result builder that enables declarative construction of `InfoViewActions`.
-///
-/// ```swift
-/// InfoViewActions {
-///     InfoView.Top {
-///         .custom(title: "Watch Later", image: UIImage(systemName: "eyeglasses")) {
-///             print("Watch Later")
-///         }
-///     }
-///     InfoView.Bottom {
-///         .system
-///     }
-/// }
-/// ```
+/// A result builder that enables declarative construction of one or two `InfoViewAction`.
 @resultBuilder
 public enum InfoViewActionsBuilder {
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ components: Any...) -> InfoViewActions {
-        let top = components.compactMap { $0 as? InfoView.Top }.last
-        let bottom = components.compactMap { $0 as? InfoView.Bottom }.last
-        return InfoViewActions(top: top?.action ?? .none, bottom: bottom?.action ?? .none)
+    public static func buildBlock(_ action: InfoViewAction) -> InfoViewAction {
+        action
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildExpression(_ expression: InfoView.Top) -> InfoView.Top {
-        expression
+    public static func buildBlock(_ action: InfoViewAction?) -> [InfoViewAction] {
+        if let action {
+            [action]
+        }
+        else {
+            []
+        }
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildExpression(_ expression: InfoView.Bottom) -> InfoView.Bottom {
-        expression
+    public static func buildBlock(_ first: InfoViewAction?, _ second: InfoViewAction) -> [InfoViewAction] {
+        [first, second].compactMap(\.self)
+    }
+
+    // swiftlint:disable:next missing_docs
+    public static func buildBlock(_ first: InfoViewAction, _ second: InfoViewAction?) -> [InfoViewAction] {
+        [first, second].compactMap(\.self)
+    }
+
+    // swiftlint:disable:next missing_docs
+    public static func buildBlock(_ first: InfoViewAction?, _ second: InfoViewAction?) -> [InfoViewAction] {
+        [first, second].compactMap(\.self)
+    }
+
+    // swiftlint:disable:next missing_docs
+    public static func buildBlock(_ first: InfoViewAction, _ second: InfoViewAction) -> [InfoViewAction] {
+        [first, second]
+    }
+
+    // swiftlint:disable:next missing_docs
+    public static func buildEither(first action: InfoViewAction) -> InfoViewAction {
+        action
+    }
+
+    // swiftlint:disable:next missing_docs
+    public static func buildEither(second action: InfoViewAction) -> InfoViewAction {
+        action
+    }
+
+    // swiftlint:disable:next missing_docs
+    public static func buildOptional(_ action: InfoViewAction?) -> InfoViewAction? {
+        action
     }
 }

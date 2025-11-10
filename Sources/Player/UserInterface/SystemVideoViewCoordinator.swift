@@ -25,8 +25,6 @@ final class SystemVideoViewCoordinator {
         }
     }
 
-    var systemInfoViewActions: [UIAction] = []
-
     private var cancellable: AnyCancellable?
 }
 

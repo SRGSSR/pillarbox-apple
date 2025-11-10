@@ -830,6 +830,14 @@ private struct MainSystemView: View {
         }
     }
 
+    private var skipInfoViewActionTitle: String {
+        streamType == .onDemand ? "From Beginning" : "Back to Live"
+    }
+
+    private var skipInfoViewActionSystemImage: String {
+        streamType == .onDemand ? "gobackward" : "goforward"
+    }
+
     var body: some View {
         SystemVideoView(player: player)
             .supportsPictureInPicture(supportsPictureInPicture)
@@ -840,15 +848,10 @@ private struct MainSystemView: View {
     }
 
     @InfoViewActionsBuilder
-    func infoViewActions() -> InfoViewActions {
-        InfoView.Top {
-            if player.canSkipToDefault(), streamType == .dvr {
-                .custom(title: "Back to live", image: UIImage(systemName: "goforward")) {
-                    player.skipToDefault()
-                }
-            }
-            else {
-                .none
+    func infoViewActions() -> [InfoViewAction] {
+        if player.canSkipToDefault() {
+            InfoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
+                player.skipToDefault()
             }
         }
     }
