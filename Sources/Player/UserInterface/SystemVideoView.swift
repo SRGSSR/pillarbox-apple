@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import AVKit
 import SwiftUI
 
 /// A view providing the standard system playback user experience.
