@@ -9,14 +9,9 @@ import UIKit
 
 /// Actions to present contextually during playback.
 public struct InfoViewAction {
-    /// Short display title.
-    public let title: String
-
-    /// Image that can appear next to this action.
-    public let image: UIImage?
-
-    /// The handler to invoke.
-    public let handler: () -> Void
+    private let title: String
+    private let image: UIImage?
+    private let handler: () -> Void
 
     /// Creates a new info view action.
     ///
@@ -66,7 +61,7 @@ public struct InfoViewAction {
 }
 
 extension InfoViewAction {
-    func toUIAction(dismissing playerViewController: AVPlayerViewController) -> UIAction? {
+    func toUIAction(dismissing playerViewController: AVPlayerViewController) -> UIAction {
         UIAction(title: title, image: image) { _ in
             playerViewController.dismiss(animated: true)
             handler()
