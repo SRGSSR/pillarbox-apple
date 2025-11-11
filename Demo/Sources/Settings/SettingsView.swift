@@ -206,7 +206,7 @@ extension SettingsView {
 #endif
     }
 
-    private func skipPicker(_ titleKey: LocalizedStringKey, selection: Binding<TimeInterval>) -> some View {
+    private func skipPicker(_ titleKey: LocalizedStringResource, selection: Binding<TimeInterval>) -> some View {
         Picker(titleKey, selection: selection) {
             ForEach([TimeInterval]([5, 7, 10, 15, 30, 45, 60, 75, 90]), id: \.self) { interval in
                 Text("\(Int(interval)) seconds")

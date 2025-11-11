@@ -33,7 +33,7 @@ struct CustomSection<Content, Header>: View where Content: View, Header: View {
 }
 
 extension CustomSection where Header == Text {
-    init(_ title: LocalizedStringKey, @ViewBuilder content: @escaping () -> Content) {
+    init(_ title: LocalizedStringResource, @ViewBuilder content: @escaping () -> Content) {
         self.init {
             content()
         } header: {
