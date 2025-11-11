@@ -7,53 +7,39 @@
 /// A result builder that enables declarative construction of one or two `InfoViewAction`.
 @resultBuilder
 public enum InfoViewActionsBuilder {
+    /// Type of a statement expression.
+    public typealias Expression = InfoViewAction
+
+    /// Type of a partial result.
+    public typealias Component = [InfoViewAction]
+
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ action: InfoViewAction) -> InfoViewAction {
-        action
+    public static func buildExpression(_ expression: Expression) -> Component {
+        [expression]
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ action: InfoViewAction?) -> [InfoViewAction] {
-        if let action {
-            [action]
-        }
-        else {
-            []
-        }
+    public static func buildBlock(_ component: Component) -> Component {
+        component
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ first: InfoViewAction?, _ second: InfoViewAction) -> [InfoViewAction] {
-        [first, second].compactMap(\.self)
+    public static func buildBlock(_ c0: Component, _ c1: Component) -> Component {
+        c0 + c1
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ first: InfoViewAction, _ second: InfoViewAction?) -> [InfoViewAction] {
-        [first, second].compactMap(\.self)
+    public static func buildOptional(_ component: Component?) -> Component {
+        component ?? []
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ first: InfoViewAction?, _ second: InfoViewAction?) -> [InfoViewAction] {
-        [first, second].compactMap(\.self)
+    public static func buildEither(first component: Component) -> Component {
+        component
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ first: InfoViewAction, _ second: InfoViewAction) -> [InfoViewAction] {
-        [first, second]
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildEither(first action: InfoViewAction) -> InfoViewAction {
-        action
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildEither(second action: InfoViewAction) -> InfoViewAction {
-        action
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildOptional(_ action: InfoViewAction?) -> InfoViewAction? {
-        action
+    public static func buildEither(second component: Component) -> Component {
+        component
     }
 }
