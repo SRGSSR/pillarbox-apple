@@ -13,7 +13,7 @@ public struct InfoViewAction {
     private let image: UIImage?
     private let handler: () -> Void
 
-    /// Creates a new info view action.
+    /// Creates an info view action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -26,7 +26,7 @@ public struct InfoViewAction {
         self.handler = handler
     }
 
-    /// Creates a new info view action.
+    /// Creates an info view action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -38,7 +38,7 @@ public struct InfoViewAction {
         self.handler = handler
     }
 
-    /// Creates a new info view action.
+    /// Creates an info view action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -49,7 +49,7 @@ public struct InfoViewAction {
         self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
     }
 
-    /// Creates a new info view action.
+    /// Creates an info view action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
