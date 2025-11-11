@@ -842,13 +842,13 @@ private struct MainSystemView: View {
         SystemVideoView(player: player)
             .supportsPictureInPicture(supportsPictureInPicture)
             .contextualActions(contextualActions)
-            .infoViewActions(infoViewActions)
+            .infoViewActions(content: infoViewActionsContent)
             .ignoresSafeArea()
             .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
-    @InfoViewActionsBuilder
-    func infoViewActions() -> [InfoViewAction] {
+    @InfoViewActionsContentBuilder
+    func infoViewActionsContent() -> InfoViewActionsContent {
         if player.canSkipToDefault() {
             InfoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
                 player.skipToDefault()

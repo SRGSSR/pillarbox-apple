@@ -6,7 +6,7 @@
 
 /// A result builder that enables declarative construction of one or two `InfoViewAction`.
 @resultBuilder
-public enum InfoViewActionsBuilder {
+public enum InfoViewActionsContentBuilder {
     /// Type of a statement expression.
     public typealias Expression = InfoViewAction
 
@@ -41,5 +41,10 @@ public enum InfoViewActionsBuilder {
     // swiftlint:disable:next missing_docs
     public static func buildEither(second component: Component) -> Component {
         component
+    }
+
+    // swiftlint:disable:next missing_docs
+    public static func buildFinalResult(_ component: Component) -> InfoViewActionsContent {
+        .init(actions: component)
     }
 }
