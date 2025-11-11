@@ -830,7 +830,7 @@ private struct MainSystemView: View {
         }
     }
 
-    private var skipInfoViewActionTitle: String {
+    private var skipInfoViewActionTitle: LocalizedStringResource {
         streamType == .onDemand ? "From Beginning" : "Back to Live"
     }
 

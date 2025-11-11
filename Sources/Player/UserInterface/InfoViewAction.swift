@@ -24,8 +24,20 @@ public struct InfoViewAction {
     ///   - title: Short display title.
     ///   - image: Image that can appear next to this action.
     ///   - handler: The handler to invoke.
-    public init(title: String, image: UIImage? = nil, handler: @escaping () -> Void) {
-        self.title = title
+    public init<S>(title: S, image: UIImage? = nil, handler: @escaping () -> Void) where S: StringProtocol {
+        self.title = String(title)
+        self.image = image
+        self.handler = handler
+    }
+
+    /// Creates a new info view action.
+    ///
+    /// - Parameters:
+    ///   - title: Short display title.
+    ///   - image: Image that can appear next to this action.
+    ///   - handler: The handler to invoke.
+    public init(title: LocalizedStringResource, image: UIImage? = nil, handler: @escaping () -> Void) {
+        self.title = String(localized: title)
         self.image = image
         self.handler = handler
     }
@@ -36,7 +48,17 @@ public struct InfoViewAction {
     ///   - title: Short display title.
     ///   - systemImage: System image name that can appear next to this action.
     ///   - handler: The handler to invoke.
-    public init(title: String, systemImage: String, handler: @escaping () -> Void) {
+    public init<S>(title: S, systemImage: String, handler: @escaping () -> Void) where S: StringProtocol {
+        self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
+    }
+
+    /// Creates a new info view action.
+    ///
+    /// - Parameters:
+    ///   - title: Short display title.
+    ///   - systemImage: System image name that can appear next to this action.
+    ///   - handler: The handler to invoke.
+    public init(title: LocalizedStringResource, systemImage: String, handler: @escaping () -> Void) {
         self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
     }
 }
