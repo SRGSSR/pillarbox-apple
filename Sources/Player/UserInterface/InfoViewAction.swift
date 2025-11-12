@@ -62,8 +62,8 @@ public struct InfoViewAction {
 
 extension InfoViewAction {
     func toUIAction(dismissing playerViewController: AVPlayerViewController) -> UIAction {
-        UIAction(title: title, image: image) { _ in
-            playerViewController.dismiss(animated: true)
+        UIAction(title: title, image: image) { [weak playerViewController] _ in
+            playerViewController?.dismiss(animated: true)
             handler()
         }
     }
