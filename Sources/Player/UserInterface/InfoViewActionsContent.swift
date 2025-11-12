@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A container that encapsulates one or more `InfoViewAction`.
+/// Content associated with ``SystemVideoView/infoViewActions(content:)``.
 public struct InfoViewActionsContent {
     let actions: [InfoViewAction]
 }

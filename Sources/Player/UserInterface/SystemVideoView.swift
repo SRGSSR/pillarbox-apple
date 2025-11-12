@@ -113,6 +113,17 @@ public extension SystemVideoView {
     ///
     /// - Parameter builder: A closure that returns an `InfoViewActions` built using the `InfoViewActionsBuilder`.
     ///
+    /// Use this modifier to add content to info view actions:
+    ///
+    /// ```swift
+    /// SystemVideoView(player: player)
+    ///    .infoViewActions {
+    ///        InfoViewAction(title: "From Beginning", systemImage: "gobackward") {
+    ///            player.skipToDefault()
+    ///        }
+    ///    }
+    /// ```
+    ///
     /// > Important: Only one or two actions are supported.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
