@@ -109,7 +109,7 @@ private struct SettingsMenuContent: View {
             Label {
                 Text("Audio", bundle: .module, comment: "Playback setting menu title")
             } icon: {
-                Image(systemName: "waveform.circle")
+                Image(systemName: "waveform")
             }
             Text(player.selectedMediaOption(for: .audible).displayName)
         }
