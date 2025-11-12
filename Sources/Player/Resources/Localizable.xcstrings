@@ -106,9 +106,6 @@
         }
       }
     },
-    "Display" : {
-      "comment" : "Playback setting menu title"
-    },
     "E%lld" : {
       "comment" : "Short episode information",
       "localizations" : {
@@ -144,11 +141,11 @@
         }
       }
     },
-    "Fit-to-screen" : {
-      "comment" : "Display option"
+    "Fill" : {
+      "comment" : "Zoom option"
     },
-    "Full-screen" : {
-      "comment" : "Display option"
+    "Fit" : {
+      "comment" : "Zoom option"
     },
     "Off" : {
       "comment" : "Media selection option",
@@ -289,6 +286,9 @@
           }
         }
       }
+    },
+    "Zoom" : {
+      "comment" : "Playback setting menu title"
     }
   },
   "version" : "1.0"

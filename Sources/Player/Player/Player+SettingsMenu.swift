@@ -96,9 +96,9 @@ private struct GravityMenuContent: View {
                 .pickerStyle(.inline)
             } label: {
                 Label {
-                    Text("Display", bundle: .module, comment: "Playback setting menu title")
+                    Text("Zoom", bundle: .module, comment: "Playback setting menu title")
                 } icon: {
-                    Image(systemName: "arrow.up.left.and.arrow.down.right")
+                    Image(systemName: imageName)
                 }
                 Self.description(for: gravity)
             }
@@ -114,12 +114,21 @@ private struct GravityMenuContent: View {
         }
     }
 
+    private var imageName: String {
+        if #available(iOS 17, tvOS 17, *) {
+            "square.arrowtriangle.4.outward"
+        }
+        else {
+            "rectangle.portrait.arrowtriangle.2.outward"
+        }
+    }
+
     private static func description(for gravity: AVLayerVideoGravity) -> Text {
         switch gravity {
         case .resizeAspectFill:
-            return Text("Full-screen", bundle: .module, comment: "Display option")
+            return Text("Fill", bundle: .module, comment: "Zoom option")
         default:
-            return Text("Fit-to-screen", bundle: .module, comment: "Display option")
+            return Text("Fit", bundle: .module, comment: "Zoom option")
         }
     }
 }
