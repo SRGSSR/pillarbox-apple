@@ -137,7 +137,7 @@
 
 ### Integrating with SwiftUI Menus
 
-- ``gravityMenu(updating:action:)``
 - ``mediaSelectionMenu(characteristic:action:)``
 - ``playbackSpeedMenu(speeds:action:)``
 - ``standardSettingsMenu(speeds:action:)``
+- ``zoomMenu(gravity:action:)``

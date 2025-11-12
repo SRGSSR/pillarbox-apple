@@ -75,7 +75,7 @@ private struct MediaSelectionMenuContent: View {
 }
 
 @available(iOS 16.0, tvOS 17.0, *)
-private struct GravityMenuContent: View {
+private struct ZoomMenuContent: View {
     private static let gravities: [AVLayerVideoGravity] = [.resizeAspect, .resizeAspectFill]
 
     @Binding var gravity: AVLayerVideoGravity
@@ -241,7 +241,7 @@ public extension Player {
         MediaSelectionMenuContent(characteristic: characteristic, action: action, player: self)
     }
 
-    /// Returns the content for a gravity settings menu.
+    /// Returns the content for a zoom settings menu.
     ///
     /// - Parameters:
     ///   - gravity: A binding to the gravity value to control.
@@ -249,10 +249,10 @@ public extension Player {
     ///
     /// The returned view is intended for use as the content of a `Menu`. Using it for any other purpose results in
     /// undefined behavior.
-    func gravityMenu(
-        updating gravity: Binding<AVLayerVideoGravity>,
+    func zoomMenu(
+        gravity: Binding<AVLayerVideoGravity>,
         action: @escaping (_ gravity: AVLayerVideoGravity) -> Void = { _ in }
     ) -> some View {
-        GravityMenuContent(gravity: gravity, action: action, player: self)
+        ZoomMenuContent(gravity: gravity, action: action, player: self)
     }
 }

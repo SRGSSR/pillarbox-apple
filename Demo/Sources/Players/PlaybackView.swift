@@ -359,7 +359,7 @@ private struct SettingsMenu: View {
             player.standardSettingsMenu()
             QualityMenu(player: player)
             if isOverCurrentContext {
-                player.gravityMenu(updating: $gravity)
+                player.zoomMenu(gravity: $gravity)
             }
             metricsMenu()
         } label: {
