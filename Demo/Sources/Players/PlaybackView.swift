@@ -835,7 +835,7 @@ private struct MainSystemView: View {
     }
 
     private var skipInfoViewActionSystemImage: String {
-        streamType == .onDemand ? "gobackward" : "goforward"
+        streamType == .onDemand ? "play.fill" : "forward.end.fill"
     }
 
     var body: some View {
