@@ -15,6 +15,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
     private var contextualActions: [UIAction] = []
+    private var infoViewActions: [InfoViewAction] = []
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -24,6 +25,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     player: player,
                     gravity: gravity,
                     contextualActions: contextualActions,
+                    infoViewActions: infoViewActions,
                     videoOverlay: videoOverlay
                 )
             }
@@ -32,6 +34,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     player: player,
                     gravity: gravity,
                     contextualActions: contextualActions,
+                    infoViewActions: infoViewActions,
                     videoOverlay: videoOverlay
                 )
             }
@@ -103,6 +106,30 @@ public extension SystemVideoView {
                 action.handler()
             }
         }
+        return view
+    }
+
+    /// Actions displayed in the info tab of the tvOS player.
+    ///
+    /// - Parameter builder: A closure that returns an `InfoViewActions` built using the `InfoViewActionsBuilder`.
+    ///
+    /// Use this modifier to add content to info view actions:
+    ///
+    /// ```swift
+    /// SystemVideoView(player: player)
+    ///    .infoViewActions {
+    ///        InfoViewAction(title: "From Beginning", systemImage: "gobackward") {
+    ///            player.skipToDefault()
+    ///        }
+    ///    }
+    /// ```
+    ///
+    /// > Important: Only one or two actions are supported.
+    @available(iOS, unavailable)
+    @available(tvOS 16, *)
+    func infoViewActions(@InfoViewActionsContentBuilder content: () -> InfoViewActionsContent) -> SystemVideoView {
+        var view = self
+        view.infoViewActions = content().actions
         return view
     }
 }

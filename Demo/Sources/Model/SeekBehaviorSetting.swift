@@ -11,7 +11,7 @@ enum SeekBehaviorSetting: Int, CaseIterable {
     case optimal
     case deferred
 
-    var name: LocalizedStringKey {
+    var name: LocalizedStringResource {
         switch self {
         case .optimal:
             return "Optimal"

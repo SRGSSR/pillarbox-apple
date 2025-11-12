@@ -12,6 +12,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
+    let infoViewActions: [InfoViewAction]
     let videoOverlay: VideoOverlay
 
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: SystemVideoViewCoordinator) {
@@ -29,12 +30,15 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     }
 
     func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
-        uiViewController.playerViewController?.player = player.systemPlayer
-        uiViewController.playerViewController?.videoGravity = gravity
-        uiViewController.playerViewController?.setVideoOverlay(videoOverlay)
+        if let playerViewController = uiViewController.playerViewController {
+            playerViewController.player = player.systemPlayer
+            playerViewController.videoGravity = gravity
+            playerViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-        uiViewController.playerViewController?.contextualActions = contextualActions
+            playerViewController.contextualActions = contextualActions
+            playerViewController.infoViewActions = infoViewActions.map { $0.toUIAction(dismissing: playerViewController) }
 #endif
+        }
         context.coordinator.player = player
     }
 }

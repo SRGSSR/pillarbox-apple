@@ -815,6 +815,7 @@ private struct MainSystemView: View {
     let player: Player
     let supportsPictureInPicture: Bool
     @ObservedObject var progressTracker: ProgressTracker
+    @State private var streamType: StreamType = .unknown
 
     private var contextualActions: [ContextualAction] {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
@@ -829,11 +830,30 @@ private struct MainSystemView: View {
         }
     }
 
+    private var skipInfoViewActionTitle: LocalizedStringResource {
+        streamType == .onDemand ? "From Beginning" : "Back to Live"
+    }
+
+    private var skipInfoViewActionSystemImage: String {
+        streamType == .onDemand ? "gobackward" : "goforward"
+    }
+
     var body: some View {
         SystemVideoView(player: player)
             .supportsPictureInPicture(supportsPictureInPicture)
             .contextualActions(contextualActions)
+            .infoViewActions(content: infoViewActionsContent)
             .ignoresSafeArea()
+            .onReceive(player: player, assign: \.streamType, to: $streamType)
+    }
+
+    @InfoViewActionsContentBuilder
+    func infoViewActionsContent() -> InfoViewActionsContent {
+        if player.canSkipToDefault() {
+            InfoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
+                player.skipToDefault()
+            }
+        }
     }
 }
 

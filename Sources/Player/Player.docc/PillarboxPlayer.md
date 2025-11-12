@@ -134,6 +134,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - <doc:optimization-article>
 
 - ``ContextualAction``
+- ``InfoViewAction``
 - ``LayoutInfo``
 - ``LazyImage``
 - ``LazyUIImage(source:)``

@@ -127,7 +127,7 @@ private extension PlaylistSelectionView {
         case insertAfter
         case append
 
-        var name: LocalizedStringKey {
+        var name: LocalizedStringResource {
             switch self {
             case .prepend:
                 "Prepend"
