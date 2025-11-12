@@ -50,6 +50,18 @@ private enum InfoViewActionsContentBuilderCompilationChecks {
     }
 
     @InfoViewActionsContentBuilder
+    static func expressionWithSwitch() -> InfoViewActionsContent {
+        switch Int.random(in: 0...2) {
+        case 0:
+            Action()
+        case 1:
+            Action()
+        default:
+            Action()
+        }
+    }
+
+    @InfoViewActionsContentBuilder
     static func expressionWithIfAvailable() -> InfoViewActionsContent {
         if #available(tvOS 16, *) {
             Action()
