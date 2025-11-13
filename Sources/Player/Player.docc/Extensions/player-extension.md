@@ -113,10 +113,8 @@
 
 ### Controlling Playback Speed
 
-- ``effectivePlaybackSpeed``
 - ``playbackSpeed``
 - ``playbackSpeedRange``
-- ``setDesiredPlaybackSpeed(_:)``
 
 ### Accessing Player Internals
 
@@ -142,3 +140,4 @@
 - ``mediaSelectionMenu(characteristic:action:)``
 - ``playbackSpeedMenu(speeds:action:)``
 - ``standardSettingsMenu(speeds:action:)``
+- ``zoomMenu(gravity:action:)``

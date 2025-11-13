@@ -125,113 +125,11 @@ private struct MainView: View {
         .bind(skipTracker, to: player)
     }
 
-    private func metadata() -> some View {
-        VStack(alignment: .leading) {
-            HStack {
-                LiveLabel(player: player, progressTracker: progressTracker)
-                if let subtitle {
-                    Text(subtitle)
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .lineLimit(2)
-                }
-            }
-            if let title {
-                Text(title)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .lineLimit(1)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundStyle(.white)
-        .opacity(shouldHideInterface ? 0 : 1)
-    }
-
-    private func bottomBar() -> some View {
-        VStack(spacing: 20) {
-            skipButton()
-            bottomControls()
-        }
-        .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
-        .padding(.horizontal)
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-    }
-
-    private func bottomControls() -> some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .bottom) {
-                metadata()
-                if isFullScreen {
-                    bottomButtons()
-                }
-            }
-
-            HStack(spacing: 20) {
-                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
-                if !isFullScreen {
-                    bottomButtons()
-                }
-            }
-        }
-        .contentShape(.rect)
-        .opacity(isUserInterfaceHidden ? 0 : 1)
-    }
-
-    private func bottomButtons() -> some View {
-        HStack(spacing: 20) {
-            LiveButton(player: player, progressTracker: progressTracker)
-            SettingsMenu(player: player, isPresentingMetrics: $isPresentingMetrics)
-            FullScreenButton(layout: $layout)
-        }
-        .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
-    }
-
-    private func topBar() -> some View {
-        HStack {
-            topLeadingButtons()
-            Spacer()
-            topTrailingButtons()
-        }
-        .topBarStyle()
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-    }
-
-    private func topLeadingButtons() -> some View {
-        HStack(spacing: 20) {
-            CloseButton()
-            if supportsPictureInPicture {
-                PiPButton()
-            }
-            routePickerView()
-        }
-        .opacity(shouldHideInterface ? 0 : 1)
-        .contentShape(.rect)
-    }
-
-    private func topTrailingButtons() -> some View {
-        HStack(spacing: 20) {
-            LoadingIndicator(player: player)
-            if !shouldHideInterface {
-                VolumeButton(player: player)
-            }
-        }
-        .contentShape(.rect)
-    }
-
     private func sliderBackground() -> some View {
         Rectangle()
             .foregroundColor(.white)
             .opacity(0.1)
             .background(.ultraThinMaterial)
-    }
-
-    private func routePickerView() -> some View {
-        RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
-            .tint(.white)
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 20)
     }
 
     private func artwork(for imageSource: ImageSource) -> some View {
@@ -276,12 +174,6 @@ private struct MainView: View {
             }
             .opacity(shouldHideInterface ? 0 : 1)
         }
-    }
-
-    private func skipButton() -> some View {
-        SkipButton(player: player, progressTracker: progressTracker)
-            .padding(.trailing, 20)
-            .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
     private func image(name: String) -> some View {
@@ -457,12 +349,18 @@ private struct VolumeButton: View {
 
 private struct SettingsMenu: View {
     let player: Player
+    let isOverCurrentContext: Bool
+
     @Binding var isPresentingMetrics: Bool
+    @Binding var gravity: AVLayerVideoGravity
 
     var body: some View {
         Menu {
             player.standardSettingsMenu()
             QualityMenu(player: player)
+            if isOverCurrentContext {
+                player.zoomMenu(gravity: $gravity)
+            }
             metricsMenu()
         } label: {
             Image(systemName: "ellipsis.circle")
@@ -1133,6 +1031,123 @@ private extension MainView {
         .foregroundStyle(.white)
         .labelStyle(.vertical)
         .contentTransition(.numericText())
+    }
+}
+
+private extension MainView {
+    func topBar() -> some View {
+        HStack {
+            topLeadingButtons()
+            Spacer()
+            topTrailingButtons()
+        }
+        .topBarStyle()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+
+    func topLeadingButtons() -> some View {
+        HStack(spacing: 20) {
+            CloseButton()
+            if supportsPictureInPicture {
+                PiPButton()
+            }
+            routePickerView()
+        }
+        .opacity(shouldHideInterface ? 0 : 1)
+        .contentShape(.rect)
+    }
+
+    func topTrailingButtons() -> some View {
+        HStack(spacing: 20) {
+            LoadingIndicator(player: player)
+            if !shouldHideInterface {
+                VolumeButton(player: player)
+            }
+        }
+        .contentShape(.rect)
+    }
+
+    func routePickerView() -> some View {
+        RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
+            .tint(.white)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 20)
+    }
+}
+
+private extension MainView {
+    func bottomBar() -> some View {
+        VStack(spacing: 20) {
+            skipButton()
+            bottomControls()
+        }
+        .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
+        .padding(.horizontal)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+
+    func bottomControls() -> some View {
+        VStack(spacing: 0) {
+            HStack(alignment: .bottom) {
+                metadata()
+                if isFullScreen {
+                    bottomButtons()
+                }
+            }
+
+            HStack(spacing: 20) {
+                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
+                if !isFullScreen {
+                    bottomButtons()
+                }
+            }
+        }
+        .contentShape(.rect)
+        .opacity(isUserInterfaceHidden ? 0 : 1)
+    }
+
+    func bottomButtons() -> some View {
+        HStack(spacing: 20) {
+            LiveButton(player: player, progressTracker: progressTracker)
+            SettingsMenu(
+                player: player,
+                isOverCurrentContext: layoutInfo.isOverCurrentContext,
+                isPresentingMetrics: $isPresentingMetrics,
+                gravity: $selectedGravity
+            )
+            FullScreenButton(layout: $layout)
+        }
+        .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
+    }
+
+    func metadata() -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                LiveLabel(player: player, progressTracker: progressTracker)
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        .lineLimit(2)
+                }
+            }
+            if let title {
+                Text(title)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .lineLimit(1)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .foregroundStyle(.white)
+        .opacity(shouldHideInterface ? 0 : 1)
+    }
+
+    func skipButton() -> some View {
+        SkipButton(player: player, progressTracker: progressTracker)
+            .padding(.trailing, 20)
+            .frame(maxWidth: .infinity, alignment: .trailing)
     }
 }
 
