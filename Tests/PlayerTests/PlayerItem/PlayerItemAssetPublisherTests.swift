@@ -13,7 +13,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
     func testNoLoad() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectAtLeastSimilarPublished(
-            values: [.loading],
+            values: [.loading()],
             from: item.$content.map(\.resource)
         )
     }
@@ -21,7 +21,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
     func testLoad() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectAtLeastSimilarPublished(
-            values: [.loading, .simple(url: Stream.onDemand.url)],
+            values: [.loading(), .simple(url: Stream.onDemand.url)],
             from: item.$content.map(\.resource)
         ) {
             PlayerItem.load(for: item.id)
@@ -31,7 +31,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
     func testReload() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectAtLeastSimilarPublished(
-            values: [.loading, .simple(url: Stream.onDemand.url)],
+            values: [.loading(), .simple(url: Stream.onDemand.url)],
             from: item.$content.map(\.resource)
         ) {
             PlayerItem.load(for: item.id)
