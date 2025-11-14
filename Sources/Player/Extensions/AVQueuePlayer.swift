@@ -11,14 +11,9 @@ extension AVQueuePlayer {
         guard self.items() != items else { return }
 
         if let firstItem = items.first {
-            if firstItem !== self.items().first {
-                remove(firstItem)
-                // TODO: Workaround to fix incorrect recovery from failed MP3 playback (FB13650115). Remove when fixed.
-                if self.items().first?.error != nil {
-                    removeAllItems()
-                }
-                // End of workaround
-                replaceCurrentItem(with: firstItem)
+            let currentItem = self.items().first
+            if firstItem !== currentItem {
+                safelyReplaceCurrentItem(with: firstItem)
             }
             removeAll(from: 1)
             if items.count > 1 {
@@ -38,5 +33,17 @@ extension AVQueuePlayer {
 
     private func append(_ items: [AVPlayerItem]) {
         items.forEach { insert($0, after: nil) }
+    }
+
+    private func safelyReplaceCurrentItem(with item: AVPlayerItem) {
+        // TODO: Workaround to fix incorrect recovery from failed MP3 playback (FB13650115). Remove when fixed.
+        if let currentItem = items().first, currentItem.error != nil {
+            removeAllItems()
+        }
+        // End of workaround
+        else {
+            remove(item)
+        }
+        replaceCurrentItem(with: item)
     }
 }
