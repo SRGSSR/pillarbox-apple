@@ -68,7 +68,9 @@ extension Resource: PlaybackResource {
 }
 
 extension Resource {
-    static let loading = Self.custom(url: .loading, delegate: LoadingResourceLoaderDelegate())
+    static func loading() -> Self {
+        .custom(url: .loading, delegate: LoadingResourceLoaderDelegate())
+    }
 
     static func failing(error: Error) -> Self {
         .custom(url: .failing, delegate: FailedResourceLoaderDelegate(error: error))

@@ -26,7 +26,7 @@ struct AssetContent {
     }
 
     static func loading(id: UUID) -> Self {
-        .init(id: id, resource: .loading, metadata: .empty, configuration: .default, dateInterval: nil)
+        .init(id: id, resource: .loading(), metadata: .empty, configuration: .default, dateInterval: nil)
     }
 
     static func failing(id: UUID, error: Error) -> Self {
@@ -44,7 +44,7 @@ struct AssetContent {
     func playerItem(reload: Bool, configuration: PlayerConfiguration, resumeState: ResumeState?) -> AVPlayerItem {
         if reload, resource.isFailing {
             PlayerItem.reload(for: id)
-            return playerItem(for: Resource.loading, configuration: configuration, resumeState: resumeState)
+            return playerItem(for: Resource.loading(), configuration: configuration, resumeState: resumeState)
         }
         else {
             PlayerItem.load(for: id)
