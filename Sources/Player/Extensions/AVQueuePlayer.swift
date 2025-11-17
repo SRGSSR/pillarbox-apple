@@ -45,7 +45,7 @@ extension AVQueuePlayer {
             remove(item)
         }
         if #available(tvOS 26, *) {
-            if let firstItem = items().first, firstItem.isLoading {
+            if let firstItem = items().first {
                 DispatchQueue.main.async {
                     firstItem.asset.cancelLoading()
                 }
