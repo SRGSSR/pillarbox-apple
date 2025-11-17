@@ -46,7 +46,7 @@ extension AVQueuePlayer {
         }
         if #available(tvOS 26, *) {
             if let firstItem = items().first {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     firstItem.asset.cancelLoading()
                 }
             }
