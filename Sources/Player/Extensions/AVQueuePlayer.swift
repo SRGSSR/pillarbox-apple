@@ -44,13 +44,13 @@ extension AVQueuePlayer {
         else {
             remove(item)
         }
-        if #available(tvOS 16, *) {
-            if let firstItem = items().first {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    firstItem.asset.cancelLoading()
-                }
+#if os(tvOS)
+        if let firstItem = items().first {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                firstItem.asset.cancelLoading()
             }
         }
+#endif
         replaceCurrentItem(with: item)
     }
 }
