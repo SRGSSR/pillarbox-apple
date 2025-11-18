@@ -45,6 +45,8 @@ extension AVQueuePlayer {
             remove(item)
         }
 #if os(tvOS)
+        // TODO: Mitigation for delayed player resource deallocation issues on tvOS. Removed when fixed.
+        // See https://github.com/SRGSSR/pillarbox-apple/issues/1367 for more information.
         if let firstItem = items().first {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 firstItem.asset.cancelLoading()
