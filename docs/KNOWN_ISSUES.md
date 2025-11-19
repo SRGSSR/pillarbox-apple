@@ -154,3 +154,11 @@ On iOS 26 and later, the device screen may dim and eventually auto-lock during v
 
 This issue is caused by a Picture in Picture regression introduced in iOS 26.  
 Avoid dynamically changing the value of `VideoView.supportsPictureInPicture(_:)` or `SystemVideoView.supportsPictureInPicture(_:)` while a video view is visible.
+
+## The player may remain silent after toggling `isMuted` (FB21089410)
+
+Due to an `AVQueuePlayer` issue, toggling `isMuted` can cause the player to remain permanently silent. This occurs when playback is near the end of an item and another item is expected to play next as part of a playlist, or when a repeat mode is enabled.
+
+### Workaround
+
+No workaround is available yet. Audio is restored when transitioning between items, when the player is paused and resumed, or when a seek operation occurs.
