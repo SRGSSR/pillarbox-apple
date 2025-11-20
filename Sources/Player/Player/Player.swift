@@ -274,6 +274,11 @@ public final class Player: ObservableObject, Equatable {
 
     deinit {
         uninstallRemoteCommands()
+
+        // Proactively clear items to mitigate potential regressions, see https://github.com/SRGSSR/pillarbox-apple/issues/1371.
+        DispatchQueue.main.async { [queuePlayer] in
+            queuePlayer.removeAllItems()
+        }
     }
 }
 
