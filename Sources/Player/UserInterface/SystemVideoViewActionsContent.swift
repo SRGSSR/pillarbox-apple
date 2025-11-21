@@ -11,7 +11,11 @@ import UIKit
 public struct SystemVideoViewActionsContent {
     static let empty = Self(actions: [])
 
-    let actions: [SystemVideoViewAction]
+    private let actions: [SystemVideoViewAction]
+
+    init(actions: [SystemVideoViewAction]) {
+        self.actions = actions
+    }
 
     func contextualActions() -> [UIAction] {
         actions.map { $0.toContextualAction() }
