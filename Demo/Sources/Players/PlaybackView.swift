@@ -735,7 +735,7 @@ private struct MainSystemView: View {
     @SystemVideoViewActionsContentBuilder7
     func contextualActionsContent() -> SystemVideoViewActionsContent {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
-            SystemVideoViewAction(title: "Skip", identifier: .skip) {
+            SystemVideoViewAction(title: "Skip") {
                 player.seek(to: skippableTimeRange.end)
             }
         }
@@ -744,7 +744,7 @@ private struct MainSystemView: View {
     @SystemVideoViewActionsContentBuilder2
     func infoViewActionsContent() -> SystemVideoViewActionsContent {
         if player.canSkipToDefault() {
-            SystemVideoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage, identifier: .skipToDefault) {
+            SystemVideoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
                 player.skipToDefault()
             }
         }
@@ -1165,12 +1165,3 @@ private extension Player {
 #Preview {
     PlaybackView(player: Player(item: URLMedia.onDemandVideoLocalHLS.item()))
 }
-
-#if os(tvOS)
-
-private extension UIAction.Identifier {
-    static let skip = UIAction.Identifier(rawValue: "skip")
-    static let skipToDefault = UIAction.Identifier(rawValue: "skip-to-default")
-}
-
-#endif

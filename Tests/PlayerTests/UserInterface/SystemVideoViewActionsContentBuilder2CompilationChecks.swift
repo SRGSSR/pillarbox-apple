@@ -9,7 +9,7 @@ import PillarboxPlayer
 // swiftlint:disable:next type_name
 private enum SystemVideoViewActionsContentBuilder2CompilationChecks {
     private static func Action() -> SystemVideoViewAction {
-        SystemVideoViewAction(title: "", identifier: .init(rawValue: "")) {}
+        SystemVideoViewAction(title: "") {}
     }
 
     @SystemVideoViewActionsContentBuilder2
