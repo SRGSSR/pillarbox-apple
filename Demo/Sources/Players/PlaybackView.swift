@@ -726,14 +726,14 @@ private struct MainSystemView: View {
     var body: some View {
         SystemVideoView(player: player)
             .supportsPictureInPicture(supportsPictureInPicture)
-            .contextualActions(content: contextualActionsActionsContent)
+            .contextualActions(content: contextualActionsContent)
             .infoViewActions(content: infoViewActionsContent)
             .ignoresSafeArea()
             .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
     @SystemVideoViewActionsContentBuilder7
-    func contextualActionsActionsContent() -> SystemVideoViewActionsContent {
+    func contextualActionsContent() -> SystemVideoViewActionsContent {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
             SystemVideoViewAction(title: "Skip", identifier: .skip) {
                 player.seek(to: skippableTimeRange.end)
