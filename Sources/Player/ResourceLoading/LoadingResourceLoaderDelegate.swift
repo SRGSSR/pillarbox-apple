@@ -7,17 +7,21 @@
 import AVFoundation
 
 final class LoadingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
+    private var request: AVAssetResourceLoadingRequest?
+
     func resourceLoader(
         _ resourceLoader: AVAssetResourceLoader,
         shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
     ) -> Bool {
-        true
+        request = loadingRequest
+        return true
     }
 
     func resourceLoader(
         _ resourceLoader: AVAssetResourceLoader,
         shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest
     ) -> Bool {
-        true
+        request = renewalRequest
+        return true
     }
 }

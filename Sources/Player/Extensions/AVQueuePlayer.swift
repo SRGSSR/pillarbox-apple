@@ -11,14 +11,8 @@ extension AVQueuePlayer {
         guard self.items() != items else { return }
 
         if let firstItem = items.first {
-            if firstItem !== self.items().first {
-                remove(firstItem)
-                // TODO: Workaround to fix incorrect recovery from failed MP3 playback (FB13650115). Remove when fixed.
-                if self.items().first?.error != nil {
-                    removeAllItems()
-                }
-                // End of workaround
-                replaceCurrentItem(with: firstItem)
+            if firstItem !== currentItem {
+                safelyReplaceCurrentItem(with: firstItem)
             }
             removeAll(from: 1)
             if items.count > 1 {
@@ -38,5 +32,26 @@ extension AVQueuePlayer {
 
     private func append(_ items: [AVPlayerItem]) {
         items.forEach { insert($0, after: nil) }
+    }
+
+    private func safelyReplaceCurrentItem(with item: AVPlayerItem) {
+        // TODO: Workaround to fix incorrect recovery from failed MP3 playback (FB13650115). Remove when fixed.
+        if currentItem?.error != nil {
+            removeAllItems()
+        }
+        // End of workaround
+        else {
+            remove(item)
+        }
+#if os(tvOS)
+        // TODO: Mitigation for delayed player resource deallocation issues on tvOS. Removed when fixed.
+        // See https://github.com/SRGSSR/pillarbox-apple/issues/1367 for more information.
+        if let currentItem {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                currentItem.asset.cancelLoading()
+            }
+        }
+#endif
+        replaceCurrentItem(with: item)
     }
 }

@@ -28,7 +28,7 @@ final class ResourceItemTests: TestCase {
     }
 
     func testLoadingPlayerItem() {
-        let item = Resource.loading.playerItem(configuration: .default)
+        let item = Resource.loading().playerItem(configuration: .default)
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false],
