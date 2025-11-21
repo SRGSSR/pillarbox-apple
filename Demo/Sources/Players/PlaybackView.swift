@@ -735,7 +735,7 @@ private struct MainSystemView: View {
     @SystemVideoViewActionsContentBuilder7
     func contextualActionsActionsContent() -> SystemVideoViewActionsContent {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
-            .init(title: "Skip", identifier: .skip) {
+            SystemVideoViewAction(title: "Skip", identifier: .skip) {
                 player.seek(to: skippableTimeRange.end)
             }
         }
@@ -744,7 +744,7 @@ private struct MainSystemView: View {
     @SystemVideoViewActionsContentBuilder2
     func infoViewActionsContent() -> SystemVideoViewActionsContent {
         if player.canSkipToDefault() {
-            .init(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage, identifier: .skipToDefault) {
+            SystemVideoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage, identifier: .skipToDefault) {
                 player.skipToDefault()
             }
         }
