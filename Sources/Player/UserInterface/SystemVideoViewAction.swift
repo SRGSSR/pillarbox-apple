@@ -59,7 +59,13 @@ public struct SystemVideoViewAction {
 }
 
 extension SystemVideoViewAction {
-    func toUIAction(dismissing playerViewController: AVPlayerViewController) -> UIAction {
+    func toContextualAction() -> UIAction {
+        UIAction(title: title, image: image) { _ in
+            handler()
+        }
+    }
+
+    func toInfoViewAction(dismissing playerViewController: AVPlayerViewController) -> UIAction {
         UIAction(title: title, image: image) { [weak playerViewController] _ in
             playerViewController?.dismiss(animated: true)
             handler()
