@@ -44,7 +44,7 @@ public enum InfoViewActionsContentBuilder {
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildFinalResult(_ component: Component) -> InfoViewActionsContent {
+    public static func buildFinalResult(_ component: Component) -> SystemVideoViewActionsContent {
         .init(actions: component)
     }
 }

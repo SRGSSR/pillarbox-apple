@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-/// Content associated with ``SystemVideoView/infoViewActions(content:)``.
-public struct InfoViewActionsContent {
+/// Content associated with ``SystemVideoView`` actions.
+public struct SystemVideoViewActionsContent {
     let actions: [SystemVideoViewAction]
 }

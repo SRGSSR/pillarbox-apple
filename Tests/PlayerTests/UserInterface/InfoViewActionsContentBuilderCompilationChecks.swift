@@ -13,25 +13,25 @@ private enum InfoViewActionsContentBuilderCompilationChecks {
     }
 
     @InfoViewActionsContentBuilder
-    static func singleExpression() -> InfoViewActionsContent {
+    static func singleExpression() -> SystemVideoViewActionsContent {
         Action()
     }
 
     @InfoViewActionsContentBuilder
-    static func twoExpressions() -> InfoViewActionsContent {
+    static func twoExpressions() -> SystemVideoViewActionsContent {
         Action()
         Action()
     }
 
     @InfoViewActionsContentBuilder
-    static func expressionWithIfOnly() -> InfoViewActionsContent {
+    static func expressionWithIfOnly() -> SystemVideoViewActionsContent {
         if true {
             Action()
         }
     }
 
     @InfoViewActionsContentBuilder
-    static func expressionWithNestedIf() -> InfoViewActionsContent {
+    static func expressionWithNestedIf() -> SystemVideoViewActionsContent {
         if true {
             if true {
                 Action()
@@ -40,7 +40,7 @@ private enum InfoViewActionsContentBuilderCompilationChecks {
     }
 
     @InfoViewActionsContentBuilder
-    static func expressionWithIfElse() -> InfoViewActionsContent {
+    static func expressionWithIfElse() -> SystemVideoViewActionsContent {
         if true {
             Action()
         }
@@ -50,7 +50,7 @@ private enum InfoViewActionsContentBuilderCompilationChecks {
     }
 
     @InfoViewActionsContentBuilder
-    static func expressionWithSwitch() -> InfoViewActionsContent {
+    static func expressionWithSwitch() -> SystemVideoViewActionsContent {
         switch Int.random(in: 0...2) {
         case 0:
             Action()
@@ -62,7 +62,7 @@ private enum InfoViewActionsContentBuilderCompilationChecks {
     }
 
     @InfoViewActionsContentBuilder
-    static func expressionWithIfAvailable() -> InfoViewActionsContent {
+    static func expressionWithIfAvailable() -> SystemVideoViewActionsContent {
         if #available(tvOS 16, *) {
             Action()
         }
