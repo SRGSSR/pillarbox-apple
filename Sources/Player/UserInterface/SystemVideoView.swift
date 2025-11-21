@@ -104,7 +104,7 @@ public extension SystemVideoView {
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .contextualActions {
-    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward") {
+    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward", identifier: .init(raw: "from_beginning")) {
     ///            player.skipToDefault()
     ///        }
     ///    }
@@ -128,7 +128,7 @@ public extension SystemVideoView {
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .infoViewActions {
-    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward") {
+    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward", identifier: .init(raw: "from_beginning")) {
     ///            player.skipToDefault()
     ///        }
     ///    }
