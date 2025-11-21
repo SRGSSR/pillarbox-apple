@@ -33,9 +33,7 @@ public struct SystemVideoViewAction {
     ///   - image: Image that can appear next to this action.
     ///   - handler: The handler to invoke.
     public init(title: LocalizedStringResource, image: UIImage? = nil, handler: @escaping () -> Void) {
-        self.title = String(localized: title)
-        self.image = image
-        self.handler = handler
+        self.init(title: String(localized: title), image: image, handler: handler)
     }
 
     /// Creates an action.
