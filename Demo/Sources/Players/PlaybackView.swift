@@ -715,19 +715,6 @@ private struct MainSystemView: View {
     @ObservedObject var progressTracker: ProgressTracker
     @State private var streamType: StreamType = .unknown
 
-    private var contextualActions: [ContextualAction] {
-        if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
-            return [
-                .init(title: "Skip") {
-                    player.seek(to: skippableTimeRange.end)
-                }
-            ]
-        }
-        else {
-            return []
-        }
-    }
-
     private var skipInfoViewActionTitle: LocalizedStringResource {
         streamType == .onDemand ? "From Beginning" : "Back to Live"
     }
@@ -739,16 +726,25 @@ private struct MainSystemView: View {
     var body: some View {
         SystemVideoView(player: player)
             .supportsPictureInPicture(supportsPictureInPicture)
-            .contextualActions(contextualActions)
+            .contextualActions(content: contextualActionsContent)
             .infoViewActions(content: infoViewActionsContent)
             .ignoresSafeArea()
             .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
-    @InfoViewActionsContentBuilder
-    func infoViewActionsContent() -> InfoViewActionsContent {
+    @SystemVideoViewActionsContentBuilder7
+    func contextualActionsContent() -> SystemVideoViewActionsContent {
+        if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
+            SystemVideoViewAction(title: "Skip") {
+                player.seek(to: skippableTimeRange.end)
+            }
+        }
+    }
+
+    @SystemVideoViewActionsContentBuilder2
+    func infoViewActionsContent() -> SystemVideoViewActionsContent {
         if player.canSkipToDefault() {
-            InfoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
+            SystemVideoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
                 player.skipToDefault()
             }
         }

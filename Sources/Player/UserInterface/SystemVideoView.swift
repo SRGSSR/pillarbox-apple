@@ -14,8 +14,9 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
-    private var contextualActions: [UIAction] = []
-    private var infoViewActions: [InfoViewAction] = []
+
+    private var contextualActionsContent: SystemVideoViewActionsContent = .empty
+    private var infoViewActionsContent: SystemVideoViewActionsContent = .empty
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -24,8 +25,8 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                 PictureInPictureSupportingSystemVideoView(
                     player: player,
                     gravity: gravity,
-                    contextualActions: contextualActions,
-                    infoViewActions: infoViewActions,
+                    contextualActionsContent: contextualActionsContent,
+                    infoViewActionsContent: infoViewActionsContent,
                     videoOverlay: videoOverlay
                 )
             }
@@ -33,8 +34,8 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                 BasicSystemVideoView(
                     player: player,
                     gravity: gravity,
-                    contextualActions: contextualActions,
-                    infoViewActions: infoViewActions,
+                    contextualActionsContent: contextualActionsContent,
+                    infoViewActionsContent: infoViewActionsContent,
                     videoOverlay: videoOverlay
                 )
             }
@@ -94,42 +95,51 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Actions to present contextually during playback.
+    /// Actions presented contextually during playback.
     ///
-    /// - Parameter contextualActions: An array of action controls to present contextually during playback.
-    @available(iOS, unavailable)
-    @available(tvOS 16, *)
-    func contextualActions(_ contextualActions: [ContextualAction]) -> SystemVideoView {
-        var view = self
-        view.contextualActions = contextualActions.map { action in
-            UIAction(title: action.title, image: action.image, identifier: .init(rawValue: action.title)) { _ in
-                action.handler()
-            }
-        }
-        return view
-    }
-
-    /// Actions displayed in the info tab of the tvOS player.
+    /// - Parameter content: The content builder
     ///
-    /// - Parameter builder: A closure that returns an `InfoViewActions` built using the `InfoViewActionsBuilder`.
-    ///
-    /// Use this modifier to add content to info view actions:
+    /// Use this modifier to configure actions:
     ///
     /// ```swift
     /// SystemVideoView(player: player)
-    ///    .infoViewActions {
-    ///        InfoViewAction(title: "From Beginning", systemImage: "gobackward") {
+    ///    .contextualActions {
+    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward", identifier: .init(raw: "from_beginning")) {
     ///            player.skipToDefault()
     ///        }
     ///    }
     /// ```
     ///
-    /// > Important: Only one or two actions are supported.
+    /// > Important: One up to seven actions are supported.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
-    func infoViewActions(@InfoViewActionsContentBuilder content: () -> InfoViewActionsContent) -> SystemVideoView {
+    func contextualActions(@SystemVideoViewActionsContentBuilder7 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
         var view = self
-        view.infoViewActions = content().actions
+        view.contextualActionsContent = content()
+        return view
+    }
+
+    /// Actions displayed in the info tab.
+    ///
+    /// - Parameter content: The content builder
+    ///
+    /// Use this modifier to configure actions:
+    ///
+    /// ```swift
+    /// SystemVideoView(player: player)
+    ///    .infoViewActions {
+    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward", identifier: .init(raw: "from_beginning")) {
+    ///            player.skipToDefault()
+    ///        }
+    ///    }
+    /// ```
+    ///
+    /// > Important: One or two actions are supported.
+    @available(iOS, unavailable)
+    @available(tvOS 16, *)
+    func infoViewActions(@SystemVideoViewActionsContentBuilder2 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
+        var view = self
+        view.infoViewActionsContent = content()
         return view
     }
 }

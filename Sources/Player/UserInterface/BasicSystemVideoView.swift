@@ -10,8 +10,8 @@ import SwiftUI
 struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
     let player: Player
     let gravity: AVLayerVideoGravity
-    let contextualActions: [UIAction]
-    let infoViewActions: [InfoViewAction]
+    let contextualActionsContent: SystemVideoViewActionsContent
+    let infoViewActionsContent: SystemVideoViewActionsContent
     let videoOverlay: VideoOverlay
 
     func makeCoordinator() -> SystemVideoViewCoordinator {
@@ -33,8 +33,8 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.videoGravity = gravity
         uiViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-        uiViewController.contextualActions = contextualActions
-        uiViewController.infoViewActions = infoViewActions.map { $0.toUIAction(dismissing: uiViewController) }
+        uiViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
+        uiViewController.updateInfoViewActionsIfNeeded(with: contextualActionsContent.infoViewActions(dismissing: uiViewController))
 #endif
         context.coordinator.player = player
     }

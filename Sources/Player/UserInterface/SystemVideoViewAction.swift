@@ -7,13 +7,13 @@
 import AVKit
 import UIKit
 
-/// Actions to present contextually during playback.
-public struct InfoViewAction {
+/// An action presented by ``SystemVideoView``.
+public struct SystemVideoViewAction {
     private let title: String
     private let image: UIImage?
     private let handler: () -> Void
 
-    /// Creates an info view action.
+    /// Creates an action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -26,19 +26,17 @@ public struct InfoViewAction {
         self.handler = handler
     }
 
-    /// Creates an info view action.
+    /// Creates an action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
     ///   - image: Image that can appear next to this action.
     ///   - handler: The handler to invoke.
     public init(title: LocalizedStringResource, image: UIImage? = nil, handler: @escaping () -> Void) {
-        self.title = String(localized: title)
-        self.image = image
-        self.handler = handler
+        self.init(title: String(localized: title), image: image, handler: handler)
     }
 
-    /// Creates an info view action.
+    /// Creates an action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -49,7 +47,7 @@ public struct InfoViewAction {
         self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
     }
 
-    /// Creates an info view action.
+    /// Creates an action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -60,9 +58,15 @@ public struct InfoViewAction {
     }
 }
 
-extension InfoViewAction {
-    func toUIAction(dismissing playerViewController: AVPlayerViewController) -> UIAction {
-        UIAction(title: title, image: image) { [weak playerViewController] _ in
+extension SystemVideoViewAction {
+    func toContextualAction() -> UIAction {
+        UIAction(title: title, image: image, identifier: .init(rawValue: title)) { _ in
+            handler()
+        }
+    }
+
+    func toInfoViewAction(dismissing playerViewController: AVPlayerViewController) -> UIAction {
+        UIAction(title: title, image: image, identifier: .init(rawValue: title)) { [weak playerViewController] _ in
             playerViewController?.dismiss(animated: true)
             handler()
         }
