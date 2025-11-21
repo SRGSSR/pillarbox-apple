@@ -33,8 +33,8 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.videoGravity = gravity
         uiViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-        uiViewController.contextualActions = contextualActions.map { $0.toContextualAction() }
-        uiViewController.infoViewActions = infoViewActions.map { $0.toInfoViewAction(dismissing: uiViewController) }
+        uiViewController.updateContextualActionsIfNeeded(with: contextualActions.map { $0.toContextualAction() })
+        uiViewController.updateInfoViewActionsIfNeeded(with: infoViewActions.map { $0.toInfoViewAction(dismissing: uiViewController) })
 #endif
         context.coordinator.player = player
     }

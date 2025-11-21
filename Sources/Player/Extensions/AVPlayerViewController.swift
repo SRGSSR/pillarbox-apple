@@ -19,6 +19,16 @@ extension AVPlayerViewController {
         }
     }
 
+    func updateContextualActionsIfNeeded(with actions: [UIAction]) {
+        guard contextualActions != actions else { return }
+        contextualActions = actions
+    }
+
+    func updateInfoViewActionsIfNeeded(with actions: [UIAction]) {
+        guard infoViewActions != actions else { return }
+        infoViewActions = actions
+    }
+
     func stopPictureInPicture() {
         guard allowsPictureInPicturePlayback else { return }
         allowsPictureInPicturePlayback = false
