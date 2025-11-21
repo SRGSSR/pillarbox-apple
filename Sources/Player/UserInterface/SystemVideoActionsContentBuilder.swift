@@ -94,7 +94,15 @@ public enum SystemVideoViewActionsContentBuilder7 {
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ c0: Component, _ c1: Component, _ c2: Component, _ c3: Component, _ c4: Component, _ c5: Component, _ c6: Component) -> Component {
+    public static func buildBlock(
+        _ c0: Component,
+        _ c1: Component,
+        _ c2: Component,
+        _ c3: Component,
+        _ c4: Component,
+        _ c5: Component,
+        _ c6: Component
+    ) -> Component {
         c0 + c1 + c2 + c3 + c4 + c5 + c6
     }
 
