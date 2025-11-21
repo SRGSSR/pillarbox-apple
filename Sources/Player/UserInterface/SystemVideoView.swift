@@ -14,8 +14,9 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
-    private var contextualActions: [SystemVideoViewAction] = []
-    private var infoViewActions: [SystemVideoViewAction] = []
+
+    private var contextualActionsContent: SystemVideoViewActionsContent = .empty
+    private var infoViewActionsContent: SystemVideoViewActionsContent = .empty
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -24,8 +25,8 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                 PictureInPictureSupportingSystemVideoView(
                     player: player,
                     gravity: gravity,
-                    contextualActions: contextualActions,
-                    infoViewActions: infoViewActions,
+                    contextualActionsContent: contextualActionsContent,
+                    infoViewActionsContent: infoViewActionsContent,
                     videoOverlay: videoOverlay
                 )
             }
@@ -33,8 +34,8 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                 BasicSystemVideoView(
                     player: player,
                     gravity: gravity,
-                    contextualActions: contextualActions,
-                    infoViewActions: infoViewActions,
+                    contextualActionsContent: contextualActionsContent,
+                    infoViewActionsContent: infoViewActionsContent,
                     videoOverlay: videoOverlay
                 )
             }
@@ -114,7 +115,7 @@ public extension SystemVideoView {
     @available(tvOS 16, *)
     func contextualActions(@SystemVideoViewActionsContentBuilder7 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
         var view = self
-        view.contextualActions = content().actions
+        view.contextualActionsContent = content()
         return view
     }
 
@@ -138,7 +139,7 @@ public extension SystemVideoView {
     @available(tvOS 16, *)
     func infoViewActions(@SystemVideoViewActionsContentBuilder2 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
         var view = self
-        view.infoViewActions = content().actions
+        view.infoViewActionsContent = content()
         return view
     }
 }
