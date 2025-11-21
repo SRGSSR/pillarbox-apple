@@ -11,7 +11,7 @@ import SwiftUI
 struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
     let player: Player
     let gravity: AVLayerVideoGravity
-    let contextualActions: [UIAction]
+    let contextualActions: [SystemVideoViewAction]
     let infoViewActions: [SystemVideoViewAction]
     let videoOverlay: VideoOverlay
 
@@ -35,7 +35,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.videoGravity = gravity
             playerViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-            playerViewController.contextualActions = contextualActions
+            playerViewController.contextualActions = contextualActions.map { $0.toContextualAction() }
             playerViewController.infoViewActions = infoViewActions.map { $0.toInfoViewAction(dismissing: playerViewController) }
 #endif
         }

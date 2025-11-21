@@ -715,19 +715,6 @@ private struct MainSystemView: View {
     @ObservedObject var progressTracker: ProgressTracker
     @State private var streamType: StreamType = .unknown
 
-    private var contextualActions: [ContextualAction] {
-        if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
-            return [
-                .init(title: "Skip") {
-                    player.seek(to: skippableTimeRange.end)
-                }
-            ]
-        }
-        else {
-            return []
-        }
-    }
-
     private var skipInfoViewActionTitle: LocalizedStringResource {
         streamType == .onDemand ? "From Beginning" : "Back to Live"
     }
@@ -739,16 +726,25 @@ private struct MainSystemView: View {
     var body: some View {
         SystemVideoView(player: player)
             .supportsPictureInPicture(supportsPictureInPicture)
-            .contextualActions(contextualActions)
+            .contextualActions(content: contextualActionsActionsContent)
             .infoViewActions(content: infoViewActionsContent)
             .ignoresSafeArea()
             .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
+    @SystemVideoViewActionsContentBuilder7
+    func contextualActionsActionsContent() -> SystemVideoViewActionsContent {
+        if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
+            .init(title: "Skip") {
+                player.seek(to: skippableTimeRange.end)
+            }
+        }
+    }
+
     @SystemVideoViewActionsContentBuilder2
     func infoViewActionsContent() -> SystemVideoViewActionsContent {
         if player.canSkipToDefault() {
-            SystemVideoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
+            .init(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
                 player.skipToDefault()
             }
         }

@@ -14,7 +14,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
-    private var contextualActions: [UIAction] = []
+    private var contextualActions: [SystemVideoViewAction] = []
     private var infoViewActions: [SystemVideoViewAction] = []
 
     // swiftlint:disable:next missing_docs
@@ -94,31 +94,40 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Actions to present contextually during playback.
+    /// Actions presented contextually during playback.
     ///
-    /// - Parameter contextualActions: An array of action controls to present contextually during playback.
+    /// - Parameter content: The content builder
+    ///
+    /// Use this modifier to configure actions:
+    ///
+    /// ```swift
+    /// SystemVideoView(player: player)
+    ///    .contextualActions {
+    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward") {
+    ///            player.skipToDefault()
+    ///        }
+    ///    }
+    /// ```
+    ///
+    /// > Important: Only one or two actions are supported.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
-    func contextualActions(_ contextualActions: [ContextualAction]) -> SystemVideoView {
+    func contextualActions(@SystemVideoViewActionsContentBuilder7 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
         var view = self
-        view.contextualActions = contextualActions.map { action in
-            UIAction(title: action.title, image: action.image, identifier: .init(rawValue: action.title)) { _ in
-                action.handler()
-            }
-        }
+        view.contextualActions = content().actions
         return view
     }
 
-    /// Actions displayed in the info tab of the tvOS player.
+    /// Actions displayed in the info tab.
     ///
-    /// - Parameter builder: The action builder
+    /// - Parameter content: The content builder
     ///
-    /// Use this modifier to configure info view actions:
+    /// Use this modifier to configure actions:
     ///
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .infoViewActions {
-    ///        InfoViewAction(title: "From Beginning", systemImage: "gobackward") {
+    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward") {
     ///            player.skipToDefault()
     ///        }
     ///    }
