@@ -7,30 +7,30 @@
 import PillarboxPlayer
 
 // swiftlint:disable:next type_name
-private enum InfoViewActionsContentBuilderCompilationChecks {
+private enum SystemVideoViewActionsContentBuilderCompilationChecks {
     private static func Action() -> SystemVideoViewAction {
         .init(title: "") {}
     }
 
-    @InfoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder
     static func singleExpression() -> SystemVideoViewActionsContent {
         Action()
     }
 
-    @InfoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder
     static func twoExpressions() -> SystemVideoViewActionsContent {
         Action()
         Action()
     }
 
-    @InfoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder
     static func expressionWithIfOnly() -> SystemVideoViewActionsContent {
         if true {
             Action()
         }
     }
 
-    @InfoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder
     static func expressionWithNestedIf() -> SystemVideoViewActionsContent {
         if true {
             if true {
@@ -39,7 +39,7 @@ private enum InfoViewActionsContentBuilderCompilationChecks {
         }
     }
 
-    @InfoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder
     static func expressionWithIfElse() -> SystemVideoViewActionsContent {
         if true {
             Action()
@@ -49,7 +49,7 @@ private enum InfoViewActionsContentBuilderCompilationChecks {
         }
     }
 
-    @InfoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder
     static func expressionWithSwitch() -> SystemVideoViewActionsContent {
         switch Int.random(in: 0...2) {
         case 0:
@@ -61,7 +61,7 @@ private enum InfoViewActionsContentBuilderCompilationChecks {
         }
     }
 
-    @InfoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder
     static func expressionWithIfAvailable() -> SystemVideoViewActionsContent {
         if #available(tvOS 16, *) {
             Action()

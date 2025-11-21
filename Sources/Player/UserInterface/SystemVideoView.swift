@@ -127,7 +127,7 @@ public extension SystemVideoView {
     /// > Important: Only one or two actions are supported.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
-    func infoViewActions(@InfoViewActionsContentBuilder content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
+    func infoViewActions(@SystemVideoViewActionsContentBuilder content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
         var view = self
         view.infoViewActions = content().actions
         return view

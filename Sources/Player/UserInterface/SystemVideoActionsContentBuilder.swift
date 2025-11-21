@@ -6,7 +6,7 @@
 
 /// A result builder that enables declarative construction of one or two `InfoViewAction`.
 @resultBuilder
-public enum InfoViewActionsContentBuilder {
+public enum SystemVideoViewActionsContentBuilder {
     /// Type of a statement expression.
     public typealias Expression = SystemVideoViewAction
 
