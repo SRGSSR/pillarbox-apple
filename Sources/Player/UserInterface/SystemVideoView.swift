@@ -110,7 +110,7 @@ public extension SystemVideoView {
     ///    }
     /// ```
     ///
-    /// > Important: Only one or two actions are supported.
+    /// > Important: One up to seven actions are supported.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
     func contextualActions(@SystemVideoViewActionsContentBuilder7 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
@@ -134,7 +134,7 @@ public extension SystemVideoView {
     ///    }
     /// ```
     ///
-    /// > Important: Only one or two actions are supported.
+    /// > Important: One or two actions are supported.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
     func infoViewActions(@SystemVideoViewActionsContentBuilder2 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
