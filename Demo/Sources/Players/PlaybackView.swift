@@ -745,7 +745,7 @@ private struct MainSystemView: View {
             .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
-    @SystemVideoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder2
     func infoViewActionsContent() -> SystemVideoViewActionsContent {
         if player.canSkipToDefault() {
             SystemVideoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {

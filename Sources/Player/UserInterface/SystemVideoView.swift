@@ -111,9 +111,9 @@ public extension SystemVideoView {
 
     /// Actions displayed in the info tab of the tvOS player.
     ///
-    /// - Parameter builder: A closure that returns an `InfoViewActions` built using the `InfoViewActionsBuilder`.
+    /// - Parameter builder: The action builder
     ///
-    /// Use this modifier to add content to info view actions:
+    /// Use this modifier to configure info view actions:
     ///
     /// ```swift
     /// SystemVideoView(player: player)
@@ -127,7 +127,7 @@ public extension SystemVideoView {
     /// > Important: Only one or two actions are supported.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
-    func infoViewActions(@SystemVideoViewActionsContentBuilder content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
+    func infoViewActions(@SystemVideoViewActionsContentBuilder2 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
         var view = self
         view.infoViewActions = content().actions
         return view

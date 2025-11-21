@@ -7,30 +7,30 @@
 import PillarboxPlayer
 
 // swiftlint:disable:next type_name
-private enum SystemVideoViewActionsContentBuilderCompilationChecks {
+private enum SystemVideoViewActionsContentBuilder2CompilationChecks {
     private static func Action() -> SystemVideoViewAction {
         .init(title: "") {}
     }
 
-    @SystemVideoViewActionsContentBuilder
-    static func singleExpression() -> SystemVideoViewActionsContent {
+    @SystemVideoViewActionsContentBuilder2
+    static func oneExpression() -> SystemVideoViewActionsContent {
         Action()
     }
 
-    @SystemVideoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder2
     static func twoExpressions() -> SystemVideoViewActionsContent {
         Action()
         Action()
     }
 
-    @SystemVideoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder2
     static func expressionWithIfOnly() -> SystemVideoViewActionsContent {
         if true {
             Action()
         }
     }
 
-    @SystemVideoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder2
     static func expressionWithNestedIf() -> SystemVideoViewActionsContent {
         if true {
             if true {
@@ -39,7 +39,7 @@ private enum SystemVideoViewActionsContentBuilderCompilationChecks {
         }
     }
 
-    @SystemVideoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder2
     static func expressionWithIfElse() -> SystemVideoViewActionsContent {
         if true {
             Action()
@@ -49,7 +49,7 @@ private enum SystemVideoViewActionsContentBuilderCompilationChecks {
         }
     }
 
-    @SystemVideoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder2
     static func expressionWithSwitch() -> SystemVideoViewActionsContent {
         switch Int.random(in: 0...2) {
         case 0:
@@ -61,7 +61,7 @@ private enum SystemVideoViewActionsContentBuilderCompilationChecks {
         }
     }
 
-    @SystemVideoViewActionsContentBuilder
+    @SystemVideoViewActionsContentBuilder2
     static func expressionWithIfAvailable() -> SystemVideoViewActionsContent {
         if #available(tvOS 16, *) {
             Action()

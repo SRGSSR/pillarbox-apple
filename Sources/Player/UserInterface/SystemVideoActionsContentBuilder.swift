@@ -4,9 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A result builder that enables declarative construction of one or two `InfoViewAction`.
+/// A result builder that enables declarative construction of one up to two `SystemVideoViewAction`s.
 @resultBuilder
-public enum SystemVideoViewActionsContentBuilder {
+public enum SystemVideoViewActionsContentBuilder2 {
     /// Type of a statement expression.
     public typealias Expression = SystemVideoViewAction
 
