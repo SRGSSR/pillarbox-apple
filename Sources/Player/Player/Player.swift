@@ -272,13 +272,22 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
     }
 
-    deinit {
-        uninstallRemoteCommands()
+    // Proactively clear items to avoid leak on iPadOS 18, see https://github.com/SRGSSR/pillarbox-apple/issues/1371.
+    // TODO: Remove when iPadOS 18 is not supported anymore
+    private func clearItems_iPadOS18() {
+        guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion == 18, UIDevice.current.userInterfaceIdiom == .pad else {
+            return
+        }
 
-        // Proactively clear items to mitigate potential regressions, see https://github.com/SRGSSR/pillarbox-apple/issues/1371.
+        // Delay after `Player` deallocation to avoid triggering updates for it.
         DispatchQueue.main.async { [queuePlayer] in
             queuePlayer.removeAllItems()
         }
+    }
+
+    deinit {
+        uninstallRemoteCommands()
+        clearItems_iPadOS18()
     }
 }
 
