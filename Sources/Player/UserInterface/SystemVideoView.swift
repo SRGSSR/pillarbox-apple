@@ -15,7 +15,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
     private var contextualActions: [UIAction] = []
-    private var infoViewActions: [InfoViewAction] = []
+    private var infoViewActions: [SystemVideoViewAction] = []
 
     // swiftlint:disable:next missing_docs
     public var body: some View {

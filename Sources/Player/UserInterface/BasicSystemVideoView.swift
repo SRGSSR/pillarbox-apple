@@ -11,7 +11,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
-    let infoViewActions: [InfoViewAction]
+    let infoViewActions: [SystemVideoViewAction]
     let videoOverlay: VideoOverlay
 
     func makeCoordinator() -> SystemVideoViewCoordinator {

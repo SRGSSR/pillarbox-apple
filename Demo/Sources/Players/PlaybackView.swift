@@ -748,7 +748,7 @@ private struct MainSystemView: View {
     @InfoViewActionsContentBuilder
     func infoViewActionsContent() -> InfoViewActionsContent {
         if player.canSkipToDefault() {
-            InfoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
+            SystemVideoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
                 player.skipToDefault()
             }
         }

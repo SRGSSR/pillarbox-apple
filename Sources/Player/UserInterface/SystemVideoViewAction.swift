@@ -7,13 +7,13 @@
 import AVKit
 import UIKit
 
-/// Actions to present contextually during playback.
-public struct InfoViewAction {
+/// An action presented by ``SystemVideoView``.
+public struct SystemVideoViewAction {
     private let title: String
     private let image: UIImage?
     private let handler: () -> Void
 
-    /// Creates an info view action.
+    /// Creates an action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -26,7 +26,7 @@ public struct InfoViewAction {
         self.handler = handler
     }
 
-    /// Creates an info view action.
+    /// Creates an action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -38,7 +38,7 @@ public struct InfoViewAction {
         self.handler = handler
     }
 
-    /// Creates an info view action.
+    /// Creates an action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -49,7 +49,7 @@ public struct InfoViewAction {
         self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
     }
 
-    /// Creates an info view action.
+    /// Creates an action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
@@ -60,7 +60,7 @@ public struct InfoViewAction {
     }
 }
 
-extension InfoViewAction {
+extension SystemVideoViewAction {
     func toUIAction(dismissing playerViewController: AVPlayerViewController) -> UIAction {
         UIAction(title: title, image: image) { [weak playerViewController] _ in
             playerViewController?.dismiss(animated: true)

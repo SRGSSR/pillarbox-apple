@@ -8,10 +8,10 @@
 @resultBuilder
 public enum InfoViewActionsContentBuilder {
     /// Type of a statement expression.
-    public typealias Expression = InfoViewAction
+    public typealias Expression = SystemVideoViewAction
 
     /// Type of a partial result.
-    public typealias Component = [InfoViewAction]
+    public typealias Component = [SystemVideoViewAction]
 
     // swiftlint:disable:next missing_docs
     public static func buildExpression(_ expression: Expression) -> Component {

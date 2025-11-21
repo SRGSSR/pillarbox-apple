@@ -12,7 +12,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     let player: Player
     let gravity: AVLayerVideoGravity
     let contextualActions: [UIAction]
-    let infoViewActions: [InfoViewAction]
+    let infoViewActions: [SystemVideoViewAction]
     let videoOverlay: VideoOverlay
 
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: SystemVideoViewCoordinator) {

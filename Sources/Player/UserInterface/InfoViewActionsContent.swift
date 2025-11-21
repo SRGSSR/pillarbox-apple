@@ -6,5 +6,5 @@
 
 /// Content associated with ``SystemVideoView/infoViewActions(content:)``.
 public struct InfoViewActionsContent {
-    let actions: [InfoViewAction]
+    let actions: [SystemVideoViewAction]
 }
