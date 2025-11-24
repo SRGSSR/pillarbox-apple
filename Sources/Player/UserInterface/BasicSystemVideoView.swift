@@ -34,7 +34,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
         uiViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
-        uiViewController.updateInfoViewActionsIfNeeded(with: contextualActionsContent.infoViewActions(dismissing: uiViewController))
+        uiViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: uiViewController))
 #endif
         context.coordinator.player = player
     }

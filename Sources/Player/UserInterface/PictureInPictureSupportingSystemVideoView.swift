@@ -36,7 +36,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
             playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
-            playerViewController.updateInfoViewActionsIfNeeded(with: contextualActionsContent.infoViewActions(dismissing: playerViewController))
+            playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: playerViewController))
 #endif
         }
         context.coordinator.player = player
