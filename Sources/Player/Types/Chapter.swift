@@ -36,7 +36,7 @@ public struct Chapter: Equatable {
             items: [
                 .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
                 .init(identifier: .commonIdentifierTitle, value: title),
-                .init(identifier: .commonIdentifierArtwork, value: artworkImage.pngData())
+                .init(identifier: .commonIdentifierArtwork, value: artworkImage.jpegData(compressionQuality: 1))
             ].compactMap(\.self),
             timeRange: timeRange
         )

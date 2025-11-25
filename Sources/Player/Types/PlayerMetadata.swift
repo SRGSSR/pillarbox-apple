@@ -84,7 +84,7 @@ public struct PlayerMetadata: Equatable {
 
     private var artworkData: Data? {
 #if os(tvOS)
-        imageSource.image?.pngData()
+        imageSource.image?.jpegData(compressionQuality: 1)
 #else
         nil
 #endif
