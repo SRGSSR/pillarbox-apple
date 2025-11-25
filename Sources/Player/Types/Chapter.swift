@@ -10,12 +10,17 @@ import UIKit
 
 /// A chapter representation.
 public struct Chapter: Equatable {
-    private static let placeholderImage = {
-        let rect = CGRect(x: 0, y: 0, width: 16, height: 9)
-        let renderer = UIGraphicsImageRenderer(bounds: rect)
-        return renderer.image { context in
-            UIColor.darkGray.setFill()
-            context.fill(rect)
+    private static let placeholderImage: UIImage? = {
+        if #unavailable(iOS 16, tvOS 18) {
+            let rect = CGRect(x: 0, y: 0, width: 16, height: 9)
+            let renderer = UIGraphicsImageRenderer(bounds: rect)
+            return renderer.image { context in
+                UIColor.darkGray.setFill()
+                context.fill(rect)
+            }
+        }
+        else {
+            return nil
         }
     }()
 
@@ -36,13 +41,13 @@ public struct Chapter: Equatable {
             items: [
                 .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
                 .init(identifier: .commonIdentifierTitle, value: title),
-                .init(identifier: .commonIdentifierArtwork, value: artworkImage.jpegData(compressionQuality: 1))
+                .init(identifier: .commonIdentifierArtwork, value: artworkImage?.jpegData(compressionQuality: 1))
             ].compactMap(\.self),
             timeRange: timeRange
         )
     }
 
-    private var artworkImage: UIImage {
+    private var artworkImage: UIImage? {
         imageSource.image ?? Self.placeholderImage
     }
 
