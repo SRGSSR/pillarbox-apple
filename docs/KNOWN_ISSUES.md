@@ -162,3 +162,11 @@ Due to an `AVQueuePlayer` issue, toggling `isMuted` can cause the player to rema
 ### Workaround
 
 No workaround is available yet. Audio is restored when transitioning between items, when the player is paused and resumed, or when a seek operation occurs.
+
+## Memory leaks when using `SystemVideoView` on tvOS 26 (FB21160665)
+
+The standard player user interface leaks memory when playing content that contains chapters on tvOS 26.
+
+### Workaround
+
+No workaround is available yet.
