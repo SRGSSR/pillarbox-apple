@@ -76,7 +76,7 @@ final class CustomPictureInPicture: NSObject {
         hostViews.remove(hostView)
         if !isActive && controller?.contentSource == hostView.contentSource {
             if let lastHostView = hostViews.last {
-                controller?.contentSource = lastHostView.contentSource
+                controller?.contentSource = lastHostView.contentSource ?? .empty
             }
             else {
                 controller?.contentSource = .empty
@@ -154,7 +154,7 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         // Wire the PiP controller to a valid source if the restored state is not bound to the player involved in
         // the restoration.
         if !hostViews.contains(where: { $0.contentSource == controller?.contentSource }) {
-            controller?.contentSource = hostViews.last?.contentSource
+            controller?.contentSource = hostViews.last?.contentSource ?? .empty
         }
 
         videoLayerView = nil
