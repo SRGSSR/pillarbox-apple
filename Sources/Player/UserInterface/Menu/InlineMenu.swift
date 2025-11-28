@@ -33,9 +33,11 @@ public struct InlineMenuInTransportBar: TransportBarElement {
     }
 }
 
-public struct InlineMenu<Body>: UIMenuElementConvertible where Body: UIMenuElementConvertible {
+public struct InlineMenu<Body> {
     private let body: Body
+}
 
+extension InlineMenu: UIMenuElementConvertible where Body: UIMenuElementConvertible {
     public func toUIMenuElement() -> UIMenuElement {
         body.toUIMenuElement()
     }

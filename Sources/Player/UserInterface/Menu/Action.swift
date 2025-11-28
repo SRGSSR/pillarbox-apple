@@ -49,9 +49,11 @@ public struct ActionInTransportBar: TransportBarElement {
     }
 }
 
-public struct Action<Body>: UIMenuElementConvertible where Body: UIMenuElementConvertible {
+public struct Action<Body> {
     private let body: Body
+}
 
+extension Action : UIMenuElementConvertible where Body: UIMenuElementConvertible {
     public func toUIMenuElement() -> UIMenuElement {
         body.toUIMenuElement()
     }
