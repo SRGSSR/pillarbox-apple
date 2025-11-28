@@ -15,18 +15,12 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     let infoViewActionsContent: SystemVideoViewActionsContent
     let videoOverlay: VideoOverlay
 
-    static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: SystemVideoViewCoordinator) {
+    static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: Void) {
         PictureInPicture.shared.system.dismantleHostViewController(uiViewController)
     }
 
-    func makeCoordinator() -> SystemVideoViewCoordinator {
-        .init()
-    }
-
     func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
-        let controller = PictureInPicture.shared.system.makeHostViewController(for: player)
-        context.coordinator.controller = controller.playerViewController
-        return controller
+        PictureInPicture.shared.system.makeHostViewController(for: player)
     }
 
     func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
@@ -39,6 +33,5 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: playerViewController))
 #endif
         }
-        context.coordinator.player = player
     }
 }
