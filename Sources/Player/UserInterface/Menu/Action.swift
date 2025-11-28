@@ -60,25 +60,81 @@ extension Action : UIMenuElementConvertible where Body: UIMenuElementConvertible
 }
 
 extension Action: InlineMenuElement where Body == ActionInInlineMenu {
-    public init(title: String, image: UIImage? = nil, handler: @escaping () -> Void) {
-        self.body = .init(title: title, image: image, handler: handler)
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage? = nil, handler: @escaping () -> Void) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage? = nil, handler: @escaping () -> Void) {
+        self.init(title: String(localized: title), image: image, handler: handler)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, handler: @escaping () -> Void) where S: StringProtocol {
+        self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, handler: @escaping () -> Void) {
+        self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
     }
 }
 
 extension Action: MenuElement where Body == ActionInMenu {
-    public init(title: String, image: UIImage? = nil, handler: @escaping () -> Void) {
-        self.body = .init(title: title, image: image, handler: handler)
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage? = nil, handler: @escaping () -> Void) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage? = nil, handler: @escaping () -> Void) {
+        self.init(title: String(localized: title), image: image, handler: handler)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, handler: @escaping () -> Void) where S: StringProtocol {
+        self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, handler: @escaping () -> Void) {
+        self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
     }
 }
 
 extension Action: SelectionMenuElement where Body == ActionInSelectionMenu {
-    public init(title: String, image: UIImage? = nil, handler: @escaping () -> Void = {}) {
-        self.body = .init(title: title, image: image, handler: handler)
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage? = nil, handler: @escaping () -> Void = {}) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage? = nil, handler: @escaping () -> Void = {}) {
+        self.init(title: String(localized: title), image: image, handler: handler)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, handler: @escaping () -> Void = {}) where S: StringProtocol {
+        self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, handler: @escaping () -> Void = {}) {
+        self.init(title: title, image: UIImage(systemName: systemImage), handler: handler)
     }
 }
 
 extension Action: TransportBarElement where Body == ActionInTransportBar {
-    public init(title: String, image: UIImage, handler: @escaping () -> Void) {
-        self.body = .init(title: title, image: image, handler: handler)
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage, handler: @escaping () -> Void) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage, handler: @escaping () -> Void) {
+        self.init(title: String(localized: title), image: image, handler: handler)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, handler: @escaping () -> Void) where S: StringProtocol {
+        self.init(title: title, image: UIImage(systemName: systemImage)!, handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, handler: @escaping () -> Void) {
+        self.init(title: title, image: UIImage(systemName: systemImage)!, handler: handler)
     }
 }
