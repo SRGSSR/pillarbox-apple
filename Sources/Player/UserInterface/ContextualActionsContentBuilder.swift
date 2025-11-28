@@ -4,59 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A result builder that enables declarative construction of one up to two `SystemVideoViewAction`s.
+/// A result builder that enables declarative construction of one up to seven `Action`s.
 @resultBuilder
-public enum SystemVideoViewActionsContentBuilder2 {
+public enum ContextualActionsContentBuilder {
     /// Type of a statement expression.
-    public typealias Expression = SystemVideoViewAction
+    public typealias Expression = ContextualAction
 
     /// Type of a partial result.
-    public typealias Component = [SystemVideoViewAction]
+    public typealias Component = [Expression]
 
-    // swiftlint:disable:next missing_docs
-    public static func buildExpression(_ expression: Expression) -> Component {
-        [expression]
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ c0: Component) -> Component {
-        c0
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ c0: Component, _ c1: Component) -> Component {
-        c0 + c1
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildOptional(_ component: Component?) -> Component {
-        component ?? []
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildEither(first component: Component) -> Component {
-        component
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildEither(second component: Component) -> Component {
-        component
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildFinalResult(_ component: Component) -> SystemVideoViewActionsContent {
-        .init(actions: component)
-    }
-}
-
-/// A result builder that enables declarative construction of one up to seven `SystemVideoViewAction`s.
-@resultBuilder
-public enum SystemVideoViewActionsContentBuilder7 {
-    /// Type of a statement expression.
-    public typealias Expression = SystemVideoViewAction
-
-    /// Type of a partial result.
-    public typealias Component = [SystemVideoViewAction]
+    public typealias Result = ContextualActionsContent
 
     // swiftlint:disable:next missing_docs
     public static func buildExpression(_ expression: Expression) -> Component {
@@ -122,7 +79,7 @@ public enum SystemVideoViewActionsContentBuilder7 {
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildFinalResult(_ component: Component) -> SystemVideoViewActionsContent {
+    public static func buildFinalResult(_ component: Component) -> Result {
         .init(actions: component)
     }
 }

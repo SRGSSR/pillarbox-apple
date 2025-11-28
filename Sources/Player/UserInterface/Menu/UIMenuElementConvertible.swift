@@ -6,11 +6,11 @@
 
 import UIKit
 
-public protocol UIMenuElementConvertible {
-    func toUIMenuElement() -> UIMenuElement
-}
-
 public protocol InlineMenuElement: UIMenuElementConvertible {}
 public protocol MenuElement: UIMenuElementConvertible {}
 public protocol SelectionMenuElement: UIMenuElementConvertible {}
 public protocol TransportBarElement: UIMenuElementConvertible {}
+
+public protocol UIMenuElementConvertible {
+    func toUIMenuElement() -> UIMenuElement
+}

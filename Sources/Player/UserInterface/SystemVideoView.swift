@@ -16,8 +16,8 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var supportsPictureInPicture = false
 
     private var transportBarContent = MenuContent()
-    private var contextualActionsContent: SystemVideoViewActionsContent = .empty
-    private var infoViewActionsContent: SystemVideoViewActionsContent = .empty
+    private var contextualActionsContent = ContextualActionsContent()
+    private var infoViewActionsContent = InfoViewActionsContent()
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -124,7 +124,7 @@ public extension SystemVideoView {
     /// ```
     ///
     /// > Important: One up to seven actions are supported.
-    func contextualActions(@SystemVideoViewActionsContentBuilder7 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
+    func contextualActions(@ContextualActionsContentBuilder content: () -> ContextualActionsContent) -> SystemVideoView {
         var view = self
         view.contextualActionsContent = content()
         return view
@@ -146,7 +146,7 @@ public extension SystemVideoView {
     /// ```
     ///
     /// > Important: One or two actions are supported.
-    func infoViewActions(@SystemVideoViewActionsContentBuilder2 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
+    func infoViewActions(@InfoViewActionsContentBuilder content: () -> InfoViewActionsContent) -> SystemVideoView {
         var view = self
         view.infoViewActionsContent = content()
         return view
