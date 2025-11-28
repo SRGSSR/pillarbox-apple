@@ -20,6 +20,12 @@ extension AVPlayerViewController {
     }
 
     @available(iOS, unavailable)
+    func updateTransportBarCustomMenuItemsIfNeeded(with items: [UIMenuElement]) {
+        guard transportBarCustomMenuItems != items else { return }
+        transportBarCustomMenuItems = items
+    }
+
+    @available(iOS, unavailable)
     func updateContextualActionsIfNeeded(with actions: [UIAction]) {
         guard contextualActions != actions else { return }
         contextualActions = actions

@@ -12,7 +12,7 @@ public struct SelectionMenuInInlineMenu: InlineMenuElement {
     let children: [UIMenuElement]
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIMenu(title: title, image: image, options: [.singleSelection], children: children)
+        UIMenu(title: title, image: image, identifier: .init(rawValue: title), options: [.singleSelection], children: children)
     }
 }
 
@@ -22,7 +22,7 @@ public struct SelectionMenuInMenu: MenuElement {
     let children: [UIMenuElement]
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIMenu(title: title, image: image, options: [.singleSelection], children: children)
+        UIMenu(title: title, image: image, identifier: .init(rawValue: title), options: [.singleSelection], children: children)
     }
 }
 
@@ -32,7 +32,7 @@ public struct SelectionMenuInSelectionMenu: SelectionMenuElement {
     let children: [UIMenuElement]
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIMenu(title: title, image: image, options: [.singleSelection], children: children)
+        UIMenu(title: title, image: image, identifier: .init(rawValue: title), options: [.singleSelection], children: children)
     }
 }
 
@@ -42,7 +42,7 @@ public struct SelectionMenuInTransportBar: TransportBarElement {
     let children: [UIMenuElement]
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIMenu(title: title, image: image, options: [.singleSelection], children: children)
+        UIMenu(title: title, image: image, identifier: .init(rawValue: title), options: [.singleSelection], children: children)
     }
 }
 

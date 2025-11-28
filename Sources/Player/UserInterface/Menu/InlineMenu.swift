@@ -11,7 +11,7 @@ public struct InlineMenuInMenu: MenuElement {
     let children: [UIMenuElement]
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIMenu(title: title, options: [.displayInline], children: children)
+        UIMenu(title: title, identifier: .init(rawValue: title), options: [.displayInline], children: children)
     }
 }
 
@@ -20,7 +20,7 @@ public struct InlineMenuInSelectionMenu: SelectionMenuElement {
     let children: [UIMenuElement]
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIMenu(title: title, options: [.displayInline], children: children)
+        UIMenu(title: title, identifier: .init(rawValue: title), options: [.displayInline], children: children)
     }
 }
 
@@ -29,7 +29,7 @@ public struct InlineMenuInTransportBar: TransportBarElement {
     let children: [UIMenuElement]
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIMenu(title: title, options: [.displayInline], children: children)
+        UIMenu(title: title, identifier: .init(rawValue: title), options: [.displayInline], children: children)
     }
 }
 

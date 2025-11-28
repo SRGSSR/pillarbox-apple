@@ -29,7 +29,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.videoGravity = gravity
         uiViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-        uiViewController.transportBarCustomMenuItems = transportBarContent.children
+        uiViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.children)
         uiViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
         uiViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: uiViewController))
 #endif

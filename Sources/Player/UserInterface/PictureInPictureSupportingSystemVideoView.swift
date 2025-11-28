@@ -30,7 +30,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.videoGravity = gravity
             playerViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-            playerViewController.transportBarCustomMenuItems = transportBarContent.children
+            playerViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.children)
             playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
             playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: playerViewController))
 #endif

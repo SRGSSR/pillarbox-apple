@@ -12,7 +12,7 @@ public struct ActionInInlineMenu: InlineMenuElement {
     let handler: () -> Void
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIAction(title: title, image: image) { _ in handler() }
+        UIAction(title: title, image: image, identifier: .init(rawValue: title)) { _ in handler() }
     }
 }
 
@@ -22,7 +22,7 @@ public struct ActionInMenu: MenuElement {
     let handler: () -> Void
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIAction(title: title, image: image) { _ in handler() }
+        UIAction(title: title, image: image, identifier: .init(rawValue: title)) { _ in handler() }
     }
 }
 
@@ -32,7 +32,7 @@ public struct ActionInSelectionMenu: SelectionMenuElement {
     let handler: () -> Void
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIAction(title: title, image: image) { action in
+        UIAction(title: title, image: image, identifier: .init(rawValue: title)) { action in
             handler()
             action.state = .on
         }
@@ -45,7 +45,7 @@ public struct ActionInTransportBar: TransportBarElement {
     let handler: () -> Void
 
     public func toUIMenuElement() -> UIMenuElement {
-        UIAction(title: title, image: image) { _ in handler() }
+        UIAction(title: title, image: image, identifier: .init(rawValue: title)) { _ in handler() }
     }
 }
 
