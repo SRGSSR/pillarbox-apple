@@ -15,6 +15,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
 
+    private var transportBarContent = MenuContent()
     private var contextualActionsContent: SystemVideoViewActionsContent = .empty
     private var infoViewActionsContent: SystemVideoViewActionsContent = .empty
 
@@ -25,6 +26,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                 PictureInPictureSupportingSystemVideoView(
                     player: player,
                     gravity: gravity,
+                    transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
                     infoViewActionsContent: infoViewActionsContent,
                     videoOverlay: videoOverlay
@@ -34,6 +36,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                 BasicSystemVideoView(
                     player: player,
                     gravity: gravity,
+                    transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
                     infoViewActionsContent: infoViewActionsContent,
                     videoOverlay: videoOverlay
@@ -94,6 +97,16 @@ public extension SystemVideoView {
         view.supportsPictureInPicture = supportsPictureInPicture
         return view
     }
+}
+
+@available(iOS, unavailable)
+@available(tvOS 16, *)
+public extension SystemVideoView {
+    func transportBar(@TransportBarContentBuilder content: () -> MenuContent) -> SystemVideoView {
+        var view = self
+        view.transportBarContent = content()
+        return view
+    }
 
     /// Actions presented contextually during playback.
     ///
@@ -111,8 +124,6 @@ public extension SystemVideoView {
     /// ```
     ///
     /// > Important: One up to seven actions are supported.
-    @available(iOS, unavailable)
-    @available(tvOS 16, *)
     func contextualActions(@SystemVideoViewActionsContentBuilder7 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
         var view = self
         view.contextualActionsContent = content()
@@ -135,8 +146,6 @@ public extension SystemVideoView {
     /// ```
     ///
     /// > Important: One or two actions are supported.
-    @available(iOS, unavailable)
-    @available(tvOS 16, *)
     func infoViewActions(@SystemVideoViewActionsContentBuilder2 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
         var view = self
         view.infoViewActionsContent = content()

@@ -11,6 +11,7 @@ import SwiftUI
 struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
     let player: Player
     let gravity: AVLayerVideoGravity
+    let transportBarContent: MenuContent
     let contextualActionsContent: SystemVideoViewActionsContent
     let infoViewActionsContent: SystemVideoViewActionsContent
     let videoOverlay: VideoOverlay
@@ -29,6 +30,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.videoGravity = gravity
             playerViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
+            playerViewController.transportBarCustomMenuItems = transportBarContent.children
             playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
             playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: playerViewController))
 #endif
