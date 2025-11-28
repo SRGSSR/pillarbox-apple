@@ -85,7 +85,7 @@ private struct ZoomMenuContent: View {
 
     var body: some View {
         if player.mediaType == .video {
-            Menu {
+            SwiftUI.Menu {
                 Picker(selection: selection) {
                     ForEach(Self.gravities, id: \.self) { gravity in
                         Self.description(for: gravity).tag(gravity)
@@ -147,7 +147,7 @@ private struct SettingsMenuContent: View {
     }
 
     private func playbackSpeedMenu() -> some View {
-        Menu {
+        SwiftUI.Menu {
             player.playbackSpeedMenu(speeds: speeds) { speed in
                 action(.playbackSpeed(speed))
             }
@@ -162,7 +162,7 @@ private struct SettingsMenuContent: View {
     }
 
     private func audibleMediaSelectionMenu() -> some View {
-        Menu {
+        SwiftUI.Menu {
             mediaSelectionMenuContent(characteristic: .audible)
         } label: {
             Label {
@@ -175,7 +175,7 @@ private struct SettingsMenuContent: View {
     }
 
     private func legibleMediaSelectionMenu() -> some View {
-        Menu {
+        SwiftUI.Menu {
             mediaSelectionMenuContent(characteristic: .legible)
         } label: {
             Label {
