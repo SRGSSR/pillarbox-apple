@@ -47,19 +47,61 @@ extension Menu: UIMenuElementConvertible where Body: UIMenuElementConvertible {
 }
 
 extension Menu: InlineMenuElement where Body == MenuInInlineMenu {
-    public init(title: String, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: title, image: image, children: content().children)
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, children: content().children)
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: image, content: content)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(title: title, image: UIImage(systemName: systemImage)!, content: content)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, content: content)
     }
 }
 
 extension Menu: MenuElement where Body == MenuInMenu {
-    public init(title: String, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: title, image: image, children: content().children)
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, children: content().children)
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: image, content: content)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(title: title, image: UIImage(systemName: systemImage)!, content: content)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, content: content)
     }
 }
 
 extension Menu: TransportBarElement where Body == MenuInTransportBar {
-    public init(title: String, image: UIImage, @MenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: title, image: image, children: content().children)
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, children: content().children)
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: image, content: content)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(title: title, image: UIImage(systemName: systemImage)!, content: content)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, content: content)
     }
 }

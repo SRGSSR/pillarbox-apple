@@ -44,19 +44,46 @@ extension InlineMenu: UIMenuElementConvertible where Body: UIMenuElementConverti
 }
 
 extension InlineMenu: MenuElement where Body == InlineMenuInMenu {
-    public init(title: String = "", @InlineMenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: title, children: content().children)
+    @_disfavoredOverload
+    public init<S>(title: S, @InlineMenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), children: content().children)
+    }
+
+    public init(title: LocalizedStringResource, @InlineMenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), content: content)
+    }
+
+    public init(@InlineMenuContentBuilder content: () -> MenuContent) {
+        self.body = .init(title: "", children: content().children)
     }
 }
 
 extension InlineMenu: SelectionMenuElement where Body == InlineMenuInSelectionMenu {
-    public init(title: String = "", @InlineMenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: title, children: content().children)
+    @_disfavoredOverload
+    public init<S>(title: S, @InlineMenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), children: content().children)
+    }
+
+    public init(title: LocalizedStringResource, @InlineMenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), content: content)
+    }
+
+    public init(@InlineMenuContentBuilder content: () -> MenuContent) {
+        self.body = .init(title: "", children: content().children)
     }
 }
 
 extension InlineMenu: TransportBarElement where Body == InlineMenuInTransportBar {
-    public init(title: String = "", @InlineMenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: title, children: content().children)
+    @_disfavoredOverload
+    public init<S>(title: S, @InlineMenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), children: content().children)
+    }
+
+    public init(title: LocalizedStringResource, @InlineMenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), content: content)
+    }
+
+    public init(@InlineMenuContentBuilder content: () -> MenuContent) {
+        self.body = .init(title: "", children: content().children)
     }
 }
