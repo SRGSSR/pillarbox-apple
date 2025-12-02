@@ -1,5 +1,5 @@
 {
-  "originHash" : "a8231012209a9b97b2355122310429a21af254600a5ac89ab9bb3363b91bc3d9",
+  "originHash" : "aed8b7b5e89b0225e440e05ca2b5c1acb501a4e7ff583ccfe0e1351c10c2ad5a",
   "pins" : [
     {
       "identity" : "comscore-swift-package-manager",
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble.git",
       "state" : {
-        "revision" : "cc945f7bdf3b485adedc315e18685c065059b4ca",
-        "version" : "13.8.0"
+        "revision" : "035b88ad6ae8035f5ce2b50b0a6d69c3b16d2120",
+        "version" : "14.0.0"
       }
     },
     {
