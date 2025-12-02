@@ -24,15 +24,6 @@ public struct InlineMenuInSelectionMenu: SelectionMenuElement {
     }
 }
 
-public struct InlineMenuInTransportBar: TransportBarElement {
-    let title: String
-    let children: [UIMenuElement]
-
-    public func toUIMenuElement() -> UIMenuElement {
-        UIMenu(title: title, identifier: .init(rawValue: title), options: [.displayInline], children: children)
-    }
-}
-
 public struct InlineMenu<Body> {
     private let body: Body
 }
@@ -59,21 +50,6 @@ extension InlineMenu: MenuElement where Body == InlineMenuInMenu {
 }
 
 extension InlineMenu: SelectionMenuElement where Body == InlineMenuInSelectionMenu {
-    @_disfavoredOverload
-    public init<S>(title: S, @InlineMenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.body = .init(title: String(title), children: content().children)
-    }
-
-    public init(title: LocalizedStringResource, @InlineMenuContentBuilder content: () -> MenuContent) {
-        self.init(title: String(localized: title), content: content)
-    }
-
-    public init(@InlineMenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: "", children: content().children)
-    }
-}
-
-extension InlineMenu: TransportBarElement where Body == InlineMenuInTransportBar {
     @_disfavoredOverload
     public init<S>(title: S, @InlineMenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         self.body = .init(title: String(title), children: content().children)
