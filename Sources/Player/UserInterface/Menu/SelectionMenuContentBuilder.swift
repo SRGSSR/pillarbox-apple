@@ -18,6 +18,18 @@ public enum SelectionMenuContentBuilder {
         components.flatMap(\.self)
     }
 
+    public static func buildOptional(_ component: Component?) -> Component {
+        component ?? []
+    }
+
+    public static func buildEither(first component: Component) -> Component {
+        component
+    }
+
+    public static func buildEither(second component: Component) -> Component {
+        component
+    }
+
     public static func buildFinalResult(_ component: Component) -> Result {
         .init(children: component.map { $0.toUIMenuElement() })
     }
