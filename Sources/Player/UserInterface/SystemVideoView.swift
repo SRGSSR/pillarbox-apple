@@ -122,6 +122,10 @@ public extension SystemVideoView {
     ///    }
     /// ```
     ///
+    /// Complex menu hierarchies can be created by nesting ``Menu``, ``SelectionMenu``, ``InlineMenu``, and ``Action``.
+    /// Some combinations are not permitted (for example, an ``InlineMenu`` cannot be the direct child of another ``InlineMenu``),
+    /// and certain constraints may apply (such as requiring an associated image for items that appear at the root level).
+    ///
     /// > Important: One up to seven root items are supported.
     func transportBar(@TransportBarContentBuilder content: () -> MenuContent) -> SystemVideoView {
         var view = self
