@@ -6,6 +6,7 @@
 
 import UIKit
 
+/// A type that contains contextual actions.
 public struct ContextualActionsContent {
     let actions: [ContextualAction]
 

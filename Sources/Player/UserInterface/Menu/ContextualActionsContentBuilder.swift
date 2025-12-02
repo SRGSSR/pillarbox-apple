@@ -4,15 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A result builder that enables declarative construction of one up to seven `Action`s.
+/// A result builder that enables declarative contextual action construction.
 @resultBuilder
 public enum ContextualActionsContentBuilder {
-    /// Type of a statement expression.
+    /// Type of statement expressions.
     public typealias Expression = ContextualAction
 
-    /// Type of a partial result.
+    /// Type of partial results.
     public typealias Component = [Expression]
 
+    /// Type of the final result.
     public typealias Result = ContextualActionsContent
 
     // swiftlint:disable:next missing_docs

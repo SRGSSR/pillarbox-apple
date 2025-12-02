@@ -4,15 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A result builder that enables declarative construction of one up to two `Action`s.
+/// A result builder that enables declarative info view action construction.
 @resultBuilder
 public enum InfoViewActionsContentBuilder {
-    /// Type of a statement expression.
+    /// Type of statement expressions.
     public typealias Expression = InfoViewAction
 
-    /// Type of a partial result.
+    /// Type of partial results.
     public typealias Component = [Expression]
 
+    /// Type of the final result.
     public typealias Result = InfoViewActionsContent
 
     // swiftlint:disable:next missing_docs

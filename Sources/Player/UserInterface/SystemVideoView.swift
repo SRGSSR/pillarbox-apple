@@ -102,6 +102,27 @@ public extension SystemVideoView {
 @available(iOS, unavailable)
 @available(tvOS 16, *)
 public extension SystemVideoView {
+    /// Items presented in the transport bar.
+    ///
+    /// - Parameter content: The content builder
+    ///
+    /// Use this modifier to configure menus and actions:
+    ///
+    /// ```swift
+    /// SystemVideoView(player: player)
+    ///    .transportBar {
+    ///        Action(title: "Favorite", systemImage: "heart") {
+    ///            // ...
+    ///        }
+    ///        SelectionMenu(title: "Quality", systemImage: "person.and.background.dotted") {
+    ///            Action(title: "Low")
+    ///            Action(title: "Medium")
+    ///            Action(title: "High")
+    ///        }
+    ///    }
+    /// ```
+    ///
+    /// > Important: One up to seven root items are supported.
     func transportBar(@TransportBarContentBuilder content: () -> MenuContent) -> SystemVideoView {
         var view = self
         view.transportBarContent = content()
@@ -117,7 +138,7 @@ public extension SystemVideoView {
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .contextualActions {
-    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward", identifier: .init(raw: "from_beginning")) {
+    ///        Action(title: "From Beginning", systemImage: "gobackward") {
     ///            player.skipToDefault()
     ///        }
     ///    }
@@ -139,7 +160,7 @@ public extension SystemVideoView {
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .infoViewActions {
-    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward", identifier: .init(raw: "from_beginning")) {
+    ///        Action(title: "From Beginning", systemImage: "gobackward") {
     ///            player.skipToDefault()
     ///        }
     ///    }
