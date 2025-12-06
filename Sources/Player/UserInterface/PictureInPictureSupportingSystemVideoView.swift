@@ -14,9 +14,9 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     let gravity: AVLayerVideoGravity
 
     let transportBarContent: TransportBarContent
-    let contextualActionsContent: SystemVideoViewActionsContent
-    let infoViewActionsContent: SystemVideoViewActionsContent
-    
+    let contextualActionsContent: ContextualActionsContent
+    let infoViewActionsContent: InfoViewActionsContent
+
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: Void) {
         PictureInPicture.shared.system.dismantleHostViewController(uiViewController)
     }
@@ -32,8 +32,8 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
             playerViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.toMenuElements())
-            playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
-            playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: playerViewController))
+            playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.toActions())
+            playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.toActions(dismissing: playerViewController))
 #endif
         }
     }

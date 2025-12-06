@@ -732,19 +732,19 @@ private struct MainSystemView: View {
             .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
-    @SystemVideoViewActionsContentBuilder7
-    func contextualActionsContent() -> SystemVideoViewActionsContent {
+    @ContextualActionsContentBuilder
+    func contextualActionsContent() -> ContextualActionsContent {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
-            SystemVideoViewAction(title: "Skip") {
+            Action(title: "Skip") {
                 player.seek(to: skippableTimeRange.end)
             }
         }
     }
 
-    @SystemVideoViewActionsContentBuilder2
-    func infoViewActionsContent() -> SystemVideoViewActionsContent {
+    @InfoViewActionsContentBuilder
+    func infoViewActionsContent() -> InfoViewActionsContent {
         if player.canSkipToDefault() {
-            SystemVideoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
+            Action(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
                 player.skipToDefault()
             }
         }

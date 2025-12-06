@@ -4,20 +4,53 @@ public struct Option<Body, Value> {
     public let body: Body
 }
 
-// MARK: `Menu` embedding
+// MARK: `ContextualActions` embedding
 
-extension Option: MenuElement where Body == MenuBodyNotSupported {
-    @available(*, unavailable, message: "Options cannot be used in menus. Use a `Picker` instead")
-    public init(title: String, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+@available(*, unavailable, message: "Options are not supported as contextual actions")
+extension Option: ContextualActionsElement where Body == ContextualActionsBodyNotSupported {
+    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
 
-// MARK: `Section` embedding
+// MARK: `InfoViewActions` embedding
 
-extension Option: SectionElement where Body == SectionBodyNotSupported {
-    @available(*, unavailable, message: "Options cannot be used in sections not belonging to a `Picker`")
-    public init(title: String, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+@available(*, unavailable, message: "Options are not supported as info view actions")
+extension Option: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported {
+    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+}
+
+// MARK: `Menu` embedding
+
+@available(*, unavailable, message: "Options cannot be used in menus. Use a `Picker` instead")
+extension Option: MenuElement where Body == MenuBodyNotSupported {
+    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -44,8 +77,33 @@ public struct OptionInPicker<Value>: PickerBody where Value: Equatable {
 }
 
 extension Option: PickerElement where Body == OptionInPicker<Value> {
-    public init(title: String, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.body = .init(title: title, image: image, value: value, handler: handler)
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, value: value, handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(title: String(localized: title), image: image, value: value, handler: handler)
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    @_disfavoredOverload
+    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(resource: image), value: value, handler: handler)
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    public init(title: LocalizedStringResource, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(title: String(localized: title), image: UIImage(resource: image), value: value, handler: handler)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
     }
 }
 
@@ -62,8 +120,6 @@ public struct OptionInPickerSection<Value>: PickerSectionBody where Value: Equat
     }
 
     public func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement {
-        // TODO: If possible, should alter selection of other buttons, possibly via publisher and UIAction subclass/wrapper? Currently
-        //       we can see two entries marked when selecting another item. Would also prevent direct UIMenuElement creation
         UIAction(title: title, image: image, state: state(selection: selection)) { action in
             selection.wrappedValue = value
             action.state = state(selection: selection)
@@ -73,16 +129,66 @@ public struct OptionInPickerSection<Value>: PickerSectionBody where Value: Equat
 }
 
 extension Option: PickerSectionElement where Body == OptionInPickerSection<Value> {
-    public init(title: String, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.body = .init(title: title, image: image, value: value, handler: handler)
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, value: value, handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(title: String(localized: title), image: image, value: value, handler: handler)
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    @_disfavoredOverload
+    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(resource: image), value: value, handler: handler)
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    public init(title: LocalizedStringResource, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(title: String(localized: title), image: UIImage(resource: image), value: value, handler: handler)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+    }
+}
+
+// MARK: `Section` embedding
+
+@available(*, unavailable, message: "Options cannot be used in sections not belonging to a `Picker`")
+extension Option: SectionElement where Body == SectionBodyNotSupported {
+    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
     }
 }
 
 // MARK: `TransportBar` embedding
 
+@available(*, unavailable, message: "Options cannot be displayed at the transport bar root level")
 extension Option: TransportBarElement where Body == TransportBarBodyNotSupported {
-    @available(*, unavailable, message: "Options cannot be displayed at the transport bar root level")
-    public init(title: String, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
