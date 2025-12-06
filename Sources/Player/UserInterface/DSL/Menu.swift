@@ -4,6 +4,40 @@ public struct Menu<Body, Value> {
     public let body: Body
 }
 
+// MARK: `ContextualActions` embedding
+
+@available(*, unavailable, message: "Menus are not supported as contextual actions")
+extension Menu: ContextualActionsElement where Body == ContextualActionsBodyNotSupported, Value == Never {
+    public init<S>(title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+    
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+}
+
+// MARK: `InfoViewActions` embedding
+
+@available(*, unavailable, message: "Menus are not supported as info view actions")
+extension Menu: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported, Value == Never {
+    public init<S>(title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+}
+
 // MARK: `Menu` embedding
 
 public struct MenuInMenu: MenuBody {
@@ -17,8 +51,67 @@ public struct MenuInMenu: MenuBody {
 }
 
 extension Menu: MenuElement where Body == MenuInMenu, Value == Never {
-    public init(title: String, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: title, image: image, content: content())
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, content: content())
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: image, content: content)
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    @_disfavoredOverload
+    public init<S>(title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(resource: image), content: content)
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    public init(title: LocalizedStringResource, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: UIImage(resource: image), content: content)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(systemName: systemImage)!, content: content)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, content: content)
+    }
+}
+
+// MARK: `Picker` embedding
+
+@available(*, unavailable, message: "Menus are not supported in pickers")
+extension Menu: PickerElement where Body == PickerBodyNotSupported<Value> {
+    public init<S>(title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+}
+
+// MARK: `PickerSection` embedding
+
+@available(*, unavailable, message: "Menus are not supported in picker sections")
+extension Menu: PickerSectionElement where Body == PickerSectionBodyNotSupported<Value> {
+    public init<S>(title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
     }
 }
 
@@ -35,26 +128,33 @@ public struct MenuInSection: SectionBody {
 }
 
 extension Menu: SectionElement where Body == MenuInSection, Value == Never {
-    public init(title: String, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: title, image: image, content: content())
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, content: content())
     }
-}
 
-// MARK: `Picker` embedding
-
-extension Menu: PickerElement where Body == PickerBodyNotSupported<Value> {
-    @available(*, unavailable, message: "Menus are not supported in picker sections. Use a `Picker` without `selection` parameter instead")
-    public init(title: String, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
-        fatalError()
+    public init(title: LocalizedStringResource, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: image, content: content)
     }
-}
 
-// MARK: `PickerSection` embedding
+    @available(iOS 17.0, tvOS 17.0, *)
+    @_disfavoredOverload
+    public init<S>(title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(resource: image), content: content)
+    }
 
-extension Menu: PickerSectionElement where Body == PickerSectionBodyNotSupported<Value> {
-    @available(*, unavailable, message: "Menus are not supported in picker sections")
-    public init(title: String, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
-        fatalError()
+    @available(iOS 17.0, tvOS 17.0, *)
+    public init(title: LocalizedStringResource, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: UIImage(resource: image), content: content)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(systemName: systemImage)!, content: content)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, content: content)
     }
 }
 
@@ -71,8 +171,33 @@ public struct MenuInTransportBar: TransportBarBody {
 }
 
 extension Menu: TransportBarElement where Body == MenuInTransportBar, Value == Never {
-    public init(title: String, image: UIImage, @MenuContentBuilder content: () -> MenuContent) {
-        self.body = .init(title: title, image: image, content: content())
+    @_disfavoredOverload
+    public init<S>(title: S, image: UIImage, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, content: content())
+    }
+
+    public init(title: LocalizedStringResource, image: UIImage, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: image, content: content)
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    @_disfavoredOverload
+    public init<S>(title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(resource: image), content: content)
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    public init(title: LocalizedStringResource, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: UIImage(resource: image), content: content)
+    }
+
+    @_disfavoredOverload
+    public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(title: String(title), image: UIImage(systemName: systemImage)!, content: content)
+    }
+
+    public init(title: LocalizedStringResource, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, content: content)
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")

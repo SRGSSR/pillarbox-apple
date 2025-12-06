@@ -13,8 +13,8 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
     let gravity: AVLayerVideoGravity
 
     let transportBarContent: TransportBarContent
-    let contextualActionsContent: SystemVideoViewActionsContent
-    let infoViewActionsContent: SystemVideoViewActionsContent
+    let contextualActionsContent: ContextualActionsContent
+    let infoViewActionsContent: InfoViewActionsContent
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
@@ -31,8 +31,8 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
         uiViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.toMenuElements())
-        uiViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
-        uiViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: uiViewController))
+        uiViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.toActions())
+        uiViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.toActions(dismissing: uiViewController))
 #endif
     }
 }
