@@ -10,11 +10,13 @@ import SwiftUI
 // swiftlint:disable:next type_name
 struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
     let player: Player
+    let videoOverlay: VideoOverlay
     let gravity: AVLayerVideoGravity
+
+    let transportBarContent: TransportBarContent
     let contextualActionsContent: SystemVideoViewActionsContent
     let infoViewActionsContent: SystemVideoViewActionsContent
-    let videoOverlay: VideoOverlay
-
+    
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: Void) {
         PictureInPicture.shared.system.dismantleHostViewController(uiViewController)
     }
@@ -29,6 +31,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.videoGravity = gravity
             playerViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
+            playerViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.toMenuElements())
             playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
             playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: playerViewController))
 #endif
