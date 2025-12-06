@@ -14,17 +14,12 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
     let infoViewActionsContent: SystemVideoViewActionsContent
     let videoOverlay: VideoOverlay
 
-    func makeCoordinator() -> SystemVideoViewCoordinator {
-        .init()
-    }
-
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         controller.allowsPictureInPicturePlayback = false
 #if os(iOS)
         controller.updatesNowPlayingInfoCenter = false
 #endif
-        context.coordinator.controller = controller
         return controller
     }
 
@@ -36,6 +31,5 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
         uiViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: uiViewController))
 #endif
-        context.coordinator.player = player
     }
 }
