@@ -15,6 +15,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
 
+    private var transportBarContent = TransportBarContent()
     private var contextualActionsContent: SystemVideoViewActionsContent = .empty
     private var infoViewActionsContent: SystemVideoViewActionsContent = .empty
 
@@ -24,19 +25,21 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
             if supportsPictureInPicture {
                 PictureInPictureSupportingSystemVideoView(
                     player: player,
+                    videoOverlay: videoOverlay,
                     gravity: gravity,
+                    transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent,
-                    videoOverlay: videoOverlay
+                    infoViewActionsContent: infoViewActionsContent
                 )
             }
             else {
                 BasicSystemVideoView(
                     player: player,
+                    videoOverlay: videoOverlay,
                     gravity: gravity,
+                    transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent,
-                    videoOverlay: videoOverlay
+                    infoViewActionsContent: infoViewActionsContent
                 )
             }
         }
@@ -92,6 +95,41 @@ public extension SystemVideoView {
     func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> SystemVideoView {
         var view = self
         view.supportsPictureInPicture = supportsPictureInPicture
+        return view
+    }
+}
+
+@available(iOS, unavailable)
+@available(tvOS 16, *)
+public extension SystemVideoView {
+    /// Items presented in the transport bar.
+    ///
+    /// - Parameter content: The content builder
+    ///
+    /// Use this modifier to configure menus and actions:
+    ///
+    /// ```swift
+    /// SystemVideoView(player: player)
+    ///    .transportBar {
+    ///        Action(title: "Favorite", systemImage: "heart") {
+    ///            // ...
+    ///        }
+    ///        SelectionMenu(title: "Quality", systemImage: "person.and.background.dotted", selection: $quality) {
+    ///            Option(title: "Low")
+    ///            Option(title: "Medium")
+    ///            Option(title: "High")
+    ///        }
+    ///    }
+    /// ```
+    ///
+    /// Complex menu hierarchies can be created by nesting ``Menu``, ``Picker``, and ``Section`` elements containing
+    /// ``Action``s and ``Option``s. Some combinations are not permitted, so follow compilation error messages when
+    /// constructing menus.
+    ///
+    /// > Important: One up to seven root items are supported.
+    func transportBar(@TransportBarContentBuilder content: () -> TransportBarContent) -> SystemVideoView {
+        var view = self
+        view.transportBarContent = content()
         return view
     }
 
