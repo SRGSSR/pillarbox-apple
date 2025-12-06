@@ -355,7 +355,7 @@ private struct SettingsMenu: View {
     @Binding var gravity: AVLayerVideoGravity
 
     var body: some View {
-        Menu {
+        SwiftUI.Menu {
             player.standardSettingsMenu()
             QualityMenu(player: player)
             if isOverCurrentContext {
@@ -392,8 +392,8 @@ private struct QualityMenu: View {
     private var qualitySetting: QualitySetting = .high
 
     var body: some View {
-        Menu {
-            Picker(selection: $qualitySetting) {
+        SwiftUI.Menu {
+            SwiftUI.Picker(selection: $qualitySetting) {
                 ForEach(QualitySetting.allCases, id: \.self) { quality in
                     Text(quality.name).tag(quality)
                 }

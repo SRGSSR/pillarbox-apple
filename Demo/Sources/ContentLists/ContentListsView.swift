@@ -116,7 +116,7 @@ struct ContentListsView: View {
 #if os(iOS)
     private func serverSettingsMenu() -> some View {
         Menu {
-            Picker(selection: $selectedServerSetting) {
+            SwiftUI.Picker(selection: $selectedServerSetting) {
                 ForEach(ServerSetting.allCases, id: \.self) { service in
                     Text(service.title).tag(service)
                 }
