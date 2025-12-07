@@ -1,4 +1,12 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
 import SwiftUI
+
+// swiftlint:disable fatal_error_message file_types_order unavailable_function
 
 public struct Section<Body, Value> {
     public let body: Body
@@ -120,3 +128,5 @@ extension Section: TransportBarElement where Body == TransportBarBodyNotSupporte
         fatalError()
     }
 }
+
+// swiftlint:enable fatal_error_message file_types_order unavailable_function

@@ -1,3 +1,11 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
+// swiftlint:disable fatal_error_message file_types_order unavailable_function
+
 import SwiftUI
 
 public struct Action<Body, Value> {
@@ -260,3 +268,5 @@ extension Action: TransportBarElement where Body == ActionInTransportBar, Value 
         fatalError()
     }
 }
+
+// swiftlint:enable fatal_error_message file_types_order unavailable_function
