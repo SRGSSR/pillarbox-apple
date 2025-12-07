@@ -1,4 +1,12 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
 import SwiftUI
+
+// swiftlint:disable fatal_error_message line_length file_types_order unavailable_function
 
 public struct Picker<Body, Value> {
     public let body: Body
@@ -208,3 +216,5 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
         fatalError()
     }
 }
+
+// swiftlint:enable fatal_error_message line_length file_types_order unavailable_function

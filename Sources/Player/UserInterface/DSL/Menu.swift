@@ -1,4 +1,12 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
 import SwiftUI
+
+// swiftlint:disable fatal_error_message file_types_order unavailable_function
 
 public struct Menu<Body, Value> {
     public let body: Body
@@ -15,7 +23,7 @@ extension Menu: ContextualActionsElement where Body == ContextualActionsBodyNotS
     public init<S>(title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
-    
+
     public init<S>(title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
@@ -205,3 +213,5 @@ extension Menu: TransportBarElement where Body == MenuInTransportBar, Value == N
         fatalError()
     }
 }
+
+// swiftlint:enable fatal_error_message file_types_order unavailable_function
