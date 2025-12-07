@@ -7,35 +7,35 @@
 import PillarboxPlayer
 
 private enum InfoViewActionsContentBuilderDSLChecks {
-    private static func TestAction() -> any InfoViewActionsElement {
+    private static func TestButton() -> any InfoViewActionsElement {
         Button("") {}
     }
 
     @InfoViewActionsContentBuilder
     static func oneExpression() -> InfoViewActionsContent {
-        TestAction()
+        TestButton()
     }
 
     @InfoViewActionsContentBuilder
     static func twoExpressions() -> InfoViewActionsContent {
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
     }
 
     @InfoViewActionsContentBuilder
     static func ifStatement() -> InfoViewActionsContent {
         if true {
-            TestAction()
+            TestButton()
         }
     }
 
     @InfoViewActionsContentBuilder
     static func ifElseStatements() -> InfoViewActionsContent {
         if true {
-            TestAction()
+            TestButton()
         }
         else {
-            TestAction()
+            TestButton()
         }
     }
 
@@ -43,21 +43,21 @@ private enum InfoViewActionsContentBuilderDSLChecks {
     static func switchStatement() -> InfoViewActionsContent {
         switch Int.random(in: 0...2) {
         case 0:
-            TestAction()
+            TestButton()
         case 1:
-            TestAction()
+            TestButton()
         default:
-            TestAction()
+            TestButton()
         }
     }
 
     @InfoViewActionsContentBuilder
     static func ifElseAvailableStatements() -> InfoViewActionsContent {
         if #available(iOS 16, tvOS 16, *) {
-            TestAction()
+            TestButton()
         }
         else {
-            TestAction()
+            TestButton()
         }
     }
 }

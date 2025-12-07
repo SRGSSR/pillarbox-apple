@@ -7,49 +7,49 @@
 import PillarboxPlayer
 
 private enum MenuContentBuilderDSLChecks {
-    private static func TestAction() -> any MenuElement {
+    private static func TestButton() -> any MenuElement {
         Button("") {}
     }
 
     @MenuContentBuilder
     static func oneExpression() -> MenuContent {
-        TestAction()
+        TestButton()
     }
 
     @MenuContentBuilder
     static func twoExpressions() -> MenuContent {
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
     }
 
     @MenuContentBuilder
     static func threeExpressions() -> MenuContent {
-        TestAction()
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
+        TestButton()
     }
 
     @MenuContentBuilder
     static func forLoop() -> MenuContent {
         for _ in 0...2 {
-            TestAction()
+            TestButton()
         }
     }
 
     @MenuContentBuilder
     static func ifStatement() -> MenuContent {
         if true {
-            TestAction()
+            TestButton()
         }
     }
 
     @MenuContentBuilder
     static func ifElseStatements() -> MenuContent {
         if true {
-            TestAction()
+            TestButton()
         }
         else {
-            TestAction()
+            TestButton()
         }
     }
 
@@ -57,21 +57,21 @@ private enum MenuContentBuilderDSLChecks {
     static func switchStatement() -> MenuContent {
         switch Int.random(in: 0...2) {
         case 0:
-            TestAction()
+            TestButton()
         case 1:
-            TestAction()
+            TestButton()
         default:
-            TestAction()
+            TestButton()
         }
     }
 
     @MenuContentBuilder
     static func ifElseAvailableStatements() -> MenuContent {
         if #available(iOS 16, tvOS 16, *) {
-            TestAction()
+            TestButton()
         }
         else {
-            TestAction()
+            TestButton()
         }
     }
 }
