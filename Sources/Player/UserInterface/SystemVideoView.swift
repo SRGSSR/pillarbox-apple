@@ -123,7 +123,7 @@ public extension SystemVideoView {
     /// ```
     ///
     /// Complex menu hierarchies can be created by nesting ``Menu``, ``Picker``, and ``Section`` elements containing
-    /// ``Action``s and ``Option``s. Some combinations are not permitted, so follow compilation error messages when
+    /// ``Button``s and ``Option``s. Some combinations are not permitted, so follow compilation error messages when
     /// constructing menus.
     ///
     /// > Important: One up to seven root items are supported.

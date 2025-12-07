@@ -8,7 +8,7 @@ import PillarboxPlayer
 
 private enum MenuContentBuilderDSLChecks {
     private static func TestAction() -> any MenuElement {
-        Action("") {}
+        Button("") {}
     }
 
     @MenuContentBuilder

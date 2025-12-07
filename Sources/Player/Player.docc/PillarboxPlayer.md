@@ -152,7 +152,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 ### Actions and Menus
 
-- ``Action``
+- ``Button``
 - ``Menu``
 - ``Option``
 - ``Picker``
@@ -161,11 +161,11 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 ### Domain-specific Language
 
-- ``ActionInContextualActions``
-- ``ActionInInfoViewActions``
-- ``ActionInMenu``
-- ``ActionInSection``
-- ``ActionInTransportBar``
+- ``ButtonInContextualActions``
+- ``ButtonInInfoViewActions``
+- ``ButtonInMenu``
+- ``ButtonInSection``
+- ``ButtonInTransportBar``
 - ``ContextualActionsBody``
 - ``ContextualActionsBodyNotSupported``
 - ``ContextualActionsContent``

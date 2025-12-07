@@ -745,7 +745,7 @@ private struct MainSystemView: View {
     @ContextualActionsContentBuilder
     func contextualActionsContent() -> ContextualActionsContent {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
-            Action(title: "Skip") {
+            Button("Skip") {
                 player.seek(to: skippableTimeRange.end)
             }
         }
@@ -754,7 +754,7 @@ private struct MainSystemView: View {
     @InfoViewActionsContentBuilder
     func infoViewActionsContent() -> InfoViewActionsContent {
         if player.canSkipToDefault() {
-            Action(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
+            Button(skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
                 player.skipToDefault()
             }
         }
