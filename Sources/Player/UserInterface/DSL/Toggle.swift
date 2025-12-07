@@ -72,7 +72,7 @@ public struct ToggleInMenu: MenuBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement {
-        UIAction(title: title, image: image, state: state(isOn: isOn)) { action in
+        UIAction.uniqueAction(title: title, image: image, state: state(isOn: isOn)) { action in
             isOn.wrappedValue.toggle()
             action.state = state(isOn: isOn)
             handler(isOn.wrappedValue)
@@ -204,7 +204,7 @@ public struct ToggleInSection: SectionBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement {
-        let action = UIAction(title: title, image: image) { action in
+        let action = UIAction.uniqueAction(title: title, image: image) { action in
             isOn.wrappedValue.toggle()
             action.state = isOn.wrappedValue ? .on : .off
             handler(isOn.wrappedValue)
@@ -298,7 +298,7 @@ public struct ToggleInTransportBar: TransportBarBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement {
-        let action = UIAction(title: title, image: image) { action in
+        let action = UIAction.uniqueAction(title: title, image: image) { action in
             isOn.wrappedValue.toggle()
             action.state = isOn.wrappedValue ? .on : .off
             handler(isOn.wrappedValue)
