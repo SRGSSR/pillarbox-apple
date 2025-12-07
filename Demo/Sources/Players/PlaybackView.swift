@@ -710,7 +710,7 @@ private struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View,
 #else
 
 private struct MainSystemView: View {
-    let player: Player
+    @ObservedObject var player: Player
     let supportsPictureInPicture: Bool
     @ObservedObject var progressTracker: ProgressTracker
     @State private var streamType: StreamType = .unknown
@@ -726,10 +726,20 @@ private struct MainSystemView: View {
     var body: some View {
         SystemVideoView(player: player)
             .supportsPictureInPicture(supportsPictureInPicture)
+            .transportBar(content: transportBarContent)
             .contextualActions(content: contextualActionsContent)
             .infoViewActions(content: infoViewActionsContent)
             .ignoresSafeArea()
             .onReceive(player: player, assign: \.streamType, to: $streamType)
+    }
+
+    @TransportBarContentBuilder
+    func transportBarContent() -> TransportBarContent {
+        Picker(title: "Playback Speed", systemImage: "speedometer", selection: $player.playbackSpeed) {
+            for speed in [0.5, 1, 1.25, 1.5, 2] as [Float] {
+                Option(title: "\(speed, specifier: "%g×")", value: speed)
+            }
+        }
     }
 
     @ContextualActionsContentBuilder

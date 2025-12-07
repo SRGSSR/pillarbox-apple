@@ -7,6 +7,9 @@
     "-%llds" : {
 
     },
+    "%g×" : {
+
+    },
     "%g× %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -355,6 +358,9 @@
 
     },
     "Playback HUD" : {
+
+    },
+    "Playback Speed" : {
 
     },
     "Player" : {
