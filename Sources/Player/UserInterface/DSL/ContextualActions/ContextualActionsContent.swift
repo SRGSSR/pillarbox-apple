@@ -6,6 +6,7 @@
 
 import UIKit
 
+/// A type that describing the content of contextual actions.
 public struct ContextualActionsContent {
     private let children: [any ContextualActionsElement]
 

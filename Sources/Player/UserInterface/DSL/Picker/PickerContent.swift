@@ -6,6 +6,7 @@
 
 import SwiftUI
 
+/// A type that describing the content of a picker.
 public struct PickerContent<Value> {
     private let children: [any PickerElement<Value>]
 

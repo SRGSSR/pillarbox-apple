@@ -6,9 +6,12 @@
 
 import UIKit
 
+/// A protocol adopted by elements displayable in a menu.
 public protocol MenuElement {
+    /// The body type.
     associatedtype Body: MenuBody
 
+    /// The body.
     var body: Body { get }
 }
 

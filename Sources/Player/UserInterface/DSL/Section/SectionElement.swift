@@ -6,9 +6,12 @@
 
 import UIKit
 
+/// A protocol adopted by elements displayable in a section.
 public protocol SectionElement {
+    /// The body type.
     associatedtype Body: SectionBody
 
+    /// The body.
     var body: Body { get }
 }
 

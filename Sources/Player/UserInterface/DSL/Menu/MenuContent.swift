@@ -6,6 +6,7 @@
 
 import UIKit
 
+/// A type that describing the content of a menu.
 public struct MenuContent {
     private let children: [any MenuElement]
 

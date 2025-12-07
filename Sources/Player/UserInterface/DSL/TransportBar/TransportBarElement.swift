@@ -6,9 +6,12 @@
 
 import UIKit
 
+/// A protocol adopted by elements displayable in a transport bar.
 public protocol TransportBarElement {
+    /// The body type.
     associatedtype Body: TransportBarBody
 
+    /// The body.
     var body: Body { get }
 }
 
