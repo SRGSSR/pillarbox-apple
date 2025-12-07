@@ -14,10 +14,7 @@ public extension Player {
         _playbackSpeed.effectiveRange
     }
 
-    /// A binding to read and write the current playback speed.
-    ///
-    /// This value might not be applied immediately or might not be applicable at all. You must check
-    /// `effectivePlaybackSpeed` to obtain the actually applied speed.
+    /// The current playback speed.
     var playbackSpeed: Float {
         get {
             _playbackSpeed.effectiveValue
