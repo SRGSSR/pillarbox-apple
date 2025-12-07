@@ -6,6 +6,7 @@
 
 import UIKit
 
+/// A type that describing the content of info view actions.
 public struct InfoViewActionsContent {
     private let children: [any InfoViewActionsElement]
 

@@ -6,9 +6,12 @@
 
 import UIKit
 
+/// A protocol adopted by elements displayable in info view actions.
 public protocol InfoViewActionsElement {
+    /// The body type.
     associatedtype Body: InfoViewActionsBody
 
+    /// The body.
     var body: Body { get }
 }
 

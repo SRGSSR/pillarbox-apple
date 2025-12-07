@@ -8,46 +8,58 @@ import SwiftUI
 
 // swiftlint:disable fatal_error_message file_types_order unavailable_function
 
+/// A toggle.
+///
+/// Toggles can be used to add settings that can be simply enabled or disabled to a transport bar, either at top level
+/// or in associated menus.
 public struct Toggle<Body, Value> {
+    /// The associated body.
     public let body: Body
 }
 
-// MARK: `ContextualActions` embedding
+// MARK: Contextual actions embedding
 
 @available(*, unavailable, message: "Toggles are not supported as contextual actions")
 extension Toggle: ContextualActionsElement where Body == ContextualActionsBodyNotSupported, Value == Never {
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
 
-// MARK: `InfoViewActions` embedding
+// MARK: Info view actions embedding
 
 @available(*, unavailable, message: "Toggles are not supported as info view actions")
 extension Toggle: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported, Value == Never {
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
 
-// MARK: `Menu` embedding
+// MARK: Menu embedding
 
+/// The body of a toggle displayed in a menu.
 public struct ToggleInMenu: MenuBody {
     let title: String
     let image: UIImage?
@@ -58,6 +70,7 @@ public struct ToggleInMenu: MenuBody {
         isOn.wrappedValue ? .on : .off
     }
 
+    // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement {
         UIAction(title: title, image: image, state: state(isOn: isOn)) { action in
             isOn.wrappedValue.toggle()
@@ -68,78 +81,128 @@ public struct ToggleInMenu: MenuBody {
 }
 
 extension Toggle: MenuElement where Body == ToggleInMenu, Value == Never {
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @_disfavoredOverload
     public init<S>(title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         self.body = .init(title: String(title), image: image, isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     public init(title: LocalizedStringResource, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
         self.init(title: String(localized: title), image: image, isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
     public init<S>(title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         self.init(title: String(title), image: UIImage(resource: image), isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @available(iOS 17.0, tvOS 17.0, *)
     public init(title: LocalizedStringResource, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
         self.init(title: String(localized: title), image: UIImage(resource: image), isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - systemImage: The name of the system symbol image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @_disfavoredOverload
     public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         self.init(title: String(title), image: UIImage(systemName: systemImage)!, isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - systemImage: The name of the system symbol image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     public init(title: LocalizedStringResource, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
         self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, isOn: isOn, handler: handler)
     }
 }
 
-// MARK: `Picker` embedding
+// MARK: Picker embedding
 
 @available(*, unavailable, message: "Toggles are not supported in pickers")
 extension Toggle: PickerElement where Body == PickerBodyNotSupported<Value> {
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
 
-// MARK: `PickerSection` embedding
+// MARK: Picker section embedding
 
 @available(*, unavailable, message: "Toggles are not supported in picker sections")
 extension Toggle: PickerSectionElement where Body == PickerSectionBodyNotSupported<Value> {
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
+    // swiftlint:disable:next missing_docs
     public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
 
-// MARK: `Section` embedding
+// MARK: Section embedding
 
+/// The body of a toggle displayed in a section.
 public struct ToggleInSection: SectionBody {
     let title: String
     let image: UIImage?
     let isOn: Binding<Bool>
     let handler: (Bool) -> Void
 
+    // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement {
         let action = UIAction(title: title, image: image) { action in
             isOn.wrappedValue.toggle()
@@ -152,44 +215,88 @@ public struct ToggleInSection: SectionBody {
 }
 
 extension Toggle: SectionElement where Body == ToggleInSection, Value == Never {
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @_disfavoredOverload
     public init<S>(title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         self.body = .init(title: String(title), image: image, isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     public init(title: LocalizedStringResource, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
         self.init(title: String(localized: title), image: image, isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
     public init<S>(title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         self.init(title: String(title), image: UIImage(resource: image), isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @available(iOS 17.0, tvOS 17.0, *)
     public init(title: LocalizedStringResource, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
         self.init(title: String(localized: title), image: UIImage(resource: image), isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - systemImage: The name of the system symbol image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @_disfavoredOverload
     public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         self.init(title: String(title), image: UIImage(systemName: systemImage)!, isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - systemImage: The name of the system symbol image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     public init(title: LocalizedStringResource, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
         self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, isOn: isOn, handler: handler)
     }
 }
 
-// MARK: `TransportBar` embedding
+// MARK: Transport bar embedding
 
+/// The body of a toggle displayed in a transport bar.
 public struct ToggleInTransportBar: TransportBarBody {
     let title: String
     let image: UIImage
     let isOn: Binding<Bool>
     let handler: (Bool) -> Void
 
+    // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement {
         let action = UIAction(title: title, image: image) { action in
             isOn.wrappedValue.toggle()
@@ -202,37 +309,80 @@ public struct ToggleInTransportBar: TransportBarBody {
 }
 
 extension Toggle: TransportBarElement where Body == ToggleInTransportBar, Value == Never {
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @_disfavoredOverload
     public init<S>(title: S, image: UIImage, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         self.body = .init(title: String(title), image: image, isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     public init(title: LocalizedStringResource, image: UIImage, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
         self.init(title: String(localized: title), image: image, isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
     public init<S>(title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         self.init(title: String(title), image: UIImage(resource: image), isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - image: The image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @available(iOS 17.0, tvOS 17.0, *)
     public init(title: LocalizedStringResource, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
         self.init(title: String(localized: title), image: UIImage(resource: image), isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - systemImage: The name of the system symbol image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     @_disfavoredOverload
     public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         self.init(title: String(title), image: UIImage(systemName: systemImage)!, isOn: isOn, handler: handler)
     }
 
+    /// Creates a toggle.
+    ///
+    /// - Parameters:
+    ///   - title: The toggle's title.
+    ///   - systemImage: The name of the system symbol image associated with the toggle.
+    ///   - isOn: A binding to a property that determines whether the toggle is on or off.
+    ///   - handler: The handler to invoke when the user interacts with the toggle.
     public init(title: LocalizedStringResource, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
         self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, isOn: isOn, handler: handler)
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")
     public init(title: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
+        // swiftlint:disable:previous missing_docs
         fatalError()
     }
 }

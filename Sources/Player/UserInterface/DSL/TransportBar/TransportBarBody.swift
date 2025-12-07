@@ -6,14 +6,17 @@
 
 import UIKit
 
+/// A body for elements not supporting wrapping in a transport bar.
 public struct TransportBarBodyNotSupported: TransportBarBody {
-    // swiftlint:disable:next unavailable_function
+    // swiftlint:disable:next missing_docs unavailable_function
     public func toMenuElement() -> UIMenuElement {
         // swiftlint:disable:next fatal_error_message
         fatalError()
     }
 }
 
+/// A protocol describing the body of elements wrapped in a transport bar.
 public protocol TransportBarBody {
+    /// Converts the body to a menu element.
     func toMenuElement() -> UIMenuElement
 }
