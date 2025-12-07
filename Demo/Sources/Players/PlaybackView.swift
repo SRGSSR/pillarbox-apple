@@ -735,9 +735,9 @@ private struct MainSystemView: View {
 
     @TransportBarContentBuilder
     func transportBarContent() -> TransportBarContent {
-        Picker(title: "Playback Speed", systemImage: "speedometer", selection: $player.playbackSpeed) {
+        Picker("Playback Speed", systemImage: "speedometer", selection: $player.playbackSpeed) {
             for speed in [0.5, 1, 1.25, 1.5, 2] as [Float] {
-                Option(title: "\(speed, specifier: "%g×")", value: speed)
+                Option("\(speed, specifier: "%g×")", value: speed)
             }
         }
     }

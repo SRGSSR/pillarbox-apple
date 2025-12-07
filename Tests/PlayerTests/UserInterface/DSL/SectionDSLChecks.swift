@@ -11,12 +11,12 @@ private enum SectionDSLChecks {
     @MenuContentBuilder
     static func menu() -> MenuContent {
         Section {}
-        Section(title: "") {}
+        Section("") {}
     }
 
     @PickerContentBuilder<Void>
     static func picker() -> PickerContent<Void> {
         Section {}
-        Section(title: "") {}
+        Section("") {}
     }
 }

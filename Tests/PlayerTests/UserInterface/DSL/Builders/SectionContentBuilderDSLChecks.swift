@@ -8,7 +8,7 @@ import PillarboxPlayer
 
 private enum SectionContentBuilderDSLChecks {
     private static func TestAction() -> any SectionElement {
-        Action(title: "") {}
+        Action("") {}
     }
 
     @SectionContentBuilder
