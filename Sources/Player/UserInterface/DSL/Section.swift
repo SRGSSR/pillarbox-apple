@@ -81,7 +81,7 @@ extension Section: MenuElement where Body == SectionInMenu, Value == Never {
 
     /// Creates a section.
     ///
-    /// - Parameter title: The section's title.
+    /// - Parameter content: The section's content.
     public init(@SectionContentBuilder content: () -> SectionContent) {
         self.init(title: String(""), content: content)
     }
@@ -122,7 +122,7 @@ extension Section: PickerElement where Body == SectionInPicker<Value> {
 
     /// Creates a section.
     ///
-    /// - Parameter title: The section's title.
+    /// - Parameter content: The section's content.
     public init(@PickerSectionContentBuilder<Value> content: () -> PickerSectionContent<Value>) {
         self.init(title: String(""), content: content)
     }
