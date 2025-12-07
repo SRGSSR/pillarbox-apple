@@ -7,80 +7,80 @@
 import PillarboxPlayer
 
 private enum ContextualActionsContentBuilderDSLChecks {
-    private static func TestAction() -> any ContextualActionsElement {
+    private static func TestButton() -> any ContextualActionsElement {
         Button("") {}
     }
 
     @ContextualActionsContentBuilder
     static func oneExpression() -> ContextualActionsContent {
-        TestAction()
+        TestButton()
     }
 
     @ContextualActionsContentBuilder
     static func twoExpressions() -> ContextualActionsContent {
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
     }
 
     @ContextualActionsContentBuilder
     static func threeExpressions() -> ContextualActionsContent {
-        TestAction()
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
+        TestButton()
     }
 
     @ContextualActionsContentBuilder
     static func fourExpressions() -> ContextualActionsContent {
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
     }
 
     @ContextualActionsContentBuilder
     static func fiveExpressions() -> ContextualActionsContent {
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
     }
 
     @ContextualActionsContentBuilder
     static func sixExpressions() -> ContextualActionsContent {
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
     }
 
     @ContextualActionsContentBuilder
     static func sevenExpressions() -> ContextualActionsContent {
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
+        TestButton()
     }
 
     @ContextualActionsContentBuilder
     static func ifStatement() -> ContextualActionsContent {
         if true {
-            TestAction()
+            TestButton()
         }
     }
 
     @ContextualActionsContentBuilder
     static func ifElseStatements() -> ContextualActionsContent {
         if true {
-            TestAction()
+            TestButton()
         }
         else {
-            TestAction()
+            TestButton()
         }
     }
 
@@ -88,21 +88,21 @@ private enum ContextualActionsContentBuilderDSLChecks {
     static func switchStatement() -> ContextualActionsContent {
         switch Int.random(in: 0...2) {
         case 0:
-            TestAction()
+            TestButton()
         case 1:
-            TestAction()
+            TestButton()
         default:
-            TestAction()
+            TestButton()
         }
     }
 
     @ContextualActionsContentBuilder
     static func ifElseAvailableStatements() -> ContextualActionsContent {
         if #available(iOS 16, tvOS 16, *) {
-            TestAction()
+            TestButton()
         }
         else {
-            TestAction()
+            TestButton()
         }
     }
 }

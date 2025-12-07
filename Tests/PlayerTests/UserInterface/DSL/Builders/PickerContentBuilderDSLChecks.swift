@@ -6,78 +6,72 @@
 
 import PillarboxPlayer
 
-private enum TestEnum: String, CaseIterable {
-    case first
-    case second
-    case third
-}
-
 private enum PickerContentBuilderDSLChecks {
-    private static func TestOption(value: TestEnum) -> any PickerElement<TestEnum> {
-        Option(value.rawValue, value: value)
+    private static func TestOption() -> any PickerElement<Bool> {
+        Option("", value: true)
     }
 
-    @PickerContentBuilder<TestEnum>
-    static func oneExpression() -> PickerContent<TestEnum> {
-        TestOption(value: .first)
+    @PickerContentBuilder<Bool>
+    static func oneExpression() -> PickerContent<Bool> {
+        TestOption()
     }
 
-    @PickerContentBuilder<TestEnum>
-    static func twoExpressions() -> PickerContent<TestEnum> {
-        TestOption(value: .first)
-        TestOption(value: .second)
+    @PickerContentBuilder<Bool>
+    static func twoExpressions() -> PickerContent<Bool> {
+        TestOption()
+        TestOption()
     }
 
-    @PickerContentBuilder<TestEnum>
-    static func threeExpressions() -> PickerContent<TestEnum> {
-        TestOption(value: .first)
-        TestOption(value: .second)
-        TestOption(value: .third)
+    @PickerContentBuilder<Bool>
+    static func threeExpressions() -> PickerContent<Bool> {
+        TestOption()
+        TestOption()
+        TestOption()
     }
 
-    @PickerContentBuilder<TestEnum>
-    static func forLoop() -> PickerContent<TestEnum> {
-        for value in TestEnum.allCases {
-            TestOption(value: value)
+    @PickerContentBuilder<Bool>
+    static func forLoop() -> PickerContent<Bool> {
+        for _ in 0...2 {
+            TestOption()
         }
     }
 
-    @PickerContentBuilder<TestEnum>
-    static func ifStatement() -> PickerContent<TestEnum> {
+    @PickerContentBuilder<Bool>
+    static func ifStatement() -> PickerContent<Bool> {
         if true {
-            TestOption(value: .first)
+            TestOption()
         }
     }
 
-    @PickerContentBuilder<TestEnum>
-    static func ifElseStatements() -> PickerContent<TestEnum> {
+    @PickerContentBuilder<Bool>
+    static func ifElseStatements() -> PickerContent<Bool> {
         if true {
-            TestOption(value: .first)
+            TestOption()
         }
         else {
-            TestOption(value: .second)
+            TestOption()
         }
     }
 
-    @PickerContentBuilder<TestEnum>
-    static func switchStatement() -> PickerContent<TestEnum> {
+    @PickerContentBuilder<Bool>
+    static func switchStatement() -> PickerContent<Bool> {
         switch Int.random(in: 0...2) {
         case 0:
-            TestOption(value: .first)
+            TestOption()
         case 1:
-            TestOption(value: .second)
+            TestOption()
         default:
-            TestOption(value: .third)
+            TestOption()
         }
     }
 
-    @PickerContentBuilder<TestEnum>
-    static func ifElseAvailableStatements() -> PickerContent<TestEnum> {
+    @PickerContentBuilder<Bool>
+    static func ifElseAvailableStatements() -> PickerContent<Bool> {
         if #available(iOS 16, tvOS 16, *) {
-            TestOption(value: .first)
+            TestOption()
         }
         else {
-            TestOption(value: .second)
+            TestOption()
         }
     }
 }

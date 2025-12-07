@@ -7,49 +7,49 @@
 import PillarboxPlayer
 
 private enum SectionContentBuilderDSLChecks {
-    private static func TestAction() -> any SectionElement {
+    private static func TestButton() -> any SectionElement {
         Button("") {}
     }
 
     @SectionContentBuilder
     static func oneExpression() -> SectionContent {
-        TestAction()
+        TestButton()
     }
 
     @SectionContentBuilder
     static func twoExpressions() -> SectionContent {
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
     }
 
     @SectionContentBuilder
     static func threeExpressions() -> SectionContent {
-        TestAction()
-        TestAction()
-        TestAction()
+        TestButton()
+        TestButton()
+        TestButton()
     }
 
     @SectionContentBuilder
     static func forLoop() -> SectionContent {
         for _ in 0...2 {
-            TestAction()
+            TestButton()
         }
     }
 
     @SectionContentBuilder
     static func ifStatement() -> SectionContent {
         if true {
-            TestAction()
+            TestButton()
         }
     }
 
     @SectionContentBuilder
     static func ifElseStatements() -> SectionContent {
         if true {
-            TestAction()
+            TestButton()
         }
         else {
-            TestAction()
+            TestButton()
         }
     }
 
@@ -57,21 +57,21 @@ private enum SectionContentBuilderDSLChecks {
     static func switchStatement() -> SectionContent {
         switch Int.random(in: 0...2) {
         case 0:
-            TestAction()
+            TestButton()
         case 1:
-            TestAction()
+            TestButton()
         default:
-            TestAction()
+            TestButton()
         }
     }
 
     @SectionContentBuilder
     static func ifElseAvailableStatements() -> SectionContent {
         if #available(iOS 16, tvOS 16, *) {
-            TestAction()
+            TestButton()
         }
         else {
-            TestAction()
+            TestButton()
         }
     }
 }
