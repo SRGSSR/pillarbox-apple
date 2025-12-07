@@ -22,17 +22,17 @@ public struct Picker<Body, Value> {
 @available(*, unavailable, message: "Pickers are not supported as contextual actions")
 extension Picker: ContextualActionsElement where Body == ContextualActionsBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 }
@@ -42,17 +42,17 @@ extension Picker: ContextualActionsElement where Body == ContextualActionsBodyNo
 @available(*, unavailable, message: "Pickers are not supported as info view actions")
 extension Picker: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 }
@@ -81,7 +81,7 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     @_disfavoredOverload
-    public init<S>(title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         self.body = .init(title: String(title), image: image, selection: selection, content: content())
     }
 
@@ -92,8 +92,8 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
     ///   - image: The image associated with the picker.
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
-    public init(title: LocalizedStringResource, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(title: String(localized: title), image: image, selection: selection, content: content)
+    public init(_ title: LocalizedStringResource, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
+        self.init(String(localized: title), image: image, selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -105,8 +105,8 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
     ///   - content: The picker's content.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
-    public init<S>(title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(resource: image), selection: selection, content: content)
+    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+        self.init(String(title), image: UIImage(resource: image), selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -117,8 +117,8 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     @available(iOS 17.0, tvOS 17.0, *)
-    public init(title: LocalizedStringResource, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(title: String(localized: title), image: image, selection: selection, content: content)
+    public init(_ title: LocalizedStringResource, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
+        self.init(String(localized: title), image: image, selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -129,8 +129,8 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     @_disfavoredOverload
-    public init<S>(title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+        self.init(String(title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -140,8 +140,8 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
     ///   - systemImage: The name of the system symbol image associated with the picker.
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
-    public init(title: LocalizedStringResource, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+    public init(_ title: LocalizedStringResource, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
+        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
     }
 }
 
@@ -150,17 +150,17 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
 @available(*, unavailable, message: "Nested pickers are not supported")
 extension Picker: PickerElement where Body == PickerBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 }
@@ -170,17 +170,17 @@ extension Picker: PickerElement where Body == PickerBodyNotSupported<Value> {
 @available(*, unavailable, message: "Pickers cannot be nested in picker sections")
 extension Picker: PickerSectionElement where Body == PickerSectionBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 }
@@ -209,7 +209,7 @@ extension Picker: SectionElement where Body == PickerInSection<Value> {
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     @_disfavoredOverload
-    public init<S>(title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         self.body = .init(title: String(title), image: image, selection: selection, content: content())
     }
 
@@ -220,8 +220,8 @@ extension Picker: SectionElement where Body == PickerInSection<Value> {
     ///   - image: The image associated with the picker.
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
-    public init(title: LocalizedStringResource, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(title: String(localized: title), image: image, selection: selection, content: content)
+    public init(_ title: LocalizedStringResource, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
+        self.init(String(localized: title), image: image, selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -233,8 +233,8 @@ extension Picker: SectionElement where Body == PickerInSection<Value> {
     ///   - content: The picker's content.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
-    public init<S>(title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(resource: image), selection: selection, content: content)
+    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+        self.init(String(title), image: UIImage(resource: image), selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -245,8 +245,8 @@ extension Picker: SectionElement where Body == PickerInSection<Value> {
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     @available(iOS 17.0, tvOS 17.0, *)
-    public init(title: LocalizedStringResource, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(title: String(localized: title), image: image, selection: selection, content: content)
+    public init(_ title: LocalizedStringResource, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
+        self.init(String(localized: title), image: image, selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -257,8 +257,8 @@ extension Picker: SectionElement where Body == PickerInSection<Value> {
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     @_disfavoredOverload
-    public init<S>(title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+        self.init(String(title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -268,8 +268,8 @@ extension Picker: SectionElement where Body == PickerInSection<Value> {
     ///   - systemImage: The name of the system symbol image associated with the picker.
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
-    public init(title: LocalizedStringResource, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+    public init(_ title: LocalizedStringResource, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
+        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
     }
 }
 
@@ -297,7 +297,7 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     @_disfavoredOverload
-    public init<S>(title: S, image: UIImage, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         self.body = .init(title: String(title), image: image, selection: selection, content: content())
     }
 
@@ -308,8 +308,8 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - image: The image associated with the picker.
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
-    public init(title: LocalizedStringResource, image: UIImage, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(title: String(localized: title), image: image, selection: selection, content: content)
+    public init(_ title: LocalizedStringResource, image: UIImage, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
+        self.init(String(localized: title), image: image, selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -321,8 +321,8 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - content: The picker's content.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
-    public init<S>(title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(resource: image), selection: selection, content: content)
+    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+        self.init(String(title), image: UIImage(resource: image), selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -333,8 +333,8 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     @available(iOS 17.0, tvOS 17.0, *)
-    public init(title: LocalizedStringResource, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(title: String(localized: title), image: image, selection: selection, content: content)
+    public init(_ title: LocalizedStringResource, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
+        self.init(String(localized: title), image: image, selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -345,8 +345,8 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     @_disfavoredOverload
-    public init<S>(title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+        self.init(String(title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -356,12 +356,12 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - systemImage: The name of the system symbol image associated with the picker.
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
-    public init(title: LocalizedStringResource, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+    public init(_ title: LocalizedStringResource, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
+        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")
-    public init<S>(title: S, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         // swiftlint:disable:previous missing_docs
         fatalError()
     }

@@ -14,7 +14,7 @@ private enum TestEnum: String, CaseIterable {
 
 private enum PickerContentBuilderDSLChecks {
     private static func TestOption(value: TestEnum) -> any PickerElement<TestEnum> {
-        Option(title: value.rawValue, value: value)
+        Option(value.rawValue, value: value)
     }
 
     @PickerContentBuilder<TestEnum>

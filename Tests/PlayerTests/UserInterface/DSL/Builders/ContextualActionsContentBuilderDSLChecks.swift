@@ -8,7 +8,7 @@ import PillarboxPlayer
 
 private enum ContextualActionsContentBuilderDSLChecks {
     private static func TestAction() -> any ContextualActionsElement {
-        Action(title: "") {}
+        Action("") {}
     }
 
     @ContextualActionsContentBuilder

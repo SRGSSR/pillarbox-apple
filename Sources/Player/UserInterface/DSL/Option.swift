@@ -21,17 +21,17 @@ public struct Option<Body, Value> {
 @available(*, unavailable, message: "Options are not supported as contextual actions")
 extension Option: ContextualActionsElement where Body == ContextualActionsBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -41,17 +41,17 @@ extension Option: ContextualActionsElement where Body == ContextualActionsBodyNo
 @available(*, unavailable, message: "Options are not supported as info view actions")
 extension Option: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -61,17 +61,17 @@ extension Option: InfoViewActionsElement where Body == InfoViewActionsBodyNotSup
 @available(*, unavailable, message: "Options cannot be used in menus. Use a `Picker` instead")
 extension Option: MenuElement where Body == MenuBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -108,7 +108,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
     @_disfavoredOverload
-    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.body = .init(title: String(title), image: image, value: value, handler: handler)
     }
 
@@ -119,8 +119,8 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
-    public init(title: LocalizedStringResource, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.init(title: String(localized: title), image: image, value: value, handler: handler)
+    public init(_ title: LocalizedStringResource, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(String(localized: title), image: image, value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -132,8 +132,8 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - handler: The handler to invoke when the user selects the action.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
-    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(resource: image), value: value, handler: handler)
+    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(String(title), image: UIImage(resource: image), value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -144,8 +144,8 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
     @available(iOS 17.0, tvOS 17.0, *)
-    public init(title: LocalizedStringResource, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.init(title: String(localized: title), image: UIImage(resource: image), value: value, handler: handler)
+    public init(_ title: LocalizedStringResource, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(String(localized: title), image: UIImage(resource: image), value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -156,8 +156,8 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
     @_disfavoredOverload
-    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(String(title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -167,8 +167,8 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - systemImage: The name of the system symbol image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
-    public init(title: LocalizedStringResource, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+    public init(_ title: LocalizedStringResource, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
     }
 }
 
@@ -204,7 +204,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
     @_disfavoredOverload
-    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.body = .init(title: String(title), image: image, value: value, handler: handler)
     }
 
@@ -215,8 +215,8 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
-    public init(title: LocalizedStringResource, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.init(title: String(localized: title), image: image, value: value, handler: handler)
+    public init(_ title: LocalizedStringResource, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(String(localized: title), image: image, value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -228,8 +228,8 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - handler: The handler to invoke when the user selects the action.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
-    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(resource: image), value: value, handler: handler)
+    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(String(title), image: UIImage(resource: image), value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -240,8 +240,8 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
     @available(iOS 17.0, tvOS 17.0, *)
-    public init(title: LocalizedStringResource, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.init(title: String(localized: title), image: UIImage(resource: image), value: value, handler: handler)
+    public init(_ title: LocalizedStringResource, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(String(localized: title), image: UIImage(resource: image), value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -252,8 +252,8 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
     @_disfavoredOverload
-    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
-        self.init(title: String(title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(String(title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -263,8 +263,8 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - systemImage: The name of the system symbol image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
-    public init(title: LocalizedStringResource, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.init(title: String(localized: title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+    public init(_ title: LocalizedStringResource, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
     }
 }
 
@@ -273,17 +273,17 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
 @available(*, unavailable, message: "Options cannot be used in sections not belonging to a `Picker`")
 extension Option: SectionElement where Body == SectionBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -293,17 +293,17 @@ extension Option: SectionElement where Body == SectionBodyNotSupported {
 @available(*, unavailable, message: "Options cannot be displayed at the transport bar root level")
 extension Option: TransportBarElement where Body == TransportBarBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }

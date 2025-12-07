@@ -8,7 +8,7 @@ import PillarboxPlayer
 
 private enum InfoViewActionsContentBuilderDSLChecks {
     private static func TestAction() -> any InfoViewActionsElement {
-        Action(title: "") {}
+        Action("") {}
     }
 
     @InfoViewActionsContentBuilder

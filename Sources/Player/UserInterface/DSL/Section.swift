@@ -21,7 +21,7 @@ public struct Section<Body, Value> {
 @available(*, unavailable, message: "Sections are not supported as contextual actions")
 extension Section: ContextualActionsElement where Body == ContextualActionsBodyNotSupported, Value == Never {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
+    public init<S>(_ title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
         fatalError()
     }
 
@@ -36,7 +36,7 @@ extension Section: ContextualActionsElement where Body == ContextualActionsBodyN
 @available(*, unavailable, message: "Sections are not supported as info view actions")
 extension Section: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported, Value == Never {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
+    public init<S>(_ title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
         fatalError()
     }
 
@@ -66,7 +66,7 @@ extension Section: MenuElement where Body == SectionInMenu, Value == Never {
     ///   - title: The section's title.
     ///   - content: The section's content.
     @_disfavoredOverload
-    public init<S>(title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
+    public init<S>(_ title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
         self.body = .init(title: String(title), content: content())
     }
 
@@ -75,15 +75,15 @@ extension Section: MenuElement where Body == SectionInMenu, Value == Never {
     /// - Parameters:
     ///   - title: The section's title.
     ///   - content: The section's content.
-    public init(title: LocalizedStringResource, @SectionContentBuilder content: () -> SectionContent) {
-        self.init(title: String(localized: title), content: content)
+    public init(_ title: LocalizedStringResource, @SectionContentBuilder content: () -> SectionContent) {
+        self.init(String(localized: title), content: content)
     }
 
     /// Creates a section.
     ///
     /// - Parameter content: The section's content.
     public init(@SectionContentBuilder content: () -> SectionContent) {
-        self.init(title: String(""), content: content)
+        self.init(String(""), content: content)
     }
 }
 
@@ -107,7 +107,7 @@ extension Section: PickerElement where Body == SectionInPicker<Value> {
     ///   - title: The section's title.
     ///   - content: The section's content.
     @_disfavoredOverload
-    public init<S>(title: S, @PickerSectionContentBuilder<Value> content: () -> PickerSectionContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, @PickerSectionContentBuilder<Value> content: () -> PickerSectionContent<Value>) where S: StringProtocol {
         self.body = .init(title: String(title), content: content())
     }
 
@@ -116,15 +116,15 @@ extension Section: PickerElement where Body == SectionInPicker<Value> {
     /// - Parameters:
     ///   - title: The section's title.
     ///   - content: The section's content.
-    public init(title: LocalizedStringResource, @PickerSectionContentBuilder<Value> content: () -> PickerSectionContent<Value>) {
-        self.init(title: String(localized: title), content: content)
+    public init(_ title: LocalizedStringResource, @PickerSectionContentBuilder<Value> content: () -> PickerSectionContent<Value>) {
+        self.init(String(localized: title), content: content)
     }
 
     /// Creates a section.
     ///
     /// - Parameter content: The section's content.
     public init(@PickerSectionContentBuilder<Value> content: () -> PickerSectionContent<Value>) {
-        self.init(title: String(""), content: content)
+        self.init(String(""), content: content)
     }
 }
 
@@ -133,7 +133,7 @@ extension Section: PickerElement where Body == SectionInPicker<Value> {
 @available(*, unavailable, message: "Nested sections are not supported")
 extension Section: PickerSectionElement where Body == PickerSectionBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
+    public init<S>(_ title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
         fatalError()
     }
 
@@ -148,7 +148,7 @@ extension Section: PickerSectionElement where Body == PickerSectionBodyNotSuppor
 @available(*, unavailable, message: "Nested sections are not supported")
 extension Section: SectionElement where Body == SectionBodyNotSupported, Value == Never {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
+    public init<S>(_ title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
         fatalError()
     }
 
@@ -163,7 +163,7 @@ extension Section: SectionElement where Body == SectionBodyNotSupported, Value =
 @available(*, unavailable, message: "Sections cannot be displayed at the transport bar root level")
 extension Section: TransportBarElement where Body == TransportBarBodyNotSupported, Value == Never {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
+    public init<S>(_ title: S, @SectionContentBuilder content: () -> SectionContent) where S: StringProtocol {
         fatalError()
     }
 
