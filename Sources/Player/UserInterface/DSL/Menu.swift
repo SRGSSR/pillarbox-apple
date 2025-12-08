@@ -56,6 +56,26 @@ extension Menu: InfoViewActionsElement where Body == InfoViewActionsBodyNotSuppo
     }
 }
 
+// MARK: Inline picker embedding
+
+@available(*, unavailable, message: "Menus are not supported in inline pickers")
+extension Menu: InlinePickerElement where Body == InlinePickerBodyNotSupported<Value> {
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        fatalError()
+    }
+}
+
 // MARK: Menu embedding
 
 /// The body of a menu displayed in another menu.

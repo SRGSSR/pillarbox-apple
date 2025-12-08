@@ -153,6 +153,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 ### Actions and Menus
 
 - ``Button``
+- ``InlinePicker``
 - ``Menu``
 - ``Option``
 - ``Picker``

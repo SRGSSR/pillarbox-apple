@@ -182,6 +182,26 @@ extension Button: InfoViewActionsElement where Body == ButtonInInfoViewActions, 
     }
 }
 
+// MARK: Inline picker embedding
+
+@available(*, unavailable, message: "Buttons are not supported in inline pickers")
+extension Button: InlinePickerElement where Body == InlinePickerBodyNotSupported<Value> {
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
+        fatalError()
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
+        fatalError()
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
+        fatalError()
+    }
+}
+
 // MARK: Menu embedding
 
 /// The body of a button displayed in a menu.
