@@ -339,7 +339,7 @@ extension Menu: TransportBarElement where Body == MenuInTransportBar, Value == N
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")
-    public init(title: String, @MenuContentBuilder content: () -> MenuContent) {
+    public init(_ title: String, @MenuContentBuilder content: () -> MenuContent) {
         // swiftlint:disable:previous missing_docs
         fatalError()
     }
