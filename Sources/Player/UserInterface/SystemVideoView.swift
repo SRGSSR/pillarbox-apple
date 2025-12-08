@@ -111,13 +111,13 @@ public extension SystemVideoView {
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .transportBar {
-    ///        Action(title: "Favorite", systemImage: "heart") {
+    ///        Button("Favorite", systemImage: "heart") {
     ///            // ...
     ///        }
-    ///        SelectionMenu(title: "Quality", systemImage: "person.and.background.dotted", selection: $quality) {
-    ///            Option(title: "Low")
-    ///            Option(title: "Medium")
-    ///            Option(title: "High")
+    ///        Picker"Quality", systemImage: "person.and.background.dotted", selection: $quality) {
+    ///            Option("Low", value: .low)
+    ///            Option("Medium", value: .medium)
+    ///            Option("High", value: .high)
     ///        }
     ///    }
     /// ```
@@ -142,7 +142,7 @@ public extension SystemVideoView {
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .contextualActions {
-    ///        Action(title: "From Beginning", systemImage: "gobackward") {
+    ///        Button("From Beginning", systemImage: "gobackward") {
     ///            player.skipToDefault()
     ///        }
     ///    }
@@ -166,7 +166,7 @@ public extension SystemVideoView {
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .infoViewActions {
-    ///        Action(title: "From Beginning", systemImage: "gobackward") {
+    ///        Button("From Beginning", systemImage: "gobackward") {
     ///            player.skipToDefault()
     ///        }
     ///    }
