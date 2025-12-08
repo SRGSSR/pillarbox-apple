@@ -55,7 +55,7 @@ public struct SectionInMenu: MenuBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement {
-        UIMenu.uniqueMenu(title: title, options: .displayInline, children: content.toMenuElements())
+        UIMenu.identifiableMenu(title: title, options: .displayInline, children: content.toMenuElements())
     }
 }
 
@@ -96,7 +96,7 @@ public struct SectionInPicker<Value>: PickerBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement {
-        UIMenu.uniqueMenu(title: title, options: .displayInline, children: content.toMenuElements(updating: selection))
+        UIMenu.identifiableMenu(title: title, options: .displayInline, children: content.toMenuElements(updating: selection))
     }
 }
 
