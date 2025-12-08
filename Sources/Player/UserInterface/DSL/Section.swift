@@ -10,7 +10,7 @@ import SwiftUI
 
 /// A section.
 ///
-/// Sections can be used to group related items displayed by a ``Menu`` or a ``Picker``.
+/// Sections can be used to group related items displayed by a ``Menu``, ``Picker`` or ``InlinePicker``.
 public struct Section<Body, Value> {
     /// The associated body.
     public let body: Body
@@ -42,6 +42,21 @@ extension Section: InfoViewActionsElement where Body == InfoViewActionsBodyNotSu
 
     // swiftlint:disable:next missing_docs
     public init(@SectionContentBuilder content: () -> SectionContent) {
+        fatalError()
+    }
+}
+
+// MARK: Inline picker embedding
+
+@available(*, unavailable, message: "Sections are not supported in inline pickers")
+extension Section: InlinePickerElement where Body == InlinePickerBodyNotSupported<Value> {
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, @PickerSectionContentBuilder<Value> content: () -> PickerSectionContent<Value>) where S: StringProtocol {
+        fatalError()
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init(@PickerSectionContentBuilder<Value> content: () -> PickerSectionContent<Value>) {
         fatalError()
     }
 }

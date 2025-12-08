@@ -57,6 +57,26 @@ extension Toggle: InfoViewActionsElement where Body == InfoViewActionsBodyNotSup
     }
 }
 
+// MARK: Inline picker embedding
+
+@available(*, unavailable, message: "Toggles are not supported in inline pickers")
+extension Toggle: InlinePickerElement where Body == InlinePickerBodyNotSupported<Value> {
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+        fatalError()
+    }
+}
+
 // MARK: Menu embedding
 
 /// The body of a toggle displayed in a menu.

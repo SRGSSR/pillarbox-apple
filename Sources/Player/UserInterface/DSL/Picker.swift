@@ -57,6 +57,26 @@ extension Picker: InfoViewActionsElement where Body == InfoViewActionsBodyNotSup
     }
 }
 
+// MARK: Inline picker embedding
+
+@available(*, unavailable, message: "Pickers cannot be nested in inline pickers picker")
+extension Picker: InlinePickerElement where Body == InlinePickerBodyNotSupported<Value> {
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+        fatalError()
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+        fatalError()
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+        fatalError()
+    }
+}
+
 // MARK: Menu embedding
 
 /// The body of a picker displayed in a menu.

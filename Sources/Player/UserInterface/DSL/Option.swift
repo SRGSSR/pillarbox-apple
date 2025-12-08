@@ -10,7 +10,7 @@ import SwiftUI
 
 /// An option.
 ///
-/// Options provide choices offered by a ``Picker``.
+/// Options provide choices offered by a ``Picker`` or ``InlinePicker``.
 public struct Option<Body, Value> {
     /// The associated body.
     public let body: Body
@@ -56,9 +56,105 @@ extension Option: InfoViewActionsElement where Body == InfoViewActionsBodyNotSup
     }
 }
 
+// MARK: Inline picker embedding
+
+/// The body of an option displayed in a picker.
+public struct OptionInInlinePicker<Value>: InlinePickerBody where Value: Equatable {
+    let title: String
+    let image: UIImage?
+    let value: Value
+    let handler: (Value) -> Void
+
+    private func state(selection: Binding<Value>) -> UIMenuElement.State {
+        selection.wrappedValue == value ? .on : .off
+    }
+
+    // swiftlint:disable:next missing_docs
+    public func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement {
+        UIAction(title: title, image: image, state: state(selection: selection)) { action in
+            selection.wrappedValue = value
+            action.state = state(selection: selection)
+            handler(value)
+        }
+    }
+}
+
+extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> {
+    /// Creates an option.
+    ///
+    /// - Parameters:
+    ///   - title: The option's title.
+    ///   - image: The image associated with the option.
+    ///   - value: The value associated with the option.
+    ///   - handler: The handler to invoke when the user selects the action.
+    @_disfavoredOverload
+    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.body = .init(title: String(title), image: image, value: value, handler: handler)
+    }
+
+    /// Creates an option.
+    ///
+    /// - Parameters:
+    ///   - title: The option's title.
+    ///   - image: The image associated with the option.
+    ///   - value: The value associated with the option.
+    ///   - handler: The handler to invoke when the user selects the action.
+    public init(_ title: LocalizedStringResource, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(String(localized: title), image: image, value: value, handler: handler)
+    }
+
+    /// Creates an option.
+    ///
+    /// - Parameters:
+    ///   - title: The option's title.
+    ///   - image: The image associated with the option.
+    ///   - value: The value associated with the option.
+    ///   - handler: The handler to invoke when the user selects the action.
+    @available(iOS 17.0, tvOS 17.0, *)
+    @_disfavoredOverload
+    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(String(title), image: UIImage(resource: image), value: value, handler: handler)
+    }
+
+    /// Creates an option.
+    ///
+    /// - Parameters:
+    ///   - title: The option's title.
+    ///   - image: The image associated with the option.
+    ///   - value: The value associated with the option.
+    ///   - handler: The handler to invoke when the user selects the action.
+    @available(iOS 17.0, tvOS 17.0, *)
+    public init(_ title: LocalizedStringResource, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(String(localized: title), image: UIImage(resource: image), value: value, handler: handler)
+    }
+
+    /// Creates an option.
+    ///
+    /// - Parameters:
+    ///   - title: The option's title.
+    ///   - systemImage: The name of the system symbol image associated with the option.
+    ///   - value: The value associated with the option.
+    ///   - handler: The handler to invoke when the user selects the action.
+    @_disfavoredOverload
+    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+        self.init(String(title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+    }
+
+    /// Creates an option.
+    ///
+    /// - Parameters:
+    ///   - title: The option's title.
+    ///   - systemImage: The name of the system symbol image associated with the option.
+    ///   - value: The value associated with the option.
+    ///   - handler: The handler to invoke when the user selects the action.
+    public init(_ title: LocalizedStringResource, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
+        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+    }
+}
+
 // MARK: Menu embedding
 
-@available(*, unavailable, message: "Options cannot be used in menus. Use a `Picker` instead")
+@available(*, unavailable, message: "Options cannot be used in menus. Use a `Picker` or `InlinePicker` instead")
 extension Option: MenuElement where Body == MenuBodyNotSupported {
     // swiftlint:disable:next missing_docs
     public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
