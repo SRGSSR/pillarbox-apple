@@ -715,6 +715,9 @@ private struct MainSystemView: View {
     @ObservedObject var progressTracker: ProgressTracker
     @State private var streamType: StreamType = .unknown
 
+    @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
+    private var qualitySetting: QualitySetting = .high
+
     private var skipInfoViewActionTitle: LocalizedStringResource {
         streamType == .onDemand ? "From Beginning" : "Back to Live"
     }
@@ -738,6 +741,11 @@ private struct MainSystemView: View {
         Picker("Playback Speed", systemImage: "speedometer", selection: $player.playbackSpeed) {
             for speed in [0.5, 1, 1.25, 1.5, 2] as [Float] {
                 Option("\(speed, specifier: "%g×")", value: speed)
+            }
+        }
+        Picker("Quality", systemImage: "person.and.background.dotted", selection: $qualitySetting) {
+            for quality in QualitySetting.allCases {
+                Option(quality.name, value: quality)
             }
         }
     }
