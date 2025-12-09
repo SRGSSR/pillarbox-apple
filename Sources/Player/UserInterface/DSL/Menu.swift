@@ -81,12 +81,13 @@ extension Menu: InlinePickerElement where Body == InlinePickerBodyNotSupported<V
 /// The body of a menu displayed in another menu.
 public struct MenuInMenu: MenuBody {
     let title: String
+    let subtitle: String?
     let image: UIImage?
     let content: MenuContent
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIMenu.identifiedMenu(title: title, image: image, children: content.toMenuElements())
+        UIMenu.identifiedMenu(title: title, subtitle: subtitle, image: image, children: content.toMenuElements())
     }
 }
 
@@ -96,63 +97,69 @@ extension Menu: MenuElement where Body == MenuInMenu, Value == Never {
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
     @_disfavoredOverload
-    public init<S>(_ title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.body = .init(title: String(title), image: image, content: content())
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), subtitle: String(optional: subtitle), image: image, content: content())
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
-    public init(_ title: LocalizedStringResource, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
-        self.init(String(localized: title), image: image, content: content)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: image, content: content)
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
     @_disfavoredOverload
-    public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.init(String(title), image: UIImage(resource: image), content: content)
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(resource: image), content: content)
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
-    public init(_ title: LocalizedStringResource, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) {
-        self.init(String(localized: title), image: UIImage(resource: image), content: content)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), content: content)
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the menu.
     ///   - content: The menu's content.
     @_disfavoredOverload
-    public init<S>(_ title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.init(String(title), image: UIImage(systemName: systemImage)!, content: content)
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, content: content)
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the menu.
     ///   - content: The menu's content.
-    public init(_ title: LocalizedStringResource, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
-        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, content: content)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, content: content)
     }
 }
 
@@ -201,12 +208,13 @@ extension Menu: PickerSectionElement where Body == PickerSectionBodyNotSupported
 /// The body of a menu displayed in a section.
 public struct MenuInSection: SectionBody {
     let title: String
+    let subtitle: String?
     let image: UIImage?
     let content: MenuContent
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIMenu.identifiedMenu(title: title, image: image, children: content.toMenuElements())
+        UIMenu.identifiedMenu(title: title, subtitle: subtitle, image: image, children: content.toMenuElements())
     }
 }
 
@@ -216,63 +224,69 @@ extension Menu: SectionElement where Body == MenuInSection, Value == Never {
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
     @_disfavoredOverload
-    public init<S>(_ title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.body = .init(title: String(title), image: image, content: content())
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.body = .init(title: String(title), subtitle: String(optional: subtitle), image: image, content: content())
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
-    public init(_ title: LocalizedStringResource, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
-        self.init(String(localized: title), image: image, content: content)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: image, content: content)
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
     @_disfavoredOverload
-    public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.init(String(title), image: UIImage(resource: image), content: content)
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(resource: image), content: content)
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
-    public init(_ title: LocalizedStringResource, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) {
-        self.init(String(localized: title), image: UIImage(resource: image), content: content)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), content: content)
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the menu.
     ///   - content: The menu's content.
     @_disfavoredOverload
-    public init<S>(_ title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.init(String(title), image: UIImage(systemName: systemImage)!, content: content)
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, content: content)
     }
 
     /// Creates a menu.
     ///
     /// - Parameters:
     ///   - title: The menu's title.
+    ///   - subtitle: The menu's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the menu.
     ///   - content: The menu's content.
-    public init(_ title: LocalizedStringResource, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
-        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, content: content)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, content: content)
     }
 }
 

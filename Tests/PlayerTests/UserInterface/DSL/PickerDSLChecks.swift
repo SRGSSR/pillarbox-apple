@@ -12,18 +12,26 @@ private enum PickerDSLChecks {
     @MenuContentBuilder
     static func menu() -> MenuContent {
         Picker("", selection: .constant(true)) {}
+        Picker("", subtitle: "", selection: .constant(true)) {}
         Picker("", image: UIImage(), selection: .constant(true)) {}
+        Picker("", subtitle: "", image: UIImage(), selection: .constant(true)) {}
         Picker("", image: .checkmark, selection: .constant(true)) {}
+        Picker("", subtitle: "", image: .checkmark, selection: .constant(true)) {}
         Picker("", systemImage: "circle", selection: .constant(true)) {}
+        Picker("", subtitle: "", systemImage: "circle", selection: .constant(true)) {}
     }
 
     @available(iOS 17.0, tvOS 18.0, *)
     @SectionContentBuilder
     static func section() -> SectionContent {
         Picker("", selection: .constant(true)) {}
+        Picker("", subtitle: "", selection: .constant(true)) {}
         Picker("", image: UIImage(), selection: .constant(true)) {}
+        Picker("", subtitle: "", image: UIImage(), selection: .constant(true)) {}
         Picker("", image: .checkmark, selection: .constant(true)) {}
+        Picker("", subtitle: "", image: .checkmark, selection: .constant(true)) {}
         Picker("", systemImage: "circle", selection: .constant(true)) {}
+        Picker("", subtitle: "", systemImage: "circle", selection: .constant(true)) {}
     }
 
     @TransportBarContentBuilder
