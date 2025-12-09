@@ -27,7 +27,7 @@ public struct ButtonInContextualActions: ContextualActionsBody {
 
     // swiftlint:disable:next missing_docs
     public func toAction() -> UIAction {
-        UIAction.identifiableAction(title: title, image: image) { _ in action() }
+        UIAction.identifiedAction(title: title, image: image) { _ in action() }
     }
 }
 
