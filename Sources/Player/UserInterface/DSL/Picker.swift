@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-// swiftlint:disable fatal_error_message line_length file_types_order unavailable_function
+// swiftlint:disable fatal_error_message file_types_order line_length unavailable_function
 
 /// A picker.
 ///
@@ -399,4 +399,4 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     }
 }
 
-// swiftlint:enable fatal_error_message line_length file_types_order unavailable_function
+// swiftlint:enable fatal_error_message file_types_order line_length unavailable_function
