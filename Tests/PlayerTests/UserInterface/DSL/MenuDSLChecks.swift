@@ -8,6 +8,7 @@ import PillarboxPlayer
 import UIKit
 
 private enum MenuDSLChecks {
+    @available(iOS 17.0, tvOS 18.0, *)
     @MenuContentBuilder
     static func menu() -> MenuContent {
         Menu("") {}
@@ -16,6 +17,7 @@ private enum MenuDSLChecks {
         Menu("", systemImage: "circle") {}
     }
 
+    @available(iOS 17.0, tvOS 18.0, *)
     @SectionContentBuilder
     static func section() -> SectionContent {
         Menu("") {}
