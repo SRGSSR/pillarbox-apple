@@ -88,7 +88,7 @@ public struct PickerInMenu<Value>: MenuBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIMenu.identifiableMenu(title: title, image: image, options: .singleSelection, children: content.toMenuElements(updating: selection))
+        UIMenu.identifiedMenu(title: title, image: image, options: .singleSelection, children: content.toMenuElements(updating: selection))
     }
 }
 
@@ -216,7 +216,7 @@ public struct PickerInSection<Value>: SectionBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIMenu.identifiableMenu(title: title, image: image, options: .singleSelection, children: content.toMenuElements(updating: selection))
+        UIMenu.identifiedMenu(title: title, image: image, options: .singleSelection, children: content.toMenuElements(updating: selection))
     }
 }
 
@@ -304,7 +304,7 @@ public struct PickerInTransportBar<Value>: TransportBarBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIMenu.identifiableMenu(title: title, image: image, options: .singleSelection, children: content.toMenuElements(updating: selection))
+        UIMenu.identifiedMenu(title: title, image: image, options: .singleSelection, children: content.toMenuElements(updating: selection))
     }
 }
 

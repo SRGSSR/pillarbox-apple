@@ -86,7 +86,7 @@ public struct MenuInMenu: MenuBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIMenu.identifiableMenu(title: title, image: image, children: content.toMenuElements())
+        UIMenu.identifiedMenu(title: title, image: image, children: content.toMenuElements())
     }
 }
 
@@ -207,7 +207,7 @@ public struct MenuInSection: SectionBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIMenu.identifiableMenu(title: title, image: image, children: content.toMenuElements())
+        UIMenu.identifiedMenu(title: title, image: image, children: content.toMenuElements())
     }
 }
 
@@ -301,7 +301,7 @@ public struct MenuInTransportBar: TransportBarBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIMenu.identifiableMenu(title: title, image: image, children: children())
+        UIMenu.identifiedMenu(title: title, image: image, children: children())
     }
 }
 
