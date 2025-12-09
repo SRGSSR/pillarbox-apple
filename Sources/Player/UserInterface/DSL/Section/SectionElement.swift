@@ -16,7 +16,7 @@ public protocol SectionElement {
 }
 
 extension SectionElement {
-    func toMenuElement() -> UIMenuElement {
+    func toMenuElement() -> UIMenuElement? {
         body.toMenuElement()
     }
 }

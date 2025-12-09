@@ -211,7 +211,7 @@ public struct ButtonInMenu: MenuBody {
     let action: () -> Void
 
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
+    public func toMenuElement() -> UIMenuElement? {
         UIAction(title: title, image: image) { _ in action() }
     }
 }
@@ -332,7 +332,7 @@ public struct ButtonInSection: SectionBody {
     let action: () -> Void
 
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
+    public func toMenuElement() -> UIMenuElement? {
         UIAction(title: title, image: image) { _ in action() }
     }
 }
@@ -413,7 +413,7 @@ public struct ButtonInTransportBar: TransportBarBody {
     let action: () -> Void
 
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
+    public func toMenuElement() -> UIMenuElement? {
         UIAction(title: title, image: image) { _ in action() }
     }
 }

@@ -19,7 +19,7 @@ public protocol PickerElement<Value> {
 }
 
 extension PickerElement {
-    func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement {
+    func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement? {
         body.toMenuElement(updating: selection)
     }
 }

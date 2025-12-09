@@ -71,7 +71,7 @@ public struct InlinePickerInMenu<Value>: MenuBody {
     let content: InlinePickerContent<Value>
 
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
+    public func toMenuElement() -> UIMenuElement? {
         UIMenu.identifiableMenu(title: title, options: [.singleSelection, .displayInline], children: content.toMenuElements(updating: selection))
     }
 }

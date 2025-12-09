@@ -16,7 +16,7 @@ public protocol TransportBarElement {
 }
 
 extension TransportBarElement {
-    func toMenuElement() -> UIMenuElement {
+    func toMenuElement() -> UIMenuElement? {
         body.toMenuElement()
     }
 }

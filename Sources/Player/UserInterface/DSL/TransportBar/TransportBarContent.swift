@@ -15,6 +15,6 @@ public struct TransportBarContent {
     }
 
     func toMenuElements() -> [UIMenuElement] {
-        children.map { $0.toMenuElement() }
+        children.compactMap { $0.toMenuElement() }
     }
 }

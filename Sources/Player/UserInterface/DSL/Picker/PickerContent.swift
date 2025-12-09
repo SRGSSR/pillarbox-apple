@@ -15,6 +15,6 @@ public struct PickerContent<Value> {
     }
 
     func toMenuElements(updating selection: Binding<Value>) -> [UIMenuElement] {
-        children.map { $0.toMenuElement(updating: selection) }
+        children.compactMap { $0.toMenuElement(updating: selection) }
     }
 }

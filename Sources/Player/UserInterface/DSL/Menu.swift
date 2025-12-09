@@ -85,7 +85,7 @@ public struct MenuInMenu: MenuBody {
     let content: MenuContent
 
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
+    public func toMenuElement() -> UIMenuElement? {
         UIMenu.identifiableMenu(title: title, image: image, children: content.toMenuElements())
     }
 }
@@ -206,7 +206,7 @@ public struct MenuInSection: SectionBody {
     let content: MenuContent
 
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
+    public func toMenuElement() -> UIMenuElement? {
         UIMenu.identifiableMenu(title: title, image: image, children: content.toMenuElements())
     }
 }
@@ -286,9 +286,22 @@ public struct MenuInTransportBar: TransportBarBody {
     let image: UIImage
     let content: MenuContent
 
+    private func children() -> [UIMenuElement] {
+        // TODO: Nested menus are not officially supported by the tvOS transport bar. In practice they work well,
+        //       except when a transport-bar-level menu contains only nested (non-inline) menus. In those cases,
+        //       we insert a dummy disabled action to ensure the menu is displayed. This code can be removed if
+        //       this behavior is improved in the future.
+        var elements = content.toMenuElements()
+        if !elements.isEmpty && elements.allSatisfy(\.isNestedMenu) {
+            let emptyAction = UIAction(attributes: .disabled) { _ in }
+            elements.append(emptyAction)
+        }
+        return elements
+    }
+
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
-        UIMenu.identifiableMenu(title: title, image: image, children: content.toMenuElements())
+    public func toMenuElement() -> UIMenuElement? {
+        UIMenu.identifiableMenu(title: title, image: image, children: children())
     }
 }
 
