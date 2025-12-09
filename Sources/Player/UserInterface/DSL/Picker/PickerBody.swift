@@ -9,7 +9,7 @@ import SwiftUI
 /// A body for elements not supporting wrapping in a picker.
 public struct PickerBodyNotSupported<Value>: PickerBody {
     // swiftlint:disable:next missing_docs unavailable_function
-    public func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement {
+    public func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement? {
         // swiftlint:disable:next fatal_error_message
         fatalError()
     }
@@ -23,5 +23,5 @@ public protocol PickerBody<Value> {
     /// Converts the body to a menu element.
     ///
     /// - Parameter selection: A binding to the value managed by the picker.
-    func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement
+    func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement?
 }

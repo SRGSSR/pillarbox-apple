@@ -16,7 +16,7 @@ public protocol MenuElement {
 }
 
 extension MenuElement {
-    func toMenuElement() -> UIMenuElement {
+    func toMenuElement() -> UIMenuElement? {
         body.toMenuElement()
     }
 }

@@ -87,7 +87,7 @@ public struct PickerInMenu<Value>: MenuBody {
     let content: PickerContent<Value>
 
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
+    public func toMenuElement() -> UIMenuElement? {
         UIMenu.identifiableMenu(title: title, image: image, options: .singleSelection, children: content.toMenuElements(updating: selection))
     }
 }
@@ -215,7 +215,7 @@ public struct PickerInSection<Value>: SectionBody {
     let content: PickerContent<Value>
 
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
+    public func toMenuElement() -> UIMenuElement? {
         UIMenu.identifiableMenu(title: title, image: image, options: .singleSelection, children: content.toMenuElements(updating: selection))
     }
 }
@@ -303,7 +303,7 @@ public struct PickerInTransportBar<Value>: TransportBarBody {
     let content: PickerContent<Value>
 
     // swiftlint:disable:next missing_docs
-    public func toMenuElement() -> UIMenuElement {
+    public func toMenuElement() -> UIMenuElement? {
         UIMenu.identifiableMenu(title: title, image: image, options: .singleSelection, children: content.toMenuElements(updating: selection))
     }
 }
