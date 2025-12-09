@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-// swiftlint:disable fatal_error_message file_types_order unavailable_function
+// swiftlint:disable fatal_error_message file_types_order line_length unavailable_function
 
 /// An option.
 ///
@@ -425,4 +425,4 @@ extension Option: TransportBarElement where Body == TransportBarBodyNotSupported
     }
 }
 
-// swiftlint:enable fatal_error_message file_types_order unavailable_function
+// swiftlint:enable fatal_error_message file_types_order line_length unavailable_function

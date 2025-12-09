@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-// swiftlint:disable fatal_error_message file_types_order unavailable_function
+// swiftlint:disable fatal_error_message file_types_order line_length unavailable_function
 
 /// A toggle.
 ///
@@ -421,4 +421,4 @@ extension Toggle: TransportBarElement where Body == ToggleInTransportBar, Value 
     }
 }
 
-// swiftlint:enable fatal_error_message file_types_order unavailable_function
+// swiftlint:enable fatal_error_message file_types_order line_length unavailable_function
