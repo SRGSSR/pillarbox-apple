@@ -177,6 +177,13 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``InfoViewActionsContent``
 - ``InfoViewActionsContentBuilder``
 - ``InfoViewActionsElement``
+- ``InlinePicker``
+- ``InlinePickerBody``
+- ``InlinePickerBodyNotSupported``
+- ``InlinePickerContent``
+- ``InlinePickerContentBuilder``
+- ``InlinePickerElement``
+- ``InlinePickerInMenu``
 - ``MenuBody``
 - ``MenuBodyNotSupported``
 - ``MenuContent``
@@ -185,6 +192,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``MenuInMenu``
 - ``MenuInSection``
 - ``MenuInTransportBar``
+- ``OptionInInlinePicker``
 - ``OptionInPicker``
 - ``OptionInPickerSection``
 - ``PickerBody``
