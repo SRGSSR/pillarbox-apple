@@ -207,12 +207,13 @@ extension Button: InlinePickerElement where Body == InlinePickerBodyNotSupported
 /// The body of a button displayed in a menu.
 public struct ButtonInMenu: MenuBody {
     let title: String
+    let subtitle: String?
     let image: UIImage?
     let action: () -> Void
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIAction(title: title, image: image) { _ in action() }
+        UIAction(title: title, subtitle: subtitle, image: image) { _ in action() }
     }
 }
 
@@ -221,65 +222,71 @@ extension Button: MenuElement where Body == ButtonInMenu, Value == Never {
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     @_disfavoredOverload
-    public init<S>(_ title: S, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
-        self.body = .init(title: String(title), image: image, action: action)
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
+        self.body = .init(title: String(title), subtitle: String(optional: subtitle), image: image, action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    public init(_ title: LocalizedStringResource, image: UIImage? = nil, action: @escaping () -> Void) {
-        self.init(String(localized: title), image: image, action: action)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: UIImage? = nil, action: @escaping () -> Void) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: image, action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
-    public init<S>(_ title: S, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
-        self.init(String(title), image: UIImage(resource: image), action: action)
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(resource: image), action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     @available(iOS 17.0, tvOS 17.0, *)
-    public init(_ title: LocalizedStringResource, image: ImageResource, action: @escaping () -> Void) {
-        self.init(String(localized: title), image: UIImage(resource: image), action: action)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, action: @escaping () -> Void) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     @_disfavoredOverload
-    public init<S>(_ title: S, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
-        self.init(String(title), image: UIImage(systemName: systemImage)!, action: action)
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    public init(_ title: LocalizedStringResource, systemImage: String, action: @escaping () -> Void) {
-        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, action: action)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, action: @escaping () -> Void) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, action: action)
     }
 }
 
@@ -328,12 +335,13 @@ extension Button: PickerSectionElement where Body == PickerSectionBodyNotSupport
 /// The body of a button displayed in a section.
 public struct ButtonInSection: SectionBody {
     let title: String
+    let subtitle: String?
     let image: UIImage?
     let action: () -> Void
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIAction(title: title, image: image) { _ in action() }
+        UIAction(title: title, subtitle: subtitle, image: image) { _ in action() }
     }
 }
 
@@ -342,65 +350,71 @@ extension Button: SectionElement where Body == ButtonInSection, Value == Never {
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     @_disfavoredOverload
-    public init<S>(_ title: S, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
-        self.body = .init(title: String(title), image: image, action: action)
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
+        self.body = .init(title: String(title), subtitle: String(optional: subtitle), image: image, action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    public init(_ title: LocalizedStringResource, image: UIImage? = nil, action: @escaping () -> Void) {
-        self.init(String(localized: title), image: image, action: action)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: UIImage? = nil, action: @escaping () -> Void) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: image, action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
-    public init<S>(_ title: S, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
-        self.init(String(title), image: UIImage(resource: image), action: action)
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(resource: image), action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     @available(iOS 17.0, tvOS 17.0, *)
-    public init(_ title: LocalizedStringResource, image: ImageResource, action: @escaping () -> Void) {
-        self.init(String(localized: title), image: UIImage(resource: image), action: action)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, action: @escaping () -> Void) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     @_disfavoredOverload
-    public init<S>(_ title: S, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
-        self.init(String(title), image: UIImage(systemName: systemImage)!, action: action)
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, action: action)
     }
 
     /// Creates a button.
     ///
     /// - Parameters:
     ///   - title: The button's title.
+    ///   - subtitle: The button's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    public init(_ title: LocalizedStringResource, systemImage: String, action: @escaping () -> Void) {
-        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, action: action)
+    public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, action: @escaping () -> Void) {
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, action: action)
     }
 }
 

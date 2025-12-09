@@ -31,17 +31,25 @@ private enum ButtonDSLChecks {
     @MenuContentBuilder
     static func menu() -> MenuContent {
         Button("") {}
+        Button("", subtitle: "") {}
         Button("", image: UIImage()) {}
+        Button("", subtitle: "", image: UIImage()) {}
         Button("", image: .checkmark) {}
+        Button("", subtitle: "", image: .checkmark) {}
         Button("", systemImage: "circle") {}
+        Button("", subtitle: "", systemImage: "circle") {}
     }
 
     @SectionContentBuilder
     static func section() -> SectionContent {
         Button("") {}
+        Button("", subtitle: "") {}
         Button("", image: UIImage()) {}
+        Button("", subtitle: "", image: UIImage()) {}
         Button("", image: .checkmark) {}
+        Button("", subtitle: "", image: .checkmark) {}
         Button("", systemImage: "circle") {}
+        Button("", subtitle: "", systemImage: "circle") {}
     }
 
     @TransportBarContentBuilder
