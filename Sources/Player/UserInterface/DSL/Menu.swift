@@ -21,17 +21,17 @@ public struct Menu<Body, Value> {
 @available(*, unavailable, message: "Menus are not supported as contextual actions")
 extension Menu: ContextualActionsElement where Body == ContextualActionsBodyNotSupported, Value == Never {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 }
@@ -41,17 +41,17 @@ extension Menu: ContextualActionsElement where Body == ContextualActionsBodyNotS
 @available(*, unavailable, message: "Menus are not supported as info view actions")
 extension Menu: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported, Value == Never {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 }
@@ -61,17 +61,17 @@ extension Menu: InfoViewActionsElement where Body == InfoViewActionsBodyNotSuppo
 @available(*, unavailable, message: "Menus are not supported in inline pickers")
 extension Menu: InlinePickerElement where Body == InlinePickerBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 }
@@ -168,17 +168,17 @@ extension Menu: MenuElement where Body == MenuInMenu, Value == Never {
 @available(*, unavailable, message: "Menus are not supported in pickers")
 extension Menu: PickerElement where Body == PickerBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 }
@@ -188,17 +188,17 @@ extension Menu: PickerElement where Body == PickerBodyNotSupported<Value> {
 @available(*, unavailable, message: "Menus are not supported in picker sections")
 extension Menu: PickerSectionElement where Body == PickerSectionBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         fatalError()
     }
 }
@@ -384,7 +384,7 @@ extension Menu: TransportBarElement where Body == MenuInTransportBar, Value == N
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")
-    public init(_ title: String, @MenuContentBuilder content: () -> MenuContent) {
+    public init<S>(_ title: S, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         // swiftlint:disable:previous missing_docs
         fatalError()
     }

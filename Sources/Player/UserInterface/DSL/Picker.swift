@@ -22,17 +22,17 @@ public struct Picker<Body, Value> {
 @available(*, unavailable, message: "Pickers are not supported as contextual actions")
 extension Picker: ContextualActionsElement where Body == ContextualActionsBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 }
@@ -42,17 +42,17 @@ extension Picker: ContextualActionsElement where Body == ContextualActionsBodyNo
 @available(*, unavailable, message: "Pickers are not supported as info view actions")
 extension Picker: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 }
@@ -62,17 +62,17 @@ extension Picker: InfoViewActionsElement where Body == InfoViewActionsBodyNotSup
 @available(*, unavailable, message: "Pickers cannot be nested in inline pickers picker")
 extension Picker: InlinePickerElement where Body == InlinePickerBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 }
@@ -176,17 +176,17 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
 @available(*, unavailable, message: "Nested pickers are not supported")
 extension Picker: PickerElement where Body == PickerBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 }
@@ -196,17 +196,17 @@ extension Picker: PickerElement where Body == PickerBodyNotSupported<Value> {
 @available(*, unavailable, message: "Pickers cannot be nested in picker sections")
 extension Picker: PickerSectionElement where Body == PickerSectionBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         fatalError()
     }
 }
@@ -393,7 +393,7 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")
-    public init<S>(_ title: S, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         // swiftlint:disable:previous missing_docs
         fatalError()
     }

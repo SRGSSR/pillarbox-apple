@@ -22,17 +22,17 @@ public struct Toggle<Body, Value> {
 @available(*, unavailable, message: "Toggles are not supported as contextual actions")
 extension Toggle: ContextualActionsElement where Body == ContextualActionsBodyNotSupported, Value == Never {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -42,17 +42,17 @@ extension Toggle: ContextualActionsElement where Body == ContextualActionsBodyNo
 @available(*, unavailable, message: "Toggles are not supported as info view actions")
 extension Toggle: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported, Value == Never {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -62,17 +62,17 @@ extension Toggle: InfoViewActionsElement where Body == InfoViewActionsBodyNotSup
 @available(*, unavailable, message: "Toggles are not supported in inline pickers")
 extension Toggle: InlinePickerElement where Body == InlinePickerBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(title: S, subtitle: S? = nil, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -185,17 +185,17 @@ extension Toggle: MenuElement where Body == ToggleInMenu, Value == Never {
 @available(*, unavailable, message: "Toggles are not supported in pickers")
 extension Toggle: PickerElement where Body == PickerBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(title: S, subtitle: S? = nil, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -205,17 +205,17 @@ extension Toggle: PickerElement where Body == PickerBodyNotSupported<Value> {
 @available(*, unavailable, message: "Toggles are not supported in picker sections")
 extension Toggle: PickerSectionElement where Body == PickerSectionBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(title: S, subtitle: S? = nil, image: UIImage? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(title: S, subtitle: S? = nil, image: ImageResource, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(title: S, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(title: S, subtitle: S? = nil, systemImage: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -415,7 +415,7 @@ extension Toggle: TransportBarElement where Body == ToggleInTransportBar, Value 
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")
-    public init(title: String, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) {
+    public init<S>(_ title: S, subtitle: S? = nil, isOn: Binding<Bool>, handler: @escaping (Bool) -> Void = { _ in }) where S: StringProtocol {
         // swiftlint:disable:previous missing_docs
         fatalError()
     }

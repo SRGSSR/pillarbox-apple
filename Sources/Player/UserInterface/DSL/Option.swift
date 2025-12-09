@@ -21,17 +21,17 @@ public struct Option<Body, Value> {
 @available(*, unavailable, message: "Options are not supported as contextual actions")
 extension Option: ContextualActionsElement where Body == ContextualActionsBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -41,17 +41,17 @@ extension Option: ContextualActionsElement where Body == ContextualActionsBodyNo
 @available(*, unavailable, message: "Options are not supported as info view actions")
 extension Option: InfoViewActionsElement where Body == InfoViewActionsBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -164,17 +164,17 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
 @available(*, unavailable, message: "Options cannot be used in menus. Use a `Picker` or `InlinePicker` instead")
 extension Option: MenuElement where Body == MenuBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -390,17 +390,17 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
 @available(*, unavailable, message: "Options cannot be used in sections not belonging to a `Picker`")
 extension Option: SectionElement where Body == SectionBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }
@@ -410,17 +410,17 @@ extension Option: SectionElement where Body == SectionBodyNotSupported {
 @available(*, unavailable, message: "Options cannot be displayed at the transport bar root level")
 extension Option: TransportBarElement where Body == TransportBarBodyNotSupported {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         fatalError()
     }
 }

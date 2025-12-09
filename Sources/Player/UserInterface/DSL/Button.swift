@@ -187,17 +187,17 @@ extension Button: InfoViewActionsElement where Body == ButtonInInfoViewActions, 
 @available(*, unavailable, message: "Buttons are not supported in inline pickers")
 extension Button: InlinePickerElement where Body == InlinePickerBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
         fatalError()
     }
 }
@@ -295,17 +295,17 @@ extension Button: MenuElement where Body == ButtonInMenu, Value == Never {
 @available(*, unavailable, message: "Buttons are not supported in pickers")
 extension Button: PickerElement where Body == PickerBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
         fatalError()
     }
 }
@@ -315,17 +315,17 @@ extension Button: PickerElement where Body == PickerBodyNotSupported<Value> {
 @available(*, unavailable, message: "Buttons are not supported in picker sections")
 extension Button: PickerSectionElement where Body == PickerSectionBodyNotSupported<Value> {
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, action: @escaping () -> Void) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
         fatalError()
     }
 
     // swiftlint:disable:next missing_docs
-    public init<S>(_ title: S, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
         fatalError()
     }
 }
@@ -499,7 +499,7 @@ extension Button: TransportBarElement where Body == ButtonInTransportBar, Value 
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")
-    public init<S>(_ title: S, action: @escaping () -> Void) where S: StringProtocol {
+    public init<S>(_ title: S, subtitle: S? = nil, action: @escaping () -> Void) where S: StringProtocol {
         // swiftlint:disable:previous missing_docs
         fatalError()
     }
