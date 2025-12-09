@@ -318,7 +318,7 @@ public struct ToggleInTransportBar: TransportBarBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        let action = UIAction(title: title, image: image) { action in
+        let action = UIAction.identifiedAction(title: title, image: image) { action in
             isOn.wrappedValue.toggle()
             action.state = isOn.wrappedValue ? .on : .off
             handler(isOn.wrappedValue)
