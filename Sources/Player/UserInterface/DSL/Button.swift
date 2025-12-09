@@ -414,7 +414,7 @@ public struct ButtonInTransportBar: TransportBarBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIAction(title: title, image: image) { _ in action() }
+        UIAction.identifiedAction(title: title, image: image) { _ in action() }
     }
 }
 
