@@ -90,6 +90,7 @@ public struct MenuInMenu: MenuBody {
     }
 }
 
+@available(iOS 17.0, tvOS 18.0, *)
 extension Menu: MenuElement where Body == MenuInMenu, Value == Never {
     /// Creates a menu.
     ///
@@ -118,7 +119,6 @@ extension Menu: MenuElement where Body == MenuInMenu, Value == Never {
     ///   - title: The menu's title.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
-    @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
     public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         self.init(String(title), image: UIImage(resource: image), content: content)
@@ -130,7 +130,6 @@ extension Menu: MenuElement where Body == MenuInMenu, Value == Never {
     ///   - title: The menu's title.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
-    @available(iOS 17.0, tvOS 17.0, *)
     public init(_ title: LocalizedStringResource, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) {
         self.init(String(localized: title), image: UIImage(resource: image), content: content)
     }
@@ -211,6 +210,7 @@ public struct MenuInSection: SectionBody {
     }
 }
 
+@available(iOS 17.0, tvOS 18.0, *)
 extension Menu: SectionElement where Body == MenuInSection, Value == Never {
     /// Creates a menu.
     ///
@@ -239,7 +239,6 @@ extension Menu: SectionElement where Body == MenuInSection, Value == Never {
     ///   - title: The menu's title.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
-    @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
     public init<S>(_ title: S, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
         self.init(String(title), image: UIImage(resource: image), content: content)
@@ -251,7 +250,6 @@ extension Menu: SectionElement where Body == MenuInSection, Value == Never {
     ///   - title: The menu's title.
     ///   - image: The image associated with the menu.
     ///   - content: The menu's content.
-    @available(iOS 17.0, tvOS 17.0, *)
     public init(_ title: LocalizedStringResource, image: ImageResource, @MenuContentBuilder content: () -> MenuContent) {
         self.init(String(localized: title), image: UIImage(resource: image), content: content)
     }
