@@ -5,6 +5,7 @@
 //
 
 @testable import PillarboxCoreBusiness
+@testable import PillarboxPlayer
 
 import Nimble
 import XCTest
@@ -16,5 +17,11 @@ final class ErrorTests: XCTestCase {
 
     func testNotHttpNSError() {
         expect(DataError.http(withStatusCode: 200)).to(beNil())
+    }
+
+    func testErrorLog() {
+        let delegate = FailedResourceLoaderDelegate(error: DataError.blocked(reason: .startDate))
+        let player = Player(item: .custom(url: URL.failing, delegate: delegate))
+        expect(player.systemPlayer.currentItem?.errorLog()).toEventuallyNot(beNil())
     }
 }

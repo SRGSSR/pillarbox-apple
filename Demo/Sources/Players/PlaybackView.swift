@@ -818,7 +818,7 @@ private struct ErrorView: View {
     private var imageName: String {
         switch error {
         case let error as DataError:
-            switch error {
+            switch error.kind {
             case let .blocked(reason: reason):
                 return Self.imageName(for: reason)
             case .http:
