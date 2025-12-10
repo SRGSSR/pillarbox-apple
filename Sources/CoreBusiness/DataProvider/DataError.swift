@@ -7,30 +7,46 @@
 import Foundation
 
 /// Data error.
-public enum DataError: LocalizedError {
-    /// Blocked content.
-    case blocked(reason: MediaComposition.BlockingReason)
+public struct DataError: LocalizedError {
+    /// The error type.
+    public let kind: Kind
 
-    /// HTTP error.
-    case http(statusCode: Int)
+    /// A readable error description.
+    public let errorDescription: String?
+}
 
-    /// Missing resource.
-    case noResourceAvailable
+public extension DataError {
+    /// Represents the type of data error.
+    enum Kind {
+        /// Missing resource.
+        case noResourceAvailable
 
-    // swiftlint:disable:next missing_docs
-    public var errorDescription: String? {
-        switch self {
-        case let .blocked(reason):
-            reason.description
-        case let .http(statusCode):
-            HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode)
-        case .noResourceAvailable:
-            String(
-                localized: "No playable resources could be found.",
-                bundle: .module,
-                comment: "Generic error message returned when no playable resources could be found"
-            )
-        }
+        /// Blocked content.
+        case blocked(reason: MediaComposition.BlockingReason)
+
+        /// HTTP error.
+        case http(statusCode: Int)
+    }
+}
+
+extension DataError {
+    static var noResourceAvailable: Self {
+        Self(kind: .noResourceAvailable, errorDescription: String(
+            localized: "No playable resources could be found.",
+            bundle: .module,
+            comment: "Generic error message returned when no playable resources could be found"
+        ))
+    }
+
+    static func blocked(reason: MediaComposition.BlockingReason) -> Self {
+        Self(kind: .blocked(reason: reason), errorDescription: reason.description)
+    }
+
+    static func http(statusCode: Int) -> Self {
+        Self(
+            kind: .http(statusCode: statusCode),
+            errorDescription: HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode)
+        )
     }
 
     static func http(from response: URLResponse) -> Self? {
