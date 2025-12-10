@@ -66,7 +66,8 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
         }
     }
 
-    func testDvrAwayFromLiveEdge() {
+    @MainActor
+    func testDvrAwayFromLiveEdge() async {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
@@ -75,7 +76,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             pause { labels in

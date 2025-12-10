@@ -64,13 +64,14 @@ final class MetricsCollectorTests: TestCase {
         }
     }
 
-    func testPlayerSetToNil() {
+    @MainActor
+    func testPlayerSetToNil() async {
         let metricsCollector = MetricsCollector(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         metricsCollector.player = player
         player.play()
-        expect(metricsCollector.metrics).toEventuallyNot(beEmpty())
+        await expect(metricsCollector.metrics).toEventuallyNot(beEmpty())
 
         metricsCollector.player = nil
         expect(metricsCollector.metrics).to(beEmpty())

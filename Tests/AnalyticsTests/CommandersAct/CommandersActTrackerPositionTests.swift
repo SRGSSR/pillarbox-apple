@@ -13,7 +13,8 @@ import PillarboxPlayer
 import PillarboxStreams
 
 final class CommandersActTrackerPositionTests: CommandersActTestCase {
-    func testLivePlayback() {
+    @MainActor
+    func testLivePlayback() async {
         let player = Player(item: .simple(
             url: Stream.live.url,
             trackerAdapters: [
@@ -22,7 +23,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
         wait(for: .seconds(2))
 
         expectAtLeastHits(
@@ -34,7 +35,8 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         }
     }
 
-    func testDvrPlayback() {
+    @MainActor
+    func testDvrPlayback() async {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
@@ -43,7 +45,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
         wait(for: .seconds(2))
 
         expectAtLeastHits(
@@ -55,7 +57,8 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         }
     }
 
-    func testSeekDuringDvrPlayback() {
+    @MainActor
+    func testSeekDuringDvrPlayback() async {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
@@ -64,7 +67,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             seek { labels in
@@ -78,7 +81,8 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         }
     }
 
-    func testDestroyDuringLivePlayback() {
+    @MainActor
+    func testDestroyDuringLivePlayback() async {
         var player: Player? = Player(item: .simple(
             url: Stream.live.url,
             trackerAdapters: [
@@ -87,7 +91,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         ))
 
         player?.play()
-        expect(player?.playbackState).toEventually(equal(.playing))
+        await expect(player?.playbackState).toEventually(equal(.playing))
         wait(for: .seconds(2))
 
         expectAtLeastHits(
@@ -99,7 +103,8 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         }
     }
 
-    func testDestroyDuringDvrPlayback() {
+    @MainActor
+    func testDestroyDuringDvrPlayback() async {
         var player: Player? = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
@@ -108,7 +113,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         ))
 
         player?.play()
-        expect(player?.playbackState).toEventually(equal(.playing))
+        await expect(player?.playbackState).toEventually(equal(.playing))
         wait(for: .seconds(2))
 
         expectAtLeastHits(

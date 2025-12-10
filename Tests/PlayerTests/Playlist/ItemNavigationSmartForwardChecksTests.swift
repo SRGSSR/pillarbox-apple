@@ -10,48 +10,54 @@ import Nimble
 import PillarboxStreams
 
 final class ItemNavigationSmartForwardChecksTests: TestCase {
-    func testCanAdvanceForOnDemandWithNextItem() {
+    @MainActor
+    func testCanAdvanceForOnDemandWithNextItem() async {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
         let player = Player(items: [item1, item2])
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canAdvanceToNextItem()).to(beTrue())
     }
 
-    func testCannotAdvanceForOnDemandWithoutNextItem() {
+    @MainActor
+    func testCannotAdvanceForOnDemandWithoutNextItem() async {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 
-    func testCanAdvanceForLiveWithNextItem() {
+    @MainActor
+    func testCanAdvanceForLiveWithNextItem() async {
         let item1 = PlayerItem.simple(url: Stream.live.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        expect(player.streamType).toEventually(equal(.live))
+        await expect(player.streamType).toEventually(equal(.live))
         expect(player.canAdvanceToNextItem()).to(beTrue())
     }
 
-    func testCannotAdvanceForLiveWithoutNextItem() {
+    @MainActor
+    func testCannotAdvanceForLiveWithoutNextItem() async {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
-        expect(player.streamType).toEventually(equal(.live))
+        await expect(player.streamType).toEventually(equal(.live))
         expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 
-    func testCanAdvanceForDvrWithNextItem() {
+    @MainActor
+    func testCanAdvanceForDvrWithNextItem() async {
         let item1 = PlayerItem.simple(url: Stream.dvr.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        expect(player.streamType).toEventually(equal(.dvr))
+        await expect(player.streamType).toEventually(equal(.dvr))
         expect(player.canAdvanceToNextItem()).to(beTrue())
     }
 
-    func testCannotAdvanceForDvrWithoutNextItem() {
+    @MainActor
+    func testCannotAdvanceForDvrWithoutNextItem() async {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
-        expect(player.streamType).toEventually(equal(.dvr))
+        await expect(player.streamType).toEventually(equal(.dvr))
         expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 

@@ -11,9 +11,10 @@ import Nimble
 import PillarboxStreams
 
 final class SkipToDefaultTests: TestCase {
-    func testSkipWhenEmpty() {
+    @MainActor
+    func testSkipWhenEmpty() async {
         let player = Player()
-        waitUntil { done in
+        await waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
                 expect(player.time()).to(equal(.invalid))
@@ -22,10 +23,11 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
-    func testSkipForUnknown() {
+    @MainActor
+    func testSkipForUnknown() async {
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.streamType).toEventually(equal(.unknown))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.unknown))
+        await waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
                 expect(player.time()).to(equal(.zero))
@@ -34,10 +36,11 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
-    func testSkipForOnDemand() {
+    @MainActor
+    func testSkipForOnDemand() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.onDemand))
+        await waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
                 expect(player.time()).to(equal(.zero))
@@ -46,10 +49,11 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
-    func testSkipForLive() {
+    @MainActor
+    func testSkipForLive() async {
         let player = Player(item: .simple(url: Stream.live.url))
-        expect(player.streamType).toEventually(equal(.live))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.live))
+        await waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
                 done()
@@ -57,11 +61,12 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
-    func testSkipForDvrInLiveConditions() {
+    @MainActor
+    func testSkipForDvrInLiveConditions() async {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
-        expect(player.streamType).toEventually(equal(.dvr))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.dvr))
+        await waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
                 done()
@@ -69,19 +74,20 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
-    func testSkipForDvrInPastConditions() {
+    @MainActor
+    func testSkipForDvrInPastConditions() async {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
-        expect(player.streamType).toEventually(equal(.dvr))
+        await expect(player.streamType).toEventually(equal(.dvr))
 
-        waitUntil { done in
+        await waitUntil { done in
             player.seek(at(CMTime(value: 1, timescale: 1))) { finished in
                 expect(finished).to(beTrue())
                 done()
             }
         }
 
-        waitUntil { done in
+        await waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
                 done()

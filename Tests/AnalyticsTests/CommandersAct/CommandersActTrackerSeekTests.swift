@@ -11,7 +11,8 @@ import PillarboxPlayer
 import PillarboxStreams
 
 final class CommandersActTrackerSeekTests: CommandersActTestCase {
-    func testSeekWhilePlaying() {
+    @MainActor
+    func testSeekWhilePlaying() async {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -20,7 +21,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             seek { labels in
@@ -34,7 +35,8 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         }
     }
 
-    func testSeekWhilePaused() {
+    @MainActor
+    func testSeekWhilePaused() async {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -42,7 +44,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
             ]
         ))
 
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
 
         expectNoHits(during: .milliseconds(500)) {
             player.seek(at(.init(value: 7, timescale: 1)))
@@ -57,7 +59,8 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         }
     }
 
-    func testDestroyPlayerWhileSeeking() {
+    @MainActor
+    func testDestroyPlayerWhileSeeking() async {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -66,7 +69,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         ))
 
         player?.play()
-        expect(player?.playbackState).toEventually(equal(.playing))
+        await expect(player?.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             seek { labels in

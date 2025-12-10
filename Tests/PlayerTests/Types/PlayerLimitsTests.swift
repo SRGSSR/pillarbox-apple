@@ -65,10 +65,11 @@ final class PlayerLimitsTests: TestCase {
         }
     }
 
-    func testLoadedItem() {
+    @MainActor
+    func testLoadedItem() async {
         let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1))
         player.limits = Self.limits
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
         player.queuePlayer.items().forEach { item in
             expect(item.preferredPeakBitRate).to(equal(100))
             expect(item.preferredPeakBitRateForExpensiveNetworks).to(equal(200))

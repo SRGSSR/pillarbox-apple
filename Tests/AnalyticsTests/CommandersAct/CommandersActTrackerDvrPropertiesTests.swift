@@ -64,7 +64,9 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         }
     }
 
-    func testDvrAwayFromLiveEdge() {
+    // FIXME: Test
+    @MainActor
+    func testDvrAwayFromLiveEdge() async {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
@@ -73,7 +75,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             seek { labels in
@@ -106,14 +108,15 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         }
     }
 
-    func testDestroyPlayerWhileInitiallyPaused() {
+    @MainActor
+    func testDestroyPlayerWhileInitiallyPaused() async {
         var player: Player? = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
         ))
-        expect(player?.playbackState).toEventually(equal(.paused))
+        await expect(player?.playbackState).toEventually(equal(.paused))
 
         expectNoHits(during: .milliseconds(500)) {
             player = nil

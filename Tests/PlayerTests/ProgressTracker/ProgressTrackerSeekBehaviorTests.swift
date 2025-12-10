@@ -19,7 +19,8 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
             .eraseToAnyPublisher()
     }
 
-    func testImmediateSeek() {
+    @MainActor
+    func testImmediateSeek() async {
         let progressTracker = ProgressTracker(
             interval: CMTime(value: 1, timescale: 4),
             seekBehavior: .optimal
@@ -27,7 +28,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
-        expect(progressTracker.range).toEventually(equal(0...1))
+        await expect(progressTracker.range).toEventually(equal(0...1))
 
         expectAtLeastEqualPublished(
             values: [false, true, false],
@@ -39,7 +40,8 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         expect(progressTracker.progress).to(equal(0.5))
     }
 
-    func testDeferredSeek() {
+    @MainActor
+    func testDeferredSeek() async {
         let progressTracker = ProgressTracker(
             interval: CMTime(value: 1, timescale: 4),
             seekBehavior: .deferred
@@ -47,7 +49,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
-        expect(progressTracker.range).toEventually(equal(0...1))
+        await expect(progressTracker.range).toEventually(equal(0...1))
 
         expectAtLeastEqualPublished(
             values: [false],
@@ -63,6 +65,6 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         ) {
             progressTracker.isInteracting = false
         }
-        expect(progressTracker.progress).toEventually(equal(0.5))
+        await expect(progressTracker.progress).toEventually(equal(0.5))
     }
 }

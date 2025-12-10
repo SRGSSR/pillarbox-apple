@@ -20,9 +20,10 @@ private struct MockMetadata: AssetMetadata {
 }
 
 final class SeekTests: TestCase {
-    func testSeekWhenEmpty() {
+    @MainActor
+    func testSeekWhenEmpty() async {
         let player = Player()
-        waitUntil { done in
+        await waitUntil { done in
             player.seek(near(.zero)) { finished in
                 expect(finished).to(beTrue())
                 done()
@@ -30,10 +31,11 @@ final class SeekTests: TestCase {
         }
     }
 
-    func testSeekInTimeRange() {
+    @MainActor
+    func testSeekInTimeRange() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.onDemand))
+        await waitUntil { done in
             player.seek(near(CMTimeMultiplyByFloat64(Stream.onDemand.duration, multiplier: 0.5))) { finished in
                 expect(finished).to(beTrue())
                 done()
@@ -41,10 +43,11 @@ final class SeekTests: TestCase {
         }
     }
 
-    func testSeekInEmptyTimeRange() {
+    @MainActor
+    func testSeekInEmptyTimeRange() async {
         let player = Player(item: .simple(url: Stream.live.url))
-        expect(player.streamType).toEventually(equal(.live))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.live))
+        await waitUntil { done in
             player.seek(near(.zero)) { finished in
                 expect(finished).to(beTrue())
                 done()
@@ -52,10 +55,11 @@ final class SeekTests: TestCase {
         }
     }
 
-    func testSeekToTimeRangeStart() {
+    @MainActor
+    func testSeekToTimeRangeStart() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.onDemand))
+        await waitUntil { done in
             player.seek(near(player.seekableTimeRange.start)) { finished in
                 expect(finished).to(beTrue())
                 done()
@@ -63,10 +67,11 @@ final class SeekTests: TestCase {
         }
     }
 
-    func testSeekToTimeRangeEnd() {
+    @MainActor
+    func testSeekToTimeRangeEnd() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.onDemand))
+        await waitUntil { done in
             player.seek(near(player.seekableTimeRange.end)) { finished in
                 expect(finished).to(beTrue())
                 done()
@@ -74,10 +79,11 @@ final class SeekTests: TestCase {
         }
     }
 
-    func testSeekBeforeTimeRangeStart() {
+    @MainActor
+    func testSeekBeforeTimeRangeStart() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.onDemand))
+        await waitUntil { done in
             player.seek(near(CMTime(value: -10, timescale: 1))) { finished in
                 expect(finished).to(beTrue())
                 expect(player.time()).to(equal(.zero))
@@ -86,10 +92,11 @@ final class SeekTests: TestCase {
         }
     }
 
-    func testSeekAfterTimeRangeEnd() {
+    @MainActor
+    func testSeekAfterTimeRangeEnd() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
-        waitUntil { done in
+        await expect(player.streamType).toEventually(equal(.onDemand))
+        await waitUntil { done in
             player.seek(near(player.seekableTimeRange.end + CMTime(value: 10, timescale: 1))) { finished in
                 expect(finished).to(beTrue())
                 expect(player.time()).to(equal(player.seekableTimeRange.end, by: beClose(within: 1)))
@@ -98,23 +105,26 @@ final class SeekTests: TestCase {
         }
     }
 
-    func testTimesDuringSeekBeforeTimeRangeStart() {
+    @MainActor
+    func testTimesDuringSeekBeforeTimeRangeStart() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         player.play()
         player.seek(near(CMTime(value: -10, timescale: 1)))
-        expect(player.time()).toAlways(beGreaterThanOrEqualTo(player.seekableTimeRange.start), until: .seconds(1))
+        await expect(player.time()).toAlways(beGreaterThanOrEqualTo(player.seekableTimeRange.start), until: .seconds(1))
     }
 
-    func testOnDemandStartAtTime() {
+    @MainActor
+    func testOnDemandStartAtTime() async {
         let configuration = PlaybackConfiguration(position: at(.init(value: 10, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, configuration: configuration))
-        expect(player.time().seconds).toEventually(equal(10))
+        await expect(player.time().seconds).toEventually(equal(10))
     }
 
-    func testDvrStartAtTime() {
+    @MainActor
+    func testDvrStartAtTime() async {
         let configuration = PlaybackConfiguration(position: at(.init(value: 10, timescale: 1)))
         let player = Player(item: .simple(url: Stream.dvr.url, configuration: configuration))
-        expect(player.time().seconds).toEventually(equal(10))
+        await expect(player.time().seconds).toEventually(equal(10))
     }
 }

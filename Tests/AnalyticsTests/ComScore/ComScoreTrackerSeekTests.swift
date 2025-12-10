@@ -12,7 +12,8 @@ import PillarboxPlayer
 import PillarboxStreams
 
 final class ComScoreTrackerSeekTests: ComScoreTestCase {
-    func testSeekWhilePlaying() {
+    @MainActor
+    func testSeekWhilePlaying() async {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -21,7 +22,7 @@ final class ComScoreTrackerSeekTests: ComScoreTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             pause { labels in
@@ -35,7 +36,8 @@ final class ComScoreTrackerSeekTests: ComScoreTestCase {
         }
     }
 
-    func testSeekWhilePaused() {
+    @MainActor
+    func testSeekWhilePaused() async {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -43,7 +45,7 @@ final class ComScoreTrackerSeekTests: ComScoreTestCase {
             ]
         ))
 
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
 
         expectNoHits(during: .milliseconds(500)) {
             player.seek(at(.init(value: 7, timescale: 1)))

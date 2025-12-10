@@ -15,21 +15,24 @@ final class SkipBackwardChecksTests: TestCase {
         expect(player.canSkipBackward()).to(beFalse())
     }
 
-    func testCanSkipForOnDemand() {
+    @MainActor
+    func testCanSkipForOnDemand() async {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSkipBackward()).to(beTrue())
     }
 
-    func testCannotSkipForLive() {
+    @MainActor
+    func testCannotSkipForLive() async {
         let player = Player(item: .simple(url: Stream.live.url))
-        expect(player.streamType).toEventually(equal(.live))
+        await expect(player.streamType).toEventually(equal(.live))
         expect(player.canSkipBackward()).to(beFalse())
     }
 
-    func testCanSkipForDvr() {
+    @MainActor
+    func testCanSkipForDvr() async {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.streamType).toEventually(equal(.dvr))
+        await expect(player.streamType).toEventually(equal(.dvr))
         expect(player.canSkipBackward()).to(beTrue())
     }
 }

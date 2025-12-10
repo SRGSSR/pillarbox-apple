@@ -16,10 +16,11 @@ final class AVPlayerTests: TestCase {
         expect(player.timeRange).to(equal(.invalid))
     }
 
-    func testTimeRangeForOnDemand() {
+    @MainActor
+    func testTimeRangeForOnDemand() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expect(player.timeRange).toEventually(equal(CMTimeRange(start: .zero, duration: Stream.onDemand.duration)))
+        await expect(player.timeRange).toEventually(equal(CMTimeRange(start: .zero, duration: Stream.onDemand.duration)))
     }
 
     func testDurationWhenEmpty() {
@@ -27,24 +28,27 @@ final class AVPlayerTests: TestCase {
         expect(player.duration).to(equal(.invalid))
     }
 
-    func testDurationForOnDemand() {
+    @MainActor
+    func testDurationForOnDemand() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expect(player.duration).to(equal(.invalid))
-        expect(player.duration).toEventually(equal(Stream.onDemand.duration))
+        await expect(player.duration).toEventually(equal(Stream.onDemand.duration))
     }
 
-    func testDurationForLive() {
+    @MainActor
+    func testDurationForLive() async {
         let item = AVPlayerItem(url: Stream.live.url)
         let player = AVPlayer(playerItem: item)
         expect(player.duration).to(equal(.invalid))
-        expect(player.duration).toEventually(equal(.indefinite))
+        await expect(player.duration).toEventually(equal(.indefinite))
     }
 
-    func testDurationForDvr() {
+    @MainActor
+    func testDurationForDvr() async {
         let item = AVPlayerItem(url: Stream.dvr.url)
         let player = AVPlayer(playerItem: item)
         expect(player.duration).to(equal(.invalid))
-        expect(player.duration).toEventually(equal(.indefinite))
+        await expect(player.duration).toEventually(equal(.indefinite))
     }
 }

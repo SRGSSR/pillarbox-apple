@@ -20,57 +20,64 @@ final class ReplayChecksTests: TestCase {
         expect(player.canReplay()).to(beFalse())
     }
 
-    func testWithOneGoodItemPlayedEntirely() {
+    @MainActor
+    func testWithOneGoodItemPlayedEntirely() async {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.play()
-        expect(player.canReplay()).toEventually(beTrue())
+        await expect(player.canReplay()).toEventually(beTrue())
     }
 
-    func testWithOneBadItemConsumed() {
+    @MainActor
+    func testWithOneBadItemConsumed() async {
         // This item is consumed by the player when failing.
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.canReplay()).toEventually(beTrue())
+        await expect(player.canReplay()).toEventually(beTrue())
     }
 
-    func testWithOneBadItemNotConsumed() {
+    @MainActor
+    func testWithOneBadItemNotConsumed() async {
         // This item is not consumed by the player when failing (for an unknown reason).
         let player = Player(item: .simple(url: Stream.unauthorized.url))
-        expect(player.canReplay()).toEventually(beTrue())
+        await expect(player.canReplay()).toEventually(beTrue())
     }
 
-    func testWithManyGoodItems() {
+    @MainActor
+    func testWithManyGoodItems() async {
         let player = Player(items: [
             .simple(url: Stream.shortOnDemand.url),
             .simple(url: Stream.shortOnDemand.url)
         ])
         player.play()
-        expect(player.canReplay()).toEventually(beTrue())
+        await expect(player.canReplay()).toEventually(beTrue())
     }
 
-    func testWithManyBadItems() {
+    @MainActor
+    func testWithManyBadItems() async {
         let player = Player(items: [
             .simple(url: Stream.unavailable.url),
             .simple(url: Stream.unavailable.url)
         ])
         player.play()
-        expect(player.canReplay()).toEventually(beTrue())
+        await expect(player.canReplay()).toEventually(beTrue())
     }
 
-    func testWithOneGoodItemAndOneBadItem() {
+    @MainActor
+    func testWithOneGoodItemAndOneBadItem() async {
         let player = Player(items: [
             .simple(url: Stream.shortOnDemand.url),
             .simple(url: Stream.unavailable.url)
         ])
         player.play()
-        expect(player.canReplay()).toEventually(beTrue())
+        await expect(player.canReplay()).toEventually(beTrue())
     }
 
-    func testWithOneLongGoodItemAndOneBadItem() {
+    @MainActor
+    func testWithOneLongGoodItemAndOneBadItem() async {
         let player = Player(items: [
             .simple(url: Stream.onDemand.url),
             .simple(url: Stream.unavailable.url)
         ])
         player.play()
-        expect(player.canReplay()).toNever(beTrue(), until: .milliseconds(500))
+        await expect(player.canReplay()).toNever(beTrue(), until: .milliseconds(500))
     }
 }

@@ -39,7 +39,8 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
     }
 
-    func testPauseDuringPlayback() {
+    @MainActor
+    func testPauseDuringPlayback() async {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -48,7 +49,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.time().seconds).toEventually(beGreaterThan(1))
+        await expect(player.time().seconds).toEventually(beGreaterThan(1))
 
         expectAtLeastHits(
             pause { labels in
@@ -76,7 +77,8 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
     }
 
-    func testDestroyPlayerDuringPlayback() {
+    @MainActor
+    func testDestroyPlayerDuringPlayback() async {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -85,7 +87,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         player?.play()
-        expect(player?.time().seconds).toEventually(beGreaterThan(5))
+        await expect(player?.time().seconds).toEventually(beGreaterThan(5))
 
         expectAtLeastHits(
             stop { labels in
@@ -96,7 +98,8 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
     }
 
-    func testDestroyPlayerDuringPlaybackAtNonStandardPlaybackSpeed() {
+    @MainActor
+    func testDestroyPlayerDuringPlaybackAtNonStandardPlaybackSpeed() async {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -106,7 +109,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         player?.playbackSpeed = 2
 
         player?.play()
-        expect(player?.time().seconds).toEventually(beGreaterThan(2))
+        await expect(player?.time().seconds).toEventually(beGreaterThan(2))
 
         expectAtLeastHits(
             stop { labels in
@@ -146,7 +149,8 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
     }
 
-    func testDisableTrackingDuringPlayback() {
+    @MainActor
+    func testDisableTrackingDuringPlayback() async {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -155,7 +159,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.time().seconds).toEventually(beGreaterThan(5))
+        await expect(player.time().seconds).toEventually(beGreaterThan(5))
 
         expectAtLeastHits(stop()) {
             player.isTrackingEnabled = false
@@ -181,7 +185,8 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
     }
 
-    func testEnableTrackingAgainWhilePaused() {
+    @MainActor
+    func testEnableTrackingAgainWhilePaused() async {
         let player = Player()
         player.append(.simple(
             url: Stream.onDemand.url,
@@ -198,7 +203,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
 
         player.pause()
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
 
         expectAtLeastHits(play()) {
             player.isTrackingEnabled = true

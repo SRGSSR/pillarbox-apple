@@ -73,13 +73,14 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         }
     }
 
-    func testPlayerChange() {
+    @MainActor
+    func testPlayerChange() async {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.isProgressAvailable).toEventually(beTrue())
+        await expect(progressTracker.isProgressAvailable).toEventually(beTrue())
 
         expectAtLeastEqualPublished(
             values: [true, false],
@@ -90,13 +91,14 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         }
     }
 
-    func testPlayerSetToNil() {
+    @MainActor
+    func testPlayerSetToNil() async {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.isProgressAvailable).toEventually(beTrue())
+        await expect(progressTracker.isProgressAvailable).toEventually(beTrue())
 
         expectAtLeastEqualPublished(
             values: [true, false],
@@ -107,15 +109,16 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         }
     }
 
-    func testBoundToPlayerAtSomeTime() {
+    @MainActor
+    func testBoundToPlayerAtSomeTime() async {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
 
-        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
+        await expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
         let time = CMTime(value: 20, timescale: 1)
 
-        waitUntil { done in
+        await waitUntil { done in
             player.seek(at(time)) { _ in
                 done()
             }

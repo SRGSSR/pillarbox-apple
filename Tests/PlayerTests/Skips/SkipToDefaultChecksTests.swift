@@ -16,29 +16,33 @@ final class SkipToDefaultChecksTests: TestCase {
         expect(player.canSkipToDefault()).to(beFalse())
     }
 
-    func testCannotSkipForUnknown() {
+    @MainActor
+    func testCannotSkipForUnknown() async {
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.streamType).toEventually(equal(.unknown))
+        await expect(player.streamType).toEventually(equal(.unknown))
         expect(player.canSkipToDefault()).to(beFalse())
     }
 
-    func testCanSkipForOnDemand() {
+    @MainActor
+    func testCanSkipForOnDemand() async {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSkipToDefault()).to(beTrue())
     }
 
-    func testCannotSkipForDvrInLiveConditions() {
+    @MainActor
+    func testCannotSkipForDvrInLiveConditions() async {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.streamType).toEventually(equal(.dvr))
+        await expect(player.streamType).toEventually(equal(.dvr))
         expect(player.canSkipToDefault()).to(beFalse())
     }
 
-    func testCanSkipForDvrInPastConditions() {
+    @MainActor
+    func testCanSkipForDvrInPastConditions() async {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.streamType).toEventually(equal(.dvr))
+        await expect(player.streamType).toEventually(equal(.dvr))
 
-        waitUntil { done in
+        await waitUntil { done in
             player.seek(at(CMTime(value: 1, timescale: 1))) { _ in
                 done()
             }
@@ -47,9 +51,10 @@ final class SkipToDefaultChecksTests: TestCase {
         expect(player.canSkipToDefault()).to(beTrue())
     }
 
-    func testCanSkipForLive() {
+    @MainActor
+    func testCanSkipForLive() async {
         let player = Player(item: .simple(url: Stream.live.url))
-        expect(player.streamType).toEventually(equal(.live))
+        await expect(player.streamType).toEventually(equal(.live))
         expect(player.canSkipToDefault()).to(beTrue())
     }
 }

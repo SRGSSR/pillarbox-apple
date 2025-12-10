@@ -35,7 +35,8 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         }
     }
 
-    func testWhenDestroyed() {
+    @MainActor
+    func testWhenDestroyed() async {
         var player: Player? = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             trackerAdapters: [
@@ -44,7 +45,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         ))
 
         player?.play()
-        expect(player?.playbackState).toEventually(equal(.playing))
+        await expect(player?.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             stop { labels in
@@ -77,7 +78,8 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         }
     }
 
-    func testAudioTrack() {
+    @MainActor
+    func testAudioTrack() async {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
             trackerAdapters: [
@@ -87,7 +89,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
 
         player.setMediaSelectionPreference(.on(languages: "fr"), for: .audible)
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             pause { labels in
@@ -98,7 +100,8 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         }
     }
 
-    func testSubtitlesOff() {
+    @MainActor
+    func testSubtitlesOff() async {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
             trackerAdapters: [
@@ -107,9 +110,9 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
         player.select(mediaOption: .off, for: .legible)
-        expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
+        await expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
 
         expectAtLeastHits(
             pause { labels in
@@ -120,7 +123,8 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         }
     }
 
-    func testSubtitlesOn() {
+    @MainActor
+    func testSubtitlesOn() async {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
             trackerAdapters: [
@@ -130,7 +134,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
 
         player.setMediaSelectionPreference(.on(languages: "fr"), for: .legible)
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             pause { labels in

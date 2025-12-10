@@ -23,15 +23,16 @@ final class ItemsUpdateTests: TestCase {
         expect(player.currentItem).to(equal(item1))
     }
 
-    func testUpdateWithCurrentItemMustNotInterruptPlayback() {
+    @MainActor
+    func testUpdateWithCurrentItemMustNotInterruptPlayback() async {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url)
         let item3 = PlayerItem.simple(url: Stream.onDemandWithSingleAudibleOption.url)
         let item4 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2, item3])
-        expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
+        await expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
         player.items = [item4, item3, item1]
-        expect(player.queuePlayer.currentItem?.url).toAlways(equal(Stream.onDemand.url), until: .seconds(2))
+        await expect(player.queuePlayer.currentItem?.url).toAlways(equal(Stream.onDemand.url), until: .seconds(2))
     }
 
     func testUpdateWithoutCurrentItem() {

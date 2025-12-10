@@ -99,10 +99,11 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testCompletionsForMultipleSeeks() {
+    @MainActor
+    func testCompletionsForMultipleSeeks() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -121,17 +122,18 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         player.seek(to: time2, smooth: true, completionHandler: completion(index: 2))
         player.seek(to: time3, smooth: true, completionHandler: completion(index: 3))
 
-        expect(results).toEventually(equalDiff([
+        await expect(results).toEventually(equalDiff([
             1: true,
             2: true,
             3: true
         ]))
     }
 
-    func testCompletionsForMultipleSeeksEndingWithSmoothSeek() {
+    @MainActor
+    func testCompletionsForMultipleSeeksEndingWithSmoothSeek() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -150,17 +152,18 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         player.seek(to: time2, smooth: false, completionHandler: completion(index: 2))
         player.seek(to: time3, smooth: true, completionHandler: completion(index: 3))
 
-        expect(results).toEventually(equalDiff([
+        await expect(results).toEventually(equalDiff([
             1: false,
             2: true,
             3: true
         ]))
     }
 
-    func testTargetSeekTimeWithMultipleSeeks() {
+    @MainActor
+    func testTargetSeekTimeWithMultipleSeeks() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(player.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         player.seek(to: time1, smooth: true) { _ in }

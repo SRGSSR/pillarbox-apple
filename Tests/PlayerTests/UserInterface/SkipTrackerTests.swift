@@ -21,29 +21,32 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.state).to(equal(.inactive))
     }
 
-    func testFulfilledRequest() {
+    @MainActor
+    func testFulfilledRequest() async {
         let skipTracker = SkipTracker()
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
     }
 
-    func testUnfulfilledRequest() {
+    @MainActor
+    func testUnfulfilledRequest() async {
         let skipTracker = SkipTracker()
         let player = Player(item: PlayerItem.simple(url: Stream.live.url))
         skipTracker.player = player
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
     }
 
-    func testIdenticalRequests() {
+    @MainActor
+    func testIdenticalRequests() async {
         let skipTracker = SkipTracker()
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.state).to(equal(.inactive))
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
@@ -52,11 +55,12 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.state).to(equal(.skippingBackward(20)))
     }
 
-    func testMixedRequests() {
+    @MainActor
+    func testMixedRequests() async {
         let skipTracker = SkipTracker()
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.state).to(equal(.inactive))
         expect(skipTracker.requestSkip(.forward)).to(beFalse())
@@ -69,22 +73,24 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.state).to(equal(.skippingBackward(20)))
     }
 
-    func testSpacedRequests() {
+    @MainActor
+    func testSpacedRequests() async {
         let skipTracker = SkipTracker(delay: 0.1)
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         wait(for: .milliseconds(200))
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.state).to(equal(.inactive))
     }
 
-    func testResetAfterDelay() {
+    @MainActor
+    func testResetAfterDelay() async {
         let skipTracker = SkipTracker(delay: 0.1)
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
         expect(skipTracker.requestSkip(.backward)).to(beFalse())
         expect(skipTracker.requestSkip(.backward)).to(beTrue())
         expect(skipTracker.state).to(equal(.skippingBackward(10)))
@@ -92,14 +98,15 @@ final class SkipTrackerTests: TestCase {
         expect(skipTracker.state).to(equal(.inactive))
     }
 
-    func testPlayerPosition() {
+    @MainActor
+    func testPlayerPosition() async {
         let skipTracker = SkipTracker()
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         skipTracker.player = player
-        expect(player.playbackState).toEventually(equal(.paused))
+        await expect(player.playbackState).toEventually(equal(.paused))
         expect(skipTracker.requestSkip(.forward)).to(beFalse())
         expect(skipTracker.requestSkip(.forward)).to(beTrue())
-        expect(player.time().seconds).toEventually(beGreaterThan(5))
+        await expect(player.time().seconds).toEventually(beGreaterThan(5))
     }
 
     func testInvalidCount() throws {
@@ -116,12 +123,13 @@ final class SkipTrackerTests: TestCase {
         expect(SkipTracker(count: 0)).to(throwAssertion())
     }
 
-    func testPlayerChangeResetsTracking() {
+    @MainActor
+    func testPlayerChangeResetsTracking() async {
         let player1 = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
-        expect(player1.playbackState).toEventually(equal(.paused))
+        await expect(player1.playbackState).toEventually(equal(.paused))
 
         let player2 = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
-        expect(player2.playbackState).toEventually(equal(.paused))
+        await expect(player2.playbackState).toEventually(equal(.paused))
 
         let skipTracker = SkipTracker()
         skipTracker.player = player1

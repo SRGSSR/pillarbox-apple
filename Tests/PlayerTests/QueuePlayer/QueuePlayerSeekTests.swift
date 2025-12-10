@@ -118,10 +118,11 @@ final class QueuePlayerSeekTests: TestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testCompletionsForMultipleSeeks() {
+    @MainActor
+    func testCompletionsForMultipleSeeks() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -140,17 +141,18 @@ final class QueuePlayerSeekTests: TestCase {
         player.seek(to: time2, completionHandler: completion(index: 2))
         player.seek(to: time3, completionHandler: completion(index: 3))
 
-        expect(results).toEventually(equalDiff([
+        await expect(results).toEventually(equalDiff([
             1: false,
             2: false,
             3: true
         ]))
     }
 
-    func testCompletionsForMultipleSmoothSeeksEndingWithSeek() {
+    @MainActor
+    func testCompletionsForMultipleSmoothSeeksEndingWithSeek() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -169,7 +171,7 @@ final class QueuePlayerSeekTests: TestCase {
         player.seek(to: time2, smooth: true, completionHandler: completion(index: 2))
         player.seek(to: time3, smooth: false, completionHandler: completion(index: 3))
 
-        expect(results).toEventually(equalDiff([
+        await expect(results).toEventually(equalDiff([
             1: false,
             2: false,
             3: true
@@ -178,11 +180,12 @@ final class QueuePlayerSeekTests: TestCase {
 
     // Checks that time is not jumping back when seeking forward several times in a row (no tolerance before is allowed
     // in this test as otherwise the player is allowed to pick a position before the desired position),
-    func testMultipleSeekMonotonicity() {
+    @MainActor
+    func testMultipleSeekMonotonicity() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         player.play()
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let values = collectOutput(from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 10), queue: .main), during: .seconds(3)) {
             player.seek(to: CMTime(value: 8, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in
@@ -198,14 +201,15 @@ final class QueuePlayerSeekTests: TestCase {
         expect(values.sorted()).to(equal(values))
     }
 
-    func testNotificationCompletionOrder() {
+    @MainActor
+    func testNotificationCompletionOrder() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time = CMTime(value: 1, timescale: 1)
         let notificationName = Notification.Name("SeekCompleted")
-        expect {
+        await expect {
             player.seek(to: time) { _ in
                 QueuePlayer.notificationCenter.post(name: notificationName, object: self)
             }
@@ -241,11 +245,12 @@ final class QueuePlayerSeekTests: TestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testEnqueue() {
+    @MainActor
+    func testEnqueue() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayerMock(playerItem: item)
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
-        waitUntil { done in
+        await expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        await waitUntil { done in
             player.seek(to: CMTime(value: 1, timescale: 1))
             player.seek(to: CMTime(value: 2, timescale: 1))
             player.seek(to: CMTime(value: 3, timescale: 1))
@@ -257,11 +262,12 @@ final class QueuePlayerSeekTests: TestCase {
         expect(player.seeks).to(equal(5))
     }
 
-    func testEnqueueSmooth() {
+    @MainActor
+    func testEnqueueSmooth() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayerMock(playerItem: item)
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
-        waitUntil { done in
+        await expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        await waitUntil { done in
             player.seek(to: CMTime(value: 1, timescale: 1), smooth: true) { _ in }
             player.seek(to: CMTime(value: 2, timescale: 1), smooth: true) { _ in }
             player.seek(to: CMTime(value: 3, timescale: 1), smooth: true) { _ in }
@@ -273,17 +279,18 @@ final class QueuePlayerSeekTests: TestCase {
         expect(player.seeks).to(equal(2))
     }
 
-    func testTargetSeekTimeWithMultipleSeeks() {
+    @MainActor
+    func testTargetSeekTimeWithMultipleSeeks() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(player.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
-        player.seek(to: time1)
+        await player.seek(to: time1)
         expect(player.targetSeekTime).to(equal(time1))
 
         let time2 = CMTime(value: 2, timescale: 1)
-        player.seek(to: time2)
+        await player.seek(to: time2)
         expect(player.targetSeekTime).to(equal(time2))
     }
 }

@@ -11,24 +11,27 @@ import Nimble
 import PillarboxStreams
 
 final class AVPlayerItemTests: TestCase {
-    func testNonLoadedItem() {
+    @MainActor
+    func testNonLoadedItem() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        expect(item.timeRange).toAlways(equal(.invalid), until: .seconds(1))
+        await expect(item.timeRange).toAlways(equal(.invalid), until: .seconds(1))
     }
 
-    func testOnDemand() {
+    @MainActor
+    func testOnDemand() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         _ = AVPlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
     }
 
-    func testPlayerItemsWithRepeatOff() {
+    @MainActor
+    func testPlayerItemsWithRepeatOff() async {
         let items = [
             PlayerItem.simple(url: Stream.onDemand.url),
             PlayerItem.simple(url: Stream.shortOnDemand.url),
             PlayerItem.simple(url: Stream.live.url)
         ]
-        expect {
+        await expect {
             AVPlayerItem.playerItems(
                 from: items,
                 after: 0,
@@ -48,13 +51,14 @@ final class AVPlayerItemTests: TestCase {
         ]))
     }
 
-    func testPlayerItemsWithRepeatOne() {
+    @MainActor
+    func testPlayerItemsWithRepeatOne() async {
         let items = [
             PlayerItem.simple(url: Stream.onDemand.url),
             PlayerItem.simple(url: Stream.shortOnDemand.url),
             PlayerItem.simple(url: Stream.live.url)
         ]
-        expect {
+        await expect {
             AVPlayerItem.playerItems(
                 from: items,
                 after: 0,
@@ -75,13 +79,14 @@ final class AVPlayerItemTests: TestCase {
         ]))
     }
 
-    func testPlayerItemsWithRepeatAll() {
+    @MainActor
+    func testPlayerItemsWithRepeatAll() async {
         let items = [
             PlayerItem.simple(url: Stream.onDemand.url),
             PlayerItem.simple(url: Stream.shortOnDemand.url),
             PlayerItem.simple(url: Stream.live.url)
         ]
-        expect {
+        await expect {
             AVPlayerItem.playerItems(
                 from: items,
                 after: 0,

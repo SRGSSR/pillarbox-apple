@@ -17,61 +17,67 @@ final class ReplayTests: TestCase {
         expect(player.currentItem).to(equal(item))
     }
 
-    func testWithOneGoodItemPlayedEntirely() {
+    @MainActor
+    func testWithOneGoodItemPlayedEntirely() async {
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
         player.play()
-        expect(player.currentItem).toEventually(beNil())
+        await expect(player.currentItem).toEventually(beNil())
         player.replay()
-        expect(player.currentItem).toEventually(equal(item))
+        await expect(player.currentItem).toEventually(equal(item))
     }
 
-    func testWithOneBadItem() {
+    @MainActor
+    func testWithOneBadItem() async {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item)
-        expect(player.currentItem).toAlways(equal(item), until: .milliseconds(500))
+        await expect(player.currentItem).toAlways(equal(item), until: .milliseconds(500))
         player.replay()
-        expect(player.currentItem).toAlways(equal(item), until: .milliseconds(500))
+        await expect(player.currentItem).toAlways(equal(item), until: .milliseconds(500))
     }
 
-    func testWithManyGoodItems() {
+    @MainActor
+    func testWithManyGoodItems() async {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
         player.play()
-        expect(player.currentItem).toEventually(equal(item2))
+        await expect(player.currentItem).toEventually(equal(item2))
         player.replay()
         expect(player.currentItem).to(equal(item2))
     }
 
-    func testWithManyBadItems() {
+    @MainActor
+    func testWithManyBadItems() async {
         let item1 = PlayerItem.simple(url: Stream.unavailable.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(items: [item1, item2])
         player.play()
-        expect(player.currentItem).toAlways(equal(item1), until: .milliseconds(500))
+        await expect(player.currentItem).toAlways(equal(item1), until: .milliseconds(500))
         player.replay()
-        expect(player.currentItem).toAlways(equal(item1), until: .milliseconds(500))
+        await expect(player.currentItem).toAlways(equal(item1), until: .milliseconds(500))
     }
 
-    func testWithOneGoodItemAndOneBadItem() {
+    @MainActor
+    func testWithOneGoodItemAndOneBadItem() async {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(items: [item1, item2])
         player.play()
-        expect(player.currentItem).toEventually(equal(item2))
+        await expect(player.currentItem).toEventually(equal(item2))
         player.replay()
         expect(player.currentItem).to(equal(item2))
     }
 
-    func testResumePlaybackIfNeeded() {
+    @MainActor
+    func testResumePlaybackIfNeeded() async {
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
         player.play()
-        expect(player.currentItem).toEventually(beNil())
+        await expect(player.currentItem).toEventually(beNil())
         player.pause()
         player.replay()
-        expect(player.currentItem).toEventually(equal(item))
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.currentItem).toEventually(equal(item))
+        await expect(player.playbackState).toEventually(equal(.playing))
     }
 }

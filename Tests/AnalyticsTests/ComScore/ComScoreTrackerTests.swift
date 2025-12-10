@@ -66,7 +66,8 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         }
     }
 
-    func testPauseDuringPlayback() {
+    @MainActor
+    func testPauseDuringPlayback() async {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -75,7 +76,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         ))
 
         player.play()
-        expect(player.time().seconds).toEventually(beGreaterThan(1))
+        await expect(player.time().seconds).toEventually(beGreaterThan(1))
 
         expectAtLeastHits(
             pause { labels in
@@ -103,7 +104,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
     }
-
+    
     func testDestroyPlayerDuringPlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,

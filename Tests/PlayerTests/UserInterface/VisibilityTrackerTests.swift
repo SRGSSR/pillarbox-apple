@@ -37,77 +37,87 @@ final class VisibilityTrackerTests: TestCase {
         expect(visibilityTracker.isUserInterfaceHidden).to(beTrue())
     }
 
-    func testInitiallyVisibleIfPaused() {
+    @MainActor
+    func testInitiallyVisibleIfPaused() async {
         let visibilityTracker = VisibilityTracker(delay: 0.5, isUserInterfaceHidden: true)
         visibilityTracker.player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
-        expect(visibilityTracker.isUserInterfaceHidden).toEventually(beFalse())
+        await expect(visibilityTracker.isUserInterfaceHidden).toEventually(beFalse())
     }
 
-    func testVisibleWhenPaused() {
+    @MainActor
+    func testVisibleWhenPaused() async {
         let visibilityTracker = VisibilityTracker(delay: 0.5, isUserInterfaceHidden: true)
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         visibilityTracker.player = player
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
         expect(visibilityTracker.isUserInterfaceHidden).to(beTrue())
         player.pause()
-        expect(visibilityTracker.isUserInterfaceHidden).toEventually(beFalse())
+        await expect(visibilityTracker.isUserInterfaceHidden).toEventually(beFalse())
     }
 
-    func testNoAutoHideWhileIdle() {
+    @MainActor
+    func testNoAutoHideWhileIdle() async {
         let visibilityTracker = VisibilityTracker(delay: 0.5)
         visibilityTracker.player = Player()
-        expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
+        await expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
     }
 
-    func testAutoHideWhilePlaying() {
+    @MainActor
+    func testAutoHideWhilePlaying() async {
         let visibilityTracker = VisibilityTracker(delay: 0.5)
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         player.play()
         visibilityTracker.player = player
-        expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue())
+        await expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue())
     }
 
-    func testNoAutoHideWhilePaused() {
+    @MainActor
+    func testNoAutoHideWhilePaused() async {
         let visibilityTracker = VisibilityTracker(delay: 0.5)
         visibilityTracker.player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
-        expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
+        await expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
     }
 
-    func testNoAutoHideWhileEnded() {
+    @MainActor
+    func testNoAutoHideWhileEnded() async {
         let visibilityTracker = VisibilityTracker(delay: Stream.shortOnDemand.duration.seconds + 0.5)
         let player = Player(item: PlayerItem.simple(url: Stream.shortOnDemand.url))
         player.play()
         visibilityTracker.player = player
-        expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
+        await expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
     }
 
-    func testNoAutoHideWhileFailed() {
+    @MainActor
+    func testNoAutoHideWhileFailed() async {
         let visibilityTracker = VisibilityTracker(delay: 0.5)
         visibilityTracker.player = Player(item: PlayerItem.simple(url: Stream.unavailable.url))
-        expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
+        await expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
     }
 
-    func testNoAutoHideWithEmptyPlayer() {
+    @MainActor
+    func testNoAutoHideWithEmptyPlayer() async {
         let visibilityTracker = VisibilityTracker(delay: 0.5)
         visibilityTracker.player = Player()
-        expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
+        await expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
     }
 
-    func testNoAutoHideWithoutPlayer() {
+    @MainActor
+    func testNoAutoHideWithoutPlayer() async {
         let visibilityTracker = VisibilityTracker(delay: 0.5)
-        expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
+        await expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
     }
 
-    func testResetAutoHide() {
+    @MainActor
+    func testResetAutoHide() async {
         let visibilityTracker = VisibilityTracker(delay: 0.3)
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         visibilityTracker.player = player
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
-        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(200))
+        await expect(player.playbackState).toEventually(equal(.playing))
+        await expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(200))
         visibilityTracker.reset()
-        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(200))
+        await expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(200))
     }
 
     func testResetDoesNotShowControls() {
@@ -116,13 +126,14 @@ final class VisibilityTrackerTests: TestCase {
         expect(visibilityTracker.isUserInterfaceHidden).to(beTrue())
     }
 
-    func testAutoHideAfterUnhide() {
+    @MainActor
+    func testAutoHideAfterUnhide() async {
         let visibilityTracker = VisibilityTracker(delay: 0.5, isUserInterfaceHidden: true)
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         player.play()
         visibilityTracker.player = player
         visibilityTracker.toggle()
-        expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue())
+        await expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue())
     }
 
     func testInvalidDelay() throws {
@@ -144,21 +155,22 @@ final class VisibilityTrackerTests: TestCase {
         expect(visibilityTracker.isUserInterfaceHidden).to(beTrue())
     }
 
-    func testPlayerChangeResetsAutoHide() {
+    @MainActor
+    func testPlayerChangeResetsAutoHide() async {
         let player1 = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         player1.play()
-        expect(player1.playbackState).toEventually(equal(.playing))
+        await expect(player1.playbackState).toEventually(equal(.playing))
 
         let player2 = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         player2.play()
-        expect(player2.playbackState).toEventually(equal(.playing))
+        await expect(player2.playbackState).toEventually(equal(.playing))
 
         let visibilityTracker = VisibilityTracker(delay: 0.5)
         visibilityTracker.player = player1
-        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
+        await expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
 
         visibilityTracker.player = player2
-        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
+        await expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
     }
 
     func testDeallocation() {
@@ -170,12 +182,13 @@ final class VisibilityTrackerTests: TestCase {
         expect(weakVisibilityTracker).to(beNil())
     }
 
-    func testDeallocationWhilePlaying() {
+    @MainActor
+    func testDeallocationWhilePlaying() async {
         var visibilityTracker: VisibilityTracker? = VisibilityTracker()
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         player.play()
         visibilityTracker?.player = player
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         weak var weakVisibilityTracker = visibilityTracker
         autoreleasepool {

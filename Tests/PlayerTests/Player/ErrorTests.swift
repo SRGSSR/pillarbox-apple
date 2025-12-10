@@ -42,26 +42,30 @@ final class ErrorTests: TestCase {
         )
     }
 
-    func testReset() {
+    @MainActor
+    func testReset() async {
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.error).toEventuallyNot(beNil())
+        await expect(player.error).toEventuallyNot(beNil())
         player.removeAllItems()
-        expect(player.error).toEventually(beNil())
+        await expect(player.error).toEventually(beNil())
     }
 
-    func testNotBusyWhenError() {
+    @MainActor
+    func testNotBusyWhenError() async {
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.error).toEventuallyNot(beNil())
+        await expect(player.error).toEventuallyNot(beNil())
         expect(player.properties.isBusy).to(beFalse())
     }
 
-    func testErrorType() {
+    @MainActor
+    func testErrorType() async {
         let player = Player(item: .failing(with: MockError(), after: 0.1))
-        expect(player.error is MockError).toEventually(beTrue())
+        await expect(player.error is MockError).toEventually(beTrue())
     }
 
-    func testUnavailableErrorType() {
+    @MainActor
+    func testUnavailableErrorType() async {
         let player = Player(item: .unavailable(with: MockError(), after: 0.1))
-        expect(player.error is MockError).toEventually(beTrue())
+        await expect(player.error is MockError).toEventually(beTrue())
     }
 }

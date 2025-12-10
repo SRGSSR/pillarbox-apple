@@ -16,39 +16,45 @@ final class SeekChecksTests: TestCase {
         expect(player.canSeek(to: .zero)).to(beFalse())
     }
 
-    func testCanSeekInTimeRange() {
+    @MainActor
+    func testCanSeekInTimeRange() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSeek(to: CMTimeMultiplyByFloat64(Stream.onDemand.duration, multiplier: 0.5))).to(beTrue())
     }
 
-    func testCannotSeekInEmptyTimeRange() {
+    @MainActor
+    func testCannotSeekInEmptyTimeRange() async {
         let player = Player(item: .simple(url: Stream.live.url))
-        expect(player.streamType).toEventually(equal(.live))
+        await expect(player.streamType).toEventually(equal(.live))
         expect(player.canSeek(to: .zero)).to(beFalse())
     }
 
-    func testCanSeekToTimeRangeStart() {
+    @MainActor
+    func testCanSeekToTimeRangeStart() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSeek(to: player.seekableTimeRange.start)).to(beTrue())
     }
 
-    func testCanSeekToTimeRangeEnd() {
+    @MainActor
+    func testCanSeekToTimeRangeEnd() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSeek(to: player.seekableTimeRange.end)).to(beTrue())
     }
 
-    func testCannotSeekBeforeTimeRangeStart() {
+    @MainActor
+    func testCannotSeekBeforeTimeRangeStart() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSeek(to: CMTime(value: -10, timescale: 1))).to(beFalse())
     }
 
-    func testCannotSeekAfterTimeRangeEnd() {
+    @MainActor
+    func testCannotSeekAfterTimeRangeEnd() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSeek(to: player.seekableTimeRange.end + CMTime(value: 1, timescale: 1))).to(beFalse())
     }
 }

@@ -61,25 +61,27 @@ final class CurrentItemTests: TestCase {
         }
     }
 
-    func testCurrentItemWithFirstItemRemoved() {
+    @MainActor
+    func testCurrentItemWithFirstItemRemoved() async {
         let item1 = PlayerItem.simple(url: Stream.unavailable.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        expect(player.error).toEventuallyNot(beNil())
+        await expect(player.error).toEventuallyNot(beNil())
         player.remove(item1)
-        expect(player.currentItem).toAlways(equal(item2), until: .seconds(1))
+        await expect(player.currentItem).toAlways(equal(item2), until: .seconds(1))
     }
 
-    func testCurrentItemWithSecondItemRemoved() {
+    @MainActor
+    func testCurrentItemWithSecondItemRemoved() async {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let item3 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
-        expect(player.currentItem).toEventually(equal(item2))
-        expect(player.error).toEventuallyNot(beNil())
+        await expect(player.currentItem).toEventually(equal(item2))
+        await expect(player.error).toEventuallyNot(beNil())
         player.remove(item2)
-        expect(player.currentItem).toAlways(equal(item3), until: .seconds(1))
+        await expect(player.currentItem).toAlways(equal(item3), until: .seconds(1))
     }
 
     func testCurrentItemWithFailedItem() {
@@ -131,12 +133,13 @@ final class CurrentItemTests: TestCase {
         }
     }
 
-    func testSetCurrentItemUpdatePlayerCurrentItem() {
+    @MainActor
+    func testSetCurrentItemUpdatePlayerCurrentItem() async {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
         player.currentItem = item2
-        expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.shortOnDemand.url))
+        await expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.shortOnDemand.url))
     }
 
     func testPlayerPreloadedItemCount() {
@@ -172,14 +175,15 @@ final class CurrentItemTests: TestCase {
         expect(player.queuePlayer.items()).to(beEmpty())
     }
 
-    func testSetCurrentItemToSameItem() {
+    @MainActor
+    func testSetCurrentItemToSameItem() async {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item])
         player.play()
-        expect(player.time().seconds).toEventually(beGreaterThan(1))
+        await expect(player.time().seconds).toEventually(beGreaterThan(1))
         player.pause()
         player.currentItem = item
-        expect(player.playbackState).toAlways(equal(.paused), until: .seconds(1))
+        await expect(player.playbackState).toAlways(equal(.paused), until: .seconds(1))
         expect(player.currentItem).to(equal(item))
         expect(player.items).to(equalDiff([item]))
         expect(player.time().seconds).to(equal(0))

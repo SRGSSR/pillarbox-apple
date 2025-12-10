@@ -11,31 +11,35 @@ import Nimble
 import PillarboxStreams
 
 final class MetricsCollectorEventsTests: TestCase {
-    func testUnbound() {
+    @MainActor
+    func testUnbound() async {
         let metricsCollector = MetricsCollector(interval: CMTime(value: 1, timescale: 4))
-        expect(metricsCollector.metricEvents).toAlways(beEmpty(), until: .milliseconds(500))
+        await expect(metricsCollector.metricEvents).toAlways(beEmpty(), until: .milliseconds(500))
     }
 
-    func testEmptyPlayer() {
+    @MainActor
+    func testEmptyPlayer() async {
         let metricsCollector = MetricsCollector(interval: CMTime(value: 1, timescale: 4))
         metricsCollector.player = Player()
-        expect(metricsCollector.metricEvents).toAlways(beEmpty(), until: .milliseconds(500))
+        await expect(metricsCollector.metricEvents).toAlways(beEmpty(), until: .milliseconds(500))
     }
 
-    func testPausedPlayer() {
+    @MainActor
+    func testPausedPlayer() async {
         let metricsCollector = MetricsCollector(interval: CMTime(value: 1, timescale: 4))
         let player = Player(item: .simple(url: Stream.onDemand.url))
         metricsCollector.player = player
-        expect(metricsCollector.metricEvents).toEventuallyNot(beEmpty())
+        await expect(metricsCollector.metricEvents).toEventuallyNot(beEmpty())
     }
 
-    func testPlayerSetToNil() {
+    @MainActor
+    func testPlayerSetToNil() async {
         let metricsCollector = MetricsCollector(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         metricsCollector.player = player
         player.play()
-        expect(metricsCollector.metricEvents).toEventuallyNot(beEmpty())
+        await expect(metricsCollector.metricEvents).toEventuallyNot(beEmpty())
 
         metricsCollector.player = nil
         expect(metricsCollector.metricEvents).to(beEmpty())

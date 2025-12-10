@@ -29,7 +29,8 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
         }
     }
 
-    func testWhenDifferentRateApplied() {
+    @MainActor
+    func testWhenDifferentRateApplied() async {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -37,7 +38,7 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
             ]
         ))
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
             playrt { labels in
@@ -48,7 +49,8 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
         }
     }
 
-    func testWhenSameRateApplied() {
+    @MainActor
+    func testWhenSameRateApplied() async {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
@@ -56,7 +58,7 @@ final class ComScoreTrackerRateTests: ComScoreTestCase {
             ]
         ))
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
+        await expect(player.playbackState).toEventually(equal(.playing))
 
         expectNoHits(during: .seconds(1)) {
             player.playbackSpeed = 1

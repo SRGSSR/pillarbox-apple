@@ -32,35 +32,40 @@ final class PlayerTests: TestCase {
         }
     }
 
-    func testTimesWhenEmpty() {
+    @MainActor
+    func testTimesWhenEmpty() async {
         let player = Player()
-        expect(player.time()).toAlways(equal(.invalid), until: .seconds(1))
+        await expect(player.time()).toAlways(equal(.invalid), until: .seconds(1))
     }
 
-    func testTimesInEmptyRange() {
+    @MainActor
+    func testTimesInEmptyRange() async {
         let player = Player(item: .simple(url: Stream.live.url))
-        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
+        await expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
         player.play()
-        expect(player.time()).toNever(equal(.invalid), until: .seconds(1))
+        await expect(player.time()).toNever(equal(.invalid), until: .seconds(1))
     }
 
-    func testMetadataUpdatesMustNotChangePlayerItem() {
+    @MainActor
+    func testMetadataUpdatesMustNotChangePlayerItem() async {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
-        expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
+        await expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
         let currentItem = player.queuePlayer.currentItem
-        expect(player.queuePlayer.currentItem).toAlways(equal(currentItem), until: .seconds(2))
+        await expect(player.queuePlayer.currentItem).toAlways(equal(currentItem), until: .seconds(2))
     }
 
-    func testRetrieveCurrentValueOnSubscription() {
+    @MainActor
+    func testRetrieveCurrentValueOnSubscription() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.properties.isBuffering).toEventually(beFalse())
+        await expect(player.properties.isBuffering).toEventually(beFalse())
         expectAtLeastEqualPublished(
             values: [false],
             from: player.propertiesPublisher.slice(at: \.isBuffering)
         )
     }
 
-    func testPreloadedItems() {
+    @MainActor
+    func testPreloadedItems() async {
         let player = Player(
             items: [
                 .simple(url: Stream.onDemand.url),
@@ -73,12 +78,13 @@ final class PlayerTests: TestCase {
             .simple(url: Stream.onDemand.url),
             .loading()
         ]
-        expect(player.items.map(\.content.resource)).toEventually(beSimilarTo(expectedResources))
-        expect(player.items.map(\.content.resource)).toAlways(beSimilarTo(expectedResources), until: .seconds(1))
+        await expect(player.items.map(\.content.resource)).toEventually(beSimilarTo(expectedResources))
+        await expect(player.items.map(\.content.resource)).toAlways(beSimilarTo(expectedResources), until: .seconds(1))
     }
 
-    func testNoMetricsWhenFailed() {
+    @MainActor
+    func testNoMetricsWhenFailed() async {
         let player = Player(item: .failing(with: MockError(), after: 0.1))
-        expect(player.metrics()).toAlways(beNil(), until: .seconds(1))
+        await expect(player.metrics()).toAlways(beNil(), until: .seconds(1))
     }
 }

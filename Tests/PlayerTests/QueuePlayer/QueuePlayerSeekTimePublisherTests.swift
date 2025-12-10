@@ -59,11 +59,12 @@ final class QueuePlayerSeekTimePublisherTests: TestCase {
         }
     }
 
-    func testMultipleSeeksWithinTimeRange() {
+    @MainActor
+    func testMultipleSeeksWithinTimeRange() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         player.play()
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -76,11 +77,12 @@ final class QueuePlayerSeekTimePublisherTests: TestCase {
         }
     }
 
-    func testMultipleSeeksAtTheSameLocationWithinTimeRange() {
+    @MainActor
+    func testMultipleSeeksAtTheSameLocationWithinTimeRange() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         player.play()
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time = CMTime(value: 1, timescale: 1)
         expectAtLeastEqualPublished(

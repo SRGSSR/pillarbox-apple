@@ -51,20 +51,22 @@ final class ItemNavigationBackwardTests: TestCase {
         expect(player.currentItem).to(equal(item2))
     }
 
-    func testReturnForOnDemandAtBeginningWithoutPreviousItem() {
+    @MainActor
+    func testReturnForOnDemandAtBeginningWithoutPreviousItem() async {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item, configuration: Self.configuration())
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item))
     }
 
-    func testReturnForOnDemandNearBeginningWithoutPreviousItem() {
+    @MainActor
+    func testReturnForOnDemandNearBeginningWithoutPreviousItem() async {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item, configuration: Self.configuration())
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
 
-        waitUntil { done in
+        await waitUntil { done in
             player.seek(at(CMTime(value: 1, timescale: 1))) { _ in
                 done()
             }
@@ -72,86 +74,94 @@ final class ItemNavigationBackwardTests: TestCase {
 
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item))
-        expect(player.time()).toNever(equal(.zero), until: .seconds(3))
+        await expect(player.time()).toNever(equal(.zero), until: .seconds(3))
     }
 
-    func testReturnForOnDemandAtBeginningWithPreviousItem() {
+    @MainActor
+    func testReturnForOnDemandAtBeginningWithPreviousItem() async {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item1))
     }
 
-    func testReturnForOnDemandNotAtBeginning() {
+    @MainActor
+    func testReturnForOnDemandNotAtBeginning() async {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
-        expect(player.streamType).toEventually(equal(.onDemand))
+        await expect(player.streamType).toEventually(equal(.onDemand))
 
-        waitUntil { done in
+        await waitUntil { done in
             player.seek(at(CMTime(value: 5, timescale: 1))) { _ in
                 done()
             }
         }
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item1))
-        expect(player.time()).toEventually(equal(.zero))
+        await expect(player.time()).toEventually(equal(.zero))
     }
 
-    func testReturnForLiveWithPreviousItem() {
+    @MainActor
+    func testReturnForLiveWithPreviousItem() async {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
-        expect(player.streamType).toEventually(equal(.live))
+        await expect(player.streamType).toEventually(equal(.live))
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item1))
     }
 
-    func testReturnForLiveWithoutPreviousItem() {
+    @MainActor
+    func testReturnForLiveWithoutPreviousItem() async {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item, configuration: Self.configuration())
-        expect(player.streamType).toEventually(equal(.live))
+        await expect(player.streamType).toEventually(equal(.live))
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item))
     }
 
-    func testReturnForDvrWithPreviousItem() {
+    @MainActor
+    func testReturnForDvrWithPreviousItem() async {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
-        expect(player.streamType).toEventually(equal(.dvr))
+        await expect(player.streamType).toEventually(equal(.dvr))
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item1))
     }
 
-    func testReturnForDvrWithoutPreviousItem() {
+    @MainActor
+    func testReturnForDvrWithoutPreviousItem() async {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item, configuration: Self.configuration())
-        expect(player.streamType).toEventually(equal(.dvr))
+        await expect(player.streamType).toEventually(equal(.dvr))
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item))
     }
 
-    func testReturnForUnknownWithPreviousItem() {
+    @MainActor
+    func testReturnForUnknownWithPreviousItem() async {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(items: [item1, item2], configuration: Self.configuration())
         player.advanceToNextItem()
-        expect(player.streamType).toEventually(equal(.unknown))
+        await expect(player.streamType).toEventually(equal(.unknown))
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item1))
     }
 
-    func testReturnForUnknownWithoutPreviousItem() {
+    @MainActor
+    func testReturnForUnknownWithoutPreviousItem() async {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item, configuration: Self.configuration())
-        expect(player.streamType).toEventually(equal(.unknown))
+        await expect(player.streamType).toEventually(equal(.unknown))
         player.returnToPreviousItem()
         expect(player.currentItem).to(equal(item))
     }
