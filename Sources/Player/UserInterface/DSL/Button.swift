@@ -84,7 +84,7 @@ extension Button: ContextualActionsElement where Body == ButtonInContextualActio
     ///   - action: A closure triggered when the user presses the button.
     @_disfavoredOverload
     public init<S>(_ title: S, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
-        self.init(String(title), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(title), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 
     /// Creates a button.
@@ -94,7 +94,7 @@ extension Button: ContextualActionsElement where Body == ButtonInContextualActio
     ///   - systemImage: The name of the system symbol image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     public init(_ title: LocalizedStringResource, systemImage: String, action: @escaping () -> Void) {
-        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(localized: title), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 }
 
@@ -168,7 +168,7 @@ extension Button: InfoViewActionsElement where Body == ButtonInInfoViewActions, 
     ///   - action: A closure triggered when the user presses the button.
     @_disfavoredOverload
     public init<S>(_ title: S, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
-        self.init(String(title), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(title), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 
     /// Creates a button.
@@ -178,7 +178,7 @@ extension Button: InfoViewActionsElement where Body == ButtonInInfoViewActions, 
     ///   - systemImage: The name of the system symbol image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     public init(_ title: LocalizedStringResource, systemImage: String, action: @escaping () -> Void) {
-        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(localized: title), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 }
 
@@ -275,7 +275,7 @@ extension Button: MenuElement where Body == ButtonInMenu, Value == Never {
     ///   - action: A closure triggered when the user presses the button.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
-        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 
     /// Creates a button.
@@ -286,7 +286,7 @@ extension Button: MenuElement where Body == ButtonInMenu, Value == Never {
     ///   - systemImage: The name of the system symbol image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, action: @escaping () -> Void) {
-        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 }
 
@@ -403,7 +403,7 @@ extension Button: SectionElement where Body == ButtonInSection, Value == Never {
     ///   - action: A closure triggered when the user presses the button.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
-        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 
     /// Creates a button.
@@ -414,7 +414,7 @@ extension Button: SectionElement where Body == ButtonInSection, Value == Never {
     ///   - systemImage: The name of the system symbol image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, action: @escaping () -> Void) {
-        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 }
 
@@ -485,7 +485,7 @@ extension Button: TransportBarElement where Body == ButtonInTransportBar, Value 
     ///   - action: A closure triggered when the user presses the button.
     @_disfavoredOverload
     public init<S>(_ title: S, systemImage: String, action: @escaping () -> Void) where S: StringProtocol {
-        self.init(String(title), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(title), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 
     /// Creates a button.
@@ -495,7 +495,7 @@ extension Button: TransportBarElement where Body == ButtonInTransportBar, Value 
     ///   - systemImage: The name of the system symbol image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
     public init(_ title: LocalizedStringResource, systemImage: String, action: @escaping () -> Void) {
-        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, action: action)
+        self.init(String(localized: title), image: UIImage(systemName: systemImage) ?? UIImage(), action: action)
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")

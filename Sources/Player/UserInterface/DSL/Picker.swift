@@ -155,7 +155,7 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
     ///   - content: The picker's content.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
-        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -167,7 +167,7 @@ extension Picker: MenuElement where Body == PickerInMenu<Value> {
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), selection: selection, content: content)
     }
 }
 
@@ -289,7 +289,7 @@ extension Picker: SectionElement where Body == PickerInSection<Value> {
     ///   - content: The picker's content.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
-        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -301,7 +301,7 @@ extension Picker: SectionElement where Body == PickerInSection<Value> {
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), selection: selection, content: content)
     }
 }
 
@@ -378,7 +378,7 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - content: The picker's content.
     @_disfavoredOverload
     public init<S>(_ title: S, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
-        self.init(String(title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+        self.init(String(title), image: UIImage(systemName: systemImage) ?? UIImage(), selection: selection, content: content)
     }
 
     /// Creates a picker.
@@ -389,7 +389,7 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - selection: A binding to a property that determines the currently-selected option.
     ///   - content: The picker's content.
     public init(_ title: LocalizedStringResource, systemImage: String, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
-        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, selection: selection, content: content)
+        self.init(String(localized: title), image: UIImage(systemName: systemImage) ?? UIImage(), selection: selection, content: content)
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")

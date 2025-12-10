@@ -143,7 +143,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - handler: The handler to invoke when the user selects the action.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
-        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -155,7 +155,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
     }
 }
 
@@ -266,7 +266,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - handler: The handler to invoke when the user selects the action.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
-        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -278,7 +278,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
     }
 }
 
@@ -369,7 +369,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - handler: The handler to invoke when the user selects the action.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
-        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
     }
 
     /// Creates an option.
@@ -381,7 +381,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the action.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
-        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, value: value, handler: handler)
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
     }
 }
 

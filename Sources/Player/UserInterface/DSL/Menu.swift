@@ -148,7 +148,7 @@ extension Menu: MenuElement where Body == MenuInMenu, Value == Never {
     ///   - content: The menu's content.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, content: content)
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), content: content)
     }
 
     /// Creates a menu.
@@ -159,7 +159,7 @@ extension Menu: MenuElement where Body == MenuInMenu, Value == Never {
     ///   - systemImage: The name of the system symbol image associated with the menu.
     ///   - content: The menu's content.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
-        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, content: content)
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), content: content)
     }
 }
 
@@ -275,7 +275,7 @@ extension Menu: SectionElement where Body == MenuInSection, Value == Never {
     ///   - content: The menu's content.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage)!, content: content)
+        self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), content: content)
     }
 
     /// Creates a menu.
@@ -286,7 +286,7 @@ extension Menu: SectionElement where Body == MenuInSection, Value == Never {
     ///   - systemImage: The name of the system symbol image associated with the menu.
     ///   - content: The menu's content.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
-        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage)!, content: content)
+        self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), content: content)
     }
 }
 
@@ -370,7 +370,7 @@ extension Menu: TransportBarElement where Body == MenuInTransportBar, Value == N
     ///   - content: The menu's content.
     @_disfavoredOverload
     public init<S>(_ title: S, systemImage: String, @MenuContentBuilder content: () -> MenuContent) where S: StringProtocol {
-        self.init(String(title), image: UIImage(systemName: systemImage)!, content: content)
+        self.init(String(title), image: UIImage(systemName: systemImage) ?? UIImage(), content: content)
     }
 
     /// Creates a menu.
@@ -380,7 +380,7 @@ extension Menu: TransportBarElement where Body == MenuInTransportBar, Value == N
     ///   - systemImage: The name of the system symbol image associated with the menu.
     ///   - content: The menu's content.
     public init(_ title: LocalizedStringResource, systemImage: String, @MenuContentBuilder content: () -> MenuContent) {
-        self.init(String(localized: title), image: UIImage(systemName: systemImage)!, content: content)
+        self.init(String(localized: title), image: UIImage(systemName: systemImage) ?? UIImage(), content: content)
     }
 
     @available(*, unavailable, message: "Elements displayed at the transport bar root level require an associated image")
