@@ -76,20 +76,23 @@ final class QueuePlayerSeekTests: TestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testNotificationsForMultipleSeeksWithinTimeRange() {
+    @MainActor
+    func testNotificationsForMultipleSeeksWithinTimeRange() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
-        expect {
+
+        await expect {
             player.seek(to: time1) { finished in
                 expect(finished).to(beFalse())
             }
             player.seek(to: time2) { finished in
                 expect(finished).to(beTrue())
             }
+            return ()
         }.toEventually(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time2]),
@@ -97,20 +100,22 @@ final class QueuePlayerSeekTests: TestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testNotificationsForSeekAfterSmoothSeekWithinTimeRange() {
+    @MainActor
+    func testNotificationsForSeekAfterSmoothSeekWithinTimeRange() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
-        expect {
+        await expect {
             player.seek(to: time1, smooth: true) { finished in
                 expect(finished).to(beFalse())
             }
             player.seek(to: time2) { finished in
                 expect(finished).to(beTrue())
             }
+            return ()
         }.toEventually(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time2]),
@@ -220,22 +225,24 @@ final class QueuePlayerSeekTests: TestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testNotificationCompletionOrderWithMultipleSeeks() {
+    @MainActor
+    func testNotificationCompletionOrderWithMultipleSeeks() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         let notificationName1 = Notification.Name("SeekCompleted1")
         let notificationName2 = Notification.Name("SeekCompleted2")
-        expect {
+        await expect {
             player.seek(to: time1) { _ in
                 QueuePlayer.notificationCenter.post(name: notificationName1, object: self)
             }
             player.seek(to: time2) { _ in
                 QueuePlayer.notificationCenter.post(name: notificationName2, object: self)
             }
+            return ()
         }.toEventually(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time2]),

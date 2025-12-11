@@ -57,20 +57,22 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testNotificationsForMultipleSeeksWithinTimeRange() {
+    @MainActor
+    func testNotificationsForMultipleSeeksWithinTimeRange() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
-        expect {
+        await expect {
             player.seek(to: time1, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
             player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
+            return ()
         }.toEventually(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time2]),
@@ -78,20 +80,22 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testNotificationsForSmoothSeekAfterSeekWithinTimeRange() {
+    @MainActor
+    func testNotificationsForSmoothSeekAfterSeekWithinTimeRange() async {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+        await expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
-        expect {
+        await expect {
             player.seek(to: time1) { finished in
                 expect(finished).to(beTrue())
             }
             player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
+            return ()
         }.toEventually(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekNotificationKey.time: time2]),
