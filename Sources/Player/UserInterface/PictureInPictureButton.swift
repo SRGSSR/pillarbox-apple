@@ -23,7 +23,7 @@ public struct PictureInPictureButton<Content>: View where Content: View {
     public var body: some View {
         Group {
             if isPossible && PictureInPicture.shared.persistable != nil {
-                Button(action: PictureInPicture.shared.custom.toggle) {
+                SwiftUI.Button(action: PictureInPicture.shared.custom.toggle) {
                     content(isActive)
                 }
                 .hoverEffect()

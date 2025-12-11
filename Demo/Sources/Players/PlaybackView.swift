@@ -355,7 +355,7 @@ private struct SettingsMenu: View {
     @Binding var gravity: AVLayerVideoGravity
 
     var body: some View {
-        Menu {
+        SwiftUI.Menu {
             player.standardSettingsMenu()
             QualityMenu(player: player)
             if isOverCurrentContext {
@@ -392,8 +392,8 @@ private struct QualityMenu: View {
     private var qualitySetting: QualitySetting = .high
 
     var body: some View {
-        Menu {
-            Picker(selection: $qualitySetting) {
+        SwiftUI.Menu {
+            SwiftUI.Picker(selection: $qualitySetting) {
                 ForEach(QualitySetting.allCases, id: \.self) { quality in
                     Text(quality.name).tag(quality)
                 }
@@ -710,10 +710,13 @@ private struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View,
 #else
 
 private struct MainSystemView: View {
-    let player: Player
+    @ObservedObject var player: Player
     let supportsPictureInPicture: Bool
     @ObservedObject var progressTracker: ProgressTracker
     @State private var streamType: StreamType = .unknown
+
+    @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
+    private var qualitySetting: QualitySetting = .high
 
     private var skipInfoViewActionTitle: LocalizedStringResource {
         streamType == .onDemand ? "From Beginning" : "Back to Live"
@@ -726,25 +729,40 @@ private struct MainSystemView: View {
     var body: some View {
         SystemVideoView(player: player)
             .supportsPictureInPicture(supportsPictureInPicture)
+            .transportBar(content: transportBarContent)
             .contextualActions(content: contextualActionsContent)
             .infoViewActions(content: infoViewActionsContent)
             .ignoresSafeArea()
             .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
-    @SystemVideoViewActionsContentBuilder7
-    func contextualActionsContent() -> SystemVideoViewActionsContent {
+    @TransportBarContentBuilder
+    func transportBarContent() -> TransportBarContent {
+        Picker("Playback Speed", systemImage: "speedometer", selection: $player.playbackSpeed) {
+            for speed in [0.5, 1, 1.25, 1.5, 2] as [Float] {
+                Option("\(speed, specifier: "%g×")", value: speed)
+            }
+        }
+        Picker("Quality", systemImage: "person.and.background.dotted", selection: $qualitySetting) {
+            for quality in QualitySetting.allCases {
+                Option(quality.name, value: quality)
+            }
+        }
+    }
+
+    @ContextualActionsContentBuilder
+    func contextualActionsContent() -> ContextualActionsContent {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
-            SystemVideoViewAction(title: "Skip") {
+            Button("Skip") {
                 player.seek(to: skippableTimeRange.end)
             }
         }
     }
 
-    @SystemVideoViewActionsContentBuilder2
-    func infoViewActionsContent() -> SystemVideoViewActionsContent {
+    @InfoViewActionsContentBuilder
+    func infoViewActionsContent() -> InfoViewActionsContent {
         if player.canSkipToDefault() {
-            SystemVideoViewAction(title: skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
+            Button(skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
                 player.skipToDefault()
             }
         }

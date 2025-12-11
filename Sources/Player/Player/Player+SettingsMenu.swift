@@ -15,7 +15,7 @@ private struct PlaybackSpeedMenuContent: View {
     @ObservedObject var player: Player
 
     var body: some View {
-        Picker(selection: selection) {
+        SwiftUI.Picker(selection: selection) {
             ForEach(playbackSpeeds, id: \.self) { speed in
                 Text("\(speed, specifier: "%g×")", bundle: .module, comment: "Speed multiplier").tag(speed)
             }
@@ -50,7 +50,7 @@ private struct MediaSelectionMenuContent: View {
     @ObservedObject var player: Player
 
     var body: some View {
-        Picker(selection: selection(for: characteristic)) {
+        SwiftUI.Picker(selection: selection(for: characteristic)) {
             ForEach(mediaOptions, id: \.self) { option in
                 Text(option.displayName).tag(option)
             }
@@ -85,8 +85,8 @@ private struct ZoomMenuContent: View {
 
     var body: some View {
         if player.mediaType == .video {
-            Menu {
-                Picker(selection: selection) {
+            SwiftUI.Menu {
+                SwiftUI.Picker(selection: selection) {
                     ForEach(Self.gravities, id: \.self) { gravity in
                         Self.description(for: gravity).tag(gravity)
                     }
@@ -147,7 +147,7 @@ private struct SettingsMenuContent: View {
     }
 
     private func playbackSpeedMenu() -> some View {
-        Menu {
+        SwiftUI.Menu {
             player.playbackSpeedMenu(speeds: speeds) { speed in
                 action(.playbackSpeed(speed))
             }
@@ -162,7 +162,7 @@ private struct SettingsMenuContent: View {
     }
 
     private func audibleMediaSelectionMenu() -> some View {
-        Menu {
+        SwiftUI.Menu {
             mediaSelectionMenuContent(characteristic: .audible)
         } label: {
             Label {
@@ -175,7 +175,7 @@ private struct SettingsMenuContent: View {
     }
 
     private func legibleMediaSelectionMenu() -> some View {
-        Menu {
+        SwiftUI.Menu {
             mediaSelectionMenuContent(characteristic: .legible)
         } label: {
             Label {

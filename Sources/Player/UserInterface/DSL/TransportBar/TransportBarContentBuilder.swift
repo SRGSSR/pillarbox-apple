@@ -4,63 +4,29 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A result builder that enables declarative construction of one up to two `SystemVideoViewAction`s.
+/// A result builder that enables declarative transport bar construction.
 @resultBuilder
-public enum SystemVideoViewActionsContentBuilder2 {
-    /// Type of a statement expression.
-    public typealias Expression = SystemVideoViewAction
+public enum TransportBarContentBuilder {
+    /// Type of partial results.
+    public typealias Component = [any TransportBarElement]
 
-    /// Type of a partial result.
-    public typealias Component = [SystemVideoViewAction]
+    /// Type of the final result.
+    public typealias Result = TransportBarContent
 
     // swiftlint:disable:next missing_docs
-    public static func buildExpression(_ expression: Expression) -> Component {
+    public static func buildExpression(_ expression: any TransportBarElement) -> Component {
         [expression]
     }
 
-    // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ c0: Component) -> Component {
-        c0
+    @available(*, unavailable, message: "At most 7 items can be added to the transport bar")
+    public static func buildBlock(_ components: Component...) -> Component {
+        // swiftlint:disable:previous missing_docs
+        components.flatMap(\.self)
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildBlock(_ c0: Component, _ c1: Component) -> Component {
-        c0 + c1
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildOptional(_ component: Component?) -> Component {
-        component ?? []
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildEither(first component: Component) -> Component {
-        component
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildEither(second component: Component) -> Component {
-        component
-    }
-
-    // swiftlint:disable:next missing_docs
-    public static func buildFinalResult(_ component: Component) -> SystemVideoViewActionsContent {
-        .init(actions: component)
-    }
-}
-
-/// A result builder that enables declarative construction of one up to seven `SystemVideoViewAction`s.
-@resultBuilder
-public enum SystemVideoViewActionsContentBuilder7 {
-    /// Type of a statement expression.
-    public typealias Expression = SystemVideoViewAction
-
-    /// Type of a partial result.
-    public typealias Component = [SystemVideoViewAction]
-
-    // swiftlint:disable:next missing_docs
-    public static func buildExpression(_ expression: Expression) -> Component {
-        [expression]
+    public static func buildBlock() -> Component {
+        []
     }
 
     // swiftlint:disable:next missing_docs
@@ -122,7 +88,7 @@ public enum SystemVideoViewActionsContentBuilder7 {
     }
 
     // swiftlint:disable:next missing_docs
-    public static func buildFinalResult(_ component: Component) -> SystemVideoViewActionsContent {
-        .init(actions: component)
+    public static func buildFinalResult(_ component: Component) -> Result {
+        .init(children: component)
     }
 }

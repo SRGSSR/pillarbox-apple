@@ -10,23 +10,19 @@ import SwiftUI
 // swiftlint:disable:next type_name
 struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
     let player: Player
-    let gravity: AVLayerVideoGravity
-    let contextualActionsContent: SystemVideoViewActionsContent
-    let infoViewActionsContent: SystemVideoViewActionsContent
     let videoOverlay: VideoOverlay
+    let gravity: AVLayerVideoGravity
 
-    static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: SystemVideoViewCoordinator) {
+    let transportBarContent: TransportBarContent
+    let contextualActionsContent: ContextualActionsContent
+    let infoViewActionsContent: InfoViewActionsContent
+
+    static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: Void) {
         PictureInPicture.shared.system.dismantleHostViewController(uiViewController)
     }
 
-    func makeCoordinator() -> SystemVideoViewCoordinator {
-        .init()
-    }
-
     func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
-        let controller = PictureInPicture.shared.system.makeHostViewController(for: player)
-        context.coordinator.controller = controller.playerViewController
-        return controller
+        PictureInPicture.shared.system.makeHostViewController(for: player)
     }
 
     func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
@@ -35,10 +31,10 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.videoGravity = gravity
             playerViewController.setVideoOverlay(videoOverlay)
 #if os(tvOS)
-            playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.contextualActions())
-            playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.infoViewActions(dismissing: playerViewController))
+            playerViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.toMenuElements())
+            playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.toActions())
+            playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.toActions(dismissing: playerViewController))
 #endif
         }
-        context.coordinator.player = player
     }
 }

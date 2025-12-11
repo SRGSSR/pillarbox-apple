@@ -15,8 +15,9 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
 
-    private var contextualActionsContent: SystemVideoViewActionsContent = .empty
-    private var infoViewActionsContent: SystemVideoViewActionsContent = .empty
+    private var transportBarContent = TransportBarContent()
+    private var contextualActionsContent = ContextualActionsContent()
+    private var infoViewActionsContent = InfoViewActionsContent()
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -24,19 +25,21 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
             if supportsPictureInPicture {
                 PictureInPictureSupportingSystemVideoView(
                     player: player,
+                    videoOverlay: videoOverlay,
                     gravity: gravity,
+                    transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent,
-                    videoOverlay: videoOverlay
+                    infoViewActionsContent: infoViewActionsContent
                 )
             }
             else {
                 BasicSystemVideoView(
                     player: player,
+                    videoOverlay: videoOverlay,
                     gravity: gravity,
+                    transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent,
-                    videoOverlay: videoOverlay
+                    infoViewActionsContent: infoViewActionsContent
                 )
             }
         }
@@ -94,6 +97,41 @@ public extension SystemVideoView {
         view.supportsPictureInPicture = supportsPictureInPicture
         return view
     }
+}
+
+@available(iOS, unavailable)
+@available(tvOS 16, *)
+public extension SystemVideoView {
+    /// Items presented in the transport bar.
+    ///
+    /// - Parameter content: The content builder
+    ///
+    /// Use this modifier to configure menus and actions:
+    ///
+    /// ```swift
+    /// SystemVideoView(player: player)
+    ///    .transportBar {
+    ///        Button("Favorite", systemImage: "heart") {
+    ///            // ...
+    ///        }
+    ///        Picker"Quality", systemImage: "person.and.background.dotted", selection: $quality) {
+    ///            Option("Low", value: .low)
+    ///            Option("Medium", value: .medium)
+    ///            Option("High", value: .high)
+    ///        }
+    ///    }
+    /// ```
+    ///
+    /// Complex menu hierarchies can be created by nesting ``Menu``, ``Picker``, ``ÌnlinePicker`` and ``Section`` elements
+    /// containing ``Button``s and ``Option``s. Some combinations are not permitted, so follow compilation error messages when
+    /// constructing menus.
+    ///
+    /// > Important: One up to seven root items are supported.
+    func transportBar(@TransportBarContentBuilder content: () -> TransportBarContent) -> SystemVideoView {
+        var view = self
+        view.transportBarContent = content()
+        return view
+    }
 
     /// Actions presented contextually during playback.
     ///
@@ -104,7 +142,7 @@ public extension SystemVideoView {
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .contextualActions {
-    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward", identifier: .init(raw: "from_beginning")) {
+    ///        Button("From Beginning", systemImage: "gobackward") {
     ///            player.skipToDefault()
     ///        }
     ///    }
@@ -113,7 +151,7 @@ public extension SystemVideoView {
     /// > Important: One up to seven actions are supported.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
-    func contextualActions(@SystemVideoViewActionsContentBuilder7 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
+    func contextualActions(@ContextualActionsContentBuilder content: () -> ContextualActionsContent) -> SystemVideoView {
         var view = self
         view.contextualActionsContent = content()
         return view
@@ -128,7 +166,7 @@ public extension SystemVideoView {
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .infoViewActions {
-    ///        SystemVideoViewAction(title: "From Beginning", systemImage: "gobackward", identifier: .init(raw: "from_beginning")) {
+    ///        Button("From Beginning", systemImage: "gobackward") {
     ///            player.skipToDefault()
     ///        }
     ///    }
@@ -137,7 +175,7 @@ public extension SystemVideoView {
     /// > Important: One or two actions are supported.
     @available(iOS, unavailable)
     @available(tvOS 16, *)
-    func infoViewActions(@SystemVideoViewActionsContentBuilder2 content: () -> SystemVideoViewActionsContent) -> SystemVideoView {
+    func infoViewActions(@InfoViewActionsContentBuilder content: () -> InfoViewActionsContent) -> SystemVideoView {
         var view = self
         view.infoViewActionsContent = content()
         return view

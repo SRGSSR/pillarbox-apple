@@ -140,7 +140,6 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``SettingsUpdate``
 - ``SkipTracker``
 - ``SystemVideoView``
-- ``SystemVideoViewAction``
 - ``VideoView``
 - ``Viewport``
 - ``VisibilityTracker``
@@ -150,6 +149,80 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``SCNQuaternionForAttitude(_:)``
 - ``SCNQuaternionRotate(_:_:_:)``
 - ``SCNQuaternionWithAngleAndAxis(_:_:_:_:)``
+
+### Actions and Menus
+
+- ``Button``
+- ``InlinePicker``
+- ``Menu``
+- ``Option``
+- ``Picker``
+- ``Section``
+- ``Toggle``
+
+### Domain-specific Language
+
+- ``ButtonInContextualActions``
+- ``ButtonInInfoViewActions``
+- ``ButtonInMenu``
+- ``ButtonInSection``
+- ``ButtonInTransportBar``
+- ``ContextualActionsBody``
+- ``ContextualActionsBodyNotSupported``
+- ``ContextualActionsContent``
+- ``ContextualActionsContentBuilder``
+- ``ContextualActionsElement``
+- ``InfoViewActionsBody``
+- ``InfoViewActionsBodyNotSupported``
+- ``InfoViewActionsContent``
+- ``InfoViewActionsContentBuilder``
+- ``InfoViewActionsElement``
+- ``InlinePicker``
+- ``InlinePickerBody``
+- ``InlinePickerBodyNotSupported``
+- ``InlinePickerContent``
+- ``InlinePickerContentBuilder``
+- ``InlinePickerElement``
+- ``InlinePickerInMenu``
+- ``MenuBody``
+- ``MenuBodyNotSupported``
+- ``MenuContent``
+- ``MenuContentBuilder``
+- ``MenuElement``
+- ``MenuInMenu``
+- ``MenuInSection``
+- ``MenuInTransportBar``
+- ``OptionInInlinePicker``
+- ``OptionInPicker``
+- ``OptionInPickerSection``
+- ``PickerBody``
+- ``PickerContent``
+- ``PickerContentBuilder``
+- ``PickerElement``
+- ``PickerBodyNotSupported``
+- ``PickerInMenu``
+- ``PickerInSection``
+- ``PickerInTransportBar``
+- ``PickerSectionBody``
+- ``PickerSectionBodyNotSupported``
+- ``PickerSectionContent``
+- ``PickerSectionContentBuilder``
+- ``PickerSectionElement``
+- ``SectionBody``
+- ``SectionBodyNotSupported``
+- ``SectionContent``
+- ``SectionContentBuilder``
+- ``SectionInMenu``
+- ``SectionInPicker``
+- ``SectionElement``
+- ``ToggleInMenu``
+- ``ToggleInSection``
+- ``ToggleInTransportBar``
+- ``TransportBarBody``
+- ``TransportBarBodyNotSupported``
+- ``TransportBarContent``
+- ``TransportBarContentBuilder``
+- ``TransportBarElement``
 
 ### Technical Notes
 
