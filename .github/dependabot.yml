@@ -35,4 +35,4 @@ updates:
           - "*"
     ignore:
       - dependency-name: "github.com/krzysztofzablocki/difference"
-      - dependency-name: "nimble"
+      - dependency-name: "github.com/quick/nimble"
