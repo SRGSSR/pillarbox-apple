@@ -272,8 +272,8 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
     }
 
-    // Proactively clear items to avoid leak on iPadOS 18, see https://github.com/SRGSSR/pillarbox-apple/issues/1371.
-    // TODO: Remove when iPadOS 18 is not supported anymore
+    // Proactively clear items to avoid leak on i(Pad)OS 18, see https://github.com/SRGSSR/pillarbox-apple/issues/1371.
+    // TODO: Remove when i(Pad)OS 18 is not supported anymore
     private func clearItems_iOS18() {
 #if os(iOS)
         guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion == 18 else {
