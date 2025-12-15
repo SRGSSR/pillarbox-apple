@@ -43,15 +43,13 @@ extension AVQueuePlayer {
         else {
             remove(item)
         }
-#if os(tvOS)
-        // TODO: Mitigation for delayed player resource deallocation issues on tvOS. Removed when fixed.
+        // TODO: Avoid deallocation issues with `SystemVideoView` on iOS and tvOS. Remove when fixed.
         // See https://github.com/SRGSSR/pillarbox-apple/issues/1367 for more information.
         if let currentItem {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 currentItem.asset.cancelLoading()
             }
         }
-#endif
         replaceCurrentItem(with: item)
     }
 }
