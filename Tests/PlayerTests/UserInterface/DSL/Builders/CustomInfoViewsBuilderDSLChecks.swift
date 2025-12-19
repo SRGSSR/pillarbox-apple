@@ -14,13 +14,13 @@ private enum CustomInfoViewsBuilderDSLChecks {
         }
     }
 
-    @CustomInfoViewsBuilder
-    static func oneExpression() -> [CustomInfoView] {
+    @CustomInfoViewsContentBuilder
+    static func oneExpression() -> CustomInfoViewsContent {
         view()
     }
 
-    @CustomInfoViewsBuilder
-    static func severalExpressions() -> [CustomInfoView] {
+    @CustomInfoViewsContentBuilder
+    static func severalExpressions() -> CustomInfoViewsContent {
         view()
         view()
         view()
@@ -28,15 +28,15 @@ private enum CustomInfoViewsBuilderDSLChecks {
         view()
     }
 
-    @CustomInfoViewsBuilder
-    static func ifStatement() -> [CustomInfoView] {
+    @CustomInfoViewsContentBuilder
+    static func ifStatement() -> CustomInfoViewsContent {
         if true {
             view()
         }
     }
 
-    @CustomInfoViewsBuilder
-    static func ifElseStatements() -> [CustomInfoView] {
+    @CustomInfoViewsContentBuilder
+    static func ifElseStatements() -> CustomInfoViewsContent {
         if true {
             view()
         }
@@ -45,8 +45,8 @@ private enum CustomInfoViewsBuilderDSLChecks {
         }
     }
 
-    @CustomInfoViewsBuilder
-    static func switchStatement() -> [CustomInfoView] {
+    @CustomInfoViewsContentBuilder
+    static func switchStatement() -> CustomInfoViewsContent {
         switch Int.random(in: 0...2) {
         case 0:
             view()
@@ -57,8 +57,8 @@ private enum CustomInfoViewsBuilderDSLChecks {
         }
     }
 
-    @CustomInfoViewsBuilder
-    static func ifElseAvailableStatements() -> [CustomInfoView] {
+    @CustomInfoViewsContentBuilder
+    static func ifElseAvailableStatements() -> CustomInfoViewsContent {
         if #available(iOS 16, tvOS 16, *) {
             view()
         }
@@ -67,8 +67,8 @@ private enum CustomInfoViewsBuilderDSLChecks {
         }
     }
 
-    @CustomInfoViewsBuilder
-    static func forEachStatements() -> [CustomInfoView] {
+    @CustomInfoViewsContentBuilder
+    static func forEachStatements() -> CustomInfoViewsContent {
         for _ in 1...10 {
             view()
         }

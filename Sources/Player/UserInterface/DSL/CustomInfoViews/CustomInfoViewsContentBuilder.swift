@@ -6,12 +6,15 @@
 
 /// A result builder that enables declarative construction of custom info views for tvOS.
 @resultBuilder
-public enum CustomInfoViewsBuilder {
+public enum CustomInfoViewsContentBuilder {
     /// The type of individual statement.
     public typealias Expression = CustomInfoView
 
     /// Type of partial results.
     public typealias Component = [CustomInfoView]
+
+    /// Type of the final result.
+    public typealias Result = CustomInfoViewsContent
 
     // swiftlint:disable:next missing_docs
     public static func buildExpression(_ expression: Expression) -> Component {
@@ -41,5 +44,10 @@ public enum CustomInfoViewsBuilder {
     // swiftlint:disable:next missing_docs
     public static func buildEither(second component: Component) -> Component {
         component
+    }
+
+    // swiftlint:disable:next missing_docs
+    public static func buildFinalResult(_ component: Component) -> Result {
+        .init(views: component)
     }
 }
