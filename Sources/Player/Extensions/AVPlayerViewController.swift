@@ -38,8 +38,7 @@ extension AVPlayerViewController {
     }
 
     @available(iOS, unavailable)
-    func updateCustomInfoViewsIfNeeded(with viewControllers: [UIViewController]) {
-        // TODO: A way to compare VCs should be found!
+    func updateCustomInfoViews(with viewControllers: [UIViewController]) {
         customInfoViewControllers = viewControllers
     }
 

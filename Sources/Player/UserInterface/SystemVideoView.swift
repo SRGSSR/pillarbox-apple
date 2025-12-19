@@ -205,7 +205,7 @@ public extension SystemVideoView {
     /// ```
     func customInfoViews(_ height: CGFloat = 350, @CustomInfoViewsContentBuilder content: () -> CustomInfoViewsContent) -> Self {
         var view = self
-        view.customInfoViewsContent = content()
+        view.customInfoViewsContent = .init(height: height, views: content().views)
         return view
     }
 }

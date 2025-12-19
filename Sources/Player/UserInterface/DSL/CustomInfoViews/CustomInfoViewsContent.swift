@@ -18,9 +18,9 @@ public struct CustomInfoViewsContent {
         self.height = height
     }
 
-    func toUIViewControllers() -> [UIViewController] {
+    func toUIViewControllers(using coordinator: CustomInfoViewsCoordinator) -> [UIViewController] {
         views.map { infoView in
-            let hostingController = UIHostingController(rootView: infoView.view)
+            let hostingController = coordinator.controller(using: infoView)
             if let height {
                 hostingController.view.heightAnchor.constraint(equalToConstant: height).isActive = true
             }
