@@ -18,6 +18,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var transportBarContent = TransportBarContent()
     private var contextualActionsContent = ContextualActionsContent()
     private var infoViewActionsContent = InfoViewActionsContent()
+    private var customInfoViewsContent = CustomInfoViewsContent()
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -29,7 +30,8 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     gravity: gravity,
                     transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent
+                    infoViewActionsContent: infoViewActionsContent,
+                    customInfoViewsContent: customInfoViewsContent
                 )
             }
             else {
@@ -39,7 +41,8 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     gravity: gravity,
                     transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent
+                    infoViewActionsContent: infoViewActionsContent,
+                    customInfoViewsContent: customInfoViewsContent
                 )
             }
         }
@@ -178,6 +181,31 @@ public extension SystemVideoView {
     func infoViewActions(@InfoViewActionsContentBuilder content: () -> InfoViewActionsContent) -> SystemVideoView {
         var view = self
         view.infoViewActionsContent = content()
+        return view
+    }
+
+    /// Custom info views displayed in the info tab.
+    ///
+    /// - Parameters:
+    ///   - height: The height of the tallest content tab.
+    ///   - content: A builder closure that provides one or more `CustomInfoView` instances.
+    ///
+    /// Use this modifier to configure actions:
+    ///
+    /// ```swift
+    /// SystemVideoView(player: player)
+    ///    .customInfoViews {
+    ///        CustomInfoView("Cast") {
+    ///             VStack {
+    ///                Text("Actor 1")
+    ///                Text("Actor 2")
+    ///            }
+    ///        }
+    ///    }
+    /// ```
+    func customInfoViews(_ height: CGFloat = 350, @CustomInfoViewsContentBuilder content: () -> CustomInfoViewsContent) -> Self {
+        var view = self
+        view.customInfoViewsContent = content()
         return view
     }
 }

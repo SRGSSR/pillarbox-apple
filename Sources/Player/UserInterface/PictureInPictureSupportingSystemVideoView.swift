@@ -16,6 +16,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     let transportBarContent: TransportBarContent
     let contextualActionsContent: ContextualActionsContent
     let infoViewActionsContent: InfoViewActionsContent
+    let customInfoViewsContent: CustomInfoViewsContent
 
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: Void) {
         PictureInPicture.shared.system.dismantleHostViewController(uiViewController)
@@ -34,6 +35,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.toMenuElements())
             playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.toActions())
             playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.toActions(dismissing: playerViewController))
+            playerViewController.updateCustomInfoViewsIfNeeded(with: customInfoViewsContent.toUIViewControllers())
 #endif
         }
     }
