@@ -37,6 +37,11 @@ extension AVPlayerViewController {
         infoViewActions = actions
     }
 
+    @available(iOS, unavailable)
+    func updateCustomInfoViews(with viewControllers: [UIViewController]) {
+        customInfoViewControllers = viewControllers
+    }
+
     func stopPictureInPicture() {
         guard allowsPictureInPicturePlayback else { return }
         allowsPictureInPicturePlayback = false

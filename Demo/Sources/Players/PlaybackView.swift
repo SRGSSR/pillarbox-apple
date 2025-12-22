@@ -713,6 +713,8 @@ private struct MainSystemView: View {
     @ObservedObject var player: Player
     let supportsPictureInPicture: Bool
     @ObservedObject var progressTracker: ProgressTracker
+
+    @EnvironmentObject private var viewModel: PlaylistViewModel
     @State private var streamType: StreamType = .unknown
 
     @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
@@ -732,6 +734,7 @@ private struct MainSystemView: View {
             .transportBar(content: transportBarContent)
             .contextualActions(content: contextualActionsContent)
             .infoViewActions(content: infoViewActionsContent)
+            .customInfoViews(content: customInfoViewsContent)
             .ignoresSafeArea()
             .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
@@ -764,6 +767,24 @@ private struct MainSystemView: View {
         if player.canSkipToDefault() {
             Button(skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
                 player.skipToDefault()
+            }
+        }
+    }
+
+    @CustomInfoViewsContentBuilder
+    func customInfoViewsContent() -> CustomInfoViewsContent {
+        if player.items.count > 1 {
+            CustomInfoView(title: "Playlist") {
+                List(player.items.indices, id: \.self) { index in
+                    let item = player.items[index]
+                    Button {
+                        player.currentItem = item
+                    } label: {
+                        Text(viewModel.entries[safeIndex: index]?.media.title ?? "Unknown")
+                            .bold(item == player.currentItem)
+                            .foregroundStyle(item == player.currentItem ? Color.primary : Color.secondary)
+                    }
+                }
             }
         }
     }
