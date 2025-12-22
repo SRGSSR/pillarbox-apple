@@ -83,6 +83,7 @@ struct PlaylistView: View {
         VStack(spacing: 0) {
             PlaybackView(player: model.player, layout: $model.layout)
                 .supportsPictureInPicture()
+                .environmentObject(model)
 #if os(iOS)
             if model.layout != .maximized {
                 Toolbar(model: model)
