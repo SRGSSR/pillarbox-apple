@@ -279,6 +279,13 @@ struct ShowcaseView: View {
                 destination: .player(media: URLMedia.startTimeVideo)
             )
             .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Playback toggle mode",
+                subtitle: "Switch between audio and video",
+                destination: .audioVideoToggle
+            )
+            .sourceCode(of: AudioVideoToggleView.self)
 #else
             cell(
                 title: "Apple Basic 16:9",
