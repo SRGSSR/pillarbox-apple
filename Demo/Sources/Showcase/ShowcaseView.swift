@@ -267,6 +267,14 @@ struct ShowcaseView: View {
                 destination: .player(media: URLMedia.startTimeVideo)
             )
             .sourceCode(of: PlayerView.self)
+#if os(iOS)
+            cell(
+                title: "Playback toggle mode",
+                subtitle: "Switch between audio and video",
+                destination: .audioVideoToggle
+            )
+            .sourceCode(of: AudioVideoToggleView.self)
+#endif
         }
     }
 
