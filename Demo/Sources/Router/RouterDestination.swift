@@ -35,6 +35,7 @@ enum RouterDestination: Identifiable, Hashable {
     case contentList(configuration: ContentList.Configuration)
 
 #if os(iOS)
+    case audioVideoToggle
     case webView(url: URL)
 #endif
 
@@ -76,6 +77,8 @@ enum RouterDestination: Identifiable, Hashable {
         case .contentList:
             return "contentList"
 #if os(iOS)
+        case .audioVideoToggle:
+            return "audioVideoToggle"
         case .webView:
             return "webView"
 #endif
@@ -135,6 +138,8 @@ enum RouterDestination: Identifiable, Hashable {
         case let .contentList(configuration: configuration):
             ContentListView(configuration: configuration)
 #if os(iOS)
+        case .audioVideoToggle:
+            AudioVideoToggleView()
         case let .webView(url: url):
             WebView(url: url)
 #endif
