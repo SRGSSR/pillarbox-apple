@@ -6,22 +6,30 @@
 
 import SwiftUI
 
-/// A type that describing the content displayed in a custom info view controller on tvOS.
-public struct Tab<Content>: InfoViewTabsElement where Content: View {
+/// A content tab.
+public struct Tab<Content> where Content: View {
     let title: String
     let identifier: String
     let content: Content
 
-    /// Creates a new `Self` instance
+    /// Creates a tab.
+    ///
     /// - Parameters:
-    ///   - title: The title of the custom info view.
-    ///   - views: A `ViewBuilder` closure that provides the SwiftUI view to be displayed inside the custom info view controller.
+    ///   - title: The tab title.
+    ///   - identifier: A unique tab identifier. If omitted ``title`` is used instead.
+    ///   - content: The tab content
+    ///
+    /// For optimal behavior you should ensure that each tab is assigned a unique stable identifier.
     public init(title: String, identifier: String? = nil, @ViewBuilder _ content: () -> Content) {
         self.title = title
         self.identifier = identifier ?? title
         self.content = content()
     }
+}
 
+// MARK: Info view tabs embedding
+
+extension Tab: InfoViewTabsElement {
     // swiftlint:disable:next missing_docs
     public func viewController(reusing viewControllers: [UIViewController]) -> UIViewController {
         let viewController = viewControllers.first { $0.restorationIdentifier == identifier }
