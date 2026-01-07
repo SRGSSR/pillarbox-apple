@@ -7,8 +7,8 @@
 import PillarboxPlayer
 import SwiftUI
 
-private enum CustomInfoViewsBuilderDSLChecks {
-    private static func view() -> PillarboxPlayer.Tab {
+private enum InfoViewTabsContentBuilderDSLChecks {
+    private static func tab() -> InfoViewTabsElement {
         Tab(title: "Title") {
             Button("") {}
         }
@@ -16,32 +16,32 @@ private enum CustomInfoViewsBuilderDSLChecks {
 
     @InfoViewTabsContentBuilder
     static func oneExpression() -> InfoViewTabsContent {
-        view()
+        tab()
     }
 
     @InfoViewTabsContentBuilder
     static func severalExpressions() -> InfoViewTabsContent {
-        view()
-        view()
-        view()
-        view()
-        view()
+        tab()
+        tab()
+        tab()
+        tab()
+        tab()
     }
 
     @InfoViewTabsContentBuilder
     static func ifStatement() -> InfoViewTabsContent {
         if true {
-            view()
+            tab()
         }
     }
 
     @InfoViewTabsContentBuilder
     static func ifElseStatements() -> InfoViewTabsContent {
         if true {
-            view()
+            tab()
         }
         else {
-            view()
+            tab()
         }
     }
 
@@ -49,28 +49,28 @@ private enum CustomInfoViewsBuilderDSLChecks {
     static func switchStatement() -> InfoViewTabsContent {
         switch Int.random(in: 0...2) {
         case 0:
-            view()
+            tab()
         case 1:
-            view()
+            tab()
         default:
-            view()
+            tab()
         }
     }
 
     @InfoViewTabsContentBuilder
     static func ifElseAvailableStatements() -> InfoViewTabsContent {
         if #available(iOS 16, tvOS 16, *) {
-            view()
+            tab()
         }
         else {
-            view()
+            tab()
         }
     }
 
     @InfoViewTabsContentBuilder
     static func forEachStatements() -> InfoViewTabsContent {
         for _ in 1...10 {
-            view()
+            tab()
         }
     }
 }
