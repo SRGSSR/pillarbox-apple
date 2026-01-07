@@ -228,9 +228,9 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 #### System Video View Tabs
 
-- ``Tab``
 - ``InfoViewTabsContent``
 - ``InfoViewTabsContentBuilder``
+- ``Tab``
 
 ### Technical Notes
 
