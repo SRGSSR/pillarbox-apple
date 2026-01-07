@@ -15,7 +15,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
     let transportBarContent: TransportBarContent
     let contextualActionsContent: ContextualActionsContent
     let infoViewActionsContent: InfoViewActionsContent
-    let customInfoViewsContent: InfoViewTabsContent
+    let infoViewTabsContent: InfoViewTabsContent
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
@@ -26,10 +26,6 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         return controller
     }
 
-    func makeCoordinator() -> CustomInfoViewsCoordinator {
-        .init()
-    }
-
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
@@ -38,7 +34,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.toMenuElements())
         uiViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.toActions())
         uiViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.toActions(dismissing: uiViewController))
-        uiViewController.updateCustomInfoViews(with: customInfoViewsContent.toUIViewControllers(using: context.coordinator))
+        uiViewController.customInfoViewControllers = infoViewTabsContent.viewControllers(reusing: uiViewController.customInfoViewControllers)
 #endif
     }
 }

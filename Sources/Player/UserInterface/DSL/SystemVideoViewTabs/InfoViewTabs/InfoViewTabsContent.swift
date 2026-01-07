@@ -18,7 +18,7 @@ public struct InfoViewTabsContent {
         self.height = height
     }
 
-    func toUIViewControllers(using coordinator: CustomInfoViewsCoordinator) -> [UIViewController] {
-        []
+    func viewControllers(reusing viewControllers: [UIViewController]) -> [UIViewController] {
+        children.map { $0.viewController(reusing: viewControllers) }
     }
 }

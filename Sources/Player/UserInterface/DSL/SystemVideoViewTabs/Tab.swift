@@ -22,6 +22,19 @@ public struct Tab<Content>: InfoViewTabsElement where Content: View {
 
     // swiftlint:disable:next missing_docs
     public func viewController(reusing viewControllers: [UIViewController]) -> UIViewController {
-        .init()
+        let viewController = viewControllers.first { $0.title == title }
+        let hostingController = hostingController(reusing: viewController)
+        hostingController.title = title
+        return hostingController
+    }
+
+    private func hostingController(reusing viewController: UIViewController?) -> UIHostingController<Content> {
+        if let hostController = viewController as? UIHostingController<Content> {
+            hostController.rootView = content
+            return hostController
+        }
+        else {
+            return UIHostingController(rootView: content)
+        }
     }
 }

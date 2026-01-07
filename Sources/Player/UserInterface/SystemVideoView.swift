@@ -31,7 +31,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
                     infoViewActionsContent: infoViewActionsContent,
-                    customInfoViewsContent: customInfoViewsContent
+                    infoViewTabsContent: customInfoViewsContent
                 )
             }
             else {
@@ -42,7 +42,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
                     infoViewActionsContent: infoViewActionsContent,
-                    customInfoViewsContent: customInfoViewsContent
+                    infoViewTabsContent: customInfoViewsContent
                 )
             }
         }
