@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A result builder that enables declarative construction of custom info views for tvOS.
+/// A result builder that enables declarative info view tab construction.
 @resultBuilder
 public enum InfoViewTabsContentBuilder {
     /// The type of individual statement.
