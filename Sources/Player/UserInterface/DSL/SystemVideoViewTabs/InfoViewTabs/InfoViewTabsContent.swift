@@ -19,6 +19,12 @@ public struct InfoViewTabsContent {
     }
 
     func viewControllers(reusing viewControllers: [UIViewController]) -> [UIViewController] {
-        elements.map { $0.viewController(reusing: viewControllers) }
+        elements.map { element in
+            let controller = element.viewController(reusing: viewControllers)
+            if let height {
+                controller.preferredContentSize = CGSize(width: 0, height: height)
+            }
+            return controller
+        }
     }
 }
