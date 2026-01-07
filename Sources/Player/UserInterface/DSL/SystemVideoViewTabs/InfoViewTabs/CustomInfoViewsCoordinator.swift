@@ -9,13 +9,8 @@ import SwiftUI
 final class CustomInfoViewsCoordinator {
     private var cache: [String: UIHostingController<AnyView>] = [:]
 
-    func controller(using customInfoView: Tab) -> UIViewController {
-        if let controller = cache[customInfoView.title] {
-            controller.rootView = customInfoView.view
-            return controller
-        }
-        let controller = UIHostingController(rootView: customInfoView.view)
-        cache[customInfoView.title] = controller
-        return controller
+    func controller(using customInfoView: Tab<EmptyView>) -> UIViewController {
+        // TODO: Will be removed
+        return .init()
     }
 }

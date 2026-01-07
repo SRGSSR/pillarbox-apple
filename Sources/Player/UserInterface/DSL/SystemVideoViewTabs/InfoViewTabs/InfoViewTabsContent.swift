@@ -10,22 +10,15 @@ import UIKit
 
 /// A type that describing the content of custom info view controllers on tvOS.
 public struct InfoViewTabsContent {
-    let tabs: [Tab]
+    let children: [any InfoViewTabsElement]
     let height: CGFloat?
 
-    init(height: CGFloat? = nil, tabs: [Tab] = []) {
-        self.tabs = tabs
+    init(height: CGFloat? = nil, children: [any InfoViewTabsElement] = []) {
+        self.children = children
         self.height = height
     }
 
     func toUIViewControllers(using coordinator: CustomInfoViewsCoordinator) -> [UIViewController] {
-        tabs.map { infoView in
-            let hostingController = coordinator.controller(using: infoView)
-            if let height {
-                hostingController.view.heightAnchor.constraint(equalToConstant: height).isActive = true
-            }
-            hostingController.title = infoView.title
-            return hostingController
-        }
+        []
     }
 }

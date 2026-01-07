@@ -8,10 +8,10 @@
 @resultBuilder
 public enum InfoViewTabsContentBuilder {
     /// The type of individual statement.
-    public typealias Expression = Tab
+    public typealias Expression = any InfoViewTabsElement
 
     /// Type of partial results.
-    public typealias Component = [Tab]
+    public typealias Component = [any InfoViewTabsElement]
 
     /// Type of the final result.
     public typealias Result = InfoViewTabsContent
@@ -48,6 +48,6 @@ public enum InfoViewTabsContentBuilder {
 
     // swiftlint:disable:next missing_docs
     public static func buildFinalResult(_ component: Component) -> Result {
-        .init(tabs: component)
+        .init(children: component)
     }
 }
