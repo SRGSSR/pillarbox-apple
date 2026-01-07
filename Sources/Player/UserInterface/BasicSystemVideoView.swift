@@ -15,7 +15,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
     let transportBarContent: TransportBarContent
     let contextualActionsContent: ContextualActionsContent
     let infoViewActionsContent: InfoViewActionsContent
-    let customInfoViewsContent: CustomInfoViewsContent
+    let customInfoViewsContent: InfoViewTabsContent
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()

@@ -771,10 +771,10 @@ private struct MainSystemView: View {
         }
     }
 
-    @CustomInfoViewsContentBuilder
-    func customInfoViewsContent() -> CustomInfoViewsContent {
+    @InfoViewTabsContentBuilder
+    func customInfoViewsContent() -> InfoViewTabsContent {
         if player.items.count > 1 {
-            CustomInfoView(title: "Playlist") {
+            Tab(title: "Playlist") {
                 List(player.items.indices, id: \.self) { index in
                     let item = player.items[index]
                     Button {

@@ -16,7 +16,7 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     let transportBarContent: TransportBarContent
     let contextualActionsContent: ContextualActionsContent
     let infoViewActionsContent: InfoViewActionsContent
-    let customInfoViewsContent: CustomInfoViewsContent
+    let customInfoViewsContent: InfoViewTabsContent
 
     static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: CustomInfoViewsCoordinator) {
         PictureInPicture.shared.system.dismantleHostViewController(uiViewController)

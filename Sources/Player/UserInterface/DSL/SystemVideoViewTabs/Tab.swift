@@ -7,7 +7,7 @@
 import SwiftUI
 
 /// A type that describing the content displayed in a custom info view controller on tvOS.
-public struct CustomInfoView {
+public struct Tab {
     let title: String
     let view: AnyView
 

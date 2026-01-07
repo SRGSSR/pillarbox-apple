@@ -162,6 +162,8 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 ### Domain-specific Language
 
+#### System Video View Controls
+
 - ``ButtonInContextualActions``
 - ``ButtonInInfoViewActions``
 - ``ButtonInMenu``
@@ -172,9 +174,6 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``ContextualActionsContent``
 - ``ContextualActionsContentBuilder``
 - ``ContextualActionsElement``
-- ``CustomInfoView``
-- ``CustomInfoViewsContent``
-- ``CustomInfoViewsContentBuilder``
 - ``InfoViewActionsBody``
 - ``InfoViewActionsBodyNotSupported``
 - ``InfoViewActionsContent``
@@ -226,6 +225,12 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``TransportBarContent``
 - ``TransportBarContentBuilder``
 - ``TransportBarElement``
+
+#### System Video View Tabs
+
+- ``Tab``
+- ``InfoViewTabsContent``
+- ``InfoViewTabsContentBuilder``
 
 ### Technical Notes
 

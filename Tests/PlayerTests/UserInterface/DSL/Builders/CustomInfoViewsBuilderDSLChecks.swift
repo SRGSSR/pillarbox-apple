@@ -8,19 +8,19 @@ import PillarboxPlayer
 import SwiftUI
 
 private enum CustomInfoViewsBuilderDSLChecks {
-    private static func view() -> CustomInfoView {
-        CustomInfoView(title: "Title") {
+    private static func view() -> PillarboxPlayer.Tab {
+        Tab(title: "Title") {
             Button("") {}
         }
     }
 
-    @CustomInfoViewsContentBuilder
-    static func oneExpression() -> CustomInfoViewsContent {
+    @InfoViewTabsContentBuilder
+    static func oneExpression() -> InfoViewTabsContent {
         view()
     }
 
-    @CustomInfoViewsContentBuilder
-    static func severalExpressions() -> CustomInfoViewsContent {
+    @InfoViewTabsContentBuilder
+    static func severalExpressions() -> InfoViewTabsContent {
         view()
         view()
         view()
@@ -28,15 +28,15 @@ private enum CustomInfoViewsBuilderDSLChecks {
         view()
     }
 
-    @CustomInfoViewsContentBuilder
-    static func ifStatement() -> CustomInfoViewsContent {
+    @InfoViewTabsContentBuilder
+    static func ifStatement() -> InfoViewTabsContent {
         if true {
             view()
         }
     }
 
-    @CustomInfoViewsContentBuilder
-    static func ifElseStatements() -> CustomInfoViewsContent {
+    @InfoViewTabsContentBuilder
+    static func ifElseStatements() -> InfoViewTabsContent {
         if true {
             view()
         }
@@ -45,8 +45,8 @@ private enum CustomInfoViewsBuilderDSLChecks {
         }
     }
 
-    @CustomInfoViewsContentBuilder
-    static func switchStatement() -> CustomInfoViewsContent {
+    @InfoViewTabsContentBuilder
+    static func switchStatement() -> InfoViewTabsContent {
         switch Int.random(in: 0...2) {
         case 0:
             view()
@@ -57,8 +57,8 @@ private enum CustomInfoViewsBuilderDSLChecks {
         }
     }
 
-    @CustomInfoViewsContentBuilder
-    static func ifElseAvailableStatements() -> CustomInfoViewsContent {
+    @InfoViewTabsContentBuilder
+    static func ifElseAvailableStatements() -> InfoViewTabsContent {
         if #available(iOS 16, tvOS 16, *) {
             view()
         }
@@ -67,8 +67,8 @@ private enum CustomInfoViewsBuilderDSLChecks {
         }
     }
 
-    @CustomInfoViewsContentBuilder
-    static func forEachStatements() -> CustomInfoViewsContent {
+    @InfoViewTabsContentBuilder
+    static func forEachStatements() -> InfoViewTabsContent {
         for _ in 1...10 {
             view()
         }

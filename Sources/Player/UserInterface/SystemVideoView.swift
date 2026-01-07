@@ -18,7 +18,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var transportBarContent = TransportBarContent()
     private var contextualActionsContent = ContextualActionsContent()
     private var infoViewActionsContent = InfoViewActionsContent()
-    private var customInfoViewsContent = CustomInfoViewsContent()
+    private var customInfoViewsContent = InfoViewTabsContent()
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -188,14 +188,14 @@ public extension SystemVideoView {
     ///
     /// - Parameters:
     ///   - height: The height of the tallest content tab.
-    ///   - content: A builder closure that provides one or more `CustomInfoView` instances.
+    ///   - content: A builder closure that provides one or more `Tab` instances.
     ///
     /// Use this modifier to configure actions:
     ///
     /// ```swift
     /// SystemVideoView(player: player)
     ///    .customInfoViews {
-    ///        CustomInfoView("Cast") {
+    ///        Tab("Cast") {
     ///             VStack {
     ///                Text("Actor 1")
     ///                Text("Actor 2")
@@ -203,9 +203,9 @@ public extension SystemVideoView {
     ///        }
     ///    }
     /// ```
-    func customInfoViews(_ height: CGFloat = 350, @CustomInfoViewsContentBuilder content: () -> CustomInfoViewsContent) -> Self {
+    func customInfoViews(_ height: CGFloat = 350, @InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
         var view = self
-        view.customInfoViewsContent = .init(height: height, views: content().views)
+        view.customInfoViewsContent = .init(height: height, tabs: content().tabs)
         return view
     }
 }

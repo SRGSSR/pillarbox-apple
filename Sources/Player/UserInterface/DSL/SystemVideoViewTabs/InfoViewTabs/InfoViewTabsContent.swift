@@ -9,17 +9,17 @@ import SwiftUI
 import UIKit
 
 /// A type that describing the content of custom info view controllers on tvOS.
-public struct CustomInfoViewsContent {
-    let views: [CustomInfoView]
+public struct InfoViewTabsContent {
+    let tabs: [Tab]
     let height: CGFloat?
 
-    init(height: CGFloat? = nil, views: [CustomInfoView] = []) {
-        self.views = views
+    init(height: CGFloat? = nil, tabs: [Tab] = []) {
+        self.tabs = tabs
         self.height = height
     }
 
     func toUIViewControllers(using coordinator: CustomInfoViewsCoordinator) -> [UIViewController] {
-        views.map { infoView in
+        tabs.map { infoView in
             let hostingController = coordinator.controller(using: infoView)
             if let height {
                 hostingController.view.heightAnchor.constraint(equalToConstant: height).isActive = true
