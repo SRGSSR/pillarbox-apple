@@ -8,10 +8,10 @@ import Foundation
 import SwiftUI
 import UIKit
 
-/// A type that describing the content of custom info view controllers on tvOS.
+/// A type that describing the content of info view tabs.
 public struct InfoViewTabsContent {
+    private let height: CGFloat?
     let elements: [any InfoViewTabsElement]
-    let height: CGFloat?
 
     init(height: CGFloat? = nil, elements: [any InfoViewTabsElement] = []) {
         self.elements = elements
