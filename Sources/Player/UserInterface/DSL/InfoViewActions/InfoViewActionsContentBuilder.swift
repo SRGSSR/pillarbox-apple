@@ -21,7 +21,7 @@ public enum InfoViewActionsContentBuilder {
     @available(*, unavailable, message: "At most 2 items can be added to the info view actions")
     public static func buildBlock(_ components: Component...) -> Component {
         // swiftlint:disable:previous missing_docs
-        components.flatMap(\.self)
+        fatalError()
     }
 
     // swiftlint:disable:next missing_docs

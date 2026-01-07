@@ -21,7 +21,7 @@ public enum TransportBarContentBuilder {
     @available(*, unavailable, message: "At most 7 items can be added to the transport bar")
     public static func buildBlock(_ components: Component...) -> Component {
         // swiftlint:disable:previous missing_docs
-        components.flatMap(\.self)
+        fatalError()
     }
 
     // swiftlint:disable:next missing_docs
