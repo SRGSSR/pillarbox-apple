@@ -107,7 +107,7 @@ public extension SystemVideoView {
 public extension SystemVideoView {
     /// Items presented in the transport bar.
     ///
-    /// - Parameter content: The content builder
+    /// - Parameter content: The content builder.
     ///
     /// Use this modifier to configure menus and actions:
     ///
@@ -160,9 +160,9 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Actions displayed in the info tab.
+    /// Actions presented in the main Info view.
     ///
-    /// - Parameter content: The content builder
+    /// - Parameter content: The content builder.
     ///
     /// Use this modifier to configure actions:
     ///
@@ -184,17 +184,17 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Custom info views displayed in the info tab.
+    /// Additional tabs presented in the Info view.
     ///
     /// - Parameters:
-    ///   - height: The height of the tallest content tab.
-    ///   - content: A builder closure that provides one or more `Tab` instances.
+    ///   - height: The height of the Info view. Should be set to the height required by the tallest tab.
+    ///   - content: The content builder.
     ///
-    /// Use this modifier to configure actions:
+    /// Use this modifier to configure tabs:
     ///
     /// ```swift
     /// SystemVideoView(player: player)
-    ///    .customInfoViews {
+    ///    .infoViewTabs {
     ///        Tab("Cast") {
     ///             VStack {
     ///                Text("Actor 1")
@@ -203,7 +203,7 @@ public extension SystemVideoView {
     ///        }
     ///    }
     /// ```
-    func customInfoViews(height: CGFloat = 350, @InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
+    func infoViewTabs(height: CGFloat = 350, @InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
         var view = self
         view.customInfoViewsContent = .init(height: height, elements: content().elements)
         return view

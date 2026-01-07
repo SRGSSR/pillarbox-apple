@@ -734,7 +734,7 @@ private struct MainSystemView: View {
             .transportBar(content: transportBarContent)
             .contextualActions(content: contextualActionsContent)
             .infoViewActions(content: infoViewActionsContent)
-            .customInfoViews(content: customInfoViewsContent)
+            .infoViewTabs(content: customInfoViewsContent)
             .ignoresSafeArea()
             .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
