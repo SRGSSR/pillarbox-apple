@@ -8,13 +8,13 @@ import UIKit
 
 /// A type that describing the content of info view actions.
 public struct InfoViewActionsContent {
-    private let children: [any InfoViewActionsElement]
+    private let elements: [any InfoViewActionsElement]
 
-    init(children: [any InfoViewActionsElement] = []) {
-        self.children = children
+    init(elements: [any InfoViewActionsElement] = []) {
+        self.elements = elements
     }
 
     func toActions(dismissing viewController: UIViewController) -> [UIAction] {
-        children.map { $0.toAction(dismissing: viewController) }
+        elements.map { $0.toAction(dismissing: viewController) }
     }
 }

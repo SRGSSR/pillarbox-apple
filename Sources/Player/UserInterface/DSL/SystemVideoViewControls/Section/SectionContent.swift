@@ -8,13 +8,13 @@ import UIKit
 
 /// A type that describing the content of a section.
 public struct SectionContent {
-    private let children: [any SectionElement]
+    private let elements: [any SectionElement]
 
-    init(children: [any SectionElement] = []) {
-        self.children = children
+    init(elements: [any SectionElement] = []) {
+        self.elements = elements
     }
 
     func toMenuElements() -> [UIMenuElement] {
-        children.compactMap { $0.toMenuElement() }
+        elements.compactMap { $0.toMenuElement() }
     }
 }

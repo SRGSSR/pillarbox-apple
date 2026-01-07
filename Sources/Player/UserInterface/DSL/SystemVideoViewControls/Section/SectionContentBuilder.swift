@@ -45,6 +45,6 @@ public enum SectionContentBuilder {
 
     // swiftlint:disable:next missing_docs
     public static func buildFinalResult(_ component: Component) -> Result {
-        .init(children: component)
+        .init(elements: component)
     }
 }

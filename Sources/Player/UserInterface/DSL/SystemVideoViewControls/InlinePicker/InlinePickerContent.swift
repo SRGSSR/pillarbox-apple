@@ -8,13 +8,13 @@ import SwiftUI
 
 /// A type that describing the content of an inline picker.
 public struct InlinePickerContent<Value> {
-    private let children: [any InlinePickerElement<Value>]
+    private let elements: [any InlinePickerElement<Value>]
 
-    init(children: [any InlinePickerElement<Value>] = []) {
-        self.children = children
+    init(elements: [any InlinePickerElement<Value>] = []) {
+        self.elements = elements
     }
 
     func toMenuElements(updating selection: Binding<Value>) -> [UIMenuElement] {
-        children.map { $0.toMenuElement(updating: selection) }
+        elements.map { $0.toMenuElement(updating: selection) }
     }
 }

@@ -8,13 +8,13 @@ import SwiftUI
 
 /// A type that describing the content of a picker section.
 public struct PickerSectionContent<Value> {
-    private let children: [any PickerSectionElement<Value>]
+    private let elements: [any PickerSectionElement<Value>]
 
-    init(children: [any PickerSectionElement<Value>] = []) {
-        self.children = children
+    init(elements: [any PickerSectionElement<Value>] = []) {
+        self.elements = elements
     }
 
     func toMenuElements(updating selection: Binding<Value>) -> [UIMenuElement] {
-        children.compactMap { $0.toMenuElement(updating: selection) }
+        elements.compactMap { $0.toMenuElement(updating: selection) }
     }
 }

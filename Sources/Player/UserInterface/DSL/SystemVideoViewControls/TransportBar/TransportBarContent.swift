@@ -8,13 +8,13 @@ import UIKit
 
 /// A type that describing the content of a transport bar.
 public struct TransportBarContent {
-    private let children: [any TransportBarElement]
+    private let elements: [any TransportBarElement]
 
-    init(children: [any TransportBarElement] = []) {
-        self.children = children
+    init(elements: [any TransportBarElement] = []) {
+        self.elements = elements
     }
 
     func toMenuElements() -> [UIMenuElement] {
-        children.compactMap { $0.toMenuElement() }
+        elements.compactMap { $0.toMenuElement() }
     }
 }

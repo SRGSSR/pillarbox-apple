@@ -8,13 +8,13 @@ import UIKit
 
 /// A type that describing the content of a menu.
 public struct MenuContent {
-    private let children: [any MenuElement]
+    private let elements: [any MenuElement]
 
-    init(children: [any MenuElement] = []) {
-        self.children = children
+    init(elements: [any MenuElement] = []) {
+        self.elements = elements
     }
 
     func toMenuElements() -> [UIMenuElement] {
-        children.compactMap { $0.toMenuElement() }
+        elements.compactMap { $0.toMenuElement() }
     }
 }

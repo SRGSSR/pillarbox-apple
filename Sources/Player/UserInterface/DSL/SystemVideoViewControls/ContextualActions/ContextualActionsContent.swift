@@ -8,13 +8,13 @@ import UIKit
 
 /// A type that describing the content of contextual actions.
 public struct ContextualActionsContent {
-    private let children: [any ContextualActionsElement]
+    private let elements: [any ContextualActionsElement]
 
-    init(children: [any ContextualActionsElement] = []) {
-        self.children = children
+    init(elements: [any ContextualActionsElement] = []) {
+        self.elements = elements
     }
 
     func toActions() -> [UIAction] {
-        children.map { $0.toAction() }
+        elements.map { $0.toAction() }
     }
 }
