@@ -186,9 +186,7 @@ public extension SystemVideoView {
 
     /// Additional tabs presented in the Info view.
     ///
-    /// - Parameters:
-    ///   - height: The height of the Info view. Should be set to the height required by the tallest tab.
-    ///   - content: The content builder.
+    /// - Parameter content: The content builder.
     ///
     /// Use this modifier to configure tabs:
     ///
@@ -203,9 +201,9 @@ public extension SystemVideoView {
     ///        }
     ///    }
     /// ```
-    func infoViewTabs(height: CGFloat = 350, @InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
+    func infoViewTabs(@InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
         var view = self
-        view.customInfoViewsContent = .init(height: height, elements: content().elements)
+        view.customInfoViewsContent = .init(elements: content().elements)
         return view
     }
 }

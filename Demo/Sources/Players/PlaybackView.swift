@@ -785,6 +785,7 @@ private struct MainSystemView: View {
                             .foregroundStyle(item == player.currentItem ? Color.primary : Color.secondary)
                     }
                 }
+                .frame(height: 400)
             }
         }
     }
