@@ -39,7 +39,7 @@ struct ShowcaseView: View {
         systemPictureInPictureSection()
         vanillaPlayerSection()
 #if os(iOS)
-        trackingSection()
+        optInSection()
         webViewSection()
 #endif
     }
