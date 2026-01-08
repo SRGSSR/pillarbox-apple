@@ -67,7 +67,11 @@ struct SearchView: View {
                         style: MediaDescription.style(for: media)
                     ) {
                         let media = Media(title: media.title, type: .urn(media.urn))
+#if os(iOS)
                         router.presented = .player(media: media)
+#else
+                        router.presented = .systemPlayer(media: media)
+#endif
                     }
                     .onAppear {
                         if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {

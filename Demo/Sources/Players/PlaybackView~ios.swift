@@ -13,8 +13,6 @@ import SwiftUI
 
 // swiftlint:disable file_length
 
-#if os(iOS)
-
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
@@ -450,6 +448,7 @@ private struct LiveLabel: View {
         .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 }
+
 private struct LiveButton: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -707,101 +706,6 @@ private struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View,
     }
 }
 
-#else
-
-private struct MainSystemView: View {
-    @ObservedObject var player: Player
-    let supportsPictureInPicture: Bool
-    @ObservedObject var progressTracker: ProgressTracker
-
-    @EnvironmentObject private var viewModel: PlaylistViewModel
-    @State private var streamType: StreamType = .unknown
-
-    @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
-    private var qualitySetting: QualitySetting = .high
-
-    private var skipInfoViewActionTitle: LocalizedStringResource {
-        streamType == .onDemand ? "From Beginning" : "Back to Live"
-    }
-
-    private var skipInfoViewActionSystemImage: String {
-        streamType == .onDemand ? "play.fill" : "forward.end.fill"
-    }
-
-    var body: some View {
-        SystemVideoView(player: player)
-            .supportsPictureInPicture(supportsPictureInPicture)
-            .transportBar(content: transportBarContent)
-            .contextualActions(content: contextualActionsContent)
-            .infoViewActions(content: infoViewActionsContent)
-            .infoViewTabs(content: customInfoViewsContent)
-            .ignoresSafeArea()
-            .onReceive(player: player, assign: \.streamType, to: $streamType)
-    }
-
-    @TransportBarContentBuilder
-    func transportBarContent() -> TransportBarContent {
-        Picker("Playback Speed", systemImage: "speedometer", selection: $player.playbackSpeed) {
-            for speed in [0.5, 1, 1.25, 1.5, 2] as [Float] {
-                Option("\(speed, specifier: "%g×")", value: speed)
-            }
-        }
-        Picker("Quality", systemImage: "person.and.background.dotted", selection: $qualitySetting) {
-            for quality in QualitySetting.allCases {
-                Option(quality.name, value: quality)
-            }
-        }
-    }
-
-    @ContextualActionsContentBuilder
-    func contextualActionsContent() -> ContextualActionsContent {
-        if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
-            Button("Skip") {
-                player.seek(to: skippableTimeRange.end)
-            }
-        }
-    }
-
-    @InfoViewActionsContentBuilder
-    func infoViewActionsContent() -> InfoViewActionsContent {
-        if player.canSkipToDefault() {
-            Button(skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
-                player.skipToDefault()
-            }
-        }
-    }
-
-    @InfoViewTabsContentBuilder
-    func customInfoViewsContent() -> InfoViewTabsContent {
-        if player.items.count > 1 {
-            Tab(title: "Playlist") {
-                _PlaylistView(player: player, viewModel: viewModel)
-                    .frame(height: 400)
-            }
-        }
-    }
-}
-
-private struct _PlaylistView: View {
-    @Environment(\.dismiss) private var dismiss
-    @ObservedObject var player: Player
-    @ObservedObject var viewModel: PlaylistViewModel
-
-    var body: some View {
-        List(Array(zip(player.items, viewModel.entries)), id: \.0) { item, entry in
-            Button {
-                player.currentItem = item
-            } label: {
-                Text(entry.media.title)
-                    .bold(item == player.currentItem)
-                    .foregroundStyle(item == player.currentItem ? Color.primary : Color.secondary)
-            }
-        }
-    }
-}
-
-#endif
-
 private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
@@ -994,28 +898,12 @@ struct PlaybackView: View {
     }
 
     private func mainView() -> some View {
-        ZStack {
-#if os(iOS)
-            MainView(
-                player: player,
-                layout: $layout,
-                supportsPictureInPicture: supportsPictureInPicture,
-                progressTracker: progressTracker
-            )
-#else
-            if isMonoscopic {
-                VideoView(player: player)
-                    .ignoresSafeArea()
-            }
-            else {
-                MainSystemView(
-                    player: player,
-                    supportsPictureInPicture: supportsPictureInPicture,
-                    progressTracker: progressTracker
-                )
-            }
-#endif
-        }
+        MainView(
+            player: player,
+            layout: $layout,
+            supportsPictureInPicture: supportsPictureInPicture,
+            progressTracker: progressTracker
+        )
         ._debugBodyCounter()
     }
 }
@@ -1027,8 +915,6 @@ extension PlaybackView {
         return view
     }
 }
-
-#if os(iOS)
 
 private extension MainView {
     func toggleGesture() -> some Gesture {
@@ -1193,21 +1079,6 @@ private extension MainView {
         SkipButton(player: player, progressTracker: progressTracker)
             .padding(.trailing, 20)
             .frame(maxWidth: .infinity, alignment: .trailing)
-    }
-}
-
-#endif
-
-private extension Player {
-    func skippableTimeRange(at time: CMTime) -> TimeRange? {
-        metadata.timeRanges.first { timeRange in
-            if case .credits = timeRange.kind, timeRange.containsTime(time) {
-                return true
-            }
-            else {
-                return false
-            }
-        }
     }
 }
 

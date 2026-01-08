@@ -36,10 +36,6 @@ private struct LoadedView: View {
 #endif
     }
 
-    private func openPlaylist() {
-        router.presented = .playlist(medias: medias())
-    }
-
     private func medias() -> [Media] {
         contents.compactMap { content -> Media? in
             guard case let .media(media) = content else { return nil }
@@ -51,6 +47,11 @@ private struct LoadedView: View {
         }
     }
 
+#if os(iOS)
+    private func openPlaylist() {
+        router.presented = .playlist(medias: medias())
+    }
+
     @ViewBuilder
     private func toolbar() -> some View {
         if !medias().isEmpty {
@@ -60,6 +61,7 @@ private struct LoadedView: View {
             .accessibilityLabel("Open as playlist")
         }
     }
+#endif
 }
 
 // Behavior: h-hug, v-exp
@@ -101,7 +103,11 @@ private struct ContentCell: View {
                 style: MediaDescription.style(for: media)
             ) {
                 let media = Media(title: title, type: .urn(media.urn, serverSetting: serverSetting))
+#if os(iOS)
                 router.presented = .player(media: media)
+#else
+                router.presented = .systemPlayer(media: media)
+#endif
             }
 #if os(iOS)
             .swipeActions { CopyButton(text: media.urn) }

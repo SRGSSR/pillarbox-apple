@@ -25,17 +25,21 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func content() -> some View {
+#if os(iOS)
         layoutsSection()
         playlistsSection()
         embeddingsSection()
         pictureInPictureCornerCases()
+#endif
         systemPlayerSection()
         miscellaneousPlayerFeaturesSection()
+#if os(iOS)
         customPictureInPictureSection()
+#endif
         systemPictureInPictureSection()
         vanillaPlayerSection()
-        trackingSection()
 #if os(iOS)
+        trackingSection()
         webViewSection()
 #endif
     }
@@ -46,6 +50,7 @@ struct ShowcaseView: View {
         }
     }
 
+#if os(iOS)
     private func layoutsSection() -> some View {
         CustomSection("Layouts") {
             cell(
@@ -217,6 +222,7 @@ struct ShowcaseView: View {
             .sourceCode(of: TransitionPiPView.self)
         }
     }
+#endif
 
     private func systemPlayerSection() -> some View {
         CustomSection("System player (using Pillarbox)") {
@@ -249,11 +255,14 @@ struct ShowcaseView: View {
                 destination: .systemPlayer(media: URNMedia.unknown)
             )
         }
+#if os(iOS)
         .sourceCode(of: SystemPlayerView.self)
+#endif
     }
 
     private func miscellaneousPlayerFeaturesSection() -> some View {
         CustomSection("Miscellaneous player features (using Pillarbox)") {
+#if os(iOS)
             cell(
                 title: "Couleur 3 (DVR)",
                 subtitle: "Inline system playback view",
@@ -267,9 +276,17 @@ struct ShowcaseView: View {
                 destination: .player(media: URLMedia.startTimeVideo)
             )
             .sourceCode(of: PlayerView.self)
+#else
+            cell(
+                title: "Apple Basic 16:9",
+                subtitle: "Playback start at 10 minutes",
+                destination: .systemPlayer(media: URLMedia.startTimeVideo)
+            )
+#endif
         }
     }
 
+#if os(iOS)
     private func customPictureInPictureSection() -> some View {
         // swiftlint:disable:next closure_body_length
         CustomSection("Custom Player and Picture in Picture (PiP) support") {
@@ -325,22 +342,27 @@ struct ShowcaseView: View {
             .sourceCode(of: PlayerView.self)
         }
     }
+#endif
 
     private func systemPictureInPictureSection() -> some View {
+        // swiftlint:disable:next closure_body_length
         CustomSection("System Player and Picture in Picture (PiP) support") {
             cell(
                 title: "Couleur 3 (DVR)",
                 subtitle: "With PiP support",
                 destination: .systemPlayer(media: URLMedia.dvrVideoHLS)
             )
+#if os(iOS)
             .sourceCode(of: SystemPlayerView.self)
-
+#endif
             cell(
                 title: "Apple Advanced 16:9 (fMP4)",
                 subtitle: "With PiP support",
                 destination: .systemPlayer(media: URLMedia.appleAdvanced_16_9_fMP4_HLS)
             )
+#if os(iOS)
             .sourceCode(of: SystemPlayerView.self)
+#endif
 
             cell(
                 title: "Couleur 3 (DVR)",
@@ -350,7 +372,9 @@ struct ShowcaseView: View {
                     supportsPictureInPicture: false
                 )
             )
+#if os(iOS)
             .sourceCode(of: SystemPlayerView.self)
+#endif
 
             cell(
                 title: "Apple Advanced 16:9 (fMP4)",
@@ -360,7 +384,9 @@ struct ShowcaseView: View {
                     supportsPictureInPicture: false
                 )
             )
+#if os(iOS)
             .sourceCode(of: SystemPlayerView.self)
+#endif
         }
     }
 
@@ -387,10 +413,13 @@ struct ShowcaseView: View {
                 destination: .vanillaPlayer(item: URLMedia.unknown.playerItem()!)
             )
         }
+#if os(iOS)
         .sourceCode(of: VanillaPlayerView.self)
+#endif
     }
 
-    private func trackingSection() -> some View {
+#if os(iOS)
+    private func optInSection() -> some View {
         CustomSection("Opt-in features") {
             cell(
                 title: "Video URL",
@@ -404,7 +433,6 @@ struct ShowcaseView: View {
         .sourceCode(of: OptInView.self)
     }
 
-#if os(iOS)
     @ViewBuilder
     private func webViewSection() -> some View {
         CustomSection("Web") {

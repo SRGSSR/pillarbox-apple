@@ -147,7 +147,11 @@ private struct MediaEntryView: View {
     }
 
     private func play() {
+#if os(iOS)
         router.presented = .player(media: media)
+#else
+        router.presented = .systemPlayer(media: media)
+#endif
     }
 }
 
@@ -202,7 +206,9 @@ struct ExamplesView: View {
     private func miscellaneousSections() -> some View {
         section(title: "Time ranges", medias: model.timeRangesMedias)
         section(title: "Aspect ratios", medias: model.aspectRatioMedias)
+#if os(iOS)
         section(title: "360° videos", medias: model.threeSixtyMedias)
+#endif
         section(title: "Unbuffered streams", medias: model.unbufferedMedias)
         section(title: "Corner cases", medias: model.cornerCaseMedias)
     }
@@ -211,7 +217,11 @@ struct ExamplesView: View {
         CustomSection(title) {
             ForEach(medias, id: \.self) { media in
                 Cell(title: media.title, subtitle: media.subtitle, imageUrl: media.imageUrl) {
+#if os(iOS)
                     router.presented = .player(media: media)
+#else
+                    router.presented = .systemPlayer(media: media)
+#endif
                 }
             }
         }

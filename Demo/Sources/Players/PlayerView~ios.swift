@@ -144,11 +144,9 @@ private struct MainView: View {
         VStack {
             PlaybackView(player: player, layout: currentLayout)
                 .supportsPictureInPicture(supportsPictureInPicture)
-#if os(iOS)
             if layout != .maximized, !chapters.isEmpty {
                 ChaptersList(player: player)
             }
-#endif
         }
         .animation(.defaultLinear, values: layout, chapters)
     }

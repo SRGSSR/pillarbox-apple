@@ -84,12 +84,10 @@ struct PlaylistView: View {
             PlaybackView(player: model.player, layout: $model.layout)
                 .supportsPictureInPicture()
                 .environmentObject(model)
-#if os(iOS)
             if model.layout != .maximized {
                 Toolbar(model: model)
                 list()
             }
-#endif
         }
         .animation(.defaultLinear, value: model.layout)
         .onAppear {

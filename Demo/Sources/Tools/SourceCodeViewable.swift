@@ -23,10 +23,10 @@ protocol SourceCodeViewable {
     static var filePath: String { get }
 }
 
+@available(tvOS, unavailable)
 extension View {
     @ViewBuilder
     func sourceCode<T>(of objectType: T.Type) -> some View where T: SourceCodeViewable {
-#if os(iOS)
         if let url = sourceCodeUrl(for: objectType) {
             swipeActions {
                 SourceCodeButton {
@@ -37,9 +37,6 @@ extension View {
         else {
             self
         }
-#else
-        self
-#endif
     }
 
     private func sourceCodeUrl<T>(for objectType: T.Type) -> URL? where T: SourceCodeViewable {
