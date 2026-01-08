@@ -775,16 +775,26 @@ private struct MainSystemView: View {
     func customInfoViewsContent() -> InfoViewTabsContent {
         if player.items.count > 1 {
             Tab(title: "Playlist") {
-                List(Array(zip(player.items, viewModel.entries)), id: \.0) { item, entry in
-                    Button {
-                        player.currentItem = item
-                    } label: {
-                        Text(entry.media.title)
-                            .bold(item == player.currentItem)
-                            .foregroundStyle(item == player.currentItem ? Color.primary : Color.secondary)
-                    }
-                }
-                .frame(height: 400)
+                _PlaylistView(player: player, viewModel: viewModel)
+                    .frame(height: 400)
+            }
+        }
+    }
+}
+
+private struct _PlaylistView: View {
+    @Environment(\.dismiss) private var dismiss
+    @ObservedObject var player: Player
+    @ObservedObject var viewModel: PlaylistViewModel
+
+    var body: some View {
+        List(Array(zip(player.items, viewModel.entries)), id: \.0) { item, entry in
+            Button {
+                player.currentItem = item
+            } label: {
+                Text(entry.media.title)
+                    .bold(item == player.currentItem)
+                    .foregroundStyle(item == player.currentItem ? Color.primary : Color.secondary)
             }
         }
     }
