@@ -11,7 +11,7 @@ import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
-// swiftlint:disable file_length
+// swiftlint:disable file_length file_types_order
 
 private struct MainView: View {
     @ObservedObject var player: Player
@@ -1085,3 +1085,5 @@ private extension MainView {
 #Preview {
     PlaybackView(player: Player(item: URLMedia.onDemandVideoLocalHLS.item()))
 }
+
+// swiftlint:enable file_types_order
