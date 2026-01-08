@@ -99,12 +99,8 @@ enum RouterDestination: Identifiable, Hashable {
         // swiftlint:disable:previous cyclomatic_complexity
         switch self {
         case let .player(media: media, supportsPictureInPicture: supportsPictureInPicture):
-#if os(iOS)
             PlayerView(media: media)
-#else
-            CustomSystemView(media: media)
-#endif
-                // .supportsPictureInPicture(supportsPictureInPicture) // TODO: Uncomment
+                 .supportsPictureInPicture(supportsPictureInPicture)
         case let .systemPlayer(media: media, supportsPictureInPicture: supportsPictureInPicture):
             SystemPlayerView(media: media)
                 .supportsPictureInPicture(supportsPictureInPicture)

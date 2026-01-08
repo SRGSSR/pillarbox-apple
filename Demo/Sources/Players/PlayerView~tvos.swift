@@ -27,10 +27,10 @@ private struct _PlaylistView: View {
 }
  */
 
-struct CustomSystemView: View {
+struct PlayerView: View {
     let media: Media
+    var supportsPictureInPicture = false
     @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
-    private var supportsPictureInPicture = false
 
     var body: some View {
         MainView(player: model.player, supportsPictureInPicture: supportsPictureInPicture)

@@ -12,10 +12,8 @@ import SwiftUI
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
     let media: Media
-
+    var supportsPictureInPicture = false
     @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
-
-    private var supportsPictureInPicture = false
 
     var body: some View {
         MainView(
@@ -180,14 +178,6 @@ private struct ChapterCell: View {
                 .clipShape(RoundedRectangle(cornerRadius: 2))
                 .padding(8)
         }
-    }
-}
-
-extension PlayerView {
-    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> PlayerView {
-        var view = self
-        view.supportsPictureInPicture = supportsPictureInPicture
-        return view
     }
 }
 
