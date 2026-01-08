@@ -775,12 +775,11 @@ private struct MainSystemView: View {
     func customInfoViewsContent() -> InfoViewTabsContent {
         if player.items.count > 1 {
             Tab(title: "Playlist") {
-                List(player.items.indices, id: \.self) { index in
-                    let item = player.items[index]
+                List(Array(zip(player.items, viewModel.entries)), id: \.0) { item, entry in
                     Button {
                         player.currentItem = item
                     } label: {
-                        Text(viewModel.entries[safeIndex: index]?.media.title ?? "Unknown")
+                        Text(entry.media.title)
                             .bold(item == player.currentItem)
                             .foregroundStyle(item == player.currentItem ? Color.primary : Color.secondary)
                     }
