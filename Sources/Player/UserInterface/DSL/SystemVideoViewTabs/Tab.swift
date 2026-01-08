@@ -44,8 +44,13 @@ extension Tab: InfoViewTabsElement {
             hostController.rootView = content
             return hostController
         }
+        else if #available(iOS 16.4, tvOS 16.4, *) {
+            let controller = UIHostingController(rootView: content)
+            controller.safeAreaRegions = []
+            return controller
+        }
         else {
-            return UIHostingController(rootView: content)
+            return UIHostingController(rootView: content, ignoreSafeArea: true)
         }
     }
 }
