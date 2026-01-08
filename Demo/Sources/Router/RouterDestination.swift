@@ -8,13 +8,13 @@ import AVFoundation
 import SwiftUI
 
 enum RouterDestination: Identifiable, Hashable {
+    case player(media: Media, supportsPictureInPicture: Bool)
     case systemPlayer(media: Media, supportsPictureInPicture: Bool)
     case vanillaPlayer(item: AVPlayerItem)
 
     case contentList(configuration: ContentList.Configuration)
 
 #if os(iOS)
-    case player(media: Media, supportsPictureInPicture: Bool)
     case inlineSystemPlayer(media: Media)
     case simplePlayer(media: Media)
 
@@ -43,14 +43,14 @@ enum RouterDestination: Identifiable, Hashable {
     var id: String {
         // Treat players using the same view model as equivalent.
         switch self {
-        case .systemPlayer:
+        case .player, .systemPlayer:
             return "player"
         case .vanillaPlayer:
             return "vanillaPlayer"
         case .contentList:
             return "contentList"
 #if os(iOS)
-        case .player, .inlineSystemPlayer:
+        case .inlineSystemPlayer:
             return "player"
         case .simplePlayer:
             return "simplePlayer"
@@ -86,11 +86,9 @@ enum RouterDestination: Identifiable, Hashable {
         }
     }
 
-#if os(iOS)
     static func player(media: Media) -> Self {
         .player(media: media, supportsPictureInPicture: true)
     }
-#endif
 
     static func systemPlayer(media: Media) -> Self {
         .systemPlayer(media: media, supportsPictureInPicture: true)
@@ -100,6 +98,13 @@ enum RouterDestination: Identifiable, Hashable {
     func view() -> some View {
         // swiftlint:disable:previous cyclomatic_complexity
         switch self {
+        case let .player(media: media, supportsPictureInPicture: supportsPictureInPicture):
+#if os(iOS)
+            PlayerView(media: media)
+#else
+            Color.red
+#endif
+                // .supportsPictureInPicture(supportsPictureInPicture) // TODO: Uncomment
         case let .systemPlayer(media: media, supportsPictureInPicture: supportsPictureInPicture):
             SystemPlayerView(media: media)
                 .supportsPictureInPicture(supportsPictureInPicture)
@@ -108,9 +113,6 @@ enum RouterDestination: Identifiable, Hashable {
         case let .contentList(configuration: configuration):
             ContentListView(configuration: configuration)
 #if os(iOS)
-        case let .player(media: media, supportsPictureInPicture: supportsPictureInPicture):
-            PlayerView(media: media)
-                .supportsPictureInPicture(supportsPictureInPicture)
         case let .inlineSystemPlayer(media: media):
             InlineSystemPlayerView(media: media)
         case let .simplePlayer(media: media):

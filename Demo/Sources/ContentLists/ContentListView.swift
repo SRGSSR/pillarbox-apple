@@ -103,11 +103,7 @@ private struct ContentCell: View {
                 style: MediaDescription.style(for: media)
             ) {
                 let media = Media(title: title, type: .urn(media.urn, serverSetting: serverSetting))
-#if os(iOS)
                 router.presented = .player(media: media)
-#else
-                router.presented = .systemPlayer(media: media)
-#endif
             }
 #if os(iOS)
             .swipeActions { CopyButton(text: media.urn) }

@@ -147,11 +147,7 @@ private struct MediaEntryView: View {
     }
 
     private func play() {
-#if os(iOS)
         router.presented = .player(media: media)
-#else
-        router.presented = .systemPlayer(media: media)
-#endif
     }
 }
 
@@ -217,11 +213,7 @@ struct ExamplesView: View {
         CustomSection(title) {
             ForEach(medias, id: \.self) { media in
                 Cell(title: media.title, subtitle: media.subtitle, imageUrl: media.imageUrl) {
-#if os(iOS)
                     router.presented = .player(media: media)
-#else
-                    router.presented = .systemPlayer(media: media)
-#endif
                 }
             }
         }

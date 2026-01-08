@@ -25,7 +25,6 @@ private struct _PlaylistView: View {
     }
 }
 
-@available(iOS, unavailable)
 struct CustomSystemView: View {
     @ObservedObject var player: Player
     let supportsPictureInPicture: Bool
@@ -46,14 +45,25 @@ struct CustomSystemView: View {
     }
 
     var body: some View {
-        SystemVideoView(player: player)
-            .supportsPictureInPicture(supportsPictureInPicture)
-            .transportBar(content: transportBarContent)
-            .contextualActions(content: contextualActionsContent)
-            .infoViewActions(content: infoViewActionsContent)
-            .infoViewTabs(content: customInfoViewsContent)
-            .ignoresSafeArea()
-            .onReceive(player: player, assign: \.streamType, to: $streamType)
+        if let error = player.error {
+            ErrorView(error: error, player: player)
+        }
+//        else if !player.items.isEmpty {
+//            SystemVideoView(player: player)
+//                .supportsPictureInPicture(supportsPictureInPicture)
+//                .transportBar(content: transportBarContent)
+//                .contextualActions(content: contextualActionsContent)
+//                .infoViewActions(content: infoViewActionsContent)
+//                .infoViewTabs(content: customInfoViewsContent)
+//                .ignoresSafeArea()
+//                .onReceive(player: player, assign: \.streamType, to: $streamType)
+//        }
+        else {
+            UnavailableView {
+                Text("No content")
+            }
+            .foregroundStyle(.white)
+        }
     }
 
     @TransportBarContentBuilder
