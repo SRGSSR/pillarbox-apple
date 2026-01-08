@@ -102,7 +102,7 @@ enum RouterDestination: Identifiable, Hashable {
 #if os(iOS)
             PlayerView(media: media)
 #else
-            Color.red
+            CustomSystemView(media: media)
 #endif
                 // .supportsPictureInPicture(supportsPictureInPicture) // TODO: Uncomment
         case let .systemPlayer(media: media, supportsPictureInPicture: supportsPictureInPicture):

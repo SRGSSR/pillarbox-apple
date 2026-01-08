@@ -7,6 +7,7 @@
 import PillarboxPlayer
 import SwiftUI
 
+/*
 private struct _PlaylistView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var player: Player
@@ -24,13 +25,36 @@ private struct _PlaylistView: View {
         }
     }
 }
+ */
 
 struct CustomSystemView: View {
+    let media: Media
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
+    private var supportsPictureInPicture = false
+
+    var body: some View {
+        MainView(player: model.player, supportsPictureInPicture: supportsPictureInPicture)
+            .enabledForInAppPictureInPicture(persisting: model)
+            .background(.black)
+            .onAppear(perform: play)
+            .tracked(name: "player")
+    }
+
+    init(media: Media) {
+        self.media = media
+    }
+
+    private func play() {
+        model.media = media
+        model.play()
+    }
+}
+
+private struct MainView: View {
     @ObservedObject var player: Player
     let supportsPictureInPicture: Bool
-    @ObservedObject var progressTracker: ProgressTracker
 
-    @EnvironmentObject private var viewModel: PlaylistViewModel
+    @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
     @State private var streamType: StreamType = .unknown
 
     @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
@@ -48,16 +72,15 @@ struct CustomSystemView: View {
         if let error = player.error {
             ErrorView(error: error, player: player)
         }
-//        else if !player.items.isEmpty {
-//            SystemVideoView(player: player)
-//                .supportsPictureInPicture(supportsPictureInPicture)
-//                .transportBar(content: transportBarContent)
-//                .contextualActions(content: contextualActionsContent)
-//                .infoViewActions(content: infoViewActionsContent)
-//                .infoViewTabs(content: customInfoViewsContent)
-//                .ignoresSafeArea()
-//                .onReceive(player: player, assign: \.streamType, to: $streamType)
-//        }
+        else if !player.items.isEmpty {
+            SystemVideoView(player: player)
+                .supportsPictureInPicture(supportsPictureInPicture)
+                .transportBar(content: transportBarContent)
+                .contextualActions(content: contextualActionsContent)
+                .infoViewActions(content: infoViewActionsContent)
+                .ignoresSafeArea()
+                .onReceive(player: player, assign: \.streamType, to: $streamType)
+        }
         else {
             UnavailableView {
                 Text("No content")
@@ -97,7 +120,7 @@ struct CustomSystemView: View {
             }
         }
     }
-
+/*
     @InfoViewTabsContentBuilder
     func customInfoViewsContent() -> InfoViewTabsContent {
         if player.items.count > 1 {
@@ -107,4 +130,5 @@ struct CustomSystemView: View {
             }
         }
     }
+ */
 }
