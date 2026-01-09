@@ -7,7 +7,6 @@
 import AVKit
 import SwiftUI
 
-// Behavior: h-exp, v-exp
 struct VanillaPlayerView: View {
     let item: AVPlayerItem
 

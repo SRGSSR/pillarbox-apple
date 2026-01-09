@@ -8,7 +8,6 @@ import CoreMedia
 import PillarboxPlayer
 import SwiftUI
 
-// Behavior: h-exp, v-hug
 private struct BasicTimeSlider: View {
     @ObservedObject var player: Player
     @StateObject private var progressTracker = ProgressTracker(
@@ -24,7 +23,6 @@ private struct BasicTimeSlider: View {
 }
 
 /// A playback view with basic controls. Requires an ancestor view to own the player to be used.
-/// Behavior: h-exp, v-exp
 struct BasicPlaybackView: View {
     @ObservedObject var player: Player
     @State private var isBusy = false

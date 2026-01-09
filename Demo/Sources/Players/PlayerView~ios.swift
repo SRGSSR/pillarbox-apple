@@ -9,7 +9,6 @@ import PillarboxPlayer
 import SwiftUI
 
 /// A standalone player view with standard controls and support for chapters.
-/// Behavior: h-exp, v-exp
 struct PlayerView: View {
     let media: Media
     var supportsPictureInPicture = false

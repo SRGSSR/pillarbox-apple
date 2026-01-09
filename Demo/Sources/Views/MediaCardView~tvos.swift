@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-// Behavior: h-hug, v-hug
 private struct CardTopTrailingView: View {
     let duration: String?
     let type: String?
@@ -28,7 +27,6 @@ private struct CardTopTrailingView: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 private struct CardBottomView: View {
     let title: String?
     let subtitle: String?
@@ -65,7 +63,6 @@ private struct CardBottomView: View {
     }
 }
 
-// Behavior: h-hug, v-hug
 struct MediaCardView: View {
     let size: CGSize
     let title: String?

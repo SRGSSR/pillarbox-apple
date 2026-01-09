@@ -8,7 +8,6 @@ import SRGDataProviderCombine
 import SRGDataProviderModel
 import SwiftUI
 
-// Behavior: h-exp, v-exp
 private struct LoadedView: View {
     @ObservedObject var model: ContentListViewModel
     let contents: [ContentListViewModel.Content]
@@ -64,7 +63,6 @@ private struct LoadedView: View {
 #endif
 }
 
-// Behavior: h-hug, v-exp
 private struct ContentCell: View {
     let content: ContentListViewModel.Content
 
@@ -127,7 +125,6 @@ private struct ContentCell: View {
     }
 }
 
-// Behavior: h-exp, v-exp
 struct ContentListView: View {
     let configuration: ContentList.Configuration
     @StateObject private var model = ContentListViewModel()

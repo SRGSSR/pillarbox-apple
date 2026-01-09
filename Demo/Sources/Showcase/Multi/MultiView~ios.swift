@@ -7,7 +7,6 @@
 import PillarboxPlayer
 import SwiftUI
 
-// Behavior: h-exp, v-exp
 struct MultiView: View {
     let media1: Media
     let media2: Media

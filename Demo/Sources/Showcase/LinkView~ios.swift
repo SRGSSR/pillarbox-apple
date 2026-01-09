@@ -7,7 +7,6 @@
 import PillarboxPlayer
 import SwiftUI
 
-// Behavior: h-exp, v-exp
 struct LinkView: View {
     let media: Media
 

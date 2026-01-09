@@ -9,8 +9,6 @@ import SceneKit
 import SwiftUI
 
 /// A view displaying video content provided by an associated player.
-///
-/// Behavior: h-exp, v-exp
 public struct VideoView: View {
     @ObservedObject private var player: Player
 

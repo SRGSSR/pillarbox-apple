@@ -8,7 +8,6 @@ import AVFoundation
 import PillarboxPlayer
 import SwiftUI
 
-// Behavior: h-exp, v-exp
 struct StoriesView: View {
     @StateObject private var model = StoriesViewModel(stories: Story.stories(from: MediaList.storyUrns))
 

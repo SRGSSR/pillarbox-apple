@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-// Behavior: h-exp, v-exp
 struct ShowcaseView: View {
     // swiftlint:disable:previous type_body_length
     @EnvironmentObject private var router: Router

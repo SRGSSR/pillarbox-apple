@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-// Behavior: h-exp, v-hug
 private struct TextFieldView: View {
     private let placeholder: String
     @Binding private var text: String
@@ -151,7 +150,6 @@ private struct MediaEntryView: View {
     }
 }
 
-// Behavior: h-exp, v-exp
 struct ExamplesView: View {
     @StateObject private var model = ExamplesViewModel()
     @EnvironmentObject private var router: Router
