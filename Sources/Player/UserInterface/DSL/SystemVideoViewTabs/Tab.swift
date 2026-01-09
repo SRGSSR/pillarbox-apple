@@ -10,7 +10,7 @@ import SwiftUI
 public struct Tab<Content> where Content: View {
     let title: String
     let identifier: String
-    let content: Content
+    fileprivate var background: TabBackground<Content>
 
     /// Creates a tab.
     ///
@@ -23,7 +23,42 @@ public struct Tab<Content> where Content: View {
     public init(title: String, identifier: String? = nil, @ViewBuilder _ content: () -> Content) {
         self.title = title
         self.identifier = identifier ?? title
-        self.content = content()
+        self.background = TabBackground(content: content())
+    }
+}
+
+public extension Tab {
+    func background(_ visibility: Visibility = .automatic) -> Tab {
+        var tab = self
+        tab.background.visibility = visibility
+        return tab
+    }
+}
+
+fileprivate struct TabBackground<Content>: View where Content: View {
+    let content: Content
+    var visibility: Visibility = .automatic
+
+    var body: some View {
+        ZStack {
+            if visibility == .visible {
+                if #available(tvOS 26.0, *) {
+                    Color.clear
+                        .glassEffect(.clear, in: .rect(cornerRadius: 40))
+                        .background {
+                            Color.clear
+                                .blur(radius: 1)
+                                //.background(.ultraThinMaterial)
+                                .padding(.vertical)
+                        }
+                }
+                else {
+                    Color.clear
+                        .background(.regularMaterial, in: .rect(cornerRadius: 25))
+                }
+            }
+            content
+        }
     }
 }
 
@@ -39,18 +74,18 @@ extension Tab: InfoViewTabsElement {
         return hostingController
     }
 
-    private func hostingController(reusing viewController: UIViewController?) -> UIHostingController<Content> {
-        if let hostController = viewController as? UIHostingController<Content> {
-            hostController.rootView = content
+    private func hostingController(reusing viewController: UIViewController?) -> UIHostingController<TabBackground<Content>> {
+        if let hostController = viewController as? UIHostingController<TabBackground<Content>> {
+            hostController.rootView = background
             return hostController
         }
         else if #available(iOS 16.4, tvOS 16.4, *) {
-            let controller = UIHostingController(rootView: content)
+            let controller = UIHostingController(rootView: background)
             controller.safeAreaRegions = []
             return controller
         }
         else {
-            return UIHostingController(rootView: content, ignoreSafeArea: true)
+            return UIHostingController(rootView: background, ignoreSafeArea: true)
         }
     }
 }

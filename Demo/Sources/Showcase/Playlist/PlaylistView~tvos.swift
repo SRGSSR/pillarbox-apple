@@ -55,6 +55,7 @@ struct PlaylistView: View {
                 _PlaylistView(model: model)
                     .frame(height: 400)
             }
+            .background(.visible)
         }
     }
 }
