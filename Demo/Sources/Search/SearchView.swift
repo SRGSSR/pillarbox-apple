@@ -41,7 +41,9 @@ struct SearchView: View {
         .animation(.defaultLinear, value: model.state)
         .tracked(name: "search")
         .searchable(text: $model.text)
+#if os(iOS)
         .navigationTitle("Search")
+#endif
         .searchScopes16_4($model.vendor) {
             ForEach([SRGVendor.RSI, .RTR, .RTS, .SRF, .SWI], id: \.self) { vendor in
                 Text(vendor.name).tag(vendor)
