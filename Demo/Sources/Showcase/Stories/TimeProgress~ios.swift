@@ -8,7 +8,7 @@ import CoreMedia
 import PillarboxPlayer
 import SwiftUI
 
-private struct TimeProgress: View {
+struct TimeProgress: View {
     let player: Player
     @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
 
