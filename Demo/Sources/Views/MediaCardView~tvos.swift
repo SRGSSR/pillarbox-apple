@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-#if os(tvOS)
 // Behavior: h-hug, v-hug
 private struct CardTopTrailingView: View {
     let duration: String?
@@ -121,4 +120,3 @@ struct MediaCardView: View {
         self.date = date
     }
 }
-#endif

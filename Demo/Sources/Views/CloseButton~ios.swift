@@ -19,9 +19,7 @@ struct CloseButton: View {
         }
         .shadow(color: .black, radius: 1)
         .accessibilityLabel("Close")
-#if os(iOS)
         .keyboardShortcut(.escape, modifiers: [])
-#endif
         .hoverEffect()
     }
 

@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-@available(tvOS, unavailable)
 struct PlaylistSelectionView: View {
     static let medias = [
         URLMedia.onDemandVideoHLS,
@@ -119,7 +118,6 @@ struct PlaylistSelectionView: View {
     }
 }
 
-@available(tvOS, unavailable)
 private extension PlaylistSelectionView {
     enum InsertionOption: CaseIterable {
         case prepend

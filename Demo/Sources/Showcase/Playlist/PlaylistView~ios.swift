@@ -24,7 +24,6 @@ private struct MediaCell: View {
     }
 }
 
-@available(tvOS, unavailable)
 private struct Toolbar: View {
     @ObservedObject private var player: Player
     @ObservedObject private var model: PlaylistViewModel
@@ -118,7 +117,6 @@ struct PlaylistView: View {
     }
 }
 
-@available(tvOS, unavailable)
 private extension Toolbar {
     func previousButton() -> some View {
         Button(action: player.returnToPreviousItem) {
@@ -148,7 +146,6 @@ private extension Toolbar {
     }
 }
 
-@available(tvOS, unavailable)
 private extension Toolbar {
     func repeatModeButton() -> some View {
         Button(action: toggleRepeatMode) {

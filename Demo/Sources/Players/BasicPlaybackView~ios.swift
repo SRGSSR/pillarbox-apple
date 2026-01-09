@@ -8,7 +8,6 @@ import CoreMedia
 import PillarboxPlayer
 import SwiftUI
 
-#if os(iOS)
 // Behavior: h-exp, v-hug
 private struct BasicTimeSlider: View {
     @ObservedObject var player: Player
@@ -23,7 +22,6 @@ private struct BasicTimeSlider: View {
             ._debugBodyCounter()
     }
 }
-#endif
 
 /// A playback view with basic controls. Requires an ancestor view to own the player to be used.
 /// Behavior: h-exp, v-exp
@@ -34,11 +32,9 @@ struct BasicPlaybackView: View {
     var body: some View {
         ZStack {
             VideoView(player: player)
-#if os(iOS)
             BasicTimeSlider(player: player)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-#endif
             ProgressView()
                 .opacity(isBusy ? 1 : 0)
                 .accessibilityHidden(true)

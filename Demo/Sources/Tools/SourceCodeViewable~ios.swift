@@ -6,6 +6,10 @@
 
 import SwiftUI
 
+protocol SourceCodeViewable {
+    static var filePath: String { get }
+}
+
 private struct SourceCodeButton: View {
     let action: () -> Void
 
@@ -19,11 +23,6 @@ private struct SourceCodeButton: View {
     }
 }
 
-protocol SourceCodeViewable {
-    static var filePath: String { get }
-}
-
-@available(tvOS, unavailable)
 extension View {
     @ViewBuilder
     func sourceCode<T>(of objectType: T.Type) -> some View where T: SourceCodeViewable {

@@ -21,9 +21,7 @@ private struct InformationSectionContent: View {
 
     var body: some View {
         cell("URI", value: uri)
-#if os(iOS)
             .swipeActions { CopyButton(text: uri) }
-#endif
         cell("Type", value: metrics.playbackType ?? "-")
         cell("Playback duration", value: playbackDuration)
         cell("Data volume", value: bytesTransferred)
@@ -161,9 +159,7 @@ struct MetricsView: View {
         }
         .transaction { $0.animation = nil }
         .navigationTitle("Metrics")
-#if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
-#endif
     }
 
     private var metrics: [Metrics] {
@@ -213,10 +209,8 @@ struct MetricsView: View {
             Section {
                 ForEach(sessionIdentifiers, id: \.self) { identifier in
                     Text(identifier)
-#if os(iOS)
                         .textSelection(.enabled)
                         .swipeActions { CopyButton(text: identifier) }
-#endif
                 }
             } header: {
                 Text("Tracking sessions")
