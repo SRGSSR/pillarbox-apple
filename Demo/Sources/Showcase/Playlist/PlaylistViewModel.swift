@@ -13,7 +13,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     private var cancellables = Set<AnyCancellable>()
 
 #if os(iOS)
-    @Published var layout: PlaybackView.Layout = .minimized
+    @Published var layout: PlaybackViewLayout = .minimized
 #endif
 
     @Published var entries: [PlaylistEntry] = [] {

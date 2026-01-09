@@ -10,7 +10,7 @@ import SwiftUI
 
 #if os(iOS)
 // Behavior: h-exp, v-hug
-private struct TimeSlider: View {
+private struct BasicTimeSlider: View {
     @ObservedObject var player: Player
     @StateObject private var progressTracker = ProgressTracker(
         interval: CMTime(value: 1, timescale: 10),
@@ -35,7 +35,7 @@ struct BasicPlaybackView: View {
         ZStack {
             VideoView(player: player)
 #if os(iOS)
-            TimeSlider(player: player)
+            BasicTimeSlider(player: player)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif

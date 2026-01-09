@@ -22,7 +22,7 @@ final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
 #if os(iOS)
-    @Published var layout: PlaybackView.Layout = .minimized
+    @Published var layout: PlaybackViewLayout = .minimized
 #endif
 
     let player = Player(configuration: .standard)

@@ -39,7 +39,7 @@ struct PlayerView: View {
 
 private struct MainView: View {
     @ObservedObject var player: Player
-    @Binding var layout: PlaybackView.Layout
+    @Binding var layout: PlaybackViewLayout
 
     let supportsPictureInPicture: Bool
 
@@ -47,7 +47,7 @@ private struct MainView: View {
         player.metadata.chapters
     }
 
-    private var currentLayout: Binding<PlaybackView.Layout> {
+    private var currentLayout: Binding<PlaybackViewLayout> {
         !chapters.isEmpty ? $layout : .constant(.inline)
     }
 
