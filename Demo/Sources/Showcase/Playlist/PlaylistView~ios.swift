@@ -76,26 +76,19 @@ private struct Toolbar: View {
 
 struct PlaylistView: View {
     let medias: [Media]
-
     @StateObject private var model = PlaylistViewModel.persisted ?? PlaylistViewModel()
 
     var body: some View {
         VStack(spacing: 0) {
             PlaybackView(player: model.player, layout: $model.layout)
                 .supportsPictureInPicture()
-                .environmentObject(model)
             if model.layout != .maximized {
                 Toolbar(model: model)
                 list()
             }
         }
         .animation(.defaultLinear, value: model.layout)
-        .onAppear {
-            if model.isEmpty {
-                model.entries = medias.map { .init(media: $0) }
-            }
-            model.play()
-        }
+        .onAppear(perform: play)
         .enabledForInAppPictureInPicture(persisting: model)
         .tracked(name: "playlist")
     }
@@ -115,6 +108,13 @@ struct PlaylistView: View {
             }
         }
         .animation(.linear, value: model.entries)
+    }
+
+    private func play() {
+        if model.isEmpty {
+            model.entries = medias.map { .init(media: $0) }
+        }
+        model.play()
     }
 }
 

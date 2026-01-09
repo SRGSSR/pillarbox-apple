@@ -12,6 +12,8 @@ enum RouterDestination: Identifiable, Hashable {
     case systemPlayer(media: Media, supportsPictureInPicture: Bool)
     case vanillaPlayer(item: AVPlayerItem)
 
+    case playlist(medias: [Media])
+
     case contentList(configuration: ContentList.Configuration)
 
 #if os(iOS)
@@ -30,8 +32,6 @@ enum RouterDestination: Identifiable, Hashable {
 
     case stories
 
-    case playlist(medias: [Media])
-
     case twinsPiP(media: Media)
     case multiPiP(media1: Media, media2: Media)
     case multiSystemPiP(media1: Media, media2: Media)
@@ -47,6 +47,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "player"
         case .vanillaPlayer:
             return "vanillaPlayer"
+        case .playlist:
+            return "playlist"
         case .contentList:
             return "contentList"
 #if os(iOS)
@@ -66,8 +68,6 @@ enum RouterDestination: Identifiable, Hashable {
             return "wrapped"
         case .stories:
             return "stories"
-        case .playlist:
-            return "playlist"
         case .optInPlayer:
             return "optInPlayer"
         case .transition:
@@ -106,6 +106,8 @@ enum RouterDestination: Identifiable, Hashable {
                 .supportsPictureInPicture(supportsPictureInPicture)
         case let .vanillaPlayer(item: item):
             VanillaPlayerView(item: item)
+        case let .playlist(medias: medias):
+            PlaylistView(medias: medias)
         case let .contentList(configuration: configuration):
             ContentListView(configuration: configuration)
 #if os(iOS)
@@ -125,8 +127,6 @@ enum RouterDestination: Identifiable, Hashable {
             WrappedView(media: media)
         case .stories:
             StoriesView()
-        case let .playlist(medias: medias):
-            PlaylistView(medias: medias)
         case let .optInPlayer(media: media):
             OptInView(media: media)
         case let .transition(media: media):

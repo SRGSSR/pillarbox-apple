@@ -27,7 +27,9 @@ struct ShowcaseView: View {
     private func content() -> some View {
 #if os(iOS)
         layoutsSection()
+#endif
         playlistsSection()
+#if os(iOS)
         embeddingsSection()
         pictureInPictureCornerCases()
 #endif
@@ -74,62 +76,6 @@ struct ShowcaseView: View {
             )
             .sourceCode(of: StoriesView.self)
         }
-    }
-
-    private func playlistsSection() -> some View {
-        // swiftlint:disable:previous function_body_length
-        // swiftlint:disable:next closure_body_length
-        CustomSection("Playlists") {
-            cell(
-                title: "Video URLs",
-                destination: .playlist(medias: MediaList.videoUrls)
-            )
-            cell(
-                title: "Video URNs",
-                destination: .playlist(medias: MediaList.videoUrns)
-            )
-            cell(
-                title: "Long video URNs",
-                destination: .playlist(medias: MediaList.longVideoUrns)
-            )
-            cell(
-                title: "Videos with media selections",
-                destination: .playlist(medias: MediaList.videosWithMediaSelections)
-            )
-            cell(
-                title: "Audios",
-                destination: .playlist(medias: MediaList.audios)
-            )
-            cell(
-                title: "Videos (URLs, one failing)",
-                destination: .playlist(medias: MediaList.videosWithOneFailingUrl)
-            )
-            cell(
-                title: "Videos (URLs, one failing MP3)",
-                destination: .playlist(medias: MediaList.videosWithOneFailingMp3Url)
-            )
-            cell(
-                title: "Videos (URNs, one failing)",
-                destination: .playlist(medias: MediaList.videosWithOneFailingUrn)
-            )
-            cell(
-                title: "Videos (URLs, all failing)",
-                destination: .playlist(medias: MediaList.videosWithOnlyFailingUrls)
-            )
-            cell(
-                title: "Videos (URNs, all failing)",
-                destination: .playlist(medias: MediaList.videosWithOnlyFailingUrns)
-            )
-            cell(
-                title: "Videos (URLs and URNs, all failing)",
-                destination: .playlist(medias: MediaList.videosWithFailingUrlsAndUrns)
-            )
-            cell(
-                title: "Empty",
-                destination: .playlist(medias: [])
-            )
-        }
-        .sourceCode(of: PlaylistView.self)
     }
 
     private func embeddingsSection() -> some View {
@@ -223,6 +169,64 @@ struct ShowcaseView: View {
         }
     }
 #endif
+
+    private func playlistsSection() -> some View {
+        // swiftlint:disable:previous function_body_length
+        // swiftlint:disable:next closure_body_length
+        CustomSection("Playlists") {
+            cell(
+                title: "Video URLs",
+                destination: .playlist(medias: MediaList.videoUrls)
+            )
+            cell(
+                title: "Video URNs",
+                destination: .playlist(medias: MediaList.videoUrns)
+            )
+            cell(
+                title: "Long video URNs",
+                destination: .playlist(medias: MediaList.longVideoUrns)
+            )
+            cell(
+                title: "Videos with media selections",
+                destination: .playlist(medias: MediaList.videosWithMediaSelections)
+            )
+            cell(
+                title: "Audios",
+                destination: .playlist(medias: MediaList.audios)
+            )
+            cell(
+                title: "Videos (URLs, one failing)",
+                destination: .playlist(medias: MediaList.videosWithOneFailingUrl)
+            )
+            cell(
+                title: "Videos (URLs, one failing MP3)",
+                destination: .playlist(medias: MediaList.videosWithOneFailingMp3Url)
+            )
+            cell(
+                title: "Videos (URNs, one failing)",
+                destination: .playlist(medias: MediaList.videosWithOneFailingUrn)
+            )
+            cell(
+                title: "Videos (URLs, all failing)",
+                destination: .playlist(medias: MediaList.videosWithOnlyFailingUrls)
+            )
+            cell(
+                title: "Videos (URNs, all failing)",
+                destination: .playlist(medias: MediaList.videosWithOnlyFailingUrns)
+            )
+            cell(
+                title: "Videos (URLs and URNs, all failing)",
+                destination: .playlist(medias: MediaList.videosWithFailingUrlsAndUrns)
+            )
+            cell(
+                title: "Empty",
+                destination: .playlist(medias: [])
+            )
+        }
+#if os(iOS)
+        .sourceCode(of: PlaylistView.self)
+#endif
+    }
 
     private func systemPlayerSection() -> some View {
         CustomSection("System player (using Pillarbox)") {

@@ -18,7 +18,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var transportBarContent = TransportBarContent()
     private var contextualActionsContent = ContextualActionsContent()
     private var infoViewActionsContent = InfoViewActionsContent()
-    private var customInfoViewsContent = InfoViewTabsContent()
+    private var infoViewTabsContent = InfoViewTabsContent()
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -31,7 +31,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
                     infoViewActionsContent: infoViewActionsContent,
-                    infoViewTabsContent: customInfoViewsContent
+                    infoViewTabsContent: infoViewTabsContent
                 )
             }
             else {
@@ -42,7 +42,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
                     infoViewActionsContent: infoViewActionsContent,
-                    infoViewTabsContent: customInfoViewsContent
+                    infoViewTabsContent: infoViewTabsContent
                 )
             }
         }
@@ -203,7 +203,7 @@ public extension SystemVideoView {
     /// ```
     func infoViewTabs(@InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
         var view = self
-        view.customInfoViewsContent = .init(elements: content().elements)
+        view.infoViewTabsContent = .init(elements: content().elements)
         return view
     }
 }
