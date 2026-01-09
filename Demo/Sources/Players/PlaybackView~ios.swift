@@ -742,10 +742,8 @@ private struct PlaybackButton: View {
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
         .accessibilityLabel(accessibilityLabel)
-#if os(iOS)
         .keyboardShortcut(.space, modifiers: [])
         .hoverEffect()
-#endif
     }
 
     private func play() {
