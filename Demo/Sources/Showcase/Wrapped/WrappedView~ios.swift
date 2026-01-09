@@ -53,5 +53,5 @@ extension WrappedView: SourceCodeViewable {
 }
 
 #Preview {
-    WrappedView(media: URLMedia.onDemandVideoLocalHLS)
+    WrappedView(media: URLMedia.onDemandVideoHLS)
 }

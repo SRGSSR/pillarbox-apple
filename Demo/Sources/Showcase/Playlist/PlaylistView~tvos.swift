@@ -58,3 +58,7 @@ struct PlaylistView: View {
         }
     }
 }
+
+#Preview {
+    PlaylistView(medias: [URLMedia.onDemandVideoHLS, URLMedia.shortOnDemandVideoHLS, URLMedia.dvrVideoHLS])
+}

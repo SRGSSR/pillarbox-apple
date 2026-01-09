@@ -27,3 +27,12 @@ struct CloseButton: View {
         self.topBarStyle = topBarStyle
     }
 }
+
+#Preview {
+    HStack {
+        CloseButton(topBarStyle: false)
+            .background(.red)
+        CloseButton(topBarStyle: true)
+            .background(.red)
+    }
+}

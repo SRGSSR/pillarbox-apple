@@ -20,3 +20,7 @@ struct TimeProgress: View {
             .bind(progressTracker, to: player)
     }
 }
+
+#Preview {
+    TimeProgress(player: Player(item: URLMedia.appleAdvanced_16_9_TS_HLS.item()))
+}

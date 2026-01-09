@@ -8,6 +8,17 @@ import Charts
 import PillarboxPlayer
 import SwiftUI
 
+private struct MediaRequestChartPreview: View {
+    @State private var player = Player(item: URLMedia.appleAdvanced_16_9_TS_HLS.item())
+    @StateObject private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
+
+    var body: some View {
+        MediaRequestChart(metrics: metricsCollector.metrics, limit: 100)
+            .bind(metricsCollector, to: player)
+            .onAppear(perform: player.play)
+    }
+}
+
 struct MediaRequestChart: View {
     let metrics: [Metrics]
     let limit: Int
@@ -41,4 +52,8 @@ struct MediaRequestChart: View {
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity, alignment: .center)
     }
+}
+
+#Preview {
+    MediaRequestChartPreview()
 }

@@ -27,3 +27,7 @@ struct StoryView: View {
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)
     }
 }
+
+#Preview {
+    StoryView(player: Player(item: URLMedia.appleAdvanced_16_9_TS_HLS.item()))
+}

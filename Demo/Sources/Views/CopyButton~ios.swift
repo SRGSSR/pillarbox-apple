@@ -18,3 +18,7 @@ struct CopyButton: View {
         .tint(.accentColor)
     }
 }
+
+#Preview {
+    CopyButton(text: "Copy")
+}

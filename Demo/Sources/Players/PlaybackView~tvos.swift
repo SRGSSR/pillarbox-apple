@@ -106,3 +106,7 @@ extension PlaybackView {
         return view
     }
 }
+
+#Preview {
+    PlaybackView(player: Player(item: URLMedia.appleBasic_4_3_HLS.item()))
+}

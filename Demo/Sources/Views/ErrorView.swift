@@ -104,3 +104,8 @@ struct ErrorView: View {
             .padding(.bottom)
     }
 }
+
+#Preview {
+    ErrorView(error: NSError(domain: "Unknown", code: 42), player: Player())
+        .preferredColorScheme(.dark)
+}

@@ -29,3 +29,7 @@ private struct SafariWebView: UIViewControllerRepresentable {
 extension WebView: SourceCodeViewable {
     static let filePath = #file
 }
+
+#Preview {
+    WebView(url: URL(string: "https://www.pillarbox.ch")!)
+}

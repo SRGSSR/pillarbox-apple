@@ -56,5 +56,5 @@ extension MultiPiPView: SourceCodeViewable {
 }
 
 #Preview {
-    MultiPiPView(media1: URLMedia.onDemandVideoLocalHLS, media2: URLMedia.onDemandVideoMP4, isSystemPlayer: false)
+    MultiPiPView(media1: URLMedia.onDemandVideoHLS, media2: URLMedia.onDemandVideoMP4, isSystemPlayer: false)
 }

@@ -62,5 +62,5 @@ extension SimplePlayerView: SourceCodeViewable {
 }
 
 #Preview {
-    SimplePlayerView(media: URLMedia.onDemandVideoLocalHLS)
+    SimplePlayerView(media: URLMedia.appleAdvanced_16_9_TS_HLS)
 }

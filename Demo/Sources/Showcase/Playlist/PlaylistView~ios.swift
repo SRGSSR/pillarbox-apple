@@ -202,9 +202,5 @@ extension PlaylistView: SourceCodeViewable {
 }
 
 #Preview {
-    PlaylistView(medias: [
-        URLMedia.onDemandVideoLocalHLS,
-        URLMedia.shortOnDemandVideoHLS,
-        URLMedia.dvrVideoHLS
-    ])
+    PlaylistView(medias: [URLMedia.onDemandVideoHLS, URLMedia.shortOnDemandVideoHLS, URLMedia.dvrVideoHLS])
 }

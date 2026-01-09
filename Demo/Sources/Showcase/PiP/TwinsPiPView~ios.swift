@@ -46,5 +46,5 @@ extension TwinsPiPView: SourceCodeViewable {
 }
 
 #Preview {
-    TwinsPiPView(media: URLMedia.onDemandVideoLocalHLS)
+    TwinsPiPView(media: URLMedia.onDemandVideoHLS)
 }

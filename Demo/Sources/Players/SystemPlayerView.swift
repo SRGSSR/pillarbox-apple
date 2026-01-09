@@ -47,5 +47,5 @@ extension SystemPlayerView: SourceCodeViewable {
 #endif
 
 #Preview {
-    SystemPlayerView(media: URLMedia.onDemandVideoLocalHLS)
+    SystemPlayerView(media: URLMedia.appleAdvanced_16_9_TS_HLS)
 }

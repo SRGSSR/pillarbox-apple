@@ -139,6 +139,17 @@ private struct ServiceStartupTimesSectionContent: View {
     }
 }
 
+private struct MetricsPreview: View {
+    @State private var player = Player(item: URLMedia.appleAdvanced_16_9_TS_HLS.item())
+    @StateObject private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
+
+    var body: some View {
+        MetricsView(metricsCollector: metricsCollector)
+            .bind(metricsCollector, to: player)
+            .onAppear(perform: player.play)
+    }
+}
+
 struct MetricsView: View {
     @ObservedObject var metricsCollector: MetricsCollector
 
@@ -293,19 +304,6 @@ struct MetricsView: View {
     }
 }
 
-struct MetricsView_Previews: PreviewProvider {
-    private struct MetricsPreview: View {
-        @State private var player = Player(item: URLMedia.appleAdvanced_16_9_TS_HLS.item())
-        @StateObject private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
-
-        var body: some View {
-            MetricsView(metricsCollector: metricsCollector)
-                .bind(metricsCollector, to: player)
-                .onAppear(perform: player.play)
-        }
-    }
-
-    static var previews: some View {
-        MetricsPreview()
-    }
+#Preview {
+    MetricsPreview()
 }

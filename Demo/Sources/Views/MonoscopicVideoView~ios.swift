@@ -52,3 +52,7 @@ struct MonoscopicVideoView: View {
         return SCNQuaternionRotate(baseOrientation(), Float(wx), Float(wy))
     }
 }
+
+#Preview {
+    MonoscopicVideoView(player: Player(item: URLMedia.apple_360.item()))
+}

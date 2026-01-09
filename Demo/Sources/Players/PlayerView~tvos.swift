@@ -7,26 +7,6 @@
 import PillarboxPlayer
 import SwiftUI
 
-/*
-private struct _PlaylistView: View {
-    @Environment(\.dismiss) private var dismiss
-    @ObservedObject var player: Player
-    @ObservedObject var viewModel: PlaylistViewModel
-
-    var body: some View {
-        List(Array(zip(player.items, viewModel.entries)), id: \.0) { item, entry in
-            Button {
-                player.currentItem = item
-            } label: {
-                Text(entry.media.title)
-                    .bold(item == player.currentItem)
-                    .foregroundStyle(item == player.currentItem ? Color.primary : Color.secondary)
-            }
-        }
-    }
-}
- */
-
 struct PlayerView: View {
     let media: Media
     var supportsPictureInPicture = false
@@ -48,4 +28,8 @@ struct PlayerView: View {
         model.media = media
         model.play()
     }
+}
+
+#Preview {
+    PlayerView(media: URLMedia.appleAdvanced_16_9_TS_HLS)
 }

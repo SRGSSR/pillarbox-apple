@@ -55,3 +55,7 @@ extension SingleView {
         return view
     }
 }
+
+#Preview {
+    SingleView(player: Player(item: URLMedia.appleAdvanced_16_9_TS_HLS.item()))
+}

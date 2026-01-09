@@ -42,5 +42,5 @@ struct BasicPlaybackView: View {
 }
 
 #Preview {
-    BasicPlaybackView(player: Player())
+    BasicPlaybackView(player: Player(item: URLMedia.appleAdvanced_16_9_TS_HLS.item()))
 }

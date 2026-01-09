@@ -68,5 +68,5 @@ extension TransitionPiPView: SourceCodeViewable {
 }
 
 #Preview {
-    TransitionPiPView(media: URLMedia.onDemandVideoLocalHLS)
+    TransitionPiPView(media: URLMedia.onDemandVideoHLS)
 }

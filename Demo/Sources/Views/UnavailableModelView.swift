@@ -35,3 +35,15 @@ struct UnavailableModelView<Model, Label, Description>: View where Model: Refres
         self.description = description
     }
 }
+
+#Preview {
+    UnavailableModelView(model: SearchViewModel()) {
+        Label {
+            Text(verbatim: "title")
+        } icon: {
+            Image(systemName: "circle.fill")
+        }
+    } description: {
+        Text(verbatim: "description")
+    }
+}

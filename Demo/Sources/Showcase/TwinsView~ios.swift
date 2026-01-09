@@ -70,5 +70,5 @@ extension TwinsView: SourceCodeViewable {
 }
 
 #Preview {
-    TwinsView(media: URLMedia.onDemandVideoLocalHLS)
+    TwinsView(media: URLMedia.onDemandVideoHLS)
 }

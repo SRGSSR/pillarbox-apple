@@ -45,5 +45,5 @@ extension BlurredView: SourceCodeViewable {
 }
 
 #Preview {
-    BlurredView(media: URLMedia.onDemandVideoLocalHLS)
+    BlurredView(media: URLMedia.onDemandVideoHLS)
 }

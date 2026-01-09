@@ -409,5 +409,5 @@ private extension MainView {
 }
 
 #Preview {
-    PlaybackView(player: Player(item: URLMedia.onDemandVideoLocalHLS.item()))
+    PlaybackView(player: Player(item: URLMedia.appleBasic_4_3_HLS.item()))
 }

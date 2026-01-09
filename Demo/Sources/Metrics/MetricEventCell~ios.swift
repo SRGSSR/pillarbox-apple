@@ -8,6 +8,21 @@ import CoreMedia
 import PillarboxPlayer
 import SwiftUI
 
+private struct MetricEventCellPreview: View {
+    @State private var player = Player(item: URLMedia.appleAdvanced_16_9_TS_HLS.item())
+    @StateObject private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
+
+    var body: some View {
+        ZStack {
+            if let event = metricsCollector.metricEvents.first {
+                MetricEventCell(event: event)
+            }
+        }
+        .bind(metricsCollector, to: player)
+        .onAppear(perform: player.play)
+    }
+}
+
 struct MetricEventCell: View {
     private static let dateFormatter = {
         let formatter = DateFormatter()
@@ -60,4 +75,8 @@ struct MetricEventCell: View {
         guard time.isValid else { return nil }
         return durationFormatter.string(from: time.seconds)
     }
+}
+
+#Preview {
+    MetricEventCellPreview()
 }
