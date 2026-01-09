@@ -29,7 +29,7 @@ struct SearchView: View {
             case let .loaded(medias: medias):
                 loadedView(medias)
             case let .failed(error):
-                UnavailableRefreshableView(model: model) {
+                UnavailableModelView(model: model) {
                     Label {
                         Text(error.localizedDescription)
                     } icon: {
@@ -85,7 +85,7 @@ struct SearchView: View {
             .scrollDismissesKeyboard(.immediately)
         }
         else {
-            UnavailableRefreshableView(model: model) {
+            UnavailableModelView(model: model) {
                 Label {
                     Text("No results.")
                 } icon: {

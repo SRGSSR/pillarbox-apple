@@ -40,7 +40,9 @@ struct ErrorView: View {
     var body: some View {
         VStack(spacing: 0) {
             messageView()
+#if os(iOS)
             retryView()
+#endif
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .foregroundStyle(.white)

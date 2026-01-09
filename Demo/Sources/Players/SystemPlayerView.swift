@@ -40,9 +40,11 @@ extension SystemPlayerView {
     }
 }
 
+#if os(iOS)
 extension SystemPlayerView: SourceCodeViewable {
     static let filePath = #file
 }
+#endif
 
 #Preview {
     SystemPlayerView(media: URLMedia.onDemandVideoLocalHLS)

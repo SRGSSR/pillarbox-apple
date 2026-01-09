@@ -24,9 +24,11 @@ struct VanillaPlayerView: View {
     }
 }
 
+#if os(iOS)
 extension VanillaPlayerView: SourceCodeViewable {
     static let filePath = #file
 }
+#endif
 
 // Workaround for FB13126425. Makes it possible to use `AVPlayer` as `@ObservableObject` to avoid memory leaks
 // in modal presentations.

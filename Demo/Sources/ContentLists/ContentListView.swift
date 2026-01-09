@@ -137,13 +137,13 @@ struct ContentListView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .accessibilityHidden(true)
             case let .loaded(contents: contents) where contents.isEmpty:
-                UnavailableRefreshableView(model: model) {
+                UnavailableModelView(model: model) {
                     Text("No items")
                 }
             case let .loaded(contents: contents):
                 LoadedView(model: model, contents: contents)
             case let .failed(error):
-                UnavailableRefreshableView(model: model) {
+                UnavailableModelView(model: model) {
                     Label {
                         Text(error.localizedDescription)
                     } icon: {

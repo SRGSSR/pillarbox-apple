@@ -10,12 +10,13 @@ protocol Refreshable {
     func refresh() async
 }
 
-struct UnavailableRefreshableView<Model, Label, Description>: View where Model: Refreshable, Label: View, Description: View {
+struct UnavailableModelView<Model, Label, Description>: View where Model: Refreshable, Label: View, Description: View {
     let model: Model
     let label: () -> Label
     let description: () -> Description
 
     var body: some View {
+#if os(iOS)
         GeometryReader { geometry in
             ScrollView {
                 UnavailableView(label: label, description: description)
@@ -23,8 +24,8 @@ struct UnavailableRefreshableView<Model, Label, Description>: View where Model: 
             }
             .refreshable { await model.refresh() }
         }
-#if os(tvOS)
-        .focusable()
+#else
+        UnavailableView(label: label, description: description)
 #endif
     }
 
