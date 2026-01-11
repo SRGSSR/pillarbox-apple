@@ -41,10 +41,6 @@ struct PlaybackView: View {
         .bind(progressTracker, to: player)
     }
 
-    private var isMonoscopic: Bool {
-        player.metadata.viewport == .monoscopic
-    }
-
     init(player: Player, layout: Binding<PlaybackViewLayout> = .constant(.inline)) {
         self.player = player
         _layout = layout
