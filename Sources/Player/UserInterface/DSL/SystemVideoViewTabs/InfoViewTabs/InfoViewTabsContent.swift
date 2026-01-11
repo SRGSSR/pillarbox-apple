@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 import UIKit
 
-/// A type that describing the content of info view tabs.
+/// A type describing the content of info view tabs.
 public struct InfoViewTabsContent {
     let elements: [any InfoViewTabsElement]
 

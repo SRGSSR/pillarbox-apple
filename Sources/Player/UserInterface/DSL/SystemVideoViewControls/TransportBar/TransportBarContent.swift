@@ -6,7 +6,7 @@
 
 import UIKit
 
-/// A type that describing the content of a transport bar.
+/// A type describing the content of a transport bar.
 public struct TransportBarContent {
     private let elements: [any TransportBarElement]
 

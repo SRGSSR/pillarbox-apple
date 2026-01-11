@@ -6,7 +6,7 @@
 
 import UIKit
 
-/// A type that describing the content of a section.
+/// A type describing the content of a section.
 public struct SectionContent {
     private let elements: [any SectionElement]
 

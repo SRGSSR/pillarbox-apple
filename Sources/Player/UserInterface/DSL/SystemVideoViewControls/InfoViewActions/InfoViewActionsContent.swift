@@ -6,7 +6,7 @@
 
 import UIKit
 
-/// A type that describing the content of info view actions.
+/// A type describing the content of info view actions.
 public struct InfoViewActionsContent {
     private let elements: [any InfoViewActionsElement]
 

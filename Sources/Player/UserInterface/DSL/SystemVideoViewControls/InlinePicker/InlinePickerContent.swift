@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-/// A type that describing the content of an inline picker.
+/// A type describing the content of an inline picker.
 public struct InlinePickerContent<Value> {
     private let elements: [any InlinePickerElement<Value>]
 
