@@ -100,7 +100,7 @@ enum RouterDestination: Identifiable, Hashable {
         switch self {
         case let .player(media: media, supportsPictureInPicture: supportsPictureInPicture):
             PlayerView(media: media)
-                 .supportsPictureInPicture(supportsPictureInPicture)
+                .supportsPictureInPicture(supportsPictureInPicture)
         case let .systemPlayer(media: media, supportsPictureInPicture: supportsPictureInPicture):
             SystemPlayerView(media: media)
                 .supportsPictureInPicture(supportsPictureInPicture)
