@@ -6,15 +6,15 @@
 
 struct LiveRadioToggle: Hashable {
     let title: String
-    let audio: String
-    let video: String
+    let audioUrn: String
+    let videoUrn: String
 
     func urn(for mode: LiveRadioToggleMode) -> String {
         switch mode {
         case .audio:
-            return audio
+            return audioUrn
         case .video:
-            return video
+            return videoUrn
         }
     }
 }
