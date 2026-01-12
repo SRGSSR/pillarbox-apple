@@ -37,7 +37,7 @@ enum RouterDestination: Identifiable, Hashable {
     case multiSystemPiP(media1: Media, media2: Media)
     case transitionPiP(media: Media)
 
-    case audioVideoToggle
+    case liveRadioToggle
 
     case webView(url: URL)
 #endif
@@ -82,8 +82,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "multiSystemPiP"
         case .transitionPiP:
             return "transitionPiP"
-        case .audioVideoToggle:
-            return "audioVideoToggle"
+        case .liveRadioToggle:
+            return "liveRadioToggle"
         case .webView:
             return "webView"
 #endif
@@ -143,8 +143,8 @@ enum RouterDestination: Identifiable, Hashable {
             MultiPiPView(media1: media1, media2: media2, isSystemPlayer: true)
         case let .transitionPiP(media: media):
             TransitionPiPView(media: media)
-        case .audioVideoToggle:
-            LiveRadiosView()
+        case .liveRadioToggle:
+            LiveRadioToggleView()
         case let .webView(url: url):
             WebView(url: url)
 #endif

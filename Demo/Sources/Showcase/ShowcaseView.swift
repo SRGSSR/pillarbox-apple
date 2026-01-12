@@ -283,9 +283,9 @@ struct ShowcaseView: View {
             cell(
                 title: "Playback toggle mode",
                 subtitle: "Switch between audio and video",
-                destination: .audioVideoToggle
+                destination: .liveRadioToggle
             )
-            .sourceCode(of: LiveRadiosView.self)
+            .sourceCode(of: LiveRadioToggleView.self)
 #else
             cell(
                 title: "Apple Basic 16:9",

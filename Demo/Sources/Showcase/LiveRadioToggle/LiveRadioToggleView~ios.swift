@@ -7,8 +7,8 @@
 import PillarboxPlayer
 import SwiftUI
 
-struct LiveRadiosView: View {
-    @StateObject private var model = LiveRadiosViewModel()
+struct LiveRadioToggleView: View {
+    @StateObject private var model = LiveRadioToggleViewModel()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -21,7 +21,7 @@ struct LiveRadiosView: View {
 
     private func modePicker() -> some View {
         Picker("Mode", selection: $model.mode) {
-            ForEach(LiveRadioMode.allCases) { mode in
+            ForEach(LiveRadioToggleMode.allCases) { mode in
                 Text(mode.rawValue)
                     .tag(mode)
             }
@@ -39,7 +39,7 @@ struct LiveRadiosView: View {
 
 private struct _PlaybackView: View {
     @ObservedObject var player: Player
-    @ObservedObject var model: LiveRadiosViewModel
+    @ObservedObject var model: LiveRadioToggleViewModel
     @State private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
 
     var body: some View {
@@ -94,10 +94,10 @@ private struct _PlaybackView: View {
     }
 }
 
-extension LiveRadiosView: SourceCodeViewable {
+extension LiveRadioToggleView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    LiveRadiosView()
+    LiveRadioToggleView()
 }

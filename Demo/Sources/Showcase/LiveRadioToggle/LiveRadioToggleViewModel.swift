@@ -8,10 +8,10 @@ import Combine
 import Foundation
 import PillarboxPlayer
 
-final class LiveRadiosViewModel: ObservableObject {
+final class LiveRadioToggleViewModel: ObservableObject {
     let player = Player()
 
-    var mode: LiveRadioMode {
+    var mode: LiveRadioToggleMode {
         didSet {
             medias = mode.medias
             switchToMedias()
