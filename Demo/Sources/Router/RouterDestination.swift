@@ -10,45 +10,52 @@ import SwiftUI
 enum RouterDestination: Identifiable, Hashable {
     case player(media: Media, supportsPictureInPicture: Bool)
     case systemPlayer(media: Media, supportsPictureInPicture: Bool)
+    case vanillaPlayer(item: AVPlayerItem)
+
+    case playlist(medias: [Media])
+
+    case contentList(configuration: ContentList.Configuration)
+
+#if os(iOS)
     case inlineSystemPlayer(media: Media)
     case simplePlayer(media: Media)
-    case optInPlayer(media: Media)
-
-    case vanillaPlayer(item: AVPlayerItem)
 
     case blurred(media: Media)
     case twins(media: Media)
     case multi(media1: Media, media2: Media)
 
+    case optInPlayer(media: Media)
+    case transition(media: Media)
+
     case link(media: Media)
     case wrapped(media: Media)
-    case transition(media: Media)
+
+    case stories
 
     case twinsPiP(media: Media)
     case multiPiP(media1: Media, media2: Media)
     case multiSystemPiP(media1: Media, media2: Media)
     case transitionPiP(media: Media)
 
-    case stories
-    case playlist(medias: [Media])
-
-    case contentList(configuration: ContentList.Configuration)
-
-#if os(iOS)
     case webView(url: URL)
 #endif
 
     var id: String {
         // Treat players using the same view model as equivalent.
         switch self {
-        case .player, .systemPlayer, .inlineSystemPlayer:
+        case .player, .systemPlayer:
+            return "player"
+        case .vanillaPlayer:
+            return "vanillaPlayer"
+        case .playlist:
+            return "playlist"
+        case .contentList:
+            return "contentList"
+#if os(iOS)
+        case .inlineSystemPlayer:
             return "player"
         case .simplePlayer:
             return "simplePlayer"
-        case .optInPlayer:
-            return "optInPlayer"
-        case .vanillaPlayer:
-            return "vanillaPlayer"
         case .blurred:
             return "blurred"
         case .twins:
@@ -59,6 +66,10 @@ enum RouterDestination: Identifiable, Hashable {
             return "link"
         case .wrapped:
             return "wrapped"
+        case .stories:
+            return "stories"
+        case .optInPlayer:
+            return "optInPlayer"
         case .transition:
             return "transition"
         case .twinsPiP:
@@ -69,13 +80,6 @@ enum RouterDestination: Identifiable, Hashable {
             return "multiSystemPiP"
         case .transitionPiP:
             return "transitionPiP"
-        case .stories:
-            return "stories"
-        case .playlist:
-            return "playlist"
-        case .contentList:
-            return "contentList"
-#if os(iOS)
         case .webView:
             return "webView"
 #endif
@@ -100,14 +104,17 @@ enum RouterDestination: Identifiable, Hashable {
         case let .systemPlayer(media: media, supportsPictureInPicture: supportsPictureInPicture):
             SystemPlayerView(media: media)
                 .supportsPictureInPicture(supportsPictureInPicture)
+        case let .vanillaPlayer(item: item):
+            VanillaPlayerView(item: item)
+        case let .playlist(medias: medias):
+            PlaylistView(medias: medias)
+        case let .contentList(configuration: configuration):
+            ContentListView(configuration: configuration)
+#if os(iOS)
         case let .inlineSystemPlayer(media: media):
             InlineSystemPlayerView(media: media)
         case let .simplePlayer(media: media):
             SimplePlayerView(media: media)
-        case let .optInPlayer(media: media):
-            OptInView(media: media)
-        case let .vanillaPlayer(item: item):
-            VanillaPlayerView(item: item)
         case let .blurred(media: media):
             BlurredView(media: media)
         case let .twins(media: media):
@@ -118,6 +125,10 @@ enum RouterDestination: Identifiable, Hashable {
             LinkView(media: media)
         case let .wrapped(media: media):
             WrappedView(media: media)
+        case .stories:
+            StoriesView()
+        case let .optInPlayer(media: media):
+            OptInView(media: media)
         case let .transition(media: media):
             TransitionView(media: media)
         case let .twinsPiP(media: media):
@@ -128,13 +139,6 @@ enum RouterDestination: Identifiable, Hashable {
             MultiPiPView(media1: media1, media2: media2, isSystemPlayer: true)
         case let .transitionPiP(media: media):
             TransitionPiPView(media: media)
-        case .stories:
-            StoriesView()
-        case let .playlist(medias: medias):
-            PlaylistView(medias: medias)
-        case let .contentList(configuration: configuration):
-            ContentListView(configuration: configuration)
-#if os(iOS)
         case let .webView(url: url):
             WebView(url: url)
 #endif

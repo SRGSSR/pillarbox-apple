@@ -97,3 +97,7 @@ extension View {
         }
     }
 }
+
+#Preview {
+    HighSpeedCapsule(speed: 2)
+}

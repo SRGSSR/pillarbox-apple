@@ -201,10 +201,10 @@ private extension Publisher {
         if condition: Bool
     ) -> AnyPublisher<Output, Failure> where P: Publisher, Failure == P.Failure, Output == P.Output {
         if condition {
-            return self.append(publisher).eraseToAnyPublisher()
+            return append(publisher).eraseToAnyPublisher()
         }
         else {
-            return self.eraseToAnyPublisher()
+            return eraseToAnyPublisher()
         }
     }
 }

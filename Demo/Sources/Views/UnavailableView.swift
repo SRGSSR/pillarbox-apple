@@ -59,17 +59,12 @@ struct UnavailableView<Label, Description>: View where Label: View, Description:
     let description: () -> Description
 
     var body: some View {
-        Group {
-            if #available(iOS 17.0, tvOS 17.0, *) {
-                ContentUnavailableView(label: label, description: description)
-            }
-            else {
-                ContentUnavailableViewOS16(label: label, description: description)
-            }
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            ContentUnavailableView(label: label, description: description)
         }
-#if os(tvOS)
-        .focusable()
-#endif
+        else {
+            ContentUnavailableViewOS16(label: label, description: description)
+        }
     }
 
     init(

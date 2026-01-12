@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-// Behavior: h-exp, v-hug
 private struct TextFieldView: View {
     private let placeholder: String
     @Binding private var text: String
@@ -151,7 +150,6 @@ private struct MediaEntryView: View {
     }
 }
 
-// Behavior: h-exp, v-exp
 struct ExamplesView: View {
     @StateObject private var model = ExamplesViewModel()
     @EnvironmentObject private var router: Router
@@ -202,7 +200,9 @@ struct ExamplesView: View {
     private func miscellaneousSections() -> some View {
         section(title: "Time ranges", medias: model.timeRangesMedias)
         section(title: "Aspect ratios", medias: model.aspectRatioMedias)
+#if os(iOS)
         section(title: "360° videos", medias: model.threeSixtyMedias)
+#endif
         section(title: "Unbuffered streams", medias: model.unbufferedMedias)
         section(title: "Corner cases", medias: model.cornerCaseMedias)
     }

@@ -57,3 +57,26 @@ public extension View {
         }
     }
 }
+
+@available(iOS, unavailable)
+public extension View {
+    /// Applies a background that mimics the standard tvOS Info view appearance.
+    @ViewBuilder
+    func infoViewTabPanel() -> some View {
+        if #available(tvOS 26, *) {
+            // Apply indirectly with a background modifier to avoid `List` selection appearance issues.
+            background {
+                Color.clear
+                    // The tvOS info panel glass effect is private. The regular one looks similar, except a bit darker.
+                    .glassEffect(.regular, in: .rect(cornerRadius: 44))
+            }
+            .padding(.vertical)
+        }
+        else {
+            background {
+                LegacyVisualEffectView(style: .regular)
+                    .clipShape(.rect(cornerRadius: 24))
+            }
+        }
+    }
+}

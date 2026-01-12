@@ -7,7 +7,6 @@
 import PillarboxPlayer
 import SwiftUI
 
-// Behavior: h-exp, v-exp
 struct SystemPlayerView: View {
     let media: Media
 
@@ -41,10 +40,12 @@ extension SystemPlayerView {
     }
 }
 
+#if os(iOS)
 extension SystemPlayerView: SourceCodeViewable {
     static let filePath = #file
 }
+#endif
 
 #Preview {
-    SystemPlayerView(media: URLMedia.onDemandVideoLocalHLS)
+    SystemPlayerView(media: URLMedia.appleAdvanced_16_9_TS_HLS)
 }

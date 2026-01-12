@@ -18,6 +18,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     private var transportBarContent = TransportBarContent()
     private var contextualActionsContent = ContextualActionsContent()
     private var infoViewActionsContent = InfoViewActionsContent()
+    private var infoViewTabsContent = InfoViewTabsContent()
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -29,7 +30,8 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     gravity: gravity,
                     transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent
+                    infoViewActionsContent: infoViewActionsContent,
+                    infoViewTabsContent: infoViewTabsContent
                 )
             }
             else {
@@ -39,7 +41,8 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
                     gravity: gravity,
                     transportBarContent: transportBarContent,
                     contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent
+                    infoViewActionsContent: infoViewActionsContent,
+                    infoViewTabsContent: infoViewTabsContent
                 )
             }
         }
@@ -104,7 +107,7 @@ public extension SystemVideoView {
 public extension SystemVideoView {
     /// Items presented in the transport bar.
     ///
-    /// - Parameter content: The content builder
+    /// - Parameter content: The content builder.
     ///
     /// Use this modifier to configure menus and actions:
     ///
@@ -157,9 +160,9 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Actions displayed in the info tab.
+    /// Actions presented in the main Info view.
     ///
-    /// - Parameter content: The content builder
+    /// - Parameter content: The content builder.
     ///
     /// Use this modifier to configure actions:
     ///
@@ -178,6 +181,32 @@ public extension SystemVideoView {
     func infoViewActions(@InfoViewActionsContentBuilder content: () -> InfoViewActionsContent) -> SystemVideoView {
         var view = self
         view.infoViewActionsContent = content()
+        return view
+    }
+
+    /// Additional tabs presented in the Info view.
+    ///
+    /// - Parameter content: The content builder.
+    ///
+    /// Use this modifier to configure tabs:
+    ///
+    /// ```swift
+    /// SystemVideoView(player: player)
+    ///    .infoViewTabs {
+    ///        Tab("Cast") {
+    ///             VStack {
+    ///                Text("Actor 1")
+    ///                Text("Actor 2")
+    ///            }
+    ///        }
+    ///    }
+    /// ```
+    ///
+    /// Apply the ``SwiftUICore/View/infoViewTabPanel()`` modifier to use a background
+    /// that mimics the standard tvOS Info view appearance.
+    func infoViewTabs(@InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
+        var view = self
+        view.infoViewTabsContent = .init(elements: content().elements)
         return view
     }
 }

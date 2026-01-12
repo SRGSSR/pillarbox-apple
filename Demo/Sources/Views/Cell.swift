@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-// Behavior: h-exp, v-hug
 struct Cell: View {
     let size: CGSize
     let title: String?

@@ -21,7 +21,9 @@ final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
         }
     }
 
-    @Published var layout: PlaybackView.Layout = .minimized
+#if os(iOS)
+    @Published var layout: PlaybackViewLayout = .minimized
+#endif
 
     let player = Player(configuration: .standard)
     private var cancellables = Set<AnyCancellable>()

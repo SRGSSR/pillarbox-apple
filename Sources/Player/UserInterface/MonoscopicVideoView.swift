@@ -58,7 +58,6 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
 /// The video is projected onto a sphere with the viewer at its center. A quaternion makes it possible to control the
 /// orientation at which the content is seen.
 ///
-/// Behavior: h-exp, v-exp
 struct MonoscopicVideoView: View {
     private let player: Player
     private let orientation: SCNQuaternion

@@ -8,7 +8,6 @@ import SRGDataProviderCombine
 import SRGDataProviderModel
 import SwiftUI
 
-// Behavior: h-exp, v-exp
 private struct LoadedView: View {
     @ObservedObject var model: ContentListViewModel
     let contents: [ContentListViewModel.Content]
@@ -36,10 +35,6 @@ private struct LoadedView: View {
 #endif
     }
 
-    private func openPlaylist() {
-        router.presented = .playlist(medias: medias())
-    }
-
     private func medias() -> [Media] {
         contents.compactMap { content -> Media? in
             guard case let .media(media) = content else { return nil }
@@ -51,6 +46,11 @@ private struct LoadedView: View {
         }
     }
 
+#if os(iOS)
+    private func openPlaylist() {
+        router.presented = .playlist(medias: medias())
+    }
+
     @ViewBuilder
     private func toolbar() -> some View {
         if !medias().isEmpty {
@@ -60,9 +60,9 @@ private struct LoadedView: View {
             .accessibilityLabel("Open as playlist")
         }
     }
+#endif
 }
 
-// Behavior: h-hug, v-exp
 private struct ContentCell: View {
     let content: ContentListViewModel.Content
 
@@ -125,7 +125,6 @@ private struct ContentCell: View {
     }
 }
 
-// Behavior: h-exp, v-exp
 struct ContentListView: View {
     let configuration: ContentList.Configuration
     @StateObject private var model = ContentListViewModel()
@@ -138,13 +137,13 @@ struct ContentListView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .accessibilityHidden(true)
             case let .loaded(contents: contents) where contents.isEmpty:
-                UnavailableRefreshableView(model: model) {
+                UnavailableModelView(model: model) {
                     Text("No items")
                 }
             case let .loaded(contents: contents):
                 LoadedView(model: model, contents: contents)
             case let .failed(error):
-                UnavailableRefreshableView(model: model) {
+                UnavailableModelView(model: model) {
                     Label {
                         Text(error.localizedDescription)
                     } icon: {

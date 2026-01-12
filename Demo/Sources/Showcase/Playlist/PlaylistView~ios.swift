@@ -1,0 +1,206 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
+import PillarboxPlayer
+import SwiftUI
+
+private struct MediaCell: View {
+    let media: Media
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(media.title)
+            if let subtitle = media.subtitle {
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .accessibilityElement()
+        .accessibilityLabel(media.title)
+    }
+}
+
+private struct Toolbar: View {
+    @ObservedObject private var player: Player
+    @ObservedObject private var model: PlaylistViewModel
+    @State private var isSelectionPresented = false
+
+    private var repeatModeImageName: String {
+        switch player.repeatMode {
+        case .off:
+            "repeat.circle"
+        case .one:
+            "repeat.1.circle.fill"
+        case .all:
+            "repeat.circle.fill"
+        }
+    }
+
+    private var repeatModeAccessibilityLabel: String {
+        switch player.repeatMode {
+        case .off:
+            "Repeat none"
+        case .one:
+            "Repeat current"
+        case .all:
+            "Repeat all"
+        }
+    }
+
+    var body: some View {
+        HStack {
+            previousButton()
+            Spacer()
+            managementButtons()
+            Spacer()
+            nextButton()
+        }
+        .padding()
+        .sheet(isPresented: $isSelectionPresented) {
+            NavigationStack {
+                PlaylistSelectionView(model: model)
+            }
+        }
+    }
+
+    init(model: PlaylistViewModel) {
+        self.player = model.player
+        self.model = model
+    }
+}
+
+struct PlaylistView: View {
+    let medias: [Media]
+    @StateObject private var model = PlaylistViewModel.persisted ?? PlaylistViewModel()
+
+    var body: some View {
+        VStack(spacing: 0) {
+            PlaybackView(player: model.player, layout: $model.layout)
+                .supportsPictureInPicture()
+            if model.layout != .maximized {
+                Toolbar(model: model)
+                list()
+            }
+        }
+        .animation(.defaultLinear, value: model.layout)
+        .onAppear(perform: play)
+        .enabledForInAppPictureInPicture(persisting: model)
+        .tracked(name: "playlist")
+    }
+
+    @ViewBuilder
+    private func list() -> some View {
+        ZStack {
+            if !model.isEmpty {
+                List($model.entries, id: \.self, editActions: .all, selection: $model.currentEntry) { $entry in
+                    MediaCell(media: entry.media)
+                }
+            }
+            else {
+                UnavailableView {
+                    Text("No items")
+                }
+            }
+        }
+        .animation(.linear, value: model.entries)
+    }
+
+    private func play() {
+        if model.isEmpty {
+            model.entries = medias.map { .init(media: $0) }
+        }
+        model.play()
+    }
+}
+
+private extension Toolbar {
+    func previousButton() -> some View {
+        Button(action: player.returnToPreviousItem) {
+            Image(systemName: "arrow.left")
+        }
+        .hoverEffect()
+        .accessibilityLabel("Previous")
+        .disabled(!player.canReturnToPreviousItem())
+    }
+
+    func managementButtons() -> some View {
+        HStack(spacing: 30) {
+            repeatModeButton()
+            shuffleButton()
+            addButton()
+            trashButton()
+        }
+    }
+
+    func nextButton() -> some View {
+        Button(action: player.advanceToNextItem) {
+            Image(systemName: "arrow.right")
+        }
+        .hoverEffect()
+        .accessibilityLabel("Next")
+        .disabled(!player.canAdvanceToNextItem())
+    }
+}
+
+private extension Toolbar {
+    func repeatModeButton() -> some View {
+        Button(action: toggleRepeatMode) {
+            Image(systemName: repeatModeImageName)
+        }
+        .hoverEffect()
+        .accessibilityLabel(repeatModeAccessibilityLabel)
+    }
+
+    func shuffleButton() -> some View {
+        Button(action: model.shuffle) {
+            Image(systemName: "shuffle")
+        }
+        .hoverEffect()
+        .accessibilityLabel("Shuffle")
+        .disabled(model.isEmpty)
+    }
+
+    func addButton() -> some View {
+        Button(action: add) {
+            Image(systemName: "plus")
+        }
+        .hoverEffect()
+        .accessibilityLabel("Add")
+    }
+
+    func trashButton() -> some View {
+        Button(action: model.trash) {
+            Image(systemName: "trash")
+        }
+        .hoverEffect()
+        .accessibilityLabel("Delete all")
+        .disabled(model.isEmpty)
+    }
+
+    private func toggleRepeatMode() {
+        switch player.repeatMode {
+        case .off:
+            player.repeatMode = .all
+        case .one:
+            player.repeatMode = .off
+        case .all:
+            player.repeatMode = .one
+        }
+    }
+
+    private func add() {
+        isSelectionPresented.toggle()
+    }
+}
+
+extension PlaylistView: SourceCodeViewable {
+    static let filePath = #file
+}
+
+#Preview {
+    PlaylistView(medias: [URLMedia.onDemandVideoHLS, URLMedia.shortOnDemandVideoHLS, URLMedia.dvrVideoHLS])
+}
