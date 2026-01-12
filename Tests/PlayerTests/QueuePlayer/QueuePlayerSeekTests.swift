@@ -17,7 +17,7 @@ private class QueuePlayerMock: QueuePlayer {
     var seeks: Int = 0
 
     override func enqueue(seek: Seek, completion: @escaping () -> Void) {
-        self.seeks += 1
+        seeks += 1
         super.enqueue(seek: seek, completion: completion)
     }
 }

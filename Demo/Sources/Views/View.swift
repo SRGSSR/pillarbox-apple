@@ -103,8 +103,7 @@ extension View {
 extension View {
     func headerStyle() -> some View {
 #if os(tvOS)
-        self
-            .font(.headline)
+        font(.headline)
             .foregroundStyle(.gray)
             .fontWeight(.semibold)
             .padding(20)
