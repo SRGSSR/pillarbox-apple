@@ -21,6 +21,8 @@ private struct _PlaylistView: View {
                     .foregroundStyle(entry == model.currentEntry ? Color.primary : Color.secondary)
             }
         }
+        .padding()
+        .infoViewBackground()
     }
 }
 
