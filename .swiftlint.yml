@@ -132,7 +132,7 @@ opt_in_rules:
   - raw_value_for_camel_cased_codable_enum
   - reduce_into
   - redundant_nil_coalescing
-  - redundant_self_in_closure
+  - redundant_self
   - redundant_type_annotation
   - required_enum_case
   - return_value_from_void_function
