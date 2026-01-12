@@ -62,7 +62,7 @@ public extension View {
 public extension View {
     /// Applies a background that mimics the standard tvOS Info view appearance.
     @ViewBuilder
-    func infoViewBackground() -> some View {
+    func infoViewTabPanel() -> some View {
         if #available(tvOS 26, *) {
             // Apply indirectly with a background modifier to avoid `List` selection appearance issues.
             background {

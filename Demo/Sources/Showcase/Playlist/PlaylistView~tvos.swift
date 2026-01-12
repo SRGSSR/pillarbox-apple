@@ -22,7 +22,7 @@ private struct _PlaylistView: View {
             }
         }
         .padding()
-        .infoViewBackground()
+        .infoViewTabPanel()
     }
 }
 
