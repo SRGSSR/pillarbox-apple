@@ -38,7 +38,7 @@ enum RouterDestination: Identifiable, Hashable {
     case transitionPiP(media: Media)
 
     case audioVideoToggle
-    
+
     case webView(url: URL)
 #endif
 
@@ -144,7 +144,7 @@ enum RouterDestination: Identifiable, Hashable {
         case let .transitionPiP(media: media):
             TransitionPiPView(media: media)
         case .audioVideoToggle:
-            AudioVideoToggleView()
+            LiveRadiosView()
         case let .webView(url: url):
             WebView(url: url)
 #endif

@@ -282,6 +282,9 @@
     "Miscellaneous player features (using Pillarbox)" : {
 
     },
+    "Mode" : {
+
+    },
     "Monitoring" : {
 
     },
@@ -358,9 +361,6 @@
 
     },
     "Playback HUD" : {
-
-    },
-    "Playback Mode" : {
 
     },
     "Playback Speed" : {
