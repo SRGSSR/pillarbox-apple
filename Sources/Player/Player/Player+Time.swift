@@ -20,4 +20,8 @@ public extension Player {
     func date() -> Date? {
         properties.date()
     }
+
+    func playbackPosition() -> PlaybackPosition {
+        .init(time: time(), date: date()) // FIXME: ItemProperties should store the playback position, time & date above should derive from it.
+    }
 }

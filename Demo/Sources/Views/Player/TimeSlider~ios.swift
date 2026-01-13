@@ -137,7 +137,7 @@ struct TimeSlider: View {
                 Self.color(for: timeRange)
                     .opacity(0.7)
                     .frame(width: width * CGFloat(timeRange.duration.seconds / duration))
-                    .offset(x: width * CGFloat(timeRange.start.seconds / duration))
+                    .offset(x: width * CGFloat(timeRange.start.time()?.seconds ?? 0 / duration))
             }
         }
     }

@@ -16,10 +16,11 @@ final class LiveRadioToggleViewModel: ObservableObject {
             guard let currentItem = player.currentItem, let currentIndex = player.items.firstIndex(of: currentItem) else {
                 return
             }
-            let position = player.time()
-            entries = mode.entries
-            if let playerItem = player.items[safeIndex: currentIndex] {
-                player.resume(at(position), in: playerItem)
+            if let date = player.date() {
+                entries = mode.entries
+                if let playerItem = player.items[safeIndex: currentIndex] {
+                    player.resume(at(date), in: playerItem)
+                }
             }
         }
     }

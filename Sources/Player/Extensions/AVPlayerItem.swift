@@ -15,6 +15,17 @@ extension AVPlayerItem {
     }
 }
 
+extension AVPlayerItem {
+    func seek(_ position: Position, completionHandler: ((Bool) -> Void)?) {
+        switch position.value {
+        case let .time(time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter):
+            seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        case let .date(date):
+            break // FIXME: UT
+        }
+    }
+}
+
 extension AVPlayerItem: PlaybackResource {
     func contains(url: URL) -> Bool {
         (asset as? AVURLAsset)?.url == url

@@ -8,9 +8,9 @@ import CoreMedia
 import PillarboxPlayer
 
 extension Player {
-    func skippableTimeRange(at time: CMTime) -> TimeRange? {
+    func skippableTimeRange(at position: PlaybackPosition) -> TimeRange? {
         metadata.timeRanges.first { timeRange in
-            if case .credits = timeRange.kind, timeRange.containsTime(time) {
+            if case .credits = timeRange.kind, timeRange.containsPosition(position) {
                 return true
             }
             else {

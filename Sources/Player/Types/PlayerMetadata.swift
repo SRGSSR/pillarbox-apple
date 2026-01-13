@@ -44,7 +44,7 @@ public struct PlayerMetadata: Equatable {
     /// Time ranges associated with the content.
     public let timeRanges: [TimeRange]
 
-    let blockedTimeRanges: [CMTimeRange]
+    let blockedMarkRanges: [MarkRange]
 
     var episodeDescription: String? {
         switch episodeInformation {
@@ -124,11 +124,17 @@ public struct PlayerMetadata: Equatable {
         self.episodeInformation = episodeInformation
         self.chapters = chapters
         self.timeRanges = timeRanges
-        self.blockedTimeRanges = Self.flattenedBlockedTimeRanges(from: timeRanges)
+        self.blockedMarkRanges = Self.flattenedBlockedTimeRanges(from: timeRanges)
     }
 
-    private static func flattenedBlockedTimeRanges(from timeRanges: [TimeRange]) -> [CMTimeRange] {
-        CMTimeRange.flatten(timeRanges.filter { $0.kind == .blocked }.map { .init(start: $0.start, end: $0.end) })
+    private static func flattenedBlockedTimeRanges(from timeRanges: [TimeRange]) -> [MarkRange] {
+        let timeRanges = timeRanges.filter { $0.kind == .blocked }.map(\.markRange).compactMap { $0.timeRange() }
+        if !timeRanges.isEmpty {
+            return CMTimeRange.flatten(timeRanges).map { .time($0) }
+        }
+        else {
+            return [] // FIXME: UT
+        }
     }
 }
 

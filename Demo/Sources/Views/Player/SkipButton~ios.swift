@@ -12,7 +12,7 @@ struct SkipButton: View {
     @ObservedObject var progressTracker: ProgressTracker
 
     private var skippableTimeRange: TimeRange? {
-        player.skippableTimeRange(at: progressTracker.time)
+        player.skippableTimeRange(at: progressTracker.playbackPosition)
     }
 
     var body: some View {
@@ -37,6 +37,11 @@ struct SkipButton: View {
 
     private func skip() {
         guard let skippableTimeRange else { return }
-        player.seek(to: skippableTimeRange.end)
+        switch skippableTimeRange.end { // FIXME: Seek to Mark?
+        case let .time(time):
+            player.seek(to: time)
+        case let .date(date):
+            player.seek(to: date)
+        }
     }
 }

@@ -11,20 +11,20 @@ extension QueuePlayer {
     /// Publishes the current time, smoothing out emitted values during seeks.
     func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.CombineLatest(
-            seekTimePublisher(),
+            seekMarkPublisher(),
             Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue)
         )
-        .map { $0 ?? $1 }
+        .map { $0?.time() ?? $1.time }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
-    func seekTimePublisher() -> AnyPublisher<CMTime?, Never> {
+    func seekMarkPublisher() -> AnyPublisher<Mark?, Never> {
         let notificationCenter = Self.notificationCenter
         return Publishers.Merge(
             notificationCenter.weakPublisher(for: .willSeek, object: self)
                 .map { notification in
-                    notification.userInfo?[SeekNotificationKey.time] as? CMTime
+                    notification.userInfo?[SeekNotificationKey.mark] as? Mark
                 },
             notificationCenter.weakPublisher(for: .didSeek, object: self)
                 .map { _ in nil }
@@ -40,10 +40,10 @@ extension QueuePlayer {
         Publishers.CombineLatest4(
             playerItemPropertiesPublisher,
             playbackPropertiesPublisher(),
-            seekTimePublisher(),
+            seekMarkPublisher(),
             mediaSelectionCriteriaPublisher()
         )
-        .map { playerItemProperties, playbackProperties, seekTime, mediaSelectionCriteria in
+        .map { playerItemProperties, playbackProperties, seekMark, mediaSelectionCriteria in
             PlayerProperties(
                 coreProperties: .init(
                     itemProperties: playerItemProperties.itemProperties,
@@ -53,7 +53,7 @@ extension QueuePlayer {
                 ),
                 timeProperties: playerItemProperties.timeProperties,
                 isEmpty: playerItemProperties.isEmpty,
-                seekTime: seekTime
+                seekMark: seekMark
             )
         }
         .removeDuplicates()

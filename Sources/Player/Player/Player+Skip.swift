@@ -20,8 +20,8 @@ public extension Player {
     func canSkipForward() -> Bool {
         guard seekableTimeRange.isValidAndNotEmpty else { return false }
         if duration.isIndefinite {
-            let currentTime = queuePlayer.targetSeekTime ?? time()
-            return canSeek(to: currentTime + forwardSkipTime)
+            let currentTime = queuePlayer.targetSeekMark?.time() ?? time()
+            return canSeek(to: .time(currentTime + forwardSkipTime))
         }
         else {
             return true
@@ -92,7 +92,7 @@ private extension Player {
     ) {
         assert(interval != .zero)
         let endTolerance = CMTime(value: 1, timescale: 1)
-        let currentTime = queuePlayer.targetSeekTime ?? time()
+        let currentTime = queuePlayer.targetSeekMark?.time() ?? time()
         if interval < .zero || currentTime < seekableTimeRange.end - endTolerance {
             seek(
                 to(currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter),

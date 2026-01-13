@@ -8,8 +8,30 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
+public struct PlaybackPosition {
+    let time: CMTime
+    let date: Date?
+
+    static func close(within tolerance: TimeInterval) -> ((PlaybackPosition, PlaybackPosition) -> Bool) {
+        return { position1, position2 in
+            CMTime.close(within: tolerance)(position1.time, position2.time)
+        }
+    }
+
+    func after(markRanges: [MarkRange]) -> Position? {
+        if let date {
+            return nil // FIXME: UT
+        }
+        else {
+            let matchingRanges = markRanges.compactMap { $0.timeRange() }.filter { $0.containsTime(time) }
+            guard let time = matchingRanges.map(\.end).max() else { return nil }
+            return at(time)
+        }
+    }
+}
+
 private struct _PeriodicTimePublisher: Publisher {
-    typealias Output = CMTime
+    typealias Output = PlaybackPosition
     typealias Failure = Never
 
     private let player: AVPlayer
@@ -29,9 +51,9 @@ private struct _PeriodicTimePublisher: Publisher {
 }
 
 extension Publishers {
-    static func PeriodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
+    static func PeriodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<PlaybackPosition, Never> {
         _PeriodicTimePublisher(player: player, interval: interval, queue: queue)
-            .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
+            .removeDuplicates(by: PlaybackPosition.close(within: interval.seconds / 2))
             .eraseToAnyPublisher()
     }
 }
@@ -43,7 +65,7 @@ private extension _PeriodicTimePublisher {
         private let interval: CMTime
         private let queue: DispatchQueue
 
-        private let buffer = DemandBuffer<CMTime>()
+        private let buffer = DemandBuffer<PlaybackPosition>()
         private let timeObserver: RecursiveLock<Any?> = .init(initialState: nil)
 
         init(subscriber: S, player: AVPlayer, interval: CMTime, queue: DispatchQueue) {
@@ -57,14 +79,14 @@ private extension _PeriodicTimePublisher {
             timeObserver.withLock { timeObserver in
                 if timeObserver == nil {
                     timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
-                        self?.send(time)
+                        self?.send(.init(time: time, date: self?.player.currentItem?.currentDate()))
                     }
                 }
             }
             process(buffer.request(demand))
         }
 
-        private func send(_ time: CMTime) {
+        private func send(_ time: PlaybackPosition) {
             process(buffer.append(time))
         }
 
@@ -78,7 +100,7 @@ private extension _PeriodicTimePublisher {
             subscriber.setLocked(nil)
         }
 
-        private func process(_ values: [CMTime]) {
+        private func process(_ values: [PlaybackPosition]) {
             guard let subscriber = subscriber.locked() else { return }
             values.forEach { value in
                 let demand = subscriber.receive(value)

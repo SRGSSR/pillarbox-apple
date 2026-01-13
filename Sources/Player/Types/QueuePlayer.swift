@@ -11,7 +11,7 @@ class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
     private var pendingSeeks = Deque<Seek>()
-    var blockedTimeRanges: [CMTimeRange] = []
+    var blockedTimeRanges: [MarkRange] = []
 
     // Starting with iOS 17 accessing media selection criteria might be slow. Use a cache for the lifetime of the
     // player.
@@ -21,22 +21,16 @@ class QueuePlayer: AVQueuePlayer {
         pendingSeeks.last
     }
 
-    var targetSeekTime: CMTime? {
-        targetSeek?.position.time
+    var targetSeekMark: Mark? {
+        targetSeek?.position.mark()
     }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, completionHandler: completionHandler)
+        seek(to(time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter), smooth: false, completionHandler: completionHandler)
     }
 
-    func seek(
-        to time: CMTime,
-        toleranceBefore: CMTime = .positiveInfinity,
-        toleranceAfter: CMTime = .positiveInfinity,
-        smooth: Bool,
-        completionHandler: @escaping (Bool) -> Void
-    ) {
-        assert(time.isValid)
+    func seek(_ position: Position, smooth: Bool, completionHandler: @escaping (Bool) -> Void) {
+        assert(position.isValid())
 
         guard !items().isEmpty else {
             completionHandler(true)
@@ -44,12 +38,12 @@ class QueuePlayer: AVQueuePlayer {
         }
 
         let seek = unblockedSeek(Seek(
-            to(time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter),
+            position,
             isSmooth: smooth,
             completionHandler: completionHandler
         ))
 
-        notifySeekStart(at: seek.position.time)
+        notifySeekStart(seek.position)
         pendingSeeks.append(seek)
 
         if seek.isSmooth && pendingSeeks.count != 1 {
@@ -69,22 +63,26 @@ class QueuePlayer: AVQueuePlayer {
     }
 
     private func seek(safelyTo position: Position, completionHandler: @escaping (Bool) -> Void) {
+        switch position.value {
+        case let .time(time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter):
+            seek(safelyTo: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        case let .date(date):
+            break // FIXME: UT
+        }
+    }
+
+    private func seek(
+        safelyTo time: CMTime,
+        toleranceBefore: CMTime,
+        toleranceAfter: CMTime,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
         let endTimeRange = CMTimeRange(start: timeRange.end - CMTime(value: 18, timescale: 1), end: timeRange.end)
-        if duration.isIndefinite || !endTimeRange.containsTime(position.time) {
-            super.seek(
-                to: position.time,
-                toleranceBefore: position.toleranceBefore,
-                toleranceAfter: position.toleranceAfter,
-                completionHandler: completionHandler
-            )
+        if duration.isIndefinite || !endTimeRange.containsTime(time) {
+            super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
         }
         else {
-            super.seek(
-                to: position.time,
-                toleranceBefore: .zero,
-                toleranceAfter: .zero,
-                completionHandler: completionHandler
-            )
+            super.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: completionHandler)
         }
     }
 
@@ -118,8 +116,8 @@ class QueuePlayer: AVQueuePlayer {
         seek(to: time) { _ in }
     }
 
-    private func notifySeekStart(at time: CMTime) {
-        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekNotificationKey.time: time])
+    private func notifySeekStart(_ position: Position) {
+        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekNotificationKey.mark: position.mark()])
     }
 
     private func notifySeekEnd() {

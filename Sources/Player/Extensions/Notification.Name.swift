@@ -7,7 +7,7 @@
 import Foundation
 
 enum SeekNotificationKey: String {
-    case time
+    case mark
 }
 
 // swiftlint:disable:next type_name

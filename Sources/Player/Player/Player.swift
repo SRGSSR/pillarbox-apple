@@ -329,13 +329,13 @@ private extension Player {
     }
 
     func configureBlockedTimeRangesPublishers() {
-        nextUnblockedTimePublisher()
-            .sink { [weak self] time in
-                self?.seek(at(time))
+        nextUnblockedPositionPublisher()
+            .sink { [weak self] position in
+                self?.seek(position)
             }
             .store(in: &cancellables)
 
-        metadataPublisher.slice(at: \.blockedTimeRanges)
+        metadataPublisher.slice(at: \.blockedMarkRanges)
             .assign(to: \.blockedTimeRanges, on: queuePlayer)
             .store(in: &cancellables)
     }

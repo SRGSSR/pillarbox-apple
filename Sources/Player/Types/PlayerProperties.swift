@@ -13,33 +13,33 @@ public struct PlayerProperties: Equatable {
         coreProperties: .empty,
         timeProperties: .empty,
         isEmpty: true,
-        seekTime: nil
+        seekMark: nil
     )
 
     let coreProperties: CoreProperties
     private let timeProperties: TimeProperties
     let isEmpty: Bool
 
-    /// The time at which the player is currently seeking, if any.
-    public let seekTime: CMTime?
+    /// The mark at which the player is currently seeking, if any.
+    public let seekMark: Mark?
 
     init(
         coreProperties: CoreProperties,
         timeProperties: TimeProperties,
         isEmpty: Bool,
-        seekTime: CMTime?
+        seekMark: Mark?
     ) {
         self.timeProperties = timeProperties
         self.coreProperties = coreProperties
         self.isEmpty = isEmpty
-        self.seekTime = seekTime
+        self.seekMark = seekMark
     }
 }
 
 public extension PlayerProperties {
     /// A Boolean describing whether the player is currently seeking to another position.
     var isSeeking: Bool {
-        seekTime != nil
+        seekMark != nil
     }
 
     /// A Boolean describing whether the player is currently buffering.

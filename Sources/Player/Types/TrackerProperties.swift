@@ -45,9 +45,9 @@ public struct TrackerProperties {
 }
 
 public extension TrackerProperties {
-    /// The time at which the player is currently seeking, if any.
-    var seekTime: CMTime? {
-        playerProperties.seekTime
+    /// The mark at which the player is currently seeking, if any.
+    var seekMark: Mark? {
+        playerProperties.seekMark
     }
 }
 

@@ -40,13 +40,18 @@ public extension Player {
         }
     }
 
-    /// Checks whether seeking to a specific time is possible.
+    /// Checks whether seeking to a specific position is possible.
     ///
-    /// - Parameter time: The time to seek to.
+    /// - Parameter position: The position to seek to.
     /// - Returns: `true` if possible.
-    func canSeek(to time: CMTime) -> Bool {
-        guard seekableTimeRange.isValidAndNotEmpty else { return false }
-        return seekableTimeRange.start <= time && time <= seekableTimeRange.end
+    func canSeek(to mark: Mark) -> Bool {
+        switch mark {
+        case let .time(time):
+            guard seekableTimeRange.isValidAndNotEmpty else { return false }
+            return seekableTimeRange.start <= time && time <= seekableTimeRange.end
+        case let .date(date):
+            return true // FIXME: UT
+        }
     }
 
     /// Seeks to a given position.
@@ -62,19 +67,18 @@ public extension Player {
         smooth: Bool = true,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
-        // Mitigates issues arising when seeking to the very end of the range by introducing a small offset.
-        let time = position.time.clamped(to: seekableTimeRange, offset: CMTime(value: 1, timescale: 10))
-        guard time.isValid else {
-            completion(true)
-            return
+        switch position.mark() {
+        case let .time(time):
+            // Mitigates issues arising when seeking to the very end of the range by introducing a small offset.
+            let time = time.clamped(to: seekableTimeRange, offset: CMTime(value: 1, timescale: 10))
+            guard time.isValid else {
+                completion(true)
+                return
+            }
+        default:
+            break
         }
-        queuePlayer.seek(
-            to: time,
-            toleranceBefore: position.toleranceBefore,
-            toleranceAfter: position.toleranceAfter,
-            smooth: smooth,
-            completionHandler: completion
-        )
+        queuePlayer.seek(position, smooth: smooth, completionHandler: completion)
     }
 
     /// Performs an optimal seek to a given time, providing the best possible interactive user experience in all cases.

@@ -115,7 +115,7 @@ extension Player {
                 var nowPlayingInfo = NowPlaying.Info()
                 if properties.streamType != .unknown {
                     nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
-                    if let time = properties.seekTime ?? queuePlayer?.currentTime(), time.isValid {
+                    if let time = properties.seekMark?.time() ?? queuePlayer?.currentTime(), time.isValid {
                         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.seekableTimeRange.start).seconds
                     }
                     nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.seekableTimeRange.duration.seconds

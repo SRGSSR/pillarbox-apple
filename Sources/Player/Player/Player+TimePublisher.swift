@@ -19,6 +19,8 @@ public extension Player {
     /// updates will be published when time jumps or when playback starts or stops.
     func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: queue)
+            .map(\.time)
+            .eraseToAnyPublisher()
     }
 
     /// Returns a publisher emitting a void value when traversing the specified times during normal playback.
@@ -33,13 +35,13 @@ public extension Player {
 }
 
 extension Player {
-    func nextUnblockedTimePublisher() -> AnyPublisher<CMTime, Never> {
+    func nextUnblockedPositionPublisher() -> AnyPublisher<Position, Never> {
         metadataPublisher
-            .slice(at: \.blockedTimeRanges)
-            .map { [queuePlayer] blockedTimeRanges -> AnyPublisher<CMTime, Never> in
-                guard !blockedTimeRanges.isEmpty else { return Empty().eraseToAnyPublisher() }
+            .slice(at: \.blockedMarkRanges)
+            .map { [queuePlayer] blockedMarkRanges -> AnyPublisher<Position, Never> in
+                guard !blockedMarkRanges.isEmpty else { return Empty().eraseToAnyPublisher() }
                 return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: .init(value: 1, timescale: 10))
-                    .compactMap { $0.after(timeRanges: blockedTimeRanges) }
+                    .compactMap { $0.after(markRanges: blockedMarkRanges) }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()

@@ -25,7 +25,7 @@ public extension Player {
     ///   instead. Calling ``resume(_:in:)`` overrides this setting temporarily.
     func resume(_ position: Position, in item: PlayerItem) {
         guard items.contains(item) else { return }
-        if item == currentItem, canSeek(to: position.time) {
+        if item == currentItem, canSeek(to: position.mark()) {
             seek(position)
         }
         else {

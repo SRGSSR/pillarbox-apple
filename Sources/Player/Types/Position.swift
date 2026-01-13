@@ -4,28 +4,52 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreMedia
 
 /// A description for a position to reach.
 public struct Position {
-    /// The time to reach.
-    public let time: CMTime
-
-    /// The tolerance allowed before the time to reach.
-    public let toleranceBefore: CMTime
-
-    /// The tolerance allowed after the time to reach.
-    public let toleranceAfter: CMTime
-
-    fileprivate init(time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) {
-        self.time = time
-        self.toleranceBefore = toleranceBefore
-        self.toleranceAfter = toleranceAfter
+    enum Value {
+        case time(CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime)
+        case date(Date)
     }
 
-    func after(_ timeRanges: [CMTimeRange]) -> Self? {
-        guard let timeAfter = time.after(timeRanges: timeRanges) else { return nil }
-        return .init(time: timeAfter, toleranceBefore: .zero, toleranceAfter: toleranceAfter)
+    let value: Value
+
+    fileprivate init(time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) {
+        self.value = .time(time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+    }
+
+    fileprivate init(date: Date) {
+        self.value = .date(date)
+    }
+
+    func after(_ markRanges: [MarkRange]) -> Self? {
+        switch value {
+        case let .time(time, _, toleranceAfter):
+            guard let timeAfter = time.after(timeRanges: markRanges.compactMap { $0.timeRange() }) else { return nil }
+            return .init(time: timeAfter, toleranceBefore: .zero, toleranceAfter: toleranceAfter)
+        case let .date(date):
+            return nil // FIXME: UT
+        }
+    }
+
+    func mark() -> Mark {
+        switch value {
+        case let .time(time, _, _):
+            .time(time)
+        case let .date(date):
+            .date(date)
+        }
+    }
+
+    func isValid() -> Bool {
+        switch value {
+        case let .time(time, _, _):
+            time.isValid
+        case let .date(date):
+            true // FIXME: UT
+        }
     }
 }
 
@@ -51,6 +75,10 @@ public func to(_ time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) 
 /// Precise positions may involve additional decoding delay, possibly impacting seek performance.
 public func at(_ time: CMTime) -> Position {
     .init(time: time, toleranceBefore: .zero, toleranceAfter: .zero)
+}
+
+public func at(_ date: Date) -> Position {
+    .init(date: date)
 }
 
 /// Returns an approximate position.

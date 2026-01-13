@@ -26,29 +26,29 @@ public struct TimeRange: Hashable {
         case closing
     }
 
-    private let timeRange: CMTimeRange
+    let markRange: MarkRange
 
     /// The kind of the time range.
     public let kind: Kind
 
     /// The start time of the time range.
-    public var start: CMTime {
-        timeRange.start
+    public var start: Mark {
+        markRange.start()
     }
 
     /// The end time of the time range.
-    public var end: CMTime {
-        timeRange.end
+    public var end: Mark {
+        markRange.end()
     }
 
     /// The duration of the time range.
     public var duration: CMTime {
-        timeRange.duration
+        markRange.duration()
     }
 
-    private init(kind: Kind, timeRange: CMTimeRange) {
+    private init(kind: Kind, markRange: MarkRange) {
         self.kind = kind
-        self.timeRange = timeRange
+        self.markRange = markRange
     }
 
     /// Creates a time range with a start time and duration.
@@ -58,7 +58,7 @@ public struct TimeRange: Hashable {
     ///   - start: The start time of the time range.
     ///   - duration: The start time of the time range.
     public init(kind: Kind, start: CMTime, duration: CMTime) {
-        self.init(kind: kind, timeRange: .init(start: start, duration: duration))
+        self.init(kind: kind, markRange: .time(.init(start: start, duration: duration)))
     }
 
     /// Creates a time range from a start and end time.
@@ -68,14 +68,23 @@ public struct TimeRange: Hashable {
     ///   - start: The start time of the time range.
     ///   - end: The end time of the time range.
     public init(kind: Kind, start: CMTime, end: CMTime) {
-        self.init(kind: kind, timeRange: .init(start: start, end: end))
+        self.init(kind: kind, markRange: .time(.init(start: start, end: end)))
     }
 
     /// Returns a Boolean value that indicates whether the time range contains a time.
     ///
     /// - Parameter time: A time value to test for in the time range.
     /// - Returns: true if the time range contains the time value; otherwise, false.
-    public func containsTime(_ time: CMTime) -> Bool {
-        timeRange.containsTime(time)
+    public func containsMark(_ mark: Mark) -> Bool {
+        markRange.containsMark(mark)
+    }
+
+    public func containsPosition(_ position: PlaybackPosition) -> Bool {
+        switch markRange {
+        case let .time(timeRange):
+            timeRange.containsTime(position.time)
+        case let .date(dateInterval):
+            false // FIXME: UT
+        }
     }
 }

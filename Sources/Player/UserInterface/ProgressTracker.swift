@@ -116,6 +116,10 @@ public final class ProgressTracker: ObservableObject {
         player?.seekableTimeRange ?? .invalid
     }
 
+    public var playbackPosition: PlaybackPosition {
+        .init(time: time, date: date())
+    }
+
     /// Creates a progress tracker updating its progress at the specified interval.
     ///
     /// - Parameters:
