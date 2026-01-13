@@ -31,8 +31,8 @@ struct LiveRadioToggleView: View {
     }
 
     private func playlistView() -> some View {
-        List(model.medias, id: \.self, selection: $model.currentMedia) { media in
-            Text(media.title)
+        List(model.entries, id: \.self, selection: $model.currentEntry) { entry in
+            Text(entry.media.title)
         }
     }
 }
