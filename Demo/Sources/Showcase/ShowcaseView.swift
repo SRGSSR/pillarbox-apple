@@ -281,8 +281,8 @@ struct ShowcaseView: View {
             .sourceCode(of: PlayerView.self)
 
             cell(
-                title: "Playback toggle mode",
-                subtitle: "Switch between audio and video",
+                title: "Radio livestreams",
+                subtitle: "Audio/video toggle",
                 destination: .liveRadioToggle
             )
             .sourceCode(of: LiveRadioToggleView.self)
