@@ -18,7 +18,9 @@ public extension MediaComposition {
             case _markIn = "fullLengthMarkIn"
             case _markOut = "fullLengthMarkOut"
             case _timeIntervals = "timeIntervalList"
-            case blockingReason = "blockReason"
+            case _blockingReason = "blockReason"
+            case _validFrom = "validFrom"
+            case _validTo = "validTo"
             case contentType = "type"
             case date
             case description
@@ -56,7 +58,9 @@ public extension MediaComposition {
         public let date: Date
 
         /// Returns whether the content is blocked for some reason.
-        public let blockingReason: BlockingReason?
+        public var blockingReason: BlockingReason? {
+            _blockingReason?.blockingReason(startDate: _validFrom, endDate: _validTo)
+        }
 
         /// The available segments.
         public var segments: [Segment] {
@@ -107,8 +111,11 @@ public extension MediaComposition {
         // swiftlint:disable:next discouraged_optional_collection
         private let _timeIntervals: [TimeInterval]?
 
+        private let _blockingReason: _BlockingReason?
         private let _markIn: Int64?
         private let _markOut: Int64?
+        private let _validFrom: Date?
+        private let _validTo: Date?
     }
 }
 
