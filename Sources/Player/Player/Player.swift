@@ -386,7 +386,7 @@ private extension Player {
     func configureErrorPublisher() {
         queuePublisher
             .map(\.error)
-            .removeDuplicates { $0 as? NSError == $1 as? NSError }
+            .removeDuplicates { $0 == nil && $1 == nil }
             .receiveOnMainThread()
             .assign(to: &$error)
     }
