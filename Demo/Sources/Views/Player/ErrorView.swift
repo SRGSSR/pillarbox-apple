@@ -11,6 +11,7 @@ import SwiftUI
 
 private struct DataErrorView: View {
     let error: DataError
+    let player: Player
 
     var body: some View {
         switch error.kind {
@@ -18,6 +19,7 @@ private struct DataErrorView: View {
             switch reason {
             case let .startDate(date) where date != nil:
                 CountdownView(endDate: date!)
+                    .onEnded(player.replay)
             default:
                 ErrorLabel(message: error.localizedDescription, systemImage: Self.imageName(for: reason))
             }
@@ -99,7 +101,7 @@ struct ErrorView: View {
         UnavailableView {
             switch error {
             case let error as DataError:
-                DataErrorView(error: error)
+                DataErrorView(error: error, player: player)
             case let error as NSError where error.domain == NSURLErrorDomain && error.code == URLError.notConnectedToInternet.rawValue:
                 ErrorLabel(message: error.localizedDescription, systemImage: "network.slash")
             default:
