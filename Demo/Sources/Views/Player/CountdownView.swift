@@ -8,42 +8,59 @@ import Combine
 import PillarboxCore
 import SwiftUI
 
-struct CountdownView: View {
-    private static let formatter = DateComponentsFormatter()
-    let endDate: Date
-    @State private var interval: TimeInterval = 0
+private final class CountdownModel: ObservableObject {
+    private static let formatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
 
+    @Published private var interval: TimeInterval = 0
+    @Published var endDate = Date()
 
-    var body: some View {
-        Text(text())
-            .foregroundStyle(.white)
-            .monospaced()
-            .font(.largeTitle)
-            .bold()
-            .padding()
-            .background(.black)
-            .clipShape(RoundedRectangle(cornerRadius: 4))
-            .contentTransition(.numericText())
-            .animation(.easeIn, value: text())
-//            .onReceive(Self.intervalPublisher(to: endDate), assign: \.self, to: $interval)
-            .onReceive(Self.intervalPublisher(to: endDate)) { interval in
-                self.interval = interval
-            }
+    init() {
+        $endDate
+            .map { Self.intervalPublisher(to: $0) }
+            .switchToLatest()
+            .assign(to: &$interval)
     }
 
     private static func intervalPublisher(to date: Date) -> AnyPublisher<TimeInterval, Never> {
         Timer.publish(every: 1, on: .main, in: .common)
             .autoconnect()
             .prepend(Date())
-            .map { date.timeIntervalSince($0) }
+            .map { max(date.timeIntervalSince($0), 0) }
             .eraseToAnyPublisher()
     }
 
-    private func text() -> String {
+    func text() -> String {
         Self.formatter.string(from: interval)!
     }
 }
 
+struct CountdownView: View {
+    let endDate: Date
+    @StateObject private var model = CountdownModel()
+
+    var body: some View {
+        VStack {
+            Text("Starts in")
+                .font(.title3)
+            Text(model.text())
+                .foregroundStyle(.white)
+                .monospaced()
+                .font(.title)
+                .bold()
+                .contentTransition(.numericText())
+                .animation(.easeIn, value: model.text())
+                .onAppear {
+                    model.endDate = endDate
+                }
+        }
+    }
+}
 #Preview {
-    CountdownView(endDate: Date(timeIntervalSinceNow: 100))
+    CountdownView(endDate: Date().addingTimeInterval(10))
+        .preferredColorScheme(.dark)
 }
