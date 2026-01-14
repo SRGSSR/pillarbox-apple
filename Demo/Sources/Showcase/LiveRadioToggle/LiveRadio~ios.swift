@@ -4,12 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
-struct LiveRadioToggle: Hashable {
+struct LiveRadio: Hashable {
     let title: String
     let audioUrn: String
     let videoUrn: String
 
-    func urn(for mode: LiveRadioToggleMode) -> String {
+    func urn(for mode: LiveRadioMode) -> String {
         switch mode {
         case .audio:
             return audioUrn

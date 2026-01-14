@@ -11,7 +11,7 @@ import PillarboxPlayer
 final class LiveRadioToggleViewModel: ObservableObject {
     let player = Player(configuration: .standard)
 
-    var mode: LiveRadioToggleMode = .video {
+    var mode: LiveRadioMode = .video {
         didSet {
             guard let currentItem = player.currentItem, let currentIndex = player.items.firstIndex(of: currentItem) else {
                 return

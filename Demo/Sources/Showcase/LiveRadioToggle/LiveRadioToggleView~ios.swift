@@ -21,7 +21,7 @@ struct LiveRadioToggleView: View {
 
     private func modePicker() -> some View {
         Picker("Mode", selection: $model.mode) {
-            ForEach(LiveRadioToggleMode.allCases) { mode in
+            ForEach(LiveRadioMode.allCases) { mode in
                 Text(mode.rawValue)
                     .tag(mode)
             }
@@ -37,10 +37,20 @@ struct LiveRadioToggleView: View {
     }
 }
 
+private struct SliderView: View {
+    @ObservedObject var player: Player
+    @State private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
+
+    var body: some View {
+        Slider(progressTracker: progressTracker)
+            .padding()
+            .bind(progressTracker, to: player)
+    }
+}
+
 private struct _PlaybackView: View {
     @ObservedObject var player: Player
     @ObservedObject var model: LiveRadioToggleViewModel
-    @State private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
 
     var body: some View {
         VStack(spacing: 0) {
@@ -48,12 +58,10 @@ private struct _PlaybackView: View {
                 audioVideoView()
                 playbackButton()
             }
-            Slider(progressTracker: progressTracker)
-                .padding()
+            SliderView(player: player)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.black)
-        .bind(progressTracker, to: player)
     }
 
     @ViewBuilder

@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-enum LiveRadioToggleMode: String, Identifiable, CaseIterable {
+enum LiveRadioMode: String, Identifiable, CaseIterable {
     case audio = "Audio"
     case video = "Video"
 
