@@ -9,51 +9,23 @@ import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
-struct ErrorView: View {
-    let error: Error
-    @ObservedObject var player: Player
-
-    private var subtitle: String? {
-        let sessionIdentifiers = player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)
-        guard !sessionIdentifiers.isEmpty else { return nil }
-        return "Monitoring: \(sessionIdentifiers.joined(separator: ", "))"
-    }
-
-    private var imageName: String {
-        switch error {
-        case let error as DataError:
-            switch error.kind {
-            case let .blocked(reason: reason):
-                return Self.imageName(for: reason)
-            case .http:
-                return "cloud.fill"
-            case .noResourceAvailable:
-                return "exclamationmark.triangle.fill"
-            }
-        case let error as NSError where error.domain == NSURLErrorDomain && error.code == URLError.notConnectedToInternet.rawValue:
-            return "network.slash"
-        default:
-            return "exclamationmark.triangle.fill"
-        }
-    }
+private struct DataErrorView: View {
+    let error: DataError
 
     var body: some View {
-        VStack(spacing: 0) {
-            messageView()
-#if os(iOS)
-            retryView()
-#endif
+        switch error.kind {
+        case let .blocked(reason: reason):
+            switch reason {
+            case let .startDate(date) where date != nil:
+                CountdownView(endDate: date!)
+            default:
+                ErrorLabel(message: error.localizedDescription, systemImage: Self.imageName(for: reason))
+            }
+        case .http:
+            ErrorLabel(message: error.localizedDescription, systemImage: "cloud.fill")
+        case .noResourceAvailable:
+            ErrorLabel(message: error.localizedDescription, systemImage: "exclamationmark.triangle.fill")
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .foregroundStyle(.white)
-        .contentShape(.rect)
-        .onTapGesture(perform: player.replay)
-        .accessibilityAddTraits(.isButton)
-#if os(iOS)
-        .overlay(alignment: .topLeading) {
-            CloseButton(topBarStyle: true)
-        }
-#endif
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -79,13 +51,59 @@ struct ErrorView: View {
             return "key.icloud.fill"
         }
     }
+}
+
+private struct ErrorLabel: View {
+    let message: String
+    let systemImage: String
+
+    var body: some View {
+        Label {
+            Text(message)
+        } icon: {
+            Image(systemName: systemImage)
+        }
+    }
+}
+
+struct ErrorView: View {
+    let error: Error
+    @ObservedObject var player: Player
+
+    private var subtitle: String? {
+        let sessionIdentifiers = player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)
+        guard !sessionIdentifiers.isEmpty else { return nil }
+        return "Monitoring: \(sessionIdentifiers.joined(separator: ", "))"
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            messageView()
+#if os(iOS)
+            retryView()
+#endif
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .foregroundStyle(.white)
+        .contentShape(.rect)
+        .onTapGesture(perform: player.replay)
+        .accessibilityAddTraits(.isButton)
+#if os(iOS)
+        .overlay(alignment: .topLeading) {
+            CloseButton(topBarStyle: true)
+        }
+#endif
+    }
 
     private func messageView() -> some View {
         UnavailableView {
-            Label {
-                Text(error.localizedDescription)
-            } icon: {
-                Image(systemName: imageName)
+            switch error {
+            case let error as DataError:
+                DataErrorView(error: error)
+            case let error as NSError where error.domain == NSURLErrorDomain && error.code == URLError.notConnectedToInternet.rawValue:
+                ErrorLabel(message: error.localizedDescription, systemImage: "network.slash")
+            default:
+                ErrorLabel(message: error.localizedDescription, systemImage: "exclamationmark.triangle.fill")
             }
         } description: {
             if let subtitle {

@@ -53,14 +53,17 @@ struct CountdownView: View {
                 .font(.title)
                 .bold()
                 .contentTransition(.numericText())
-                .animation(.easeIn, value: model.text())
+                .animation(.default, value: model.text())
                 .onAppear {
+                    model.endDate = endDate
+                }
+                .onChange(of: endDate) { endDate in
                     model.endDate = endDate
                 }
         }
     }
 }
 #Preview {
-    CountdownView(endDate: Date().addingTimeInterval(10))
+    CountdownView(endDate: Date().addingTimeInterval(3600))
         .preferredColorScheme(.dark)
 }
