@@ -1,0 +1,111 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
+import PillarboxPlayer
+import SwiftUI
+
+struct LiveRadioToggleView: View {
+    @StateObject private var model = LiveRadioToggleViewModel()
+
+    var body: some View {
+        VStack(spacing: 0) {
+            modePicker()
+            _PlaybackView(player: model.player, model: model)
+            playlistView()
+        }
+        .onAppear(perform: model.play)
+    }
+
+    private func modePicker() -> some View {
+        Picker("Mode", selection: $model.mode) {
+            ForEach(LiveRadioMode.allCases) { mode in
+                Text(mode.rawValue)
+                    .tag(mode)
+            }
+        }
+        .pickerStyle(.segmented)
+        .padding()
+    }
+
+    private func playlistView() -> some View {
+        List(model.entries, id: \.self, selection: $model.currentEntry) { entry in
+            Text(entry.media.title)
+        }
+    }
+}
+
+private struct SliderView: View {
+    @ObservedObject var player: Player
+    @State private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
+
+    var body: some View {
+        Slider(progressTracker: progressTracker)
+            .padding()
+            .bind(progressTracker, to: player)
+    }
+}
+
+private struct _PlaybackView: View {
+    @ObservedObject var player: Player
+    @ObservedObject var model: LiveRadioToggleViewModel
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ZStack {
+                audioVideoView()
+                playbackButton()
+            }
+            SliderView(player: player)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.black)
+    }
+
+    @ViewBuilder
+    private func audioVideoView() -> some View {
+        switch model.mode {
+        case .audio:
+            artworkView()
+        case .video:
+            videoView()
+        }
+    }
+
+    private func videoView() -> some View {
+        VideoView(player: player)
+    }
+
+    private func playbackButton() -> some View {
+        Button(action: player.togglePlayPause) {
+            Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 50)
+                .tint(.white)
+                .shadow(radius: 5)
+        }
+    }
+
+    private func artworkView() -> some View {
+        ZStack {
+            Color.clear
+            LazyImage(source: player.metadata.imageSource) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            }
+        }
+        .animation(.easeIn(duration: 0.2), value: player.metadata.imageSource)
+    }
+}
+
+extension LiveRadioToggleView: SourceCodeViewable {
+    static let filePath = #file
+}
+
+#Preview {
+    LiveRadioToggleView()
+}

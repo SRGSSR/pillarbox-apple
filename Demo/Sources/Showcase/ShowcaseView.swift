@@ -279,6 +279,13 @@ struct ShowcaseView: View {
                 destination: .player(media: URLMedia.startTimeVideo)
             )
             .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Radio livestreams",
+                subtitle: "Audio/video toggle",
+                destination: .liveRadioToggle
+            )
+            .sourceCode(of: LiveRadioToggleView.self)
 #else
             cell(
                 title: "Apple Basic 16:9",
