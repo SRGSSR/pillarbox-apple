@@ -9,7 +9,7 @@ import PillarboxCore
 import PillarboxPlayer
 import SwiftUI
 
-private final class CountdownModel: ObservableObject {
+private final class CountdownViewModel: ObservableObject {
     private static let formatter = {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
@@ -55,7 +55,7 @@ struct CountdownView: View {
     let endDate: Date
     private var onEnded: (() -> Void)?
 
-    @StateObject private var model = CountdownModel()
+    @StateObject private var model = CountdownViewModel()
 
     var body: some View {
         VStack {
@@ -68,13 +68,13 @@ struct CountdownView: View {
                 .bold()
                 .contentTransition(.numericText())
                 .animation(.default, value: model.text())
-                .onAppear {
-                    model.onEnded = onEnded
-                    model.endDate = endDate
-                }
-                .onChange(of: endDate) { endDate in
-                    model.endDate = endDate
-                }
+        }
+        .onAppear {
+            model.onEnded = onEnded
+            model.endDate = endDate
+        }
+        .onChange(of: endDate) { endDate in
+            model.endDate = endDate
         }
     }
 
