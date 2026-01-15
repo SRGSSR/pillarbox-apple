@@ -79,21 +79,13 @@ struct ErrorView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            messageView()
+        messageView()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .foregroundStyle(.white)
 #if os(iOS)
-            retryView()
-#endif
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .foregroundStyle(.white)
-        .contentShape(.rect)
-        .onTapGesture(perform: player.replay)
-        .accessibilityAddTraits(.isButton)
-#if os(iOS)
-        .overlay(alignment: .topLeading) {
-            CloseButton(topBarStyle: true)
-        }
+            .overlay(alignment: .topLeading) {
+                CloseButton(topBarStyle: true)
+            }
 #endif
     }
 
@@ -116,12 +108,6 @@ struct ErrorView: View {
 #endif
             }
         }
-    }
-
-    private func retryView() -> some View {
-        Text("Tap to retry")
-            .font(.callout)
-            .padding(.bottom)
     }
 }
 
