@@ -37,6 +37,13 @@ private final class CountdownViewModel: ObservableObject {
                 self?.onEnded?()
             }
             .store(in: &cancellables)
+
+        Signal.applicationWillEnterForeground()
+            .sink { [weak self] _ in
+                guard let self, interval == 0 else { return }
+                onEnded?()
+            }
+            .store(in: &cancellables)
     }
 
     private static func intervalPublisher(to date: Date) -> AnyPublisher<TimeInterval?, Never> {
