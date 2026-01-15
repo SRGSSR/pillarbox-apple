@@ -18,20 +18,21 @@ private final class CountdownViewModel: ObservableObject {
     }()
 
     @Published private var interval: TimeInterval?
-    @Published var endDate = Date()
+    @Published var endDate: Date?
     var onEnded: (() -> Void)?
     private var cancellables = Set<AnyCancellable>()
 
     init() {
         $endDate
+            .compactMap(\.self)
             .map { Self.intervalPublisher(to: $0) }
             .switchToLatest()
             .assign(to: &$interval)
 
         $interval
-            .map { $0?.rounded() }
-            .filter { $0 == 0 }
+            .compactMap(\.self)
             .removeDuplicates()
+            .filter { $0 == 0 }
             .sink { [weak self] _ in
                 self?.onEnded?()
             }
