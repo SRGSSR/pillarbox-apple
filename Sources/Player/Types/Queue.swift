@@ -12,7 +12,7 @@ struct Queue {
     let elements: [QueueElement]
     let itemState: ItemState
 
-    var index: Int? {
+    private var index: Int? {
         elements.firstIndex { $0.matches(itemState.item) }
     }
 
@@ -21,13 +21,18 @@ struct Queue {
         return elements[index].item
     }
 
+    private var content: AssetContent? {
+        guard let index else { return nil }
+        return elements[index].content
+    }
+
     var items: QueueItems? {
         guard let item, let playerItem else { return nil }
         return .init(item: item, playerItem: playerItem)
     }
 
     var error: Error? {
-        item?.content.resource.error ?? itemState.error
+        content?.resource.error ?? itemState.error
     }
 
     var isActive: Bool {
