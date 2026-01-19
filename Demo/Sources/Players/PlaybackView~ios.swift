@@ -14,7 +14,6 @@ import SwiftUI
 struct PlaybackView: View {
     @ObservedObject private var player: Player
     @Binding private var layout: PlaybackViewLayout
-    @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     private var supportsPictureInPicture = false
 
@@ -38,7 +37,6 @@ struct PlaybackView: View {
             }
         }
         .background(.black)
-        .bind(progressTracker, to: player)
     }
 
     init(player: Player, layout: Binding<PlaybackViewLayout> = .constant(.inline)) {
@@ -50,8 +48,7 @@ struct PlaybackView: View {
         MainView(
             player: player,
             layout: $layout,
-            supportsPictureInPicture: supportsPictureInPicture,
-            progressTracker: progressTracker
+            supportsPictureInPicture: supportsPictureInPicture
         )
         ._debugBodyCounter()
     }
@@ -61,7 +58,7 @@ private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackViewLayout
     let supportsPictureInPicture: Bool
-    let progressTracker: ProgressTracker
+    @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     @StateObject private var visibilityTracker = VisibilityTracker()
     @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1), limit: 90)
@@ -114,6 +111,7 @@ private struct MainView: View {
         }
         .bind(visibilityTracker, to: player)
         .bind(metricsCollector, to: player)
+        .bind(progressTracker, to: player)
     }
 
     private var isFullScreen: Bool {

@@ -20,7 +20,7 @@ final class ErrorTests: XCTestCase {
     }
 
     func testErrorLog() {
-        let delegate = FailedResourceLoaderDelegate(error: DataError.blocked(reason: .startDate))
+        let delegate = FailedResourceLoaderDelegate(error: DataError.blocked(reason: .startDate(nil)))
         let player = Player(item: .custom(url: URL.failing, delegate: delegate))
         expect(player.systemPlayer.currentItem?.errorLog()).toEventuallyNot(beNil())
     }
