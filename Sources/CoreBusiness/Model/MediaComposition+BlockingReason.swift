@@ -19,6 +19,8 @@ public extension MediaComposition {
         case commercial
 
         /// Not available anymore.
+        ///
+        /// Provides the date when the content expired, if known.
         case endDate(Date?)
 
         /// Geoblocked.
@@ -31,6 +33,8 @@ public extension MediaComposition {
         case legal
 
         /// Not available yet.
+        ///
+        /// Provides the date when the content will become available, if known.
         case startDate(Date?)
 
         /// Unknown reason.
