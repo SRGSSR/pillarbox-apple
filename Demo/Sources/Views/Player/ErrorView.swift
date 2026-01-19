@@ -18,7 +18,7 @@ private struct DataErrorView: View {
         case let .blocked(reason: reason):
             switch reason {
             case let .startDate(date) where date != nil:
-                CountdownView(endDate: date!)
+                CountdownView(endDate: date!, metadata: player.metadata)
                     .onEnded(player.replay)
             default:
                 ErrorLabel(message: error.localizedDescription, systemImage: Self.imageName(for: reason))

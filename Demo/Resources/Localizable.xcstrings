@@ -7,6 +7,9 @@
     "-%llds" : {
 
     },
+    "%@ will start in" : {
+
+    },
     "%g×" : {
 
     },
@@ -430,9 +433,6 @@
 
     },
     "Stalls" : {
-
-    },
-    "Starts in" : {
 
     },
     "Startup times (QoE)" : {

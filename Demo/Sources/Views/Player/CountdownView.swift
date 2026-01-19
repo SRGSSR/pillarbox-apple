@@ -63,11 +63,21 @@ struct CountdownView: View {
     let endDate: Date
     private var onEnded: (() -> Void)?
 
+    let metadata: PlayerMetadata
     @StateObject private var model = CountdownViewModel()
+
+    private var title: String {
+        if let title = metadata.title {
+            return "\(title) will start in"
+        }
+        else {
+            return "Will start in"
+        }
+    }
 
     var body: some View {
         VStack {
-            Text("Starts in")
+            Text(title)
                 .font(.title3)
             Text(model.text())
                 .foregroundStyle(.white)
@@ -86,8 +96,9 @@ struct CountdownView: View {
         }
     }
 
-    init(endDate: Date) {
+    init(endDate: Date, metadata: PlayerMetadata) {
         self.endDate = endDate
+        self.metadata = metadata
     }
 }
 
@@ -100,6 +111,6 @@ extension CountdownView {
 }
 
 #Preview {
-    CountdownView(endDate: Date().addingTimeInterval(10))
+    CountdownView(endDate: Date().addingTimeInterval(10), metadata: .init(title: "19h30"))
         .preferredColorScheme(.dark)
 }
