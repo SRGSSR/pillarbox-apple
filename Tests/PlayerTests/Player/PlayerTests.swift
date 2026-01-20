@@ -18,7 +18,7 @@ final class PlayerTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)
 
-        weak var weakPlayer = player
+        weak let weakPlayer = player
         autoreleasepool {
             player = nil
         }

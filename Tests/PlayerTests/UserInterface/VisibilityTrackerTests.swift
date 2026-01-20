@@ -163,7 +163,7 @@ final class VisibilityTrackerTests: TestCase {
 
     func testDeallocation() {
         var visibilityTracker: VisibilityTracker? = VisibilityTracker()
-        weak var weakVisibilityTracker = visibilityTracker
+        weak let weakVisibilityTracker = visibilityTracker
         autoreleasepool {
             visibilityTracker = nil
         }
@@ -177,7 +177,7 @@ final class VisibilityTrackerTests: TestCase {
         visibilityTracker?.player = player
         expect(player.playbackState).toEventually(equal(.playing))
 
-        weak var weakVisibilityTracker = visibilityTracker
+        weak let weakVisibilityTracker = visibilityTracker
         autoreleasepool {
             visibilityTracker = nil
         }

@@ -51,7 +51,7 @@ final class AVPlayerPeriodicTimePublisherTests: TestCase {
             interval: CMTime(value: 1, timescale: 1)
         )
 
-        weak var weakPlayer = player
+        weak let weakPlayer = player
         autoreleasepool {
             player = nil
         }

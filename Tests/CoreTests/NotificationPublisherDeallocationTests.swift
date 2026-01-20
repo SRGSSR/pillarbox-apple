@@ -16,7 +16,7 @@ final class NotificationPublisherDeallocationTests: XCTestCase {
         var object: TestObject? = TestObject()
         let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
 
-        weak var weakObject = object
+        weak let weakObject = object
         try autoreleasepool {
             try waitForOutput(from: publisher) {
                 notificationCenter.post(name: .testNotification, object: object)
@@ -31,7 +31,7 @@ final class NotificationPublisherDeallocationTests: XCTestCase {
         var object: TestNSObject? = TestNSObject()
         let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
 
-        weak var weakObject = object
+        weak let weakObject = object
         try autoreleasepool {
             try waitForOutput(from: publisher) {
                 notificationCenter.post(name: .testNotification, object: object)
