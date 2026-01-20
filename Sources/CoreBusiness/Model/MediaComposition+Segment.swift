@@ -10,13 +10,17 @@ public extension MediaComposition {
     /// A chapter section.
     struct Segment: Decodable {
         enum CodingKeys: String, CodingKey {
-            case blockingReason = "blockReason"
+            case _blockingReason = "blockReason"
             case _markIn = "markIn"
             case _markOut = "markOut"
+            case _validFrom = "validFrom"
+            case _validTo = "validTo"
         }
 
         /// Returns whether the content is blocked for some reason.
-        public let blockingReason: BlockingReason?
+        public var blockingReason: BlockingReason? {
+            _blockingReason?.blockingReason(startDate: _validFrom, endDate: _validTo)
+        }
 
         /// The associated time range.
         public var timeRange: CMTimeRange {
@@ -28,5 +32,8 @@ public extension MediaComposition {
 
         private let _markIn: Int64
         private let _markOut: Int64
+        private let _blockingReason: _BlockingReason?
+        private let _validFrom: Date?
+        private let _validTo: Date?
     }
 }

@@ -53,7 +53,7 @@ private struct MainView: View {
         VStack {
             PlaybackView(player: player, layout: currentLayout)
                 .supportsPictureInPicture(supportsPictureInPicture)
-            if layout != .maximized, !chapters.isEmpty {
+            if layout != .maximized, !chapters.isEmpty, player.error == nil {
                 ChaptersList(player: player)
             }
         }

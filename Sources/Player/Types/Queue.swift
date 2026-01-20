@@ -12,13 +12,19 @@ struct Queue {
     let elements: [QueueElement]
     let itemState: ItemState
 
-    var index: Int? {
-        elements.firstIndex { $0.matches(itemState.item) }
+    private let index: Int?
+
+    private var element: QueueElement? {
+        guard let index else { return nil }
+        return elements[index]
     }
 
     var item: PlayerItem? {
-        guard let index else { return nil }
-        return elements[index].item
+        element?.item
+    }
+
+    private var content: AssetContent? {
+        element?.content
     }
 
     var items: QueueItems? {
@@ -27,7 +33,7 @@ struct Queue {
     }
 
     var error: Error? {
-        item?.content.resource.error ?? itemState.error
+        content?.resource.error ?? itemState.error
     }
 
     var isActive: Bool {
@@ -41,6 +47,7 @@ struct Queue {
     init(elements: [QueueElement], itemState: ItemState) {
         self.elements = elements
         self.itemState = !elements.isEmpty ? itemState : .empty
+        self.index = elements.firstIndex { $0.matches(itemState.item) }
     }
 
     static func buffer(from previous: Self, to current: Self, length: Int) -> QueueBuffer? {

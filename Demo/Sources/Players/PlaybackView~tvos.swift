@@ -11,26 +11,12 @@ struct PlaybackView: View {
     @ObservedObject var player: Player
     private var infoViewTabsContent: (() -> InfoViewTabsContent)?
 
-    @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
-    @State private var streamType: StreamType = .unknown
-
-    @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
-    private var qualitySetting: QualitySetting = .high
-
-    private var skipInfoViewActionTitle: LocalizedStringResource {
-        streamType == .onDemand ? "From Beginning" : "Back to Live"
-    }
-
-    private var skipInfoViewActionSystemImage: String {
-        streamType == .onDemand ? "play.fill" : "forward.end.fill"
-    }
-
     var body: some View {
         if let error = player.error {
             ErrorView(error: error, player: player)
         }
         else if !player.items.isEmpty {
-            mainView()
+            MainView(player: player, infoViewTabsContent: infoViewTabsContent)
         }
         else {
             UnavailableView {
@@ -43,8 +29,26 @@ struct PlaybackView: View {
     init(player: Player) {
         self.player = player
     }
+}
 
-    private func mainView() -> some View {
+private struct MainView: View {
+    @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
+    private var qualitySetting: QualitySetting = .high
+
+    @State private var streamType: StreamType = .unknown
+    @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
+    @ObservedObject var player: Player
+    let infoViewTabsContent: (() -> InfoViewTabsContent)?
+
+    private var skipInfoViewActionTitle: LocalizedStringResource {
+        streamType == .onDemand ? "From Beginning" : "Back to Live"
+    }
+
+    private var skipInfoViewActionSystemImage: String {
+        streamType == .onDemand ? "play.fill" : "forward.end.fill"
+    }
+
+    var body: some View {
         ZStack {
             if let infoViewTabsContent {
                 systemVideoView()
@@ -56,6 +60,12 @@ struct PlaybackView: View {
         }
         .ignoresSafeArea()
         .onReceive(player: player, assign: \.streamType, to: $streamType)
+        .bind(progressTracker, to: player)
+    }
+
+    init(player: Player, infoViewTabsContent: (() -> InfoViewTabsContent)?) {
+        self.player = player
+        self.infoViewTabsContent = infoViewTabsContent
     }
 
     private func systemVideoView() -> SystemVideoView<EmptyView> {
