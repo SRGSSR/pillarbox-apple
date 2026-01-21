@@ -130,6 +130,8 @@ public extension SystemVideoView {
     /// constructing menus.
     ///
     /// > Important: One up to seven root items are supported.
+    ///
+    /// @Image(source: transport-bar, alt: "A screenshot of the transport bar")
     func transportBar(@TransportBarContentBuilder content: () -> TransportBarContent) -> SystemVideoView {
         var view = self
         view.transportBarContent = content()
@@ -152,6 +154,8 @@ public extension SystemVideoView {
     /// ```
     ///
     /// > Important: One up to seven actions are supported.
+    ///
+    /// @Image(source: contextual-actions, alt: "A screenshot of contextual actions")
     @available(iOS, unavailable)
     @available(tvOS 16, *)
     func contextualActions(@ContextualActionsContentBuilder content: () -> ContextualActionsContent) -> SystemVideoView {
@@ -176,6 +180,8 @@ public extension SystemVideoView {
     /// ```
     ///
     /// > Important: One or two actions are supported.
+    ///
+    /// @Image(source: info-view-actions, alt: "A screenshot of info view actions")
     @available(iOS, unavailable)
     @available(tvOS 16, *)
     func infoViewActions(@InfoViewActionsContentBuilder content: () -> InfoViewActionsContent) -> SystemVideoView {
@@ -204,6 +210,8 @@ public extension SystemVideoView {
     ///
     /// Apply the ``SwiftUICore/View/infoViewTabPanel()`` modifier to use a background
     /// that mimics the standard tvOS Info view appearance.
+    ///
+    /// @Image(source: info-view-tabs, alt: "A screenshot of info view tabs")
     func infoViewTabs(@InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
         var view = self
         view.infoViewTabsContent = .init(elements: content().elements)
