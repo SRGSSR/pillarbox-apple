@@ -2,6 +2,8 @@
 
 The following document lists known Pillarbox issues. Entries with a feedback number (FBxxxxxxxx) have been reported to Apple and will hopefully be fixed in upcoming iOS and tvOS releases.
 
+Detailed information about these reports is available from our [Apple feedback public repository](https://github.com/SRGSSR/apple-bug-reports).
+
 ## Video view leak (FB11934227)
 
 A bug in AVKit makes `SystemVideoView` leak resources after having interacted with the playback button
