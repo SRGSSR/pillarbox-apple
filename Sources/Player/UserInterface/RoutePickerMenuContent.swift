@@ -7,7 +7,8 @@
 import AVKit
 import SwiftUI
 
-@propertyWrapper private class Control {
+@propertyWrapper
+private class Control {
     fileprivate weak var source: UIControl?
 
     var wrappedValue: Control {
@@ -34,7 +35,7 @@ private struct RoutePickerWrapper: UIViewRepresentable {
     }
 }
 
-private struct RoutePickerMenuContent: View {
+struct RoutePickerMenuContent: View {
     @Control private var control
 
     var body: some View {
@@ -52,11 +53,5 @@ private struct RoutePickerMenuContent: View {
 
     private func sendAction() {
         control.sendAction()
-    }
-}
-
-public extension RoutePickerView {
-    static func routePickerMenu() -> some View {
-        RoutePickerMenuContent()
     }
 }
