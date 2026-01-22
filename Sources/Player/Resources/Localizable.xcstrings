@@ -36,9 +36,6 @@
         }
       }
     },
-    "AirPlay" : {
-
-    },
     "Audio" : {
       "comment" : "Playback setting menu title",
       "localizations" : {

@@ -39,10 +39,14 @@ private struct RoutePickerMenuContent: View {
 
     var body: some View {
         SwiftUI.Button(action: sendAction) {
-            Label("AirPlay", systemImage: "airplay.video")
-                .background {
-                    RoutePickerWrapper(control: control)
-                }
+            Label {
+                Text(verbatim: "AirPlay")
+            } icon: {
+                Image(systemName: "airplay.video")
+            }
+            .background {
+                RoutePickerWrapper(control: control)
+            }
         }
     }
 
