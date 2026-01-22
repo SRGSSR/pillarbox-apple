@@ -154,7 +154,7 @@ On iOS 26 and later, the device screen may dim and eventually auto-lock during v
 
 ### Workaround
 
-This issue is caused by a Picture in Picture regression introduced in iOS 26.  
+This issue is caused by a Picture in Picture regression introduced in iOS 26.
 Avoid dynamically changing the value of `VideoView.supportsPictureInPicture(_:)` or `SystemVideoView.supportsPictureInPicture(_:)` while a video view is visible.
 
 ## The player may remain silent after toggling `isMuted` (FB21089410)
@@ -172,3 +172,11 @@ The standard player user interface leaks memory when playing content that contai
 ### Workaround
 
 No workaround is available yet.
+
+## Playback incorrectly jumps to the live edge when resuming a DVR video livestream after an interruption (e.g. alarm) (FB21701670)
+
+When playing a video livestream that offers a DVR window, the player incorrectly resumes at the live edge after an interruption instead of resuming from the previous playback position.
+
+### Workaround
+
+Apps that require this behavior to be handled correctly can manage [audio session interruptions](https://developer.apple.com/documentation/avfaudio/handling-audio-interruptions) to save and restore the current playback position.
