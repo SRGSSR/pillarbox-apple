@@ -7,20 +7,20 @@
 import AVKit
 import SwiftUI
 
-@propertyWrapper private class ControlReference {
-    fileprivate weak var control: UIControl?
+@propertyWrapper private class Control {
+    fileprivate weak var source: UIControl?
 
-    var wrappedValue: ControlReference {
+    var wrappedValue: Control {
         self
     }
 
     func sendAction() {
-        control?.sendActions(for: .touchUpInside)
+        source?.sendActions(for: .touchUpInside)
     }
 }
 
 private struct RoutePickerWrapper: UIViewRepresentable {
-    let reference: ControlReference
+    let control: Control
 
     func makeUIView(context: Context) -> AVRoutePickerView {
         let view = AVRoutePickerView()
@@ -30,24 +30,24 @@ private struct RoutePickerWrapper: UIViewRepresentable {
 
     func updateUIView(_ uiView: AVRoutePickerView, context: Context) {
         guard let button = uiView.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
-        reference.control = button
+        control.source = button
     }
 }
 
 private struct RoutePickerMenuContent: View {
-    @ControlReference private var reference
+    @Control private var control
 
     var body: some View {
         SwiftUI.Button(action: sendAction) {
             Label("AirPlay", systemImage: "airplay.video")
                 .background {
-                    RoutePickerWrapper(reference: reference)
+                    RoutePickerWrapper(control: control)
                 }
         }
     }
 
     private func sendAction() {
-        reference.sendAction()
+        control.sendAction()
     }
 }
 
