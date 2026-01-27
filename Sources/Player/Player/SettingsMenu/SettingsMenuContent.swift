@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import SwiftUI
 
 @available(iOS 16.0, tvOS 17.0, *)

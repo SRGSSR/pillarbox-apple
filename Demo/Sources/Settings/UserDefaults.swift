@@ -17,6 +17,7 @@ extension UserDefaults {
         case presenterModeEnabled
         case smartNavigationEnabled
         case seekBehaviorSetting
+        case routePickerSetting
         case backwardSkipInterval
         case forwardSkipInterval
         case serverSetting
@@ -45,6 +46,10 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: DemoSettingKey.seekBehaviorSetting.rawValue)) ?? .optimal
     }
 
+    @objc dynamic var routePickerSetting: RoutePickerSetting {
+        .init(rawValue: integer(forKey: DemoSettingKey.routePickerSetting.rawValue)) ?? .button
+    }
+
     @objc dynamic var backwardSkipInterval: TimeInterval {
         double(forKey: DemoSettingKey.backwardSkipInterval.rawValue)
     }
@@ -70,6 +75,7 @@ extension UserDefaults {
             DemoSettingKey.presenterModeEnabled.rawValue: false,
             DemoSettingKey.smartNavigationEnabled.rawValue: true,
             DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.optimal.rawValue,
+            DemoSettingKey.routePickerSetting.rawValue: RoutePickerSetting.button.rawValue,
             DemoSettingKey.backwardSkipInterval.rawValue: 10,
             DemoSettingKey.forwardSkipInterval.rawValue: 10,
             DemoSettingKey.serverSetting.rawValue: ServerSetting.production.rawValue,

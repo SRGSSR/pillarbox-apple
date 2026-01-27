@@ -120,6 +120,9 @@
     "Buffering" : {
 
     },
+    "Button" : {
+
+    },
     "Cancel" : {
 
     },
@@ -273,6 +276,9 @@
     "Media requests" : {
 
     },
+    "Menu" : {
+
+    },
     "Metadata" : {
 
     },
@@ -394,6 +400,9 @@
 
     },
     "Reset" : {
+
+    },
+    "Route picker" : {
 
     },
     "Search" : {
