@@ -255,4 +255,12 @@ public extension Player {
     ) -> some View {
         ZoomMenuContent(gravity: gravity, action: action, player: self)
     }
+
+    /// Returns content for a route picker button.
+    ///
+    /// The returned view is intended for use as the content of a `Menu`. Using it for any other purpose results in
+    /// undefined behavior.
+    func routePickerMenu(activeTintColor: Color? = nil) -> some View {
+        RoutePickerMenuContent(activeTintColor: activeTintColor, player: self)
+    }
 }

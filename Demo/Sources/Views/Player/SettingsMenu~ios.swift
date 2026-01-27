@@ -23,6 +23,7 @@ struct SettingsMenu: View {
                 player.zoomMenu(gravity: $gravity)
             }
             metricsMenu()
+            player.routePickerMenu()
         } label: {
             Image(systemName: "ellipsis.circle")
                 .font(.system(size: 20))
