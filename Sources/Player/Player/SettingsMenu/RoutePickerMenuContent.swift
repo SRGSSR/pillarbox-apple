@@ -36,15 +36,15 @@ private struct RoutePickerWrapper: UIViewRepresentable {
 }
 
 struct RoutePickerMenuContent: View {
+    private static let defaultActiveTintColor: Color = {
+        guard let color = AVRoutePickerView().activeTintColor else { return .blue }
+        return .init(uiColor: color)
+    }()
+
     let activeTintColor: Color?
     @ObservedObject var player: Player
 
     @Control private var control
-
-    public static let defaultActiveTintColor: Color = {
-        guard let color = AVRoutePickerView().activeTintColor else { return .blue }
-        return .init(uiColor: color)
-    }()
 
     var body: some View {
         SwiftUI.Button(action: sendAction) {
