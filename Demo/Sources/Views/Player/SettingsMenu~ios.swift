@@ -9,6 +9,9 @@ import PillarboxPlayer
 import SwiftUI
 
 struct SettingsMenu: View {
+    @AppStorage(UserDefaults.DemoSettingKey.routePickerSetting.rawValue)
+    private var routePickerSetting: RoutePickerSetting = .button
+
     let player: Player
     let isOverCurrentContext: Bool
 
@@ -23,6 +26,9 @@ struct SettingsMenu: View {
                 player.zoomMenu(gravity: $gravity)
             }
             metricsMenu()
+            if routePickerSetting == .menu {
+                player.routePickerMenu()
+            }
         } label: {
             Image(systemName: "ellipsis.circle")
                 .font(.system(size: 20))

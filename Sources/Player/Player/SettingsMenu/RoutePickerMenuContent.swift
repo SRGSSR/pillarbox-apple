@@ -36,6 +36,14 @@ private struct RoutePickerWrapper: UIViewRepresentable {
 }
 
 struct RoutePickerMenuContent: View {
+    private static let defaultActiveTintColor: Color = {
+        guard let color = AVRoutePickerView().activeTintColor else { return .blue }
+        return .init(uiColor: color)
+    }()
+
+    let activeTintColor: Color?
+    @ObservedObject var player: Player
+
     @Control private var control
 
     var body: some View {
@@ -43,11 +51,27 @@ struct RoutePickerMenuContent: View {
             Label {
                 Text(verbatim: "AirPlay")
             } icon: {
-                Image(systemName: "airplay.video")
+                icon()
             }
             .background {
                 RoutePickerWrapper(control: control)
             }
+        }
+    }
+
+    private var foregroundColor: Color {
+        activeTintColor ?? Self.defaultActiveTintColor
+    }
+
+    @ViewBuilder
+    private func icon() -> some View {
+        if player.isExternalPlaybackActive {
+            Image(systemName: "airplay.video")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(foregroundColor, foregroundColor.opacity(0.5))
+        }
+        else {
+            Image(systemName: "airplay.video")
         }
     }
 

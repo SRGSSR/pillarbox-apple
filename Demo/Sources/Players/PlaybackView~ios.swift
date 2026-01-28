@@ -72,6 +72,9 @@ private struct MainView: View {
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
 
+    @AppStorage(UserDefaults.DemoSettingKey.routePickerSetting.rawValue)
+    private var routePickerSetting: RoutePickerSetting = .button
+
     private var prioritizesVideoDevices: Bool {
         player.mediaType == .video
     }
@@ -318,11 +321,14 @@ private extension MainView {
         .contentShape(.rect)
     }
 
+    @ViewBuilder
     func routePickerView() -> some View {
-        RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
-            .tint(.white)
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 20)
+        if routePickerSetting == .button {
+            RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
+                .tint(.white)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 20)
+        }
     }
 }
 

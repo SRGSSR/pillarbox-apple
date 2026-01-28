@@ -63,6 +63,9 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
 
+    @AppStorage(UserDefaults.DemoSettingKey.routePickerSetting.rawValue)
+    private var routePickerSetting: RoutePickerSetting = .button
+
     @AppStorage(UserDefaults.DemoSettingKey.backwardSkipInterval.rawValue)
     private var backwardSkipInterval: TimeInterval = 10
 
@@ -179,12 +182,16 @@ extension SettingsView {
             }
             seekBehaviorPicker()
             qualityPicker()
+#if os(iOS)
+            routePicker()
+#endif
         } header: {
              Text("Player")
                 .headerStyle()
         }
     }
 
+#if os(iOS)
     private func skipsSection() -> some View {
         Section {
             skipPicker("Backward by", selection: $backwardSkipInterval)
@@ -194,6 +201,7 @@ extension SettingsView {
                 .headerStyle()
         }
     }
+#endif
 
     private func seekBehaviorPicker() -> some View {
         Picker("Seek behavior", selection: $seekBehaviorSetting) {
@@ -228,6 +236,16 @@ extension SettingsView {
         .pickerStyle(.navigationLink)
 #endif
     }
+
+#if os(iOS)
+    private func routePicker() -> some View {
+        Picker("Route picker", selection: $routePickerSetting) {
+            ForEach(RoutePickerSetting.allCases, id: \.self) { setting in
+                Text(setting.name).tag(setting)
+            }
+        }
+    }
+#endif
 
     private func debuggingSection() -> some View {
         Section {
