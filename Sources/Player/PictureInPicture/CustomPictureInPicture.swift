@@ -79,6 +79,7 @@ final class CustomPictureInPicture: NSObject {
                 controller?.contentSource = lastHostView.contentSource ?? .empty
             }
             else {
+                hostView.player = nil
                 controller?.contentSource = .empty
             }
         }
