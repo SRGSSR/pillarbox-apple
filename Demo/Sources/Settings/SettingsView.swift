@@ -182,7 +182,9 @@ extension SettingsView {
             }
             seekBehaviorPicker()
             qualityPicker()
+#if os(iOS)
             routePicker()
+#endif
         } header: {
              Text("Player")
                 .headerStyle()
