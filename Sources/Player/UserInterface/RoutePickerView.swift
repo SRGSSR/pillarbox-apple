@@ -23,7 +23,7 @@ private struct _RoutePickerView: UIViewRepresentable {
     }
 }
 
-/// A button to pick a playback route.
+/// A button to pick a playback route independently of a player.
 ///
 /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
 public struct RoutePickerView: View {
