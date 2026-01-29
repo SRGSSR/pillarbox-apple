@@ -25,6 +25,11 @@ private struct _RoutePickerView: UIViewRepresentable {
 
 /// A button to pick a playback route independently of a player.
 ///
+/// This view represents a button that users tap to stream audio/video content to a media receiver, such as a Mac or
+/// Apple TV. When the user taps the button, the system presents a popover that displays all of the nearby AirPlay
+/// devices that can receive and play back media. If your app prefers video content, the system displays video-capable
+/// devices higher in the list.
+///
 /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
 public struct RoutePickerView: View {
     private var prioritizesVideoDevices: Bool
