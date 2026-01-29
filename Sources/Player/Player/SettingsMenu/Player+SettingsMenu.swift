@@ -75,6 +75,8 @@ public extension Player {
     ///
     /// The returned view is intended for use as the content of a `Menu`. Using it for any other purpose results in
     /// undefined behavior.
+    ///
+    /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
     func routePickerMenu(activeTintColor: Color? = nil) -> some View {
         RoutePickerMenuContent(activeTintColor: activeTintColor, player: self)
     }

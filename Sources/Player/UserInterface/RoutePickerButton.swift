@@ -35,22 +35,45 @@ private struct RoutePickerWrapper: UIViewRepresentable {
     }
 }
 
-/// A button to pick a playback route.
-///
-/// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
-public struct RoutePickerButton<Content>: View where Content: View {
+private struct _RoutePickerButton<Content>: View where Content: View {
     @ObservedObject var player: Player
     let content: (Bool) -> Content
 
     @Control private var control
 
-    // swiftlint:disable:next missing_docs
-    public var body: some View {
+    var body: some View {
         SwiftUI.Button(action: sendAction) {
             content(player.isExternalPlaybackActive)
                 .background {
                     RoutePickerWrapper(control: control)
                 }
+        }
+    }
+
+    init(player: Player, @ViewBuilder content: @escaping (_ isExternalPlaybackActive: Bool) -> Content) {
+        self.player = player
+        self.content = content
+    }
+
+    private func sendAction() {
+        control.sendAction()
+    }
+}
+
+/// A button to pick a playback route.
+///
+/// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
+public struct RoutePickerButton<Content>: View where Content: View {
+    let player: Player
+    let content: (Bool) -> Content
+
+    // swiftlint:disable:next missing_docs
+    public var body: some View {
+        if !ProcessInfo.processInfo.isRunningOnMac {
+            _RoutePickerButton(player: player, content: content)
+        }
+        else {
+            EmptyView()
         }
     }
 
@@ -63,8 +86,6 @@ public struct RoutePickerButton<Content>: View where Content: View {
         self.player = player
         self.content = content
     }
-
-    private func sendAction() {
-        control.sendAction()
-    }
 }
+
+
