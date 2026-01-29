@@ -21,6 +21,7 @@ private final class Control {
 }
 
 private struct RoutePickerWrapper: UIViewRepresentable {
+    let prioritizesVideoDevices: Bool
     let control: Control
 
     func makeUIView(context: Context) -> AVRoutePickerView {
@@ -30,12 +31,15 @@ private struct RoutePickerWrapper: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: AVRoutePickerView, context: Context) {
-        guard let button = uiView.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
-        control.source = button
+        uiView.prioritizesVideoDevices = prioritizesVideoDevices
+        if let button = uiView.subviews.first(where: { $0 is UIButton }) as? UIButton {
+            control.source = button
+        }
     }
 }
 
 private struct _RoutePickerButton<Content>: View where Content: View {
+    let prioritizesVideoDevices: Bool
     let content: () -> Content
 
     @Control private var control
@@ -44,13 +48,9 @@ private struct _RoutePickerButton<Content>: View where Content: View {
         SwiftUI.Button(action: sendAction) {
             content()
                 .background {
-                    RoutePickerWrapper(control: control)
+                    RoutePickerWrapper(prioritizesVideoDevices: prioritizesVideoDevices, control: control)
                 }
         }
-    }
-
-    init(@ViewBuilder content: @escaping () -> Content) {
-        self.content = content
     }
 
     private func sendAction() {
@@ -67,12 +67,13 @@ private struct _RoutePickerButton<Content>: View where Content: View {
 ///
 /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
 public struct RoutePickerButton<Content>: View where Content: View {
+    private let prioritizesVideoDevices: Bool
     let content: () -> Content
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
         if !ProcessInfo.processInfo.isRunningOnMac {
-            _RoutePickerButton(content: content)
+            _RoutePickerButton(prioritizesVideoDevices: prioritizesVideoDevices, content: content)
         }
         else {
             EmptyView()
@@ -81,8 +82,13 @@ public struct RoutePickerButton<Content>: View where Content: View {
 
     /// Creates a route picker button.
     ///
-    /// - Parameter content: The content displayed by the button.
-    public init(@ViewBuilder content: @escaping () -> Content) {
+    /// - Parameters:
+    ///   - prioritizesVideoDevices: A Boolean setting whether or not the route picker should sort video
+    ///     capable output devices to the top of the list. Setting this to `true` will cause the route picker view to
+    ///     show a videocentric icon.
+    ///   - content: The content displayed by the button.
+    public init(prioritizesVideoDevices: Bool = false, @ViewBuilder content: @escaping () -> Content) {
+        self.prioritizesVideoDevices = prioritizesVideoDevices
         self.content = content
     }
 }

@@ -32,7 +32,7 @@ private struct _RoutePickerView: UIViewRepresentable {
 ///
 /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
 public struct RoutePickerView: View {
-    private var prioritizesVideoDevices: Bool
+    private let prioritizesVideoDevices: Bool
     private var activeTintColor: Color?
 
     // swiftlint:disable:next missing_docs
