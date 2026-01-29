@@ -68,6 +68,7 @@ public final class MetricsTracker: PlayerItemTracker {
                 session.start()
                 sendEvent(name: .start, data: startData(from: events))
             }
+            stopHeartbeat()
             sendEvent(name: .error, data: errorData(from: error))
             session.stop()
         default:
