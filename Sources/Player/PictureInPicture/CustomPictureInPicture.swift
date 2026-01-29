@@ -75,6 +75,7 @@ final class CustomPictureInPicture: NSObject {
     func dismantleHostView(_ hostView: PictureInPictureHostView) {
         hostViews.remove(hostView)
         if !isActive && controller?.contentSource == hostView.contentSource {
+            controller?.contentSource?.playerLayer?.player = nil
             if let lastHostView = hostViews.last {
                 controller?.contentSource = lastHostView.contentSource ?? .empty
             }
