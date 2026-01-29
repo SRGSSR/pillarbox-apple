@@ -14,26 +14,31 @@ struct RoutePickerMenuContent: View {
     }()
 
     let activeTintColor: Color?
-    let player: Player
+    @ObservedObject var player: Player
 
     var body: some View {
-        RoutePickerButton(player: player) { isExternalPlaybackActive in
+        RoutePickerButton {
             Label {
                 Text(verbatim: "AirPlay")
             } icon: {
-                if isExternalPlaybackActive {
-                    Image(systemName: "airplay.video")
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(foregroundColor, foregroundColor.opacity(0.5))
-                }
-                else {
-                    Image(systemName: "airplay.video")
-                }
+                icon()
             }
         }
     }
 
     private var foregroundColor: Color {
         activeTintColor ?? Self.defaultActiveTintColor
+    }
+
+    @ViewBuilder
+    private func icon() -> some View {
+        if player.isExternalPlaybackActive {
+            Image(systemName: "airplay.video")
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(foregroundColor, foregroundColor.opacity(0.5))
+        }
+        else {
+            Image(systemName: "airplay.video")
+        }
     }
 }

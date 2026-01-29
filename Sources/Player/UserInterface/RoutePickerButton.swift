@@ -36,22 +36,20 @@ private struct RoutePickerWrapper: UIViewRepresentable {
 }
 
 private struct _RoutePickerButton<Content>: View where Content: View {
-    @ObservedObject var player: Player
-    let content: (Bool) -> Content
+    let content: () -> Content
 
     @Control private var control
 
     var body: some View {
         SwiftUI.Button(action: sendAction) {
-            content(player.isExternalPlaybackActive)
+            content()
                 .background {
                     RoutePickerWrapper(control: control)
                 }
         }
     }
 
-    init(player: Player, @ViewBuilder content: @escaping (_ isExternalPlaybackActive: Bool) -> Content) {
-        self.player = player
+    init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
     }
 
@@ -64,13 +62,12 @@ private struct _RoutePickerButton<Content>: View where Content: View {
 ///
 /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
 public struct RoutePickerButton<Content>: View where Content: View {
-    let player: Player
-    let content: (Bool) -> Content
+    let content: () -> Content
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
         if !ProcessInfo.processInfo.isRunningOnMac {
-            _RoutePickerButton(player: player, content: content)
+            _RoutePickerButton(content: content)
         }
         else {
             EmptyView()
@@ -79,11 +76,8 @@ public struct RoutePickerButton<Content>: View where Content: View {
 
     /// Creates a route picker button.
     ///
-    /// - Parameters:
-    ///   - player: A player whose external playback state must be reflected by the button.
-    ///   - content: The content displayed in the button.
-    public init(player: Player, @ViewBuilder content: @escaping (_ isExternalPlaybackActive: Bool) -> Content) {
-        self.player = player
+    /// - Parameter content: The content displayed by the button.
+    public init(@ViewBuilder content: @escaping () -> Content) {
         self.content = content
     }
 }
