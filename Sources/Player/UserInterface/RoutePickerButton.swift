@@ -75,9 +75,6 @@ public struct RoutePickerButton<Content>: View where Content: View {
         if !ProcessInfo.processInfo.isRunningOnMac {
             _RoutePickerButton(prioritizesVideoDevices: prioritizesVideoDevices, content: content)
         }
-        else {
-            EmptyView()
-        }
     }
 
     /// Creates a route picker button.

@@ -40,9 +40,6 @@ public struct RoutePickerView: View {
         if !ProcessInfo.processInfo.isRunningOnMac {
             _RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices, activeTintColor: activeTintColor)
         }
-        else {
-            EmptyView()
-        }
     }
 
     /// Creates a route picker button.
