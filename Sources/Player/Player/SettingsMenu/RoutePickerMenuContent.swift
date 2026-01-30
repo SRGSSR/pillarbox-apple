@@ -13,11 +13,12 @@ struct RoutePickerMenuContent: View {
         return .init(uiColor: color)
     }()
 
+    let prioritizesVideoDevices: Bool
     let activeTintColor: Color?
     @ObservedObject var player: Player
 
     var body: some View {
-        RoutePickerButton {
+        RoutePickerButton(prioritizesVideoDevices: prioritizesVideoDevices) {
             Label {
                 Text(verbatim: "AirPlay")
             } icon: {

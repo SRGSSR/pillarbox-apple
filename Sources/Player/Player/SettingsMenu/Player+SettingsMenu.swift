@@ -82,7 +82,7 @@ public extension Player {
     /// undefined behavior.
     ///
     /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
-    func routePickerMenu(activeTintColor: Color? = nil) -> some View {
-        RoutePickerMenuContent(activeTintColor: activeTintColor, player: self)
+    func routePickerMenu(prioritizesVideoDevices: Bool = false, activeTintColor: Color? = nil) -> some View {
+        RoutePickerMenuContent(prioritizesVideoDevices: prioritizesVideoDevices, activeTintColor: activeTintColor, player: self)
     }
 }
