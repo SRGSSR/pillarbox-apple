@@ -24,6 +24,8 @@ For optimal compatibility with the ``PillarboxPlayer`` framework, certain specif
 - Set the `DEFAULT` attribute to `YES` **only** for the rendition that should be selected when the user has not made an explicit choice.
 - Set the `AUTOSELECT` attribute to `YES` for all renditions to enable automatic selection.
 
+> Important: Never include characteristics in the rendition `NAME`.
+
 #### Subtitle renditions
 
 - **Unforced Subtitles:** Set `AUTOSELECT` to `YES` for `SUBTITLES` and `CLOSED-CAPTIONS` renditions to allow selection in _Automatic_ mode.
@@ -35,6 +37,8 @@ For optimal compatibility with the ``PillarboxPlayer`` framework, certain specif
 
 - **CC:** Use the `CLOSED-CAPTIONS` type and set `AUTOSELECT` to `YES`.
 - **SDH:** Use the `SUBTITLES` type with the `public.accessibility.transcribes-spoken-dialog` and `public.accessibility.describes-music-and-sound` characteristics, and set `AUTOSELECT` to `YES`.
+
+> Important: Never include characteristics in the rendition `NAME`.
 
 Within a group of renditions (`EXT-X-MEDIA` tags with the same `TYPE` and `GROUP-ID`), tags that share the same `LANGUAGE` value must be [ordered](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Multivariant-Playlist) from most general (fewest or no `CHARACTERISTICS`) to most specific (the most `CHARACTERISTICS`). This ordering ensures that when no accessibility preferences are set, Pillarbox’s ``Player/setMediaSelectionPreference(_:for:)`` will match the general tags first.
 
