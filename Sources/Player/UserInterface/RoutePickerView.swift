@@ -23,7 +23,7 @@ private struct _RoutePickerView: UIViewRepresentable {
     }
 }
 
-/// A button to pick a playback route independently of a player.
+/// A button to pick a playback route.
 ///
 /// This view represents the standard button that users tap to stream audio/video content to a media receiver, such as
 /// a Mac or Apple TV. When the user taps the button, the system presents an interface that displays all of the nearby
