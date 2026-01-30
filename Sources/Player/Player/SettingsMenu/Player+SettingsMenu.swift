@@ -71,22 +71,18 @@ public extension Player {
 
     /// Returns content for a route picker button.
     ///  
-    /// - Parameters:
-    ///   - prioritizesVideoDevices: A Boolean setting whether or not the route picker should sort video capable output
-    ///     devices to the top of the list. Setting this to `true` will cause the route picker view to show a videocentric
-    ///     icon.
-    ///   - activeTintColor: The view's tint color when AirPlay is active or `nil` for the default color.
+    /// - Paramete activeTintColor: The view's tint color when AirPlay is active or `nil` for the default color.
     ///
     /// This view represents a menu item that users tap to stream audio/video content to a media receiver, such as a Mac
     /// or Apple TV. When the user taps the item, the system presents a popover that displays all of the nearby AirPlay
-    /// devices that can receive and play back media. If your app prefers video content, the system displays video-capable
-    /// devices higher in the list.
-    /// 
+    /// devices that can receive and play back media. If the associated player plays video content, the system displays
+    /// video-capable devices higher in the list and adjusts the button icon accordingly.
+    ///
     /// The returned view is intended for use as the content of a `Menu`. Using it for any other purpose results in
     /// undefined behavior.
     /// 
     /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
-    func routePickerMenu(prioritizesVideoDevices: Bool = false, activeTintColor: Color? = nil) -> some View {
-        RoutePickerMenuContent(prioritizesVideoDevices: prioritizesVideoDevices, activeTintColor: activeTintColor, player: self)
+    func routePickerMenu(activeTintColor: Color? = nil) -> some View {
+        RoutePickerMenuContent(activeTintColor: activeTintColor, player: self)
     }
 }

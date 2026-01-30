@@ -13,7 +13,6 @@ struct RoutePickerMenuContent: View {
         return .init(uiColor: color)
     }()
 
-    let prioritizesVideoDevices: Bool
     let activeTintColor: Color?
     @ObservedObject var player: Player
 
@@ -25,6 +24,10 @@ struct RoutePickerMenuContent: View {
                 icon()
             }
         }
+    }
+
+    private var prioritizesVideoDevices: Bool {
+        player.mediaType == .video
     }
 
     private var foregroundColor: Color {
