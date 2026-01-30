@@ -20,7 +20,7 @@ private final class Control {
     }
 }
 
-private struct RoutePickerWrapper: UIViewRepresentable {
+private struct _RoutePickerView: UIViewRepresentable {
     let prioritizesVideoDevices: Bool
     let control: Control
 
@@ -48,7 +48,7 @@ private struct _RoutePickerButton<Content>: View where Content: View {
         SwiftUI.Button(action: sendAction) {
             content()
                 .background {
-                    RoutePickerWrapper(prioritizesVideoDevices: prioritizesVideoDevices, control: control)
+                    _RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices, control: control)
                 }
         }
     }
