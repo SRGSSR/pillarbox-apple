@@ -31,15 +31,19 @@ struct RoutePickerMenuContent: View {
         activeTintColor ?? Self.defaultActiveTintColor
     }
 
+    private var imageName: String {
+        prioritizesVideoDevices ? "airplay.video" : "airplay.audio"
+    }
+
     @ViewBuilder
     private func icon() -> some View {
         if player.isExternalPlaybackActive {
-            Image(systemName: "airplay.video")
+            Image(systemName: imageName)
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(foregroundColor, foregroundColor.opacity(0.5))
         }
         else {
-            Image(systemName: "airplay.video")
+            Image(systemName: imageName)
         }
     }
 }
