@@ -70,7 +70,7 @@ public extension Player {
     }
 
     /// Returns content for a route picker button.
-    ///  
+    ///
     /// - Parameter activeTintColor: The view's tint color when AirPlay is active or `nil` for the default color.
     ///
     /// This view represents a menu item that users tap to stream audio/video content to a media receiver, such as a Mac

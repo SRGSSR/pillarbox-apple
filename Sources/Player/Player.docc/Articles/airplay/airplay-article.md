@@ -43,4 +43,4 @@ While AirPlay can be controlled from the iOS Control Center, including an AirPla
 - Add a ``RoutePickerView`` to your player layout to provide AirPlay controls directly in your app.
 - Ensure you specify an explicit size for the ``RoutePickerView``, as it otherwise occupies all available parent space.
 
-> Note: ``RoutePickerView`` provides the standard AirPlay route picking experience. If adding more buttons clutters your player layout, you can instead use ``Player/routePickerMenu(activeTintColor:)`` or ``RoutePickerButton`` to consolidate player settings and reduce interface clutter.
+> Note: ``RoutePickerView`` provides the standard AirPlay route picker button. To declutter your player layout, you can instead use ``Player/routePickerMenu(activeTintColor:)`` or ``RoutePickerButton`` to consolidate player settings into a dedicated custom interface.
