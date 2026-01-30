@@ -84,8 +84,7 @@ public struct RoutePickerButton<Content>: View where Content: View {
     ///
     /// - Parameters:
     ///   - prioritizesVideoDevices: A Boolean setting whether or not the route picker should sort video capable output
-    ///     devices to the top of the list. Setting this to `true` will cause the route picker view to show a videocentric
-    ///     icon.
+    ///     devices to the top of the list.
     ///   - content: The content displayed by the button.
     public init(prioritizesVideoDevices: Bool = false, @ViewBuilder content: @escaping () -> Content) {
         self.prioritizesVideoDevices = prioritizesVideoDevices
@@ -93,8 +92,14 @@ public struct RoutePickerButton<Content>: View where Content: View {
     }
 }
 
-#Preview {
+#Preview("Audio") {
     RoutePickerButton {
+        Label("AirPlay", systemImage: "airplay.audio")
+    }
+}
+
+#Preview("Video") {
+    RoutePickerButton(prioritizesVideoDevices: true) {
         Label("AirPlay", systemImage: "airplay.video")
     }
 }
