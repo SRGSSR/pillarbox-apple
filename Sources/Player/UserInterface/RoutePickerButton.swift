@@ -68,7 +68,7 @@ private struct _RoutePickerButton<Content>: View where Content: View {
 /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
 public struct RoutePickerButton<Content>: View where Content: View {
     private let prioritizesVideoDevices: Bool
-    let content: () -> Content
+    private let content: () -> Content
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
