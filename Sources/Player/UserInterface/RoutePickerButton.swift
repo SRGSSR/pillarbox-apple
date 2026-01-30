@@ -93,4 +93,8 @@ public struct RoutePickerButton<Content>: View where Content: View {
     }
 }
 
-
+#Preview {
+    RoutePickerButton {
+        Label("AirPlay", systemImage: "airplay.video")
+    }
+}
