@@ -98,6 +98,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``PictureInPictureButton``
 - ``PictureInPictureDelegate``
 - ``PictureInPicturePersistable``
+- ``RoutePickerButton``
 - ``RoutePickerView``
 
 ### Content Loading

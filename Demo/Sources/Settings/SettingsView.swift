@@ -238,10 +238,13 @@ extension SettingsView {
     }
 
 #if os(iOS)
+    @ViewBuilder
     private func routePicker() -> some View {
-        Picker("Route picker", selection: $routePickerSetting) {
-            ForEach(RoutePickerSetting.allCases, id: \.self) { setting in
-                Text(setting.name).tag(setting)
+        if !ProcessInfo.processInfo.isRunningOnMac {
+            Picker("Route picker", selection: $routePickerSetting) {
+                ForEach(RoutePickerSetting.allCases, id: \.self) { setting in
+                    Text(setting.name).tag(setting)
+                }
             }
         }
     }
