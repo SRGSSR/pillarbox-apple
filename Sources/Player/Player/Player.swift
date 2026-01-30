@@ -317,7 +317,6 @@ private extension Player {
     }
 
     func configureControlCenterPublishers() {
-        guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
         configureControlCenterMetadataUpdatePublisher()
         configureControlCenterRemoteCommandUpdatePublisher()
     }
