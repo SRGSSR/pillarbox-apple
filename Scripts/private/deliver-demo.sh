@@ -12,7 +12,7 @@ function usage {
 function install_tools {
     curl -Ssf https://pkgx.sh | sh &> /dev/null
     set -a
-    eval "$(pkgx +ruby@3.3.0 +bundle +rsvg-convert +magick)"
+    eval "$(pkgx +ruby@3.3.0 +bundle +rsvg-convert +gm)"
     set +a
 }
 
