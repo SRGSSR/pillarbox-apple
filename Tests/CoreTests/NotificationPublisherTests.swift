@@ -32,7 +32,7 @@ final class NotificationPublisherTests: XCTestCase {
         var object: TestObject? = TestObject()
         let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
 
-        weak var weakObject = object
+        weak let weakObject = object
         autoreleasepool {
             object = nil
         }

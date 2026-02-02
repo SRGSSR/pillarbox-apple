@@ -16,7 +16,7 @@ final class WeakCapturePublisherTests: XCTestCase {
         let publisher = Just("output")
             .weakCapture(object)
 
-        weak var weakObject = object
+        weak let weakObject = object
         autoreleasepool {
             object = nil
         }
