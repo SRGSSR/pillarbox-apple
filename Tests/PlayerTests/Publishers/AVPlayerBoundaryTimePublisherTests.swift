@@ -65,7 +65,7 @@ final class AVPlayerBoundaryTimePublisherTests: TestCase {
             ]
         )
 
-        weak var weakPlayer = player
+        weak let weakPlayer = player
         autoreleasepool {
             player = nil
         }
