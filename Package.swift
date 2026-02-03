@@ -32,7 +32,11 @@ let package = Package(
         .library(
             name: "PillarboxMonitoring",
             targets: ["PillarboxMonitoring"]
-        )
+        ),
+        .library(
+            name: "PillarboxStandardConnector",
+            targets: ["PillarboxStandardConnector"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/comScore/Comscore-Swift-Package-Manager.git", .upToNextMinor(from: "6.16.0")),
@@ -116,6 +120,13 @@ let package = Package(
             ]
         ),
         .target(
+            name: "PillarboxStandardConnector",
+            dependencies: [
+                .target(name: "PillarboxPlayer")
+            ],
+            path: "Sources/StandardConnector"
+        ),
+        .target(
             name: "PillarboxStreams",
             path: "Sources/Streams",
             resources: [
@@ -175,6 +186,13 @@ let package = Package(
             ],
             resources: [
                 .process("Resources")
+            ]
+        ),
+        .testTarget(
+            name: "StandardConnectorTests",
+            dependencies: [
+                .target(name: "PillarboxCircumspect"),
+                .target(name: "PillarboxStandardConnector")
             ]
         )
     ],
