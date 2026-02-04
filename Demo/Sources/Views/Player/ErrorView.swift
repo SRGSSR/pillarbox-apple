@@ -9,52 +9,6 @@ import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
-private struct DataErrorView: View {
-    let error: DataError
-    let player: Player
-
-    var body: some View {
-        switch error.kind {
-        case let .blocked(reason: reason):
-            switch reason {
-            case let .startDate(date) where date != nil:
-                CountdownView(endDate: date!, metadata: player.metadata)
-                    .onEnded(player.replay)
-            default:
-                ErrorLabel(message: error.localizedDescription, systemImage: Self.imageName(for: reason))
-            }
-        case .http:
-            ErrorLabel(message: error.localizedDescription, systemImage: "cloud.fill")
-        case .noResourceAvailable:
-            ErrorLabel(message: error.localizedDescription, systemImage: "exclamationmark.triangle.fill")
-        }
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
-    private static func imageName(for reason: MediaComposition.BlockingReason) -> String {
-        switch reason {
-        case .ageRating12:
-            return "12.circle.fill"
-        case .ageRating18:
-            return "18.circle.fill"
-        case .commercial:
-            return "megaphone.fill"
-        case .endDate, .startDate:
-            return "clock.fill"
-        case .geoblocked:
-            return "globe.europe.africa.fill"
-        case .journalistic:
-            return "newspaper.fill"
-        case .legal:
-            return "hand.raised.fill"
-        case .unknown:
-            return "exclamationmark.triangle.fill"
-        case .vpnOrProxyDetected:
-            return "key.icloud.fill"
-        }
-    }
-}
-
 private struct ErrorLabel: View {
     let message: String
     let systemImage: String
@@ -89,13 +43,47 @@ struct ErrorView: View {
 #endif
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
+    private static func imageName(for reason: MediaComposition.BlockingReason) -> String {
+        switch reason {
+        case .ageRating12:
+            return "12.circle.fill"
+        case .ageRating18:
+            return "18.circle.fill"
+        case .commercial:
+            return "megaphone.fill"
+        case .endDate, .startDate:
+            return "clock.fill"
+        case .geoblocked:
+            return "globe.europe.africa.fill"
+        case .journalistic:
+            return "newspaper.fill"
+        case .legal:
+            return "hand.raised.fill"
+        case .unknown:
+            return "exclamationmark.triangle.fill"
+        case .vpnOrProxyDetected:
+            return "key.icloud.fill"
+        }
+    }
+
     private func messageView() -> some View {
         UnavailableView {
             switch error {
-            case let error as DataError:
-                DataErrorView(error: error, player: player)
             case let error as NSError where error.domain == NSURLErrorDomain && error.code == URLError.notConnectedToInternet.rawValue:
                 ErrorLabel(message: error.localizedDescription, systemImage: "network.slash")
+            case let error as HttpError:
+                ErrorLabel(message: error.localizedDescription, systemImage: "cloud.fill")
+            case let error as SourceError:
+                ErrorLabel(message: error.localizedDescription, systemImage: "exclamationmark.triangle.fill")
+            case let error as BlockingError:
+                switch error.reason {
+                case let .startDate(date) where date != nil:
+                    CountdownView(endDate: date!, metadata: player.metadata)
+                        .onEnded(player.replay)
+                default:
+                    ErrorLabel(message: error.localizedDescription, systemImage: Self.imageName(for: error.reason))
+                }
             default:
                 ErrorLabel(message: error.localizedDescription, systemImage: "exclamationmark.triangle.fill")
             }

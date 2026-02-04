@@ -10,7 +10,7 @@ import Foundation
 extension Publisher {
     func mapHttpErrors() -> Publishers.TryMap<Self, Output> where Output == URLSession.DataTaskPublisher.Output {
         tryMap { result in
-            if let httpError = DataError.http(from: result.response) {
+            if let httpError = HttpError(response: result.response) {
                 throw httpError
             }
             return result
