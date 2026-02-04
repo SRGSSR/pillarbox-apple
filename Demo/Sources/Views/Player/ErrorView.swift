@@ -7,6 +7,7 @@
 import PillarboxCoreBusiness
 import PillarboxMonitoring
 import PillarboxPlayer
+import PillarboxStandardConnector
 import SwiftUI
 
 private struct ErrorLabel: View {

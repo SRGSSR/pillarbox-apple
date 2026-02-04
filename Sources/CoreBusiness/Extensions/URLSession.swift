@@ -6,6 +6,9 @@
 
 import Foundation
 
+@_spi(StandardConnectorPrivate)
+import PillarboxStandardConnector
+
 extension URLSession {
     /// Loads data for a request, throwing when HTTP errors are encountered.
     ///

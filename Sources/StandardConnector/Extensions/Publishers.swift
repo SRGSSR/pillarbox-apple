@@ -7,8 +7,10 @@
 import Combine
 import Foundation
 
-extension Publisher {
+public extension Publisher {
+    @_spi(StandardConnectorPrivate)
     func mapHttpErrors() -> Publishers.TryMap<Self, Output> where Output == URLSession.DataTaskPublisher.Output {
+        // swiftlint:disable:previous missing_docs
         tryMap { result in
             if let httpError = HttpError(response: result.response) {
                 throw httpError

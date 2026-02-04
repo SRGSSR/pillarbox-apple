@@ -14,13 +14,17 @@ public struct HttpError: LocalizedError {
     /// A readable error description.
     public let errorDescription: String?
 
-    init?(statusCode: Int) {
+    @_spi(StandardConnectorPrivate)
+    public init?(statusCode: Int) {
+        // swiftlint:disable:previous missing_docs
         guard statusCode >= 400 else { return nil }
         self.statusCode = statusCode
         self.errorDescription = HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode)
     }
 
-    init?(response: URLResponse) {
+    @_spi(StandardConnectorPrivate)
+    public init?(response: URLResponse) {
+        // swiftlint:disable:previous missing_docs
         guard let httpResponse = response as? HTTPURLResponse else { return nil }
         self.init(statusCode: httpResponse.statusCode)
     }
