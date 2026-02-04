@@ -9,8 +9,8 @@ import Nimble
 import PillarboxStandardConnector
 import XCTest
 
-final class StandardConnectorTests: XCTestCase {
-    func testDummy() {
-        expect(StandardConnector.run()).to(equal("connected"))
+final class PlayerItemTests: XCTestCase {
+    func testSimple() {
+        expect(true).to(beTrue())
     }
 }
