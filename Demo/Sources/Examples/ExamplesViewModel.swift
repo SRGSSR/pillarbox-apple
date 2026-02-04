@@ -127,7 +127,6 @@ final class ExamplesViewModel: ObservableObject {
 
     let cornerCaseMedias = [
         URNMedia.unknown,
-        URNMedia.expired,
         URLMedia.unknown,
         URLMedia.unauthorized,
         URLMedia.unavailableMp3

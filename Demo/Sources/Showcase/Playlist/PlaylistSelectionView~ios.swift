@@ -38,7 +38,6 @@ struct PlaylistSelectionView: View {
         URLMedia.unauthorized,
         URLMedia.unknown,
         URLMedia.unavailableMp3,
-        URNMedia.expired,
         URNMedia.unknown
     ]
 
