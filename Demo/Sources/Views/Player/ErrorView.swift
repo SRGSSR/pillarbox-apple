@@ -69,24 +69,7 @@ struct ErrorView: View {
 
     private func messageView() -> some View {
         UnavailableView {
-            switch error {
-            case let error as NSError where error.domain == NSURLErrorDomain && error.code == URLError.notConnectedToInternet.rawValue:
-                ErrorLabel(message: error.localizedDescription, systemImage: "network.slash")
-            case let error as HttpError:
-                ErrorLabel(message: error.localizedDescription, systemImage: "cloud.fill")
-            case let error as SourceError:
-                ErrorLabel(message: error.localizedDescription, systemImage: "exclamationmark.triangle.fill")
-            case let error as BlockingError:
-                switch error.reason {
-                case let .startDate(date) where date != nil:
-                    CountdownView(endDate: date!, metadata: player.metadata)
-                        .onEnded(player.replay)
-                default:
-                    ErrorLabel(message: error.localizedDescription, systemImage: Self.imageName(for: error.reason))
-                }
-            default:
-                ErrorLabel(message: error.localizedDescription, systemImage: "exclamationmark.triangle.fill")
-            }
+            label()
         } description: {
             if let subtitle {
                 Text(subtitle)
@@ -95,6 +78,33 @@ struct ErrorView: View {
                     .textSelection(.enabled)
 #endif
             }
+        }
+    }
+
+    @ViewBuilder
+    private func label() -> some View {
+        switch error {
+        case let error as NSError where error.domain == NSURLErrorDomain && error.code == URLError.notConnectedToInternet.rawValue:
+            ErrorLabel(message: error.localizedDescription, systemImage: "network.slash")
+        case let error as HttpError:
+            ErrorLabel(message: error.localizedDescription, systemImage: "cloud.fill")
+        case let error as SourceError:
+            ErrorLabel(message: error.localizedDescription, systemImage: "exclamationmark.triangle.fill")
+        case let error as BlockingError:
+            label(for: error)
+        default:
+            ErrorLabel(message: error.localizedDescription, systemImage: "exclamationmark.triangle.fill")
+        }
+    }
+
+    @ViewBuilder
+    private func label(for error: BlockingError) -> some View {
+        switch error.reason {
+        case let .startDate(date) where date != nil:
+            CountdownView(endDate: date!, metadata: player.metadata)
+                .onEnded(player.replay)
+        default:
+            ErrorLabel(message: error.localizedDescription, systemImage: Self.imageName(for: error.reason))
         }
     }
 }
