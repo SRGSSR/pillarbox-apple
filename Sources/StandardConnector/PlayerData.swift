@@ -8,6 +8,10 @@ import CoreMedia
 import Foundation
 import PillarboxPlayer
 
+// FIXME: Remove when minimum target is 17 and use `Never` instead.
+/// An object representing the absence of custom data.
+public struct EmptyCustomData: Decodable {}
+
 /// Metadata associated with content loaded.
 public struct PlayerData<CustomData: Decodable>: Decodable {
     enum CodingKeys: String, CodingKey {

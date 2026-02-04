@@ -17,7 +17,7 @@ public extension PlayerItem {
     ///   - configuration: The configuration to apply to the player item.
     static func standard<CustomData: Decodable>(
         request: URLRequest,
-        type: CustomData.Type,
+        type: CustomData.Type = EmptyCustomData.self,
         trackerAdapters: [TrackerAdapter<PlayerData<CustomData>>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
