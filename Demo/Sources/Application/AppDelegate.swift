@@ -12,7 +12,7 @@ import ShowTime
 import SRGDataProvider
 import UIKit
 
-@_spi(Private)
+@_spi(CoreBusinessPrivate)
 import PillarboxCoreBusiness
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
