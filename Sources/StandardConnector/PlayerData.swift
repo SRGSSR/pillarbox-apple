@@ -24,6 +24,7 @@ public struct PlayerData<CustomData: Decodable>: Decodable {
         case episodeNumber
         case _viewport = "viewport"
         case source
+        case drm
         case _chapters = "chapters"
         case _timeRanges = "timeRanges"
         case customData
@@ -45,6 +46,9 @@ public struct PlayerData<CustomData: Decodable>: Decodable {
 
     /// The source.
     public let source: Source
+
+    /// The DRM.
+    public let drm: DRM?
 
     /// Custom data.
     public let customData: CustomData?
@@ -151,5 +155,13 @@ extension PlayerData {
         case .monoscopic:
             return .monoscopic
         }
+    }
+}
+
+public extension PlayerData {
+    /// A DRM protection description.
+    struct DRM: Decodable {
+        /// The certificate URL.
+        public let certificateUrl: URL?
     }
 }
