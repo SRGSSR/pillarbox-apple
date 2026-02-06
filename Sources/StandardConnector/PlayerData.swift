@@ -28,19 +28,24 @@ public struct PlayerData<CustomData: Decodable>: Decodable {
         case customData
     }
 
-    let identifier: String?
-    let title: String?
-    let subtitle: String?
-    let description: String?
-    let posterUrl: URL?
-    let seasonNumber: Int?
-    let episodeNumber: Int?
-    let source: Source
+    private let identifier: String?
+    private let title: String?
+    private let subtitle: String?
+    private let description: String?
+    private let posterUrl: URL?
+    private let seasonNumber: Int?
+    private let episodeNumber: Int?
+
     // swiftlint:disable:next discouraged_optional_collection
     private let _chapters: [_Chapter]?
     // swiftlint:disable:next discouraged_optional_collection
     private let _timeRanges: [_TimeRange]?
-    let customData: CustomData?
+
+    /// The source.
+    public let source: Source
+
+    /// Custom data.
+    public let customData: CustomData?
 }
 
 extension PlayerData: AssetMetadata {
