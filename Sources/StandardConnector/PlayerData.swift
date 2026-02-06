@@ -89,8 +89,8 @@ extension PlayerData: AssetMetadata {
     }
 
     private func imageSource(from url: URL?) -> ImageSource {
-        guard let posterUrl else { return .none }
-        return .url(standardResolution: posterUrl)
+        guard let url else { return .none }
+        return .url(standardResolution: url)
     }
 }
 
