@@ -35,6 +35,7 @@ private extension PlayerItem {
         assetProvider: @escaping (PlayerData<CustomData>) -> Asset<PlayerData<CustomData>>,
     ) -> AnyPublisher<Asset<PlayerData<CustomData>>, Error> {
         URLSession.shared.dataTaskPublisher(for: request)
+            .mapHttpErrors()
             .map(\.data)
             .decode(type: PlayerData<CustomData>.self, decoder: JSONDecoder())
             .map { assetProvider($0) }
