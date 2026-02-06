@@ -6,6 +6,8 @@
 
 import Foundation
 
-struct Source: Decodable {
-    let url: URL
+/// A source.
+public struct Source: Decodable {
+    /// The media URL.
+    public let url: URL
 }
