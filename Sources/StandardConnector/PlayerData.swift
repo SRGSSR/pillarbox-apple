@@ -45,7 +45,7 @@ public struct PlayerData<CustomData: Decodable>: Decodable {
     private let _timeRanges: [_TimeRange]?
 
     /// The source.
-    public let source: Source
+    public let source: Source?
 
     /// The DRM.
     public let drm: DRM?
