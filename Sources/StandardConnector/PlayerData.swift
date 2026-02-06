@@ -22,6 +22,7 @@ public struct PlayerData<CustomData: Decodable>: Decodable {
         case posterUrl
         case seasonNumber
         case episodeNumber
+        case _viewport = "viewport"
         case source
         case _chapters = "chapters"
         case _timeRanges = "timeRanges"
@@ -35,6 +36,7 @@ public struct PlayerData<CustomData: Decodable>: Decodable {
     private let posterUrl: URL?
     private let seasonNumber: Int?
     private let episodeNumber: Int?
+    private let _viewport: _Viewport?
 
     // swiftlint:disable:next discouraged_optional_collection
     private let _chapters: [_Chapter]?
@@ -57,7 +59,7 @@ extension PlayerData: AssetMetadata {
             subtitle: subtitle,
             description: description,
             imageSource: imageSource(from: posterUrl),
-            viewport: .standard,
+            viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
             timeRanges: timeRanges
@@ -132,6 +134,22 @@ extension PlayerData {
                 start: .init(value: CMTimeValue(startTime), timescale: 1000),
                 end: .init(value: CMTimeValue(endTime), timescale: 1000)
             )
+        }
+    }
+}
+
+extension PlayerData {
+    private enum _Viewport: String, Decodable {
+        case standard = "STANDARD"
+        case monoscopic = "MONOSCOPIC"
+    }
+
+    var viewport: Viewport {
+        switch _viewport {
+        case .standard, .none:
+            return .standard
+        case .monoscopic:
+            return .monoscopic
         }
     }
 }
