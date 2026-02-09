@@ -13,7 +13,7 @@ import PillarboxPlayer
 public struct EmptyCustomData: Decodable {}
 
 /// Metadata associated with content loaded.
-public struct PlayerData<CustomData: Decodable>: Decodable {
+public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
     enum CodingKeys: String, CodingKey {
         case identifier
         case title
