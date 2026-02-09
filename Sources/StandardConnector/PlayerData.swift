@@ -15,19 +15,19 @@ public struct EmptyCustomData: Decodable {}
 /// Metadata associated with content loaded.
 public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
     enum CodingKeys: String, CodingKey {
-        case identifier
-        case title
-        case subtitle
-        case description
-        case posterUrl
-        case seasonNumber
-        case episodeNumber
-        case _viewport = "viewport"
-        case source
-        case drm
         case _chapters = "chapters"
         case _timeRanges = "timeRanges"
+        case _viewport = "viewport"
         case customData
+        case description
+        case drm
+        case episodeNumber
+        case identifier
+        case posterUrl
+        case seasonNumber
+        case source
+        case subtitle
+        case title
     }
 
     private let identifier: String?
