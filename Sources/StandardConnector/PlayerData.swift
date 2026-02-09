@@ -62,7 +62,7 @@ extension PlayerData: AssetMetadata {
             title: title,
             subtitle: subtitle,
             description: description,
-            imageSource: imageSource(from: posterUrl),
+            imageSource: Self.imageSource(from: posterUrl),
             viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
@@ -86,7 +86,7 @@ extension PlayerData: AssetMetadata {
             Chapter(
                 identifier: chapter.identifier,
                 title: chapter.title,
-                imageSource: imageSource(from: chapter.posterUrl),
+                imageSource: Self.imageSource(from: chapter.posterUrl),
                 timeRange: .init(
                     start: .init(value: CMTimeValue(chapter.startTime), timescale: 1000),
                     end: .init(value: CMTimeValue(chapter.endTime), timescale: 1000)
@@ -99,7 +99,7 @@ extension PlayerData: AssetMetadata {
         _timeRanges?.map(\.timeRange) ?? []
     }
 
-    private func imageSource(from url: URL?) -> ImageSource {
+    private static func imageSource(from url: URL?) -> ImageSource {
         guard let url else { return .none }
         return .url(standardResolution: url)
     }
