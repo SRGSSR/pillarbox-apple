@@ -9,6 +9,7 @@
 /// Mainly used for development-oriented purposes (e.g., unit testing).
 public struct CommandersActLabels: Decodable {
     private let _media_airplay_on: String?
+    private let _media_audiodescription_on: String?
     private let _media_position: String?
     private let _media_subtitles_on: String?
     private let _media_timeshift: String?
@@ -93,6 +94,12 @@ public struct CommandersActLabels: Decodable {
     /// The value of `media_audio_track`.
     public var media_audio_track: String?
 
+    /// The value of `media_audiodescription_on`.
+    public var media_audiodescription_on: Bool? {
+        // swiftlint:disable:previous discouraged_optional_boolean
+        extract(\._media_audiodescription_on)
+    }
+
     /// The value of `media_player_display`.
     public let media_player_display: String?
 
@@ -132,6 +139,7 @@ public struct CommandersActLabels: Decodable {
 private extension CommandersActLabels {
     enum CodingKeys: String, CodingKey {
         case _media_airplay_on = "media_airplay_on"
+        case _media_audiodescription_on = "media_audiodescription_on"
         case _media_position = "media_position"
         case _media_subtitles_on = "media_subtitles_on"
         case _media_timeshift = "media_timeshift"
