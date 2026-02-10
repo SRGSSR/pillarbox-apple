@@ -102,8 +102,8 @@ private struct MainView: View {
     @InfoViewActionsContentBuilder
     private func infoViewActionsContent() -> InfoViewActionsContent {
         if player.canSkipToDefault() {
-            Button(skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) {
-                player.skipToDefault()
+            Button(skipInfoViewActionTitle, systemImage: skipInfoViewActionSystemImage) { [weak player] in
+                player?.skipToDefault()
             }
         }
     }
