@@ -179,7 +179,8 @@ public extension SystemVideoView {
     ///    }
     /// ```
     ///
-    /// > Important: One or two actions are supported.
+    /// > Important: One or two actions are supported. To avoid playback continuing briefly after closing the
+    ///   player, ensure that actions only weakly retain any ``Player`` instance they interact with.
     ///
     /// @Image(source: info-view-actions, alt: "A screenshot of info view actions")
     @available(iOS, unavailable)
