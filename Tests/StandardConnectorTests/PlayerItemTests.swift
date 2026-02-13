@@ -13,7 +13,7 @@ import PillarboxPlayer
 
 import XCTest
 
-private enum ErrorMock: Error {
+private enum ErrorMock: Error, Equatable {
     case unknown
 }
 
@@ -44,5 +44,22 @@ final class PlayerItemTests: XCTestCase {
 
         let player = Player(item: playerItem)
         expect { (player.error as? HttpError)?.statusCode }.toEventually(equal(404))
+    }
+
+    func testBusinessError() {
+        URLProtocolMock.responseHandler = { request in
+            HttpResponseHandler(
+                data: Data("{}".utf8),
+                response: HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil),
+                error: nil
+            )
+        }
+
+        let playerItem = PlayerItem.standard(request: URLRequest(url: URL(string: "https://standard.connector.pillarbox.ch")!)) { playerData in
+            Asset.unavailable(with: ErrorMock.unknown, metadata: playerData)
+        }
+
+        let player = Player(item: playerItem)
+        expect { player.error as? ErrorMock }.toEventually(equal(.unknown))
     }
 }
