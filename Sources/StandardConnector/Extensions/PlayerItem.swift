@@ -38,6 +38,7 @@ private extension PlayerItem {
             .mapHttpErrors()
             .map(\.data)
             .decode(type: PlayerData<CustomData>.self, decoder: JSONDecoder())
+            .mapError { _ in SourceError() }
             .map { assetProvider($0) }
             .eraseToAnyPublisher()
     }
