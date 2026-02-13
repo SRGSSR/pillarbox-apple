@@ -62,4 +62,21 @@ final class PlayerItemTests: XCTestCase {
         let player = Player(item: playerItem)
         expect { player.error as? ErrorMock }.toEventually(equal(.unknown))
     }
+
+    func testSourceError() {
+        URLProtocolMock.responseHandler = { request in
+            HttpResponseHandler(
+                data: Data(),
+                response: HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil),
+                error: nil
+            )
+        }
+
+        let playerItem = PlayerItem.standard(request: URLRequest(url: URL(string: "https://standard.connector.pillarbox.ch")!)) { playerData in
+            Asset.unavailable(with: ErrorMock.unknown, metadata: playerData)
+        }
+
+        let player = Player(item: playerItem)
+        expect { player.error as? SourceError }.toEventuallyNot(beNil())
+    }
 }
