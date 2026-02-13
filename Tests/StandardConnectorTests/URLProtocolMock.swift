@@ -28,10 +28,10 @@ class URLProtocolMock: URLProtocol {
         if let response = responseHandler.response {
             client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         }
-        else if let data = responseHandler.data {
+        if let data = responseHandler.data {
             client?.urlProtocol(self, didLoad: data)
         }
-        else if let error = responseHandler.error {
+        if let error = responseHandler.error {
             client?.urlProtocol(self, didFailWithError: error)
         }
         client?.urlProtocolDidFinishLoading(self)
