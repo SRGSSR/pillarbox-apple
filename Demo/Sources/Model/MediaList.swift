@@ -214,8 +214,7 @@ enum MediaList {
     ]
 
     static let videosWithOnlyFailingUrns = [
-        URNMedia.unknown,
-        URNMedia.expired
+        URNMedia.unknown
     ]
 
     static let videosWithOnlyFailingUrls = [
@@ -226,7 +225,6 @@ enum MediaList {
     static let videosWithFailingUrlsAndUrns = [
         URNMedia.unknown,
         URLMedia.unknown,
-        URNMedia.expired,
         URLMedia.unauthorized,
         URLMedia.unavailableMp3
     ]

@@ -6,6 +6,9 @@
 
 import Foundation
 
+@_spi(StandardConnectorPrivate)
+import PillarboxStandardConnector
+
 extension URLSession {
     /// Loads data for a request, throwing when HTTP errors are encountered.
     ///
@@ -15,7 +18,7 @@ extension URLSession {
     /// - Returns: Data and response.
     func httpData(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> (Data, URLResponse) {
         let (data, response) = try await data(for: request, delegate: delegate)
-        if let httpError = DataError.http(from: response) {
+        if let httpError = HttpError(response: response) {
             throw httpError
         }
         return (data, response)
@@ -29,7 +32,7 @@ extension URLSession {
     /// - Returns: Data and response.
     func httpData(from url: URL, delegate: URLSessionTaskDelegate? = nil) async throws -> (Data, URLResponse) {
         let (data, response) = try await data(from: url, delegate: delegate)
-        if let httpError = DataError.http(from: response) {
+        if let httpError = HttpError(response: response) {
             throw httpError
         }
         return (data, response)

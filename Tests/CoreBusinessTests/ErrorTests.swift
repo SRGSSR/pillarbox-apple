@@ -11,16 +11,8 @@ import Nimble
 import XCTest
 
 final class ErrorTests: XCTestCase {
-    func testHttpError() {
-        expect(DataError.http(withStatusCode: 404)).notTo(beNil())
-    }
-
-    func testNotHttpNSError() {
-        expect(DataError.http(withStatusCode: 200)).to(beNil())
-    }
-
     func testErrorLog() {
-        let delegate = FailedResourceLoaderDelegate(error: DataError.blocked(reason: .startDate(nil)))
+        let delegate = FailedResourceLoaderDelegate(error: BlockingError(reason: .startDate(nil)))
         let player = Player(item: .custom(url: URL.failing, delegate: delegate))
         expect(player.systemPlayer.currentItem?.errorLog()).toEventuallyNot(beNil())
     }

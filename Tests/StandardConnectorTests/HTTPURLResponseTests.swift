@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import PillarboxCoreBusiness
+@testable import PillarboxStandardConnector
 
 import Nimble
 import XCTest

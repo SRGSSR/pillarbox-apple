@@ -5,9 +5,10 @@ builder:
     - platform: ios
       documentation_targets: [
         PillarboxPlayer,
+        PillarboxStandardConnector,
         PillarboxCoreBusiness,
         PillarboxMonitoring,
         PillarboxAnalytics,
         PillarboxCore,
-        PillarboxCircumspect,
+        PillarboxCircumspect
       ]

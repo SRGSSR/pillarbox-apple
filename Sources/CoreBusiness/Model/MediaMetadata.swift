@@ -5,6 +5,10 @@
 //
 
 import PillarboxPlayer
+
+@_spi(StandardConnectorPrivate)
+import PillarboxStandardConnector
+
 import UIKit
 
 /// Metadata associated with content loaded from a URN.
@@ -78,7 +82,7 @@ public struct MediaMetadata {
     init(mediaCompositionResponse: MediaCompositionResponse, dataProvider: DataProvider) throws {
         let mediaComposition = mediaCompositionResponse.mediaComposition
         guard let mainChapter = mediaComposition.chapter(for: mediaComposition.chapterUrn) else {
-            throw DataError.noResourceAvailable
+            throw SourceError()
         }
         self.mediaComposition = mediaComposition
         self.mediaCompositionUrl = mediaCompositionResponse.response.url

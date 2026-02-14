@@ -100,6 +100,8 @@ struct TimeSlider: View {
             return .orange
         case .blocked:
             return .red
+        case .custom:
+            return .blue
         }
     }
 
