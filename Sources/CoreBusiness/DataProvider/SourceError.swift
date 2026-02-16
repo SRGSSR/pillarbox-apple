@@ -16,9 +16,4 @@ public struct SourceError: LocalizedError {
             comment: "Generic error message returned when no playable resources could be found"
         )
     }
-
-    @_spi(StandardConnectorPrivate)
-    public init() {
-        // swiftlint:disable:previous missing_docs
-    }
 }

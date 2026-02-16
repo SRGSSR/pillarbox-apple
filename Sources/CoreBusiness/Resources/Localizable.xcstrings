@@ -1,6 +1,41 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "No playable resources could be found." : {
+      "comment" : "Generic error message returned when no playable resources could be found",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine abspielbaren Inhalte gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No playable resources could be found."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune ressource jouable n'a pu être trouvée."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non è stato possibile trovare elementi riproducibili."
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na chattà naginas resursas correspundentas."
+          }
+        }
+      }
+    },
     "This commercial content is not available." : {
       "comment" : "Blocking reason description message",
       "localizations" : {
