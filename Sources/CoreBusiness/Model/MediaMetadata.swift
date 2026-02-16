@@ -5,10 +5,6 @@
 //
 
 import PillarboxPlayer
-
-@_spi(StandardConnectorPrivate)
-import PillarboxStandardConnector
-
 import UIKit
 
 /// Metadata associated with content loaded from a URN.
