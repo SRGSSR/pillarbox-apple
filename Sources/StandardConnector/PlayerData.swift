@@ -12,7 +12,7 @@ import PillarboxPlayer
 /// An object representing the absence of custom data.
 public struct EmptyCustomData: Decodable {}
 
-/// Metadata associated with content loaded.
+/// Metadata associated with content loaded in a player.
 public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
     enum CodingKeys: String, CodingKey {
         case _chapters = "chapters"
