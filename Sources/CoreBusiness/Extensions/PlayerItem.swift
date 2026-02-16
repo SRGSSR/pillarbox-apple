@@ -10,6 +10,9 @@ import PillarboxAnalytics
 import PillarboxMonitoring
 import PillarboxPlayer
 
+@_spi(StandardConnectorPrivate)
+import PillarboxStandardConnector
+
 public extension PlayerItem {
     /// Creates a player item from a URN.
     ///
@@ -108,10 +111,10 @@ private extension PlayerItem {
 
     private static func asset(metadata: MediaMetadata, configuration: PlaybackConfiguration, dataProvider: DataProvider) -> Asset<MediaMetadata> {
         if let blockingReason = metadata.blockingReason {
-            return .unavailable(with: DataError.blocked(reason: blockingReason), metadata: metadata)
+            return .unavailable(with: BlockingError(reason: blockingReason), metadata: metadata)
         }
         guard let resource = metadata.resource else {
-            return .unavailable(with: DataError.noResourceAvailable, metadata: metadata)
+            return .unavailable(with: SourceError(), metadata: metadata)
         }
         let configuration = assetConfiguration(for: resource, configuration: configuration)
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {

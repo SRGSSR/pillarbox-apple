@@ -32,6 +32,10 @@ let package = Package(
         .library(
             name: "PillarboxMonitoring",
             targets: ["PillarboxMonitoring"]
+        ),
+        .library(
+            name: "PillarboxStandardConnector",
+            targets: ["PillarboxStandardConnector"]
         )
     ],
     dependencies: [
@@ -72,7 +76,8 @@ let package = Package(
             name: "PillarboxCoreBusiness",
             dependencies: [
                 .target(name: "PillarboxAnalytics"),
-                .target(name: "PillarboxMonitoring")
+                .target(name: "PillarboxMonitoring"),
+                .target(name: "PillarboxStandardConnector")
             ],
             path: "Sources/CoreBusiness",
             resources: [
@@ -113,6 +118,16 @@ let package = Package(
             ],
             plugins: [
                 .plugin(name: "PillarboxPackageInfoPlugin")
+            ]
+        ),
+        .target(
+            name: "PillarboxStandardConnector",
+            dependencies: [
+                .target(name: "PillarboxPlayer")
+            ],
+            path: "Sources/StandardConnector",
+            resources: [
+                .process("Resources")
             ]
         ),
         .target(
@@ -175,6 +190,13 @@ let package = Package(
             ],
             resources: [
                 .process("Resources")
+            ]
+        ),
+        .testTarget(
+            name: "StandardConnectorTests",
+            dependencies: [
+                .target(name: "PillarboxCircumspect"),
+                .target(name: "PillarboxStandardConnector")
             ]
         )
     ],

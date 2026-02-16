@@ -15,6 +15,9 @@ public struct TimeRange: Hashable {
 
         /// Blocked.
         case blocked
+
+        /// Custom.
+        case custom(String)
     }
 
     /// The credits type.

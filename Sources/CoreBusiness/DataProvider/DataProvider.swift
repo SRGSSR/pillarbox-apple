@@ -7,6 +7,9 @@
 import Combine
 import Foundation
 
+@_spi(StandardConnectorPrivate)
+import PillarboxStandardConnector
+
 final class DataProvider {
     private let server: Server
     private let session = URLSession(configuration: .default)

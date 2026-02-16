@@ -6,6 +6,9 @@
 
 @testable import PillarboxCoreBusiness
 
+@_spi(StandardConnectorPrivate)
+import PillarboxStandardConnector
+
 import PillarboxCircumspect
 import XCTest
 
@@ -18,7 +21,7 @@ final class DataProviderTests: XCTestCase {
 
     func testNonExistingMediaMetadata() {
         expectFailure(
-            DataError.http(withStatusCode: 404),
+            HttpError(statusCode: 404),
             from: DataProvider().mediaCompositionPublisher(forUrn: "urn:rts:video:unknown")
         )
     }
