@@ -63,7 +63,7 @@ final class PlayerItemTests: XCTestCase {
         expect { player.error as? ErrorMock }.toEventually(equal(.unknown))
     }
 
-    func testSourceError() {
+    func testDecodingError() {
         URLProtocolMock.responseHandler = { request in
             HttpResponseHandler(
                 data: Data(),
@@ -77,6 +77,6 @@ final class PlayerItemTests: XCTestCase {
         }
 
         let player = Player(item: playerItem)
-        expect { player.error as? SourceError }.toEventuallyNot(beNil())
+        expect { player.error as? DecodingError }.toEventuallyNot(beNil())
     }
 }
