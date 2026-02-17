@@ -6,7 +6,9 @@
 
 import Foundation
 
-/// Http error.
+/// An error representing an HTTP failure.
+///
+/// `HttpError` is created from an HTTP status code greater than or equal to 400.
 public struct HttpError: LocalizedError {
     /// A code.
     public let statusCode: Int

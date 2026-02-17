@@ -10,9 +10,14 @@ import PillarboxPlayer
 
 // FIXME: Remove when minimum target is 17 and use `Never` instead.
 /// An object representing the absence of custom data.
+///
+/// Use `Never` when targeting iOS 17 or later.
 public struct EmptyCustomData: Decodable {}
 
 /// Metadata associated with content loaded in a player.
+///
+/// Represents the standard metadata returned by a backend
+/// endpoint and used to configure a playable `Asset`.
 public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
     enum CodingKeys: String, CodingKey {
         case _chapters = "chapters"
