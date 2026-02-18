@@ -4,11 +4,11 @@
     @PageColor(blue)
 }
 
-Provides a ready-to-use metadata connector.
+Connect to a standard metadata source.
 
 ## Overview
 
-The PillarboxStandardConnector framework provides a standard way to consume media metadata that comply with Pillarbox standard format.
+The PillarboxStandardConnector framework provides a standard way to consume media metadata that complies with Pillarbox standard format.
 It establishes a clear contract between backends and Pillarbox clients, ensuring consistent metadata decoding.
 
 When creating a standard player item, the connector:
