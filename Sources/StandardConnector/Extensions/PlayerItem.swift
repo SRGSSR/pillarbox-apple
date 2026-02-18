@@ -9,16 +9,22 @@ import Foundation
 import PillarboxPlayer
 
 public extension PlayerItem {
-    /// Creates a player item from a URLRequest.
+    /// Creates a player item from a backend endpoint providing Pillarbox-standard metadata.
+    ///
     /// - Parameters:
-    ///   - request: The URL request.
-    ///   - type: The custom data type to decode the response.
-    ///   - decoder: A JSON decoder.
+    ///   - request: The `URLRequest` to fetch metadata from.
+    ///   - type: The type of custom metadata to decode. Defaults to `EmptyCustomData`.
+    ///   - decoder: A `JSONDecoder` used to decode the response. Defaults to `JSONDecoder()`.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - assetProvider: A closure for creating an `Asset` from a `PlayerData`.
+    ///   - assetProvider: A closure that receives the decoded `PlayerData` and returns an `Asset`.
+    ///
+    /// This method fetches metadata from the provided endpoint and decodes it into a `PlayerData` object.
+    ///
+    /// The connector does not create the `Asset` automatically. Users must provide an `assetProvider` closure that transforms
+    /// the decoded `PlayerData` into a playable `Asset`.
     static func standard<CustomData>(
         request: URLRequest,
-        type: CustomData.Type = EmptyCustomData.self,
+        type: CustomData.Type,
         decoder: JSONDecoder = JSONDecoder(),
         trackerAdapters: [TrackerAdapter<PlayerData<CustomData>>] = [],
         assetProvider: @escaping (PlayerData<CustomData>) -> Asset<PlayerData<CustomData>>
@@ -27,6 +33,27 @@ public extension PlayerItem {
             publisher: publisher(request: request, type: type, decoder: decoder, assetProvider: assetProvider),
             trackerAdapters: trackerAdapters
         )
+    }
+
+    /// Creates a player item from a backend endpoint providing Pillarbox-standard metadata.
+    ///
+    /// - Parameters:
+    ///   - request: The `URLRequest` to fetch metadata from.
+    ///   - decoder: A `JSONDecoder` used to decode the response. Defaults to `JSONDecoder()`.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - assetProvider: A closure that receives the decoded `PlayerData` and returns an `Asset`.
+    ///
+    /// This method fetches metadata from the provided endpoint and decodes it into a `PlayerData` object.
+    ///
+    /// The connector does not create the `Asset` automatically. Users must provide an `assetProvider` closure that transforms
+    /// the decoded `PlayerData` into a playable `Asset`.
+    static func standard(
+        request: URLRequest,
+        decoder: JSONDecoder = JSONDecoder(),
+        trackerAdapters: [TrackerAdapter<PlayerData<EmptyCustomData>>] = [],
+        assetProvider: @escaping (PlayerData<EmptyCustomData>) -> Asset<PlayerData<EmptyCustomData>>
+    ) -> Self {
+        Self.standard(request: request, type: EmptyCustomData.self, decoder: decoder, trackerAdapters: trackerAdapters, assetProvider: assetProvider)
     }
 }
 

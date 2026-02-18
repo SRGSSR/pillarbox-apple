@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// A source.
+/// Represents the media source for a playable asset.
 public struct Source: Decodable {
     /// The media URL.
     public let url: URL
