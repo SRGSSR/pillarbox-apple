@@ -1,5 +1,5 @@
 {
-  "originHash" : "7da825c06af0398383cd3c18b07d055b09f07614d19946179618ca9ce1c33a3b",
+  "originHash" : "951aab17a5d6f34e53bc7633ddcea830377f57a827374cd29428bab43fe997f6",
   "pins" : [
     {
       "identity" : "comscore-swift-package-manager",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CommandersAct/iOSV5.git",
       "state" : {
-        "revision" : "a4c2621326b115f254e2193f2fd5a678d48fd8eb",
-        "version" : "5.4.17"
+        "revision" : "3b484abc866976f2cd94f3a499e198ec002f86a9",
+        "version" : "5.4.19"
       }
     },
     {
