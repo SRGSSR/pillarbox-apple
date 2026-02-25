@@ -7,9 +7,6 @@
 import Foundation
 
 private let kAppleImageUrl = URL("https://www.apple.com/newsroom/images/default/apple-logo-og.jpg?202312141200")
-private let kBitmovinImageUrl = URL("""
-    https://img.redbull.com/images/c_crop,w_3840,h_1920,x_0,y_0,f_auto,q_auto/c_scale,w_1200/redbullcom/tv/FO-1MR39KNMH2111/fo-1mr39knmh2111-featuremedia
-    """)
 private let kUnifiedStreamingImageUrl1 = URL("https://mango.blender.org/wp-content/gallery/4k-renders/01_thom_celia_bridge.jpg")
 private let kUnifiedStreamingImageUrl2 = URL("https://website-storage.unified-streaming.com/images/_1200x630_crop_center-center_none/default-facebook.png")
 
@@ -172,31 +169,6 @@ enum URLMedia {
         title: "Unauthorized URL",
         subtitle: "Content which cannot be accessed",
         type: .url("https://httpbin.org/status/403")
-    )
-    static let bitmovinOnDemandMultipleTracks = Media(
-        title: "Multiple subtitles and audio tracks",
-        imageUrl: "https://durian.blender.org/wp-content/uploads/2010/06/05.8b_comp_000272.jpg",
-        type: .url("https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8")
-    )
-    static let bitmovinOnDemand_4K_HEVC = Media(
-        title: "4K, HEVC",
-        imageUrl: "https://peach.blender.org/wp-content/uploads/bbb-splash.png",
-        type: .url("https://cdn.bitmovin.com/content/encoding_test_dash_hls/4k/hls/4k_profile/master.m3u8")
-    )
-    static let bitmovinOnDemandSingleAudio = Media(
-        title: "VoD, single audio track",
-        imageUrl: kBitmovinImageUrl,
-        type: .url("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
-    )
-    static let bitmovinOnDemandAES128 = Media(
-        title: "AES-128",
-        imageUrl: kBitmovinImageUrl,
-        type: .url("https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")
-    )
-    static let bitmovinOnDemandProgressive = Media(
-        title: "AVC Progressive",
-        imageUrl: kBitmovinImageUrl,
-        type: .url("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/MI201109210084_mpeg-4_hd_high_1080p25_10mbits.mp4")
     )
     static let unifiedStreamingOnDemand_fMP4 = Media(
         title: "Fragmented MP4",
@@ -432,11 +404,6 @@ enum URLMedia {
     static let mux_LowLatency = Media(
         title: "Low-Latency",
         type: .url("https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8")
-    )
-    static let bitmovin_360 = Media(
-        title: "Bitmovin 360°",
-        imageUrl: "https://www.rts.ch/2017/02/24/11/43/8414076.image/16x9",
-        type: .monoscopicUrl("https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8")
     )
     static let apple_360 = Media(
         title: "Apple 360°",

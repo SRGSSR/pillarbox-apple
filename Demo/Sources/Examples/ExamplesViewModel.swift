@@ -44,14 +44,6 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.uhdVideoHLS
     ]
 
-    let bitmovinMedias = [
-        URLMedia.bitmovinOnDemandMultipleTracks,
-        URLMedia.bitmovinOnDemand_4K_HEVC,
-        URLMedia.bitmovinOnDemandSingleAudio,
-        URLMedia.bitmovinOnDemandAES128,
-        URLMedia.bitmovinOnDemandProgressive
-    ]
-
     let unifiedStreamingMedias = [
         URLMedia.unifiedStreamingOnDemand_fMP4,
         URLMedia.unifiedStreamingOnDemandKeyRotation,
@@ -116,7 +108,6 @@ final class ExamplesViewModel: ObservableObject {
 
     let threeSixtyMedias = [
         URNMedia.gothard_360,
-        URLMedia.bitmovin_360,
         URLMedia.apple_360
     ]
 
