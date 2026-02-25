@@ -180,3 +180,11 @@ When playing a video livestream that offers a DVR window, the player incorrectly
 ### Workaround
 
 Apps that require this behavior to be handled correctly can manage [audio session interruptions](https://developer.apple.com/documentation/avfaudio/handling-audio-interruptions) to save and restore the current playback position.
+
+## FairPlay-protected content playback fails with Lightning adapter (A1438) on iOS 18 and above (FB22052832)
+
+When using an official Lightning-to-HDMI Apple adapter (A1438) to connect a Lightning-equipped iOS device to a screen, using an appropriate HDMI cable, playback always fails with an error when playing FairPlay protected content on iOS 18 and 26.
+
+### Workaround
+
+No workaround is available yet.
