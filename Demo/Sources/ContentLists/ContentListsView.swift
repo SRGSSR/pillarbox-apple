@@ -29,8 +29,8 @@ struct ContentListsView: View {
 
     @ViewBuilder
     private func content() -> some View {
-        section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
-        section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
+        section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF])
+        section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF])
         section(for: .tvLivestreams, image: "livephoto.play", vendors: [.RSI, .RTR, .RTS, .SRF])
         section(for: .tvShows, image: "rectangle.on.rectangle.angled", vendors: [.RSI, .RTR, .RTS, .SRF])
         section(for: .liveCenterVideos, image: "sportscourt", vendors: [.RSI, .RTS, .SRF])
