@@ -45,7 +45,7 @@ struct SearchView: View {
         .navigationTitle("Search")
 #endif
         .searchScopes16_4($model.vendor) {
-            ForEach([SRGVendor.RSI, .RTR, .RTS, .SRF, .SWI], id: \.self) { vendor in
+            ForEach([SRGVendor.RSI, .RTR, .RTS, .SRF], id: \.self) { vendor in
                 Text(vendor.name).tag(vendor)
             }
         }
