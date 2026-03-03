@@ -6,6 +6,10 @@
 
 import Foundation
 
-struct Downloader {
-    let downloads: [Download] = []
+final class Downloader {
+    private(set) var downloads: [Download] = []
+
+    func add(url: URL) {
+        downloads.append(Download())
+    }
 }
