@@ -4,4 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-struct Download {}
+import Foundation
+
+struct Download: Hashable {
+    let url: URL
+}

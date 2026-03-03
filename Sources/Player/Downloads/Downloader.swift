@@ -7,9 +7,16 @@
 import Foundation
 
 final class Downloader {
-    private(set) var downloads: [Download] = []
+    private(set) var downloads: Set<Download> = []
 
-    func add(url: URL) {
-        downloads.append(Download())
+    @discardableResult
+    func add(url: URL) -> Download {
+        let download = Download(url: url)
+        downloads.insert(download)
+        return download
+    }
+
+    func remove(_ download: Download) {
+        downloads.remove(download)
     }
 }
