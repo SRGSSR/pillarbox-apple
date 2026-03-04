@@ -6,6 +6,7 @@
 
 import AVFoundation
 
+#if DEBUG
 public final class Downloader: ObservableObject {
     @Published private var _downloads: Set<Download> = []
 
@@ -32,3 +33,4 @@ public final class Downloader: ObservableObject {
         _downloads.remove(download)
     }
 }
+#endif

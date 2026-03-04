@@ -7,6 +7,7 @@
 import PillarboxPlayer
 import SwiftUI
 
+#if DEBUG
 struct DownloadsView: View {
     @StateObject private var downloader = Downloader()
 
@@ -40,3 +41,4 @@ struct DownloadsView: View {
         DownloadsView()
     }
 }
+#endif
