@@ -17,7 +17,7 @@ public struct CommandersActGlobals {
     public init(
         consentServices: [String],
         profileIdentifier: String? = nil,
-        labels: [String: String]
+        labels: [String: String] = [:]
     ) {
         self.labels = labels.merging([
             "consent_services": consentServices.joined(separator: ","),
