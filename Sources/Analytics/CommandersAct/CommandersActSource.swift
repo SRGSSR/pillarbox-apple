@@ -14,7 +14,7 @@ public struct CommandersActSource {
     ///   - page: Page information.
     ///   - section: Section information.
     ///   - labels: Additional information associated with the source.
-    public init(page: CommandersActPage, section: CommandersActSection? = nil, labels: [String: String] = [:]) {
+    public init(page: CommandersActLocation, section: CommandersActLocation? = nil, labels: [String: String] = [:]) {
         self.labels = labels
     }
 }
