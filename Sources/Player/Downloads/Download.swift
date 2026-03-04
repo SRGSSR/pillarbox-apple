@@ -23,10 +23,12 @@ public final class Download: ObservableObject {
         task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
 
         task.publisher(for: \.state)
+            .receiveOnMainThread()
             .assign(to: &$state)
 
         task.progress.publisher(for: \.fractionCompleted)
             .map { $0.clamped(to: 0...1) }
+            .receiveOnMainThread()
             .assign(to: &$progress)
 
         task.resume()

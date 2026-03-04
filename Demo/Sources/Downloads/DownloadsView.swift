@@ -90,6 +90,12 @@ private struct DownloadCell: View {
                     .resizable()
             }
             .frame(width: 40, height: 40)
+        case .canceling:
+            Text("Cancelled")
+                .foregroundStyle(.red)
+        case .completed:
+            Image(systemName: "checkmark")
+                .foregroundStyle(.green)
         default:
             EmptyView()
         }
