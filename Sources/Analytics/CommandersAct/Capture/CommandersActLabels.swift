@@ -135,11 +135,6 @@ public struct CommandersActLabels: Decodable {
         extract(\._media_volume)
     }
 
-    private func extract<T>(_ keyPath: KeyPath<Self, String?>) -> T? where T: LosslessStringConvertible {
-        guard let value = self[keyPath: keyPath] else { return nil }
-        return .init(value)
-    }
-
     // MARK: Source labels
 
     /// The value of `page_id`.
@@ -162,6 +157,11 @@ public struct CommandersActLabels: Decodable {
     /// The value of `item_position_in_section`.
     public var item_position_in_section: Int? {
         extract(\._item_position_in_section)
+    }
+
+    private func extract<T>(_ keyPath: KeyPath<Self, String?>) -> T? where T: LosslessStringConvertible {
+        guard let value = self[keyPath: keyPath] else { return nil }
+        return .init(value)
     }
 }
 

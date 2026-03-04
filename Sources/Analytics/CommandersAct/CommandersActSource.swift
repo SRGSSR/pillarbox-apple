@@ -7,7 +7,7 @@
 /// A struct describing the source of an event sent to Commanders Act.
 public struct CommandersActSource {
     let labels: [String: String]
-    
+
     /// Creates Commanders Act source information.
     /// 
     /// - Parameters:
