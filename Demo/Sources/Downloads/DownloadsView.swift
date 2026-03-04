@@ -54,11 +54,20 @@ struct DownloadsView: View {
     private func cell(for download: Download) -> some View {
         VStack(alignment: .leading) {
             Text(download.title)
+            ProgressBar(download: download)
             if let url = downloader.fileUrl(for: download) {
                 Text(url.absoluteString)
                     .font(.footnote)
             }
         }
+    }
+}
+
+private struct ProgressBar: View {
+    @ObservedObject var download: Download
+
+    var body: some View {
+        ProgressView(value: download.progress)
     }
 }
 
