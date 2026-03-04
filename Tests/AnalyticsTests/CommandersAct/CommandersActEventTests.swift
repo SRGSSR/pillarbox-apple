@@ -81,6 +81,7 @@ final class CommandersActEventTests: CommandersActTestCase {
         expectAtLeastHits(
             custom(name: "name") { labels in
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
+                expect(labels.profile_id).to(equal("profile"))
             }
         ) {
             Analytics.shared.sendEvent(commandersAct: .init(name: "name"))
@@ -91,12 +92,14 @@ final class CommandersActEventTests: CommandersActTestCase {
         expectAtLeastHits(
             custom(name: "name") { labels in
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
+                expect(labels.profile_id).to(equal("profile"))
             }
         ) {
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: "name",
                 labels: [
                     "event_name": "overridden_name",
+                    "profile_id": "profile42",
                     "consent_services": "service42"
                 ]
             ))
