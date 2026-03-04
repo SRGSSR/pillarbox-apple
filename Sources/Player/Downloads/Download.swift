@@ -6,13 +6,17 @@
 
 import AVFoundation
 
-final class Download: ObservableObject {
+public final class Download: ObservableObject {
+    private let id = UUID()
+    // TODO: Should we keep this public?
+    public let title: String
     let url: URL
     @Published private(set) var state: AVAssetDownloadTask.State = .running
 
-    init(url: URL, session: AVAssetDownloadURLSession) {
+    init(title: String, url: URL, session: AVAssetDownloadURLSession) {
+        self.title = title
         self.url = url
-        let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: "Unknown")
+        let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
 
         task.publisher(for: \.state)
@@ -22,11 +26,11 @@ final class Download: ObservableObject {
 }
 
 extension Download: Hashable {
-    static func == (lhs: Download, rhs: Download) -> Bool {
-        lhs.url == rhs.url
+    public static func == (lhs: Download, rhs: Download) -> Bool {
+        lhs.id == rhs.id
     }
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(url)
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
