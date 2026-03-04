@@ -11,17 +11,11 @@ import SwiftUI
 
 #if DEBUG
 struct DownloadsView: View {
-    @EnvironmentObject private var router: Router
     @StateObject private var downloader = Downloader()
 
     var body: some View {
         List(Array(downloader.downloads), id: \.self) { download in
-            cell(for: download)
-                .onTapGesture {
-                    if let fileUrl = downloader.fileUrl(for: download) {
-                        router.presented = .player(media: .init(title: download.title, type: .url(fileUrl)))
-                    }
-                }
+            DownloadCell(downloader: downloader, download: download)
         }
         .toolbar {
             Menu {
@@ -50,15 +44,54 @@ struct DownloadsView: View {
             Text(title)
         }
     }
+}
 
-    private func cell(for download: Download) -> some View {
-        VStack(alignment: .leading) {
-            Text(download.title)
-            ProgressBar(download: download)
-            if let url = downloader.fileUrl(for: download) {
-                Text(url.absoluteString)
-                    .font(.footnote)
+private struct DownloadCell: View {
+    @EnvironmentObject private var router: Router
+
+    let downloader: Downloader
+    @ObservedObject var download: Download
+
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(download.title)
+                ProgressBar(download: download)
+                if let url = downloader.fileUrl(for: download) {
+                    Text(url.absoluteString)
+                        .font(.footnote)
+                }
             }
+            .onTapGesture {
+                if let fileUrl = downloader.fileUrl(for: download) {
+                    router.presented = .player(media: .init(title: download.title, type: .url(fileUrl)))
+                }
+            }
+            resumeSuspendButton()
+        }
+    }
+
+    @ViewBuilder
+    func resumeSuspendButton() -> some View {
+        switch download.state {
+        case .suspended:
+            Button {
+                download.resume()
+            } label: {
+                Image(systemName: "play.circle")
+                    .resizable()
+            }
+            .frame(width: 40, height: 40)
+        case .running:
+            Button {
+                download.suspend()
+            } label: {
+                Image(systemName: "pause.circle")
+                    .resizable()
+            }
+            .frame(width: 40, height: 40)
+        default:
+            EmptyView()
         }
     }
 }

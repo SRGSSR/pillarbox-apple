@@ -13,7 +13,7 @@ public final class Download: ObservableObject {
     let task: AVAssetDownloadTask
     let url: URL
 
-    @Published private(set) var state: AVAssetDownloadTask.State = .running
+    @Published public private(set) var state: AVAssetDownloadTask.State = .running
     @Published public private(set) var progress: Double = 0
 
     init(title: String, url: URL, session: AVAssetDownloadURLSession) {
@@ -26,10 +26,22 @@ public final class Download: ObservableObject {
             .assign(to: &$state)
 
         task.progress.publisher(for: \.fractionCompleted)
+            .map { $0.clamped(to: 0...1) }
             .assign(to: &$progress)
 
         task.resume()
     }
+
+    public func resume() {
+        task.resume()
+        print("--> resume")
+    }
+
+    public func suspend() {
+        task.suspend()
+        print("--> suspend")
+    }
+
 }
 
 extension Download: Hashable {
