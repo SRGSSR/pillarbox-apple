@@ -15,6 +15,13 @@ public struct CommandersActSource {
     ///   - section: Section information.
     ///   - labels: Additional information associated with the source.
     public init(page: CommandersActLocation, section: CommandersActLocation? = nil, labels: [String: String] = [:]) {
-        self.labels = labels
+        self.labels = labels.merging([
+            "page_id": page.identifier,
+            "page_version": page.version,
+            "section_position_in_page": page.position,
+            "section_id": section?.identifier,
+            "section_version": section?.version,
+            "item_position_in_section": section?.position
+        ].compactMapValues(\.self)) { _, new in new }
     }
 }
