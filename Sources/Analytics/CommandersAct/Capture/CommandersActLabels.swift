@@ -14,6 +14,8 @@ public struct CommandersActLabels: Decodable {
     private let _media_subtitles_on: String?
     private let _media_timeshift: String?
     private let _media_volume: String?
+    private let _section_position_in_page: String?
+    private let _item_position_in_section: String?
 
     let event_name: String?
     let listener_session_id: String?
@@ -32,6 +34,9 @@ public struct CommandersActLabels: Decodable {
 
     /// The value of `consent_services`.
     public let consent_services: String?
+
+    /// The value of `profile_id`.
+    public let profile_id: String?
 
     /// The Commanders Act contextual information.
     public let context: CommandersActContext
@@ -134,6 +139,30 @@ public struct CommandersActLabels: Decodable {
         guard let value = self[keyPath: keyPath] else { return nil }
         return .init(value)
     }
+
+    // MARK: Source labels
+
+    /// The value of `page_id`.
+    public var page_id: String?
+
+    /// The value of `page_version`.
+    public var page_version: String?
+
+    /// The value of `section_position_in_page`.
+    public var section_position_in_page: Int? {
+        extract(\._section_position_in_page)
+    }
+
+    /// The value of `section_id`.
+    public var section_id: String?
+
+    /// The value of `section_version`.
+    public var section_version: String?
+
+    /// The value of `item_position_in_section`.
+    public var item_position_in_section: Int? {
+        extract(\._item_position_in_section)
+    }
 }
 
 private extension CommandersActLabels {
@@ -144,6 +173,8 @@ private extension CommandersActLabels {
         case _media_subtitles_on = "media_subtitles_on"
         case _media_timeshift = "media_timeshift"
         case _media_volume = "media_volume"
+        case _section_position_in_page = "section_position_in_page"
+        case _item_position_in_section = "item_position_in_section"
         case context
         case event_name
         case listener_session_id
@@ -152,6 +183,7 @@ private extension CommandersActLabels {
         case navigation_app_site_name
         case navigation_device
         case consent_services
+        case profile_id
         case navigation_property_type
         case content_bu_owner
         case navigation_level_0
@@ -171,5 +203,9 @@ private extension CommandersActLabels {
         case media_player_version
         case media_subtitle_selection
         case user
+        case page_id
+        case page_version
+        case section_id
+        case section_version
     }
 }
