@@ -7,6 +7,7 @@
 import AVFoundation
 
 #if DEBUG
+@_spi(DownloaderPrivate)
 public final class Downloader: ObservableObject {
     @Published private var _downloads: Set<Download> = []
 

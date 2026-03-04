@@ -4,7 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
+@_spi(DownloaderPrivate)
 import PillarboxPlayer
+
 import SwiftUI
 
 #if DEBUG
