@@ -10,6 +10,7 @@ public final class Download: ObservableObject {
     private let id = UUID()
     // TODO: Should we keep this public?
     public let title: String
+    let task: AVAssetDownloadTask
     let url: URL
     @Published private(set) var state: AVAssetDownloadTask.State = .running
 
@@ -17,8 +18,7 @@ public final class Download: ObservableObject {
         self.title = title
         self.url = url
         let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
-        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
-
+        task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
         task.publisher(for: \.state)
             .assign(to: &$state)
         task.resume()
