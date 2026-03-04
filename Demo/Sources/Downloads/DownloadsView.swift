@@ -15,7 +15,7 @@ struct DownloadsView: View {
 
     var body: some View {
         List(Array(downloader.downloads), id: \.self) { download in
-            Text(download.title)
+            cell(for: download)
         }
         .toolbar {
             Menu {
@@ -34,6 +34,16 @@ struct DownloadsView: View {
             downloader.add(title: title, url: url)
         } label: {
             Text(title)
+        }
+    }
+
+    private func cell(for download: Download) -> some View {
+        VStack(alignment: .leading) {
+            Text(download.title)
+            if let url = downloader.fileUrl(for: download) {
+                Text(url.absoluteString)
+                    .font(.footnote)
+            }
         }
     }
 }
