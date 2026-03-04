@@ -22,6 +22,7 @@ final class CommandersActEventTests: CommandersActTestCase {
         )
         let globals = CommandersActGlobals(
             consentServices: ["service1,service2,service3"],
+            profileIdentifier: "profile",
             labels: [
                 "globals-label": "globals",
                 "common-label": "globals"
@@ -30,6 +31,7 @@ final class CommandersActEventTests: CommandersActTestCase {
 
         expect(event.merging(globals: globals).labels).to(equal([
             "consent_services": "service1,service2,service3",
+            "profile_id": "profile",
             "globals-label": "globals",
             "event-label": "event",
             "common-label": "globals"

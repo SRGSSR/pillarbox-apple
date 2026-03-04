@@ -12,10 +12,16 @@ public struct CommandersActGlobals {
     /// 
     /// - Parameters:
     ///   - consentServices: The list of services for which the user provided consent.
+    ///   - profileIdentifier: An identifier for the app user, if any.
     ///   - labels: Additional information associated with the global labels.
-    public init(consentServices: [String], labels: [String: String]) {
+    public init(
+        consentServices: [String],
+        profileIdentifier: String? = nil,
+        labels: [String: String]
+    ) {
         self.labels = labels.merging([
-            "consent_services": consentServices.joined(separator: ",")
-        ]) { _, new in new }
+            "consent_services": consentServices.joined(separator: ","),
+            "profile_id": profileIdentifier
+        ].compactMapValues(\.self)) { _, new in new }
     }
 }
