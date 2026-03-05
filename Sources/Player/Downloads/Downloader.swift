@@ -18,7 +18,7 @@ public final class Downloader: NSObject, ObservableObject {
         delegateQueue: .main
     )
 
-    @Published private var _downloads: OrderedDictionary<Download, DownloadedFile> {
+    @Published private var _downloads: OrderedDictionary<Download, DownloadedFile> = [:] {
         didSet {
             Self.saveDownloads(_downloads)
         }
@@ -29,15 +29,19 @@ public final class Downloader: NSObject, ObservableObject {
     }
 
     override public init() {
-        _downloads = Self.restoreDownloads()
+        super.init()
+        restore()
     }
 
-    private static func restoreDownloads() -> OrderedDictionary<Download, DownloadedFile> {
+    private static func restoreDownloads(from tasks: [URLSessionTask]) -> OrderedDictionary<Download, DownloadedFile> {
         guard let jsonData = try? Data(contentsOf: metadataFileUrl), let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return [:]
         }
         return OrderedDictionary(
-            uniqueKeys: metadata.map { Download(title: $0.title, taskDescription: $0.taskDescription) },
+            uniqueKeys: metadata.map { metadata in
+                let task = tasks.first { $0.taskDescription == metadata.taskDescription }
+                return Download(title: metadata.title, taskDescription: metadata.taskDescription, task: task)
+            },
             values: metadata.map { .available($0.fileUrl) }
         )
     }
@@ -49,6 +53,12 @@ public final class Downloader: NSObject, ObservableObject {
         }
         if let jsonData = try? JSONEncoder().encode(metadata) {
             try? jsonData.write(to: metadataFileUrl)
+        }
+    }
+
+    func restore() {
+        session.getAllTasks { [weak self] tasks in
+            self?._downloads = Self.restoreDownloads(from: tasks)
         }
     }
 
