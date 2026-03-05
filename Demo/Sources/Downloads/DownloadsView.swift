@@ -20,7 +20,7 @@ private struct DownloadCell: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(download.title ?? "Untitled")
+                Text(download.title)
                 ProgressBar(download: download)
                 if let fileUrl = downloader.fileUrl(for: download) {
                     Text(fileUrl.absoluteString)
@@ -30,7 +30,7 @@ private struct DownloadCell: View {
             .accessibilityAddTraits(.isButton)
             .onTapGesture {
                 if let fileUrl = downloader.fileUrl(for: download) {
-                    router.presented = .player(media: .init(title: download.title ?? "Untitled", type: .url(fileUrl)))
+                    router.presented = .player(media: .init(title: download.title, type: .url(fileUrl)))
                 }
             }
             resumeSuspendButton()
