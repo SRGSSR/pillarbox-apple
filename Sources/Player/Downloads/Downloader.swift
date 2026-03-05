@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import OrderedCollections
 
 private enum Location {
     case empty
@@ -14,7 +15,7 @@ private enum Location {
 #if DEBUG
 @_spi(DownloaderPrivate)
 public final class Downloader: NSObject, ObservableObject {
-    @Published private var _downloads: [Download: Location] = [:]
+    @Published private var _downloads: OrderedDictionary<Download, Location> = [:]
 
     private lazy var session = AVAssetDownloadURLSession(
         configuration: .background(withIdentifier: "ch.srgssr.player.downloader"),
@@ -23,7 +24,7 @@ public final class Downloader: NSObject, ObservableObject {
     )
 
     public var downloads: [Download] {
-        Array(_downloads.keys.sorted(using: KeyPathComparator(\.title)))
+        Array(_downloads.keys)
     }
 
     override public init() {}
@@ -40,7 +41,7 @@ public final class Downloader: NSObject, ObservableObject {
     }
 
     public func fileUrl(for download: Download) -> URL? {
-        if let location = _downloads[download], case let .url(url) = location  {
+        if let location = _downloads[download], case let .url(url) = location {
             return url
         }
         else {
