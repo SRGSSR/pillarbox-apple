@@ -7,15 +7,16 @@
 import AVFoundation
 
 public final class Download: ObservableObject {
-    private let id = UUID()
-
     public let title: String
+
+    let taskDescription: String
 
     public private(set) var state: AVAssetDownloadTask.State = .running
     public private(set) var progress: Double = 0
 
-    init(title: String) {
+    init(title: String, taskDescription: String = UUID().uuidString) {
         self.title = title
+        self.taskDescription = taskDescription
     }
 
     public func resume() {
@@ -29,10 +30,10 @@ public final class Download: ObservableObject {
 
 extension Download: Hashable {
     public static func == (lhs: Download, rhs: Download) -> Bool {
-        lhs.id == rhs.id
+        lhs.taskDescription == rhs.taskDescription
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(taskDescription)
     }
 }
