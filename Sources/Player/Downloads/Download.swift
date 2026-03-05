@@ -8,19 +8,17 @@ import AVFoundation
 
 public final class Download: ObservableObject {
     private let id = UUID()
-    // TODO: Should we keep this public?
-    public let title: String
-    let task: AVAssetDownloadTask
-    let url: URL
+    let task: URLSessionTask
+
+    public var title: String? {
+        task.taskDescription
+    }
 
     @Published public private(set) var state: AVAssetDownloadTask.State = .running
     @Published public private(set) var progress: Double = 0
 
-    init(title: String, url: URL, session: AVAssetDownloadURLSession) {
-        self.title = title
-        self.url = url
-        let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
-        task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
+    init(task: URLSessionTask) {
+        self.task = task
 
         task.publisher(for: \.state)
             .receiveOnMainThread()
@@ -30,8 +28,6 @@ public final class Download: ObservableObject {
             .map { $0.clamped(to: 0...1) }
             .receiveOnMainThread()
             .assign(to: &$progress)
-
-        task.resume()
     }
 
     public func resume() {
