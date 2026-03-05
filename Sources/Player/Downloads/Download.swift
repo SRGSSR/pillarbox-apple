@@ -11,20 +11,40 @@ public final class Download: ObservableObject {
 
     let taskDescription: String
 
-    public private(set) var state: AVAssetDownloadTask.State = .running
-    public private(set) var progress: Double = 0
+    @Published public private(set) var state: URLSessionTask.State
+    @Published public private(set) var progress: Double
 
-    init(title: String, taskDescription: String = UUID().uuidString) {
+    private let task: URLSessionTask?
+
+    init(title: String, taskDescription: String, task: URLSessionTask? = nil) {
         self.title = title
         self.taskDescription = taskDescription
+        self.task = task
+
+        if let task {
+            self.state = .running
+            self.progress = 0
+
+            task.publisher(for: \.state)
+                .receiveOnMainThread()
+                .assign(to: &$state)
+            task.progress.publisher(for: \.fractionCompleted)
+                .map { $0.clamped(to: 0...1) }
+                .receiveOnMainThread()
+                .assign(to: &$progress)
+        }
+        else {
+            self.state = .completed
+            self.progress = 1
+        }
     }
 
     public func resume() {
-
+        task?.resume()
     }
 
     public func suspend() {
-
+        task?.suspend()
     }
 }
 

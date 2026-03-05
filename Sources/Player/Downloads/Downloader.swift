@@ -54,7 +54,10 @@ public final class Downloader: NSObject, ObservableObject {
 
     @discardableResult
     public func add(title: String, url: URL) -> Download {
-        let download = Download(title: title)
+        let taskDescription = UUID().uuidString
+        let task = downloadTask(title: title, taskDescription: taskDescription, url: url)
+        let download = Download(title: title, taskDescription: taskDescription, task: task)
+        download.resume()
         _downloads[download] = .missing
         return download
     }
@@ -66,6 +69,13 @@ public final class Downloader: NSObject, ObservableObject {
     public func fileUrl(for download: Download) -> URL? {
         guard let file = _downloads[download], case let .available(url) = file else { return nil }
         return url
+    }
+
+    private func downloadTask(title: String, taskDescription: String, url: URL) -> URLSessionTask {
+        let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
+        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
+        task.taskDescription = taskDescription
+        return task
     }
 }
 
