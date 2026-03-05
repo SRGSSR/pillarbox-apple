@@ -16,15 +16,20 @@ public final class Downloader: NSObject, ObservableObject {
         delegateQueue: .main
     )
 
-    public var downloads: [Download] {
-        []
-    }
+    @Published public private(set) var downloads: [Download] = []
 
     override public init() {}
 
-    public func add(title: String, url: URL) {}
+    @discardableResult
+    public func add(title: String, url: URL) -> Download {
+        let download = Download(title: title)
+        downloads.append(download)
+        return download
+    }
 
-    public func remove(_ download: Download) {}
+    public func remove(_ download: Download) {
+        downloads.removeAll { $0 == download }
+    }
 
     public func fileUrl(for download: Download) -> URL? {
         nil
