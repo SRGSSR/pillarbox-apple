@@ -9,15 +9,13 @@ import AVFoundation
 public final class Download: ObservableObject {
     private let id = UUID()
 
-    public var title: String? {
-        nil
-    }
+    public let title: String
 
-    @Published public private(set) var state: AVAssetDownloadTask.State = .running
-    @Published public private(set) var progress: Double = 0
+    public private(set) var state: AVAssetDownloadTask.State = .running
+    public private(set) var progress: Double = 0
 
-    init(task: URLSessionTask) {
-
+    init(title: String) {
+        self.title = title
     }
 
     public func resume() {
