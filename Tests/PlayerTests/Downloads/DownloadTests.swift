@@ -6,13 +6,25 @@
 
 @testable import PillarboxPlayer
 
+import AVFoundation
 import Nimble
 import PillarboxStreams
 import XCTest
 
 final class DownloadTests: TestCase {
+    private lazy var session = AVAssetDownloadURLSession(
+        configuration: .background(withIdentifier: ""),
+        assetDownloadDelegate: nil,
+        delegateQueue: nil
+    )
+
     func testCreation() {
-        let download = Download(url: Stream.shortOnDemand.url)
-        expect(download.state).to(equal(.running))
+        let download = Download(url: Stream.shortOnDemand.url, session: session)
+        expect(download.state).toEventually(equal(.running))
+    }
+
+    func testCompleted() {
+        let download = Download(url: Stream.shortOnDemand.url, session: session)
+        expect(download.state).toEventually(equal(.completed))
     }
 }

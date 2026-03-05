@@ -6,12 +6,27 @@
 
 import AVFoundation
 
-struct Download: Hashable {
+final class Download: ObservableObject {
     let url: URL
-    let state: AVAssetDownloadTask.State
+    @Published private(set) var state: AVAssetDownloadTask.State = .running
 
-    init(url: URL) {
+    init(url: URL, session: AVAssetDownloadURLSession) {
         self.url = url
-        self.state = .running
+        let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: "Unknown")
+        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
+
+        task.publisher(for: \.state)
+            .assign(to: &$state)
+        task.resume()
+    }
+}
+
+extension Download: Hashable {
+    static func == (lhs: Download, rhs: Download) -> Bool {
+        lhs.url == rhs.url
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(url)
     }
 }
