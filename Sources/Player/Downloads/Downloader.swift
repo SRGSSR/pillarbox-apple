@@ -9,7 +9,7 @@ import OrderedCollections
 
 private enum Location {
     case empty
-    case url(URL)
+    case fileUrl(URL)
 }
 
 #if DEBUG
@@ -37,23 +37,30 @@ public final class Downloader: NSObject, ObservableObject {
     }
 
     public func remove(_ download: Download) {
+        download.cancel()
+        removeFile(for: download)
         _downloads.removeValue(forKey: download)
     }
 
     public func fileUrl(for download: Download) -> URL? {
-        if let location = _downloads[download], case let .url(url) = location {
-            return url
+        if let location = _downloads[download], case let .fileUrl(fileUrl) = location {
+            return fileUrl
         }
         else {
             return nil
         }
+    }
+
+    private func removeFile(for download: Download) {
+        guard let fileUrl = fileUrl(for: download) else { return }
+        try? FileManager.default.removeItem(at: fileUrl)
     }
 }
 
 extension Downloader: AVAssetDownloadDelegate {
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         if let download = _downloads.keys.first(where: { $0.task == assetDownloadTask }) {
-            _downloads[download] = .url(location)
+            _downloads[download] = .fileUrl(location)
         }
     }
 

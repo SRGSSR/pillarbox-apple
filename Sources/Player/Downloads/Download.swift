@@ -36,14 +36,15 @@ public final class Download: ObservableObject {
 
     public func resume() {
         task.resume()
-        print("--> resume")
     }
 
     public func suspend() {
         task.suspend()
-        print("--> suspend")
     }
 
+    func cancel() {
+        task.cancel()
+    }
 }
 
 extension Download: Hashable {

@@ -22,8 +22,8 @@ private struct DownloadCell: View {
             VStack(alignment: .leading) {
                 Text(download.title)
                 ProgressBar(download: download)
-                if let url = downloader.fileUrl(for: download) {
-                    Text(url.absoluteString)
+                if let fileUrl = downloader.fileUrl(for: download) {
+                    Text(fileUrl.absoluteString)
                         .font(.footnote)
                 }
             }
