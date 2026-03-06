@@ -7,23 +7,25 @@
 import AVFoundation
 
 public final class Download: ObservableObject {
-    public let title: String
+    let id: String
 
-    let taskDescription: String
+    public let title: String
 
     @Published public private(set) var state: URLSessionTask.State
     @Published public private(set) var progress: Double
 
     private let task: URLSessionTask?
 
-    init(title: String, taskDescription: String, task: URLSessionTask? = nil) {
+    init(id: String = UUID().uuidString, title: String, task: URLSessionTask? = nil) {
+        self.id = id
         self.title = title
-        self.taskDescription = taskDescription
         self.task = task
 
         if let task {
             self.state = .running
             self.progress = 0
+
+            task.taskDescription = id
 
             task.publisher(for: \.state)
                 .receiveOnMainThread()
@@ -50,10 +52,10 @@ public final class Download: ObservableObject {
 
 extension Download: Hashable {
     public static func == (lhs: Download, rhs: Download) -> Bool {
-        lhs.taskDescription == rhs.taskDescription
+        lhs.id == rhs.id
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(taskDescription)
+        hasher.combine(id)
     }
 }
