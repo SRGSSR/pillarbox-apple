@@ -15,7 +15,7 @@ public struct CommandersActPageView {
     /// The page levels.
     public let levels: [String]
 
-    /// The source of the event.
+    /// The source of the page view.
     public let source: CommandersActSource?
 
     /// Additional information associated with the page view.
@@ -27,7 +27,7 @@ public struct CommandersActPageView {
     ///   - name: The page name.
     ///   - type: The page type (e.g., _Article_).
     ///   - levels: The page levels.
-    ///   - source: The source of the event.
+    ///   - source: The source of the page view.
     ///   - labels: Additional information associated with the page view.
     ///
     /// Custom labels which might accidentally override official labels will be ignored.

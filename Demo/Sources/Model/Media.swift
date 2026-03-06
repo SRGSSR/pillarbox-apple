@@ -114,7 +114,10 @@ struct Media: Hashable {
                         DemoTracker.Metadata(title: metadata.mainChapter.title)
                     }
                 ],
-                context: .init(configuration: .init(position: at(startTime)))
+                context: .init(
+                    configuration: .init(position: at(startTime)),
+                    commandersActSource: .init(page: .init(identifier: "my_page"), section: .init(identifier: "my_section"))
+                )
             )
         }
     }

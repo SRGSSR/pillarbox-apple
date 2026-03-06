@@ -13,6 +13,7 @@ public struct CommandersActSource {
     /// - Parameters:
     ///   - page: Page information.
     ///   - section: Section information.
+    ///   - source: The source of the event.
     ///   - labels: Additional information associated with the source.
     public init(page: CommandersActLocation, section: CommandersActLocation? = nil, labels: [String: String] = [:]) {
         self.labels = labels.merging([
