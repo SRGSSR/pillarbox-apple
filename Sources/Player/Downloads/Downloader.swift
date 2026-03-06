@@ -18,7 +18,9 @@ public final class Downloader: NSObject, ObservableObject {
         delegateQueue: .main
     )
 
-    @Published private var _downloads: OrderedDictionary<Download, DownloadedFile> = [:] {
+    private var pendingDownloads: [Download] = []
+
+    @Published private var _downloads: OrderedDictionary<Download, URL> = [:] {
         didSet {
             Self.saveDownloads(_downloads)
         }
@@ -33,7 +35,7 @@ public final class Downloader: NSObject, ObservableObject {
         restore()
     }
 
-    private static func restoreDownloads(from tasks: [URLSessionTask]) -> OrderedDictionary<Download, DownloadedFile> {
+    private static func restoreDownloads(from tasks: [URLSessionTask]) -> OrderedDictionary<Download, URL> {
         guard let jsonData = try? Data(contentsOf: metadataFileUrl), let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return [:]
         }
@@ -42,14 +44,13 @@ public final class Downloader: NSObject, ObservableObject {
                 let task = tasks.first { $0.taskDescription == metadata.taskDescription }
                 return Download(title: metadata.title, taskDescription: metadata.taskDescription, task: task)
             },
-            values: metadata.map { .available($0.fileUrl) }
+            values: metadata.map(\.fileUrl)
         )
     }
 
-    private static func saveDownloads(_ downloads: OrderedDictionary<Download, DownloadedFile>) {
-        let metadata = downloads.compactMap { download, file -> DownloadMetadata? in
-            guard let fileUrl = file.url() else { return nil }
-            return DownloadMetadata(title: download.title, fileUrl: fileUrl, taskDescription: download.taskDescription)
+    private static func saveDownloads(_ downloads: OrderedDictionary<Download, URL>) {
+        let metadata = downloads.map { download, url in
+            DownloadMetadata(title: download.title, fileUrl: url, taskDescription: download.taskDescription)
         }
         if let jsonData = try? JSONEncoder().encode(metadata) {
             try? jsonData.write(to: metadataFileUrl)
@@ -68,7 +69,7 @@ public final class Downloader: NSObject, ObservableObject {
         let task = downloadTask(title: title, taskDescription: taskDescription, url: url)
         let download = Download(title: title, taskDescription: taskDescription, task: task)
         download.resume()
-        _downloads[download] = .missing
+        pendingDownloads.append(download)
         return download
     }
 
@@ -77,8 +78,7 @@ public final class Downloader: NSObject, ObservableObject {
     }
 
     public func fileUrl(for download: Download) -> URL? {
-        guard let file = _downloads[download], case let .available(url) = file else { return nil }
-        return url
+        _downloads[download]
     }
 
     private func downloadTask(title: String, taskDescription: String, url: URL) -> URLSessionTask {
@@ -91,8 +91,9 @@ public final class Downloader: NSObject, ObservableObject {
 
 extension Downloader: AVAssetDownloadDelegate {
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
-        guard let download = _downloads.keys.first(where: { $0.taskDescription == assetDownloadTask.taskDescription }) else { return }
-        _downloads[download] = .available(location)
+        guard let download = pendingDownloads.first(where: { $0.taskDescription == assetDownloadTask.taskDescription }) else { return }
+        pendingDownloads.removeAll { $0 == download }
+        _downloads[download] = location
     }
 }
 
