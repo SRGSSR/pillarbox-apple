@@ -48,6 +48,10 @@ public final class Download: ObservableObject {
     public func suspend() {
         task?.suspend()
     }
+
+    func cancel() {
+        task?.cancel()
+    }
 }
 
 extension Download: Hashable {
