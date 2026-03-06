@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+@_spi(DownloaderPrivate)
 @testable import PillarboxPlayer
 
 import Nimble
@@ -17,13 +18,13 @@ final class DownloaderTests: TestCase {
 
     func testAdd() {
         let downloader = Downloader()
-        let download = downloader.add(url: Stream.shortOnDemand.url)
+        let download = downloader.add(title: "Title", url: Stream.shortOnDemand.url)
         expect(downloader.downloads).to(equal([download]))
     }
 
     func testRemove() {
         let downloader = Downloader()
-        let download = downloader.add(url: Stream.shortOnDemand.url)
+        let download = downloader.add(title: "Title", url: Stream.shortOnDemand.url)
         downloader.remove(download)
         expect(downloader.downloads).to(beEmpty())
     }
