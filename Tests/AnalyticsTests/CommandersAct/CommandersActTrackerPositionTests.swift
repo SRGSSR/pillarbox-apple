@@ -17,7 +17,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.live.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -38,7 +38,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -59,7 +59,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -82,7 +82,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.live.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -103,7 +103,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -124,7 +124,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ],
             configuration: .init(position: at(.init(value: 100, timescale: 1)))
         ))

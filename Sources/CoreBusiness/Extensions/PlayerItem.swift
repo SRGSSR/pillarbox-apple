@@ -28,13 +28,13 @@ public extension PlayerItem {
         _ urn: String,
         server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
-        configuration: PlaybackConfiguration = .default
+        context: PlaybackContext = .default
     ) -> Self {
         .init(
-            publisher: publisher(forUrn: urn, server: server, configuration: configuration),
+            publisher: publisher(forUrn: urn, server: server, configuration: context.configuration),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
-                CommandersActTracker.adapter { $0.analyticsMetadata },
+                CommandersActTracker.adapter(configuration: context.commandersActSource) { $0.analyticsMetadata },
                 MetricsTracker.adapter(
                     configuration: .init(
                         identifier: urn,
@@ -65,10 +65,10 @@ public extension PlayerItem {
         url: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlaybackConfiguration = .default
+        context: PlaybackContext = .default
     ) -> Self where M: AssetMetadata {
         .init(
-            asset: .tokenProtected(url: url, metadata: metadata, configuration: configuration),
+            asset: .tokenProtected(url: url, metadata: metadata, configuration: context.configuration),
             trackerAdapters: trackerAdapters
         )
     }
@@ -89,10 +89,10 @@ public extension PlayerItem {
         certificateUrl: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlaybackConfiguration = .default
+        context: PlaybackContext = .default
     ) -> Self where M: AssetMetadata {
         .init(
-            asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration),
+            asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: context.configuration),
             trackerAdapters: trackerAdapters
         )
     }

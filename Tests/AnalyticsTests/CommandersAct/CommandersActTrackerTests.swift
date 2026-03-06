@@ -15,7 +15,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
         expectAtLeastHits(
@@ -31,7 +31,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in [:] }
+                CommandersActTracker.adapter(configuration: nil) { _ in [:] }
             ]
         ))
         expectNoHits(during: .milliseconds(500)) {
@@ -43,7 +43,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -63,7 +63,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.mediumOnDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
         expectAtLeastHits(
@@ -80,7 +80,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -100,7 +100,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
         player?.playbackSpeed = 2
@@ -121,7 +121,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in [:] }
+                CommandersActTracker.adapter(configuration: nil) { _ in [:] }
             ]
         ))
 
@@ -138,7 +138,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.unavailable.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in [:] }
+                CommandersActTracker.adapter(configuration: nil) { _ in [:] }
             ]
         ))
         expectNoHits(during: .milliseconds(500)) {
@@ -150,7 +150,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in [:] }
+                CommandersActTracker.adapter(configuration: nil) { _ in [:] }
             ]
         ))
 
@@ -166,7 +166,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in [:] }
+                CommandersActTracker.adapter(configuration: nil) { _ in [:] }
             ]
         ))
 
@@ -186,7 +186,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         player.append(.simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in [:] }
+                CommandersActTracker.adapter(configuration: nil) { _ in [:] }
             ]
         ))
 
