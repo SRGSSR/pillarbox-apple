@@ -23,7 +23,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     private let heartbeat: CommandersActHeartbeat
 
     // swiftlint:disable:next missing_docs
-    public init(configuration: Void, queue: DispatchQueue) {
+    public init(configuration: CommandersActSource?, queue: DispatchQueue) {
         heartbeat = .init(queue: queue)
     }
 
