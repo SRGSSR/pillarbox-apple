@@ -20,7 +20,7 @@ public final class Downloader: NSObject, ObservableObject {
 
     private var pendingDownloads: [Download] = []
 
-    @Published private var _downloads: OrderedDictionary<Download, URL> = [:] {
+    @Published private var _downloads: OrderedDictionary<Download, Data> = [:] {
         didSet {
             Self.saveDownloads(_downloads)
         }
@@ -35,7 +35,7 @@ public final class Downloader: NSObject, ObservableObject {
         restore()
     }
 
-    private static func restoreDownloads(from tasks: [URLSessionTask]) -> OrderedDictionary<Download, URL> {
+    private static func restoreDownloads(from tasks: [URLSessionTask]) -> OrderedDictionary<Download, Data> {
         guard let jsonData = try? Data(contentsOf: metadataFileUrl), let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return [:]
         }
@@ -44,13 +44,13 @@ public final class Downloader: NSObject, ObservableObject {
                 let task = tasks.first { $0.taskDescription == metadata.id }
                 return Download(id: metadata.id, title: metadata.title, task: task)
             },
-            values: metadata.map(\.fileUrl)
+            values: metadata.map(\.bookmarkData)
         )
     }
 
-    private static func saveDownloads(_ downloads: OrderedDictionary<Download, URL>) {
-        let metadata = downloads.map { download, url in
-            DownloadMetadata(id: download.id, title: download.title, fileUrl: url)
+    private static func saveDownloads(_ downloads: OrderedDictionary<Download, Data>) {
+        let metadata = downloads.map { download, bookmarkData in
+            return DownloadMetadata(id: download.id, title: download.title, bookmarkData: bookmarkData)
         }
         if let jsonData = try? JSONEncoder().encode(metadata) {
             try? jsonData.write(to: metadataFileUrl)
@@ -75,11 +75,18 @@ public final class Downloader: NSObject, ObservableObject {
     }
 
     public func remove(_ download: Download) {
+        download.cancel()
+        pendingDownloads.removeAll { $0 == download }
+        if let url = fileUrl(for: download) {
+            try? FileManager.default.removeItem(at: url)
+        }
         _downloads.removeValue(forKey: download)
     }
 
     public func fileUrl(for download: Download) -> URL? {
-        _downloads[download]
+        guard let bookmarkData = _downloads[download] else { return nil }
+        var bookmarkDataIsStale = false
+        return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &bookmarkDataIsStale)
     }
 
     private func downloadTask(title: String, url: URL) -> URLSessionTask {
@@ -92,7 +99,12 @@ extension Downloader: AVAssetDownloadDelegate {
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         guard let download = pendingDownloads.first(where: { $0.id == assetDownloadTask.taskDescription }) else { return }
         pendingDownloads.removeAll { $0 == download }
-        _downloads[download] = location
+        _downloads[download] = try? location.bookmarkData()
+    }
+
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
+        guard error != nil, let download = _downloads.keys.first(where: { $0.id == task.taskDescription }) else { return }
+        remove(download)
     }
 }
 
