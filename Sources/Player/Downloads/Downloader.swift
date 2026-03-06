@@ -41,8 +41,8 @@ public final class Downloader: NSObject, ObservableObject {
         }
         return OrderedDictionary(
             uniqueKeys: metadata.map { metadata in
-                let task = tasks.first { $0.taskDescription == metadata.taskDescription }
-                return Download(title: metadata.title, taskDescription: metadata.taskDescription, task: task)
+                let task = tasks.first { $0.taskDescription == metadata.id }
+                return Download(id: metadata.id, title: metadata.title, task: task)
             },
             values: metadata.map(\.fileUrl)
         )
@@ -50,7 +50,7 @@ public final class Downloader: NSObject, ObservableObject {
 
     private static func saveDownloads(_ downloads: OrderedDictionary<Download, URL>) {
         let metadata = downloads.map { download, url in
-            DownloadMetadata(title: download.title, fileUrl: url, taskDescription: download.taskDescription)
+            DownloadMetadata(id: download.id, title: download.title, fileUrl: url)
         }
         if let jsonData = try? JSONEncoder().encode(metadata) {
             try? jsonData.write(to: metadataFileUrl)
@@ -65,9 +65,10 @@ public final class Downloader: NSObject, ObservableObject {
 
     @discardableResult
     public func add(title: String, url: URL) -> Download {
-        let taskDescription = UUID().uuidString
-        let task = downloadTask(title: title, taskDescription: taskDescription, url: url)
-        let download = Download(title: title, taskDescription: taskDescription, task: task)
+        let download = Download(
+            title: title,
+            task: downloadTask(title: title, url: url)
+        )
         download.resume()
         pendingDownloads.append(download)
         return download
@@ -81,17 +82,15 @@ public final class Downloader: NSObject, ObservableObject {
         _downloads[download]
     }
 
-    private func downloadTask(title: String, taskDescription: String, url: URL) -> URLSessionTask {
+    private func downloadTask(title: String, url: URL) -> URLSessionTask {
         let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
-        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
-        task.taskDescription = taskDescription
-        return task
+        return session.makeAssetDownloadTask(downloadConfiguration: configuration)
     }
 }
 
 extension Downloader: AVAssetDownloadDelegate {
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
-        guard let download = pendingDownloads.first(where: { $0.taskDescription == assetDownloadTask.taskDescription }) else { return }
+        guard let download = pendingDownloads.first(where: { $0.id == assetDownloadTask.taskDescription }) else { return }
         pendingDownloads.removeAll { $0 == download }
         _downloads[download] = location
     }

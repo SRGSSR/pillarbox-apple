@@ -9,7 +9,7 @@ import Foundation
 // TODO: Should check metadata when deserializing. If file does not exist, drop (failable initializer?)
 
 struct DownloadMetadata: Codable {
+    let id: String
     let title: String
     let fileUrl: URL
-    let taskDescription: String
 }
