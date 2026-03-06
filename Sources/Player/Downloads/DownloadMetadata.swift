@@ -11,5 +11,5 @@ import Foundation
 struct DownloadMetadata: Codable {
     let id: String
     let title: String
-    let bookmarkData: Data
+    let file: DownloadedFile
 }
