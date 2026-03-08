@@ -205,4 +205,22 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             player.play()
         }
     }
+
+    func testSourceLabels() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                CommandersActTracker.adapter(
+                    configuration: .init(page: .init(identifier: "page"))
+                ) { _ in .test }
+            ]
+        ))
+        expectAtLeastHits(
+            play { labels in
+                expect(labels.page_id).to(equal("page"))
+            }
+        ) {
+            player.play()
+        }
+    }
 }
