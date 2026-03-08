@@ -5,7 +5,9 @@
 //
 
 import AVFoundation
+import Combine
 import OrderedCollections
+import UIKit
 
 #if DEBUG
 @_spi(DownloaderPrivate)
@@ -19,6 +21,7 @@ public final class Downloader: NSObject, ObservableObject {
     )
 
     private var pendingDownloads: [Download] = []
+    private var cancellables = Set<AnyCancellable>()
 
     @Published private var _downloads: OrderedDictionary<Download, DownloadedFile> = [:] {
         didSet {
@@ -32,19 +35,23 @@ public final class Downloader: NSObject, ObservableObject {
 
     override public init() {
         super.init()
-        restore()
+        configureRestoration()
     }
 
     private static func restoreDownloads(from tasks: [URLSessionTask]) -> OrderedDictionary<Download, DownloadedFile> {
         guard let jsonData = try? Data(contentsOf: metadataFileUrl), let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return [:]
         }
+        let existingMetadata = metadata.filter { metadata in
+            guard let fileUrl = metadata.file.url(allowsPartial: true) else { return false }
+            return FileManager.default.fileExists(atPath: fileUrl.path)
+        }
         return OrderedDictionary(
-            uniqueKeys: metadata.map { metadata in
+            uniqueKeys: existingMetadata.map { metadata in
                 let task = tasks.first { $0.taskDescription == metadata.id }
                 return Download(id: metadata.id, title: metadata.title, task: task)
             },
-            values: metadata.map(\.file)
+            values: existingMetadata.map(\.file)
         )
     }
 
@@ -95,6 +102,16 @@ public final class Downloader: NSObject, ObservableObject {
     private func downloadTask(title: String, url: URL) -> URLSessionTask {
         let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
         return session.makeAssetDownloadTask(downloadConfiguration: configuration)
+    }
+
+    private func configureRestoration() {
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+            .map { _ in }
+            .prepend(())
+            .sink { [weak self] _ in
+                self?.restore()
+            }
+            .store(in: &cancellables)
     }
 }
 
