@@ -19,6 +19,7 @@ public struct CommandersActEvent {
     ///
     /// - Parameters:
     ///   - name: The event name.
+    ///   - source: The source of the event.
     ///   - labels: Additional information associated with the event.
     ///
     /// Custom labels which might accidentally override official labels will be ignored.

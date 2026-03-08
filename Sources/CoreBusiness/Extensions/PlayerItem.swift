@@ -20,7 +20,7 @@ public extension PlayerItem {
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
+    ///   - context: Contextual information associated with the item.
     ///
     /// Metadata is automatically associated with the item. In addition to trackers you provide, tracking is performed
     /// according to SRG SSR analytics standards.
@@ -57,7 +57,7 @@ public extension PlayerItem {
     ///   - url: The URL to play.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
+    ///   - context: Contextual information associated with the item.
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
     /// tracking.
@@ -80,7 +80,7 @@ public extension PlayerItem {
     ///   - certificateUrl: The URL of the certificate to use.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
+    ///   - context: Contextual information associated with the item.
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
     /// tracking.
