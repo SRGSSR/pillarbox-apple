@@ -24,7 +24,7 @@ final class CommandersActHeartbeat {
         self.queue = queue
     }
 
-    func update(with properties: TrackerProperties, labels: @escaping (TrackerProperties) -> [String: String]) {
+    func update(with properties: TrackerProperties, source: CommandersActSource?, labels: @escaping (TrackerProperties) -> [String: String]) {
         self.properties = properties
 
         if properties.playbackState == .playing {
@@ -32,7 +32,7 @@ final class CommandersActHeartbeat {
             cancellable = Self.eventPublisher(for: properties, delay: delay, posInterval: posInterval, uptimeInterval: uptimeInterval)
                 .receive(on: queue)
                 .sink { [weak self] event in
-                    self?.sendEvent(event, labels: labels)
+                    self?.sendEvent(event, source: source, labels: labels)
                 }
         }
         else {
@@ -44,10 +44,11 @@ final class CommandersActHeartbeat {
         cancellable = nil
     }
 
-    private func sendEvent(_ event: Event, labels: @escaping (TrackerProperties) -> [String: String]) {
+    private func sendEvent(_ event: Event, source: CommandersActSource?, labels: @escaping (TrackerProperties) -> [String: String]) {
         guard let properties else { return }
         Analytics.shared.sendEvent(commandersAct: .init(
             name: event.rawValue,
+            source: source,
             labels: labels(properties.current())
         ))
     }

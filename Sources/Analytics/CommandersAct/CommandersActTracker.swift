@@ -70,7 +70,7 @@ private extension CommandersActTracker {
     func notify(_ event: Event, properties: TrackerProperties) {
         updateStopwatch(event: event, properties: properties)
         sendEventIfNeeded(event: event, properties: properties)
-        heartbeat.update(with: properties, labels: labels)
+        heartbeat.update(with: properties, source: configuration, labels: labels)
     }
 
     func updateStopwatch(event: Event, properties: TrackerProperties) {

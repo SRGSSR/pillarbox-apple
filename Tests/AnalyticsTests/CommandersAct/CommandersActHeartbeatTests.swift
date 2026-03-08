@@ -19,7 +19,10 @@ final class CommandersActHeartbeatTests: CommandersActTestCase {
         let player = Player(item: .simple(url: stream.url))
         player.propertiesPublisher
             .sink { properties in
-                heartbeat.update(with: .init(playerProperties: properties, time: .zero, date: nil, metrics: nil)) { properties in
+                heartbeat.update(
+                    with: .init(playerProperties: properties, time: .zero, date: nil, metrics: nil),
+                    source: .init(page: .init(identifier: "page"))
+                ) { properties in
                     ["media_volume": properties.isMuted ? "0" : "100"]
                 }
             }
@@ -83,6 +86,24 @@ final class CommandersActHeartbeatTests: CommandersActTestCase {
             }
         ) {
             player.isMuted = true
+        }
+    }
+
+    func testSourceLabels() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                CommandersActTracker.adapter(
+                    configuration: .init(page: .init(identifier: "page"))
+                ) { _ in .test }
+            ]
+        ))
+        expectAtLeastHits(
+            play { labels in
+                expect(labels.page_id).to(equal("page"))
+            }
+        ) {
+            player.play()
         }
     }
 }
