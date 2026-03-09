@@ -35,7 +35,7 @@ public final class Downloader: NSObject, ObservableObject {
 
     override public init() {
         super.init()
-        configureRestoration()
+        restore()
     }
 
     private static func restoreDownloads(from tasks: [URLSessionTask]) -> OrderedDictionary<Download, DownloadedFile> {
@@ -107,16 +107,6 @@ public final class Downloader: NSObject, ObservableObject {
     private func downloadTask(title: String, url: URL) -> URLSessionTask {
         let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
         return session.makeAssetDownloadTask(downloadConfiguration: configuration)
-    }
-
-    private func configureRestoration() {
-        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
-            .map { _ in }
-            .prepend(())
-            .sink { [weak self] _ in
-                self?.restore()
-            }
-            .store(in: &cancellables)
     }
 }
 
