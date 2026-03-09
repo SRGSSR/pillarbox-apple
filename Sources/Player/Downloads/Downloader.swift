@@ -57,7 +57,7 @@ public final class Downloader: NSObject, ObservableObject {
 
     private static func saveDownloads(_ downloads: OrderedDictionary<Download, DownloadedFile>) {
         let metadata = downloads.map { download, file in
-            return DownloadMetadata(id: download.id, title: download.title, file: file)
+            DownloadMetadata(id: download.id, title: download.title, file: file)
         }
         if let jsonData = try? JSONEncoder().encode(metadata) {
             try? jsonData.write(to: metadataFileUrl)
@@ -94,6 +94,11 @@ public final class Downloader: NSObject, ObservableObject {
         fileUrl(for: download, allowsPartial: false)
     }
 
+    public func errorMessage(for download: Download) -> String? {
+        guard let file = _downloads[download] else { return nil }
+        return file.errorMessage()
+    }
+
     private func fileUrl(for download: Download, allowsPartial: Bool) -> URL? {
         guard let file = _downloads[download] else { return nil }
         return file.url(allowsPartial: allowsPartial)
@@ -124,11 +129,11 @@ extension Downloader: AVAssetDownloadDelegate {
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let download = _downloads.keys.first(where: { $0.id == task.taskDescription }) else { return }
-        if error == nil, let file = _downloads[download] {
-            _downloads[download] = file.toBookmark()
+        if let error {
+            _downloads[download] = .failed(error.localizedDescription)
         }
-        else {
-            remove(download)
+        else if let file = _downloads[download] {
+            _downloads[download] = file.toBookmark()
         }
     }
 }

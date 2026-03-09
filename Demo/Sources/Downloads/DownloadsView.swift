@@ -22,10 +22,7 @@ private struct DownloadCell: View {
             VStack(alignment: .leading) {
                 Text(download.title)
                 ProgressBar(download: download)
-                if let fileUrl = downloader.fileUrl(for: download) {
-                    Text(fileUrl.absoluteString)
-                        .font(.footnote)
-                }
+                subtitle()
             }
             .accessibilityAddTraits(.isButton)
             .onTapGesture {
@@ -35,6 +32,18 @@ private struct DownloadCell: View {
             }
             resumeSuspendButton()
         }
+    }
+
+    func subtitle() -> some View {
+        ZStack {
+            if let fileUrl = downloader.fileUrl(for: download) {
+                Text(fileUrl.absoluteString)
+            }
+            else if let errorMessage = downloader.errorMessage(for: download) {
+                Text(errorMessage)
+            }
+        }
+        .font(.footnote)
     }
 
     @ViewBuilder
