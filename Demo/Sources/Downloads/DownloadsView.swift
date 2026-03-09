@@ -118,6 +118,7 @@ struct DownloadsView: View {
                 Image(systemName: "plus")
             }
         }
+        .navigationTitle("Downloads")
     }
 
     private func button(title: String, url: URL) -> some View {
