@@ -19,11 +19,6 @@ public struct CommandersActLocation {
     public init(identifier: String, version: String? = nil, position: Int? = nil) {
         self.identifier = identifier
         self.version = version
-        self.position = Self.string(from: position)
-    }
-
-    static func string(from integer: Int?) -> String? {
-        guard let integer else { return nil }
-        return String(integer)
+        self.position = position.map(String.init)
     }
 }
