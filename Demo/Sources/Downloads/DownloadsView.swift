@@ -19,10 +19,9 @@ private struct DownloadCell: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 20) {
                 Text(download.title)
                 ProgressBar(download: download)
-                subtitle()
             }
             .accessibilityAddTraits(.isButton)
             .onTapGesture {
@@ -37,55 +36,41 @@ private struct DownloadCell: View {
         }
     }
 
-    func subtitle() -> some View {
-        ZStack {
-            if let fileUrl = downloader.fileUrl(for: download) {
-                Text(fileUrl.absoluteString)
-            }
-        }
-        .font(.footnote)
-    }
-
     @ViewBuilder
     func resumeSuspendButton() -> some View {
-        if downloader.isFailed(download: download) {
-            Button {
-                downloader.restart(download: download)
-            } label: {
-                Image(systemName: "arrow.counterclockwise.circle.fill")
-                    .resizable()
-            }
-            .tint(.red)
-            .frame(width: 40, height: 40)
-        }
-        else {
-            switch download.state {
-            case .suspended:
+        ZStack {
+            if downloader.isFailed(download: download) {
                 Button {
-                    download.resume()
+                    downloader.restart(download: download)
                 } label: {
-                    Image(systemName: "play.circle")
+                    Image(systemName: "arrow.counterclockwise.circle")
                         .resizable()
                 }
-                .frame(width: 40, height: 40)
-            case .running:
-                Button {
-                    download.suspend()
-                } label: {
-                    Image(systemName: "pause.circle")
+                .tint(.red)
+            }
+            else {
+                switch download.state {
+                case .suspended:
+                    Button(action: download.resume) {
+                        Image(systemName: "play.circle")
+                            .resizable()
+                    }
+                case .running:
+                    Button(action: download.suspend) {
+                        Image(systemName: "pause.circle")
+                            .resizable()
+                    }
+                case .completed:
+                    Image(systemName: "checkmark")
                         .resizable()
+                        .foregroundStyle(.green)
+                default:
+                    EmptyView()
                 }
-                .frame(width: 40, height: 40)
-            case .canceling:
-                Text("Cancelled")
-                    .foregroundStyle(.red)
-            case .completed:
-                Image(systemName: "checkmark")
-                    .foregroundStyle(.green)
-            default:
-                EmptyView()
             }
         }
+        .frame(width: 30, height: 30)
+        .padding()
     }
 }
 
