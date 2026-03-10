@@ -129,7 +129,7 @@ extension Downloader: AVAssetDownloadDelegate {
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         guard let download = pendingDownloads.first(where: { $0.id == assetDownloadTask.taskDescription }) else { return }
         pendingDownloads.removeAll { $0 == download }
-        _downloads[download] = .url(location)
+        _downloads[download] = .url(localUrl: location)
     }
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
@@ -139,7 +139,7 @@ extension Downloader: AVAssetDownloadDelegate {
                 _downloads[download] = file.toBookmark()
             }
             else if let remoteUrl = task.currentRequest?.url, let localUrl = file.url(allowsPartial: true) {
-                _downloads[download] = .failed(remoteUrl, localUrl)
+                _downloads[download] = .failed(remoteUrl: remoteUrl, localUrl: localUrl)
             }
             else {
                 assertionFailure("💥")
