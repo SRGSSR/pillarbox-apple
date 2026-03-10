@@ -94,9 +94,24 @@ public final class Downloader: NSObject, ObservableObject {
         fileUrl(for: download, allowsPartial: false)
     }
 
-    public func errorMessage(for download: Download) -> String? {
-        guard let file = _downloads[download] else { return nil }
-        return file.errorMessage()
+    public func isFailed(download: Download) -> Bool {
+        switch _downloads[download] {
+        case .failed:
+            true
+        default:
+            false
+        }
+    }
+
+    public func restart(download: Download) {
+        switch _downloads[download] {
+        case let .failed(remoteUrl, _):
+            remove(download)
+            add(title: download.title, url: remoteUrl)
+        default:
+            return
+        }
+
     }
 
     private func fileUrl(for download: Download, allowsPartial: Bool) -> URL? {
@@ -119,11 +134,16 @@ extension Downloader: AVAssetDownloadDelegate {
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let download = _downloads.keys.first(where: { $0.id == task.taskDescription }) else { return }
-        if let error {
-            _downloads[download] = .failed(error.localizedDescription)
-        }
-        else if let file = _downloads[download] {
-            _downloads[download] = file.toBookmark()
+        if let file = _downloads[download] {
+            if error == nil {
+                _downloads[download] = file.toBookmark()
+            }
+            else if let remoteUrl = task.currentRequest?.url, let localUrl = file.url(allowsPartial: true) {
+                _downloads[download] = .failed(remoteUrl, localUrl)
+            }
+            else {
+                assertionFailure("💥")
+            }
         }
     }
 }
