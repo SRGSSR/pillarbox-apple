@@ -26,7 +26,10 @@ private struct DownloadCell: View {
             }
             .accessibilityAddTraits(.isButton)
             .onTapGesture {
-                if let fileUrl = downloader.fileUrl(for: download) {
+                if downloader.isFailed(download: download) {
+                    downloader.restart(download: download)
+                }
+                else if let fileUrl = downloader.fileUrl(for: download) {
                     router.presented = .player(media: .init(title: download.title, type: .url(fileUrl)))
                 }
             }
