@@ -9,5 +9,6 @@ import Foundation
 struct DownloadMetadata: Codable {
     let id: String
     let title: String
+    let remoteUrl: URL
     let file: DownloadedFile
 }
