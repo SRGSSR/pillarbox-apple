@@ -7,9 +7,9 @@
 import Foundation
 
 enum DownloadedFile: Codable {
-    case url(URL)
+    case url(localUrl: URL)
     case bookmark(Data)
-    case failed(URL, URL)
+    case failed(remoteUrl: URL, localUrl: URL)
 
     func url(allowsPartial: Bool) -> URL? {
         switch self {
