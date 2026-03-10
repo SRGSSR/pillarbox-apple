@@ -93,21 +93,18 @@ public final class Downloader: NSObject, ObservableObject {
     public func isFailed(download: Download) -> Bool {
         switch _downloads[download] {
         case .failed:
-            true
+            return true
+        case let .bookmark(data):
+            var bookmarkDataIsStale = false
+            return (try? URL(resolvingBookmarkData: data, bookmarkDataIsStale: &bookmarkDataIsStale)) == nil
         default:
-            false
+            return false
         }
     }
 
     public func restart(download: Download) {
-        switch _downloads[download] {
-        case let .failed(remoteUrl, _):
-            remove(download)
-            add(title: download.title, url: remoteUrl)
-        default:
-            return
-        }
-
+        remove(download)
+        add(title: download.title, url: download.remoteUrl)
     }
 
     private func fileUrl(for download: Download, allowsPartial: Bool) -> URL? {
@@ -136,8 +133,8 @@ extension Downloader: AVAssetDownloadDelegate {
             if error == nil {
                 _downloads[download] = file.toBookmark()
             }
-            else if let remoteUrl = task.currentRequest?.url, let localUrl = file.url(allowsPartial: true) {
-                _downloads[download] = .failed(remoteUrl: remoteUrl, localUrl: localUrl)
+            else if let localUrl = file.url(allowsPartial: true) {
+                _downloads[download] = .failed(localUrl: localUrl)
             }
             else {
                 assertionFailure("💥")
