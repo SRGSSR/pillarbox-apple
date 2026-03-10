@@ -39,40 +39,49 @@ private struct DownloadCell: View {
             if let fileUrl = downloader.fileUrl(for: download) {
                 Text(fileUrl.absoluteString)
             }
-            else if let errorMessage = downloader.errorMessage(for: download) {
-                Text(errorMessage)
-            }
         }
         .font(.footnote)
     }
 
     @ViewBuilder
     func resumeSuspendButton() -> some View {
-        switch download.state {
-        case .suspended:
+        if downloader.isFailed(download: download) {
             Button {
-                download.resume()
+                downloader.restart(download: download)
             } label: {
-                Image(systemName: "play.circle")
+                Image(systemName: "arrow.counterclockwise.circle.fill")
                     .resizable()
             }
+            .tint(.red)
             .frame(width: 40, height: 40)
-        case .running:
-            Button {
-                download.suspend()
-            } label: {
-                Image(systemName: "pause.circle")
-                    .resizable()
+        }
+        else {
+            switch download.state {
+            case .suspended:
+                Button {
+                    download.resume()
+                } label: {
+                    Image(systemName: "play.circle")
+                        .resizable()
+                }
+                .frame(width: 40, height: 40)
+            case .running:
+                Button {
+                    download.suspend()
+                } label: {
+                    Image(systemName: "pause.circle")
+                        .resizable()
+                }
+                .frame(width: 40, height: 40)
+            case .canceling:
+                Text("Cancelled")
+                    .foregroundStyle(.red)
+            case .completed:
+                Image(systemName: "checkmark")
+                    .foregroundStyle(.green)
+            default:
+                EmptyView()
             }
-            .frame(width: 40, height: 40)
-        case .canceling:
-            Text("Cancelled")
-                .foregroundStyle(.red)
-        case .completed:
-            Image(systemName: "checkmark")
-                .foregroundStyle(.green)
-        default:
-            EmptyView()
         }
     }
 }
