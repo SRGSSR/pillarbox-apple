@@ -42,16 +42,12 @@ public final class Downloader: NSObject, ObservableObject {
         guard let jsonData = try? Data(contentsOf: metadataFileUrl), let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return [:]
         }
-        let existingMetadata = metadata.filter { metadata in
-            guard let fileUrl = metadata.file.url(allowsPartial: true) else { return false }
-            return FileManager.default.fileExists(atPath: fileUrl.path)
-        }
         return OrderedDictionary(
-            uniqueKeys: existingMetadata.map { metadata in
+            uniqueKeys: metadata.map { metadata in
                 let task = tasks.first { $0.taskDescription == metadata.id }
                 return Download(id: metadata.id, title: metadata.title, task: task)
             },
-            values: existingMetadata.map(\.file)
+            values: metadata.map(\.file)
         )
     }
 
