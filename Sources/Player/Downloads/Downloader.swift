@@ -45,7 +45,7 @@ public final class Downloader: NSObject, ObservableObject {
         return OrderedDictionary(
             uniqueKeys: metadata.map { metadata in
                 let task = tasks.first { $0.taskDescription == metadata.id }
-                return Download(id: metadata.id, title: metadata.title, task: task)
+                return Download(metadata: metadata, task: task)
             },
             values: metadata.map(\.file)
         )
@@ -53,7 +53,7 @@ public final class Downloader: NSObject, ObservableObject {
 
     private static func saveDownloads(_ downloads: OrderedDictionary<Download, DownloadedFile>) {
         let metadata = downloads.map { download, file in
-            DownloadMetadata(id: download.id, title: download.title, file: file)
+            DownloadMetadata(id: download.id, title: download.title, remoteUrl: download.remoteUrl, file: file)
         }
         if let jsonData = try? JSONEncoder().encode(metadata) {
             try? jsonData.write(to: metadataFileUrl)
@@ -117,7 +117,9 @@ public final class Downloader: NSObject, ObservableObject {
 
     private func downloadTask(title: String, url: URL) -> URLSessionTask {
         let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
-        return session.makeAssetDownloadTask(downloadConfiguration: configuration)
+        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
+        task.taskDescription = UUID().uuidString
+        return task
     }
 }
 

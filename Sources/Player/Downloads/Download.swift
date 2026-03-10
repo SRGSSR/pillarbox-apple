@@ -10,35 +10,40 @@ public final class Download: ObservableObject {
     let id: String
 
     public let title: String
+    public let remoteUrl: URL
 
-    @Published public private(set) var state: URLSessionTask.State
-    @Published public private(set) var progress: Double
+    @Published public private(set) var state: URLSessionTask.State = .completed
+    @Published public private(set) var progress: Double = 1
 
     private let task: URLSessionTask?
 
-    init(id: String = UUID().uuidString, title: String, task: URLSessionTask? = nil) {
-        self.id = id
-        self.title = title
+    init(metadata: DownloadMetadata, task: URLSessionTask?) {
+        self.id = metadata.id
+        self.title = metadata.title
+        self.remoteUrl = metadata.remoteUrl
         self.task = task
 
-        if let task {
-            self.state = .running
-            self.progress = 0
+        configureTaskPublisher()
+    }
 
-            task.taskDescription = id
+    init(title: String, task: URLSessionTask) {
+        self.id = task.taskDescription!
+        self.title = title
+        self.remoteUrl = task.currentRequest!.url!
+        self.task = task
 
-            task.publisher(for: \.state)
-                .receiveOnMainThread()
-                .assign(to: &$state)
-            task.progress.publisher(for: \.fractionCompleted)
-                .map { $0.clamped(to: 0...1) }
-                .receiveOnMainThread()
-                .assign(to: &$progress)
-        }
-        else {
-            self.state = .completed
-            self.progress = 1
-        }
+        configureTaskPublisher()
+    }
+
+    private func configureTaskPublisher() {
+        task?.publisher(for: \.state)
+            .receiveOnMainThread()
+            .assign(to: &$state)
+
+        task?.progress.publisher(for: \.fractionCompleted)
+            .map { $0.clamped(to: 0...1) }
+            .receiveOnMainThread()
+            .assign(to: &$progress)
     }
 
     public func resume() {
