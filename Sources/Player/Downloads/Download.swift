@@ -8,34 +8,38 @@ import AVFoundation
 
 public final class Download: ObservableObject {
     let id: String
-
     public let title: String
     public let remoteUrl: URL
+    private let task: URLSessionTask?
+    private unowned let downloader: Downloader
 
     @Published public private(set) var state: URLSessionTask.State = .completed
     @Published public private(set) var progress: Double = 1
 
-    private let task: URLSessionTask?
-
-    init(metadata: DownloadMetadata, task: URLSessionTask?) {
-        self.id = metadata.id
-        self.title = metadata.title
-        self.remoteUrl = metadata.remoteUrl
-        self.task = task
-
-        configureTaskPublisher()
-    }
-
-    init(title: String, task: URLSessionTask) {
-        self.id = task.taskDescription!
+    private init(id: String, title: String, remoteUrl: URL, task: URLSessionTask?, downloader: Downloader) {
+        self.id = id
         self.title = title
-        self.remoteUrl = task.currentRequest!.url!
+        self.remoteUrl = remoteUrl
         self.task = task
+        self.downloader = downloader
 
         configureTaskPublisher()
     }
 
-    private func configureTaskPublisher() {
+    func cancel() {
+        task?.cancel()
+    }
+}
+
+private extension Download {
+    static func downloadTask(id: String, title: String, remoteUrl: URL, downloader: Downloader) -> URLSessionTask {
+        let configuration = AVAssetDownloadConfiguration(asset: .init(url: remoteUrl), title: title)
+        let task = downloader.session.makeAssetDownloadTask(downloadConfiguration: configuration)
+        task.taskDescription = id
+        return task
+    }
+
+    func configureTaskPublisher() {
         task?.publisher(for: \.state)
             .receiveOnMainThread()
             .assign(to: &$state)
@@ -45,17 +49,39 @@ public final class Download: ObservableObject {
             .receiveOnMainThread()
             .assign(to: &$progress)
     }
+}
 
-    public func resume() {
+extension Download {
+    convenience init(metadata: DownloadMetadata, task: URLSessionTask?, downloader: Downloader) {
+        self.init(id: metadata.id, title: metadata.title, remoteUrl: metadata.remoteUrl, task: task, downloader: downloader)
+    }
+
+    convenience init(title: String, remoteUrl: URL, downloader: Downloader) {
+        let id = UUID().uuidString
+        let task = Self.downloadTask(id: id, title: title, remoteUrl: remoteUrl, downloader: downloader)
+        self.init(id: id, title: title, remoteUrl: remoteUrl, task: task, downloader: downloader)
+    }
+}
+
+public extension Download {
+    func resume() {
         task?.resume()
     }
 
-    public func suspend() {
+    func suspend() {
         task?.suspend()
     }
 
-    func cancel() {
-        task?.cancel()
+    func restart() {
+        downloader.restart(download: self)
+    }
+
+    func isFailed() -> Bool {
+        downloader.isFailed(download: self)
+    }
+
+    func fileUrl() -> URL? {
+        downloader.fileUrl(for: self, allowsPartial: false)
     }
 }
 
