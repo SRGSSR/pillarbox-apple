@@ -27,7 +27,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
              player = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [
-                    CommandersActTracker.adapter { _ in .test }
+                    CommandersActTracker.adapter(configuration: nil) { _ in .test }
                 ]
             ))
             player?.playbackSpeed = 0.5
@@ -39,7 +39,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -69,7 +69,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
              player = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [
-                    CommandersActTracker.adapter { _ in .test }
+                    CommandersActTracker.adapter(configuration: nil) { _ in .test }
                 ]
             ))
             player?.isMuted = true
@@ -81,7 +81,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -102,7 +102,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -124,7 +124,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 

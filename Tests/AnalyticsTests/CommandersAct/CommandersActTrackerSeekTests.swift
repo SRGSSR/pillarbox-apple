@@ -15,7 +15,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -38,7 +38,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -61,7 +61,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 

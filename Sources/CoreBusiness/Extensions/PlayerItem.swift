@@ -20,7 +20,7 @@ public extension PlayerItem {
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
+    ///   - context: Contextual information associated with the item.
     ///
     /// Metadata is automatically associated with the item. In addition to trackers you provide, tracking is performed
     /// according to SRG SSR analytics standards.
@@ -28,13 +28,13 @@ public extension PlayerItem {
         _ urn: String,
         server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
-        configuration: PlaybackConfiguration = .default
+        context: PlaybackContext = .default
     ) -> Self {
         .init(
-            publisher: publisher(forUrn: urn, server: server, configuration: configuration),
+            publisher: publisher(forUrn: urn, server: server, configuration: context.configuration),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
-                CommandersActTracker.adapter { $0.analyticsMetadata },
+                CommandersActTracker.adapter(configuration: context.commandersActSource) { $0.analyticsMetadata },
                 MetricsTracker.adapter(
                     configuration: .init(
                         identifier: urn,
@@ -57,7 +57,7 @@ public extension PlayerItem {
     ///   - url: The URL to play.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
+    ///   - context: Contextual information associated with the item.
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
     /// tracking.
@@ -65,10 +65,10 @@ public extension PlayerItem {
         url: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlaybackConfiguration = .default
+        context: PlaybackContext = .default
     ) -> Self where M: AssetMetadata {
         .init(
-            asset: .tokenProtected(url: url, metadata: metadata, configuration: configuration),
+            asset: .tokenProtected(url: url, metadata: metadata, configuration: context.configuration),
             trackerAdapters: trackerAdapters
         )
     }
@@ -80,7 +80,7 @@ public extension PlayerItem {
     ///   - certificateUrl: The URL of the certificate to use.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
+    ///   - context: Contextual information associated with the item.
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
     /// tracking.
@@ -89,10 +89,10 @@ public extension PlayerItem {
         certificateUrl: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlaybackConfiguration = .default
+        context: PlaybackContext = .default
     ) -> Self where M: AssetMetadata {
         .init(
-            asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration),
+            asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: context.configuration),
             trackerAdapters: trackerAdapters
         )
     }

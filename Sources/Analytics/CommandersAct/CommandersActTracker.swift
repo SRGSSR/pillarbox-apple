@@ -19,12 +19,14 @@ public final class CommandersActTracker: PlayerItemTracker {
     private var metadata: [String: String] = [:]
     private var lastEvent: Event = .none
 
+    private let configuration: CommandersActSource?
     private let stopwatch = Stopwatch()
     private let heartbeat: CommandersActHeartbeat
 
     // swiftlint:disable:next missing_docs
-    public init(configuration: Void, queue: DispatchQueue) {
-        heartbeat = .init(queue: queue)
+    public init(configuration: CommandersActSource?, queue: DispatchQueue) {
+        self.configuration = configuration
+        self.heartbeat = .init(queue: queue)
     }
 
     // swiftlint:disable:next missing_docs
@@ -68,7 +70,7 @@ private extension CommandersActTracker {
     func notify(_ event: Event, properties: TrackerProperties) {
         updateStopwatch(event: event, properties: properties)
         sendEventIfNeeded(event: event, properties: properties)
-        heartbeat.update(with: properties, labels: labels)
+        heartbeat.update(with: properties, source: configuration, labels: labels)
     }
 
     func updateStopwatch(event: Event, properties: TrackerProperties) {
@@ -91,6 +93,7 @@ private extension CommandersActTracker {
         default:
             Analytics.shared.sendCommandersActEvent(.init(
                 name: event.rawValue,
+                source: configuration,
                 labels: labels(from: properties)
             ))
             lastEvent = event

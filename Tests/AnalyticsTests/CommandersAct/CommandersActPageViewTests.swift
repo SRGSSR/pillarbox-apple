@@ -22,6 +22,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
         )
         let globals = CommandersActGlobals(
             consentServices: ["service1,service2,service3"],
+            profileIdentifier: "profile",
             labels: [
                 "globals-label": "globals",
                 "common-label": "globals"
@@ -30,6 +31,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
 
         expect(pageView.merging(globals: globals).labels).to(equal([
             "consent_services": "service1,service2,service3",
+            "profile_id": "profile",
             "globals-label": "globals",
             "pageview-label": "pageview",
             "common-label": "globals"
@@ -57,6 +59,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.navigation_property_type).to(equal("app"))
                 expect(labels.content_bu_owner).to(equal("SRG"))
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
+                expect(labels.page_id).to(equal("page"))
             }
         ) {
             Analytics.shared.trackPageView(
@@ -72,7 +75,8 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                         "level_6",
                         "level_7",
                         "level_8"
-                    ]
+                    ],
+                    source: .init(page: .init(identifier: "page"))
                 )
             )
         }
@@ -158,15 +162,18 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             page_view { labels in
                 expect(labels.page_name).to(equal("name"))
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
+                expect(labels.page_id).to(equal("page"))
             }
         ) {
             Analytics.shared.trackPageView(
                 commandersAct: .init(
                     name: "name",
                     type: "type",
+                    source: .init(page: .init(identifier: "page")),
                     labels: [
                         "page_name": "overridden_title",
-                        "consent_services": "service42"
+                        "consent_services": "service42",
+                        "page_id": "page42"
                     ]
                 )
             )

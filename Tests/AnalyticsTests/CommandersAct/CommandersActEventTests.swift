@@ -22,6 +22,7 @@ final class CommandersActEventTests: CommandersActTestCase {
         )
         let globals = CommandersActGlobals(
             consentServices: ["service1,service2,service3"],
+            profileIdentifier: "profile",
             labels: [
                 "globals-label": "globals",
                 "common-label": "globals"
@@ -30,10 +31,24 @@ final class CommandersActEventTests: CommandersActTestCase {
 
         expect(event.merging(globals: globals).labels).to(equal([
             "consent_services": "service1,service2,service3",
+            "profile_id": "profile",
             "globals-label": "globals",
             "event-label": "event",
             "common-label": "globals"
         ]))
+    }
+
+    func testLabels() {
+        expectAtLeastHits(
+            custom(name: "name") { labels in
+                expect(labels.page_id).to(equal("page"))
+            }
+        ) {
+            Analytics.shared.sendEvent(commandersAct: .init(
+                name: "name",
+                source: .init(page: .init(identifier: "page"))
+            ))
+        }
     }
 
     func testBlankName() throws {
@@ -79,6 +94,7 @@ final class CommandersActEventTests: CommandersActTestCase {
         expectAtLeastHits(
             custom(name: "name") { labels in
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
+                expect(labels.profile_id).to(equal("profile"))
             }
         ) {
             Analytics.shared.sendEvent(commandersAct: .init(name: "name"))
@@ -88,14 +104,19 @@ final class CommandersActEventTests: CommandersActTestCase {
     func testCustomLabelsForbiddenOverrides() {
         expectAtLeastHits(
             custom(name: "name") { labels in
+                expect(labels.profile_id).to(equal("profile"))
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
+                expect(labels.page_id).to(equal("page"))
             }
         ) {
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: "name",
+                source: .init(page: .init(identifier: "page")),
                 labels: [
                     "event_name": "overridden_name",
-                    "consent_services": "service42"
+                    "profile_id": "profile42",
+                    "consent_services": "service42",
+                    "page_id": "page42"
                 ]
             ))
         }

@@ -25,7 +25,7 @@ public struct ComScoreGlobals {
     /// - Parameters:
     ///   - consent: The user's consent status.
     ///   - labels: Additional information associated with the global labels.
-    public init(consent: ComScoreConsent, labels: [String: String]) {
+    public init(consent: ComScoreConsent, labels: [String: String] = [:]) {
         self.labels = labels.merging(["cs_ucfr": consent.rawValue]) { _, new in new }
     }
 }

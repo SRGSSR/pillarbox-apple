@@ -17,7 +17,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -34,7 +34,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.live.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -51,7 +51,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -68,7 +68,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
 
@@ -91,7 +91,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
         expectAtLeastHits(play()) {
@@ -110,7 +110,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.dvr.url,
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in .test }
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
             ]
         ))
         expect(player?.playbackState).toEventually(equal(.paused))

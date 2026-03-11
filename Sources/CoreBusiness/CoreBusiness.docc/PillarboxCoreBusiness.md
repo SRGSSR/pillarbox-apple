@@ -18,7 +18,7 @@ The PillarboxCoreBusiness framework offers standard SRG SSR business integration
 
 ### Play SRG SSR content
 
-To play SRG SSR content, create a `PlayerItem` using ``PillarboxPlayer/PlayerItem/urn(_:server:trackerAdapters:configuration:)``, and pass the content URN as a parameter. Then load this `PlayerItem` into a `Player` instance.
+To play SRG SSR content, create a `PlayerItem` using ``PillarboxPlayer/PlayerItem/urn(_:server:trackerAdapters:context:)``, and pass the content URN as a parameter. Then load this `PlayerItem` into a `Player` instance.
 
 You can specify a different server or add custom tracker adapters. Standard SRG SSR trackers cannot be disabled.
 
