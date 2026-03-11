@@ -13,8 +13,26 @@ public final class Download: ObservableObject {
     private let task: URLSessionTask?
     private unowned let downloader: Downloader
 
-    @Published public private(set) var state: URLSessionTask.State = .completed
+    @Published private(set) var state: URLSessionTask.State = .completed
     @Published public private(set) var progress: Double = 1
+
+    public var status: DownloadStatus {
+        switch state {
+        case .running:
+            return .running
+        case .suspended, .canceling:
+            return .suspended
+        case .completed:
+            switch link() {
+            case let .available(url):
+                return .completed(url)
+            case .missing:
+                return .failed
+            }
+        @unknown default:
+            return .failed
+        }
+    }
 
     private init(id: String, title: String, remoteUrl: URL, task: URLSessionTask?, downloader: Downloader) {
         self.id = id
@@ -28,6 +46,10 @@ public final class Download: ObservableObject {
 
     func cancel() {
         task?.cancel()
+    }
+
+    func link() -> DownloadLink {
+        downloader.link(for: self)
     }
 }
 
@@ -74,10 +96,6 @@ public extension Download {
 
     func restart() {
         downloader.restart(download: self)
-    }
-
-    func link() -> DownloadLink {
-        downloader.link(for: self)
     }
 }
 
