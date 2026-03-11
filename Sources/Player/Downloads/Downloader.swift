@@ -14,7 +14,7 @@ import UIKit
 public final class Downloader: NSObject, ObservableObject {
     static let metadataFileUrl = URL.libraryDirectory.appending(component: "downloads.json")
 
-    private lazy var session = AVAssetDownloadURLSession(
+    lazy var session = AVAssetDownloadURLSession(
         configuration: .background(withIdentifier: "ch.srgssr.player.downloader"),
         assetDownloadDelegate: self,
         delegateQueue: .main
@@ -38,14 +38,14 @@ public final class Downloader: NSObject, ObservableObject {
         restore()
     }
 
-    private static func restoreDownloads(from tasks: [URLSessionTask]) -> OrderedDictionary<Download, DownloadedFile> {
+    private static func restoreDownloads(from tasks: [URLSessionTask], downloader: Downloader) -> OrderedDictionary<Download, DownloadedFile> {
         guard let jsonData = try? Data(contentsOf: metadataFileUrl), let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return [:]
         }
         return OrderedDictionary(
             uniqueKeys: metadata.map { metadata in
                 let task = tasks.first { $0.taskDescription == metadata.id }
-                return Download(metadata: metadata, task: task)
+                return Download(metadata: metadata, task: task, downloader: downloader)
             },
             values: metadata.map(\.file)
         )
@@ -62,16 +62,14 @@ public final class Downloader: NSObject, ObservableObject {
 
     func restore() {
         session.getAllTasks { [weak self] tasks in
-            self?._downloads = Self.restoreDownloads(from: tasks)
+            guard let self else { return }
+            _downloads = Self.restoreDownloads(from: tasks, downloader: self)
         }
     }
 
     @discardableResult
-    public func add(title: String, url: URL) -> Download {
-        let download = Download(
-            title: title,
-            task: downloadTask(title: title, url: url)
-        )
+    public func add(title: String, remoteUrl: URL) -> Download {
+        let download = Download(title: title, remoteUrl: remoteUrl, downloader: self)
         download.resume()
         pendingDownloads.append(download)
         return download
@@ -86,11 +84,7 @@ public final class Downloader: NSObject, ObservableObject {
         _downloads.removeValue(forKey: download)
     }
 
-    public func fileUrl(for download: Download) -> URL? {
-        fileUrl(for: download, allowsPartial: false)
-    }
-
-    public func isFailed(download: Download) -> Bool {
+    func isFailed(download: Download) -> Bool {
         switch _downloads[download] {
         case .failed:
             return true
@@ -102,21 +96,14 @@ public final class Downloader: NSObject, ObservableObject {
         }
     }
 
-    public func restart(download: Download) {
+    func restart(download: Download) {
         remove(download)
-        add(title: download.title, url: download.remoteUrl)
+        add(title: download.title, remoteUrl: download.remoteUrl)
     }
 
-    private func fileUrl(for download: Download, allowsPartial: Bool) -> URL? {
+    func fileUrl(for download: Download, allowsPartial: Bool) -> URL? {
         guard let file = _downloads[download] else { return nil }
         return file.url(allowsPartial: allowsPartial)
-    }
-
-    private func downloadTask(title: String, url: URL) -> URLSessionTask {
-        let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
-        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
-        task.taskDescription = UUID().uuidString
-        return task
     }
 }
 
@@ -128,17 +115,15 @@ extension Downloader: AVAssetDownloadDelegate {
     }
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
-        guard let download = _downloads.keys.first(where: { $0.id == task.taskDescription }) else { return }
-        if let file = _downloads[download] {
-            if error == nil {
-                _downloads[download] = file.toBookmark()
-            }
-            else if let localUrl = file.url(allowsPartial: true) {
-                _downloads[download] = .failed(localUrl: localUrl)
-            }
-            else {
-                assertionFailure("💥")
-            }
+        guard let download = _downloads.keys.first(where: { $0.id == task.taskDescription }), let file = _downloads[download] else { return }
+        if error == nil {
+            _downloads[download] = file.toBookmark()
+        }
+        else if let localUrl = file.url(allowsPartial: true) {
+            _downloads[download] = .failed(localUrl: localUrl)
+        }
+        else {
+            assertionFailure("💥")
         }
     }
 }

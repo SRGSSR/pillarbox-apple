@@ -13,8 +13,6 @@ import SwiftUI
 
 private struct DownloadCell: View {
     @EnvironmentObject private var router: Router
-
-    let downloader: Downloader
     @ObservedObject var download: Download
 
     var body: some View {
@@ -25,10 +23,10 @@ private struct DownloadCell: View {
             }
             .accessibilityAddTraits(.isButton)
             .onTapGesture {
-                if downloader.isFailed(download: download) {
-                    downloader.restart(download: download)
+                if download.isFailed() {
+                    download.restart()
                 }
-                else if let fileUrl = downloader.fileUrl(for: download) {
+                else if let fileUrl = download.fileUrl() {
                     router.presented = .player(media: .init(title: download.title, type: .url(fileUrl)))
                 }
             }
@@ -39,9 +37,9 @@ private struct DownloadCell: View {
     @ViewBuilder
     func resumeSuspendButton() -> some View {
         ZStack {
-            if downloader.isFailed(download: download) {
+            if download.isFailed() {
                 Button {
-                    downloader.restart(download: download)
+                    download.restart()
                 } label: {
                     Image(systemName: "arrow.counterclockwise.circle")
                         .resizable()
@@ -88,7 +86,7 @@ struct DownloadsView: View {
     var body: some View {
         List {
             ForEach(Array(downloader.downloads), id: \.self) { download in
-                DownloadCell(downloader: downloader, download: download)
+                DownloadCell(download: download)
             }
             .onDelete { indexes in
                 for index in indexes.reversed() {
@@ -120,7 +118,7 @@ struct DownloadsView: View {
 
     private func button(title: String, url: URL) -> some View {
         Button {
-            downloader.add(title: title, url: url)
+            downloader.add(title: title, remoteUrl: url)
         } label: {
             Text(title)
         }
