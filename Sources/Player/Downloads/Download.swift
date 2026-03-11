@@ -76,12 +76,8 @@ public extension Download {
         downloader.restart(download: self)
     }
 
-    func isFailed() -> Bool {
-        downloader.isFailed(download: self)
-    }
-
-    func fileUrl() -> URL? {
-        downloader.fileUrl(for: self, allowsPartial: false)
+    func link() -> DownloadLink {
+        downloader.link(for: self)
     }
 }
 

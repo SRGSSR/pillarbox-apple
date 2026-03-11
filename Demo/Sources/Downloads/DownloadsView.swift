@@ -23,11 +23,11 @@ private struct DownloadCell: View {
             }
             .accessibilityAddTraits(.isButton)
             .onTapGesture {
-                if download.isFailed() {
+                switch download.link() {
+                case let .available(url):
+                    router.presented = .player(media: .init(title: download.title, type: .url(url)))
+                case .missing:
                     download.restart()
-                }
-                else if let fileUrl = download.fileUrl() {
-                    router.presented = .player(media: .init(title: download.title, type: .url(fileUrl)))
                 }
             }
             resumeSuspendButton()
@@ -37,7 +37,7 @@ private struct DownloadCell: View {
     @ViewBuilder
     func resumeSuspendButton() -> some View {
         ZStack {
-            if download.isFailed() {
+            if download.link() == .missing {
                 Button {
                     download.restart()
                 } label: {

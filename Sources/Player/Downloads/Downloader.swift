@@ -78,22 +78,10 @@ public final class Downloader: NSObject, ObservableObject {
     public func remove(_ download: Download) {
         download.cancel()
         pendingDownloads.removeAll { $0 == download }
-        if let url = fileUrl(for: download, allowsPartial: true) {
+        if let url = url(for: download) {
             try? FileManager.default.removeItem(at: url)
         }
         _downloads.removeValue(forKey: download)
-    }
-
-    func isFailed(download: Download) -> Bool {
-        switch _downloads[download] {
-        case .failed:
-            return true
-        case let .bookmark(data):
-            var bookmarkDataIsStale = false
-            return (try? URL(resolvingBookmarkData: data, bookmarkDataIsStale: &bookmarkDataIsStale)) == nil
-        default:
-            return false
-        }
     }
 
     func restart(download: Download) {
@@ -101,9 +89,12 @@ public final class Downloader: NSObject, ObservableObject {
         add(title: download.title, remoteUrl: download.remoteUrl)
     }
 
-    func fileUrl(for download: Download, allowsPartial: Bool) -> URL? {
-        guard let file = _downloads[download] else { return nil }
-        return file.url(allowsPartial: allowsPartial)
+    func link(for download: Download) -> DownloadLink {
+        _downloads[download]?.link() ?? .missing
+    }
+
+    func url(for download: Download) -> URL? {
+        _downloads[download]?.url()
     }
 }
 
@@ -111,20 +102,12 @@ extension Downloader: AVAssetDownloadDelegate {
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         guard let download = pendingDownloads.first(where: { $0.id == assetDownloadTask.taskDescription }) else { return }
         pendingDownloads.removeAll { $0 == download }
-        _downloads[download] = .url(localUrl: location)
+        _downloads[download] = .partial(location)
     }
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let download = _downloads.keys.first(where: { $0.id == task.taskDescription }), let file = _downloads[download] else { return }
-        if error == nil {
-            _downloads[download] = file.toBookmark()
-        }
-        else if let localUrl = file.url(allowsPartial: true) {
-            _downloads[download] = .failed(localUrl: localUrl)
-        }
-        else {
-            assertionFailure("💥")
-        }
+        _downloads[download] = file.complete(with: error)
     }
 }
 
