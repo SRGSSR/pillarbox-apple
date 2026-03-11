@@ -6,7 +6,9 @@
 
 import Foundation
 
-enum DownloadLink: Equatable {
-    case available(URL)
-    case missing
+public enum DownloadStatus: Equatable {
+    case running
+    case suspended
+    case completed(URL)
+    case failed
 }

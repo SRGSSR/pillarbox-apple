@@ -23,11 +23,13 @@ private struct DownloadCell: View {
             }
             .accessibilityAddTraits(.isButton)
             .onTapGesture {
-                switch download.link() {
-                case let .available(url):
+                switch download.status {
+                case let .completed(url):
                     router.presented = .player(media: .init(title: download.title, type: .url(url)))
-                case .missing:
+                case .failed:
                     download.restart()
+                default:
+                    break
                 }
             }
             resumeSuspendButton()
@@ -37,38 +39,29 @@ private struct DownloadCell: View {
     @ViewBuilder
     func resumeSuspendButton() -> some View {
         ZStack {
-            if download.link() == .missing {
-                Button {
-                    download.restart()
-                } label: {
-                    Image(systemName: "arrow.counterclockwise.circle")
-                        .resizable()
-                }
-                .tint(.red)
-            }
-            else {
-                switch download.state {
-                case .suspended:
-                    Button(action: download.resume) {
-                        Image(systemName: "play.circle")
-                            .resizable()
-                    }
-                case .running:
-                    Button(action: download.suspend) {
-                        Image(systemName: "pause.circle")
-                            .resizable()
-                    }
-                case .completed:
-                    Image(systemName: "checkmark")
-                        .resizable()
-                        .foregroundStyle(.green)
-                default:
-                    EmptyView()
-                }
+            switch download.status {
+            case .running:
+                button(systemImage: "pause.circle", action: download.suspend)
+            case .suspended:
+                button(systemImage: "play.circle", action: download.resume)
+            case .completed:
+                Image(systemName: "checkmark")
+                    .resizable()
+                    .foregroundStyle(.green)
+            case .failed:
+                button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
+                    .tint(.red)
             }
         }
         .frame(width: 30, height: 30)
         .padding()
+    }
+
+    private func button(systemImage: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .resizable()
+        }
     }
 }
 
