@@ -19,7 +19,7 @@ private struct DownloadCell: View {
         HStack {
             VStack(alignment: .leading, spacing: 20) {
                 Text(download.title)
-                ProgressBar(download: download)
+                ProgressView(value: download.progress)
             }
             .accessibilityAddTraits(.isButton)
             .onTapGesture {
@@ -37,7 +37,7 @@ private struct DownloadCell: View {
     }
 
     @ViewBuilder
-    func resumeSuspendButton() -> some View {
+    private func resumeSuspendButton() -> some View {
         ZStack {
             switch download.status {
             case .running:
@@ -62,14 +62,6 @@ private struct DownloadCell: View {
             Image(systemName: systemImage)
                 .resizable()
         }
-    }
-}
-
-private struct ProgressBar: View {
-    @ObservedObject var download: Download
-
-    var body: some View {
-        ProgressView(value: download.progress)
     }
 }
 
