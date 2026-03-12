@@ -9,6 +9,11 @@ import Combine
 import OrderedCollections
 import UIKit
 
+struct PendingDownload: Equatable {
+    let download: Download
+    let replacedDownload: Download?
+}
+
 #if DEBUG
 @_spi(DownloaderPrivate)
 public final class Downloader: NSObject, ObservableObject {
@@ -20,7 +25,7 @@ public final class Downloader: NSObject, ObservableObject {
         delegateQueue: .main
     )
 
-    private var pendingDownloads: [Download] = []
+    private var pendingDownloads: [PendingDownload] = []
     private var cancellables = Set<AnyCancellable>()
 
     @Published private var _downloads: OrderedDictionary<Download, DownloadedFile> = [:] {
@@ -38,7 +43,47 @@ public final class Downloader: NSObject, ObservableObject {
         restore()
     }
 
-    private static func restoreDownloads(from tasks: [URLSessionTask], downloader: Downloader) -> OrderedDictionary<Download, DownloadedFile> {
+    @discardableResult
+    public func add(title: String, remoteUrl: URL) -> Download {
+        add(title: title, remoteUrl: remoteUrl, replacing: nil)
+    }
+
+    public func remove(_ download: Download) {
+        do {
+            download.cancel()
+            pendingDownloads.removeAll { $0.download == download }
+            if let url = url(for: download) {
+                try FileManager.default.removeItem(at: url)
+                _downloads.removeValue(forKey: download)
+            }
+        }
+        catch {}
+    }
+}
+
+extension Downloader {
+    func restore() {
+        session.getAllTasks { [weak self] tasks in
+            guard let self else { return }
+            _downloads = Self.restoreDownloads(from: tasks, downloader: self)
+        }
+    }
+
+    func restart(download: Download) -> Download {
+        add(title: download.title, remoteUrl: download.remoteUrl, replacing: download)
+    }
+
+    func link(for download: Download) -> DownloadLink {
+        _downloads[download]?.link() ?? .missing
+    }
+
+    func url(for download: Download) -> URL? {
+        _downloads[download]?.url()
+    }
+}
+
+private extension Downloader {
+    static func restoreDownloads(from tasks: [URLSessionTask], downloader: Downloader) -> OrderedDictionary<Download, DownloadedFile> {
         guard let jsonData = try? Data(contentsOf: metadataFileUrl), let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return [:]
         }
@@ -51,7 +96,7 @@ public final class Downloader: NSObject, ObservableObject {
         )
     }
 
-    private static func saveDownloads(_ downloads: OrderedDictionary<Download, DownloadedFile>) {
+    static func saveDownloads(_ downloads: OrderedDictionary<Download, DownloadedFile>) {
         let metadata = downloads.map { download, file in
             DownloadMetadata(id: download.id, title: download.title, remoteUrl: download.remoteUrl, file: file)
         }
@@ -60,52 +105,32 @@ public final class Downloader: NSObject, ObservableObject {
         }
     }
 
-    func restore() {
-        session.getAllTasks { [weak self] tasks in
-            guard let self else { return }
-            _downloads = Self.restoreDownloads(from: tasks, downloader: self)
-        }
-    }
-
-    @discardableResult
-    public func add(title: String, remoteUrl: URL) -> Download {
+    func add(title: String, remoteUrl: URL, replacing replacedDownload: Download?) -> Download {
         let download = Download(title: title, remoteUrl: remoteUrl, downloader: self)
         download.resume()
-        pendingDownloads.append(download)
+        pendingDownloads.append(.init(download: download, replacedDownload: replacedDownload))
         return download
-    }
-
-    public func remove(_ download: Download) {
-        do {
-            download.cancel()
-            pendingDownloads.removeAll { $0 == download }
-            if let url = url(for: download) {
-                try FileManager.default.removeItem(at: url)
-                _downloads.removeValue(forKey: download)
-            }
-        }
-        catch {}
-    }
-
-    func restart(download: Download) {
-        remove(download)
-        add(title: download.title, remoteUrl: download.remoteUrl)
-    }
-
-    func link(for download: Download) -> DownloadLink {
-        _downloads[download]?.link() ?? .missing
-    }
-
-    func url(for download: Download) -> URL? {
-        _downloads[download]?.url()
     }
 }
 
 extension Downloader: AVAssetDownloadDelegate {
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
-        guard let download = pendingDownloads.first(where: { $0.id == assetDownloadTask.taskDescription }) else { return }
-        pendingDownloads.removeAll { $0 == download }
-        _downloads[download] = .partial(location)
+        guard let pendingDownload = pendingDownloads.first(where: { $0.download.id == assetDownloadTask.taskDescription }) else {
+            return
+        }
+        pendingDownloads.removeAll { $0 == pendingDownload }
+        if let replacedDownload = pendingDownload.replacedDownload {
+            if let index = _downloads.index(forKey: replacedDownload) {
+                _downloads.updateValue(.partial(location), forKey: pendingDownload.download, insertingAt: index)
+            }
+            else {
+                _downloads[pendingDownload.download] = .partial(location)
+            }
+            remove(replacedDownload)
+        }
+        else {
+            _downloads[pendingDownload.download] = .partial(location)
+        }
     }
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
