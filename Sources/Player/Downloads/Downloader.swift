@@ -76,12 +76,15 @@ public final class Downloader: NSObject, ObservableObject {
     }
 
     public func remove(_ download: Download) {
-        download.cancel()
-        pendingDownloads.removeAll { $0 == download }
-        if let url = url(for: download) {
-            try? FileManager.default.removeItem(at: url)
+        do {
+            download.cancel()
+            pendingDownloads.removeAll { $0 == download }
+            if let url = url(for: download) {
+                try FileManager.default.removeItem(at: url)
+                _downloads.removeValue(forKey: download)
+            }
         }
-        _downloads.removeValue(forKey: download)
+        catch {}
     }
 
     func restart(download: Download) {
