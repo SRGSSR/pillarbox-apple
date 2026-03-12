@@ -9,11 +9,6 @@ import Combine
 import OrderedCollections
 import UIKit
 
-struct PendingDownload: Equatable {
-    let download: Download
-    let replacedDownload: Download?
-}
-
 #if DEBUG
 @_spi(DownloaderPrivate)
 public final class Downloader: NSObject, ObservableObject {
@@ -25,7 +20,7 @@ public final class Downloader: NSObject, ObservableObject {
         delegateQueue: .main
     )
 
-    private var pendingDownloads: [PendingDownload] = []
+    private var pendingDownloads: [Download] = []
     private var cancellables = Set<AnyCancellable>()
 
     @Published private var _downloads: OrderedDictionary<Download, DownloadedFile> = [:] {
@@ -45,17 +40,18 @@ public final class Downloader: NSObject, ObservableObject {
 
     @discardableResult
     public func add(title: String, remoteUrl: URL) -> Download {
-        add(title: title, remoteUrl: remoteUrl, replacing: nil)
+        let download = Download(title: title, remoteUrl: remoteUrl, downloader: self)
+        download.resume()
+        pendingDownloads.append(download)
+        return download
     }
 
     public func remove(_ download: Download) {
         do {
             download.cancel()
-            pendingDownloads.removeAll { $0.download == download }
-            if let url = url(for: download) {
-                try FileManager.default.removeItem(at: url)
-                _downloads.removeValue(forKey: download)
-            }
+            pendingDownloads.removeAll { $0 == download }
+            try removeFile(for: download)
+            _downloads.removeValue(forKey: download)
         }
         catch {}
     }
@@ -69,8 +65,14 @@ extension Downloader {
         }
     }
 
-    func restart(download: Download) -> Download {
-        add(title: download.title, remoteUrl: download.remoteUrl, replacing: download)
+    private func removeFile(for download: Download) throws {
+        guard let url = url(for: download) else { return }
+        try FileManager.default.removeItem(at: url)
+    }
+
+    func renew(download: Download) throws {
+        try removeFile(for: download)
+        pendingDownloads.append(download)
     }
 
     func link(for download: Download) -> DownloadLink {
@@ -104,33 +106,15 @@ private extension Downloader {
             try? jsonData.write(to: metadataFileUrl)
         }
     }
-
-    func add(title: String, remoteUrl: URL, replacing replacedDownload: Download?) -> Download {
-        let download = Download(title: title, remoteUrl: remoteUrl, downloader: self)
-        download.resume()
-        pendingDownloads.append(.init(download: download, replacedDownload: replacedDownload))
-        return download
-    }
 }
 
 extension Downloader: AVAssetDownloadDelegate {
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
-        guard let pendingDownload = pendingDownloads.first(where: { $0.download.id == assetDownloadTask.taskDescription }) else {
+        guard let download = pendingDownloads.first(where: { $0.id == assetDownloadTask.taskDescription }) else {
             return
         }
-        pendingDownloads.removeAll { $0 == pendingDownload }
-        if let replacedDownload = pendingDownload.replacedDownload {
-            if let index = _downloads.index(forKey: replacedDownload) {
-                _downloads.updateValue(.partial(location), forKey: pendingDownload.download, insertingAt: index)
-            }
-            else {
-                _downloads[pendingDownload.download] = .partial(location)
-            }
-            remove(replacedDownload)
-        }
-        else {
-            _downloads[pendingDownload.download] = .partial(location)
-        }
+        pendingDownloads.removeAll { $0 == download }
+        _downloads[download] = .partial(location)
     }
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
