@@ -17,22 +17,27 @@ private struct DownloadCell: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 20) {
-                Text(download.title)
-                ProgressView(value: download.progress)
-            }
-            .accessibilityAddTraits(.isButton)
-            .onTapGesture {
-                switch download.status {
-                case let .completed(url):
-                    router.presented = .player(media: .init(title: download.title, type: .url(url)))
-                case .failed:
-                    download.restart()
-                default:
-                    break
-                }
-            }
+            infoView()
             resumeSuspendButton()
+        }
+    }
+
+    private func infoView() -> some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text(download.title)
+            ProgressView(value: download.progress)
+        }
+        .contentShape(.rect)
+        .accessibilityAddTraits(.isButton)
+        .onTapGesture {
+            switch download.status {
+            case let .completed(url):
+                router.presented = .player(media: .init(title: download.title, type: .url(url)))
+            case .failed:
+                download.restart()
+            default:
+                break
+            }
         }
     }
 
@@ -93,6 +98,10 @@ struct DownloadsView: View {
                 button(
                     title: "Long video",
                     url: "https://rts-vod-amd.akamaized.net/ww/14970442/4dcba1d3-8cc8-3667-a7d2-b3b92c4243d9/master.m3u8"
+                )
+                button(
+                    title: "MP3",
+                    url: "https://rts-aod-dd.akamaized.net/ww/13306839/63cc2653-8305-3894-a448-108810b553ef.mp3"
                 )
             } label: {
                 Image(systemName: "plus")
