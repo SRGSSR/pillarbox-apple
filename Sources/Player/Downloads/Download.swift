@@ -8,16 +8,18 @@ import AVFoundation
 import Combine
 
 public final class Download: ObservableObject {
-    let id: String
+    private let id: String
+
     public let title: String
-    public let remoteUrl: URL
+    public let url: URL
+
     private var task: URLSessionTask? {
         didSet {
             configureTaskPublisher()
         }
     }
-    private unowned let downloader: Downloader
-    private var cancellables = Set<AnyCancellable>()
+
+    @Published private var location: DownloadLocation = .unknown
 
     @Published private(set) var state: URLSessionTask.State = .completed
     @Published public private(set) var progress: Double = 1
@@ -29,10 +31,10 @@ public final class Download: ObservableObject {
         case .suspended, .canceling:
             return .suspended
         case .completed:
-            switch link() {
-            case let .available(url):
+            if let url = fileUrl() {
                 return .completed(url)
-            case .missing:
+            }
+            else {
                 return .failed
             }
         @unknown default:
@@ -40,58 +42,75 @@ public final class Download: ObservableObject {
         }
     }
 
-    private init(id: String, title: String, remoteUrl: URL, task: URLSessionTask?, downloader: Downloader) {
+    private init(id: String, title: String, url: URL, location: DownloadLocation, task: URLSessionTask?) {
         self.id = id
         self.title = title
-        self.remoteUrl = remoteUrl
+        self.url = url
+        self.location = location
         self.task = task
-        self.downloader = downloader
 
         configureTaskPublisher()
     }
 
+    static func create(title: String, url: URL, using session: AVAssetDownloadURLSession) -> Self {
+        let id = UUID().uuidString
+        let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
+        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
+        task.taskDescription = id
+        return self.init(id: id, title: title, url: url, location: .unknown, task: task)
+    }
+
+    static func restore(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) -> Self {
+        if let task = tasks.first(where: { $0.taskDescription == metadata.id }) {
+            return self.init(id: metadata.id, title: metadata.title, url: metadata.url, location: .init(from: metadata.bookmarkData), task: task)
+        }
+        else if let bookmarkData = metadata.bookmarkData {
+            return self.init(id: metadata.id, title: metadata.title, url: metadata.url, location: .bookmark(bookmarkData), task: nil)
+        }
+        else {
+            return create(title: metadata.title, url: metadata.url, using: session)
+        }
+    }
+
+    func matches(task: URLSessionTask) -> Bool {
+        task.taskDescription == id
+    }
+
+    func metadata() -> DownloadMetadata {
+        .init(id: id, title: title, url: url, bookmarkData: location.bookmarkData())
+    }
+
+    func attach(to url: URL) {
+        location = .unreliable(url)
+    }
+
     func cancel() {
         task?.cancel()
+        if let url = fileUrl() {
+            try? FileManager.default.removeItem(at: url)
+        }
     }
 
-    func link() -> DownloadLink {
-        downloader.link(for: self)
-    }
-}
-
-private extension Download {
-    static func downloadTask(id: String, title: String, remoteUrl: URL, downloader: Downloader) -> URLSessionTask {
-        let configuration = AVAssetDownloadConfiguration(asset: .init(url: remoteUrl), title: title)
-        let task = downloader.session.makeAssetDownloadTask(downloadConfiguration: configuration)
-        task.taskDescription = id
-        return task
-    }
-
-    func configureTaskPublisher() {
-        cancellables = []
-
-        task?.publisher(for: \.state)
+    private func configureTaskPublisher() {
+        guard let task else { return }
+        task.publisher(for: \.state)
             .receiveOnMainThread()
-            .weakAssign(to: \.state, on: self)
-            .store(in: &cancellables)
-
-        task?.progress.publisher(for: \.fractionCompleted)
+            .assign(to: &$state)
+        task.progress.publisher(for: \.fractionCompleted)
             .map { $0.clamped(to: 0...1) }
             .receiveOnMainThread()
-            .weakAssign(to: \.progress, on: self)
-            .store(in: &cancellables)
-    }
-}
-
-extension Download {
-    convenience init(metadata: DownloadMetadata, task: URLSessionTask?, downloader: Downloader) {
-        self.init(id: metadata.id, title: metadata.title, remoteUrl: metadata.remoteUrl, task: task, downloader: downloader)
+            .assign(to: &$progress)
+        Publishers.CombineLatest(task.publisher(for: \.state), $location)
+            .compactMap { _, location in
+                location.toBookmark()
+            }
+            .assign(to: &$location)
     }
 
-    convenience init(title: String, remoteUrl: URL, downloader: Downloader) {
-        let id = UUID().uuidString
-        let task = Self.downloadTask(id: id, title: title, remoteUrl: remoteUrl, downloader: downloader)
-        self.init(id: id, title: title, remoteUrl: remoteUrl, task: task, downloader: downloader)
+    private func fileUrl() -> URL? {
+        guard let bookmarkData = location.bookmarkData() else { return nil }
+        var isStale = false
+        return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
     }
 }
 
@@ -105,12 +124,7 @@ public extension Download {
     }
 
     func restart() {
-        do {
-            try downloader.renew(download: self)
-            task = Self.downloadTask(id: id, title: title, remoteUrl: remoteUrl, downloader: downloader)
-            task?.resume()
-        }
-        catch {}
+
     }
 }
 

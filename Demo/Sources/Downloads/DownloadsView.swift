@@ -112,7 +112,7 @@ struct DownloadsView: View {
 
     private func button(title: String, url: URL) -> some View {
         Button {
-            downloader.add(title: title, remoteUrl: url)
+            downloader.add(title: title, url: url)
         } label: {
             Text(title)
         }
