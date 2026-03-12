@@ -94,7 +94,7 @@ public extension Download {
         task?.suspend()
     }
 
-    func restart() {
+    func restart() -> Download {
         downloader.restart(download: self)
     }
 }
