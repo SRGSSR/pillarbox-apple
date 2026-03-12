@@ -5,13 +5,19 @@
 //
 
 import AVFoundation
+import Combine
 
 public final class Download: ObservableObject {
     let id: String
     public let title: String
     public let remoteUrl: URL
-    private let task: URLSessionTask?
+    private var task: URLSessionTask? {
+        didSet {
+            configureTaskPublisher()
+        }
+    }
     private unowned let downloader: Downloader
+    private var cancellables = Set<AnyCancellable>()
 
     @Published private(set) var state: URLSessionTask.State = .completed
     @Published public private(set) var progress: Double = 1
@@ -62,14 +68,18 @@ private extension Download {
     }
 
     func configureTaskPublisher() {
+        cancellables = []
+
         task?.publisher(for: \.state)
             .receiveOnMainThread()
-            .assign(to: &$state)
+            .weakAssign(to: \.state, on: self)
+            .store(in: &cancellables)
 
         task?.progress.publisher(for: \.fractionCompleted)
             .map { $0.clamped(to: 0...1) }
             .receiveOnMainThread()
-            .assign(to: &$progress)
+            .weakAssign(to: \.progress, on: self)
+            .store(in: &cancellables)
     }
 }
 
@@ -94,8 +104,13 @@ public extension Download {
         task?.suspend()
     }
 
-    func restart() -> Download {
-        downloader.restart(download: self)
+    func restart() {
+        do {
+            try downloader.renew(download: self)
+            task = Self.downloadTask(id: id, title: title, remoteUrl: remoteUrl, downloader: downloader)
+            task?.resume()
+        }
+        catch {}
     }
 }
 
