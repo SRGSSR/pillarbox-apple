@@ -55,6 +55,8 @@ public final class Download: ObservableObject {
         self.task = task
         self.session = session
 
+        task?.resume()
+
         NotificationCenter.default.addObserver(self, selector: #selector(willTerminate), name: UIApplication.willTerminateNotification, object: nil)
         configureTaskPublishers()
     }
@@ -163,7 +165,6 @@ public extension Download {
     func restart() {
         removeFile()
         task = Self.task(id: id, title: title, url: url, using: session)
-        task?.resume()
     }
 }
 
