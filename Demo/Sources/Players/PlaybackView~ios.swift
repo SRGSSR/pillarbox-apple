@@ -168,13 +168,6 @@ private struct MainView: View {
         .bind(skipTracker, to: player)
     }
 
-    private func sliderBackground() -> some View {
-        Rectangle()
-            .foregroundColor(.white)
-            .opacity(0.1)
-            .background(.ultraThinMaterial)
-    }
-
     private func artwork(for imageSource: ImageSource) -> some View {
         LazyImage(source: imageSource) { image in
             image
