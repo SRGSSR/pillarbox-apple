@@ -20,20 +20,31 @@ public final class Download: ObservableObject {
         }
     }
 
-    @Published private(set) var state: URLSessionTask.State = .completed
+    @Published public private(set) var state: URLSessionTask.State = .completed
     @Published public private(set) var progress: Double = 0
 
     private var locationSubject = PassthroughSubject<URL, Never>()
 
     @Published private var bookmarkData: Data?
 
-    public var status: DownloadStatus {
-        var isStale = false
-        if let bookmarkData, let url = try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale) {
-            return .completed(url)
-        }
-        else {
-            return .suspended
+    public var file: DownloadedFile {
+        switch state {
+        case .running, .suspended, .canceling:
+            if let url = fileUrl() {
+                return .partial(url)
+            }
+            else {
+                return .unavailable
+            }
+        case .completed:
+            if let url = fileUrl() {
+                return .complete(url)
+            }
+            else {
+                return .failed
+            }
+        @unknown default:
+            return .failed
         }
     }
 
@@ -93,6 +104,13 @@ public final class Download: ObservableObject {
 
     private func configureTaskPublishers() {
         guard let task else { return }
+        task.publisher(for: \.state)
+            .receiveOnMainThread()
+            .assign(to: &$state)
+        task.progress.publisher(for: \.fractionCompleted)
+            .map { $0.clamped(to: 0...1) }
+            .receiveOnMainThread()
+            .assign(to: &$progress)
         bookmarkDataPublisher(for: task)
             .receiveOnMainThread()
             .map { Optional($0) }

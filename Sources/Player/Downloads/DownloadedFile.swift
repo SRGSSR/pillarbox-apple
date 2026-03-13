@@ -6,7 +6,9 @@
 
 import Foundation
 
-enum DownloadedFile: Codable, Equatable {
-    case unassigned
-    case assigned(Data)
+public enum DownloadedFile {
+    case unavailable
+    case partial(URL)
+    case complete(URL)
+    case failed
 }
