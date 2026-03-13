@@ -30,8 +30,8 @@ private struct DownloadCell: View {
         .contentShape(.rect)
         .accessibilityAddTraits(.isButton)
         .onTapGesture {
-            switch download.status {
-            case let .completed(url):
+            switch download.file {
+            case let .partial(url), let .complete(url):
                 router.presented = .player(media: .init(title: download.title, type: .url(url)))
             case .failed:
                 download.restart()
@@ -44,7 +44,7 @@ private struct DownloadCell: View {
     @ViewBuilder
     private func resumeSuspendButton() -> some View {
         ZStack {
-            switch download.status {
+            switch download.state {
             case .running:
                 button(systemImage: "pause.circle", action: download.suspend)
             case .suspended:
@@ -53,9 +53,8 @@ private struct DownloadCell: View {
                 Image(systemName: "checkmark")
                     .resizable()
                     .foregroundStyle(.green)
-            case .failed:
-                button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
-                    .tint(.red)
+            default:
+                EmptyView()
             }
         }
         .frame(width: 30, height: 30)
