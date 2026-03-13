@@ -56,8 +56,8 @@ private extension Downloader {
               let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return []
         }
-        return metadata.map {
-            let download = Download.restore(from: $0, reusing: tasks, in: session)
+        return metadata.map { metadata in
+            let download = Download.restore(from: metadata, reusing: tasks, in: session)
             download.resume()
             return download
         }
@@ -84,7 +84,7 @@ extension Downloader: AVAssetDownloadDelegate {
     }
 
     private func download(matching task: URLSessionTask) -> Download? {
-        downloads.first(where: { $0.matches(task: task) })
+        downloads.first { $0.matches(task: task) }
     }
 }
 
