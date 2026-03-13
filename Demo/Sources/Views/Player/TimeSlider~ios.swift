@@ -54,6 +54,7 @@ struct TimeSlider: View {
     }
 
     private var isVisible: Bool {
+        // TODO: streamType != .unknown really necessary here?
         progressTracker.isProgressAvailable && streamType != .unknown
     }
 
