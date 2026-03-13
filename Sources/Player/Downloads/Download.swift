@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import UIKit
 
 public final class Download: ObservableObject {
     private let id: String
@@ -34,6 +35,7 @@ public final class Download: ObservableObject {
         self.bookmarkData = bookmarkData
         self.task = task
 
+        NotificationCenter.default.addObserver(self, selector: #selector(cleanup(_:)), name: UIApplication.willTerminateNotification, object: nil)
         configureTaskPublisher()
     }
 
@@ -61,6 +63,12 @@ public final class Download: ObservableObject {
 
     func metadata() -> DownloadMetadata {
         .init(id: id, title: title, url: url, bookmarkData: bookmarkData)
+    }
+
+    @objc
+    func cleanup(_ notification: Notification) {
+        guard bookmarkData == nil else { return }
+        task?.cancel()
     }
 
     func cancel() {
