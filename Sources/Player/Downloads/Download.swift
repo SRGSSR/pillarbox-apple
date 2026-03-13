@@ -22,6 +22,8 @@ public final class Download: ObservableObject {
     @Published private(set) var state: URLSessionTask.State = .completed
     @Published public private(set) var progress: Double = 0
 
+    private var locationSubject = PassthroughSubject<URL, Never>()
+
     private var bookmarkData: Data?
     public var status: DownloadStatus = .suspended
 
@@ -44,8 +46,13 @@ public final class Download: ObservableObject {
     }
 
     static func restore(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) -> Self {
-        let task = tasks.first(where: { $0.taskDescription == metadata.id })
-        return self.init(id: metadata.id, title: metadata.title, url: metadata.url, bookmarkData: metadata.bookmarkData, task: task)
+        if let bookmarkData = metadata.bookmarkData {
+            let task = tasks.first(where: { $0.taskDescription == metadata.id })
+            return self.init(id: metadata.id, title: metadata.title, url: metadata.url, bookmarkData: bookmarkData, task: task)
+        }
+        else {
+            return create(title: metadata.title, url: metadata.url, using: session)
+        }
     }
 
     func matches(task: URLSessionTask) -> Bool {
@@ -64,7 +71,7 @@ public final class Download: ObservableObject {
     }
 
     func attach(to location: URL) {
-
+        locationSubject.send(location)
     }
 
     private func fileUrl() -> URL? {
