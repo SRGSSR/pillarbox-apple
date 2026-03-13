@@ -21,7 +21,7 @@ public final class Download: ObservableObject {
     }
 
     @Published public private(set) var state: URLSessionTask.State = .completed
-    @Published public private(set) var progress: Double = 0
+    @Published public private(set) var progress: Double = 1
 
     private var locationSubject = PassthroughSubject<URL, Never>()
 
