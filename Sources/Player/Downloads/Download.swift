@@ -19,34 +19,17 @@ public final class Download: ObservableObject {
         }
     }
 
-    @Published private var location: DownloadLocation = .unknown
-
     @Published private(set) var state: URLSessionTask.State = .completed
-    @Published public private(set) var progress: Double = 1
+    @Published public private(set) var progress: Double = 0
 
-    public var status: DownloadStatus {
-        switch state {
-        case .running:
-            return .running
-        case .suspended, .canceling:
-            return .suspended
-        case .completed:
-            if let url = fileUrl() {
-                return .completed(url)
-            }
-            else {
-                return .failed
-            }
-        @unknown default:
-            return .failed
-        }
-    }
+    private var bookmarkData: Data?
+    public var status: DownloadStatus = .suspended
 
-    private init(id: String, title: String, url: URL, location: DownloadLocation, task: URLSessionTask?) {
+    private init(id: String, title: String, url: URL, bookmarkData: Data?, task: URLSessionTask?) {
         self.id = id
         self.title = title
         self.url = url
-        self.location = location
+        self.bookmarkData = bookmarkData
         self.task = task
 
         configureTaskPublisher()
@@ -57,19 +40,12 @@ public final class Download: ObservableObject {
         let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
         task.taskDescription = id
-        return self.init(id: id, title: title, url: url, location: .unknown, task: task)
+        return self.init(id: id, title: title, url: url, bookmarkData: nil, task: task)
     }
 
     static func restore(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) -> Self {
-        if let task = tasks.first(where: { $0.taskDescription == metadata.id }) {
-            return self.init(id: metadata.id, title: metadata.title, url: metadata.url, location: .init(from: metadata.bookmarkData), task: task)
-        }
-        else if let bookmarkData = metadata.bookmarkData {
-            return self.init(id: metadata.id, title: metadata.title, url: metadata.url, location: .bookmark(bookmarkData), task: nil)
-        }
-        else {
-            return create(title: metadata.title, url: metadata.url, using: session)
-        }
+        let task = tasks.first(where: { $0.taskDescription == metadata.id })
+        return self.init(id: metadata.id, title: metadata.title, url: metadata.url, bookmarkData: metadata.bookmarkData, task: task)
     }
 
     func matches(task: URLSessionTask) -> Bool {
@@ -77,11 +53,7 @@ public final class Download: ObservableObject {
     }
 
     func metadata() -> DownloadMetadata {
-        .init(id: id, title: title, url: url, bookmarkData: location.bookmarkData())
-    }
-
-    func attach(to url: URL) {
-        location = .unreliable(url)
+        .init(id: id, title: title, url: url, bookmarkData: bookmarkData)
     }
 
     func cancel() {
@@ -91,26 +63,18 @@ public final class Download: ObservableObject {
         }
     }
 
-    private func configureTaskPublisher() {
-        guard let task else { return }
-        task.publisher(for: \.state)
-            .receiveOnMainThread()
-            .assign(to: &$state)
-        task.progress.publisher(for: \.fractionCompleted)
-            .map { $0.clamped(to: 0...1) }
-            .receiveOnMainThread()
-            .assign(to: &$progress)
-        Publishers.CombineLatest(task.publisher(for: \.state), $location)
-            .compactMap { _, location in
-                location.toBookmark()
-            }
-            .assign(to: &$location)
+    func attach(to location: URL) {
+
     }
 
     private func fileUrl() -> URL? {
-        guard let bookmarkData = location.bookmarkData() else { return nil }
+        guard let bookmarkData else { return nil }
         var isStale = false
         return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
+    }
+
+    private func configureTaskPublisher() {
+
     }
 }
 
