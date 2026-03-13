@@ -16,7 +16,7 @@ public final class Download: ObservableObject {
 
     private var task: URLSessionTask? {
         didSet {
-            configureTaskPublisher()
+            configureTaskPublishers()
         }
     }
 
@@ -25,8 +25,17 @@ public final class Download: ObservableObject {
 
     private var locationSubject = PassthroughSubject<URL, Never>()
 
-    private var bookmarkData: Data?
-    public var status: DownloadStatus = .suspended
+    @Published private var bookmarkData: Data?
+
+    public var status: DownloadStatus {
+        var isStale = false
+        if let bookmarkData, let url = try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale) {
+            return .completed(url)
+        }
+        else {
+            return .suspended
+        }
+    }
 
     private init(id: String, title: String, url: URL, bookmarkData: Data?, task: URLSessionTask?) {
         self.id = id
@@ -36,7 +45,7 @@ public final class Download: ObservableObject {
         self.task = task
 
         NotificationCenter.default.addObserver(self, selector: #selector(cleanup), name: UIApplication.willTerminateNotification, object: nil)
-        configureTaskPublisher()
+        configureTaskPublishers()
     }
 
     static func create(title: String, url: URL, using session: AVAssetDownloadURLSession) -> Self {
@@ -82,14 +91,28 @@ public final class Download: ObservableObject {
         return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
     }
 
-    private func configureTaskPublisher() {
-
+    private func configureTaskPublishers() {
+        guard let task else { return }
+        bookmarkDataPublisher(for: task)
+            .receiveOnMainThread()
+            .map { Optional($0) }
+            .assign(to: &$bookmarkData)
     }
 
     @objc
     func cleanup() {
         guard bookmarkData == nil else { return }
         task?.cancel()
+    }
+
+    private func bookmarkDataPublisher(for task: URLSessionTask) -> AnyPublisher<Data, Never> {
+        locationSubject.map { url in
+            task.progress.publisher(for: \.fractionCompleted)
+                .first { $0 > 0 }
+                .compactMap { _ in try? url.bookmarkData() }
+        }
+        .switchToLatest()
+        .eraseToAnyPublisher()
     }
 }
 
