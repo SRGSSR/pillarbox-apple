@@ -83,6 +83,11 @@ extension Downloader: AVAssetDownloadDelegate {
         download.attach(to: location)
     }
 
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
+        guard let download = download(matching: task) else { return }
+        download.complete(with: error)
+    }
+
     private func download(matching task: URLSessionTask) -> Download? {
         downloads.first { $0.matches(task: task) }
     }

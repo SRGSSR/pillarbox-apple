@@ -44,17 +44,23 @@ private struct DownloadCell: View {
     @ViewBuilder
     private func resumeSuspendButton() -> some View {
         ZStack {
-            switch download.state {
-            case .running:
-                button(systemImage: "pause.circle", action: download.suspend)
-            case .suspended:
-                button(systemImage: "play.circle", action: download.resume)
-            case .completed:
-                Image(systemName: "checkmark")
-                    .resizable()
-                    .foregroundStyle(.green)
+            switch download.file {
+            case .failed:
+                button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
+                    .tint(.red)
             default:
-                EmptyView()
+                switch download.state {
+                case .running:
+                    button(systemImage: "pause.circle", action: download.suspend)
+                case .suspended:
+                    button(systemImage: "play.circle", action: download.resume)
+                case .completed:
+                    Image(systemName: "checkmark")
+                        .resizable()
+                        .foregroundStyle(.green)
+                default:
+                    EmptyView()
+                }
             }
         }
         .frame(width: 30, height: 30)
