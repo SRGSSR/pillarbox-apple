@@ -25,6 +25,7 @@ public final class Downloader: NSObject, ObservableObject {
 
     override public init() {
         super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(terminate), name: UIApplication.willTerminateNotification, object: nil)
         restore()
     }
 
@@ -39,6 +40,11 @@ public final class Downloader: NSObject, ObservableObject {
     public func remove(_ download: Download) {
         download.cancel()
         downloads.removeAll { $0 == download }
+    }
+
+    @objc
+    private func terminate() {
+        Self.saveDownloads(downloads)
     }
 }
 
