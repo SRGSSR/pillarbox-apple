@@ -33,12 +33,11 @@ public final class Download: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     public var file: DownloadedFile {
+        guard error == nil else { return .failed }
         switch state {
         case .running, .suspended, .canceling:
             guard let url = fileUrl() else { return .unavailable }
             return .partial(url)
-        case .completed where error != nil:
-            return .failed
         case .completed:
             guard let url = fileUrl() else { return .failed }
             return .complete(url)
