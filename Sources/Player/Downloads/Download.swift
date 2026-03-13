@@ -26,23 +26,18 @@ public final class Download: ObservableObject {
     private var locationSubject = PassthroughSubject<URL, Never>()
 
     @Published private var bookmarkData: Data?
+    @Published private var error: Error?
 
     public var file: DownloadedFile {
         switch state {
         case .running, .suspended, .canceling:
-            if let url = fileUrl() {
-                return .partial(url)
-            }
-            else {
-                return .unavailable
-            }
+            guard let url = fileUrl() else { return .unavailable }
+            return .partial(url)
+        case .completed where error != nil:
+            return .failed
         case .completed:
-            if let url = fileUrl() {
-                return .complete(url)
-            }
-            else {
-                return .failed
-            }
+            guard let url = fileUrl() else { return .failed }
+            return .complete(url)
         @unknown default:
             return .failed
         }
@@ -94,6 +89,10 @@ public final class Download: ObservableObject {
 
     func attach(to location: URL) {
         locationSubject.send(location)
+    }
+
+    func complete(with error: Error?) {
+        self.error = error
     }
 
     private func fileUrl() -> URL? {
