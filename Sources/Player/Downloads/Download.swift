@@ -69,7 +69,7 @@ public final class Download: ObservableObject {
 
     static func restore(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) -> Self {
         if let bookmarkData = metadata.bookmarkData {
-            let task = tasks.first(where: { $0.taskDescription == metadata.id })
+            let task = tasks.first { $0.taskDescription == metadata.id }
             return self.init(id: metadata.id, title: metadata.title, url: metadata.url, bookmarkData: bookmarkData, task: task)
         }
         else {
@@ -144,7 +144,6 @@ public extension Download {
     }
 
     func restart() {
-
     }
 }
 
