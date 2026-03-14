@@ -25,11 +25,10 @@ public final class Download: ObservableObject {
     @Published public private(set) var state: URLSessionTask.State = .completed
     @Published public private(set) var progress: Double = 1
 
-    private var locationSubject = PassthroughSubject<URL, Never>()
-
     @Published private var bookmarkData: Data?
     @Published private var error: Error?
 
+    private var locationSubject = PassthroughSubject<URL, Never>()
     private var cancellables = Set<AnyCancellable>()
 
     public var file: DownloadedFile {
@@ -54,7 +53,7 @@ public final class Download: ObservableObject {
         self.task = task
         self.session = session
 
-        NotificationCenter.default.addObserver(self, selector: #selector(willTerminate), name: UIApplication.willTerminateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
         configureTaskPublishers()
     }
 
@@ -146,7 +145,7 @@ public final class Download: ObservableObject {
     }
 
     @objc
-    func willTerminate() {
+    func applicationWillTerminate() {
         guard bookmarkData == nil else { return }
         task?.cancel()
     }
