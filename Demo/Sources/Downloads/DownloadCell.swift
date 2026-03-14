@@ -12,13 +12,13 @@ import SwiftUI
 #if DEBUG
 
 struct DownloadCell: View {
-    @EnvironmentObject private var router: Router
     @ObservedObject var download: Download
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         HStack {
             infoView()
-            resumeSuspendButton()
+            statusButton()
         }
     }
 
@@ -41,30 +41,34 @@ struct DownloadCell: View {
         }
     }
 
-    @ViewBuilder
-    private func resumeSuspendButton() -> some View {
+    private func statusButton() -> some View {
         ZStack {
             switch download.file {
             case .failed:
                 button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
                     .tint(.red)
             default:
-                switch download.state {
-                case .running:
-                    button(systemImage: "pause.circle", action: download.suspend)
-                case .suspended:
-                    button(systemImage: "play.circle", action: download.resume)
-                case .completed:
-                    Image(systemName: "checkmark")
-                        .resizable()
-                        .foregroundStyle(.green)
-                default:
-                    EmptyView()
-                }
+                resumeSuspendButton()
             }
         }
         .frame(width: 30, height: 30)
         .padding()
+    }
+
+    @ViewBuilder
+    private func resumeSuspendButton() -> some View {
+        switch download.state {
+        case .running:
+            button(systemImage: "pause.circle", action: download.suspend)
+        case .suspended:
+            button(systemImage: "play.circle", action: download.resume)
+        case .completed:
+            Image(systemName: "checkmark")
+                .resizable()
+                .foregroundStyle(.green)
+        default:
+            EmptyView()
+        }
     }
 
     private func button(systemImage: String, action: @escaping () -> Void) -> some View {
