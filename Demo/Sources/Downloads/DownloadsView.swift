@@ -15,16 +15,30 @@ struct DownloadsView: View {
     @StateObject private var downloader = Downloader()
 
     var body: some View {
-        List {
-            ForEach(Array(downloader.downloads), id: \.self) { download in
-                DownloadCell(download: download)
+        ZStack {
+            if !downloader.downloads.isEmpty {
+                List {
+                    ForEach(Array(downloader.downloads), id: \.self) { download in
+                        DownloadCell(download: download)
+                    }
+                    .onDelete { indexes in
+                        for index in indexes.reversed() {
+                            downloader.remove(downloader.downloads[index])
+                        }
+                    }
+                }
             }
-            .onDelete { indexes in
-                for index in indexes.reversed() {
-                    downloader.remove(downloader.downloads[index])
+            else {
+                UnavailableView {
+                    Label {
+                        Text("No downloads.")
+                    } icon: {
+                        Image(systemName: "square.and.arrow.down")
+                    }
                 }
             }
         }
+        .animation(.defaultLinear, value: downloader.downloads)
         .toolbar {
             Menu {
                 // Warning: Use /ww/ streams only since /ch/-ones are AES-encrypted and cannot be played offline.
