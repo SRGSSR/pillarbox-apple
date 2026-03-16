@@ -24,7 +24,14 @@ struct DownloadsView: View {
             }
         }
         .animation(.defaultLinear, value: downloader.downloads)
-        .toolbar(content: toolbar)
+        .toolbar {
+            ToolbarItem {
+                removeAllButton()
+            }
+            ToolbarItem {
+                menu()
+            }
+        }
         .navigationTitle("Downloads")
     }
 
@@ -48,13 +55,6 @@ struct DownloadsView: View {
             } icon: {
                 Image(systemName: "square.and.arrow.down")
             }
-        }
-    }
-
-    private func toolbar() -> some View {
-        HStack {
-            removeAllButton()
-            menu()
         }
     }
 
@@ -90,9 +90,12 @@ struct DownloadsView: View {
         }
     }
 
+    @ViewBuilder
     private func removeAllButton() -> some View {
-        Button(action: downloader.removeAll) {
-            Image(systemName: "trash")
+        if !downloader.downloads.isEmpty {
+            Button(action: downloader.removeAll) {
+                Image(systemName: "trash")
+            }
         }
     }
 }
