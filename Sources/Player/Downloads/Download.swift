@@ -57,10 +57,21 @@ public final class Download: ObservableObject {
         configureTaskPublishers()
     }
 
-    static func create(title: String, url: URL, using session: AVAssetDownloadURLSession) -> Self {
+    convenience init(title: String, url: URL, using session: AVAssetDownloadURLSession) {
         let id = UUID().uuidString
-        let task = task(id: id, title: title, url: url, using: session)
-        return self.init(id: id, title: title, url: url, bookmarkData: nil, task: task, session: session)
+        let task = Self.task(id: id, title: title, url: url, using: session)
+        self.init(id: id, title: title, url: url, bookmarkData: nil, task: task, session: session)
+    }
+
+    convenience init(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) {
+        if let bookmarkData = metadata.bookmarkData {
+            let task = tasks.first { $0.taskDescription == metadata.id }
+            task?.resume()
+            self.init(id: metadata.id, title: metadata.title, url: metadata.url, bookmarkData: bookmarkData, task: task, session: session)
+        }
+        else {
+            self.init(title: metadata.title, url: metadata.url, using: session)
+        }
     }
 
     static func task(id: String, title: String, url: URL, using session: AVAssetDownloadURLSession?) -> URLSessionTask? {
@@ -70,17 +81,6 @@ public final class Download: ObservableObject {
         task.taskDescription = id
         task.resume()
         return task
-    }
-
-    static func restore(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) -> Self {
-        if let bookmarkData = metadata.bookmarkData {
-            let task = tasks.first { $0.taskDescription == metadata.id }
-            task?.resume()
-            return self.init(id: metadata.id, title: metadata.title, url: metadata.url, bookmarkData: bookmarkData, task: task, session: session)
-        }
-        else {
-            return create(title: metadata.title, url: metadata.url, using: session)
-        }
     }
 
     func matches(task: URLSessionTask) -> Bool {

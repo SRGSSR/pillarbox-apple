@@ -31,7 +31,7 @@ public final class Downloader: NSObject, ObservableObject {
 
     @discardableResult
     public func add(title: String, url: URL) -> Download {
-        let download = Download.create(title: title, url: url, using: session)
+        let download = Download(title: title, url: url, using: session)
         downloads.append(download)
         return download
     }
@@ -55,7 +55,7 @@ private extension Downloader {
               let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return []
         }
-        return metadata.map { Download.restore(from: $0, reusing: tasks, in: session) }
+        return metadata.map { Download(from: $0, reusing: tasks, in: session) }
     }
 
     static func saveDownloads(_ downloads: [Download]) {
