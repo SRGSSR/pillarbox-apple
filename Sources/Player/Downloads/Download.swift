@@ -28,7 +28,7 @@ public final class Download: ObservableObject {
     @Published private var bookmarkData: Data?
     @Published private var error: Error?
 
-    private var locationSubject = PassthroughSubject<URL, Never>()
+    private var locationSubject = CurrentValueSubject<URL?, Never>(nil)
     private var cancellables = Set<AnyCancellable>()
 
     public var file: DownloadedFile {
@@ -97,8 +97,12 @@ public final class Download: ObservableObject {
     }
 
     func removeFile() {
-        guard let url = fileUrl() else { return }
-        try? FileManager.default.removeItem(at: url)
+        if let url = fileUrl() {
+            try? FileManager.default.removeItem(at: url)
+        }
+        if let url = locationUrl() {
+            try? FileManager.default.removeItem(at: url)
+        }
     }
 
     func attach(to location: URL) {
@@ -113,6 +117,10 @@ public final class Download: ObservableObject {
         guard let bookmarkData else { return nil }
         var isStale = false
         return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
+    }
+
+    private func locationUrl() -> URL? {
+        locationSubject.value
     }
 
     private func configureTaskPublishers() {
@@ -138,7 +146,7 @@ public final class Download: ObservableObject {
         locationSubject.map { url in
             task.progress.publisher(for: \.fractionCompleted)
                 .first { $0 > 0 }
-                .compactMap { _ in try? url.bookmarkData() }
+                .compactMap { _ in try? url?.bookmarkData() }
         }
         .switchToLatest()
         .eraseToAnyPublisher()
