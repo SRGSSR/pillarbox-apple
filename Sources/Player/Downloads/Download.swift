@@ -32,7 +32,7 @@ public final class Download: ObservableObject {
     @Published private var bookmarkData: Data?
     @Published private var error: Error?
 
-    private var locationSubject = CurrentValueSubject<URL?, Never>(nil)
+    private let locationSubject = CurrentValueSubject<URL?, Never>(nil)
     private var cancellables = Set<AnyCancellable>()
 
     public var file: DownloadedFile {
@@ -78,7 +78,7 @@ public final class Download: ObservableObject {
         }
     }
 
-    static func task(id: String, title: String, url: URL, using session: AVAssetDownloadURLSession?) -> URLSessionTask? {
+    private static func task(id: String, title: String, url: URL, using session: AVAssetDownloadURLSession?) -> URLSessionTask? {
         guard let session else { return nil }
         let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)

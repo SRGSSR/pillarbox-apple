@@ -43,6 +43,13 @@ public final class Downloader: NSObject, ObservableObject {
         downloads.removeAll { $0 == download }
     }
 
+    public func removeAll() {
+        downloads.forEach { download in
+            download.cancel()
+        }
+        downloads.removeAll()
+    }
+
     @objc
     private func applicationWillTerminate() {
         Self.saveDownloads(downloads)
