@@ -25,7 +25,9 @@ struct DownloadCell: View {
     private func infoView() -> some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(download.title)
-            ProgressView(value: download.progress)
+            ProgressView(value: download.progress) {
+                Text(download.progress, format: .percent.precision(.fractionLength(0)))
+            }
         }
         .contentShape(.rect)
         .accessibilityAddTraits(.isButton)
