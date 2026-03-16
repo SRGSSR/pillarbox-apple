@@ -77,12 +77,12 @@ private extension Downloader {
 
 @available(tvOS, unavailable)
 extension Downloader: AVAssetDownloadDelegate {
-    #if os(iOS)
+#if os(iOS)
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         guard let download = download(matching: assetDownloadTask) else { return }
         download.attach(to: location)
     }
-    #endif
+#endif
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let download = download(matching: task) else { return }
