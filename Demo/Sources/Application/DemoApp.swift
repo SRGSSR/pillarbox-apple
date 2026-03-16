@@ -19,7 +19,7 @@ struct DemoApp: App {
                 showcaseTab()
                 contentListsTab()
                 searchTab()
-#if DEBUG
+#if DEBUG && os(iOS)
                 downloadsTab()
 #endif
                 settingsTab()
@@ -67,7 +67,7 @@ struct DemoApp: App {
         }
     }
 
-#if DEBUG
+#if DEBUG && os(iOS)
     private func downloadsTab() -> some View {
         RoutedNavigationStack(keyPath: \.downloadsPath) {
             DownloadsView()

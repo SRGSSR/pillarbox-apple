@@ -8,6 +8,10 @@ import AVFoundation
 import Combine
 import UIKit
 
+#if DEBUG
+
+@available(tvOS, unavailable)
+@_spi(DownloaderPrivate)
 public final class Download: ObservableObject {
     private let id: String
 
@@ -159,6 +163,7 @@ public final class Download: ObservableObject {
     }
 }
 
+@available(tvOS, unavailable)
 public extension Download {
     func resume() {
         task?.resume()
@@ -176,6 +181,7 @@ public extension Download {
     }
 }
 
+@available(tvOS, unavailable)
 extension Download: Hashable {
     public static func == (lhs: Download, rhs: Download) -> Bool {
         lhs.id == rhs.id
@@ -185,3 +191,5 @@ extension Download: Hashable {
         hasher.combine(id)
     }
 }
+
+#endif

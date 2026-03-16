@@ -9,6 +9,8 @@ import Combine
 import UIKit
 
 #if DEBUG
+
+@available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Downloader: NSObject, ObservableObject {
     private lazy var session = AVAssetDownloadURLSession(
@@ -47,6 +49,7 @@ public final class Downloader: NSObject, ObservableObject {
     }
 }
 
+@available(tvOS, unavailable)
 private extension Downloader {
     private static let metadataFileUrl = URL.libraryDirectory.appending(component: "downloads.json")
 
@@ -72,11 +75,14 @@ private extension Downloader {
     }
 }
 
+@available(tvOS, unavailable)
 extension Downloader: AVAssetDownloadDelegate {
+    #if os(iOS)
     public func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         guard let download = download(matching: assetDownloadTask) else { return }
         download.attach(to: location)
     }
+    #endif
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let download = download(matching: task) else { return }

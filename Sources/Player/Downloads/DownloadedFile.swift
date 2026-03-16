@@ -6,9 +6,15 @@
 
 import Foundation
 
+#if DEBUG
+
+@available(tvOS, unavailable)
+@_spi(DownloaderPrivate)
 public enum DownloadedFile {
     case unavailable
     case partial(URL)
     case complete(URL)
     case failed
 }
+
+#endif
