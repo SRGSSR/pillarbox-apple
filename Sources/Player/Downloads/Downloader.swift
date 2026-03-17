@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+// swiftlint:disable missing_docs
+
 import AVFoundation
 import Combine
 import UIKit
@@ -102,3 +104,5 @@ extension Downloader: AVAssetDownloadDelegate {
 }
 
 #endif
+
+// swiftlint:enable missing_docs

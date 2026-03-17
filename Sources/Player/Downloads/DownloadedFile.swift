@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+// swiftlint:disable missing_docs
+
 import Foundation
 
 #if DEBUG
@@ -18,3 +20,5 @@ public enum DownloadedFile {
 }
 
 #endif
+
+// swiftlint:enable missing_docs

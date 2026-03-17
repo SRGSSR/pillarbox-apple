@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+// swiftlint:disable missing_docs
+
 import AVFoundation
 import Combine
 import UIKit
@@ -205,3 +207,5 @@ extension Download: Hashable {
 }
 
 #endif
+
+// swiftlint:enable missing_docs
