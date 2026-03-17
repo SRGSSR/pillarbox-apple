@@ -26,17 +26,20 @@ public final class Download: ObservableObject {
 
     private weak let session: AVAssetDownloadURLSession?
 
-    @Published public private(set) var state: URLSessionTask.State = .completed
-    @Published public private(set) var progress: Double = 1
+    public var progress: Double {
+        hasFailed ? 0 : _progress
+    }
 
+    @Published public private(set) var state: URLSessionTask.State = .completed
+    @Published private var _progress: Double = 1
     @Published private var bookmarkData: Data?
-    @Published private var error: Error?
+    @Published private var hasFailed: Bool
 
     private let locationSubject = CurrentValueSubject<URL?, Never>(nil)
     private var cancellables = Set<AnyCancellable>()
 
     public var file: DownloadedFile {
-        guard error == nil else { return .failed }
+        guard !hasFailed else { return .failed }
         switch state {
         case .running, .suspended, .canceling:
             guard let url = fileUrl() else { return .unavailable }
@@ -49,11 +52,12 @@ public final class Download: ObservableObject {
         }
     }
 
-    private init(id: String, title: String, url: URL, bookmarkData: Data?, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
+    private init(id: String, title: String, url: URL, bookmarkData: Data?, hasFailed: Bool, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
         self.id = id
         self.title = title
         self.url = url
         self.bookmarkData = bookmarkData
+        self.hasFailed = hasFailed
         self.task = task
         self.session = session
 
@@ -64,14 +68,22 @@ public final class Download: ObservableObject {
     convenience init(title: String, url: URL, using session: AVAssetDownloadURLSession) {
         let id = UUID().uuidString
         let task = Self.task(id: id, title: title, url: url, using: session)
-        self.init(id: id, title: title, url: url, bookmarkData: nil, task: task, session: session)
+        self.init(id: id, title: title, url: url, bookmarkData: nil, hasFailed: false, task: task, session: session)
     }
 
     convenience init(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) {
         if let bookmarkData = metadata.bookmarkData {
             let task = tasks.first { $0.taskDescription == metadata.id }
             task?.resume()
-            self.init(id: metadata.id, title: metadata.title, url: metadata.url, bookmarkData: bookmarkData, task: task, session: session)
+            self.init(
+                id: metadata.id,
+                title: metadata.title,
+                url: metadata.url,
+                bookmarkData: bookmarkData,
+                hasFailed: metadata.hasFailed,
+                task: task,
+                session: session
+            )
         }
         else {
             self.init(title: metadata.title, url: metadata.url, using: session)
@@ -92,7 +104,7 @@ public final class Download: ObservableObject {
     }
 
     func metadata() -> DownloadMetadata {
-        .init(id: id, title: title, url: url, bookmarkData: bookmarkData)
+        .init(id: id, title: title, url: url, bookmarkData: bookmarkData, hasFailed: hasFailed)
     }
 
     func cancel() {
@@ -114,7 +126,7 @@ public final class Download: ObservableObject {
     }
 
     func complete(with error: Error?) {
-        self.error = error
+        hasFailed = error != nil
     }
 
     private func fileUrl() -> URL? {
@@ -137,7 +149,7 @@ public final class Download: ObservableObject {
         task.progress.publisher(for: \.fractionCompleted)
             .map { $0.clamped(to: 0...1) }
             .receiveOnMainThread()
-            .weakAssign(to: \.progress, on: self)
+            .weakAssign(to: \._progress, on: self)
             .store(in: &cancellables)
         bookmarkDataPublisher(for: task)
             .receiveOnMainThread()
@@ -177,7 +189,7 @@ public extension Download {
         removeFile()
 
         task = Self.task(id: id, title: title, url: url, using: session)
-        error = nil
+        hasFailed = false
     }
 }
 
