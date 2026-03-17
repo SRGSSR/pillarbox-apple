@@ -11,6 +11,7 @@ import Nimble
 import PillarboxStreams
 import XCTest
 
+@available(tvOS, unavailable)
 final class DownloaderTests: TestCase {
     func testEmpty() {
         expect(Downloader().downloads).to(beEmpty())
