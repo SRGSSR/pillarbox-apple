@@ -53,10 +53,6 @@ struct TimeSlider: View {
         return Self.formattedTime(progressTracker.timeRange.duration, duration: progressTracker.timeRange.duration)
     }
 
-    private var isVisible: Bool {
-        progressTracker.isProgressAvailable && streamType != .unknown
-    }
-
     var body: some View {
         HStack {
             label(withText: formattedElapsedTime)
@@ -116,7 +112,7 @@ struct TimeSlider: View {
             .frame(height: progressTracker.isInteracting ? 16 : 8)
             .clipShape(.capsule)
             .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
-            .opacity(isVisible ? 1 : 0)
+            .opacity(progressTracker.isProgressAvailable ? 1 : 0)
             .animation(.defaultLinear, value: progressTracker.isInteracting)
         }
         .onEditingChanged { isEditing in

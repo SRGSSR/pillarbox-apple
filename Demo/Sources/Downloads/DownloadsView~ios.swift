@@ -1,0 +1,109 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
+@_spi(DownloaderPrivate)
+import PillarboxPlayer
+
+import SwiftUI
+
+#if DEBUG
+
+struct DownloadsView: View {
+    @StateObject private var downloader = Downloader()
+
+    var body: some View {
+        ZStack {
+            if !downloader.downloads.isEmpty {
+                mainView()
+            }
+            else {
+                emptyView()
+            }
+        }
+        .animation(.defaultLinear, value: downloader.downloads)
+        .toolbar {
+            ToolbarItem {
+                removeAllButton()
+            }
+            ToolbarItem {
+                menu()
+            }
+        }
+        .navigationTitle("Downloads")
+    }
+
+    private func mainView() -> some View {
+        List {
+            ForEach(Array(downloader.downloads), id: \.self) { download in
+                DownloadCell(download: download)
+            }
+            .onDelete { indexes in
+                for index in indexes.reversed() {
+                    downloader.remove(downloader.downloads[index])
+                }
+            }
+        }
+    }
+
+    private func emptyView() -> some View {
+        UnavailableView {
+            Label {
+                Text("No downloads.")
+            } icon: {
+                Image(systemName: "square.and.arrow.down")
+            }
+        }
+    }
+
+    private func menu() -> some View {
+        Menu {
+            // Warning: Use /ww/ streams only since /ch/-ones are AES-encrypted and cannot be played offline.
+            addDownloadButton(
+                title: "Short video",
+                url: "https://rts-vod-amd.akamaized.net/ww/13317145/f1d49f18-f302-37ce-866c-1c1c9b76a824/master.m3u8"
+            )
+            addDownloadButton(
+                title: "Medium video",
+                url: "https://rts-vod-amd.akamaized.net/ww/cc16c4b0-1c15-326d-958b-faad09e216c1/ffc39d4f-eb00-3979-a5bd-0e3b93b99073/master.m3u8"
+            )
+            addDownloadButton(
+                title: "Long video",
+                url: "https://rts-vod-amd.akamaized.net/ww/14970442/4dcba1d3-8cc8-3667-a7d2-b3b92c4243d9/master.m3u8"
+            )
+            addDownloadButton(
+                title: "MP3",
+                url: "https://rts-aod-dd.akamaized.net/ww/13306839/63cc2653-8305-3894-a448-108810b553ef.mp3"
+            )
+        } label: {
+            Image(systemName: "plus")
+        }
+    }
+
+    private func addDownloadButton(title: String, url: URL) -> some View {
+        Button {
+            downloader.add(title: title, url: url)
+        } label: {
+            Text(title)
+        }
+    }
+
+    @ViewBuilder
+    private func removeAllButton() -> some View {
+        if !downloader.downloads.isEmpty {
+            Button(action: downloader.removeAll) {
+                Image(systemName: "trash")
+            }
+        }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        DownloadsView()
+    }
+}
+
+#endif

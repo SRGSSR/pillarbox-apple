@@ -19,6 +19,9 @@ struct DemoApp: App {
                 showcaseTab()
                 contentListsTab()
                 searchTab()
+#if DEBUG && os(iOS)
+                downloadsTab()
+#endif
                 settingsTab()
             }
             .modal(item: $router.presented) { presented in
@@ -63,6 +66,17 @@ struct DemoApp: App {
             Label("Search", systemImage: "magnifyingglass")
         }
     }
+
+#if DEBUG && os(iOS)
+    private func downloadsTab() -> some View {
+        RoutedNavigationStack(keyPath: \.downloadsPath) {
+            DownloadsView()
+        }
+        .tabItem {
+            Label("Downloads", systemImage: "square.and.arrow.down")
+        }
+    }
+#endif
 
     private func settingsTab() -> some View {
         RoutedNavigationStack(keyPath: \.settingsPath) {
