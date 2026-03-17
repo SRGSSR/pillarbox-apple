@@ -27,7 +27,9 @@ struct DownloadCell: View {
             Text(download.title)
             ProgressView(value: download.progress) {
                 Text(download.progress, format: .percent.precision(.fractionLength(0)))
+                    .contentTransition(.numericText())
             }
+            .animation(.linear, value: download.progress)
         }
         .contentShape(.rect)
         .accessibilityAddTraits(.isButton)

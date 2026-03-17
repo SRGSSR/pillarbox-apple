@@ -85,15 +85,13 @@ public final class Download: ObservableObject {
 
     convenience init(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) {
         if let bookmarkData = metadata.bookmarkData {
-            let task = tasks.first { $0.taskDescription == metadata.id }
-            task?.resume()
             self.init(
                 id: metadata.id,
                 title: metadata.title,
                 url: metadata.url,
                 bookmarkData: bookmarkData,
                 hasFailed: metadata.hasFailed,
-                task: task,
+                task: tasks.first { $0.taskDescription == metadata.id },
                 session: session
             )
         }
