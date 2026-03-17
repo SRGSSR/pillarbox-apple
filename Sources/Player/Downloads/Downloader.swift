@@ -29,7 +29,7 @@ public final class Downloader: NSObject, ObservableObject {
 
     override public init() {
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateDownload(_:)), name: .didUpdateDownload, object: nil)
         restore()
     }
 
@@ -53,7 +53,8 @@ public final class Downloader: NSObject, ObservableObject {
     }
 
     @objc
-    private func applicationWillTerminate() {
+    private func didUpdateDownload(_ notification: Notification) {
+        guard let download = notification.object as? Download, downloads.contains(download) else { return }
         Self.saveDownloads(downloads)
     }
 }

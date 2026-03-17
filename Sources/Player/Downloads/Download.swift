@@ -34,8 +34,18 @@ public final class Download: ObservableObject {
 
     @Published public private(set) var state: URLSessionTask.State = .completed
     @Published private var _progress: Double = 1
-    @Published private var bookmarkData: Data?
-    @Published private var hasFailed: Bool
+
+    @Published private var hasFailed: Bool {
+        didSet {
+            notifyUpdate()
+        }
+    }
+
+    @Published private var bookmarkData: Data? {
+        didSet {
+            notifyUpdate()
+        }
+    }
 
     private let locationSubject = CurrentValueSubject<URL?, Never>(nil)
     private var cancellables = Set<AnyCancellable>()
@@ -171,9 +181,13 @@ public final class Download: ObservableObject {
     }
 
     @objc
-    func applicationWillTerminate() {
+    private func applicationWillTerminate() {
         guard bookmarkData == nil else { return }
         task?.cancel()
+    }
+
+    private func notifyUpdate() {
+        NotificationCenter.default.post(name: .didUpdateDownload, object: self)
     }
 }
 
