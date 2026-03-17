@@ -28,4 +28,12 @@ final class DownloaderTests: TestCase {
         downloader.remove(download)
         expect(downloader.downloads).to(beEmpty())
     }
+
+    func testRemoveAll() {
+        let downloader = Downloader()
+        downloader.add(title: "Title_1", url: Stream.shortOnDemand.url)
+        downloader.add(title: "Title_2", url: Stream.shortOnDemand.url)
+        downloader.removeAll()
+        expect(downloader.downloads).to(beEmpty())
+    }
 }
