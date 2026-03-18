@@ -35,8 +35,8 @@ struct DownloadCell: View {
         .accessibilityAddTraits(.isButton)
         .onTapGesture {
             switch download.file {
-            case let .partial(url), let .complete(url):
-                router.presented = .player(media: .init(title: download.title, type: .url(url)))
+            case let .partial(item), let .complete(item):
+                router.presented = .player(media: .init(title: download.title, item: item))
             case .failed:
                 download.restart()
             default:

@@ -20,6 +20,7 @@ struct Media: Hashable {
         case encryptedUrl(URL, certificateUrl: URL)
         case unbufferedUrl(URL)
         case urn(String, serverSetting: ServerSetting)
+        case item(PlayerItem)
 
         static func urn(_ urn: String) -> Self {
             .urn(urn, serverSetting: .production)
@@ -50,6 +51,10 @@ struct Media: Hashable {
         self.type = type
         self.startTime = startTime
         self.timeRanges = timeRanges
+    }
+    
+    init(title: String, item: PlayerItem) {
+        self.init(title: title, type: .item(item))
     }
 
     // swiftlint:disable:next function_body_length
@@ -116,6 +121,8 @@ struct Media: Hashable {
                 ],
                 context: .init(configuration: .init(position: at(startTime)))
             )
+        case let .item(item):
+            return item
         }
     }
 

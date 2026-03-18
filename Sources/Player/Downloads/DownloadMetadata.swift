@@ -7,9 +7,15 @@
 import Foundation
 
 struct DownloadMetadata: Codable {
-    let id: String
+    let identifier: String
     let title: String
     let url: URL
     let bookmarkData: Data?
     let hasFailed: Bool
+}
+
+extension DownloadMetadata: AssetMetadata {
+    var playerMetadata: PlayerMetadata {
+        .init(identifier: identifier, title: title)
+    }
 }

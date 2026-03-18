@@ -14,8 +14,8 @@ import Foundation
 @_spi(DownloaderPrivate)
 public enum DownloadedFile {
     case unavailable
-    case partial(URL)
-    case complete(URL)
+    case partial(PlayerItem)
+    case complete(PlayerItem)
     case failed
 }
 
