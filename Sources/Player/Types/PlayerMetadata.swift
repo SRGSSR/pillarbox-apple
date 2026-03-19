@@ -9,7 +9,7 @@ import Combine
 import MediaPlayer
 
 /// Metadata associated with playback.
-public struct PlayerMetadata: Equatable {
+public struct PlayerMetadata: Codable, Equatable {
     static let empty = Self()
 
     /// An identifier for the content.
@@ -44,7 +44,10 @@ public struct PlayerMetadata: Equatable {
     /// Time ranges associated with the content.
     public let timeRanges: [TimeRange]
 
-    let blockedTimeRanges: [CMTimeRange]
+    var blockedTimeRanges: [CMTimeRange] {
+        // TODO: Should compute and cache the result, but should not be serialized.
+        Self.flattenedBlockedTimeRanges(from: timeRanges)
+    }
 
     var episodeDescription: String? {
         switch episodeInformation {
@@ -124,7 +127,6 @@ public struct PlayerMetadata: Equatable {
         self.episodeInformation = episodeInformation
         self.chapters = chapters
         self.timeRanges = timeRanges
-        self.blockedTimeRanges = Self.flattenedBlockedTimeRanges(from: timeRanges)
     }
 
     private static func flattenedBlockedTimeRanges(from timeRanges: [TimeRange]) -> [CMTimeRange] {

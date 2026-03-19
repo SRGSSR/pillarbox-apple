@@ -7,9 +7,9 @@
 import CoreMedia
 
 /// Represents a time range.
-public struct TimeRange: Hashable {
+public struct TimeRange: Codable, Hashable {
     /// The range type.
-    public enum Kind: Hashable {
+    public enum Kind: Codable, Hashable {
         /// Credits.
         case credits(Credits)
 
@@ -21,7 +21,7 @@ public struct TimeRange: Hashable {
     }
 
     /// The credits type.
-    public enum Credits {
+    public enum Credits: Codable {
         /// Opening.
         case opening
 
@@ -29,7 +29,7 @@ public struct TimeRange: Hashable {
         case closing
     }
 
-    private let timeRange: CMTimeRange
+    private let timeRange: CodableTimeRange
 
     /// The kind of the time range.
     public let kind: Kind
@@ -49,7 +49,7 @@ public struct TimeRange: Hashable {
         timeRange.duration
     }
 
-    private init(kind: Kind, timeRange: CMTimeRange) {
+    private init(kind: Kind, timeRange: CodableTimeRange) {
         self.kind = kind
         self.timeRange = timeRange
     }

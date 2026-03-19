@@ -18,11 +18,15 @@ private let kSession = URLSession(configuration: .default)
 ///
 /// An image source is opaque and not meant for direct image extraction. To display an image from a source, use
 /// ``LazyImage`` in SwiftUI or ``LazyUIImage(source:)`` in UIKit.
-public struct ImageSource: Equatable {
+public struct ImageSource: Codable, Equatable {
     enum Kind: Equatable {
         case none
         case url(standardResolution: URL, lowResolution: URL)
         case image(UIImage)
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case kind
     }
 
     /// No image.
@@ -30,6 +34,16 @@ public struct ImageSource: Equatable {
 
     let kind: Kind
     private let trigger = Trigger()
+
+    private init(kind: Kind) {
+        self.kind = kind
+    }
+
+    // swiftlint:disable:next missing_docs
+    public init(from decoder: any Decoder) throws {
+        // FIXME:
+        kind = .none
+    }
 
     /// An image retrieved from a URL.
     ///
@@ -49,6 +63,11 @@ public struct ImageSource: Equatable {
     // swiftlint:disable:next missing_docs
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.kind == rhs.kind
+    }
+
+    // swiftlint:disable:next missing_docs
+    public func encode(to encoder: any Encoder) throws {
+        // FIXME:
     }
 }
 
