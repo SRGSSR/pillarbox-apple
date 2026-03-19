@@ -7,7 +7,7 @@
 import Foundation
 
 struct DownloadMetadata: Codable {
-    let identifier: String
+    let id: UUID
     let title: String
     let url: URL
     let bookmarkData: Data?
@@ -16,6 +16,6 @@ struct DownloadMetadata: Codable {
 
 extension DownloadMetadata: AssetMetadata {
     var playerMetadata: PlayerMetadata {
-        .init(identifier: identifier, title: title)
+        .init(identifier: id.uuidString, title: title)
     }
 }

@@ -15,7 +15,7 @@ import UIKit
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject {
-    private let identifier: String
+    private let id: UUID
 
     public let title: String
     public let url: URL
@@ -64,8 +64,8 @@ public final class Download: ObservableObject {
         }
     }
 
-    private init(identifier: String, title: String, url: URL, bookmarkData: Data?, hasFailed: Bool, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
-        self.identifier = identifier
+    private init(id: UUID, title: String, url: URL, bookmarkData: Data?, hasFailed: Bool, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
+        self.id = id
         self.title = title
         self.url = url
         self.bookmarkData = bookmarkData
@@ -78,20 +78,20 @@ public final class Download: ObservableObject {
     }
 
     convenience init(title: String, url: URL, using session: AVAssetDownloadURLSession) {
-        let identifier = UUID().uuidString
-        let task = Self.task(identifier: identifier, title: title, url: url, using: session)
-        self.init(identifier: identifier, title: title, url: url, bookmarkData: nil, hasFailed: false, task: task, session: session)
+        let id = UUID()
+        let task = Self.task(id: id, title: title, url: url, using: session)
+        self.init(id: id, title: title, url: url, bookmarkData: nil, hasFailed: false, task: task, session: session)
     }
 
     convenience init(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) {
         if let bookmarkData = metadata.bookmarkData {
             self.init(
-                identifier: metadata.identifier,
+                id: metadata.id,
                 title: metadata.title,
                 url: metadata.url,
                 bookmarkData: bookmarkData,
                 hasFailed: metadata.hasFailed,
-                task: tasks.first { $0.taskDescription == metadata.identifier },
+                task: tasks.first { $0.taskDescription == metadata.id.uuidString },
                 session: session
             )
         }
@@ -100,21 +100,21 @@ public final class Download: ObservableObject {
         }
     }
 
-    private static func task(identifier: String, title: String, url: URL, using session: AVAssetDownloadURLSession?) -> URLSessionTask? {
+    private static func task(id: UUID, title: String, url: URL, using session: AVAssetDownloadURLSession?) -> URLSessionTask? {
         guard let session else { return nil }
         let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
-        task.taskDescription = identifier
+        task.taskDescription = id.uuidString
         task.resume()
         return task
     }
 
     func matches(task: URLSessionTask) -> Bool {
-        task.taskDescription == identifier
+        task.taskDescription == id.uuidString
     }
 
     func metadata() -> DownloadMetadata {
-        .init(identifier: identifier, title: title, url: url, bookmarkData: bookmarkData, hasFailed: hasFailed)
+        .init(id: id, title: title, url: url, bookmarkData: bookmarkData, hasFailed: hasFailed)
     }
 
     func cancel() {
@@ -202,7 +202,7 @@ public extension Download {
     func restart() {
         removeFile()
 
-        task = Self.task(identifier: identifier, title: title, url: url, using: session)
+        task = Self.task(id: id, title: title, url: url, using: session)
         hasFailed = false
     }
 }
@@ -210,11 +210,11 @@ public extension Download {
 @available(tvOS, unavailable)
 extension Download: Hashable {
     public static func == (lhs: Download, rhs: Download) -> Bool {
-        lhs.identifier == rhs.identifier
+        lhs.id == rhs.id
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(identifier)
+        hasher.combine(id)
     }
 }
 

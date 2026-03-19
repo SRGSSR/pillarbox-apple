@@ -52,12 +52,12 @@ struct Media: Hashable {
         self.startTime = startTime
         self.timeRanges = timeRanges
     }
-    
+
     init(title: String, item: PlayerItem) {
         self.init(title: title, type: .item(item))
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     func item() -> PlayerItem {
         switch type {
         case let .url(url), let .monoscopicUrl(url):
