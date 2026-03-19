@@ -24,8 +24,13 @@ public final class Downloader: ObservableObject {
     }
 
     @discardableResult
-    public func add(title: String, url: URL) -> Download {
-        Self.manager.add(title: title, url: url)
+    public func add<P, M>(publisher: P, metadataMapper: @escaping (M) -> PlayerMetadata) -> Download where P: Publisher, P.Output == Asset<M> {
+        Self.manager.add(publisher: publisher, metadataMapper: metadataMapper)
+    }
+
+    @discardableResult
+    public func add<M>(asset: Asset<M>) -> Download where M: AssetMetadata {
+        Self.manager.add(asset: asset)
     }
 
     public func remove(_ download: Download) {

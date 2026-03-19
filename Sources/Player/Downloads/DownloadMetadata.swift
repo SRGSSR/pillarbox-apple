@@ -6,16 +6,10 @@
 
 import Foundation
 
-struct DownloadMetadata: Codable {
+struct DownloadMetadata: Codable, AssetMetadata {
     let id: UUID
-    let title: String
-    let url: URL
+    let playerMetadata: PlayerMetadata
+    let url: URL?
     let bookmarkData: Data?
     let hasFailed: Bool
-}
-
-extension DownloadMetadata: AssetMetadata {
-    var playerMetadata: PlayerMetadata {
-        .init(identifier: id.uuidString, title: title)
-    }
 }

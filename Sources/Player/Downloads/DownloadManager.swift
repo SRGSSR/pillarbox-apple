@@ -31,8 +31,16 @@ final class DownloadManager: NSObject {
     }
 
     @discardableResult
-    func add(title: String, url: URL) -> Download {
-        let download = Download(title: title, url: url, using: session)
+    func add<P, M>(publisher: P, metadataMapper: @escaping (M) -> PlayerMetadata) -> Download where P: Publisher, P.Output == Asset<M> {
+        add(download: Download(publisher: publisher, metadataMapper: metadataMapper, using: session))
+    }
+
+    @discardableResult
+    func add<M>(asset: Asset<M>) -> Download where M: AssetMetadata {
+        add(download: Download(asset: asset, using: session))
+    }
+
+    private func add(download: Download) -> Download {
         downloads.append(download)
         return download
     }
@@ -65,11 +73,12 @@ private extension DownloadManager {
               let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return []
         }
-        return metadata.map { Download(from: $0, reusing: tasks, in: session) }
+        return []
+        // FIXME return metadata.map { Download(from: $0, reusing: tasks, in: session) }
     }
 
     static func saveDownloads(_ downloads: [Download]) {
-        let metadata = downloads.map { $0.metadata() }
+        let metadata = downloads.map { $0.downloadMetadata() }
         guard let jsonData = try? JSONEncoder().encode(metadata) else { return }
         try? jsonData.write(to: metadataFileUrl)
     }

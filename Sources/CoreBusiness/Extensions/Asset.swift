@@ -17,8 +17,8 @@ public func _setUsesContentKeySession(_ usesContentKeySession: Bool) {
     kUsesContentKeySession = usesContentKeySession
 }
 
-extension Asset {
-    static func tokenProtected(url: URL, metadata: M, configuration: PlaybackConfiguration) -> Self {
+public extension Asset {
+    static func tokenProtected(url: URL, metadata: M, configuration: PlaybackConfiguration = .default) -> Self {
         let id = UUID()
         return .custom(
             url: AkamaiURLCoding.encodeUrl(url, id: id),
@@ -28,7 +28,7 @@ extension Asset {
         )
     }
 
-    static func encrypted(url: URL, certificateUrl: URL, metadata: M, configuration: PlaybackConfiguration) -> Self {
+    static func encrypted(url: URL, certificateUrl: URL, metadata: M, configuration: PlaybackConfiguration = .default) -> Self {
         // FIXME: An issue affects `AVContentKeySession`, preventing key request creation after several hours (FB19383686).
         //        In the meantime we use a `.custom` asset but when the issue has been fixed we should use an `.encrypted`
         //        asset (removing `IrdetoResourceLoaderDelegate` in the process).
