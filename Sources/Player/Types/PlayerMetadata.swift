@@ -11,7 +11,8 @@ import MediaPlayer
 // TODO: Rename as AssetMetadata after protocol removal
 /// Metadata associated with playback.
 public struct PlayerMetadata: Equatable {
-    static let empty = Self()
+    /// Empty metadata.
+    public static let empty = Self()
 
     /// An identifier for the content.
     public let identifier: String?
