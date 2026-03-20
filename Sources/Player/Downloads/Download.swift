@@ -21,7 +21,7 @@ public final class Download: ObservableObject {
         metadata.title ?? "-"
     }
 
-    private var task: URLSessionTask? {
+    @Published private var task: URLSessionTask? {
         didSet {
             configureTaskPublishers()
         }
@@ -59,7 +59,9 @@ public final class Download: ObservableObject {
     }
 
     private let locationSubject = CurrentValueSubject<URL?, Never>(nil)
+
     private var cancellables = Set<AnyCancellable>()
+    private var taskCancellables = Set<AnyCancellable>()
 
     public var file: DownloadedFile {
         guard !hasFailed else { return .failed }
@@ -98,6 +100,12 @@ public final class Download: ObservableObject {
                 Just(.failing(id: id, error: error))
             }
             .assign(to: &$content)
+        $content
+            .map { content in
+                Self.task(metadata: content.metadata, resource: content.resource, using: session)
+            }
+            .weakAssign(to: \.task, on: self)
+            .store(in: &cancellables)
     }
 
     convenience init<M>(asset: Asset<M>, using session: AVAssetDownloadURLSession) where M: AssetMetadata {
@@ -119,6 +127,22 @@ public final class Download: ObservableObject {
             task: tasks.first { $0.taskDescription == metadata.id.uuidString },
             session: session
         )
+    }
+
+    private static func task(metadata: PlayerMetadata, resource: Resource, using session: AVAssetDownloadURLSession?) -> URLSessionTask? {
+        guard let session else { return nil }
+        // TODO: Probably shared code for asset construction
+        switch resource {
+        case let .simple(url):
+            let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: metadata.title ?? "-")
+            let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
+            task.taskDescription = metadata.identifier
+            task.resume()
+            return task
+        default:
+            // FIXME:
+            return nil
+        }
     }
 
     func matches(task: URLSessionTask) -> Bool {
@@ -162,22 +186,22 @@ public final class Download: ObservableObject {
     }
 
     private func configureTaskPublishers() {
-        cancellables = []
+        taskCancellables = []
         guard let task else { return }
         task.publisher(for: \.state)
             .receiveOnMainThread()
             .weakAssign(to: \.state, on: self)
-            .store(in: &cancellables)
+            .store(in: &taskCancellables)
         task.progress.publisher(for: \.fractionCompleted)
             .map { $0.clamped(to: 0...1) }
             .receiveOnMainThread()
             .weakAssign(to: \._progress, on: self)
-            .store(in: &cancellables)
+            .store(in: &taskCancellables)
         bookmarkDataPublisher(for: task)
             .receiveOnMainThread()
             .map { Optional($0) }
             .weakAssign(to: \.bookmarkData, on: self)
-            .store(in: &cancellables)
+            .store(in: &taskCancellables)
     }
 
     private func bookmarkDataPublisher(for task: URLSessionTask) -> AnyPublisher<Data, Never> {
