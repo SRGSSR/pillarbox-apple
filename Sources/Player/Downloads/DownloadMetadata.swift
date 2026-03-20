@@ -8,6 +8,7 @@ import Foundation
 
 struct DownloadMetadata: Codable, AssetMetadata {
     let id: UUID
+    // TODO: Should persist Resource, PlayerMetadata and PlaybackConfiguration from the AssetContent
     let playerMetadata: PlayerMetadata
     let url: URL?
     let bookmarkData: Data?

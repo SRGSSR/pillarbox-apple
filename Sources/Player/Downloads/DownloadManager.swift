@@ -73,8 +73,7 @@ private extension DownloadManager {
               let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return []
         }
-        return []
-        // FIXME return metadata.map { Download(from: $0, reusing: tasks, in: session) }
+        return metadata.compactMap { Download(from: $0, reusing: tasks, in: session) }
     }
 
     static func saveDownloads(_ downloads: [Download]) {

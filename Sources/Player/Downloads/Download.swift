@@ -37,7 +37,12 @@ public final class Download: ObservableObject {
         hasFailed ? 0 : _progress
     }
 
-    @Published private var content: AssetContent
+    @Published private var content: AssetContent {
+        didSet {
+            notifyUpdate()
+        }
+    }
+
     @Published public private(set) var state: URLSessionTask.State = .completed
     @Published private var _progress: Double = 1
 
@@ -70,6 +75,13 @@ public final class Download: ObservableObject {
         }
     }
 
+    private init(content: AssetContent, bookmarkData: Data?, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
+        self.content = content
+        self.bookmarkData = bookmarkData
+        self.task = task
+        self.session = session
+    }
+
     init<P, M>(
         publisher: P,
         metadataMapper: @escaping (M) -> PlayerMetadata,
@@ -90,6 +102,23 @@ public final class Download: ObservableObject {
 
     convenience init<M>(asset: Asset<M>, using session: AVAssetDownloadURLSession) where M: AssetMetadata {
         self.init(publisher: Just(asset), metadataMapper: { $0.playerMetadata }, using: session)
+    }
+
+    convenience init?(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) {
+        // FIXME: Does not handle all cases
+        guard let bookmarkData = metadata.bookmarkData else { return nil }
+        self.init(
+            content: .loaded(
+                id: metadata.id,
+                resource: .simple(url: metadata.url!) /* FIXME */,
+                metadata: metadata.playerMetadata,
+                configuration: .default /* FIXME */,
+                dateInterval: nil
+            ),
+            bookmarkData: bookmarkData,
+            task: tasks.first { $0.taskDescription == metadata.id.uuidString },
+            session: session
+        )
     }
 
     func matches(task: URLSessionTask) -> Bool {
