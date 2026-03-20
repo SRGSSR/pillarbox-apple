@@ -9,7 +9,7 @@ import Combine
 /// A protocol defining how an asset is loaded.
 public protocol AssetLoader {
     /// The input expected to load an asset.
-    associatedtype Input: Codable
+    associatedtype Input
 
     /// The metadata delivered when loading an asset.
     associatedtype Metadata

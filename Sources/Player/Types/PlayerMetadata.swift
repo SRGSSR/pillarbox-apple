@@ -8,6 +8,7 @@ import AVFoundation
 import Combine
 import MediaPlayer
 
+// TODO: Rename as AssetMetadata after protocol removal
 /// Metadata associated with playback.
 public struct PlayerMetadata: Equatable {
     static let empty = Self()
