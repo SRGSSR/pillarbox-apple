@@ -15,7 +15,7 @@ public protocol AssetLoader {
     associatedtype Metadata
 
     /// A publisher that delivers the asset matching a given input.
-    static func publisher(for input: Input) -> AnyPublisher<Asset<Metadata>, Error>
+    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<Metadata>, Error>
 
     /// Converts metadata to player metadata.
     static func playerMetadata(from metadata: Metadata) -> PlayerMetadata

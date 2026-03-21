@@ -40,7 +40,7 @@ public final class PlayerItem: Hashable {
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             Publishers.CombineLatest(
-                assetLoader.publisher(for: input),
+                assetLoader.assetPublisher(for: input),
                 Just(Date.now).setFailureType(to: Error.self)
             )
             .handleEvents(receiveOutput: { asset, _ in

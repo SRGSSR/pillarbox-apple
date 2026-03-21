@@ -14,7 +14,7 @@ enum URNAssetLoader: AssetLoader {
         let configuration: PlaybackConfiguration
     }
 
-    static func publisher(for input: Input) -> AnyPublisher<Asset<MediaMetadata>, Error> {
+    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<MediaMetadata>, Error> {
         let dataProvider = DataProvider(server: input.server)
         return dataProvider.mediaCompositionPublisher(forUrn: input.urn)
             .tryMap { response in

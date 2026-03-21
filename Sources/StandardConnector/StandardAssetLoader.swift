@@ -15,7 +15,7 @@ enum StandardAssetLoader<CustomData>: AssetLoader where CustomData: Decodable {
         let assetProvider: (PlayerData<CustomData>) -> Asset<PlayerData<CustomData>>
     }
 
-    static func publisher(for input: Input) -> AnyPublisher<Asset<PlayerData<CustomData>>, Error> {
+    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<PlayerData<CustomData>>, Error> {
         URLSession.shared.dataTaskPublisher(for: input.request)
             .mapHttpErrors()
             .map(\.data)

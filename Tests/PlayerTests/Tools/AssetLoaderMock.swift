@@ -15,7 +15,7 @@ enum AssetLoaderMock: AssetLoader {
         let delay: TimeInterval
     }
 
-    static func publisher(for input: Input) -> AnyPublisher<Asset<PlayerMetadata>, Error> {
+    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<PlayerMetadata>, Error> {
         Just(input.asset)
             .delayIfNeeded(for: .seconds(input.delay), scheduler: DispatchQueue.main)
             .setFailureType(to: Error.self)
