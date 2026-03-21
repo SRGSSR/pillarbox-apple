@@ -29,8 +29,9 @@ public extension PlayerItem {
         trackerAdapters: [TrackerAdapter<PlayerData<CustomData>>] = [],
         assetProvider: @escaping (PlayerData<CustomData>) -> Asset<PlayerData<CustomData>>
     ) -> Self where CustomData: Decodable {
-        .init(
-            publisher: publisher(request: request, type: type, decoder: decoder, assetProvider: assetProvider),
+        self.init(
+            assetLoader: StandardAssetLoader.self,
+            input: .init(request: request, decoder: decoder, assetProvider: assetProvider),
             trackerAdapters: trackerAdapters
         )
     }
@@ -54,21 +55,5 @@ public extension PlayerItem {
         assetProvider: @escaping (PlayerData<EmptyCustomData>) -> Asset<PlayerData<EmptyCustomData>>
     ) -> Self {
         Self.standard(request: request, type: EmptyCustomData.self, decoder: decoder, trackerAdapters: trackerAdapters, assetProvider: assetProvider)
-    }
-}
-
-private extension PlayerItem {
-    static func publisher<CustomData>(
-        request: URLRequest,
-        type: CustomData.Type,
-        decoder: JSONDecoder,
-        assetProvider: @escaping (PlayerData<CustomData>) -> Asset<PlayerData<CustomData>>,
-    ) -> AnyPublisher<Asset<PlayerData<CustomData>>, Error> where CustomData: Decodable {
-        URLSession.shared.dataTaskPublisher(for: request)
-            .mapHttpErrors()
-            .map(\.data)
-            .decode(type: PlayerData<CustomData>.self, decoder: decoder)
-            .map { assetProvider($0) }
-            .eraseToAnyPublisher()
     }
 }
