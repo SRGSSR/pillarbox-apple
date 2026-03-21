@@ -20,3 +20,10 @@ public protocol AssetLoader {
     /// Converts metadata to player metadata.
     static func playerMetadata(from metadata: Metadata) -> PlayerMetadata
 }
+
+public extension AssetLoader where Metadata == PlayerMetadata {
+    // swiftlint:disable:next missing_docs
+    static func playerMetadata(from metadata: PlayerMetadata) -> PlayerMetadata {
+        metadata
+    }
+}

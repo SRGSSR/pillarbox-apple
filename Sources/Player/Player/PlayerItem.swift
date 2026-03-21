@@ -35,7 +35,7 @@ public final class PlayerItem: Hashable {
     ///   - assetLoader: The asset loader type.
     ///   - input: The input expected by the asset loader.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public init<A>(assetLoader: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>]) where A: AssetLoader {
+    public init<A>(assetLoader: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
