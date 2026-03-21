@@ -66,9 +66,9 @@
 
 - ``canSeek(to:)``
 - ``seek(_:smooth:completion:)``
-- ``seek(to:completion:)-9bknb``
-- ``seek(to:completion:)-2ypz8``
-- ``seek(to:completion:)-1tbeq``
+- ``seek(to:completion:)-(CMTime,_)``
+- ``seek(to:completion:)-(Date,_)``
+- ``seek(to:completion:)-(Chapter,_)``
 
 ### Resuming
 
