@@ -32,15 +32,15 @@ public final class PlayerItem: Hashable {
     /// Creates an item loaded using an ``AssetLoader``.
     ///
     /// - Parameters:
-    ///   - assetLoader: The asset loader type.
+    ///   - assetLoaderType: The asset loader type.
     ///   - input: The input expected by the asset loader.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public init<A>(assetLoader: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
+    public init<A>(assetLoaderType: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             Publishers.CombineLatest(
-                assetLoader.assetPublisher(for: input),
+                assetLoaderType.assetPublisher(for: input),
                 Just(Date.now).setFailureType(to: Error.self)
             )
             .handleEvents(receiveOutput: { asset, _ in
@@ -51,7 +51,7 @@ public final class PlayerItem: Hashable {
             .map { asset, startDate in
                 Publishers.CombineLatest3(
                     Just(asset),
-                    assetLoader.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
+                    assetLoaderType.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
                     Just(DateInterval(start: startDate, end: .now))
                 )
             }
@@ -108,7 +108,7 @@ public extension PlayerItem {
         asset: Asset<PlayerMetadata>,
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) {
-        self.init(assetLoader: SimpleAssetLoader.self, input: asset, trackerAdapters: trackerAdapters)
+        self.init(assetLoaderType: SimpleAssetLoader.self, input: asset, trackerAdapters: trackerAdapters)
     }
 }
 

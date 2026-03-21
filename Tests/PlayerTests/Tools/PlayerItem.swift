@@ -18,7 +18,7 @@ extension PlayerItem {
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
         self.init(
-            assetLoader: AssetLoaderMock.self,
+            assetLoaderType: AssetLoaderMock.self,
             input: .init(asset: .simple(url: url, metadata: metadata), delay: delay),
             trackerAdapters: trackerAdapters
         )
@@ -30,7 +30,7 @@ extension PlayerItem {
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
         self.init(
-            assetLoader: UpdatingAssetLoaderMock.self,
+            assetLoaderType: UpdatingAssetLoaderMock.self,
             input: .init(url: url, delay: delay),
             trackerAdapters: trackerAdapters
         )
@@ -38,7 +38,7 @@ extension PlayerItem {
 
     static func failing(with error: Error, after delay: TimeInterval) -> Self {
         self.init(
-            assetLoader: FailingAssetLoaderMock.self,
+            assetLoaderType: FailingAssetLoaderMock.self,
             input: .init(error: error, delay: delay)
         )
     }
@@ -49,7 +49,7 @@ extension PlayerItem {
         after delay: TimeInterval
     ) -> Self {
         self.init(
-            assetLoader: AssetLoaderMock.self,
+            assetLoaderType: AssetLoaderMock.self,
             input: .init(asset: .unavailable(with: error, metadata: metadata), delay: delay)
         )
     }

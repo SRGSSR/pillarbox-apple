@@ -30,7 +30,7 @@ public extension PlayerItem {
         assetProvider: @escaping (PlayerData<CustomData>) -> Asset<PlayerData<CustomData>>
     ) -> Self where CustomData: Decodable {
         self.init(
-            assetLoader: StandardAssetLoader.self,
+            assetLoaderType: StandardAssetLoader.self,
             input: .init(request: request, decoder: decoder, assetProvider: assetProvider),
             trackerAdapters: trackerAdapters
         )

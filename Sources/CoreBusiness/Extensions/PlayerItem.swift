@@ -31,7 +31,7 @@ public extension PlayerItem {
         context: PlaybackContext = .default
     ) -> Self {
         self.init(
-            assetLoader: URNAssetLoader.self,
+            assetLoaderType: URNAssetLoader.self,
             input: .init(urn: urn, server: server, configuration: context.configuration),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },

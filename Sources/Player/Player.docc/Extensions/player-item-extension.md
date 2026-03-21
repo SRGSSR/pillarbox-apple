@@ -4,7 +4,7 @@
 
 ### Creating a Custom Player Item
 
-- ``init(assetLoader:input:trackerAdapters:)``
+- ``init(assetLoaderType:input:trackerAdapters:)``
 - ``init(asset:trackerAdapters:)``
 
 ### Creating a Standard Player Item with Metadata
