@@ -58,7 +58,7 @@ struct Media: Hashable {
         case let .url(url), let .monoscopicUrl(url):
             return .simple(
                 url: url,
-                metadata: playerMetadata(),
+                metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -69,7 +69,7 @@ struct Media: Hashable {
         case let .tokenProtectedUrl(url):
             return .tokenProtected(
                 url: url,
-                metadata: playerMetadata(),
+                metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -81,7 +81,7 @@ struct Media: Hashable {
             return .encrypted(
                 url: url,
                 certificateUrl: certificateUrl,
-                metadata: playerMetadata(),
+                metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -97,7 +97,7 @@ struct Media: Hashable {
             )
             return .simple(
                 url: url,
-                metadata: playerMetadata(),
+                metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -156,7 +156,7 @@ extension Media {
         }
     }
 
-    private func playerMetadata() -> PlayerMetadata {
+    private func metadata() -> PlayerMetadata {
         .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
     }
 }
