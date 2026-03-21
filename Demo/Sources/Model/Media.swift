@@ -58,7 +58,7 @@ struct Media: Hashable {
         case let .url(url), let .monoscopicUrl(url):
             return .simple(
                 url: url,
-                metadata: self,
+                metadata: playerMetadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -69,7 +69,7 @@ struct Media: Hashable {
         case let .tokenProtectedUrl(url):
             return .tokenProtected(
                 url: url,
-                metadata: self,
+                metadata: playerMetadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -81,7 +81,7 @@ struct Media: Hashable {
             return .encrypted(
                 url: url,
                 certificateUrl: certificateUrl,
-                metadata: self,
+                metadata: playerMetadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -97,7 +97,7 @@ struct Media: Hashable {
             )
             return .simple(
                 url: url,
-                metadata: self,
+                metadata: playerMetadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -134,11 +134,7 @@ struct Media: Hashable {
     }
 }
 
-extension Media: AssetMetadata {
-    var playerMetadata: PlayerMetadata {
-        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
-    }
-
+extension Media {
     private var imageSource: ImageSource {
         if let image {
             return .image(image)
@@ -158,5 +154,9 @@ extension Media: AssetMetadata {
         default:
             return .standard
         }
+    }
+
+    private func playerMetadata() -> PlayerMetadata {
+        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
     }
 }
