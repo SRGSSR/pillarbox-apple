@@ -170,7 +170,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                MetricsTracker.adapter(configuration: .test) { .test }
+                MetricsTracker.adapter(configuration: .test) { _ in .test }
             ]
         ))
         expectAtLeastHits(
