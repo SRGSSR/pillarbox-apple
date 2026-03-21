@@ -16,9 +16,9 @@ enum UpdatingAssetLoaderMock: AssetLoader {
     }
 
     static func assetPublisher(for input: Input) -> AnyPublisher<Asset<PlayerMetadata>, Error> {
-        Just(.simple(url: input.url, metadata: .init(title: "title1", subtitle: "subtitle1")))
+        Just(.simple(url: input.url, metadata: .init(title: "title1")))
             .delayIfNeeded(for: .seconds(input.delay), scheduler: DispatchQueue.main)
-            .prepend(.simple(url: input.url, metadata: .init(title: "title0", subtitle: "subtitle0")))
+            .prepend(.simple(url: input.url, metadata: .init(title: "title0")))
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
