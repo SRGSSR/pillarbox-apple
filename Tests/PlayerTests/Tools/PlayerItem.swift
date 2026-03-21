@@ -14,50 +14,43 @@ extension PlayerItem {
     static func mock(
         url: URL,
         loadedAfter delay: TimeInterval,
-        trackerAdapters: [TrackerAdapter<Void>] = []
+        withMetadata metadata: PlayerMetadata = .empty,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
-        let publisher = Just(Asset.simple(url: url))
-            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
-    }
-
-    static func mock(
-        url: URL,
-        loadedAfter delay: TimeInterval,
-        withMetadata: AssetMetadataMock,
-        trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []
-    ) -> Self {
-        let publisher = Just(Asset.simple(url: url, metadata: withMetadata))
-            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
+        self.init(
+            assetLoader: AssetLoaderMock.self,
+            input: .init(asset: .simple(url: url, metadata: metadata), delay: delay),
+            trackerAdapters: trackerAdapters
+        )
     }
 
     static func mock(
         url: URL,
         withMetadataUpdateAfter delay: TimeInterval,
-        trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
-        let publisher = Just(Asset.simple(
-            url: url,
-            metadata: AssetMetadataMock(title: "title1", subtitle: "subtitle1")
-        ))
-        .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
-        .prepend(Asset.simple(
-            url: url,
-            metadata: AssetMetadataMock(title: "title0", subtitle: "subtitle0")
-        ))
-        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
+        self.init(
+            assetLoader: UpdatingAssetLoaderMock.self,
+            input: .init(url: url, delay: delay),
+            trackerAdapters: trackerAdapters
+        )
     }
 
     static func failing(with error: Error, after delay: TimeInterval) -> Self {
-        let publisher = Fail<Asset<Void>, Error>(error: error)
-            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(publisher: publisher)
+        self.init(
+            assetLoader: FailingAssetLoaderMock.self,
+            input: .init(error: error, delay: delay)
+        )
     }
 
-    static func unavailable(with error: Error, after delay: TimeInterval) -> Self {
-        let publisher = Just(Asset.unavailable(with: error, metadata: ()))
-            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(publisher: publisher)
+    static func unavailable(
+        with error: Error,
+        metadata: PlayerMetadata = .empty,
+        after delay: TimeInterval
+    ) -> Self {
+        self.init(
+            assetLoader: AssetLoaderMock.self,
+            input: .init(asset: .unavailable(with: error, metadata: metadata), delay: delay)
+        )
     }
 }
