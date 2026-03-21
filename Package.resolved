@@ -1,5 +1,5 @@
 {
-  "originHash" : "0035349bd2bad5d70db66486971a9f74851bc33268f6474ec97349f3860c88ca",
+  "originHash" : "4842ca5cd718e6c4d9d04f4784e465ddd422a912e604e267819693ef7f9a335e",
   "pins" : [
     {
       "identity" : "comscore-swift-package-manager",
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "8d9834a6189db730f6264db7556a7ffb751e99ee",
-        "version" : "1.4.0"
+        "revision" : "6675bc0ff86e61436e615df6fc5174e043e57924",
+        "version" : "1.4.1"
       }
     }
   ],
