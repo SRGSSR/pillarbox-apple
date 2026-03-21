@@ -11,6 +11,10 @@ import PillarboxPlayer
 final class DemoTracker: PlayerItemTracker {
     struct Metadata {
         let title: String
+
+        init(title: String?) {
+            self.title = title ?? "Untitled"
+        }
     }
 
     private static let logger = Logger(category: "DemoTracker")

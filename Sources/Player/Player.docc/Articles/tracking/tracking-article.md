@@ -38,7 +38,7 @@ After defining the associated types, implement the tracker lifecycle methods to 
 
 ### Attach a tracker to an item
 
-To attach a tracker, transform the ``AssetMetadata`` retrieved during ``Asset`` creation into the ``PlayerItemTracker/Metadata`` type defined for your tracker. Use an adapter for this transformation, which you can create with the ``PlayerItemTracker/adapter(configuration:behavior:mapper:)`` method:
+To attach a tracker, transform the ``PlayerMetadata`` retrieved during ``Asset`` creation into the ``PlayerItemTracker/Metadata`` type defined for your tracker. Use an adapter for this transformation, which you can create with the ``PlayerItemTracker/adapter(configuration:behavior:mapper:)`` method:
 
 ```swift
 let item = PlayerItem.simple(url: url, metadata: CustomMetadata(), trackerAdapters: [

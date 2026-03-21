@@ -33,7 +33,7 @@ final class MetadataPublisherTests: TestCase {
 
     func testAvailableAfterDelay() {
         let player = Player(
-            item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: AssetMetadataMock(title: "title"))
+            item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .init(title: "title"))
         )
         expectAtLeastEqualPublished(
             values: [nil, "title"],
@@ -45,7 +45,7 @@ final class MetadataPublisherTests: TestCase {
         let player = Player(item: .mock(
             url: Stream.onDemand.url,
             loadedAfter: 0,
-            withMetadata: AssetMetadataMock(title: "title")
+            withMetadata: .init(title: "title")
         ))
         expectAtLeastEqualPublished(
             values: [nil, "title"],
@@ -62,7 +62,7 @@ final class MetadataPublisherTests: TestCase {
     }
 
     func testNetworkItemReloading() {
-        let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .title1))
+        let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .init(title: "title1")))
         expectAtLeastEqualPublished(
             values: [nil, "title1"],
             from: Self.titlePublisherTest(for: player)
@@ -71,12 +71,12 @@ final class MetadataPublisherTests: TestCase {
             values: [nil, "title2"],
             from: Self.titlePublisherTest(for: player)
         ) {
-            player.items = [.mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .title2)]
+            player.items = [.mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .init(title: "title2"))]
         }
     }
 
     func testEntirePlayback() {
-        let player = Player(item: .mock(url: Stream.shortOnDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
+        let player = Player(item: .mock(url: Stream.shortOnDemand.url, loadedAfter: 0, withMetadata: .init(title: "title")))
         expectAtLeastEqualPublished(
             values: [nil, "title", nil],
             from: Self.titlePublisherTest(for: player)

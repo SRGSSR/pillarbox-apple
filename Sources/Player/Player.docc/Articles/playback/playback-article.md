@@ -58,15 +58,21 @@ You can initialize a player with or without media items. Since ``Player`` confor
 
 ## Configure the player
 
-Customize the player during initialization by providing a ``PlayerConfiguration`` object. Note that configuration settings are immutable after the player is created.
+Customize the player during initialization by providing a ``PlayerConfiguration`` object. Note that configuration settings are immutable after the player has been created.
 
 ## Load custom content
 
-In scenarios where media URLs are dynamically retrieved (e.g., from a web service), you can create custom player items by following these steps:
+When your content is retrieved dynamically—such as from a web service—you can create custom player items by implementing an asset loader tailored to your needs.
 
-1. Write a publisher that fetches the media URL and associated metadata.
-2. Map the publisher’s output to an ``Asset`` wrapping the retrieved media URL. If metadata is required (e.g., for <doc:control-center-article> integration or custom tracking), define and attach a suitable ``AssetMetadata`` type and populate it with the retrieved metadata. Refer to the <doc:metadata-article> article for details.
-3. Create a ``PlayerItem`` using the publisher, ensuring the initializer accounts for any external parameters the publisher requires.
+Follow these steps:
+
+1. Create a type (typically an enum) that conforms to ``AssetLoader``.
+2. Define an associated ``AssetLoader/Input`` type that encapsulates all the information required to load the asset.
+3. Implement ``AssetLoader/assetPublisher(for:)`` to fetch the content URL along with any associated metadata for a given input.
+4. Implement ``AssetLoader/playerMetadata(from:)`` to transform the loaded asset metadata into ``PlayerMetadata`` understood by the player. For more details, see <doc:metadata-article>.
+5. Create a PlayerItem using ``PlayerItem/init(assetLoaderType:input:trackerAdapters:)`` to load content through your custom asset loader.
+
+For improved ergonomics, consider adding a convenience initializer in a dedicated ``PlayerItem`` extension that exposes a more streamlined API based on your input parameters.
 
 ## Start playback
 

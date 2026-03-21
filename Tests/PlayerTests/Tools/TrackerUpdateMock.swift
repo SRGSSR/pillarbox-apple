@@ -9,13 +9,13 @@
 import AVFoundation
 import Combine
 
-final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
+final class TrackerUpdateMock: PlayerItemTracker {
     typealias StatePublisher = PassthroughSubject<State, Never>
 
     enum State: Equatable {
         case enabled
         case disabled
-        case updatedMetadata(Metadata)
+        case updatedMetadata(PlayerMetadata)
         case updatedProperties
     }
 
@@ -33,7 +33,7 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
         configuration.statePublisher.send(.enabled)
     }
 
-    func updateMetadata(to metadata: Metadata) {
+    func updateMetadata(to metadata: PlayerMetadata) {
         configuration.statePublisher.send(.updatedMetadata(metadata))
     }
 
@@ -49,7 +49,7 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
 }
 
 extension TrackerUpdateMock {
-    static func adapter<M>(statePublisher: StatePublisher, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
-        adapter(configuration: Configuration(statePublisher: statePublisher), mapper: mapper)
+    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<PlayerMetadata> {
+        adapter(configuration: Configuration(statePublisher: statePublisher))
     }
 }

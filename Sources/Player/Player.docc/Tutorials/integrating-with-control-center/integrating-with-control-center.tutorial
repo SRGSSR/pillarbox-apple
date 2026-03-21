@@ -28,30 +28,14 @@
                     @Image(source: integrating-with-control-center-1-2, alt: "An iPhone screenshot showing Control Center integration.")
                 }
             }
-        }
-    }
-    
-    @Section(title: "Display metadata in the Control Center") {
-        @ContentAndMedia {
-            Enhance the Control Center experience by associating metadata with the content being played.
-        }
-        
-        @Steps {
-            @Step {
-                Add metadata to the ``Player`` that implements the ``AssetMetadata`` protocol. 
-
-                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-1.swift, previousFile: integrating-with-control-center-1-2.swift) {
-                    @Image(source: integrating-with-control-center-2-1, alt: "An iPhone screenshot showing an empty Control Center.")
-                }
-            }
             
             @Step {
-                Implement the protocol to provide ``PlayerMetadata``. Include a title, a subtitle, and an image to display in the Control Center.
+                Associate metadata with the item being played.
                 
                 This implementation assumes your app resources contain an image named `apple`.
 
-                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-2.swift) {
-                    @Image(source: integrating-with-control-center-2-2, alt: "An iPhone screenshot showing metadata displayed in the Control Center.")
+                @Code(name: "ContentView.swift", file: integrating-with-control-center-1-3.swift) {
+                    @Image(source: integrating-with-control-center-1-3, alt: "An iPhone screenshot showing metadata displayed in the Control Center.")
                 }
             }
         }

@@ -30,8 +30,9 @@ public extension PlayerItem {
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         context: PlaybackContext = .default
     ) -> Self {
-        .init(
-            publisher: publisher(forUrn: urn, server: server, configuration: context.configuration),
+        self.init(
+            assetLoaderType: URNAssetLoader.self,
+            input: .init(urn: urn, server: server, configuration: context.configuration),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
                 CommandersActTracker.adapter(configuration: context.commandersActSource) { $0.analyticsMetadata },
@@ -61,13 +62,13 @@ public extension PlayerItem {
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
     /// tracking.
-    static func tokenProtected<M>(
+    static func tokenProtected(
         url: URL,
-        metadata: M,
-        trackerAdapters: [TrackerAdapter<M>] = [],
+        metadata: PlayerMetadata = .empty,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
         context: PlaybackContext = .default
-    ) -> Self where M: AssetMetadata {
-        .init(
+    ) -> Self {
+        self.init(
             asset: .tokenProtected(url: url, metadata: metadata, configuration: context.configuration),
             trackerAdapters: trackerAdapters
         )
@@ -84,59 +85,16 @@ public extension PlayerItem {
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
     /// tracking.
-    static func encrypted<M>(
+    static func encrypted(
         url: URL,
         certificateUrl: URL,
-        metadata: M,
-        trackerAdapters: [TrackerAdapter<M>] = [],
+        metadata: PlayerMetadata,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
         context: PlaybackContext = .default
-    ) -> Self where M: AssetMetadata {
-        .init(
+    ) -> Self {
+        self.init(
             asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: context.configuration),
             trackerAdapters: trackerAdapters
         )
-    }
-}
-
-private extension PlayerItem {
-    static func publisher(forUrn urn: String, server: Server, configuration: PlaybackConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
-        let dataProvider = DataProvider(server: server)
-        return dataProvider.mediaCompositionPublisher(forUrn: urn)
-            .tryMap { response in
-                let metadata = try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
-                return asset(metadata: metadata, configuration: configuration, dataProvider: dataProvider)
-            }
-            .eraseToAnyPublisher()
-    }
-
-    private static func asset(metadata: MediaMetadata, configuration: PlaybackConfiguration, dataProvider: DataProvider) -> Asset<MediaMetadata> {
-        if let blockingReason = metadata.blockingReason {
-            return .unavailable(with: BlockingError(reason: blockingReason), metadata: metadata)
-        }
-        guard let resource = metadata.resource else {
-            return .unavailable(with: SourceError(), metadata: metadata)
-        }
-        let configuration = assetConfiguration(for: resource, configuration: configuration)
-        if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
-            return .encrypted(url: resource.url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration)
-        }
-        else {
-            switch resource.tokenType {
-            case .akamai:
-                return .tokenProtected(url: resource.url, metadata: metadata, configuration: configuration)
-            default:
-                return .simple(url: resource.url, metadata: metadata, configuration: configuration)
-            }
-        }
-    }
-
-    private static func assetConfiguration(
-        for resource: MediaComposition.Resource,
-        configuration: PlaybackConfiguration
-    ) -> PlaybackConfiguration {
-        // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
-        // livestreams cannot be paused and resumed in the past, as requested by business people.
-        guard resource.streamType == .live else { return configuration }
-        return .init(automaticallyPreservesTimeOffsetFromLive: true, preferredForwardBufferDuration: 1)
     }
 }
