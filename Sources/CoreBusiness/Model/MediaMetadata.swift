@@ -39,8 +39,7 @@ public struct MediaMetadata {
 
     /// The available chapters.
     public var chapters: [Chapter] {
-        guard mainChapter.mediaType == .video else { return [] }
-        return mediaComposition.chapters(relatedTo: mainChapter).map { chapter in
+        mediaComposition.chapters(relatedTo: mainChapter).map { chapter in
             .init(
                 identifier: chapter.urn,
                 title: chapter.title,
