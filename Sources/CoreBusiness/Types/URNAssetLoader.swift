@@ -8,13 +8,13 @@ import Combine
 import PillarboxPlayer
 
 enum URNAssetLoader: AssetLoader {
-    struct Input {
+    struct URNAsset {
         let urn: String
         let server: Server
         let configuration: PlaybackConfiguration
     }
 
-    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<MediaMetadata>, Error> {
+    static func assetPublisher(for input: URNAsset) -> AnyPublisher<Asset<MediaMetadata>, Error> {
         let dataProvider = DataProvider(server: input.server)
         return dataProvider.mediaCompositionPublisher(forUrn: input.urn)
             .tryMap { response in
