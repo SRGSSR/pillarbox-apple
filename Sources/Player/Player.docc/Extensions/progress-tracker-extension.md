@@ -9,7 +9,7 @@
 ### Binding to a Player
 
 - ``player``
-- ``SwiftUICore/View/bind(_:to:)-8fqem``
+- ``SwiftUICore/View/bind(_:to:)-(ProgressTracker,_)``
 
 ### Managing Progress
 

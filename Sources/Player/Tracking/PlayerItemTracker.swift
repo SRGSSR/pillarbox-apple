@@ -116,25 +116,25 @@ public extension PlayerItemTracker where Configuration == Void {
     }
 }
 
-public extension PlayerItemTracker where Metadata == Void {
+public extension PlayerItemTracker where Metadata == PlayerMetadata {
     /// Creates an adapter for the receiver.
     ///
     /// - Parameters:
     ///   - configuration: The tracker configuration.
     ///   - behavior: The tracking behavior.
     /// - Returns: The tracker adapter.
-    static func adapter<M>(configuration: Configuration, behavior: TrackingBehavior = .optional) -> TrackerAdapter<M> {
-        .init(trackerType: Self.self, configuration: configuration, behavior: behavior) { _ in }
+    static func adapter(configuration: Configuration, behavior: TrackingBehavior = .optional) -> TrackerAdapter<PlayerMetadata> {
+        .init(trackerType: Self.self, configuration: configuration, behavior: behavior) { $0 }
     }
 }
 
-public extension PlayerItemTracker where Configuration == Void, Metadata == Void {
+public extension PlayerItemTracker where Configuration == Void, Metadata == PlayerMetadata {
     /// Creates an adapter for the receiver.
     ///
     /// - Parameter behavior: The tracking behavior.
     ///
     /// - Returns: The tracker adapter.
-    static func adapter<M>(behavior: TrackingBehavior = .optional) -> TrackerAdapter<M> {
-        .init(trackerType: Self.self, configuration: (), behavior: behavior) { _ in }
+    static func adapter(behavior: TrackingBehavior = .optional) -> TrackerAdapter<PlayerMetadata> {
+        .init(trackerType: Self.self, configuration: (), behavior: behavior) { $0 }
     }
 }

@@ -12,17 +12,17 @@ import PillarboxStreams
 final class PlayerItemTrackerUpdateTests: TestCase {
     func testMetadata() {
         let player = Player()
-        let publisher = TrackerUpdateMock<String>.StatePublisher()
+        let publisher = TrackerUpdateMock.StatePublisher()
         let item = PlayerItem.simple(
             url: Stream.shortOnDemand.url,
-            metadata: AssetMetadataMock(title: "title"),
+            metadata: PlayerMetadata(title: "title"),
             trackerAdapters: [
-                TrackerUpdateMock.adapter(statePublisher: publisher) { $0.title }
+                TrackerUpdateMock.adapter(statePublisher: publisher)
             ]
         )
         expectAtLeastEqualPublished(
             values: [
-                .updatedMetadata("title"),
+                .updatedMetadata(.init(title: "title")),
                 .enabled,
                 .updatedProperties,
                 .disabled
@@ -36,16 +36,16 @@ final class PlayerItemTrackerUpdateTests: TestCase {
 
     func testMetadataUpdate() {
         let player = Player()
-        let publisher = TrackerUpdateMock<String>.StatePublisher()
+        let publisher = TrackerUpdateMock.StatePublisher()
         let item = PlayerItem.mock(url: Stream.shortOnDemand.url, withMetadataUpdateAfter: 1, trackerAdapters: [
-            TrackerUpdateMock.adapter(statePublisher: publisher) { $0.title }
+            TrackerUpdateMock.adapter(statePublisher: publisher)
         ])
         expectAtLeastEqualPublished(
             values: [
-                .updatedMetadata("title0"),
+                .updatedMetadata(.init(title: "title0")),
                 .enabled,
                 .updatedProperties,
-                .updatedMetadata("title1"),
+                .updatedMetadata(.init(title: "title1")),
                 .updatedProperties,
                 .disabled
             ],
