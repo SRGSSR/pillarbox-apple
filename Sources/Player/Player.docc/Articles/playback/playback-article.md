@@ -62,7 +62,7 @@ Customize the player during initialization by providing a ``PlayerConfiguration`
 
 ## Load custom content
 
-When your content is retrieved dynamically—such as from a web service—you can create custom player items by implementing an asset loader tailored to your needs.
+When your content is retrieved dynamically, such as from a web service, you can create custom player items by implementing an asset loader tailored to your needs.
 
 Follow these steps:
 
