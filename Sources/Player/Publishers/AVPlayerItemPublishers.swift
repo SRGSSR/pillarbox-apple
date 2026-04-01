@@ -112,7 +112,7 @@ extension AVPlayerItem {
     }
 
     private func isEndedPublisher() -> AnyPublisher<Bool, Never> {
-        Publishers.Merge(endTimeNotificationPublisher(), timebaseUpdateNotificationPublisher())
+        Publishers.Merge(endTimeNotificationPublisher(), timeJumpedNotificationPublisher())
             .prepend(false)
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -124,9 +124,8 @@ extension AVPlayerItem {
             .eraseToAnyPublisher()
     }
 
-    private func timebaseUpdateNotificationPublisher() -> AnyPublisher<Bool, Never> {
-        publisher(for: \.timebase)
-            .compactMap(\.self)
+    private func timeJumpedNotificationPublisher() -> AnyPublisher<Bool, Never> {
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.timeJumpedNotification, object: self)
             .map { _ in false }
             .eraseToAnyPublisher()
     }
