@@ -74,4 +74,34 @@ final class ReplayTests: TestCase {
         expect(player.currentItem).toEventually(equal(item))
         expect(player.playbackState).toEventually(equal(.playing))
     }
+
+    func testWithPauseAtItemEnd() {
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
+        player.actionAtItemEnd = .pause
+        player.play()
+        expect(player.canReplay()).toEventually(beTrue())
+        let playerItem = player.queuePlayer.currentItem
+
+        player.replay()
+        expect(player.currentItem).to(equal(item))
+        expect(player.queuePlayer.currentItem).to(equal(playerItem))
+        expect(player.playbackState).toEventually(equal(.playing))
+        expect(player.time().seconds).to(beCloseTo(0, within: 0.5))
+    }
+
+    func testWithNoneAtItemEnd() {
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
+        player.actionAtItemEnd = .none
+        player.play()
+        expect(player.canReplay()).toEventually(beTrue())
+        let playerItem = player.queuePlayer.currentItem
+
+        player.replay()
+        expect(player.currentItem).to(equal(item))
+        expect(player.queuePlayer.currentItem).to(equal(playerItem))
+        expect(player.playbackState).toEventually(equal(.playing))
+        expect(player.time().seconds).to(beCloseTo(0, within: 0.5))
+    }
 }
