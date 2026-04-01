@@ -112,6 +112,23 @@ final class PlayerPublisherTests: TestCase {
         }
     }
 
+    func testPausedMp3ItemStatusLifeCycle() {
+        let player = Player(item: .simple(url: Stream.mp3.url))
+        expectAtLeastEqualPublished(
+            values: [.unknown, .readyToPlay, .ended],
+            from: Self.itemStatusPublisher(for: player)
+        ) {
+            player.actionAtItemEnd = .pause
+            player.play()
+        }
+        expectAtLeastEqualPublishedNext(
+            values: [.readyToPlay],
+            from: Self.itemStatusPublisher(for: player)
+        ) {
+            player.seek(to: .zero)
+        }
+    }
+
     func testDurationEmpty() {
         let player = Player()
         expectAtLeastPublished(
