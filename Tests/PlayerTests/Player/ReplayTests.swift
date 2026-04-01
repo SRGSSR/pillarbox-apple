@@ -75,7 +75,7 @@ final class ReplayTests: TestCase {
         expect(player.playbackState).toEventually(equal(.playing))
     }
 
-    func testWithPauseAtItemEnd() {
+    func testWithPauseActionAtItemEnd() {
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
         player.actionAtItemEnd = .pause
@@ -90,7 +90,7 @@ final class ReplayTests: TestCase {
         expect(player.time().seconds).to(beCloseTo(0, within: 0.5))
     }
 
-    func testWithNoneAtItemEnd() {
+    func testWithNoneActionAtItemEnd() {
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
         player.actionAtItemEnd = .none
