@@ -53,6 +53,10 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyBufferStop()
             streamingAnalytics.notifyEvent(with: properties, rate: &rate)
         }
+
+        if properties.playbackState == .ended {
+            createPlaybackSession()
+        }
     }
 
     // swiftlint:disable:next missing_docs
