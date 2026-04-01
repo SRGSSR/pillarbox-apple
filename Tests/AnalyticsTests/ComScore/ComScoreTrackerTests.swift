@@ -19,6 +19,7 @@ import PillarboxStreams
 //      Fortunately we can customize them indirectly, though, since the end event inherits labels from a former event.
 //      Thus, to test end events resulting from tracker deallocation we need to have another event sent within the same
 //      expectation first so that the end event is provided a listener identifier.
+// swiftlint:disable:next type_body_length
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testGlobals() {
         let player = Player(item: .simple(

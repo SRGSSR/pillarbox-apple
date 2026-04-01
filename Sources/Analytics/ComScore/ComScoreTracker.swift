@@ -54,9 +54,7 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyEvent(with: properties, rate: &rate)
         }
 
-        if properties.playbackState == .ended {
-            createPlaybackSession()
-        }
+        createPlaybackSessionIfNeeded(with: properties)
     }
 
     // swiftlint:disable:next missing_docs
@@ -75,6 +73,11 @@ private extension ComScoreTracker {
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(Player.version)
         setMetadata(metadata)
+    }
+
+    func createPlaybackSessionIfNeeded(with properties: TrackerProperties) {
+        guard properties.playbackState == .ended else { return }
+        createPlaybackSession()
     }
 
     func setMetadata(_ metadata: [String: String]) {
