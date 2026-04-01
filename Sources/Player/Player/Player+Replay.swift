@@ -5,12 +5,14 @@
 //
 
 public extension Player {
-    /// Checks whether the player has finished playing and its content can be played again.
+    /// Indicates whether the current content can be replayed.
     ///
-    /// - Returns: `true` if possible.
+    /// The behavior depends on the value of ``Player/actionAtItemEnd``:
     ///
-    /// If all content has been played the player will start again from the first item. In case of a failure
-    /// playback will start again from the failed item.
+    /// - If set to `.advance`, replay becomes available once all items have been played.
+    ///   Playback restarts from the first item.
+    /// - If set to `.pause` or `.none`, replay becomes available at the end of each item.
+    ///   Playback restarts from the current item.
     func canReplay() -> Bool {
         guard !storedItems.isEmpty else { return false }
         switch actionAtItemEnd {
