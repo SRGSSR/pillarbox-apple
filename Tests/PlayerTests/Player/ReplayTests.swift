@@ -74,4 +74,58 @@ final class ReplayTests: TestCase {
         expect(player.currentItem).toEventually(equal(item))
         expect(player.playbackState).toEventually(equal(.playing))
     }
+
+    func testWithPauseActionAtItemEnd() {
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
+        player.actionAtItemEnd = .pause
+        player.play()
+        expect(player.canReplay()).toEventually(beTrue())
+        let playerItem = player.queuePlayer.currentItem
+
+        player.replay()
+        expect(player.currentItem).to(equal(item))
+        expect(player.queuePlayer.currentItem).to(equal(playerItem))
+        expect(player.playbackState).toEventually(equal(.playing))
+        expect(player.time().seconds).to(beCloseTo(0, within: 0.5))
+    }
+
+    func testWithNoneActionAtItemEnd() {
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
+        player.actionAtItemEnd = .none
+        player.play()
+        expect(player.canReplay()).toEventually(beTrue())
+        let playerItem = player.queuePlayer.currentItem
+
+        player.replay()
+        expect(player.currentItem).to(equal(item))
+        expect(player.queuePlayer.currentItem).to(equal(playerItem))
+        expect(player.playbackState).toEventually(equal(.playing))
+        expect(player.time().seconds).to(beCloseTo(0, within: 0.5))
+    }
+
+    func testWithAdvanceToPauseActionAtItemEndChange() {
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
+        player.play()
+        expect(player.canReplay()).toEventually(beTrue())
+
+        player.actionAtItemEnd = .pause
+        player.replay()
+        expect(player.currentItem).to(equal(item))
+        expect(player.playbackState).toEventually(equal(.playing))
+        expect(player.time().seconds).to(beCloseTo(0, within: 0.5))
+    }
+
+    func testIgnoredWhilePlaying() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        player.resume(at(.init(value: 20, timescale: 1)), in: item)
+        expect(player.playbackState).toEventually(equal(.paused))
+        expect(player.time().seconds).to(equal(20))
+
+        player.replay()
+        expect(player.time().seconds).toAlways(beCloseTo(20, within: 0.5), until: .seconds(1))
+    }
 }

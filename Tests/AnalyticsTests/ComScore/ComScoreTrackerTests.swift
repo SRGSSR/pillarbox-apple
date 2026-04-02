@@ -19,6 +19,7 @@ import PillarboxStreams
 //      Fortunately we can customize them indirectly, though, since the end event inherits labels from a former event.
 //      Thus, to test end events resulting from tracker deallocation we need to have another event sent within the same
 //      expectation first so that the end event is provided a listener identifier.
+// swiftlint:disable:next type_body_length
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testGlobals() {
         let player = Player(item: .simple(
@@ -232,6 +233,98 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             }
         ) {
             player.replay()
+        }
+    }
+
+    func testReplayAfterPauseActionAtItemEnd() {
+        let player = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in .test }
+            ]
+        ))
+        player.actionAtItemEnd = .pause
+        var ns_st_id: String?
+        expectAtLeastHits(
+            play { labels in
+                expect(labels["media_title"]).to(equal("name"))
+                expect(labels.ns_st_id).notTo(beNil())
+                ns_st_id = labels.ns_st_id
+            },
+            end()
+        ) {
+            player.play()
+        }
+        expectAtLeastHits(
+            play { labels in
+                expect(labels["media_title"]).to(equal("name"))
+                expect(labels.ns_st_id).notTo(beNil())
+                expect(labels.ns_st_id).notTo(equal(ns_st_id))
+            }
+        ) {
+            player.replay()
+        }
+    }
+
+    func testReplayAfterNoneActionAtItemEnd() {
+        let player = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in .test }
+            ]
+        ))
+        player.actionAtItemEnd = .none
+        var ns_st_id: String?
+        expectAtLeastHits(
+            play { labels in
+                expect(labels["media_title"]).to(equal("name"))
+                expect(labels.ns_st_id).notTo(beNil())
+                ns_st_id = labels.ns_st_id
+            },
+            end()
+        ) {
+            player.play()
+        }
+        expectAtLeastHits(
+            play { labels in
+                expect(labels["media_title"]).to(equal("name"))
+                expect(labels.ns_st_id).notTo(beNil())
+                expect(labels.ns_st_id).notTo(equal(ns_st_id))
+            }
+        ) {
+            player.replay()
+        }
+    }
+
+    func testSeekAfterPauseAtItemEnd() {
+        let player = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in .test }
+            ]
+        ))
+        player.actionAtItemEnd = .pause
+        var ns_st_id: String?
+        expectAtLeastHits(
+            play { labels in
+                expect(labels["media_title"]).to(equal("name"))
+                expect(labels.ns_st_id).notTo(beNil())
+                ns_st_id = labels.ns_st_id
+            },
+            end()
+        ) {
+            player.play()
+        }
+        expectAtLeastHits(
+            play { labels in
+                expect(labels["media_title"]).to(equal("name"))
+                expect(labels.ns_st_id).notTo(beNil())
+                expect(labels.ns_st_id).notTo(equal(ns_st_id))
+            }
+        ) {
+            player.seek(to: .zero) { _ in
+                player.play()
+            }
         }
     }
 }

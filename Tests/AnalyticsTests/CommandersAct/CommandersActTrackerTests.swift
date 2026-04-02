@@ -76,6 +76,32 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
     }
 
+    func testPlaybackWithPauseActionAtItemEnd() {
+        let player = Player(item: .simple(
+            url: Stream.mediumOnDemand.url,
+            trackerAdapters: [
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
+            ]
+        ))
+        expectAtLeastHits(play(), eof()) {
+            player.actionAtItemEnd = .pause
+            player.play()
+        }
+    }
+
+    func testPlaybackWithNoneActionAtItemEnd() {
+        let player = Player(item: .simple(
+            url: Stream.mediumOnDemand.url,
+            trackerAdapters: [
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
+            ]
+        ))
+        expectAtLeastHits(play(), eof()) {
+            player.actionAtItemEnd = .none
+            player.play()
+        }
+    }
+
     func testDestroyPlayerDuringPlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
