@@ -117,4 +117,15 @@ final class ReplayTests: TestCase {
         expect(player.playbackState).toEventually(equal(.playing))
         expect(player.time().seconds).to(beCloseTo(0, within: 0.5))
     }
+
+    func testIgnoredWhilePlaying() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        player.resume(at(.init(value: 20, timescale: 1)), in: item)
+        expect(player.playbackState).toEventually(equal(.paused))
+        expect(player.time().seconds).to(equal(20))
+
+        player.replay()
+        expect(player.time().seconds).toAlways(beCloseTo(20, within: 0.5), until: .seconds(1))
+    }
 }

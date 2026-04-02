@@ -4,6 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
+private enum ReplayAction {
+    case none
+    case restart
+    case reload
+}
+
 public extension Player {
     /// Indicates whether the current content can be replayed.
     ///
@@ -14,26 +20,34 @@ public extension Player {
     /// - If set to `.pause` or `.none`, replay becomes available at the end of each item. Playback restarts from the
     ///   current item.
     func canReplay() -> Bool {
-        guard !storedItems.isEmpty else { return false }
-        switch actionAtItemEnd {
-        case .advance:
-            return queuePlayer.items().isEmpty || error != nil
-        default:
-            return playbackState == .ended
-        }
+        replayAction() != .none
     }
 
     /// Replays the content, resuming playback automatically.
     func replay() {
-        guard canReplay() else { return }
-        switch actionAtItemEnd {
-        case .advance:
-            play()
-            replaceCurrentItemWithItem(currentItem ?? items.first)
-        default:
+        switch replayAction() {
+        case .none:
+            break
+        case .restart:
             skipToDefault { [weak self] _ in
                 self?.play()
             }
+        case .reload:
+            play()
+            replaceCurrentItemWithItem(currentItem ?? items.first)
+        }
+    }
+
+    private func replayAction() -> ReplayAction {
+        guard !storedItems.isEmpty else { return .none }
+        if queuePlayer.items().isEmpty || error != nil {
+            return .reload
+        }
+        else if playbackState == .ended {
+            return .restart
+        }
+        else {
+            return .none
         }
     }
 }
