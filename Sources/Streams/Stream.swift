@@ -99,7 +99,7 @@ public extension Stream {
     /// An MP3 stream.
     static let mp3: Self = .init(
         url: Bundle.module.url(forResource: "silence", withExtension: "mp3")!,
-        duration: CMTime(value: 5, timescale: 1)
+        duration: CMTime(value: 1, timescale: 1)
     )
 
     /// An unavailable MP3 stream.
