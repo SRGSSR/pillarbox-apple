@@ -34,17 +34,11 @@ enum URLMedia {
         imageUrl: "https://cdn.prod.swi-services.ch/video-delivery/images/94f5f5d1-5d53-4336-afda-9198462c45d9/_.1hAGinujJ.yERGrrGNzBGCNSxmhKZT/16x9",
         type: .url("https://cdn.prod.swi-services.ch/video-projects/94f5f5d1-5d53-4336-afda-9198462c45d9/localised-videos/ENG/renditions/ENG.mp4")
     )
-    static let liveVideoHLS = Media(
-        title: "Couleur 3 en vidéo (live)",
-        subtitle: "Video livestream - HLS",
-        imageUrl: "https://img.rts.ch/audio/2010/image/924h3y-25865853.image?w=640&h=640",
-        type: .url("https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")
-    )
     static let dvrVideoHLS = Media(
         title: "Couleur 3 en vidéo (DVR)",
         subtitle: "Video livestream with DVR - HLS",
         imageUrl: "https://il.srgssr.ch/images/?imageUrl=https%3A%2F%2Fwww.rts.ch%2F2020%2F05%2F18%2F14%2F20%2F11333286.image%2F16x9&format=jpg&width=960",
-        type: .url("https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8")
+        type: .url("https://visualradio-rts-couleur3-d.akamaized.net/out/v1/6a1472634ad745f59a9e63ee8adbbc00/index.m3u8")
     )
     static let liveTimestampVideoHLS = Media(
         title: "Tageschau",

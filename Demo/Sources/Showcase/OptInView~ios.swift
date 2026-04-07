@@ -20,7 +20,7 @@ struct OptInView: View {
     @State private var isActive = false
     @State private var supportsPictureInPicture = false
     @State private var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
-    @State private var actionAtItemEnd: AVPlayer.ActionAtItemEnd = .advance
+    @State private var actionAtItemEnd: ActionAtItemEnd = .advance
 
     var body: some View {
         VStack {
@@ -74,9 +74,8 @@ struct OptInView: View {
 
     private func actionAtItemEndPicker() -> some View {
         Picker("Action at item end", selection: $actionAtItemEnd) {
-            Text("Advance").tag(AVPlayer.ActionAtItemEnd.advance)
-            Text("Pause").tag(AVPlayer.ActionAtItemEnd.pause)
-            Text("None").tag(AVPlayer.ActionAtItemEnd.none)
+            Text("Advance").tag(ActionAtItemEnd.advance)
+            Text("Pause").tag(ActionAtItemEnd.pause)
         }
     }
 

@@ -162,12 +162,12 @@ public final class Player: ObservableObject, Equatable {
     /// The action that the player should perform when playback of an item ends.
     ///
     /// The default value is `.advance`.
-    public var actionAtItemEnd: AVPlayer.ActionAtItemEnd {
+    public var actionAtItemEnd: ActionAtItemEnd {
         get {
-            queuePlayer.actionAtItemEnd
+            .init(from: queuePlayer.actionAtItemEnd)
         }
         set {
-            queuePlayer.actionAtItemEnd = newValue
+            queuePlayer.actionAtItemEnd = newValue.toAVPlayerActionAtItemEnd()
         }
     }
 
