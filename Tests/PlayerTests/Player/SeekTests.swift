@@ -11,14 +11,6 @@ import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
-private struct MockMetadata: AssetMetadata {
-    var playerMetadata: PlayerMetadata {
-        .init(timeRanges: [
-            .init(kind: .blocked, start: .init(value: 20, timescale: 1), end: .init(value: 60, timescale: 1))
-        ])
-    }
-}
-
 final class SeekTests: TestCase {
     func testSeekWhenEmpty() {
         let player = Player()

@@ -91,25 +91,7 @@ public struct MediaMetadata {
     }
 }
 
-extension MediaMetadata: AssetMetadata {
-    // swiftlint:disable:next missing_docs
-    public var playerMetadata: PlayerMetadata {
-        .init(
-            identifier: mediaComposition.chapterUrn,
-            title: title,
-            subtitle: subtitle,
-            description: description,
-            imageSource: .url(
-                standardResolution: standardResolutionImageUrl(for: mainChapter),
-                lowResolution: lowResolutionImageUrl(for: mainChapter)
-            ),
-            viewport: viewport,
-            episodeInformation: episodeInformation,
-            chapters: chapters,
-            timeRanges: timeRanges
-        )
-    }
-
+extension MediaMetadata {
     var title: String {
         guard mainChapter.contentType != .livestream else { return mainChapter.title }
         if let show = mediaComposition.show {
@@ -183,6 +165,23 @@ extension MediaMetadata: AssetMetadata {
                 TimeRange(kind: .credits(.closing), start: interval.timeRange.start, end: interval.timeRange.end)
             }
         }
+    }
+
+    func playerMetadata() -> PlayerMetadata {
+        .init(
+            identifier: mediaComposition.chapterUrn,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            imageSource: .url(
+                standardResolution: standardResolutionImageUrl(for: mainChapter),
+                lowResolution: lowResolutionImageUrl(for: mainChapter)
+            ),
+            viewport: viewport,
+            episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges
+        )
     }
 
     private func standardResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {

@@ -9,7 +9,7 @@
 ### Binding to a Player
 
 - ``player``
-- ``SwiftUICore/View/bind(_:to:)-wthx``
+- ``SwiftUICore/View/bind(_:to:)-(VisibilityTracker,_)``
 
 ### Managing User Interface Visibility
 

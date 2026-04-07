@@ -81,7 +81,6 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 - <doc:metadata-article>
 
-- ``AssetMetadata``
 - ``Chapter``
 - ``EpisodeInformation``
 - ``ImageSource``

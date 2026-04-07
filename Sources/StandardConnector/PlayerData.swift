@@ -56,22 +56,7 @@ public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
     public let customData: CustomData?
 }
 
-extension PlayerData: AssetMetadata {
-    // swiftlint:disable:next missing_docs
-    public var playerMetadata: PlayerMetadata {
-        .init(
-            identifier: identifier,
-            title: title,
-            subtitle: subtitle,
-            description: description,
-            imageSource: Self.imageSource(from: posterUrl),
-            viewport: viewport,
-            episodeInformation: episodeInformation,
-            chapters: chapters,
-            timeRanges: timeRanges
-        )
-    }
-
+extension PlayerData {
     var episodeInformation: EpisodeInformation? {
         guard let episodeNumber else { return nil }
         if let seasonNumber {
@@ -104,6 +89,20 @@ extension PlayerData: AssetMetadata {
     private static func imageSource(from url: URL?) -> ImageSource {
         guard let url else { return .none }
         return .url(standardResolution: url)
+    }
+
+    func playerMetadata() -> PlayerMetadata {
+        .init(
+            identifier: identifier,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            imageSource: Self.imageSource(from: posterUrl),
+            viewport: viewport,
+            episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges
+        )
     }
 }
 

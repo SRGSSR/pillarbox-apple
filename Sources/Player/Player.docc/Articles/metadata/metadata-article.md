@@ -9,14 +9,12 @@ Associate metadata with the content being played.
 
 ## Overview
 
-A ``PlayerItem`` is responsible for delivering a playable ``Asset``, which can optionally include metadata describing the content being played.
+Assets loaded into a player typically include additional metadata such as a title, subtitle, artwork, or chapter information. This metadata serves two primary purposes:
 
-Metadata serves two key purposes:
+1. When mapped to ``PlayerMetadata``, a ``Player`` can automatically publish metadata associated with the current item. This enables you to display contextual information in custom user interfaces. Player metadata is also automatically surfaced in the Control Center. For more details, see <doc:control-center-article>.
+2. Asset metadata is also forwarded as-is to any ``TrackerAdapter`` attached to a ``PlayerItem``. This allows you to transform and adapt metadata to match the input requirements of a specific ``PlayerItemTracker`` implementation. For more details, see <doc:tracking-article>.
 
-1. A ``Player`` automatically retrieves and publishes standard ``PlayerMetadata`` about its current item. This may include a title, subtitle, artwork image, or chapters. To enable this, the asset’s metadata must conform to the ``AssetMetadata`` protocol.
-2. Metadata associated with an asset is passed as-is to any ``TrackerAdapter`` linked to a ``PlayerItem``. This allows metadata to be mapped to the expected input of a specific ``PlayerItemTracker`` implementation. For more details, refer to the <doc:tracking-article> article.
-
-Standard metadata can be used when designing custom player user interfaces and ensures consistent information display in the Control Center.
+For additional information about asset loading in general, refer to <doc:playback-article>.
 
 ## Define player metadata
 
@@ -32,11 +30,19 @@ struct Media {
 }
 ```
 
-To associate this metadata with an ``Asset``, it must conform to ``AssetMetadata``. This enables the player to extract and publish the standard ``PlayerMetadata`` for the item, such as:
+When implementing an ``AssetLoader``, use ``AssetLoader/playerMetadata(from:)`` to transform this model into a ``PlayerMetadata`` instance that the player can understand and expose:
 
 ```swift
-extension Media: AssetMetadata {
-    var playerMetadata: PlayerMetadata {
+enum MediaAssetLoader: AssetLoader {
+    struct Input {
+        // ...
+    }
+
+    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<Media>, Error> {
+        // ...
+    }
+
+    static func playerMetadata(from metadata: Media) -> PlayerMetadata {
         .init(title: show, subtitle: name, imageSource: .url(artworkUrl))
     }
 }
