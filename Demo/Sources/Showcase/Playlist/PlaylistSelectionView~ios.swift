@@ -11,7 +11,6 @@ struct PlaylistSelectionView: View {
         URLMedia.onDemandVideoHLS,
         URLMedia.shortOnDemandVideoHLS,
         URLMedia.onDemandVideoMP4,
-        URLMedia.liveVideoHLS,
         URLMedia.dvrVideoHLS,
         URLMedia.liveTimestampVideoHLS,
         URLMedia.onDemandAudioMP3,

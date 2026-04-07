@@ -15,7 +15,6 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.onDemandVideoHLS,
         URLMedia.shortOnDemandVideoHLS,
         URLMedia.onDemandVideoMP4,
-        URLMedia.liveVideoHLS,
         URLMedia.dvrVideoHLS,
         URLMedia.liveTimestampVideoHLS,
         URLMedia.onDemandAudioMP3,
@@ -112,7 +111,6 @@ final class ExamplesViewModel: ObservableObject {
     ]
 
     let unbufferedMedias = [
-        UnbufferedURLMedia.liveVideo,
         UnbufferedURLMedia.liveAudio
     ]
 
