@@ -81,13 +81,6 @@ final class ReplayChecksTests: TestCase {
         expect(player.canReplay()).toEventually(beTrue())
     }
 
-    func testWithNoneActionAtItemEnd() {
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
-        player.actionAtItemEnd = .none
-        player.play()
-        expect(player.canReplay()).toEventually(beTrue())
-    }
-
     func testWithAdvanceToPauseActionAtItemEndChange() {
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)

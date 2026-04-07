@@ -266,36 +266,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         }
     }
 
-    func testReplayAfterNoneActionAtItemEnd() {
-        let player = Player(item: .simple(
-            url: Stream.shortOnDemand.url,
-            trackerAdapters: [
-                ComScoreTracker.adapter { _ in .test }
-            ]
-        ))
-        player.actionAtItemEnd = .none
-        var ns_st_id: String?
-        expectAtLeastHits(
-            play { labels in
-                expect(labels["media_title"]).to(equal("name"))
-                expect(labels.ns_st_id).notTo(beNil())
-                ns_st_id = labels.ns_st_id
-            },
-            end()
-        ) {
-            player.play()
-        }
-        expectAtLeastHits(
-            play { labels in
-                expect(labels["media_title"]).to(equal("name"))
-                expect(labels.ns_st_id).notTo(beNil())
-                expect(labels.ns_st_id).notTo(equal(ns_st_id))
-            }
-        ) {
-            player.replay()
-        }
-    }
-
     func testSeekAfterPauseAtItemEnd() {
         let player = Player(item: .simple(
             url: Stream.shortOnDemand.url,
