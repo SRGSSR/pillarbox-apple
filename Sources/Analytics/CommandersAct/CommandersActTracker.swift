@@ -187,7 +187,7 @@ private extension CommandersActTracker {
     }
 
     func playbackDuration() -> Int {
-        Int(stopwatch.time().rounded())
+        Int(stopwatch.duration().timeInterval().rounded())
     }
 
     func timeshiftOffset(from properties: TrackerProperties) -> Int {
