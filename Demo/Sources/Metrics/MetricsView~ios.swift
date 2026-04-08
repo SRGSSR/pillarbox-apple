@@ -220,7 +220,6 @@ struct MetricsView: View {
             Section {
                 ForEach(sessionIdentifiers, id: \.self) { identifier in
                     Text(identifier)
-                        .textSelection(.enabled)
                         .swipeActions { CopyButton(text: identifier) }
                 }
             } header: {
