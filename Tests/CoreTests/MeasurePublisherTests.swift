@@ -11,7 +11,7 @@ import PillarboxCircumspect
 import XCTest
 
 final class MeasurePublisherTests: XCTestCase {
-    func testWithSingleEvent() {
+    func testWithSingleEvent_() {
         let publisher = Just(1)
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .measureDateInterval()
@@ -19,7 +19,7 @@ final class MeasurePublisherTests: XCTestCase {
         expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
     }
 
-    func testWithMultipleEvents() {
+    func testWithMultipleEvents_() {
         let publisher = [1, 2].publisher
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .measureDateInterval()
@@ -27,10 +27,34 @@ final class MeasurePublisherTests: XCTestCase {
         expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
     }
 
-    func testWithoutEvents() {
+    func testWithoutEvents_() {
         let publisher = Empty<Int, Never>()
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .measureDateInterval()
+        expectNothingPublished(from: publisher, during: .seconds(1))
+    }
+
+    func testWithSingleEvent() {
+        let publisher = Just(1)
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .measureDuration()
+            .map { $0.timeInterval() }
+        expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
+    }
+
+    func testWithMultipleEvents() {
+        let publisher = [1, 2].publisher
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .measureDuration()
+            .map { $0.timeInterval() }
+        expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
+    }
+
+    func testWithoutEvents() {
+        let publisher = Empty<Int, Never>()
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .measureDuration()
+            .map { $0.timeInterval() }
         expectNothingPublished(from: publisher, during: .seconds(1))
     }
 }

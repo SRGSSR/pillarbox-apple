@@ -200,4 +200,15 @@ public extension Publisher {
             }
             .eraseToAnyPublisher()
     }
+
+    // Measures the duration between consecutive events.
+    ///
+    /// - Parameter clock: The clock to use.
+    /// - Returns: A publisher that emits elements representing the duration between the elements it receives.
+    func measureDuration<C>(clock: C = .continuous) -> AnyPublisher<C.Duration, Failure> where C: Clock {
+        map { _ in clock.now }
+            .withPrevious(clock.now)
+            .compactMap { $0.duration(to: $1) }
+            .eraseToAnyPublisher()
+    }
 }
