@@ -193,7 +193,7 @@ public extension Publisher {
     func measureDuration<C>(clock: C = .continuous) -> AnyPublisher<C.Duration, Failure> where C: Clock {
         map { _ in clock.now }
             .withPrevious(clock.now)
-            .compactMap { $0.duration(to: $1) }
+            .map { $0.duration(to: $1) }
             .eraseToAnyPublisher()
     }
 }
