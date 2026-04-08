@@ -185,11 +185,11 @@ extension AVPlayerItem {
     func assetMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         publisher(for: \.isPlaybackLikelyToKeepUp)
             .first(where: \.self)
-            .measureDuration(clock: .suspending)
+            .measureTiming(clock: .suspending)
             .weakCapture(self)
-            .map { duration, item in
+            .map { timing, item in
                 MetricEvent(
-                    kind: .asset(experience: duration),
+                    kind: .asset(experience: timing.duration),
                     time: item.currentTime()
                 )
             }

@@ -39,35 +39,33 @@ public final class PlayerItem: Hashable {
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
-            Publishers.CombineLatest(
-                assetLoaderType.assetPublisher(for: input),
-                Just(SuspendingClock.suspending.now).setFailureType(to: Error.self)
-            )
-            .handleEvents(receiveOutput: { asset, _ in
-                trackerAdapters.forEach { adapter in
-                    adapter.updateMetadata(to: asset.metadata)
+            assetLoaderType.assetPublisher(for: input)
+                .handleEvents(receiveOutput: { asset in
+                    trackerAdapters.forEach { adapter in
+                        adapter.updateMetadata(to: asset.metadata)
+                    }
+                }, receiveCompletion: nil)
+                .addTiming(clock: .suspending)
+                .map { asset, timing in
+                    Publishers.CombineLatest3(
+                        Just(asset),
+                        assetLoaderType.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
+                        Just(timing)
+                    )
                 }
-            }, receiveCompletion: nil)
-            .map { asset, start in
-                Publishers.CombineLatest3(
-                    Just(asset),
-                    assetLoaderType.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
-                    Just(Timing(start: start, duration: start.duration(to: SuspendingClock.suspending.now)))
-                )
-            }
-            .switchToLatest()
-            .map { asset, metadata, timing in
-                .loaded(
-                    id: id,
-                    resource: asset.resource,
-                    metadata: metadata,
-                    configuration: asset.configuration,
-                    timing: timing
-                )
-            }
-            .catch { error in
-                Just(.failing(id: id, error: error))
-            }
+                .switchToLatest()
+                .map { asset, metadata, timing in
+                        .loaded(
+                            id: id,
+                            resource: asset.resource,
+                            metadata: metadata,
+                            configuration: asset.configuration,
+                            timing: timing
+                        )
+                }
+                .catch { error in
+                    Just(.failing(id: id, error: error))
+                }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)

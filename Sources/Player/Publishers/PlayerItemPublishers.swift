@@ -6,6 +6,7 @@
 
 import Combine
 import Foundation
+import PillarboxCore
 
 extension PlayerItem {
     private static func experience<C>(fromService service: Timing<C>, start: C.Instant) -> C.Duration where C: Clock {

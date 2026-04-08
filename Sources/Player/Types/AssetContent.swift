@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import PillarboxCore
 
 struct AssetContent {
     let id: UUID
