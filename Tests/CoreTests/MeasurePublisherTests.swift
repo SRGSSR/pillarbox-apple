@@ -11,29 +11,6 @@ import PillarboxCircumspect
 import XCTest
 
 final class MeasurePublisherTests: XCTestCase {
-    func testWithSingleEvent_() {
-        let publisher = Just(1)
-            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .measureDateInterval()
-            .map(\.duration)
-        expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
-    }
-
-    func testWithMultipleEvents_() {
-        let publisher = [1, 2].publisher
-            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .measureDateInterval()
-            .map(\.duration)
-        expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
-    }
-
-    func testWithoutEvents_() {
-        let publisher = Empty<Int, Never>()
-            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .measureDateInterval()
-        expectNothingPublished(from: publisher, during: .seconds(1))
-    }
-
     func testWithSingleEvent() {
         let publisher = Just(1)
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
