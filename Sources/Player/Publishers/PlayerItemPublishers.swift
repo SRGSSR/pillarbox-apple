@@ -8,32 +8,31 @@ import Combine
 import Foundation
 
 extension PlayerItem {
-    private static func experience(fromService service: DateInterval, startDate: Date) -> DateInterval {
-        if startDate < service.start {
-            return service
+    private static func experience<C>(fromService service: Timing<C>, start: C.Instant) -> C.Duration where C: Clock {
+        if start < service.start {
+            return service.duration
         }
-        else if startDate < service.end {
-            return .init(start: startDate, end: service.end)
+        else if start < service.end {
+            return start.duration(to: service.end)
         }
         else {
-            return .init(start: startDate, duration: 0)
+            return .zero
         }
     }
 
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Publishers.CombineLatest(
             $content
-                .compactMap(\.dateInterval)
+                .compactMap(\.timing)
                 .removeDuplicates(),
-            Just(Date.now)
+            Just(SuspendingClock.suspending.now)
         )
-        .map { dateInterval, startDate in
+        .map { timing, start in
             MetricEvent(
                 kind: .metadata(
-                    experience: Self.experience(fromService: dateInterval, startDate: startDate),
-                    service: dateInterval
-                ),
-                date: dateInterval.end
+                    experience: Self.experience(fromService: timing, start: start),
+                    service: timing.duration
+                )
             )
         }
         .eraseToAnyPublisher()

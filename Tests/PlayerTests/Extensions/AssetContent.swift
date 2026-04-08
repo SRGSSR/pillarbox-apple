@@ -11,6 +11,6 @@ import PillarboxStreams
 
 extension AssetContent {
     static func test(id: Character) -> Self {
-        .loaded(id: UUID(id), resource: .simple(url: Stream.onDemand.url), metadata: .empty, configuration: .default, dateInterval: nil)
+        .loaded(id: UUID(id), resource: .simple(url: Stream.onDemand.url), metadata: .empty, configuration: .default, timing: nil)
     }
 }

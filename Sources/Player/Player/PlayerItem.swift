@@ -41,28 +41,28 @@ public final class PlayerItem: Hashable {
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             Publishers.CombineLatest(
                 assetLoaderType.assetPublisher(for: input),
-                Just(Date.now).setFailureType(to: Error.self)
+                Just(SuspendingClock.suspending.now).setFailureType(to: Error.self)
             )
             .handleEvents(receiveOutput: { asset, _ in
                 trackerAdapters.forEach { adapter in
                     adapter.updateMetadata(to: asset.metadata)
                 }
             }, receiveCompletion: nil)
-            .map { asset, startDate in
+            .map { asset, start in
                 Publishers.CombineLatest3(
                     Just(asset),
                     assetLoaderType.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
-                    Just(DateInterval(start: startDate, end: .now))
+                    Just(Timing(start: start, duration: start.duration(to: SuspendingClock.suspending.now)))
                 )
             }
             .switchToLatest()
-            .map { asset, metadata, dateInterval in
+            .map { asset, metadata, timing in
                 .loaded(
                     id: id,
                     resource: asset.resource,
                     metadata: metadata,
                     configuration: asset.configuration,
-                    dateInterval: dateInterval
+                    timing: timing
                 )
             }
             .catch { error in

@@ -66,7 +66,7 @@ private struct ExperienceStartupTimesSectionContent: View {
         metricEvents.compactMap { event in
             switch event.kind {
             case let .metadata(experience: experience, service: _):
-                return experience.duration
+                return experience.timeInterval()
             default:
                 return nil
             }
@@ -77,7 +77,7 @@ private struct ExperienceStartupTimesSectionContent: View {
         metricEvents.compactMap { event in
             switch event.kind {
             case let .asset(experience: experience):
-                return experience.duration
+                return experience.timeInterval()
             default:
                 return nil
             }
@@ -119,7 +119,7 @@ private struct ServiceStartupTimesSectionContent: View {
         metricEvents.compactMap { event in
             switch event.kind {
             case let .metadata(experience: _, service: service):
-                return service.duration
+                return service.timeInterval()
             default:
                 return nil
             }

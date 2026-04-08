@@ -13,15 +13,14 @@ public struct MetricEvent: Hashable {
     public enum Kind {
         /// Metadata is available.
         ///
-        /// Two associated date intervals are provided, respectively measuring when metadata retrieval started / ended from
-        /// an end-user or from a technical perspective.
-        case metadata(experience: DateInterval, service: DateInterval)
+        /// Two associated durations are provided, measuring metadata retrieval from an end-user, respectively from a
+        /// technical perspective.
+        case metadata(experience: Duration, service: Duration)
 
         /// The asset is ready to play.
         ///
-        /// An associated date interval is provided, measuring when asset retrieval started / ended from an end-user
-        /// perspective.
-        case asset(experience: DateInterval)
+        /// An associated duration is provided, measuring asset retrieval from an end-user perspective.
+        case asset(experience: Duration)
 
         /// Failure.
         case failure(Error)
@@ -42,16 +41,15 @@ public struct MetricEvent: Hashable {
     public let kind: Kind
 
     /// The date at which the event was created.
-    public let date: Date
+    public let date = Date()
 
     /// The player time.
     ///
     /// Might be `.invalid`.
     public let time: CMTime
 
-    init(kind: Kind, date: Date = .init(), time: CMTime = .invalid) {
+    init(kind: Kind, time: CMTime = .invalid) {
         self.kind = kind
-        self.date = date
         self.time = time
     }
 
@@ -71,9 +69,9 @@ extension MetricEvent.Kind: CustomStringConvertible {
     public var description: String {
         switch self {
         case let .metadata(experience: experience, service: service):
-            return "Metadata: \(Self.duration(from: experience.duration)) (experience), \(Self.duration(from: service.duration)) (service)"
+            return "Metadata: \(Self.duration(from: experience.timeInterval())) (experience), \(Self.duration(from: service.timeInterval())) (service)"
         case let .asset(experience: experience):
-            return "Asset: \(Self.duration(from: experience.duration)) (experience)"
+            return "Asset: \(Self.duration(from: experience.timeInterval())) (experience)"
         case let .failure(error):
             return "Failure: \(error.localizedDescription)"
         case let .warning(error):
