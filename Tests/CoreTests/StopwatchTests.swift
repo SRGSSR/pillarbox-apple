@@ -13,14 +13,14 @@ final class StopwatchTests: XCTestCase {
     func testCreation() {
         let stopwatch = Stopwatch()
         wait(for: .milliseconds(500))
-        expect(stopwatch.duration().timeInterval()).to(equal(0))
+        expect(stopwatch.timeInterval()).to(equal(0))
     }
 
     func testStart() {
         let stopwatch = Stopwatch()
         stopwatch.start()
         wait(for: .milliseconds(500))
-        expect(stopwatch.duration().timeInterval()).to(beCloseTo(0.5, within: 0.1))
+        expect(stopwatch.timeInterval()).to(beCloseTo(0.5, within: 0.1))
     }
 
     func testStartAndStop() {
@@ -29,14 +29,14 @@ final class StopwatchTests: XCTestCase {
         wait(for: .milliseconds(200))
         stopwatch.stop()
         wait(for: .milliseconds(200))
-        expect(stopwatch.duration().timeInterval()).to(beCloseTo(0.2, within: 0.1))
+        expect(stopwatch.timeInterval()).to(beCloseTo(0.2, within: 0.1))
     }
 
     func testStopWithoutStart() {
         let stopwatch = Stopwatch()
         stopwatch.stop()
         wait(for: .milliseconds(200))
-        expect(stopwatch.duration().timeInterval()).to(beCloseTo(0, within: 0.1))
+        expect(stopwatch.timeInterval()).to(beCloseTo(0, within: 0.1))
     }
 
     func testReset() {
@@ -45,7 +45,7 @@ final class StopwatchTests: XCTestCase {
         wait(for: .milliseconds(200))
         stopwatch.reset()
         wait(for: .milliseconds(100))
-        expect(stopwatch.duration().timeInterval()).to(equal(0))
+        expect(stopwatch.timeInterval()).to(equal(0))
     }
 
     func testMultipleStarts() {
@@ -54,7 +54,7 @@ final class StopwatchTests: XCTestCase {
         wait(for: .milliseconds(200))
         stopwatch.start()
         wait(for: .milliseconds(200))
-        expect(stopwatch.duration().timeInterval()).to(beCloseTo(0.4, within: 0.1))
+        expect(stopwatch.timeInterval()).to(beCloseTo(0.4, within: 0.1))
     }
 
     func testAccumulation() {
@@ -65,6 +65,6 @@ final class StopwatchTests: XCTestCase {
         wait(for: .milliseconds(200))
         stopwatch.start()
         wait(for: .milliseconds(200))
-        expect(stopwatch.duration().timeInterval()).to(beCloseTo(0.4, within: 0.1))
+        expect(stopwatch.timeInterval()).to(beCloseTo(0.4, within: 0.1))
     }
 }

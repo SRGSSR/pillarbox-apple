@@ -184,7 +184,7 @@ private extension MetricsTracker {
             bufferedDuration: Self.bufferedDuration(from: properties),
             duration: Self.duration(from: properties),
             frameDrops: metrics?.total.numberOfDroppedVideoFrames,
-            playbackDuration: stopwatch.duration().timeInterval().toMilliseconds,
+            playbackDuration: stopwatch.timeInterval().toMilliseconds,
             position: Self.position(from: properties),
             positionTimestamp: Self.positionTimestamp(from: properties),
             stall: .init(

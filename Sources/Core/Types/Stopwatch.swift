@@ -47,3 +47,10 @@ public final class Stopwatch<C> where C: Clock {
         total = .zero
     }
 }
+
+public extension Stopwatch where C.Duration == Duration {
+    /// The duration accumulated by the stopwatch, as a time interval.
+    func timeInterval() -> TimeInterval {
+        duration().timeInterval()
+    }
+}
