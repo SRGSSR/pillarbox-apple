@@ -20,7 +20,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     private var lastEvent: Event = .none
 
     private let configuration: CommandersActSource?
-    private let stopwatch = Stopwatch()
+    private let stopwatch = Stopwatch(clock: .suspending)
     private let heartbeat: CommandersActHeartbeat
 
     // swiftlint:disable:next missing_docs

@@ -23,7 +23,7 @@ public final class MetricsTracker: PlayerItemTracker {
     private var stallDuration: TimeInterval = 0
     private var cancellables = Set<AnyCancellable>()
 
-    private let stopwatch = Stopwatch()
+    private let stopwatch = Stopwatch(clock: .suspending)
 
     // swiftlint:disable:next missing_docs
     public var sessionIdentifier: String? {
