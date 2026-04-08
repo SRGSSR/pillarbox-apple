@@ -110,20 +110,17 @@ struct SettingsView: View {
 }
 
 extension SettingsView {
-    private var version: String {
-        Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
-    }
+    private static let version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+    private static let buildVersion = Bundle.main.infoDictionary!["CFBundleVersion"] as! String
 
-    private var buildVersion: String {
-        Bundle.main.infoDictionary!["CFBundleVersion"] as! String
-    }
-
-    private var applicationIdentifier: String? {
+    private static let applicationIdentifier: String? = {
         guard let applicationIdentifier = Bundle.main.infoDictionary?["TestFlightApplicationIdentifier"] as? String else {
             return nil
         }
         return !applicationIdentifier.isEmpty ? applicationIdentifier : nil
-    }
+    }()
+
+    private static let deviceId = UIDevice.current.identifierForVendor!.uuidString.lowercased()
 }
 
 extension SettingsView {
@@ -155,7 +152,7 @@ extension SettingsView {
 #if os(iOS)
         linksSection()
 #endif
-        versionSection()
+        informationSection()
     }
 
     private func applicationSection() -> some View {
@@ -330,17 +327,19 @@ extension SettingsView {
             .keyboardType(.numberPad)
     }
 
-    private func versionSection() -> some View {
+    private func informationSection() -> some View {
         Section {
-            InfoCell(title: "Application", value: "\(version), build \(buildVersion)")
+            InfoCell(title: "Application", value: "\(Self.version), build \(Self.buildVersion)")
             InfoCell(title: "Library", value: Player.version)
-            if let applicationIdentifier {
+            if let identifier = Self.applicationIdentifier {
                 Button("TestFlight builds") {
-                    openTestFlight(forApplicationIdentifier: applicationIdentifier)
+                    openTestFlight(forApplicationIdentifier: identifier)
                 }
             }
+            InfoCell(title: "Device identifier", value: Self.deviceId)
+                .swipeActions { CopyButton(text: Self.deviceId) }
         } header: {
-            Text("Version information")
+            Text("Information")
                 .headerStyle()
         } footer: {
             versionFooter()
