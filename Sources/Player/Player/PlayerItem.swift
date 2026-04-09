@@ -45,7 +45,7 @@ public final class PlayerItem: Hashable {
                         adapter.updateMetadata(to: asset.metadata)
                     }
                 }, receiveCompletion: nil)
-                .withTiming(clock: .suspending)
+                .withInterval(clock: .suspending)
                 .map { asset, timing in
                     Publishers.CombineLatest3(
                         Just(asset),
@@ -54,13 +54,13 @@ public final class PlayerItem: Hashable {
                     )
                 }
                 .switchToLatest()
-                .map { asset, metadata, timing in
+                .map { asset, metadata, service in
                         .loaded(
                             id: id,
                             resource: asset.resource,
                             metadata: metadata,
                             configuration: asset.configuration,
-                            timing: timing
+                            service: service
                         )
                 }
                 .catch { error in

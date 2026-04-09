@@ -10,11 +10,11 @@ import Combine
 import PillarboxCircumspect
 import XCTest
 
-final class TimingPublisherTests: XCTestCase {
+final class ClockIntervalPublisherTests: XCTestCase {
     func testMeasureSingleEvent() {
         let publisher = Just(1)
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .measureTiming()
+            .measureInterval()
             .map { $0.timeInterval() }
         expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
     }
@@ -22,7 +22,7 @@ final class TimingPublisherTests: XCTestCase {
     func testMeasureMultipleEvents() {
         let publisher = [1, 2].publisher
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .measureTiming()
+            .measureInterval()
             .map { $0.timeInterval() }
         expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
     }
@@ -30,7 +30,7 @@ final class TimingPublisherTests: XCTestCase {
     func testMeasureNoEvents() {
         let publisher = Empty<Int, Never>()
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .measureTiming()
+            .measureInterval()
             .map { $0.timeInterval() }
         expectNothingPublished(from: publisher, during: .seconds(1))
     }
@@ -38,7 +38,7 @@ final class TimingPublisherTests: XCTestCase {
     func testWithSingleEvent() {
         let publisher = Just(1)
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .withTiming()
+            .withInterval()
             .map { $1.timeInterval() }
         expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
     }
@@ -46,7 +46,7 @@ final class TimingPublisherTests: XCTestCase {
     func testWithMultipleEvents() {
         let publisher = [1, 2].publisher
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .withTiming()
+            .withInterval()
             .map { $1.timeInterval() }
         expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
     }
@@ -54,7 +54,7 @@ final class TimingPublisherTests: XCTestCase {
     func testWithNoEvents() {
         let publisher = Empty<Int, Never>()
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .withTiming()
+            .withInterval()
             .map { $1.timeInterval() }
         expectNothingPublished(from: publisher, during: .seconds(1))
     }

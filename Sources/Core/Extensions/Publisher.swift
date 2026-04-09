@@ -186,28 +186,28 @@ public extension Publisher {
 }
 
 public extension Publisher {
-    /// Measures the timing between consecutive outputs.
+    /// Measures the time interval between consecutive outputs.
     ///
     /// - Parameter clock: The clock to use.
-    /// - Returns: A publisher that emits elements representing the timing between the elements it receives.
-    func measureTiming<C>(clock: C = .continuous) -> AnyPublisher<Timing<C>, Failure> where C: Clock {
+    /// - Returns: A publisher that emits elements representing the time interval between the elements it receives.
+    func measureInterval<C>(clock: C = .continuous) -> AnyPublisher<ClockInterval<C>, Failure> where C: Clock {
         map { _ in clock.now }
             .withPrevious(clock.now)
-            .map { Timing(start: $0, duration: $0.duration(to: $1)) }
+            .map { ClockInterval(start: $0, duration: $0.duration(to: $1)) }
             .eraseToAnyPublisher()
     }
 
-    /// Adds timing information to the upstream output.
+    /// Adds time interval information to the upstream output.
     ///
     /// - Parameter clock: The clock to use.
-    /// - Returns: A publisher that emits elements produced upstream, associated with timing information between consecutive
-    ///   elements.
-    func withTiming<C>(clock: C = .continuous) -> AnyPublisher<(Output, Timing<C>), Failure> where C: Clock {
+    /// - Returns: A publisher that emits elements produced upstream, associated with time interval information between
+    ///   consecutive elements.
+    func withInterval<C>(clock: C = .continuous) -> AnyPublisher<(Output, ClockInterval<C>), Failure> where C: Clock {
         map { ($0, clock.now) }
             .withPrevious((Optional<Output>.none, clock.now))
             .compactMap { previous, current in
                 guard let value = current.0 else { return nil }
-                return (value, Timing(start: previous.1, duration: previous.1.duration(to: current.1)))
+                return (value, ClockInterval(start: previous.1, duration: previous.1.duration(to: current.1)))
             }
             .eraseToAnyPublisher()
     }

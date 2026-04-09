@@ -9,7 +9,7 @@ import Foundation
 import PillarboxCore
 
 extension PlayerItem {
-    private static func experience<C>(fromService service: Timing<C>, start: C.Instant) -> C.Duration where C: Clock {
+    private static func experience<C>(fromService service: ClockInterval<C>, start: C.Instant) -> C.Duration where C: Clock {
         if start < service.start {
             return service.duration
         }
@@ -24,15 +24,15 @@ extension PlayerItem {
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Publishers.CombineLatest(
             $content
-                .compactMap(\.timing)
+                .compactMap(\.service)
                 .removeDuplicates(),
             Just(SuspendingClock.suspending.now)
         )
-        .map { timing, start in
+        .map { service, start in
             MetricEvent(
                 kind: .metadata(
-                    experience: Self.experience(fromService: timing, start: start),
-                    service: timing.duration
+                    experience: Self.experience(fromService: service, start: start),
+                    service: service.duration
                 )
             )
         }

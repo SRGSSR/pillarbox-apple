@@ -12,26 +12,26 @@ struct AssetContent {
     let resource: Resource
     let metadata: PlayerMetadata
     let configuration: PlaybackConfiguration
-    let timing: Timing<SuspendingClock>?
+    let service: ClockInterval<SuspendingClock>?
 
-    private init(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, timing: Timing<SuspendingClock>?) {
+    private init(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, service: ClockInterval<SuspendingClock>?) {
         self.id = id
         self.resource = resource
         self.metadata = metadata
         self.configuration = configuration
-        self.timing = timing
+        self.service = service
     }
 
-    static func loaded(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, timing: Timing<SuspendingClock>?) -> Self {
-        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, timing: timing)
+    static func loaded(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, service: ClockInterval<SuspendingClock>?) -> Self {
+        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, service: service)
     }
 
     static func loading(id: UUID) -> Self {
-        .init(id: id, resource: .loading(), metadata: .empty, configuration: .default, timing: nil)
+        .init(id: id, resource: .loading(), metadata: .empty, configuration: .default, service: nil)
     }
 
     static func failing(id: UUID, error: Error) -> Self {
-        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, timing: nil)
+        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, service: nil)
     }
 
     private func playerItem(for resource: Resource, configuration: PlayerConfiguration, resumeState: ResumeState?) -> AVPlayerItem {

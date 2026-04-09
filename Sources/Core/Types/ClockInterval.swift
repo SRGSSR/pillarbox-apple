@@ -6,21 +6,21 @@
 
 import Foundation
 
-/// Contains timing information for an event.
-public struct Timing<C>: Equatable where C: Clock {
-    /// The start of the event.
+/// Contains a time interval associated with a clock.
+public struct ClockInterval<C>: Equatable where C: Clock {
+    /// The start of the interval.
     public let start: C.Instant
 
-    /// The duration of the event.
+    /// The duration of the interval.
     public let duration: C.Duration
 
-    /// The end of the event.
+    /// The end of the interval.
     public var end: C.Instant {
         start.advanced(by: duration)
     }
 }
 
-public extension Timing where C.Duration == Duration {
+public extension ClockInterval where C.Duration == Duration {
     /// The duration as a time interval.
     func timeInterval() -> TimeInterval {
         duration.timeInterval()
