@@ -191,12 +191,12 @@ public extension Publisher {
     /// - Parameter clock: The clock to use.
     /// - Returns: A publisher that emits elements produced upstream, associated with time interval information between
     ///   consecutive elements.
-    func withInterval<C>(clock: C = .continuous) -> AnyPublisher<(Output, ClockInterval<C>), Failure> where C: Clock {
+    func withInterval<C>(clock: C = .continuous) -> AnyPublisher<(output: Output, interval: ClockInterval<C>), Failure> where C: Clock {
         map { ($0, clock.now) }
-            .withPrevious((Optional<Output>.none, clock.now))
+            .withPrevious((output: Optional<Output>.none, instant: clock.now))
             .compactMap { previous, current in
-                guard let value = current.0 else { return nil }
-                return (value, ClockInterval(start: previous.1, duration: previous.1.duration(to: current.1)))
+                guard let output = current.output else { return nil }
+                return (output, ClockInterval(start: previous.instant, duration: previous.instant.duration(to: current.instant)))
             }
             .eraseToAnyPublisher()
     }
@@ -207,7 +207,7 @@ public extension Publisher {
     /// - Returns: A publisher that emits elements representing the time interval between the elements it receives.
     func measureInterval<C>(clock: C = .continuous) -> AnyPublisher<ClockInterval<C>, Failure> where C: Clock {
         withInterval(clock: clock)
-            .map(\.1)
+            .map(\.interval)
             .eraseToAnyPublisher()
     }
 }
