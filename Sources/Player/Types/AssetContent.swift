@@ -22,7 +22,13 @@ struct AssetContent {
         self.service = service
     }
 
-    static func loaded(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, service: ClockInterval<SuspendingClock>?) -> Self {
+    static func loaded(
+        id: UUID,
+        resource: Resource,
+        metadata: PlayerMetadata,
+        configuration: PlaybackConfiguration,
+        service: ClockInterval<SuspendingClock>?
+    ) -> Self {
         .init(id: id, resource: resource, metadata: metadata, configuration: configuration, service: service)
     }
 
