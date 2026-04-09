@@ -187,9 +187,9 @@ extension AVPlayerItem {
             .first(where: \.self)
             .measureInterval(clock: .suspending)
             .weakCapture(self)
-            .map { timing, item in
+            .map { interval, item in
                 MetricEvent(
-                    kind: .asset(experience: timing.duration),
+                    kind: .asset(experience: interval.duration),
                     time: item.currentTime()
                 )
             }

@@ -46,11 +46,11 @@ public final class PlayerItem: Hashable {
                     }
                 }, receiveCompletion: nil)
                 .withInterval(clock: .suspending)
-                .map { asset, timing in
+                .map { asset, interval in
                     Publishers.CombineLatest3(
                         Just(asset),
                         assetLoaderType.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
-                        Just(timing)
+                        Just(interval)
                     )
                 }
                 .switchToLatest()
