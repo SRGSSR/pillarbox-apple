@@ -14,7 +14,13 @@ struct AssetContent {
     let configuration: PlaybackConfiguration
     let serviceInterval: ClockInterval<SuspendingClock>?
 
-    private init(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, serviceInterval: ClockInterval<SuspendingClock>?) {
+    private init(
+        id: UUID,
+        resource: Resource,
+        metadata: PlayerMetadata,
+        configuration: PlaybackConfiguration,
+        serviceInterval: ClockInterval<SuspendingClock>?
+    ) {
         self.id = id
         self.resource = resource
         self.metadata = metadata
