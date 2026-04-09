@@ -45,7 +45,7 @@ public final class PlayerItem: Hashable {
                         adapter.updateMetadata(to: asset.metadata)
                     }
                 }, receiveCompletion: nil)
-                .addTiming(clock: .suspending)
+                .withTiming(clock: .suspending)
                 .map { asset, timing in
                     Publishers.CombineLatest3(
                         Just(asset),

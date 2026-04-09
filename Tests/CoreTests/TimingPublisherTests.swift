@@ -11,7 +11,7 @@ import PillarboxCircumspect
 import XCTest
 
 final class TimingPublisherTests: XCTestCase {
-    func testMeasureWithSingleEvent() {
+    func testMeasureSingleEvent() {
         let publisher = Just(1)
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .measureTiming()
@@ -19,7 +19,7 @@ final class TimingPublisherTests: XCTestCase {
         expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
     }
 
-    func testMeasureWithMultipleEvents() {
+    func testMeasureMultipleEvents() {
         let publisher = [1, 2].publisher
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .measureTiming()
@@ -27,7 +27,7 @@ final class TimingPublisherTests: XCTestCase {
         expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
     }
 
-    func testMeasureWithoutEvents() {
+    func testMeasureNoEvents() {
         let publisher = Empty<Int, Never>()
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .measureTiming()
@@ -35,26 +35,26 @@ final class TimingPublisherTests: XCTestCase {
         expectNothingPublished(from: publisher, during: .seconds(1))
     }
 
-    func testAddWithSingleEvent() {
+    func testWithSingleEvent() {
         let publisher = Just(1)
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .addTiming()
+            .withTiming()
             .map { $1.timeInterval() }
         expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
     }
 
-    func testAddWithMultipleEvents() {
+    func testWithMultipleEvents() {
         let publisher = [1, 2].publisher
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .addTiming()
+            .withTiming()
             .map { $1.timeInterval() }
         expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
     }
 
-    func testAddWithoutEvents() {
+    func testWithNoEvents() {
         let publisher = Empty<Int, Never>()
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .addTiming()
+            .withTiming()
             .map { $1.timeInterval() }
         expectNothingPublished(from: publisher, during: .seconds(1))
     }

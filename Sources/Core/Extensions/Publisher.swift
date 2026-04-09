@@ -202,7 +202,7 @@ public extension Publisher {
     /// - Parameter clock: The clock to use.
     /// - Returns: A publisher that emits elements produced upstream, associated with timing information between consecutive
     ///   elements.
-    func addTiming<C>(clock: C = .continuous) -> AnyPublisher<(Output, Timing<C>), Failure> where C: Clock {
+    func withTiming<C>(clock: C = .continuous) -> AnyPublisher<(Output, Timing<C>), Failure> where C: Clock {
         map { ($0, clock.now) }
             .withPrevious((Optional<Output>.none, clock.now))
             .compactMap { previous, current in
