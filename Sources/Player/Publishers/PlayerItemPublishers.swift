@@ -22,20 +22,18 @@ extension PlayerItem {
     }
 
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        Publishers.CombineLatest(
-            $content
-                .compactMap(\.service)
-                .removeDuplicates(),
-            Just(SuspendingClock.suspending.now)
-        )
-        .map { service, start in
-            MetricEvent(
-                kind: .metadata(
-                    experience: Self.experience(fromService: service, start: start),
-                    service: service.duration
+        $content
+            .compactMap(\.service)
+            .removeDuplicates()
+            .withInterval(clock: .suspending)
+            .map { service, interval in
+                MetricEvent(
+                    kind: .metadata(
+                        experience: Self.experience(fromService: service, start: interval.start),
+                        service: service.duration
+                    )
                 )
-            )
-        }
-        .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
 }
