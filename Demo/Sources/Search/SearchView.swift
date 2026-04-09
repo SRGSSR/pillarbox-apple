@@ -75,7 +75,7 @@ struct SearchView: View {
                         }
                     }
 #if os(iOS)
-                    .swipeActions { CopyButton(text: media.urn) }
+                    .swipeActions { CopyActions(text: media.urn) }
                     .refreshable { await model.refresh() }
 #else
                     .ignoresSafeArea(.all, edges: .horizontal)

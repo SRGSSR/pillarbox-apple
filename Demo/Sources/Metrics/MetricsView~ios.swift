@@ -21,7 +21,7 @@ private struct InformationSectionContent: View {
 
     var body: some View {
         cell("URI", value: uri)
-            .swipeActions { CopyButton(text: uri) }
+            .swipeActions { CopyActions(text: uri) }
         cell("Type", value: metrics.playbackType ?? "-")
         cell("Playback duration", value: playbackDuration)
         cell("Data volume", value: bytesTransferred)
@@ -220,7 +220,7 @@ struct MetricsView: View {
             Section {
                 ForEach(sessionIdentifiers, id: \.self) { identifier in
                     Text(identifier)
-                        .swipeActions { CopyButton(text: identifier) }
+                        .swipeActions { CopyActions(text: identifier) }
                 }
             } header: {
                 Text("Tracking sessions")

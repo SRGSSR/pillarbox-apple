@@ -86,7 +86,7 @@ private struct ContentCell: View {
 #endif
             }
 #if os(iOS)
-            .swipeActions { CopyButton(text: topic.urn) }
+            .swipeActions { CopyActions(text: topic.urn) }
 #endif
         case let .media(media):
             let title = MediaDescription.title(for: media)
@@ -104,7 +104,7 @@ private struct ContentCell: View {
                 router.presented = .player(media: media)
             }
 #if os(iOS)
-            .swipeActions { CopyButton(text: media.urn) }
+            .swipeActions { CopyActions(text: media.urn) }
 #endif
         case let .show(show):
             CustomNavigationLink(
@@ -119,7 +119,7 @@ private struct ContentCell: View {
 #endif
             }
 #if os(iOS)
-            .swipeActions { CopyButton(text: show.urn) }
+            .swipeActions { CopyActions(text: show.urn) }
 #endif
         }
     }

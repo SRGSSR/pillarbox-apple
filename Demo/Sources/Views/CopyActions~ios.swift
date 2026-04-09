@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-struct CopyButton: View {
+struct CopyActions: View {
     let text: String
 
     var body: some View {
@@ -16,9 +16,18 @@ struct CopyButton: View {
             Image(systemName: "doc.on.doc")
         }
         .tint(.accentColor)
+
+        ShareLink(item: text) {
+            Image(systemName: "square.and.arrow.up")
+        }
     }
 }
 
 #Preview {
-    CopyButton(text: "Copy")
+    List {
+        Text("Swipe to reveal copy actions")
+            .swipeActions {
+                CopyActions(text: "Copy")
+            }
+    }
 }

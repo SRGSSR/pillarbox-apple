@@ -338,7 +338,7 @@ extension SettingsView {
             }
             InfoCell(title: "Device identifier", value: Self.deviceId)
 #if os(iOS)
-                .swipeActions { CopyButton(text: Self.deviceId) }
+                .swipeActions { CopyActions(text: Self.deviceId) }
 #endif
         } header: {
             Text("Information")
