@@ -186,17 +186,6 @@ public extension Publisher {
 }
 
 public extension Publisher {
-    /// Measures the time interval between consecutive outputs.
-    ///
-    /// - Parameter clock: The clock to use.
-    /// - Returns: A publisher that emits elements representing the time interval between the elements it receives.
-    func measureInterval<C>(clock: C = .continuous) -> AnyPublisher<ClockInterval<C>, Failure> where C: Clock {
-        map { _ in clock.now }
-            .withPrevious(clock.now)
-            .map { ClockInterval(start: $0, duration: $0.duration(to: $1)) }
-            .eraseToAnyPublisher()
-    }
-
     /// Adds time interval information to the upstream output.
     ///
     /// - Parameter clock: The clock to use.
@@ -209,6 +198,16 @@ public extension Publisher {
                 guard let value = current.0 else { return nil }
                 return (value, ClockInterval(start: previous.1, duration: previous.1.duration(to: current.1)))
             }
+            .eraseToAnyPublisher()
+    }
+
+    /// Measures the time interval between consecutive outputs.
+    ///
+    /// - Parameter clock: The clock to use.
+    /// - Returns: A publisher that emits elements representing the time interval between the elements it receives.
+    func measureInterval<C>(clock: C = .continuous) -> AnyPublisher<ClockInterval<C>, Failure> where C: Clock {
+        withInterval(clock: clock)
+            .map(\.1)
             .eraseToAnyPublisher()
     }
 }
