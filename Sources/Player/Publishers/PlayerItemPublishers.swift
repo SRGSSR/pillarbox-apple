@@ -23,7 +23,7 @@ extension PlayerItem {
 
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         $content
-            .compactMap(\.service)
+            .compactMap(\.serviceInterval)
             .removeDuplicates()
             .withInterval(clock: .suspending)
             .map { service, interval in

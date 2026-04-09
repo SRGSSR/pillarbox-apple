@@ -12,14 +12,14 @@ struct AssetContent {
     let resource: Resource
     let metadata: PlayerMetadata
     let configuration: PlaybackConfiguration
-    let service: ClockInterval<SuspendingClock>?
+    let serviceInterval: ClockInterval<SuspendingClock>?
 
-    private init(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, service: ClockInterval<SuspendingClock>?) {
+    private init(id: UUID, resource: Resource, metadata: PlayerMetadata, configuration: PlaybackConfiguration, serviceInterval: ClockInterval<SuspendingClock>?) {
         self.id = id
         self.resource = resource
         self.metadata = metadata
         self.configuration = configuration
-        self.service = service
+        self.serviceInterval = serviceInterval
     }
 
     static func loaded(
@@ -27,17 +27,17 @@ struct AssetContent {
         resource: Resource,
         metadata: PlayerMetadata,
         configuration: PlaybackConfiguration,
-        service: ClockInterval<SuspendingClock>?
+        serviceInterval: ClockInterval<SuspendingClock>?
     ) -> Self {
-        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, service: service)
+        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, serviceInterval: serviceInterval)
     }
 
     static func loading(id: UUID) -> Self {
-        .init(id: id, resource: .loading(), metadata: .empty, configuration: .default, service: nil)
+        .init(id: id, resource: .loading(), metadata: .empty, configuration: .default, serviceInterval: nil)
     }
 
     static func failing(id: UUID, error: Error) -> Self {
-        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, service: nil)
+        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, serviceInterval: nil)
     }
 
     private func playerItem(for resource: Resource, configuration: PlayerConfiguration, resumeState: ResumeState?) -> AVPlayerItem {

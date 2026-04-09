@@ -54,13 +54,13 @@ public final class PlayerItem: Hashable {
                     )
                 }
                 .switchToLatest()
-                .map { asset, metadata, service in
+                .map { asset, metadata, interval in
                     .loaded(
                         id: id,
                         resource: asset.resource,
                         metadata: metadata,
                         configuration: asset.configuration,
-                        service: service
+                        serviceInterval: interval
                     )
                 }
                 .catch { error in
