@@ -46,7 +46,13 @@ private extension Player {
 
     func playRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
-            self?.play()
+            guard let self else { return .commandFailed }
+            if canReplay() {
+                replay()
+            }
+            else {
+                play()
+            }
             return .success
         }
     }
