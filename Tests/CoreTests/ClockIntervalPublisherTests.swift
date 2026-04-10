@@ -1,0 +1,61 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
+@testable import PillarboxCore
+
+import Combine
+import PillarboxCircumspect
+import XCTest
+
+final class ClockIntervalPublisherTests: XCTestCase {
+    func testMeasureSingleEvent() {
+        let publisher = Just(1)
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .measureInterval()
+            .map { $0.timeInterval() }
+        expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
+    }
+
+    func testMeasureMultipleEvents() {
+        let publisher = [1, 2].publisher
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .measureInterval()
+            .map { $0.timeInterval() }
+        expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
+    }
+
+    func testMeasureNoEvents() {
+        let publisher = Empty<Int, Never>()
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .measureInterval()
+            .map { $0.timeInterval() }
+        expectNothingPublished(from: publisher, during: .seconds(1))
+    }
+
+    func testWithSingleEvent() {
+        let publisher = Just(1)
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .withInterval()
+            .map { $1.timeInterval() }
+        expectAtLeastPublished(values: [0.5], from: publisher, to: beClose(within: 0.1))
+    }
+
+    func testWithMultipleEvents() {
+        let publisher = [1, 2].publisher
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .withInterval()
+            .map { $1.timeInterval() }
+        expectAtLeastPublished(values: [0.5, 0], from: publisher, to: beClose(within: 0.1))
+    }
+
+    func testWithNoEvents() {
+        let publisher = Empty<Int, Never>()
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .withInterval()
+            .map { $1.timeInterval() }
+        expectNothingPublished(from: publisher, during: .seconds(1))
+    }
+}

@@ -186,18 +186,28 @@ public extension Publisher {
 }
 
 public extension Publisher {
-    /// Measures the interval between consecutive events.
+    /// Adds time interval information to the upstream output.
     ///
-    /// - Parameter scheduler: A scheduler to use for tracking the timing of events.
-    /// - Returns: A publisher that emits elements representing the date interval between the elements it receives.
-    func measureDateInterval<S>(
-        scheduler: S = DispatchQueue.main
-    ) -> AnyPublisher<DateInterval, Failure> where S: Scheduler, S.SchedulerTimeType == DispatchQueue.SchedulerTimeType {
-        measureInterval(using: scheduler)
-            .map { stride in
-                let date = Date.now
-                return DateInterval(start: date.advanced(by: -TimeInterval(from: stride)), end: date)
+    /// - Parameter clock: The clock to use.
+    /// - Returns: A publisher that emits elements produced upstream, associated with time interval information between
+    ///   consecutive elements.
+    func withInterval<C>(clock: C = .continuous) -> AnyPublisher<(output: Output, interval: ClockInterval<C>), Failure> where C: Clock {
+        map { ($0, clock.now) }
+            .withPrevious((output: Optional<Output>.none, instant: clock.now))
+            .compactMap { previous, current in
+                guard let output = current.output else { return nil }
+                return (output, ClockInterval(start: previous.instant, duration: previous.instant.duration(to: current.instant)))
             }
+            .eraseToAnyPublisher()
+    }
+
+    /// Measures the time interval between consecutive outputs.
+    ///
+    /// - Parameter clock: The clock to use.
+    /// - Returns: A publisher that emits elements representing the time interval between the elements it receives.
+    func measureInterval<C>(clock: C = .continuous) -> AnyPublisher<ClockInterval<C>, Failure> where C: Clock {
+        withInterval(clock: clock)
+            .map(\.interval)
             .eraseToAnyPublisher()
     }
 }

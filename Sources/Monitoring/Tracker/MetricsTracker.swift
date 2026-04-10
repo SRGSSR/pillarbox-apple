@@ -23,7 +23,7 @@ public final class MetricsTracker: PlayerItemTracker {
     private var stallDuration: TimeInterval = 0
     private var cancellables = Set<AnyCancellable>()
 
-    private let stopwatch = Stopwatch()
+    private let stopwatch = Stopwatch(clock: .suspending)
 
     // swiftlint:disable:next missing_docs
     public var sessionIdentifier: String? {
@@ -184,7 +184,7 @@ private extension MetricsTracker {
             bufferedDuration: Self.bufferedDuration(from: properties),
             duration: Self.duration(from: properties),
             frameDrops: metrics?.total.numberOfDroppedVideoFrames,
-            playbackDuration: stopwatch.time().toMilliseconds,
+            playbackDuration: stopwatch.timeInterval().toMilliseconds,
             position: Self.position(from: properties),
             positionTimestamp: Self.positionTimestamp(from: properties),
             stall: .init(

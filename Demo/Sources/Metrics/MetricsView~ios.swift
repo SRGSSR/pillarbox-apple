@@ -21,7 +21,7 @@ private struct InformationSectionContent: View {
 
     var body: some View {
         cell("URI", value: uri)
-            .swipeActions { CopyButton(text: uri) }
+            .swipeActions { CopyActions(text: uri) }
         cell("Type", value: metrics.playbackType ?? "-")
         cell("Playback duration", value: playbackDuration)
         cell("Data volume", value: bytesTransferred)
@@ -66,7 +66,7 @@ private struct ExperienceStartupTimesSectionContent: View {
         metricEvents.compactMap { event in
             switch event.kind {
             case let .metadata(experience: experience, service: _):
-                return experience.duration
+                return experience.timeInterval()
             default:
                 return nil
             }
@@ -77,7 +77,7 @@ private struct ExperienceStartupTimesSectionContent: View {
         metricEvents.compactMap { event in
             switch event.kind {
             case let .asset(experience: experience):
-                return experience.duration
+                return experience.timeInterval()
             default:
                 return nil
             }
@@ -119,7 +119,7 @@ private struct ServiceStartupTimesSectionContent: View {
         metricEvents.compactMap { event in
             switch event.kind {
             case let .metadata(experience: _, service: service):
-                return service.duration
+                return service.timeInterval()
             default:
                 return nil
             }
@@ -220,8 +220,7 @@ struct MetricsView: View {
             Section {
                 ForEach(sessionIdentifiers, id: \.self) { identifier in
                     Text(identifier)
-                        .textSelection(.enabled)
-                        .swipeActions { CopyButton(text: identifier) }
+                        .swipeActions { CopyActions(text: identifier) }
                 }
             } header: {
                 Text("Tracking sessions")
