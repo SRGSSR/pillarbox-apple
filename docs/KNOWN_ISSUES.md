@@ -188,3 +188,11 @@ When using an official Lightning-to-HDMI Apple adapter (A1438) to connect a Ligh
 ### Workaround
 
 No workaround is available yet.
+
+## The `.pauses` audiovisual background playback policy is no longer correctly applied on iOS 26.4 (FB22488151)
+
+With the`.automatic` or `.pauses` audiovisual background playback policy enabled, video playback continues instead of being automatically paused by the system when the app moves to the background or the device is locked.
+
+### Workaround
+
+No workaround is available yet.
