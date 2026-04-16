@@ -120,6 +120,7 @@ private extension CommandersActTracker {
         labels["media_subtitles_on"] = subtitleOn(from: properties)
         labels["media_subtitle_selection"] = subtitleSelection(from: properties)
         labels["media_airplay_on"] = externalPlaybackActive(from: properties)
+        labels["media_google_cast"] = "false"
 
         switch properties.streamType {
         case .onDemand:
