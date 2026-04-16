@@ -196,3 +196,11 @@ With the`.automatic` or `.pauses` audiovisual background playback policy enabled
 ### Workaround
 
 No workaround is available yet.
+
+## Negative metrics after audio track switch (FB22519249)
+
+Some increments reported in `Metrics` may contain negative values immediately following an audio track switch.
+
+### Workaround
+
+No workaround is available yet.
