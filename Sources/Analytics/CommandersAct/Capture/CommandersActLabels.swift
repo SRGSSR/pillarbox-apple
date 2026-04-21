@@ -10,6 +10,7 @@
 public struct CommandersActLabels: Decodable {
     private let _media_airplay_on: String?
     private let _media_audiodescription_on: String?
+    private let _media_google_cast: String?
     private let _media_position: String?
     private let _media_subtitles_on: String?
     private let _media_timeshift: String?
@@ -105,6 +106,12 @@ public struct CommandersActLabels: Decodable {
         extract(\._media_audiodescription_on)
     }
 
+    /// The value of `media_google_cast`.
+    public var media_google_cast: Bool? {
+        // swiftlint:disable:previous discouraged_optional_boolean
+        extract(\._media_google_cast)
+    }
+
     /// The value of `media_player_display`.
     public let media_player_display: String?
 
@@ -169,6 +176,7 @@ private extension CommandersActLabels {
     enum CodingKeys: String, CodingKey {
         case _media_airplay_on = "media_airplay_on"
         case _media_audiodescription_on = "media_audiodescription_on"
+        case _media_google_cast = "media_google_cast"
         case _media_position = "media_position"
         case _media_subtitles_on = "media_subtitles_on"
         case _media_timeshift = "media_timeshift"

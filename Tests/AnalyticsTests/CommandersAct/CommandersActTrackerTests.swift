@@ -219,6 +219,23 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
     }
 
+    func testCommonLabels() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                CommandersActTracker.adapter(configuration: nil) { _ in .test }
+            ]
+        ))
+        expectAtLeastHits(
+            play { labels in
+                expect(labels.media_player_display).to(equal("Pillarbox"))
+                expect(labels.media_google_cast).to(beFalse())
+            }
+        ) {
+            player.play()
+        }
+    }
+
     func testSourceLabels() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
