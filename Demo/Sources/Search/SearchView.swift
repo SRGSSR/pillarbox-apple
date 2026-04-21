@@ -38,7 +38,7 @@ struct SearchView: View {
                 }
             }
         }
-        .animation(.defaultLinear, value: model.state)
+        .animation(.defaultLinear, value: model.animationValue)
         .tracked(name: "search")
         .searchable(text: $model.text)
 #if os(iOS)

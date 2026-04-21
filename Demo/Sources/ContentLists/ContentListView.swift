@@ -152,7 +152,7 @@ struct ContentListView: View {
                 }
             }
         }
-        .animation(.defaultLinear, value: model.state)
+        .animation(.defaultLinear, value: model.animationValue)
         .onAppear { model.configuration = configuration }
 #if os(iOS)
         .navigationTitle(configuration.list.name)

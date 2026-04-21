@@ -13,6 +13,17 @@ final class ContentListViewModel: ObservableObject, Refreshable {
     @Published var configuration: ContentList.Configuration?
     private let trigger = Trigger()
 
+    var animationValue: String {
+        switch state {
+        case .loading:
+            return "loading"
+        case .loaded:
+            return "loaded"
+        case .failed:
+            return "failed"
+        }
+    }
+
     init() {
         $configuration
             .removeDuplicates()
@@ -135,23 +146,10 @@ final class ContentListViewModel: ObservableObject, Refreshable {
 }
 
 extension ContentListViewModel {
-    enum State: Equatable {
+    enum State {
         case loading
         case loaded(contents: [Content])
         case failed(Error)
-
-        static func == (lhs: Self, rhs: Self) -> Bool {
-            switch (lhs, rhs) {
-            case (.loading, .loading):
-                return true
-            case let (.loaded(contents: lhsContents), .loaded(contents: rhsContents)):
-                return lhsContents == rhsContents
-            case let (.failed(lhsError), .failed(rhsError)):
-                return lhsError as NSError == rhsError as NSError
-            default:
-                return false
-            }
-        }
     }
 
     enum TriggerId {
