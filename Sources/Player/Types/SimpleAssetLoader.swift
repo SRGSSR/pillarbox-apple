@@ -19,8 +19,4 @@ enum SimpleAssetLoader: AssetLoader {
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
-
-    static func playerMetadata(from metadata: PlayerMetadata) -> PlayerMetadata {
-        metadata
-    }
 }
