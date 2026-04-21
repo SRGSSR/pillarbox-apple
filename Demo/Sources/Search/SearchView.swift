@@ -16,34 +16,16 @@ struct SearchView: View {
         ZStack {
             switch model.state {
             case .empty:
-                UnavailableView {
-                    Label {
-                        Text("Enter something to search.")
-                    } icon: {
-                        Image(systemName: "magnifyingglass")
-                    }
-                }
+                emptyView()
             case .loading:
                 ProgressView()
                     .accessibilityHidden(true)
             case let .loaded(medias: medias) where medias.isEmpty:
-                UnavailableModelView(model: model) {
-                    Label {
-                        Text("No results.")
-                    } icon: {
-                        Image(systemName: "circle.slash")
-                    }
-                }
+                unavailableModelView(title: "No results.", icon: "circle.slash")
             case let .loaded(medias: medias):
                 loadedView(medias)
             case let .failed(error):
-                UnavailableModelView(model: model) {
-                    Label {
-                        Text(error.localizedDescription)
-                    } icon: {
-                        Image(systemName: "exclamationmark.bubble")
-                    }
-                }
+                unavailableModelView(title: error.localizedDescription, icon: "exclamationmark.bubble")
             }
         }
         .animation(.defaultLinear, value: model.animationValue)
@@ -90,6 +72,30 @@ struct SearchView: View {
             }
         }
         .scrollDismissesKeyboard(.immediately)
+    }
+
+    private func emptyView() -> some View {
+        UnavailableView {
+            Label {
+                Text("Enter something to search.")
+            } icon: {
+                Image(systemName: "magnifyingglass")
+            }
+        }
+    }
+
+    private func unavailableModelView(title: String, icon: String) -> some View {
+        UnavailableModelView(model: model) {
+            Label {
+                Text(title)
+            } icon: {
+                Image(systemName: icon)
+            }
+        }
+    }
+
+    private func unavailableModelView(title: LocalizedStringResource, icon: String) -> some View {
+        unavailableModelView(title: String(localized: title), icon: icon)
     }
 }
 
