@@ -69,7 +69,8 @@ public extension PlayerItem {
         context: PlaybackContext = .default
     ) -> Self {
         self.init(
-            asset: .tokenProtected(url: url, metadata: metadata, configuration: context.configuration),
+            assetLoaderType: TokenProtectedAssetLoader.self,
+            input: .init(url: url, metadata: metadata, context: context),
             trackerAdapters: trackerAdapters
         )
     }
@@ -93,7 +94,8 @@ public extension PlayerItem {
         context: PlaybackContext = .default
     ) -> Self {
         self.init(
-            asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: context.configuration),
+            assetLoaderType: EncryptedAssetLoader.self,
+            input: .init(url: url, certificateUrl: certificateUrl, metadata: metadata, context: context),
             trackerAdapters: trackerAdapters
         )
     }
