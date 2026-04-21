@@ -6,6 +6,20 @@
 
 import Combine
 
+/// A protocol defining how an asset is loaded and persisted.
+public protocol DownloadableAssetLoader: AssetLoader  {
+    // TODO: We should manage an identifier (e.g. Hashable)
+    static func identifier(from input: Input) -> String
+
+    static func setInput(_ input: Input, for identifier: String)
+    static func setMetadata(_ metadata: Metadata, for identifier: String)
+
+    static func input(for identifier: String) -> Input?
+    static func metadata(for identifier: String) -> Metadata?
+
+    static func remove(for identifier: String)
+}
+
 /// A protocol defining how an asset is loaded.
 public protocol AssetLoader {
     /// The input expected to load an asset.
