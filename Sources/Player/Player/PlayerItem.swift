@@ -130,52 +130,6 @@ public extension PlayerItem {
             trackerAdapters: trackerAdapters
         )
     }
-
-    /// Returns an item loaded with custom resource loading.
-    ///
-    /// - Parameters:
-    ///   - url: The URL to be played.
-    ///   - delegate: The custom resource loader to use.
-    ///   - metadata: The metadata associated with the item.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
-    /// - Returns: The item.
-    ///
-    /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
-    static func custom(
-        url: URL,
-        delegate: AVAssetResourceLoaderDelegate,
-        metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
-        configuration: PlaybackConfiguration = .default
-    ) -> Self {
-        .init(
-            asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
-            trackerAdapters: trackerAdapters
-        )
-    }
-
-    /// Returns an encrypted item loaded with a content key session.
-    ///
-    /// - Parameters:
-    ///   - url: The URL to be played.
-    ///   - delegate: The content key session delegate to use.
-    ///   - metadata: The metadata associated with the item.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
-    /// - Returns: The item.
-    static func encrypted(
-        url: URL,
-        delegate: AVContentKeySessionDelegate,
-        metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
-        configuration: PlaybackConfiguration = .default
-    ) -> Self {
-        .init(
-            asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
-            trackerAdapters: trackerAdapters
-        )
-    }
 }
 
 extension PlayerItem {
