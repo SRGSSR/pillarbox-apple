@@ -60,8 +60,8 @@ final class SpeedTests: TestCase {
     }
 
     func testPlaylistOnDemandToLive() {
-        let item1 = PlayerItem(asset: .simple(url: Stream.onDemand.url))
-        let item2 = PlayerItem(asset: .simple(url: Stream.live.url))
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.live.url)
         let player = Player(items: [item1, item2])
 
         player.playbackSpeed = 2
@@ -73,8 +73,8 @@ final class SpeedTests: TestCase {
     }
 
     func testPlaylistOnDemandToOnDemand() {
-        let item1 = PlayerItem(asset: .simple(url: Stream.onDemand.url))
-        let item2 = PlayerItem(asset: .simple(url: Stream.onDemand.url))
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         player.playbackSpeed = 2
         expect(player.playbackSpeed).toEventually(equal(2))
