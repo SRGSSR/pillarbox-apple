@@ -97,20 +97,6 @@ public final class PlayerItem: Hashable {
 }
 
 public extension PlayerItem {
-    /// Creates a player item from an ``Asset``.
-    ///
-    /// - Parameters:
-    ///   - asset: The asset to play.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    convenience init(
-        asset: Asset<PlayerMetadata>,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
-    ) {
-        self.init(assetLoaderType: SimpleAssetLoader.self, input: asset, trackerAdapters: trackerAdapters)
-    }
-}
-
-public extension PlayerItem {
     /// Returns a simple playable item.
     ///
     /// - Parameters:
@@ -125,8 +111,9 @@ public extension PlayerItem {
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
-        .init(
-            asset: .simple(url: url, metadata: metadata, configuration: configuration),
+        self.init(
+            assetLoaderType: SimpleAssetLoader.self,
+            input: .init(url: url, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters
         )
     }

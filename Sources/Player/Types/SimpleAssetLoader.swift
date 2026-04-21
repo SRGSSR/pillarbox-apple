@@ -5,10 +5,17 @@
 //
 
 import Combine
+import Foundation
 
 enum SimpleAssetLoader: AssetLoader {
-    static func assetPublisher(for input: Asset<PlayerMetadata>) -> AnyPublisher<Asset<PlayerMetadata>, Error> {
-        Just(input)
+    struct Input {
+        let url: URL
+        let metadata: PlayerMetadata
+        let configuration: PlaybackConfiguration
+    }
+
+    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<PlayerMetadata>, Error> {
+        Just(.simple(url: input.url, metadata: input.metadata, configuration: input.configuration))
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
