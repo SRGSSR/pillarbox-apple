@@ -23,9 +23,26 @@ public final class Downloader: ObservableObject {
             .assign(to: &$downloads)
     }
 
+//    @discardableResult
+//    public func add(title: String, url: URL) -> Download {
+//        Self.manager.add(title: title, url: url)
+//    }
+
     @discardableResult
-    public func add(title: String, url: URL) -> Download {
-        Self.manager.add(title: title, url: url)
+    public func add<A>(assetLoaderType: A.Type, input: A.Input) -> Download where A: DownloadableAssetLoader {
+        Self.manager.add(assetLoaderType: assetLoaderType, input: input)
+    }
+
+    @discardableResult
+    public func add(url: URL, metadata: PlayerMetadata) -> Download {
+        Self.manager.add(
+            assetLoaderType: SimpleAssetLoader.self,
+            input: .init(
+                url: url,
+                metadata: metadata,
+                configuration: .default
+            )
+        )
     }
 
     public func remove(_ download: Download) {

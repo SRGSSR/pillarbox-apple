@@ -12,13 +12,23 @@ import UIKit
 
 #if DEBUG
 
+public typealias AssetLoaderType = String
+let downloadableAssetLoaderRegistry: [AssetLoaderType: any DownloadableAssetLoader.Type] = [
+    "\(SimpleAssetLoader.self)": SimpleAssetLoader.self
+]
+
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject {
-    private let id: String
+    private let id = UUID()
 
-    public let title: String
-    public let url: URL
+//    public let title: String
+//    public let url: URL
+
+    public let assetId: String
+    public let assetLoaderType: AssetLoaderType
+
+    @Published private(set) var content: AssetContent
 
     private var task: URLSessionTask? {
         didSet {
@@ -64,57 +74,120 @@ public final class Download: ObservableObject {
         }
     }
 
-    private init(id: String, title: String, url: URL, bookmarkData: Data?, hasFailed: Bool, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
-        self.id = id
-        self.title = title
-        self.url = url
+    public init<A>(assetId: String, assetLoaderType: A.Type, input: A.Input, session: AVAssetDownloadURLSession) where A: DownloadableAssetLoader {
+        content = .loading(id: id)
+        self.assetId = assetId
+        self.assetLoaderType = "\(assetLoaderType.self)"
+        self.session = session
+        self.hasFailed = false
+        assetLoaderType.assetPublisher(for: input)
+            .map { asset in
+                Publishers.CombineLatest(
+                    Just(asset),
+                    assetLoaderType.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
+                )
+            }
+            .switchToLatest()
+            .map { [id] asset, metadata in
+                .loaded(
+                    id: id,
+                    resource: asset.resource,
+                    metadata: metadata,
+                    configuration: asset.configuration,
+                    serviceInterval: nil
+                )
+            }
+            .catch { [id] error in
+                Just(.failing(id: id, error: error))
+            }
+            .assign(to: &$content)
+
+        $content.map { content in
+            Self.task(
+                id: content.id,
+                title: content.metadata.title ?? "Untitled",
+                url: content.resource.url(),
+                using: session
+            )
+        }
+        .weakAssign(to: \.task, on: self)
+        .store(in: &cancellables)
+    }
+
+    private init(assetId: String, assetLoaderType: AssetLoaderType, bookmarkData: Data?, hasFailed: Bool, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
+        self.assetId = assetId
+        self.assetLoaderType = assetLoaderType
         self.bookmarkData = bookmarkData
         self.hasFailed = hasFailed
         self.task = task
         self.session = session
+        self.content = .loading(id: id)
 
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
         configureTaskPublishers()
     }
 
-    convenience init(title: String, url: URL, using session: AVAssetDownloadURLSession) {
-        let id = UUID().uuidString
-        let task = Self.task(id: id, title: title, url: url, using: session)
-        self.init(id: id, title: title, url: url, bookmarkData: nil, hasFailed: false, task: task, session: session)
+    init?(metadata: DownloadMetadata, session: AVAssetDownloadURLSession) {
+        guard
+            let assetLoaderType = downloadableAssetLoaderRegistry[metadata.assetId],
+            let publisher = assetLoaderType.assetContentPublisher(for: metadata)
+        else { return nil }
+        self.assetId = metadata.assetId
+        self.assetLoaderType = metadata.assetLoaderType
+        self.content = .loading(id: metadata.id)
+        self.session = session
+        self.hasFailed = false
+        publisher
+            .assign(to: &$content)
+
+        $content.map { content in
+            Self.task(
+                id: content.id,
+                title: content.metadata.title ?? "Untitled",
+                url: content.resource.url(),
+                using: session
+            )
+        }
+        .weakAssign(to: \.task, on: self)
+        .store(in: &cancellables)
     }
 
-    convenience init(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) {
+    convenience init?(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) {
         if let bookmarkData = metadata.bookmarkData {
             self.init(
-                id: metadata.id,
-                title: metadata.title,
-                url: metadata.url,
+                assetId: metadata.assetId,
+                assetLoaderType: metadata.assetLoaderType,
                 bookmarkData: bookmarkData,
                 hasFailed: metadata.hasFailed,
-                task: tasks.first { $0.taskDescription == metadata.id },
+                task: tasks.first { $0.taskDescription == metadata.id.uuidString },
                 session: session
             )
         }
         else {
-            self.init(title: metadata.title, url: metadata.url, using: session)
+            self.init(metadata: metadata, session: session)
         }
     }
 
-    private static func task(id: String, title: String, url: URL, using session: AVAssetDownloadURLSession?) -> URLSessionTask? {
+    private static func task(id: UUID, title: String, url: URL, using session: AVAssetDownloadURLSession?) -> URLSessionTask? {
         guard let session else { return nil }
         let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
-        task.taskDescription = id
+        task.taskDescription = id.uuidString
         task.resume()
         return task
     }
 
     func matches(task: URLSessionTask) -> Bool {
-        task.taskDescription == id
+        task.taskDescription == id.uuidString
     }
 
     func metadata() -> DownloadMetadata {
-        .init(id: id, title: title, url: url, bookmarkData: bookmarkData, hasFailed: hasFailed)
+        .init(id: id, assetId: assetId, assetLoaderType: assetLoaderType, bookmarkData: bookmarkData, hasFailed: hasFailed)
+    }
+
+    public func title() -> String? {
+        guard let assetLoaderType = downloadableAssetLoaderRegistry[assetLoaderType] else { return nil }
+        return assetLoaderType.playerMetadata(for: metadata())?.title
     }
 
     func cancel() {
@@ -202,7 +275,7 @@ public extension Download {
     func restart() {
         removeFile()
 
-        task = Self.task(id: id, title: title, url: url, using: session)
+        //task = Self.task(id: id, title: metada, url: url, using: session)
         hasFailed = false
     }
 }

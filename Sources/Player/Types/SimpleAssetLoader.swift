@@ -27,7 +27,7 @@ enum SimpleAssetLoader: DownloadableAssetLoader {
         init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.url = try container.decode(URL.self, forKey: .url)
-            let title = try container.decode(String.self, forKey: .url)
+            let title = try container.decode(String.self, forKey: .title)
             self.metadata = .init(title: title)
             self.configuration = .default
         }

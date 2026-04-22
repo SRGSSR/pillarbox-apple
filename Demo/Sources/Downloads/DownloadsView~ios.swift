@@ -84,7 +84,8 @@ struct DownloadsView: View {
 
     private func addDownloadButton(title: String, url: URL) -> some View {
         Button {
-            downloader.add(title: title, url: url)
+            //downloader.add(title: title, url: url)
+            downloader.add(url: url, metadata: .init(title: title))
         } label: {
             Text(title)
         }

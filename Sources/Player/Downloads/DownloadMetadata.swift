@@ -7,9 +7,9 @@
 import Foundation
 
 struct DownloadMetadata: Codable {
-    let id: String
-    let title: String
-    let url: URL
+    let id: UUID
+    let assetId: String
+    let assetLoaderType: AssetLoaderType
     let bookmarkData: Data?
     let hasFailed: Bool
 }

@@ -30,9 +30,18 @@ final class DownloadManager: NSObject {
         restore()
     }
 
+//    @discardableResult
+//    func add(title: String, url: URL) -> Download {
+//        let download = Download(title: title, url: url, using: session)
+//        downloads.append(download)
+//        return download
+//    }
+
     @discardableResult
-    func add(title: String, url: URL) -> Download {
-        let download = Download(title: title, url: url, using: session)
+    func add<A>(assetLoaderType: A.Type, input: A.Input) -> Download where A: DownloadableAssetLoader {
+        let identifier = assetLoaderType.identifier(from: input)
+        assetLoaderType.setInput(input, for: identifier)
+        let download = Download(assetId: identifier, assetLoaderType: assetLoaderType, input: input, session: session)
         downloads.append(download)
         return download
     }
@@ -58,14 +67,14 @@ final class DownloadManager: NSObject {
 
 @available(tvOS, unavailable)
 private extension DownloadManager {
-    private static let metadataFileUrl = URL.libraryDirectory.appending(component: "downloads.json")
+    private static let metadataFileUrl = URL.libraryDirectory.appending(component: "_downloads.json")
 
     static func restoreDownloads(reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) -> [Download] {
         guard let jsonData = try? Data(contentsOf: metadataFileUrl),
               let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
             return []
         }
-        return metadata.map { Download(from: $0, reusing: tasks, in: session) }
+        return metadata.compactMap { Download(from: $0, reusing: tasks, in: session) }
     }
 
     static func saveDownloads(_ downloads: [Download]) {

@@ -22,9 +22,13 @@ struct DownloadCell: View {
         }
     }
 
+    var title: String {
+        download.title() ?? "Untitled"
+    }
+
     private func infoView() -> some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text(download.title)
+            Text(title)
             ProgressView(value: download.progress) {
                 Text(download.progress, format: .percent.precision(.fractionLength(0)))
                     .contentTransition(.numericText())
@@ -36,7 +40,7 @@ struct DownloadCell: View {
         .onTapGesture {
             switch download.file {
             case let .partial(url), let .complete(url):
-                router.presented = .player(media: .init(title: download.title, type: .url(url)))
+                router.presented = .player(media: .init(title: title, type: .url(url)))
             case .failed:
                 download.restart()
             default:

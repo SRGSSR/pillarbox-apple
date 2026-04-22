@@ -33,6 +33,17 @@ enum Resource {
         ])
     }
 
+    func url() -> URL {
+        switch self {
+        case let .simple(url):
+            return url
+        case let .custom(url, _): // TODO: Delegate handling
+            return url
+        case let .encrypted(url, _): // TODO: Delegate handling
+            return url
+        }
+    }
+
     func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
         switch self {
         case let .simple(url: url):
