@@ -16,29 +16,19 @@ struct SearchView: View {
         ZStack {
             switch model.state {
             case .empty:
-                UnavailableView {
-                    Label {
-                        Text("Enter something to search.")
-                    } icon: {
-                        Image(systemName: "magnifyingglass")
-                    }
-                }
+                emptyView()
             case .loading:
                 ProgressView()
                     .accessibilityHidden(true)
+            case let .loaded(medias: medias) where medias.isEmpty:
+                unavailableModelView(title: "No results.", icon: "circle.slash")
             case let .loaded(medias: medias):
                 loadedView(medias)
             case let .failed(error):
-                UnavailableModelView(model: model) {
-                    Label {
-                        Text(error.localizedDescription)
-                    } icon: {
-                        Image(systemName: "exclamationmark.bubble")
-                    }
-                }
+                unavailableModelView(title: error.localizedDescription, icon: "exclamationmark.bubble")
             }
         }
-        .animation(.defaultLinear, value: model.state)
+        .animation(.defaultLinear, value: model.animationValue)
         .tracked(name: "search")
         .searchable(text: $model.text)
 #if os(iOS)
@@ -53,46 +43,59 @@ struct SearchView: View {
 
     @ViewBuilder
     private func loadedView(_ medias: [SRGMedia]) -> some View {
-        if !medias.isEmpty {
-            CustomList(data: medias) { media in
-                if let media {
-                    Cell(
-                        size: .init(width: 520, height: 300),
-                        title: constant(iOS: MediaDescription.title(for: media), tvOS: media.show?.title),
-                        subtitle: constant(iOS: MediaDescription.subtitle(for: media), tvOS: media.title),
-                        imageUrl: SRGDataProvider.current!.url(for: media.image, size: .large),
-                        type: MediaDescription.systemImage(for: media),
-                        duration: MediaDescription.duration(for: media),
-                        date: MediaDescription.date(for: media),
-                        style: MediaDescription.style(for: media)
-                    ) {
-                        let media = Media(title: media.title, type: .urn(media.urn))
-                        router.presented = .player(media: media)
+        CustomList(data: medias) { media in
+            if let media {
+                Cell(
+                    size: .init(width: 520, height: 300),
+                    title: constant(iOS: MediaDescription.title(for: media), tvOS: media.show?.title),
+                    subtitle: constant(iOS: MediaDescription.subtitle(for: media), tvOS: media.title),
+                    imageUrl: SRGDataProvider.current!.url(for: media.image, size: .large),
+                    type: MediaDescription.systemImage(for: media),
+                    duration: MediaDescription.duration(for: media),
+                    date: MediaDescription.date(for: media),
+                    style: MediaDescription.style(for: media)
+                ) {
+                    let media = Media(title: media.title, type: .urn(media.urn))
+                    router.presented = .player(media: media)
+                }
+                .onAppear {
+                    if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
+                        model.loadMore()
                     }
-                    .onAppear {
-                        if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
-                            model.loadMore()
-                        }
-                    }
+                }
 #if os(iOS)
-                    .swipeActions { CopyActions(text: media.urn) }
-                    .refreshable { await model.refresh() }
+                .swipeActions { CopyActions(text: media.urn) }
+                .refreshable { await model.refresh() }
 #else
-                    .ignoresSafeArea(.all, edges: .horizontal)
+                .ignoresSafeArea(.all, edges: .horizontal)
 #endif
-                }
-            }
-            .scrollDismissesKeyboard(.immediately)
-        }
-        else {
-            UnavailableModelView(model: model) {
-                Label {
-                    Text("No results.")
-                } icon: {
-                    Image(systemName: "circle.slash")
-                }
             }
         }
+        .scrollDismissesKeyboard(.immediately)
+    }
+
+    private func emptyView() -> some View {
+        UnavailableView {
+            Label {
+                Text("Enter something to search.")
+            } icon: {
+                Image(systemName: "magnifyingglass")
+            }
+        }
+    }
+
+    private func unavailableModelView(title: String, icon: String) -> some View {
+        UnavailableModelView(model: model) {
+            Label {
+                Text(title)
+            } icon: {
+                Image(systemName: icon)
+            }
+        }
+    }
+
+    private func unavailableModelView(title: LocalizedStringResource, icon: String) -> some View {
+        unavailableModelView(title: String(localized: title), icon: icon)
     }
 }
 

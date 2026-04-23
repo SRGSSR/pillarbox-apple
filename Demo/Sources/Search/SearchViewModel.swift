@@ -11,24 +11,11 @@ import SRGDataProviderCombine
 import SRGDataProviderModel
 
 final class SearchViewModel: ObservableObject, Refreshable {
-    enum State: Equatable {
+    enum State {
         case empty
         case loading
         case loaded(medias: [SRGMedia])
         case failed(Error)
-
-        static func == (lhs: Self, rhs: Self) -> Bool {
-            switch (lhs, rhs) {
-            case (.empty, .empty), (.loading, .loading):
-                return true
-            case let (.loaded(medias: lhsMedias), .loaded(medias: rhsMedias)):
-                return lhsMedias == rhsMedias
-            case let (.failed(lhsError), .failed(rhsError)):
-                return lhsError as NSError == rhsError as NSError
-            default:
-                return false
-            }
-        }
     }
 
     enum TriggerId {
@@ -47,6 +34,19 @@ final class SearchViewModel: ObservableObject, Refreshable {
     @Published var vendor: SRGVendor = .RTS
 
     private let trigger = Trigger()
+
+    var animationValue: String {
+        switch state {
+        case .empty:
+            return "empty"
+        case .loading:
+            return "loading"
+        case.loaded:
+            return "loaded"
+        case .failed:
+            return "failed"
+        }
+    }
 
     init() {
         Publishers.CombineLatest($text, $vendor)
