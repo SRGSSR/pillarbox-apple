@@ -74,7 +74,7 @@ public final class PlayerItem: Hashable {
 
     // swiftlint:disable:next missing_docs
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
-        lhs === rhs
+        lhs.id == rhs.id
     }
 
     static func load(for id: UUID) {
