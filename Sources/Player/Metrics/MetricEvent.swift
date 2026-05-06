@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
 import CoreMedia
+import Foundation
 
 /// A metric event.
 public struct MetricEvent: Hashable {
