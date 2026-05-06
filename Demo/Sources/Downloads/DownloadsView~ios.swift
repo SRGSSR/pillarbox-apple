@@ -12,7 +12,7 @@ import SwiftUI
 #if DEBUG
 
 struct DownloadsView: View {
-    @StateObject private var downloader = Downloader()
+    @StateObject private var downloader = Downloader(downloader: DemoAssetDownloader(fileName: "file_downloads.json"))
 
     var body: some View {
         ZStack {
@@ -84,7 +84,7 @@ struct DownloadsView: View {
 
     private func addDownloadButton(title: String, url: URL) -> some View {
         Button {
-            downloader.add(title: title, url: url)
+            downloader.add(input: .init(title: title, url: url))
         } label: {
             Text(title)
         }

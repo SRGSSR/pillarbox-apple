@@ -14,11 +14,15 @@ import UIKit
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Download: ObservableObject {
+public final class Download<A>: ObservableObject where A: AssetDownloader {
     private let id: String
-
-    public let title: String
-    public let url: URL
+    @Published private(set) var data: DownloadData<A.Loader.Input, A.Loader.Metadata> {
+        didSet {
+            if let bookmarkData = data.bookmarkData {
+                downloader?.updateDownload(bookmarkData: bookmarkData, for: id)
+            }
+        }
+    }
 
     private var task: URLSessionTask? {
         didSet {
@@ -27,6 +31,7 @@ public final class Download: ObservableObject {
     }
 
     private weak let session: AVAssetDownloadURLSession?
+    private weak let downloader: A?
 
     public var progress: Double {
         hasFailed ? 0 : _progress
@@ -35,17 +40,7 @@ public final class Download: ObservableObject {
     @Published public private(set) var state: URLSessionTask.State = .completed
     @Published private var _progress: Double = 1
 
-    @Published private var hasFailed: Bool {
-        didSet {
-            notifyUpdate()
-        }
-    }
-
-    @Published private var bookmarkData: Data? {
-        didSet {
-            notifyUpdate()
-        }
-    }
+    @Published private var hasFailed: Bool
 
     private let locationSubject = CurrentValueSubject<URL?, Never>(nil)
     private var cancellables = Set<AnyCancellable>()
@@ -64,39 +59,56 @@ public final class Download: ObservableObject {
         }
     }
 
-    private init(id: String, title: String, url: URL, bookmarkData: Data?, hasFailed: Bool, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
+    private init(id: String, data: DownloadData<A.Loader.Input, A.Loader.Metadata>, downloader: A, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
         self.id = id
-        self.title = title
-        self.url = url
-        self.bookmarkData = bookmarkData
-        self.hasFailed = hasFailed
+        self.data = data
+        self.hasFailed = false
         self.task = task
         self.session = session
+        self.downloader = downloader
 
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
         configureTaskPublishers()
     }
 
-    convenience init(title: String, url: URL, using session: AVAssetDownloadURLSession) {
-        let id = UUID().uuidString
-        let task = Self.task(id: id, title: title, url: url, using: session)
-        self.init(id: id, title: title, url: url, bookmarkData: nil, hasFailed: false, task: task, session: session)
+    convenience init(from input: A.Loader.Input, downloader: A, using session: AVAssetDownloadURLSession) {
+        let id = downloader.identifier(for: input)
+        let data = downloader.download(for: id) ?? downloader.addDownload(using: input, for: id)
+        self.init(id: id, data: data, downloader: downloader, task: nil, session: session)
+        A.Loader.assetPublisher(for: input)
+            .handleEvents(receiveOutput: { asset in
+                downloader.updateDownload(metadata: asset.metadata, for: id)
+            }, receiveCompletion: nil)
+            .map { asset in
+                let title = A.Loader.playerMetadata(from: asset.metadata).title
+                let url = asset.resource.url()
+                return Self.task(id: id, title: title ?? id, url: url, using: session)
+            }
+            .catch { _ in
+                Just(nil).eraseToAnyPublisher()
+            }
+            .weakAssign(to: \.task, on: self)
+            .store(in: &cancellables)
     }
 
-    convenience init(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) {
-        if let bookmarkData = metadata.bookmarkData {
+    convenience init(
+        from data: DownloadData<A.Loader.Input, A.Loader.Metadata>,
+        downloader: A,
+        reusing tasks: [URLSessionTask],
+        in session: AVAssetDownloadURLSession
+    ) {
+        let id = downloader.identifier(for: data.input)
+        if data.bookmarkData != nil {
             self.init(
-                id: metadata.id,
-                title: metadata.title,
-                url: metadata.url,
-                bookmarkData: bookmarkData,
-                hasFailed: metadata.hasFailed,
-                task: tasks.first { $0.taskDescription == metadata.id },
+                id: id,
+                data: data,
+                downloader: downloader,
+                task: tasks.first { $0.taskDescription == id },
                 session: session
             )
         }
         else {
-            self.init(title: metadata.title, url: metadata.url, using: session)
+            self.init(from: data.input, downloader: downloader, using: session)
         }
     }
 
@@ -111,10 +123,6 @@ public final class Download: ObservableObject {
 
     func matches(task: URLSessionTask) -> Bool {
         task.taskDescription == id
-    }
-
-    func metadata() -> DownloadMetadata {
-        .init(id: id, title: title, url: url, bookmarkData: bookmarkData, hasFailed: hasFailed)
     }
 
     func cancel() {
@@ -140,7 +148,7 @@ public final class Download: ObservableObject {
     }
 
     private func fileUrl() -> URL? {
-        guard let bookmarkData else { return nil }
+        guard let bookmarkData = data.bookmarkData else { return nil }
         var isStale = false
         return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
     }
@@ -164,7 +172,7 @@ public final class Download: ObservableObject {
         bookmarkDataPublisher(for: task)
             .receiveOnMainThread()
             .map { Optional($0) }
-            .weakAssign(to: \.bookmarkData, on: self)
+            .weakAssign(to: \.data.bookmarkData, on: self)
             .store(in: &cancellables)
     }
 
@@ -180,12 +188,13 @@ public final class Download: ObservableObject {
 
     @objc
     private func applicationWillTerminate() {
-        guard bookmarkData == nil else { return }
+        guard data.bookmarkData == nil else { return }
         task?.cancel()
     }
 
-    private func notifyUpdate() {
-        NotificationCenter.default.post(name: .didUpdateDownload, object: self)
+    public func metadata() -> PlayerMetadata {
+        guard let metadata = data.metadata else { return .empty }
+        return A.Loader.playerMetadata(from: metadata)
     }
 }
 
@@ -202,7 +211,8 @@ public extension Download {
     func restart() {
         removeFile()
 
-        task = Self.task(id: id, title: title, url: url, using: session)
+        // TODO: We have to handle the restart.
+        // task = Self.task(id: id, title: title, url: url, using: session)
         hasFailed = false
     }
 }

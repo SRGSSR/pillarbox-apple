@@ -11,79 +11,46 @@ import UIKit
 #if DEBUG
 
 @available(tvOS, unavailable)
-final class DownloadManager: NSObject {
+final class DownloadManager<A>: NSObject, AVAssetDownloadDelegate where A: AssetDownloader {
     private lazy var session = AVAssetDownloadURLSession(
-        configuration: .background(withIdentifier: "ch.srgssr.player.downloader"),
+        configuration: .background(withIdentifier: "ch.srgssr.player.downloader"), // TODO: We should better handle the identifier.
         assetDownloadDelegate: self,
         delegateQueue: .main
     )
 
-    @Published private(set) var downloads: [Download] = [] {
-        didSet {
-            Self.saveDownloads(downloads)
-        }
-    }
+    @Published private(set) var downloads: [Download<A>] = []
+    private let downloader: A
 
-    override init() {
+    init(downloader: A) {
+        self.downloader = downloader
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateDownload(_:)), name: .didUpdateDownload, object: nil)
         restore()
     }
 
     @discardableResult
-    func add(title: String, url: URL) -> Download {
-        let download = Download(title: title, url: url, using: session)
+    func add(input: A.Loader.Input) -> Download<A> {
+        let download = Download(from: input, downloader: downloader, using: session)
+        // TODO: We should probably insert the download here.
         downloads.append(download)
         return download
     }
 
-    func remove(_ download: Download) {
-        download.cancel()
+    func remove(_ download: Download<A>) {
+        download.cancel() // <----
+        downloader.removeDownload(download.data) // ---> // TODO: Should we move this in Download to avoid duplication with remove all?
         downloads.removeAll { $0 == download }
     }
 
     func removeAll() {
         downloads.forEach { download in
             download.cancel()
+            downloader.removeDownload(download.data)
         }
         downloads.removeAll()
     }
 
-    @objc
-    private func didUpdateDownload(_ notification: Notification) {
-        guard let download = notification.object as? Download, downloads.contains(download) else { return }
-        Self.saveDownloads(downloads)
-    }
-}
+    // MARK: AVAssetDownloadDelegate
 
-@available(tvOS, unavailable)
-private extension DownloadManager {
-    private static let metadataFileUrl = URL.libraryDirectory.appending(component: "downloads.json")
-
-    static func restoreDownloads(reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) -> [Download] {
-        guard let jsonData = try? Data(contentsOf: metadataFileUrl),
-              let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
-            return []
-        }
-        return metadata.map { Download(from: $0, reusing: tasks, in: session) }
-    }
-
-    static func saveDownloads(_ downloads: [Download]) {
-        let metadata = downloads.map { $0.metadata() }
-        guard let jsonData = try? JSONEncoder().encode(metadata) else { return }
-        try? jsonData.write(to: metadataFileUrl)
-    }
-
-    func restore() {
-        session.getAllTasks { [weak self] tasks in
-            guard let self else { return }
-            downloads = Self.restoreDownloads(reusing: tasks, in: session)
-        }
-    }
-}
-
-@available(tvOS, unavailable)
-extension DownloadManager: AVAssetDownloadDelegate {
 #if os(iOS)
     func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         guard let download = download(matching: assetDownloadTask) else { return }
@@ -96,8 +63,24 @@ extension DownloadManager: AVAssetDownloadDelegate {
         download.complete(with: error)
     }
 
-    private func download(matching task: URLSessionTask) -> Download? {
+    private func download(matching task: URLSessionTask) -> Download<A>? {
         downloads.first { $0.matches(task: task) }
+    }
+}
+
+@available(tvOS, unavailable)
+private extension DownloadManager {
+    func restoreDownloads(reusing tasks: [URLSessionTask]) -> [Download<A>] {
+        downloader.downloads().map { downloadData in
+            Download(from: downloadData, downloader: downloader, reusing: tasks, in: session)
+        }
+    }
+
+    func restore() {
+        session.getAllTasks { [weak self] tasks in
+            guard let self else { return }
+            downloads = restoreDownloads(reusing: tasks)
+        }
     }
 }
 

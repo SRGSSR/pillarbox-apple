@@ -13,27 +13,28 @@ import Foundation
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Downloader: ObservableObject {
-    private static let manager = DownloadManager()
+public final class Downloader<A>: ObservableObject where A: AssetDownloader {
+    private let manager: DownloadManager<A>
 
-    @Published public private(set) var downloads: [Download] = []
+    @Published public private(set) var downloads: [Download<A>] = []
 
-    public init() {
-        Self.manager.$downloads
+    public init(downloader: A) {
+        manager = DownloadManager(downloader: downloader)
+        manager.$downloads
             .assign(to: &$downloads)
     }
 
     @discardableResult
-    public func add(title: String, url: URL) -> Download {
-        Self.manager.add(title: title, url: url)
+    public func add(input: A.Loader.Input) -> Download<A> {
+        manager.add(input: input)
     }
 
-    public func remove(_ download: Download) {
-        Self.manager.remove(download)
+    public func remove(_ download: Download<A>) {
+        manager.remove(download)
     }
 
     public func removeAll() {
-        Self.manager.removeAll()
+        manager.removeAll()
     }
 }
 
