@@ -11,7 +11,7 @@
 import Foundation
 
 @_spi(DownloaderPrivate)
-public protocol AssetDownloader: AnyObject {
+public protocol AssetDownloadStore: AnyObject {
     associatedtype Input
     associatedtype Metadata
 
@@ -27,7 +27,7 @@ public protocol AssetDownloader: AnyObject {
     func updateDownload(bookmarkData: Data, for identifier: String)
 }
 
-extension AssetDownloader {
+extension AssetDownloadStore {
     func download(for input: Input) -> DownloadData<Input, Metadata>? {
         download(for: identifier(for: input))
     }

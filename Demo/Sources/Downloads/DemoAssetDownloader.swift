@@ -11,7 +11,7 @@ import PillarboxPlayer
 
 #if DEBUG
 
-class DemoAssetDownloader: AssetDownloader {
+class DemoAssetDownloader: AssetDownloadStore {
     typealias Loader = DemoAssetLoader
 
     struct FileEntry: Codable {

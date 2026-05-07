@@ -14,7 +14,7 @@ import UIKit
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Download<L, A>: ObservableObject where L: AssetLoader, A: AssetDownloader, L.Input == A.Input, L.Metadata == A.Metadata {
+public final class Download<L, A>: ObservableObject where L: AssetLoader, A: AssetDownloadStore, L.Input == A.Input, L.Metadata == A.Metadata {
     private let id: String
 
     @Published private(set) var data: DownloadData<A.Input, A.Metadata> {

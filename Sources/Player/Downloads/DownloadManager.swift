@@ -11,7 +11,7 @@ import UIKit
 #if DEBUG
 
 @available(tvOS, unavailable)
-final class DownloadManager<L, A>: NSObject, AVAssetDownloadDelegate where L: AssetLoader, A: AssetDownloader, L.Input == A.Input, L.Metadata == A.Metadata {
+final class DownloadManager<L, A>: NSObject, AVAssetDownloadDelegate where L: AssetLoader, A: AssetDownloadStore, L.Input == A.Input, L.Metadata == A.Metadata {
     private lazy var session = AVAssetDownloadURLSession(
         configuration: .background(withIdentifier: "ch.srgssr.player.downloader"), // TODO: We should better handle the identifier.
         assetDownloadDelegate: self,

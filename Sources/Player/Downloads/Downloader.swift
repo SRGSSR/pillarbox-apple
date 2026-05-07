@@ -13,7 +13,7 @@ import Foundation
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Downloader<L, A>: ObservableObject where L: AssetLoader, A: AssetDownloader, L.Input == A.Input, L.Metadata == A.Metadata {
+public final class Downloader<L, A>: ObservableObject where L: AssetLoader, A: AssetDownloadStore, L.Input == A.Input, L.Metadata == A.Metadata {
     private let manager: DownloadManager<L, A>
 
     @Published public private(set) var downloads: [Download<L, A>] = []
