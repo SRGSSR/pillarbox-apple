@@ -39,17 +39,17 @@ public final class PlayerItem: Hashable {
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
-            assetLoaderType.assetPublisher(for: input)
-                .handleEvents(receiveOutput: { asset in
+            assetLoaderType.metadataPublisher(for: input)
+                .handleEvents(receiveOutput: { metadata in
                     trackerAdapters.forEach { adapter in
-                        adapter.updateMetadata(to: asset.metadata)
+                        adapter.updateMetadata(to: metadata)
                     }
                 }, receiveCompletion: nil)
                 .withInterval(clock: .suspending)
-                .map { asset, interval in
+                .map { metadata, interval in
                     Publishers.CombineLatest3(
-                        Just(asset),
-                        assetLoaderType.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
+                        Just(assetLoaderType.asset(input: input, metadata: metadata)),
+                        assetLoaderType.playerMetadata(from: metadata).playerMetadataPublisher(),
                         Just(interval)
                     )
                 }

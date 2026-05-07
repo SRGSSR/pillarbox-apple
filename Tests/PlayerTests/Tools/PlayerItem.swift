@@ -19,7 +19,7 @@ extension PlayerItem {
     ) -> Self {
         self.init(
             assetLoaderType: AssetLoaderMock.self,
-            input: .init(asset: .simple(url: url, metadata: metadata), delay: delay),
+            input: .init(url: url, metadata: metadata, delay: delay),
             trackerAdapters: trackerAdapters
         )
     }
@@ -49,8 +49,8 @@ extension PlayerItem {
         after delay: TimeInterval
     ) -> Self {
         self.init(
-            assetLoaderType: AssetLoaderMock.self,
-            input: .init(asset: .unavailable(with: error, metadata: metadata), delay: delay)
+            assetLoaderType: UnavailableAssetLoaderMock.self,
+            input: .init(error: error, metadata: metadata, delay: delay)
         )
     }
 }

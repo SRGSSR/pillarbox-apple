@@ -14,9 +14,13 @@ enum SimpleAssetLoader: AssetLoader {
         let configuration: PlaybackConfiguration
     }
 
-    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<PlayerMetadata>, Error> {
-        Just(.simple(url: input.url, metadata: input.metadata, configuration: input.configuration))
+    static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerMetadata, Error> {
+        Just(input.metadata)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
+    }
+
+    static func asset(input: Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {
+        .simple(url: input.url, metadata: metadata, configuration: input.configuration)
     }
 }

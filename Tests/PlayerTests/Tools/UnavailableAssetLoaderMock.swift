@@ -9,17 +9,11 @@ import Foundation
 import PillarboxCore
 import PillarboxPlayer
 
-enum AssetLoaderMock: AssetLoader {
+enum UnavailableAssetLoaderMock: AssetLoader {
     struct Input {
-        let url: URL
+        let error: Error
         let metadata: PlayerMetadata
         let delay: TimeInterval
-
-        init(url: URL, metadata: PlayerMetadata, delay: TimeInterval = 0) {
-            self.url = url
-            self.metadata = metadata
-            self.delay = delay
-        }
     }
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerMetadata, any Error> {
@@ -30,6 +24,6 @@ enum AssetLoaderMock: AssetLoader {
     }
 
     static func asset(input: Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {
-        .simple(url: input.url, metadata: metadata)
+        .unavailable(with: input.error, metadata: metadata)
     }
 }

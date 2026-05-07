@@ -27,16 +27,6 @@ public protocol AssetDownloadStore: AnyObject {
     func updateDownloadRecord(bookmarkData: Data, for identifier: String)
 }
 
-extension AssetDownloadStore {
-    func downloadRecord(for input: Input) -> DownloadRecord<Input, Metadata>? {
-        downloadRecord(for: identifier(for: input))
-    }
-
-    func removeDownloadRecord(_ download: DownloadRecord<Input, Metadata>) {
-        removeDownloadRecord(for: identifier(for: download.input))
-    }
-}
-
 #endif
 
 // swiftlint:enable missing_docs

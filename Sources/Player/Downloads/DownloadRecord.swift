@@ -14,7 +14,7 @@ import Foundation
 public struct DownloadRecord<Input, Metadata> {
     let input: Input
     let metadata: Metadata?
-    var bookmarkData: Data?
+    let bookmarkData: Data?
 
     public init(input: Input, metadata: Metadata?, bookmarkData: Data?) {
         self.input = input

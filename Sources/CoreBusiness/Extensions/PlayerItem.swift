@@ -58,7 +58,7 @@ public extension PlayerItem {
     ///   - url: The URL to play.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - context: Contextual information associated with the item.
+    ///   - configuration: The configuration to apply to the player item.
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
     /// tracking.
@@ -66,11 +66,11 @@ public extension PlayerItem {
         url: URL,
         metadata: PlayerMetadata = .empty,
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
-        context: PlaybackContext = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
             assetLoaderType: TokenProtectedAssetLoader.self,
-            input: .init(url: url, metadata: metadata, context: context),
+            input: .init(url: url, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters
         )
     }
@@ -82,7 +82,7 @@ public extension PlayerItem {
     ///   - certificateUrl: The URL of the certificate to use.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - context: Contextual information associated with the item.
+    ///   - configuration: The configuration to apply to the player item.
     ///
     /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
     /// tracking.
@@ -91,11 +91,11 @@ public extension PlayerItem {
         certificateUrl: URL,
         metadata: PlayerMetadata,
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
-        context: PlaybackContext = .default
+        configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
             assetLoaderType: EncryptedAssetLoader.self,
-            input: .init(url: url, certificateUrl: certificateUrl, metadata: metadata, context: context),
+            input: .init(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters
         )
     }

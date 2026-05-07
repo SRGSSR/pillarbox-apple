@@ -18,10 +18,15 @@ struct DemoAssetLoader: AssetLoader {
         let url: URL
     }
 
-    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<String>, any Error> {
-        Just(.simple(url: input.url, metadata: input.title))
+    static func metadataPublisher(for input: Input) -> AnyPublisher<String, any Error> {
+        Just(input.title)
+            .delay(for: .milliseconds(Int.random(in: 0...2000)), scheduler: DispatchQueue.main)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
+    }
+
+    static func asset(input: Input, metadata: String) -> Asset<String> {
+        .simple(url: input.url, metadata: metadata)
     }
 
     static func playerMetadata(from metadata: String) -> PlayerMetadata {

@@ -12,8 +12,12 @@ import Nimble
 import XCTest
 
 private enum FailedAssetLoader: AssetLoader {
-    static func assetPublisher(for input: Error) -> AnyPublisher<Asset<Void>, any Error> {
+    static func metadataPublisher(for input: Error) -> AnyPublisher<Void, any Error> {
         Fail(error: input).eraseToAnyPublisher()
+    }
+
+    static func asset(input: Error, metadata: Void) -> Asset<Void> {
+        .unavailable(with: input, metadata: metadata)
     }
 
     static func playerMetadata(from metadata: Void) -> PlayerMetadata {

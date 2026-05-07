@@ -11,8 +11,8 @@ import SwiftUI
 
 #if DEBUG
 
-struct DownloadCell<L, S>: View where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-    @ObservedObject var download: Download<L, S>
+struct DownloadCell<L>: View where L: AssetLoader {
+    @ObservedObject var download: Download<L>
     @EnvironmentObject private var router: Router
 
     private var title: String {

@@ -75,7 +75,7 @@ struct Media: Hashable {
                         DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
-                context: .init(configuration: .init(position: at(startTime)))
+                configuration: .init(position: at(startTime))
             )
         case let .encryptedUrl(url, certificateUrl: certificateUrl):
             return .encrypted(
@@ -87,7 +87,7 @@ struct Media: Hashable {
                         DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
-                context: .init(configuration: .init(position: at(startTime)))
+                configuration: .init(position: at(startTime))
             )
         case let .unbufferedUrl(url):
             let configuration = PlaybackConfiguration(

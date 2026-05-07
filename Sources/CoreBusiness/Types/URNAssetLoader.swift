@@ -8,20 +8,23 @@ import Combine
 import PillarboxPlayer
 
 enum URNAssetLoader: AssetLoader {
-    struct URNAsset {
+    struct Input {
         let urn: String
         let server: Server
         let configuration: PlaybackConfiguration
     }
 
-    static func assetPublisher(for input: URNAsset) -> AnyPublisher<Asset<MediaMetadata>, Error> {
+    static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
         let dataProvider = DataProvider(server: input.server)
         return dataProvider.mediaCompositionPublisher(forUrn: input.urn)
             .tryMap { response in
-                let metadata = try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
-                return Self.asset(metadata: metadata, configuration: input.configuration, dataProvider: dataProvider)
+                try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
             }
             .eraseToAnyPublisher()
+    }
+
+    static func asset(input: Input, metadata: MediaMetadata) -> Asset<MediaMetadata> {
+        Self.asset(metadata: metadata, configuration: input.configuration)
     }
 
     static func playerMetadata(from metadata: MediaMetadata) -> PlayerMetadata {
@@ -30,7 +33,7 @@ enum URNAssetLoader: AssetLoader {
 }
 
 private extension URNAssetLoader {
-    private static func asset(metadata: MediaMetadata, configuration: PlaybackConfiguration, dataProvider: DataProvider) -> Asset<MediaMetadata> {
+    private static func asset(metadata: MediaMetadata, configuration: PlaybackConfiguration) -> Asset<MediaMetadata> {
         if let blockingReason = metadata.blockingReason {
             return .unavailable(with: BlockingError(reason: blockingReason), metadata: metadata)
         }

@@ -14,26 +14,43 @@ import XCTest
 @available(tvOS, unavailable)
 final class DownloadManagerTests: TestCase {
     func testEmpty() {
-        expect(DownloadManager().downloads).to(beEmpty())
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, store: AssetDownloadStoreMock())
+        expect(manager.downloads).to(beEmpty())
     }
 
-    func testAdd() {
-        let manager = DownloadManager()
-        let download = manager.add(title: "Title", url: Stream.shortOnDemand.url)
+    func testAddSingle() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, store: AssetDownloadStoreMock())
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         expect(manager.downloads).to(equal([download]))
     }
 
+    func testAddMany() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, store: AssetDownloadStoreMock())
+        let download1 = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download2 = manager.add(input: .init(url: Stream.mediumOnDemand.url, metadata: .empty))
+        expect(download1).notTo(equal(download2))
+        expect(manager.downloads).to(equal([download1, download2]))
+    }
+
+    func testAddIdentical() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, store: AssetDownloadStoreMock())
+        let download1 = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download2 = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        expect(download1).to(equal(download2))
+        expect(manager.downloads).to(equal([download1]))
+    }
+
     func testRemove() {
-        let manager = DownloadManager()
-        let download = manager.add(title: "Title", url: Stream.shortOnDemand.url)
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, store: AssetDownloadStoreMock())
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         manager.remove(download)
         expect(manager.downloads).to(beEmpty())
     }
 
     func testRemoveAll() {
-        let manager = DownloadManager()
-        manager.add(title: "Title_1", url: Stream.shortOnDemand.url)
-        manager.add(title: "Title_2", url: Stream.shortOnDemand.url)
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, store: AssetDownloadStoreMock())
+        manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        manager.add(input: .init(url: Stream.mediumOnDemand.url, metadata: .empty))
         manager.removeAll()
         expect(manager.downloads).to(beEmpty())
     }

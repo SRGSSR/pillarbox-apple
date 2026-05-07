@@ -13,12 +13,16 @@ enum EncryptedAssetLoader: AssetLoader {
         let url: URL
         let certificateUrl: URL
         let metadata: PlayerMetadata
-        let context: PlaybackContext
+        let configuration: PlaybackConfiguration
     }
 
-    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<PlayerMetadata>, any Error> {
-        Just(.encrypted(url: input.url, certificateUrl: input.certificateUrl, metadata: input.metadata, configuration: input.context.configuration))
+    static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerMetadata, any Error> {
+        Just(input.metadata)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
+    }
+
+    static func asset(input: Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {
+        .encrypted(url: input.url, certificateUrl: input.certificateUrl, metadata: metadata, configuration: input.configuration)
     }
 }

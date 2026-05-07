@@ -15,11 +15,15 @@ enum UpdatingAssetLoaderMock: AssetLoader {
         let delay: TimeInterval
     }
 
-    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<PlayerMetadata>, Error> {
-        Just(.simple(url: input.url, metadata: .init(title: "title1")))
+    static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerMetadata, any Error> {
+        Just(.init(title: "title1"))
             .delayIfNeeded(for: .seconds(input.delay), scheduler: DispatchQueue.main)
-            .prepend(.simple(url: input.url, metadata: .init(title: "title0")))
+            .prepend(.init(title: "title0"))
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
+    }
+
+    static func asset(input: Input, metadata: Metadata) -> Asset<Metadata> {
+        .simple(url: input.url, metadata: metadata)
     }
 }
