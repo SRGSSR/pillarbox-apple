@@ -14,9 +14,10 @@ import UIKit
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Download<A>: ObservableObject where A: AssetDownloader {
+public final class Download<L, A>: ObservableObject where L: AssetLoader, A: AssetDownloader, L.Input == A.Input, L.Metadata == A.Metadata {
     private let id: String
-    @Published private(set) var data: DownloadData<A.Loader.Input, A.Loader.Metadata> {
+
+    @Published private(set) var data: DownloadData<A.Input, A.Metadata> {
         didSet {
             if let bookmarkData = data.bookmarkData {
                 downloader?.updateDownload(bookmarkData: bookmarkData, for: id)
@@ -59,7 +60,7 @@ public final class Download<A>: ObservableObject where A: AssetDownloader {
         }
     }
 
-    private init(id: String, data: DownloadData<A.Loader.Input, A.Loader.Metadata>, downloader: A, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
+    private init(id: String, data: DownloadData<A.Input, A.Metadata>, downloader: A, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
         self.id = id
         self.data = data
         self.hasFailed = false
@@ -71,16 +72,16 @@ public final class Download<A>: ObservableObject where A: AssetDownloader {
         configureTaskPublishers()
     }
 
-    convenience init(from input: A.Loader.Input, downloader: A, using session: AVAssetDownloadURLSession) {
+    convenience init(loaderType: L.Type, from input: A.Input, downloader: A, using session: AVAssetDownloadURLSession) {
         let id = downloader.identifier(for: input)
         let data = downloader.download(for: id) ?? downloader.addDownload(using: input, for: id)
         self.init(id: id, data: data, downloader: downloader, task: nil, session: session)
-        A.Loader.assetPublisher(for: input)
+        loaderType.assetPublisher(for: input)
             .handleEvents(receiveOutput: { asset in
                 downloader.updateDownload(metadata: asset.metadata, for: id)
             }, receiveCompletion: nil)
             .map { asset in
-                let title = A.Loader.playerMetadata(from: asset.metadata).title
+                let title = loaderType.playerMetadata(from: asset.metadata).title
                 let url = asset.resource.url()
                 return Self.task(id: id, title: title ?? id, url: url, using: session)
             }
@@ -92,7 +93,8 @@ public final class Download<A>: ObservableObject where A: AssetDownloader {
     }
 
     convenience init(
-        from data: DownloadData<A.Loader.Input, A.Loader.Metadata>,
+        loaderType: L.Type,
+        from data: DownloadData<A.Input, A.Metadata>,
         downloader: A,
         reusing tasks: [URLSessionTask],
         in session: AVAssetDownloadURLSession
@@ -108,7 +110,7 @@ public final class Download<A>: ObservableObject where A: AssetDownloader {
             )
         }
         else {
-            self.init(from: data.input, downloader: downloader, using: session)
+            self.init(loaderType: loaderType, from: data.input, downloader: downloader, using: session)
         }
     }
 
@@ -194,7 +196,7 @@ public final class Download<A>: ObservableObject where A: AssetDownloader {
 
     public func metadata() -> PlayerMetadata {
         guard let metadata = data.metadata else { return .empty }
-        return A.Loader.playerMetadata(from: metadata)
+        return L.playerMetadata(from: metadata)
     }
 }
 

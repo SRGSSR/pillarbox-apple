@@ -11,14 +11,14 @@ import UIKit
 #if DEBUG
 
 @available(tvOS, unavailable)
-final class DownloadManager<A>: NSObject, AVAssetDownloadDelegate where A: AssetDownloader {
+final class DownloadManager<L, A>: NSObject, AVAssetDownloadDelegate where L: AssetLoader, A: AssetDownloader, L.Input == A.Input, L.Metadata == A.Metadata {
     private lazy var session = AVAssetDownloadURLSession(
         configuration: .background(withIdentifier: "ch.srgssr.player.downloader"), // TODO: We should better handle the identifier.
         assetDownloadDelegate: self,
         delegateQueue: .main
     )
 
-    @Published private(set) var downloads: [Download<A>] = []
+    @Published private(set) var downloads: [Download<L, A>] = []
     private let downloader: A
 
     init(downloader: A) {
@@ -28,14 +28,14 @@ final class DownloadManager<A>: NSObject, AVAssetDownloadDelegate where A: Asset
     }
 
     @discardableResult
-    func add(input: A.Loader.Input) -> Download<A> {
-        let download = Download(from: input, downloader: downloader, using: session)
+    func add(input: A.Input) -> Download<L, A> {
+        let download = Download(loaderType: L.self, from: input, downloader: downloader, using: session)
         // TODO: We should probably insert the download here.
         downloads.append(download)
         return download
     }
 
-    func remove(_ download: Download<A>) {
+    func remove(_ download: Download<L, A>) {
         download.cancel() // <----
         downloader.removeDownload(download.data) // ---> // TODO: Should we move this in Download to avoid duplication with remove all?
         downloads.removeAll { $0 == download }
@@ -63,16 +63,16 @@ final class DownloadManager<A>: NSObject, AVAssetDownloadDelegate where A: Asset
         download.complete(with: error)
     }
 
-    private func download(matching task: URLSessionTask) -> Download<A>? {
+    private func download(matching task: URLSessionTask) -> Download<L, A>? {
         downloads.first { $0.matches(task: task) }
     }
 }
 
 @available(tvOS, unavailable)
 private extension DownloadManager {
-    func restoreDownloads(reusing tasks: [URLSessionTask]) -> [Download<A>] {
+    func restoreDownloads(reusing tasks: [URLSessionTask]) -> [Download<L, A>] {
         downloader.downloads().map { downloadData in
-            Download(from: downloadData, downloader: downloader, reusing: tasks, in: session)
+            Download(loaderType: L.self, from: downloadData, downloader: downloader, reusing: tasks, in: session)
         }
     }
 

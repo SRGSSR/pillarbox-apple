@@ -12,27 +12,27 @@ import Foundation
 
 @_spi(DownloaderPrivate)
 public protocol AssetDownloader: AnyObject {
-    // TODO: Remane methods by including Data in the name.
-    associatedtype Loader: AssetLoader
+    associatedtype Input
+    associatedtype Metadata
 
-    func identifier(for input: Loader.Input) -> String
+    func identifier(for input: Input) -> String
 
-    func download(for identifier: String) -> DownloadData<Loader.Input, Loader.Metadata>?
-    func downloads() -> [DownloadData<Loader.Input, Loader.Metadata>]
+    func download(for identifier: String) -> DownloadData<Input, Metadata>?
+    func downloads() -> [DownloadData<Input, Metadata>]
 
-    func addDownload(using input: Loader.Input, for identifier: String) -> DownloadData<Loader.Input, Loader.Metadata>
+    func addDownload(using input: Input, for identifier: String) -> DownloadData<Input, Metadata>
     func removeDownload(for identifier: String)
 
-    func updateDownload(metadata: Loader.Metadata, for identifier: String)
+    func updateDownload(metadata: Metadata, for identifier: String)
     func updateDownload(bookmarkData: Data, for identifier: String)
 }
 
 extension AssetDownloader {
-    func download(for input: Loader.Input) -> DownloadData<Loader.Input, Loader.Metadata>? {
+    func download(for input: Input) -> DownloadData<Input, Metadata>? {
         download(for: identifier(for: input))
     }
 
-    func removeDownload(_ download: DownloadData<Loader.Input, Loader.Metadata>) {
+    func removeDownload(_ download: DownloadData<Input, Metadata>) {
         removeDownload(for: identifier(for: download.input))
     }
 }
