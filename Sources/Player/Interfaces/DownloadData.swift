@@ -16,7 +16,7 @@ public struct DownloadData<Input, Metadata> {
     let metadata: Metadata?
     var bookmarkData: Data?
 
-    public init(input: Input, metadata: Metadata?, bookmarkData: Data? = nil) {
+    public init(input: Input, metadata: Metadata?, bookmarkData: Data?) {
         self.input = input
         self.metadata = metadata
         self.bookmarkData = bookmarkData
