@@ -12,7 +12,7 @@ import SwiftUI
 #if DEBUG
 
 struct DownloadsView: View {
-    @StateObject private var downloader = Downloader(loaderType: DemoAssetLoader.self, downloader: DemoAssetDownloader(fileName: "file_downloads.json"))
+    @StateObject private var downloader = Downloader(loaderType: DemoAssetLoader.self, store: DemoAssetDownloadStore(fileName: "file_downloads.json"))
 
     var body: some View {
         ZStack {

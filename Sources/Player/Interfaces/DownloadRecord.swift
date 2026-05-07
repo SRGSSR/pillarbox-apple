@@ -11,7 +11,7 @@ import Foundation
 // swiftlint:disable missing_docs
 
 @_spi(DownloaderPrivate)
-public struct DownloadData<Input, Metadata> {
+public struct DownloadRecord<Input, Metadata> {
     let input: Input
     let metadata: Metadata?
     var bookmarkData: Data?

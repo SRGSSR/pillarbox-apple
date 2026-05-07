@@ -17,23 +17,23 @@ public protocol AssetDownloadStore: AnyObject {
 
     func identifier(for input: Input) -> String
 
-    func download(for identifier: String) -> DownloadData<Input, Metadata>?
-    func downloads() -> [DownloadData<Input, Metadata>]
+    func downloadRecord(for identifier: String) -> DownloadRecord<Input, Metadata>?
+    func downloadRecords() -> [DownloadRecord<Input, Metadata>]
 
-    func addDownload(using input: Input, for identifier: String) -> DownloadData<Input, Metadata>
-    func removeDownload(for identifier: String)
+    func addDownloadRecord(using input: Input, for identifier: String) -> DownloadRecord<Input, Metadata>
+    func removeDownloadRecord(for identifier: String)
 
-    func updateDownload(metadata: Metadata, for identifier: String)
-    func updateDownload(bookmarkData: Data, for identifier: String)
+    func updateDownloadRecord(metadata: Metadata, for identifier: String)
+    func updateDownloadRecord(bookmarkData: Data, for identifier: String)
 }
 
 extension AssetDownloadStore {
-    func download(for input: Input) -> DownloadData<Input, Metadata>? {
-        download(for: identifier(for: input))
+    func downloadRecord(for input: Input) -> DownloadRecord<Input, Metadata>? {
+        downloadRecord(for: identifier(for: input))
     }
 
-    func removeDownload(_ download: DownloadData<Input, Metadata>) {
-        removeDownload(for: identifier(for: download.input))
+    func removeDownloadRecord(_ download: DownloadRecord<Input, Metadata>) {
+        removeDownloadRecord(for: identifier(for: download.input))
     }
 }
 

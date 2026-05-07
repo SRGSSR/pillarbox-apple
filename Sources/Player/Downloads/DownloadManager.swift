@@ -11,40 +11,40 @@ import UIKit
 #if DEBUG
 
 @available(tvOS, unavailable)
-final class DownloadManager<L, A>: NSObject, AVAssetDownloadDelegate where L: AssetLoader, A: AssetDownloadStore, L.Input == A.Input, L.Metadata == A.Metadata {
+final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
     private lazy var session = AVAssetDownloadURLSession(
         configuration: .background(withIdentifier: "ch.srgssr.player.downloader"), // TODO: We should better handle the identifier.
         assetDownloadDelegate: self,
         delegateQueue: .main
     )
 
-    @Published private(set) var downloads: [Download<L, A>] = []
-    private let downloader: A
+    @Published private(set) var downloads: [Download<L, S>] = []
+    private let store: S
 
-    init(downloader: A) {
-        self.downloader = downloader
+    init(store: S) {
+        self.store = store
         super.init()
         restore()
     }
 
     @discardableResult
-    func add(input: A.Input) -> Download<L, A> {
-        let download = Download(loaderType: L.self, from: input, downloader: downloader, using: session)
+    func add(input: S.Input) -> Download<L, S> {
+        let download = Download(loaderType: L.self, from: input, store: store, using: session)
         // TODO: We should probably insert the download here.
         downloads.append(download)
         return download
     }
 
-    func remove(_ download: Download<L, A>) {
+    func remove(_ download: Download<L, S>) {
         download.cancel() // <----
-        downloader.removeDownload(download.data) // ---> // TODO: Should we move this in Download to avoid duplication with remove all?
+        store.removeDownloadRecord(download.record) // ---> // TODO: Should we move this in Download to avoid duplication with remove all?
         downloads.removeAll { $0 == download }
     }
 
     func removeAll() {
         downloads.forEach { download in
             download.cancel()
-            downloader.removeDownload(download.data)
+            store.removeDownloadRecord(download.record)
         }
         downloads.removeAll()
     }
@@ -63,16 +63,16 @@ final class DownloadManager<L, A>: NSObject, AVAssetDownloadDelegate where L: As
         download.complete(with: error)
     }
 
-    private func download(matching task: URLSessionTask) -> Download<L, A>? {
+    private func download(matching task: URLSessionTask) -> Download<L, S>? {
         downloads.first { $0.matches(task: task) }
     }
 }
 
 @available(tvOS, unavailable)
 private extension DownloadManager {
-    func restoreDownloads(reusing tasks: [URLSessionTask]) -> [Download<L, A>] {
-        downloader.downloads().map { downloadData in
-            Download(loaderType: L.self, from: downloadData, downloader: downloader, reusing: tasks, in: session)
+    func restoreDownloads(reusing tasks: [URLSessionTask]) -> [Download<L, S>] {
+        store.downloadRecords().map { downloadRecord in
+            Download(loaderType: L.self, from: downloadRecord, store: store, reusing: tasks, in: session)
         }
     }
 

@@ -11,9 +11,7 @@ import PillarboxPlayer
 
 #if DEBUG
 
-class DemoAssetDownloader: AssetDownloadStore {
-    typealias Loader = DemoAssetLoader
-
+class DemoAssetDownloadStore: AssetDownloadStore {
     struct FileEntry: Codable {
         let url: URL
         let title: String
@@ -46,20 +44,20 @@ class DemoAssetDownloader: AssetDownloadStore {
         input.url.absoluteString
     }
 
-    func download(for identifier: String) -> DownloadData<DemoAssetLoader.Input, String>? {
+    func downloadRecord(for identifier: String) -> DownloadRecord<DemoAssetLoader.Input, String>? {
         guard let fileData = fileEntries.first(where: { $0.url.absoluteString == identifier }) else {
             return nil
         }
-        return DownloadData(
+        return DownloadRecord(
             input: DemoAssetLoader.Input(title: fileData.title, url: fileData.url),
             metadata: fileData.title,
             bookmarkData: fileData.bookmarkData
         )
     }
 
-    func downloads() -> [DownloadData<DemoAssetLoader.Input, String>] {
+    func downloadRecords() -> [DownloadRecord<DemoAssetLoader.Input, String>] {
         fileEntries.map { fileData in
-            DownloadData(
+            DownloadRecord(
                 input: DemoAssetLoader.Input(title: fileData.title, url: fileData.url),
                 metadata: fileData.title,
                 bookmarkData: fileData.bookmarkData
@@ -67,30 +65,30 @@ class DemoAssetDownloader: AssetDownloadStore {
         }
     }
 
-    func addDownload(using input: DemoAssetLoader.Input, for identifier: String) -> DownloadData<DemoAssetLoader.Input, String> {
+    func addDownloadRecord(using input: DemoAssetLoader.Input, for identifier: String) -> DownloadRecord<DemoAssetLoader.Input, String> {
         let fileEntry = FileEntry(url: input.url, title: input.title, bookmarkData: nil)
         fileEntries.append(fileEntry)
         save()
-        return DownloadData(
+        return DownloadRecord(
             input: DemoAssetLoader.Input(title: fileEntry.title, url: fileEntry.url),
             metadata: nil,
             bookmarkData: fileEntry.bookmarkData
         )
     }
 
-    func removeDownload(for identifier: String) {
+    func removeDownloadRecord(for identifier: String) {
         fileEntries.removeAll { $0.url.absoluteString == identifier }
         save()
     }
 
-    func updateDownload(metadata: String, for identifier: String) {
+    func updateDownloadRecord(metadata: String, for identifier: String) {
         guard let index = fileEntries.firstIndex(where: { $0.url.absoluteString == identifier }) else { return }
         let fileEntry = fileEntries[index]
         fileEntries[index] = fileEntry.withTitle(metadata)
         save()
     }
 
-    func updateDownload(bookmarkData: Data, for identifier: String) {
+    func updateDownloadRecord(bookmarkData: Data, for identifier: String) {
         guard let index = fileEntries.firstIndex(where: { $0.url.absoluteString == identifier }) else { return }
         let fileEntry = fileEntries[index]
         fileEntries[index] = fileEntry.withBookmarkData(bookmarkData)
