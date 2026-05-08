@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 import UIKit
 
 #if DEBUG
@@ -23,8 +24,8 @@ protocol DownloadDelegate<Metadata>: AnyObject {
 @_spi(DownloaderPrivate)
 public final class Download<L>: ObservableObject where L: AssetLoader {
     let id: String
-    let loaderType: L.Type
 
+    private let trigger = Trigger()
     private weak let delegate: (any DownloadDelegate<L.Metadata>)?
 
     @Published private var _metadata: L.Metadata?
@@ -47,14 +48,13 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         delegate: any DownloadDelegate<L.Metadata>
     ) {
         self.id = id
-        self.loaderType = loaderType
         self.delegate = delegate
         configureMetadataPublisher(for: record)
     }
 
     public func metadata() -> PlayerMetadata {
         guard let _metadata else { return .empty}
-        return loaderType.playerMetadata(from: _metadata)
+        return L.playerMetadata(from: _metadata)
     }
 
     func attach(to location: URL) {
@@ -77,14 +77,26 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
             return Just(metadata).eraseToAnyPublisher()
         }
         else {
-            return loaderType.metadataPublisher(for: record.input)
-                .handleEvents(receiveOutput: { [id, delegate] metadata in
-                    delegate?.didProvideMetadata(metadata, for: id)
-                }, receiveCompletion: nil)
-                .map(\.self)
-                .replaceError(with: nil)        // FIXME: Error management
-                .eraseToAnyPublisher()
+            // FIXME:
+            // - Error management
+            // - Should restart at the beginning if metadata was already successfully saved?
+            return Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [id, delegate] in
+                L.metadataPublisher(for: record.input)
+                    .handleEvents(receiveOutput: { metadata in
+                        delegate?.didProvideMetadata(metadata, for: id)
+                    }, receiveCompletion: nil)
+                    .map(\.self)
+                    .replaceError(with: nil)
+            }
+            .eraseToAnyPublisher()
         }
+    }
+}
+
+@available(tvOS, unavailable)
+private extension Download {
+    enum TriggerId: Hashable {
+        case reload
     }
 }
 
@@ -100,6 +112,7 @@ public extension Download {
     }
 
     func restart() {
+        trigger.activate(for: TriggerId.reload)
     }
 }
 
