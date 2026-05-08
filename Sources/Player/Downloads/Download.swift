@@ -26,17 +26,20 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     let id: String
 
     private let trigger = Trigger()
+
+    private let locationSubject = CurrentValueSubject<URL?, Never>(nil)
+    private let errorSubject = CurrentValueSubject<Error?, Never>(nil)
+
+    @Published private var properties: DownloadProperties<L.Metadata> = .init()
+
     private weak let delegate: (any DownloadDelegate<L.Metadata>)?
 
-    @Published private var _metadata: L.Metadata?
+    public var progress: Double {
+        properties.progress
+    }
 
-    // FIXME:
-    @Published public private(set) var progress: Double = 1
-    @Published public private(set) var state: URLSessionTask.State = .completed
-
-    public var file: DownloadedFile {
-        // FIXME:
-        .failed
+    public var state: DownloadState {
+        .canceling
     }
 
     init(
@@ -44,52 +47,148 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         loaderType: L.Type,
         record: DownloadRecord<L.Input, L.Metadata>,
         session: AVAssetDownloadURLSession,
-        tasks: [URLSessionTask] = [],
         delegate: any DownloadDelegate<L.Metadata>
     ) {
         self.id = id
         self.delegate = delegate
-        configureMetadataPublisher(for: record)
+
+        propertiesPublisher(id: id, record: record, session: session)
+            .receiveOnMainThread()
+            .print("-->")
+            .assign(to: &$properties)
+    }
+
+    private static func task(id: String, input: L.Input, metadata: L.Metadata, using session: AVAssetDownloadURLSession) -> URLSessionTask {
+        let asset = L.asset(input: input, metadata: metadata)
+        let configuration = AVAssetDownloadConfiguration(asset: .init(url: asset.resource.url()), title: L.playerMetadata(from: metadata).title ?? id)
+        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
+        task.taskDescription = id
+        task.resume()
+        return task
     }
 
     public func metadata() -> PlayerMetadata {
-        guard let _metadata else { return .empty}
-        return L.playerMetadata(from: _metadata)
+        guard let metadata = properties.metadata else { return .empty }
+        return L.playerMetadata(from: metadata)
     }
 
     func attach(to location: URL) {
+        locationSubject.send(location)
     }
 
     func complete(with error: Error?) {
+        errorSubject.send(error)
     }
 
     func matches(task: URLSessionTask) -> Bool {
         task.taskDescription == id
     }
 
-    private func configureMetadataPublisher(for record: DownloadRecord<L.Input, L.Metadata>) {
-        metadataPublisher(for: record)
-            .assign(to: &$_metadata)
+    public func playerItem(allowsPartial: Bool = true) -> PlayerItem? {
+        .simple(url: URL(string: "")!)
     }
+}
 
-    private func metadataPublisher(for record: DownloadRecord<L.Input, L.Metadata>) -> AnyPublisher<L.Metadata?, Never> {
-        if let metadata = record.metadata {
-            return Just(metadata).eraseToAnyPublisher()
-        }
-        else {
-            // FIXME:
-            // - Error management
-            // - Should restart at the beginning if metadata was already successfully saved?
-            return Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [id, delegate] in
-                L.metadataPublisher(for: record.input)
-                    .handleEvents(receiveOutput: { metadata in
-                        delegate?.didProvideMetadata(metadata, for: id)
-                    }, receiveCompletion: nil)
-                    .map(\.self)
-                    .replaceError(with: nil)
+@available(tvOS, unavailable)
+private extension Download {
+    private static func taskPublisher(id: String, record: DownloadRecord<L.Input, L.Metadata>, metadata: L.Metadata, session: AVAssetDownloadURLSession) -> AnyPublisher<URLSessionTask?, Never> {
+        session.taskPublisher(withDescription: id)
+            .map { task in
+                if let task {
+                    return task
+                }
+                else if record.bookmarkData == nil {
+                    return Self.task(id: id, input: record.input, metadata: metadata, using: session)
+                }
+                else {
+                    return nil
+                }
             }
             .eraseToAnyPublisher()
+    }
+
+    private static func statePublisher(for task: URLSessionTask?) -> AnyPublisher<URLSessionTask.State, Never> {
+        guard let task else {
+            return Just(.suspended)
+                .eraseToAnyPublisher()
         }
+        return task.publisher(for: \.state)
+            .eraseToAnyPublisher()
+    }
+
+    private static func progressPublisher(for task: URLSessionTask?) -> AnyPublisher<Double, Never> {
+        guard let task else {
+            return Just(0).eraseToAnyPublisher()
+        }
+        return task.progress.publisher(for: \.fractionCompleted)
+            .map { $0.clamped(to: 0...1) }
+            .eraseToAnyPublisher()
+    }
+
+    private static func locationPublisher(for download: Download?) -> AnyPublisher<URL?, Never> {
+        guard let download else {
+            return Just(nil).eraseToAnyPublisher()
+        }
+        return download.locationSubject
+            .eraseToAnyPublisher()
+    }
+
+    func metadataPublisher(for record: DownloadRecord<L.Input, L.Metadata>) -> AnyPublisher<L.Metadata, Error> {
+        if let metadata = record.metadata {
+            return Just(metadata)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        else {
+            return L.metadataPublisher(for: record.input)
+                .handleEvents(receiveOutput: { [delegate, id] metadata in
+                    delegate?.didProvideMetadata(metadata, for: id)
+                }, receiveCompletion: nil)
+                .map(\.self)
+                .eraseToAnyPublisher()
+        }
+    }
+
+    func propertiesPublisher(
+        id: String,
+        record: DownloadRecord<L.Input, L.Metadata>,
+        session: AVAssetDownloadURLSession
+    ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
+        metadataPublisher(for: record)
+            .handleEvents(receiveOutput: { [weak self] metadata in
+                self?.delegate?.didProvideMetadata(metadata, for: id)
+            }, receiveCompletion: nil)
+            .map { metadata in
+                Publishers.CombineLatest(
+                    Just(metadata),
+                    Self.taskPublisher(id: id, record: record, metadata: metadata, session: session)
+                )
+            }
+            .switchToLatest()
+            .map { [weak self] metadata, task in
+                Publishers.CombineLatest5(
+                    Just(metadata),
+                    Just(task),
+                    Self.statePublisher(for: task),
+                    Self.progressPublisher(for: task),
+                    Self.locationPublisher(for: self)
+                )
+            }
+            .switchToLatest()
+            .map { metadata, task, state, progress, location in
+                DownloadProperties(
+                    metadata: metadata,
+                    error: nil /* TODO */,
+                    task: task,
+                    state: state,
+                    progress: progress,
+                    bookmarkData: try? location?.bookmarkData()
+                )
+            }
+            .catch { error in
+                Just(DownloadProperties(metadata: nil, error: error, task: nil, state: .suspended, progress: 0, bookmarkData: nil))
+            }
+            .eraseToAnyPublisher()
     }
 }
 

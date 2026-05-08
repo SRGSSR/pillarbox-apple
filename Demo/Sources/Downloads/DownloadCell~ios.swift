@@ -38,9 +38,10 @@ struct DownloadCell<L>: View where L: AssetLoader {
         .contentShape(.rect)
         .accessibilityAddTraits(.isButton)
         .onTapGesture {
-            switch download.file {
-            case let .partial(url), let .complete(url):
-                router.presented = .player(media: .init(title: title, type: .url(url)))
+            switch download.state {
+            case let .partial(item), let .complete(item):
+                // router.presented = .player
+                break
             case .failed:
                 download.restart()
             default:
@@ -51,7 +52,7 @@ struct DownloadCell<L>: View where L: AssetLoader {
 
     private func statusButton() -> some View {
         ZStack {
-            switch download.file {
+            switch download.state {
             case .failed:
                 button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
                     .tint(.red)
@@ -70,7 +71,7 @@ struct DownloadCell<L>: View where L: AssetLoader {
             button(systemImage: "pause.circle", action: download.suspend)
         case .suspended:
             button(systemImage: "play.circle", action: download.resume)
-        case .completed:
+        case .complete:
             Image(systemName: "checkmark")
                 .resizable()
                 .foregroundStyle(.green)

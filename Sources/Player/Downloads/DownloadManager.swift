@@ -12,22 +12,23 @@ import UIKit
 
 @available(tvOS, unavailable)
 final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-    private lazy var session = AVAssetDownloadURLSession(
-        configuration: .background(withIdentifier: "ch.srgssr.player.downloader"), // TODO: We should better handle the identifier.
-        assetDownloadDelegate: self,
-        delegateQueue: .main
-    )
-
     private let store: S
-    private let loaderType: L.Type
+    private var session: AVAssetDownloadURLSession!
 
     @Published private(set) var downloads: [Download<L>] = []
 
     init(loaderType: L.Type, store: S) {
-        self.loaderType = loaderType
         self.store = store
         super.init()
-        restore()
+        self.session = .init(
+            configuration: .background(withIdentifier: "ch.srgssr.player.downloader"), // TODO: We should better handle the identifier.
+            assetDownloadDelegate: self,
+            delegateQueue: .main
+        )
+        self.downloads = store.downloadRecords().map { record in
+            let id = store.identifier(for: record.input)
+            return Download(id: id, loaderType: loaderType, record: record, session: session, delegate: self)
+        }
     }
 
     @discardableResult
@@ -38,7 +39,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         }
         else {
             let record = store.addDownloadRecord(using: input, for: id)
-            let download = Download(id: id, loaderType: loaderType, record: record, session: session, delegate: self)
+            let download = Download(id: id, loaderType: L.self, record: record, session: session, delegate: self)
             downloads.append(download)
             return download
         }
@@ -88,23 +89,6 @@ extension DownloadManager: DownloadDelegate {
 
     func didProvideBookmarkData(_ bookmarkData: Data, for identifier: String) {
         store.updateDownloadRecord(bookmarkData: bookmarkData, for: identifier)
-    }
-}
-
-@available(tvOS, unavailable)
-private extension DownloadManager {
-    func restoreDownloads(reusing tasks: [URLSessionTask]) -> [Download<L>] {
-        store.downloadRecords().map { record in
-            let id = store.identifier(for: record.input)
-            return Download(id: id, loaderType: loaderType, record: record, session: session, tasks: tasks, delegate: self)
-        }
-    }
-
-    func restore() {
-        session.getAllTasks { [weak self] tasks in
-            guard let self else { return }
-            downloads = restoreDownloads(reusing: tasks)
-        }
     }
 }
 

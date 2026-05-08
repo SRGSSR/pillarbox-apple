@@ -33,6 +33,13 @@ enum Resource {
         ])
     }
 
+    func url() -> URL {
+        switch self {
+        case let .simple(url), let .custom(url, _), let .encrypted(url, _):
+            return url
+        }
+    }
+
     func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
         let automaticallyLoadedAssetKeys = ["duration"]
         switch self {
