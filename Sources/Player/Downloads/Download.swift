@@ -56,11 +56,7 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         self.id = id
         self.delegate = delegate
         self.properties = .init(from: record)
-
-        propertiesPublisher(id: id, record: record, session: session)
-            .receiveOnMainThread()
-            .print("-->")
-            .assign(to: &$properties)
+        configurePropertiesPublisher(record: record, session: session)
     }
 
     private static func task(id: String, input: L.Input, metadata: L.Metadata, using session: AVAssetDownloadURLSession) -> URLSessionTask {
@@ -70,6 +66,12 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         task.taskDescription = id
         task.resume()
         return task
+    }
+
+    private func configurePropertiesPublisher(record: DownloadRecord<L.Input, L.Metadata>, session: AVAssetDownloadURLSession) {
+        propertiesPublisher(id: id, record: record, session: session)
+            .receiveOnMainThread()
+            .assign(to: &$properties)
     }
 
     public func metadata() -> PlayerMetadata {
