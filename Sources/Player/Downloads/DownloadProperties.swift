@@ -8,20 +8,22 @@ import Foundation
 
 struct DownloadProperties<Metadata> {
     let metadata: Metadata?
-    let error: Error?
     let taskProperties: TaskProperties?
     let bookmarkData: Data?
+    let error: Error?
 
-    init(metadata: Metadata?, error: Error?, taskProperties: TaskProperties?, bookmarkData: Data?) {
+    init(metadata: Metadata?, taskProperties: TaskProperties?, bookmarkData: Data?, error: Error?) {
         self.metadata = metadata
-        self.error = error
         self.taskProperties = taskProperties
         self.bookmarkData = bookmarkData
+        self.error = error
     }
 
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
         self.metadata = record.metadata
+        self.taskProperties = nil
 
+        // TODO: Improve implementation
         var isStale = false
         if let bookmarkData = record.bookmarkData, (try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)) != nil {
             self.bookmarkData = bookmarkData
@@ -31,6 +33,5 @@ struct DownloadProperties<Metadata> {
             self.bookmarkData = nil
             self.error = MissingFileError()
         }
-        self.taskProperties = nil
     }
 }

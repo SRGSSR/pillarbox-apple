@@ -152,6 +152,7 @@ private extension Download {
         record: DownloadRecord<L.Input, L.Metadata>,
         session: AVAssetDownloadURLSession
     ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
+        // TODO: Respond to trigger
         metadataPublisher(for: record)
             .handleEvents(receiveOutput: { [weak self] metadata in
                 self?.delegate?.didProvideMetadata(metadata, for: id)
@@ -163,24 +164,25 @@ private extension Download {
                 )
             }
             .switchToLatest()
-            .map { [locationSubject] metadata, task in
-                Publishers.CombineLatest3(
+            .map { [locationSubject, errorSubject] metadata, task in
+                Publishers.CombineLatest4(
                     Just(metadata),
                     Self.taskPropertiesPublisher(for: task),
-                    locationSubject
+                    locationSubject,
+                    errorSubject
                 )
             }
             .switchToLatest()
-            .map { metadata, taskProperties, location in
+            .map { metadata, taskProperties, location, error in
                 DownloadProperties(
                     metadata: metadata,
-                    error: nil /* TODO */,
                     taskProperties: taskProperties,
-                    bookmarkData: try? location?.bookmarkData()
+                    bookmarkData: try? location?.bookmarkData(),
+                    error: error
                 )
             }
             .catch { error in
-                Just(DownloadProperties(metadata: nil, error: error, taskProperties: nil, bookmarkData: nil))
+                Just(DownloadProperties(metadata: nil, taskProperties: nil, bookmarkData: nil, error: error))
             }
             .eraseToAnyPublisher()
     }
