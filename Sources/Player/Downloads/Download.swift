@@ -13,14 +13,6 @@ import UIKit
 
 #if DEBUG
 
-protocol DownloadDelegate<Metadata>: AnyObject {
-    associatedtype Metadata
-
-    func didProvideMetadata(_ metadata: Metadata, for identifier: String)
-    func didProvideBookmarkData(_ bookmarkData: Data, for identifier: String)
-    func didProvideError(_ error: any Error, for identifier: String)
-}
-
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download<L>: ObservableObject where L: AssetLoader {
@@ -32,8 +24,6 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     private let errorSubject = PassthroughSubject<Error, Never>()
 
     @Published private var properties: DownloadProperties<L.Metadata>
-
-    private weak let delegate: (any DownloadDelegate<L.Metadata>)?
 
     public var isProgressAvailable: Bool {
         properties.taskProperties != nil
@@ -69,11 +59,9 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         id: String,
         loaderType: L.Type,
         record: DownloadRecord<L.Input, L.Metadata>,
-        session: AVAssetDownloadURLSession,
-        delegate: any DownloadDelegate<L.Metadata>
+        session: AVAssetDownloadURLSession
     ) {
         self.id = id
-        self.delegate = delegate
         self.properties = .init(from: record)
         configurePropertiesPublisher(record: record, session: session)
     }

@@ -29,7 +29,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         )
         self.downloads = store.downloadRecords().map { record in
             let id = store.identifier(for: record.input)
-            return Download(id: id, loaderType: loaderType, record: record, session: session, delegate: self)
+            return Download(id: id, loaderType: loaderType, record: record, session: session)
         }
     }
 
@@ -41,7 +41,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         }
         else {
             let record = store.addDownloadRecord(using: input, for: id)
-            let download = Download(id: id, loaderType: L.self, record: record, session: session, delegate: self)
+            let download = Download(id: id, loaderType: L.self, record: record, session: session)
             downloads.append(download)
             return download
         }
@@ -77,20 +77,6 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
 
     private func download(matching task: URLSessionTask) -> Download<L>? {
         downloads.first { $0.matches(task: task) }
-    }
-}
-
-extension DownloadManager: DownloadDelegate {
-    func didProvideMetadata(_ metadata: L.Metadata, for identifier: String) {
-        store.updateDownloadRecord(metadata: metadata, for: identifier)
-    }
-
-    func didProvideBookmarkData(_ bookmarkData: Data, for identifier: String) {
-        store.updateDownloadRecord(bookmarkData: bookmarkData, for: identifier)
-    }
-
-    func didProvideError(_ error: any Error, for identifier: String) {
-        store.updateDownloadRecord(error: error, for: identifier)
     }
 }
 
