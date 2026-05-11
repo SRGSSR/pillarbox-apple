@@ -38,14 +38,16 @@ struct DownloadCell<L>: View where L: AssetLoader {
         .contentShape(.rect)
         .accessibilityAddTraits(.isButton)
         .onTapGesture {
-            switch download.state {
-            case let .partial(item), let .complete(item):
+            if let item = download.playerItem() {
                 // router.presented = .player
-                break
-            case .failed:
-                download.restart()
-            default:
-                break
+            }
+            else {
+                switch download.state {
+                case .failed:
+                    download.restart()
+                default:
+                    break
+                }
             }
         }
     }
@@ -53,31 +55,21 @@ struct DownloadCell<L>: View where L: AssetLoader {
     private func statusButton() -> some View {
         ZStack {
             switch download.state {
+            case .running:
+                button(systemImage: "pause.circle", action: download.suspend)
+            case .suspended:
+                button(systemImage: "play.circle", action: download.resume)
+            case .completed:
+                Image(systemName: "checkmark")
+                    .resizable()
+                    .foregroundStyle(.green)
             case .failed:
                 button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
                     .tint(.red)
-            default:
-                resumeSuspendButton()
             }
         }
         .frame(width: 30, height: 30)
         .padding()
-    }
-
-    @ViewBuilder
-    private func resumeSuspendButton() -> some View {
-        switch download.state {
-        case .running:
-            button(systemImage: "pause.circle", action: download.suspend)
-        case .suspended:
-            button(systemImage: "play.circle", action: download.resume)
-        case .complete:
-            Image(systemName: "checkmark")
-                .resizable()
-                .foregroundStyle(.green)
-        default:
-            EmptyView()
-        }
     }
 
     private func button(systemImage: String, action: @escaping () -> Void) -> some View {

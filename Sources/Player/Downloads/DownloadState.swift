@@ -7,8 +7,6 @@
 public enum DownloadState {
     case running
     case suspended
-    case canceling
-    case partial(PlayerItem)
-    case complete(PlayerItem)
+    case completed
     case failed(Error)
 }

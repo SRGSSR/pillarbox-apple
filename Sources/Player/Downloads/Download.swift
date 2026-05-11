@@ -44,7 +44,25 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     }
 
     public var state: DownloadState {
-        .canceling
+        if let error = properties.error {
+            return .failed(error)
+        }
+        else if let taskProperties = properties.taskProperties {
+            switch taskProperties.state {
+            case .running, .canceling:
+                return .running
+            case .suspended:
+                return .suspended
+            case .completed:
+                return .completed
+            @unknown default:
+                assertionFailure("Unhandled case")
+                return .completed
+            }
+        }
+        else {
+            return .completed
+        }
     }
 
     init(
@@ -78,6 +96,11 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     public func metadata() -> PlayerMetadata {
         guard let metadata = properties.metadata else { return .empty }
         return L.playerMetadata(from: metadata)
+    }
+
+    public func playerItem() -> PlayerItem? {
+        // TODO:
+        nil
     }
 
     func attach(to location: URL) {
