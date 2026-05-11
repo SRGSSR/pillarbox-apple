@@ -18,8 +18,8 @@ public final class Downloader<L, S>: ObservableObject where L: AssetLoader, S: A
 
     @Published public private(set) var downloads: [Download<L>] = []
 
-    public init(loaderType: L.Type, store: S) {
-        manager = DownloadManager(loaderType: loaderType, store: store)
+    public init(loaderType: L.Type, configuration: URLSessionConfiguration, store: S) {
+        manager = DownloadManager(loaderType: loaderType, configuration: configuration, store: store)
         manager.$downloads
             .assign(to: &$downloads)
     }

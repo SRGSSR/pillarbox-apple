@@ -19,14 +19,10 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
 
     @Published private(set) var downloads: [Download<L>] = []
 
-    init(loaderType: L.Type, store: S) {
+    init(loaderType: L.Type, configuration: URLSessionConfiguration, store: S) {
         self.store = store
         super.init()
-        self.session = .init(
-            configuration: .background(withIdentifier: "ch.srgssr.player.downloader"), // TODO: We should better handle the identifier.
-            assetDownloadDelegate: self,
-            delegateQueue: .main
-        )
+        self.session = .init(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
         self.downloads = store.downloadRecords().map { record in
             let id = store.identifier(for: record.input)
             return Download(id: id, loaderType: loaderType, record: record, session: session)
