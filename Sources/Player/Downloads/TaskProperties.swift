@@ -20,6 +20,6 @@ struct TaskProperties {
     init(task: URLSessionTask) {
         self.task = task
         self.state = task.state
-        self.progress = task.progress.fractionCompleted
+        self.progress = task.progress.fractionCompleted.clamped(to: 0...1)
     }
 }
