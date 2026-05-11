@@ -22,16 +22,7 @@ struct DownloadProperties<Metadata> {
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
         self.metadata = record.metadata
         self.taskProperties = nil
-
-        // TODO: Improve implementation
-        var isStale = false
-        if let bookmarkData = record.bookmarkData, (try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)) != nil {
-            self.bookmarkData = bookmarkData
-            self.error = nil
-        }
-        else {
-            self.bookmarkData = nil
-            self.error = MissingFileError()
-        }
+        self.bookmarkData = record.bookmarkData
+        self.error = record.error
     }
 }

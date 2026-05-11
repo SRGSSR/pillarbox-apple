@@ -23,6 +23,12 @@ public struct DownloadRecord<Input, Metadata> {
         self.bookmarkData = bookmarkData
         self.error = error
     }
+
+    func url() -> URL? {
+        guard let bookmarkData else { return nil }
+        var isStale = false
+        return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
+    }
 }
 
 // swiftlint:enable missing_docs

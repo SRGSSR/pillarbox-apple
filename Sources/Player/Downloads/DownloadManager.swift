@@ -36,7 +36,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
     @discardableResult
     func add(input: S.Input) -> Download<L> {
         let id = store.identifier(for: input)
-        if let download = download(with: id) {
+        if let download = downloads.first(where: { $0.id == id }) {
             return download
         }
         else {
@@ -45,10 +45,6 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
             downloads.append(download)
             return download
         }
-    }
-
-    private func download(with id: String) -> Download<L>? {
-        downloads.first { $0.id == id }
     }
 
     func remove(_ download: Download<L>) {
@@ -75,8 +71,8 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
 #endif
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
-        guard let download = download(matching: task) else { return }
-        download.complete(with: error)
+        guard let error, let download = download(matching: task) else { return }
+        download.fail(with: error)
     }
 
     private func download(matching task: URLSessionTask) -> Download<L>? {

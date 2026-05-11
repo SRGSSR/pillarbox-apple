@@ -28,8 +28,8 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
     private let trigger = Trigger()
 
-    private let locationSubject = CurrentValueSubject<URL?, Never>(nil)
-    private let errorSubject = CurrentValueSubject<Error?, Never>(nil)
+    private let locationSubject = PassthroughSubject<URL, Never>()
+    private let errorSubject = PassthroughSubject<Error, Never>()
 
     @Published private var properties: DownloadProperties<L.Metadata>
 
@@ -107,7 +107,7 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         locationSubject.send(location)
     }
 
-    func complete(with error: Error?) {
+    func fail(with error: Error) {
         errorSubject.send(error)
     }
 
@@ -163,9 +163,6 @@ private extension Download {
         }
         else {
             return L.metadataPublisher(for: record.input)
-                .handleEvents(receiveOutput: { [delegate, id] metadata in
-                    delegate?.didProvideMetadata(metadata, for: id)
-                }, receiveCompletion: nil)
                 .map(\.self)
                 .eraseToAnyPublisher()
         }
@@ -176,48 +173,7 @@ private extension Download {
         record: DownloadRecord<L.Input, L.Metadata>,
         session: AVAssetDownloadURLSession
     ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
-        // TODO: Respond to trigger
-        metadataPublisher(for: record)
-            .handleEvents(receiveOutput: { [delegate] metadata in
-                delegate?.didProvideMetadata(metadata, for: id)
-            }, receiveCompletion: nil)
-            .map { metadata in
-                Publishers.CombineLatest(
-                    Just(metadata),
-                    Self.taskPublisher(id: id, record: record, metadata: metadata, session: session)
-                )
-            }
-            .switchToLatest()
-            .map { [delegate, locationSubject, errorSubject] metadata, task in
-                Publishers.CombineLatest4(
-                    Just(metadata),
-                    Self.taskPropertiesPublisher(for: task),
-                    locationSubject,
-                    errorSubject
-                        .handleEvents(receiveOutput: { error in
-                            guard let error else { return }
-                            delegate?.didProvideError(error, for: id)
-                        }, receiveCompletion: nil)
-                )
-            }
-            .switchToLatest()
-            .map { [delegate] metadata, taskProperties, location, error in
-                // TODO: Bookmark data creation should happen once
-                let bookmarkData = try? location?.bookmarkData()
-                if let bookmarkData {
-                    delegate?.didProvideBookmarkData(bookmarkData, for: id)
-                }
-                return DownloadProperties(
-                    metadata: metadata,
-                    taskProperties: taskProperties,
-                    bookmarkData: bookmarkData,
-                    error: error
-                )
-            }
-            .catch { error in
-                Just(DownloadProperties(metadata: nil, taskProperties: nil, bookmarkData: nil, error: error))
-            }
-            .eraseToAnyPublisher()
+        Empty().eraseToAnyPublisher()
     }
 }
 
