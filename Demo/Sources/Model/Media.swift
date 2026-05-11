@@ -20,6 +20,7 @@ struct Media: Hashable {
         case encryptedUrl(URL, certificateUrl: URL)
         case unbufferedUrl(URL)
         case urn(String, serverSetting: ServerSetting)
+        case item(PlayerItem)
 
         static func urn(_ urn: String) -> Self {
             .urn(urn, serverSetting: .production)
@@ -116,6 +117,8 @@ struct Media: Hashable {
                 ],
                 context: .init(configuration: .init(position: at(startTime)))
             )
+        case let .item(item):
+            return item
         }
     }
 

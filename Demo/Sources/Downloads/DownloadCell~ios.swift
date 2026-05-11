@@ -36,7 +36,7 @@ struct DownloadCell<L>: View where L: AssetLoader {
         .accessibilityAddTraits(.isButton)
         .onTapGesture {
             if let item = download.playerItem() {
-                // router.presented = .player
+                router.presented = .player(media: .init(title: title, type: .item(item)))
             }
             else {
                 switch download.state {
