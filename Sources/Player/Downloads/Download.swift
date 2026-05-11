@@ -109,20 +109,6 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
 @available(tvOS, unavailable)
 private extension Download {
-    static func metadataPublisher(record: DownloadRecord<L.Input, L.Metadata>) -> AnyPublisher<L.Metadata?, Error> {
-        if let metadata = record.metadata {
-            return Just(metadata)
-                .setFailureType(to: Error.self)
-                .eraseToAnyPublisher()
-        }
-        else {
-            return L.metadataPublisher(for: record.input)
-                .map(\.self)
-                .prepend(nil)
-                .eraseToAnyPublisher()
-        }
-    }
-
     func propertiesPublisher(
         id: String,
         record: DownloadRecord<L.Input, L.Metadata>,
