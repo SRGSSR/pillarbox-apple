@@ -89,7 +89,7 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         return L.playerMetadata(from: metadata)
     }
 
-    public func playerItem() -> PlayerItem? {
+    public func playerItem(allowsPartial: Bool = true) -> PlayerItem? {
         // TODO:
         nil
     }
@@ -104,10 +104,6 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
     func matches(task: URLSessionTask) -> Bool {
         task.taskDescription == id
-    }
-
-    public func playerItem(allowsPartial: Bool = true) -> PlayerItem? {
-        .simple(url: URL(string: "")!)
     }
 }
 
