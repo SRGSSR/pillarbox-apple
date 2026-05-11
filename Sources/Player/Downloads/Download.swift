@@ -119,14 +119,6 @@ private extension Download {
             .eraseToAnyPublisher()
     }
 
-    private static func locationPublisher(for download: Download?) -> AnyPublisher<URL?, Never> {
-        guard let download else {
-            return Just(nil).eraseToAnyPublisher()
-        }
-        return download.locationSubject
-            .eraseToAnyPublisher()
-    }
-
     private static func taskPropertiesPublisher(for task: URLSessionTask?) -> AnyPublisher<TaskProperties?, Never> {
         guard let task else { return Just(nil).eraseToAnyPublisher() }
         return Publishers.CombineLatest3(
@@ -171,11 +163,11 @@ private extension Download {
                 )
             }
             .switchToLatest()
-            .map { [weak self] metadata, task in
+            .map { [locationSubject] metadata, task in
                 Publishers.CombineLatest3(
                     Just(metadata),
                     Self.taskPropertiesPublisher(for: task),
-                    Self.locationPublisher(for: self)
+                    locationSubject
                 )
             }
             .switchToLatest()
