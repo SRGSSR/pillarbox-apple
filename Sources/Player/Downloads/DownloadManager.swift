@@ -92,6 +92,10 @@ extension DownloadManager: DownloadDelegate {
     func didProvideBookmarkData(_ bookmarkData: Data, for identifier: String) {
         store.updateDownloadRecord(bookmarkData: bookmarkData, for: identifier)
     }
+
+    func didProvideError(_ error: any Error, for identifier: String) {
+        store.updateDownloadRecord(error: error, for: identifier)
+    }
 }
 
 #endif

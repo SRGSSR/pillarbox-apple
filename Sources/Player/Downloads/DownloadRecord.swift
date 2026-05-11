@@ -15,11 +15,13 @@ public struct DownloadRecord<Input, Metadata> {
     let input: Input
     let metadata: Metadata?
     let bookmarkData: Data?
+    let error: Error?
 
-    public init(input: Input, metadata: Metadata?, bookmarkData: Data?) {
+    public init(input: Input, metadata: Metadata?, bookmarkData: Data?, error: Error?) {
         self.input = input
         self.metadata = metadata
         self.bookmarkData = bookmarkData
+        self.error = error
     }
 }
 

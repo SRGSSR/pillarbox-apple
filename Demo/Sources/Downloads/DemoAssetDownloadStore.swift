@@ -11,18 +11,46 @@ import PillarboxPlayer
 
 #if DEBUG
 
+struct DownloadError: LocalizedError {
+    let errorDescription: String?
+
+    init?(errorDescription: String?) {
+        guard let errorDescription else { return nil }
+        self.errorDescription = errorDescription
+    }
+}
+
 class DemoAssetDownloadStore: AssetDownloadStore {
     struct FileEntry: Codable {
         let url: URL
         let title: String
         let bookmarkData: Data?
+        let errorDescription: String?
+
+        init(url: URL, title: String) {
+            self.url = url
+            self.title = title
+            self.bookmarkData = nil
+            self.errorDescription = nil
+        }
+
+        private init(url: URL, title: String, bookmarkData: Data?, errorDescription: String?) {
+            self.url = url
+            self.title = title
+            self.bookmarkData = bookmarkData
+            self.errorDescription = errorDescription
+        }
 
         func withTitle(_ title: String) -> Self {
-            .init(url: url, title: title, bookmarkData: bookmarkData)
+            .init(url: url, title: title, bookmarkData: bookmarkData, errorDescription: errorDescription)
         }
 
         func withBookmarkData(_ bookmarkData: Data) -> Self {
-            .init(url: url, title: title, bookmarkData: bookmarkData)
+            .init(url: url, title: title, bookmarkData: bookmarkData, errorDescription: errorDescription)
+        }
+
+        func withErrorDescription(_ errorDescription: String) -> Self {
+            .init(url: url, title: title, bookmarkData: bookmarkData, errorDescription: errorDescription)
         }
     }
 
@@ -45,34 +73,37 @@ class DemoAssetDownloadStore: AssetDownloadStore {
     }
 
     func downloadRecord(for identifier: String) -> DownloadRecord<DemoAssetLoader.Input, String>? {
-        guard let fileData = fileEntries.first(where: { $0.url.absoluteString == identifier }) else {
+        guard let fileEntry = fileEntries.first(where: { $0.url.absoluteString == identifier }) else {
             return nil
         }
         return DownloadRecord(
-            input: DemoAssetLoader.Input(title: fileData.title, url: fileData.url),
-            metadata: fileData.title,
-            bookmarkData: fileData.bookmarkData
+            input: DemoAssetLoader.Input(title: fileEntry.title, url: fileEntry.url),
+            metadata: fileEntry.title,
+            bookmarkData: fileEntry.bookmarkData,
+            error: DownloadError(errorDescription: fileEntry.errorDescription)
         )
     }
 
     func downloadRecords() -> [DownloadRecord<DemoAssetLoader.Input, String>] {
-        fileEntries.map { fileData in
+        fileEntries.map { fileEntry in
             DownloadRecord(
-                input: DemoAssetLoader.Input(title: fileData.title, url: fileData.url),
-                metadata: fileData.title,
-                bookmarkData: fileData.bookmarkData
+                input: DemoAssetLoader.Input(title: fileEntry.title, url: fileEntry.url),
+                metadata: fileEntry.title,
+                bookmarkData: fileEntry.bookmarkData,
+                error: DownloadError(errorDescription: fileEntry.errorDescription)
             )
         }
     }
 
     func addDownloadRecord(using input: DemoAssetLoader.Input, for identifier: String) -> DownloadRecord<DemoAssetLoader.Input, String> {
-        let fileEntry = FileEntry(url: input.url, title: input.title, bookmarkData: nil)
+        let fileEntry = FileEntry(url: input.url, title: input.title)
         fileEntries.append(fileEntry)
         save()
         return DownloadRecord(
             input: DemoAssetLoader.Input(title: fileEntry.title, url: fileEntry.url),
             metadata: nil,
-            bookmarkData: fileEntry.bookmarkData
+            bookmarkData: fileEntry.bookmarkData,
+            error: DownloadError(errorDescription: fileEntry.errorDescription)
         )
     }
 
@@ -92,6 +123,13 @@ class DemoAssetDownloadStore: AssetDownloadStore {
         guard let index = fileEntries.firstIndex(where: { $0.url.absoluteString == identifier }) else { return }
         let fileEntry = fileEntries[index]
         fileEntries[index] = fileEntry.withBookmarkData(bookmarkData)
+        save()
+    }
+
+    func updateDownloadRecord(error: any Error, for identifier: String) {
+        guard let index = fileEntries.firstIndex(where: { $0.url.absoluteString == identifier }) else { return }
+        let fileEntry = fileEntries[index]
+        fileEntries[index] = fileEntry.withErrorDescription(error.localizedDescription)
         save()
     }
 

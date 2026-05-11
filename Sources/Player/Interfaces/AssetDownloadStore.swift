@@ -25,6 +25,7 @@ public protocol AssetDownloadStore: AnyObject {
 
     func updateDownloadRecord(metadata: Metadata, for identifier: String)
     func updateDownloadRecord(bookmarkData: Data, for identifier: String)
+    func updateDownloadRecord(error: Error, for identifier: String)
 }
 
 #endif

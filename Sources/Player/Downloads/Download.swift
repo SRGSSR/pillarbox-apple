@@ -18,6 +18,7 @@ protocol DownloadDelegate<Metadata>: AnyObject {
 
     func didProvideMetadata(_ metadata: Metadata, for identifier: String)
     func didProvideBookmarkData(_ bookmarkData: Data, for identifier: String)
+    func didProvideError(_ error: any Error, for identifier: String)
 }
 
 @available(tvOS, unavailable)
@@ -154,8 +155,8 @@ private extension Download {
     ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
         // TODO: Respond to trigger
         metadataPublisher(for: record)
-            .handleEvents(receiveOutput: { [weak self] metadata in
-                self?.delegate?.didProvideMetadata(metadata, for: id)
+            .handleEvents(receiveOutput: { [delegate] metadata in
+                delegate?.didProvideMetadata(metadata, for: id)
             }, receiveCompletion: nil)
             .map { metadata in
                 Publishers.CombineLatest(
@@ -164,20 +165,29 @@ private extension Download {
                 )
             }
             .switchToLatest()
-            .map { [locationSubject, errorSubject] metadata, task in
+            .map { [delegate, locationSubject, errorSubject] metadata, task in
                 Publishers.CombineLatest4(
                     Just(metadata),
                     Self.taskPropertiesPublisher(for: task),
                     locationSubject,
                     errorSubject
+                        .handleEvents(receiveOutput: { error in
+                            guard let error else { return }
+                            delegate?.didProvideError(error, for: id)
+                        }, receiveCompletion: nil)
                 )
             }
             .switchToLatest()
-            .map { metadata, taskProperties, location, error in
-                DownloadProperties(
+            .map { [delegate] metadata, taskProperties, location, error in
+                // TODO: Bookmark data creation should happen once
+                let bookmarkData = try? location?.bookmarkData()
+                if let bookmarkData {
+                    delegate?.didProvideBookmarkData(bookmarkData, for: id)
+                }
+                return DownloadProperties(
                     metadata: metadata,
                     taskProperties: taskProperties,
-                    bookmarkData: try? location?.bookmarkData(),
+                    bookmarkData: bookmarkData,
                     error: error
                 )
             }
