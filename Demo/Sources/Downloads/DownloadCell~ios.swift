@@ -29,12 +29,9 @@ struct DownloadCell<L>: View where L: AssetLoader {
     private func infoView() -> some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(title)
-            ProgressView(value: download.progress) {
-                Text(download.progress, format: .percent.precision(.fractionLength(0)))
-                    .contentTransition(.numericText())
-            }
-            .animation(.linear, value: download.progress)
+            progressBar()
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.rect)
         .accessibilityAddTraits(.isButton)
         .onTapGesture {
@@ -49,6 +46,17 @@ struct DownloadCell<L>: View where L: AssetLoader {
                     break
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private func progressBar() -> some View {
+        if download.isProgressAvailable {
+            ProgressView(value: download.progress) {
+                Text(download.progress, format: .percent.precision(.fractionLength(0)))
+                    .contentTransition(.numericText())
+            }
+            .animation(.linear, value: download.progress)
         }
     }
 
