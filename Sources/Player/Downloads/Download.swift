@@ -18,12 +18,12 @@ import UIKit
 public final class Download<L>: ObservableObject where L: AssetLoader {
     let id: String
 
+    @Published private var properties: DownloadProperties<L.Metadata>
+
     private let trigger = Trigger()
 
     private let locationSubject = PassthroughSubject<URL, Never>()
     private let errorSubject = PassthroughSubject<Error, Never>()
-
-    @Published private var properties: DownloadProperties<L.Metadata>
 
     public var isProgressAvailable: Bool {
         properties.taskProperties != nil
@@ -68,7 +68,10 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
     private static func task(id: String, input: L.Input, metadata: L.Metadata, using session: AVAssetDownloadURLSession) -> URLSessionTask {
         let asset = L.asset(input: input, metadata: metadata)
-        let configuration = AVAssetDownloadConfiguration(asset: .init(url: asset.resource.url()), title: L.playerMetadata(from: metadata).title ?? id)
+        let configuration = AVAssetDownloadConfiguration(
+            asset: .init(url: asset.resource.url()),
+            title: L.playerMetadata(from: metadata).title ?? id
+        )
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
         task.taskDescription = id
         task.resume()
@@ -110,52 +113,6 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
 @available(tvOS, unavailable)
 private extension Download {
-    private static func taskPublisher(
-        id: String,
-        record: DownloadRecord<L.Input, L.Metadata>,
-        metadata: L.Metadata,
-        session: AVAssetDownloadURLSession
-    ) -> AnyPublisher<URLSessionTask?, Never> {
-        session.taskPublisher(withDescription: id)
-            .map { task in
-                if let task {
-                    return task
-                }
-                else if record.bookmarkData == nil {
-                    return Self.task(id: id, input: record.input, metadata: metadata, using: session)
-                }
-                else {
-                    return nil
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-
-    private static func taskPropertiesPublisher(for task: URLSessionTask?) -> AnyPublisher<TaskProperties?, Never> {
-        guard let task else { return Just(nil).eraseToAnyPublisher() }
-        return Publishers.CombineLatest3(
-            Just(task),
-            task.publisher(for: \.state),
-            task.progress.publisher(for: \.fractionCompleted)
-                .map { $0.clamped(to: 0...1) }
-        )
-        .map { .init(task: $0, state: $1, progress: $2) }
-        .eraseToAnyPublisher()
-    }
-
-    func metadataPublisher(for record: DownloadRecord<L.Input, L.Metadata>) -> AnyPublisher<L.Metadata, Error> {
-        if let metadata = record.metadata {
-            return Just(metadata)
-                .setFailureType(to: Error.self)
-                .eraseToAnyPublisher()
-        }
-        else {
-            return L.metadataPublisher(for: record.input)
-                .map(\.self)
-                .eraseToAnyPublisher()
-        }
-    }
-
     func propertiesPublisher(
         id: String,
         record: DownloadRecord<L.Input, L.Metadata>,
