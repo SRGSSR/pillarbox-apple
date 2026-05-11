@@ -13,6 +13,8 @@ import UIKit
 @available(tvOS, unavailable)
 final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
     private let store: S
+
+    // swiftlint:disable:next implicitly_unwrapped_optional
     private var session: AVAssetDownloadURLSession!
 
     @Published private(set) var downloads: [Download<L>] = []

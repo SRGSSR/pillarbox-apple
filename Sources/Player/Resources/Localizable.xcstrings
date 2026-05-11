@@ -351,6 +351,9 @@
         }
       }
     },
+    "The file is missing." : {
+      "comment" : "Missing file error message"
+    },
     "Zoom" : {
       "comment" : "Playback setting menu title",
       "localizations" : {

@@ -10,6 +10,12 @@ enum PlaybackError: Error {
     case unknown
 }
 
+struct MissingFileError: LocalizedError {
+    var errorDescription: String? {
+        String(localized: "The file is missing.", bundle: .module, comment: "Missing file error message")
+    }
+}
+
 extension NSError {
     private static func domain(from error: Error) -> String {
         (error as NSError).domain

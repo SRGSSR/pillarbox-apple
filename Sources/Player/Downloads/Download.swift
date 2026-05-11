@@ -30,12 +30,16 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     private let locationSubject = CurrentValueSubject<URL?, Never>(nil)
     private let errorSubject = CurrentValueSubject<Error?, Never>(nil)
 
-    @Published private var properties: DownloadProperties<L.Metadata> = .init()
+    @Published private var properties: DownloadProperties<L.Metadata>
 
     private weak let delegate: (any DownloadDelegate<L.Metadata>)?
 
+    public var isProgressAvailable: Bool {
+        properties.taskProperties != nil
+    }
+
     public var progress: Double {
-        properties.progress
+        properties.taskProperties?.progress ?? 0
     }
 
     public var state: DownloadState {
@@ -51,6 +55,7 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     ) {
         self.id = id
         self.delegate = delegate
+        self.properties = .init(from: record)
 
         propertiesPublisher(id: id, record: record, session: session)
             .receiveOnMainThread()
@@ -91,7 +96,12 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
 @available(tvOS, unavailable)
 private extension Download {
-    private static func taskPublisher(id: String, record: DownloadRecord<L.Input, L.Metadata>, metadata: L.Metadata, session: AVAssetDownloadURLSession) -> AnyPublisher<URLSessionTask?, Never> {
+    private static func taskPublisher(
+        id: String,
+        record: DownloadRecord<L.Input, L.Metadata>,
+        metadata: L.Metadata,
+        session: AVAssetDownloadURLSession
+    ) -> AnyPublisher<URLSessionTask?, Never> {
         session.taskPublisher(withDescription: id)
             .map { task in
                 if let task {
@@ -107,30 +117,24 @@ private extension Download {
             .eraseToAnyPublisher()
     }
 
-    private static func statePublisher(for task: URLSessionTask?) -> AnyPublisher<URLSessionTask.State, Never> {
-        guard let task else {
-            return Just(.suspended)
-                .eraseToAnyPublisher()
-        }
-        return task.publisher(for: \.state)
-            .eraseToAnyPublisher()
-    }
-
-    private static func progressPublisher(for task: URLSessionTask?) -> AnyPublisher<Double, Never> {
-        guard let task else {
-            return Just(0).eraseToAnyPublisher()
-        }
-        return task.progress.publisher(for: \.fractionCompleted)
-            .map { $0.clamped(to: 0...1) }
-            .eraseToAnyPublisher()
-    }
-
     private static func locationPublisher(for download: Download?) -> AnyPublisher<URL?, Never> {
         guard let download else {
             return Just(nil).eraseToAnyPublisher()
         }
         return download.locationSubject
             .eraseToAnyPublisher()
+    }
+
+    private static func taskPropertiesPublisher(for task: URLSessionTask?) -> AnyPublisher<TaskProperties?, Never> {
+        guard let task else { return Just(nil).eraseToAnyPublisher() }
+        return Publishers.CombineLatest3(
+            Just(task),
+            task.publisher(for: \.state),
+            task.progress.publisher(for: \.fractionCompleted)
+                .map { $0.clamped(to: 0...1) }
+        )
+        .map { .init(task: $0, state: $1, progress: $2) }
+        .eraseToAnyPublisher()
     }
 
     func metadataPublisher(for record: DownloadRecord<L.Input, L.Metadata>) -> AnyPublisher<L.Metadata, Error> {
@@ -166,27 +170,23 @@ private extension Download {
             }
             .switchToLatest()
             .map { [weak self] metadata, task in
-                Publishers.CombineLatest5(
+                Publishers.CombineLatest3(
                     Just(metadata),
-                    Just(task),
-                    Self.statePublisher(for: task),
-                    Self.progressPublisher(for: task),
+                    Self.taskPropertiesPublisher(for: task),
                     Self.locationPublisher(for: self)
                 )
             }
             .switchToLatest()
-            .map { metadata, task, state, progress, location in
+            .map { metadata, taskProperties, location in
                 DownloadProperties(
                     metadata: metadata,
                     error: nil /* TODO */,
-                    task: task,
-                    state: state,
-                    progress: progress,
+                    taskProperties: taskProperties,
                     bookmarkData: try? location?.bookmarkData()
                 )
             }
             .catch { error in
-                Just(DownloadProperties(metadata: nil, error: error, task: nil, state: .suspended, progress: 0, bookmarkData: nil))
+                Just(DownloadProperties(metadata: nil, error: error, taskProperties: nil, bookmarkData: nil))
             }
             .eraseToAnyPublisher()
     }

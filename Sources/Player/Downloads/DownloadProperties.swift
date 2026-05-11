@@ -9,17 +9,28 @@ import Foundation
 struct DownloadProperties<Metadata> {
     let metadata: Metadata?
     let error: Error?
-    let task: URLSessionTask?
-    let state: URLSessionTask.State
-    let progress: Double
+    let taskProperties: TaskProperties?
     let bookmarkData: Data?
 
-    init(metadata: Metadata? = nil, error: Error? = nil, task: URLSessionTask? = nil, state: URLSessionTask.State = .running, progress: Double = 0, bookmarkData: Data? = nil) {
+    init(metadata: Metadata?, error: Error?, taskProperties: TaskProperties?, bookmarkData: Data?) {
         self.metadata = metadata
         self.error = error
-        self.task = task
-        self.state = state
-        self.progress = progress
+        self.taskProperties = taskProperties
         self.bookmarkData = bookmarkData
+    }
+
+    init<Input>(from record: DownloadRecord<Input, Metadata>) {
+        self.metadata = record.metadata
+
+        var isStale = false
+        if let bookmarkData = record.bookmarkData, (try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)) != nil {
+            self.bookmarkData = bookmarkData
+            self.error = nil
+        }
+        else {
+            self.bookmarkData = nil
+            self.error = MissingFileError()
+        }
+        self.taskProperties = nil
     }
 }
