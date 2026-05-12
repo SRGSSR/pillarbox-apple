@@ -13,14 +13,6 @@ import UIKit
 
 #if DEBUG
 
-protocol DownloadDelegate<L>: AnyObject {
-    associatedtype L: AssetLoader
-
-    func metadata(for identifier: String) -> L.Metadata?
-    func location(for identifier: String) -> URL?
-    func updateDownloadRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String)
-}
-
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download<L>: ObservableObject where L: AssetLoader {
