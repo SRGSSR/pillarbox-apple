@@ -13,6 +13,12 @@ import UIKit
 
 #if DEBUG
 
+protocol DownloadDelegate<L>: AnyObject {
+    associatedtype L: AssetLoader
+
+    func shouldUpdateRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String)
+}
+
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download<L>: ObservableObject where L: AssetLoader {
@@ -24,6 +30,8 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
     private let locationSubject: CurrentValueSubject<URL?, Never>
     private let errorSubject: CurrentValueSubject<Error?, Never>
+
+    private weak let delegate: (any DownloadDelegate<L>)?
 
     public var isProgressAvailable: Bool {
         properties.taskProperties != nil
@@ -59,9 +67,12 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         id: String,
         loaderType: L.Type,
         record: DownloadRecord<L.Input, L.Metadata>,
-        session: AVAssetDownloadURLSession
+        session: AVAssetDownloadURLSession,
+        delegate: any DownloadDelegate<L>
     ) {
         self.id = id
+        self.delegate = delegate
+
         self.properties = .init(from: record)
         self.locationSubject = .init(Self.url(fromBookmarkData: record.bookmarkData))
         self.errorSubject = .init(record.error)
@@ -191,6 +202,10 @@ private extension Download {
             .catch { error in
                 Just(DownloadProperties(metadata: nil, taskProperties: nil, bookmarkData: nil, error: error))
             }
+            .handleEvents(receiveOutput: { [delegate] properties in
+                let record = DownloadRecord(input: record.input, metadata: properties.metadata, bookmarkData: properties.bookmarkData, error: properties.error)
+                delegate?.shouldUpdateRecord(record, for: id)
+            }, receiveCompletion: nil)
             .eraseToAnyPublisher()
     }
 }

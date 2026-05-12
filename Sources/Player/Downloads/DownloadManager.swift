@@ -25,7 +25,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         self.session = .init(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
         self.downloads = store.downloadRecords().map { record in
             let id = store.identifier(for: record.input)
-            return Download(id: id, loaderType: loaderType, record: record, session: session)
+            return Download(id: id, loaderType: loaderType, record: record, session: session, delegate: self)
         }
     }
 
@@ -37,7 +37,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         }
         else {
             let record = store.addDownloadRecord(using: input, for: id)
-            let download = Download(id: id, loaderType: L.self, record: record, session: session)
+            let download = Download(id: id, loaderType: L.self, record: record, session: session, delegate: self)
             downloads.append(download)
             return download
         }
@@ -73,6 +73,12 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
 
     private func download(matching task: URLSessionTask) -> Download<L>? {
         downloads.first { $0.matches(task: task) }
+    }
+}
+
+extension DownloadManager: DownloadDelegate {
+    func shouldUpdateRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String) {
+        store.updateDownloadRecord(record, for: identifier)
     }
 }
 
