@@ -125,6 +125,19 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     func matches(task: URLSessionTask) -> Bool {
         task.taskDescription == id
     }
+
+    private func fileUrl() -> URL? {
+        Self.url(fromBookmarkData: properties.bookmarkData)
+    }
+
+    private func removeFile() {
+        if let url = fileUrl() {
+            try? FileManager.default.removeItem(at: url)
+        }
+        if let url = locationSubject.value {
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
 }
 
 @available(tvOS, unavailable)
@@ -220,15 +233,20 @@ private extension Download {
 @available(tvOS, unavailable)
 public extension Download {
     func resume() {
+        properties.taskProperties?.task.resume()
     }
 
     func suspend() {
+        properties.taskProperties?.task.suspend()
     }
 
     func cancel() {
+        properties.taskProperties?.task.cancel()
+        removeFile()
     }
 
     func restart() {
+        removeFile()
         trigger.activate(for: TriggerId.reload)
     }
 }
