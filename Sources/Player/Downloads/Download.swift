@@ -165,7 +165,7 @@ private extension Download {
                 if let task {
                     return task
                 }
-                else if record.bookmarkData != nil {
+                else if record.bookmarkData != nil || record.error != nil {
                     return nil
                 }
                 else {
