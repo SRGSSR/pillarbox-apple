@@ -174,6 +174,7 @@ private extension Download {
         }
     }
 
+    // TODO: Must correctly deal with file deletion from system settings
     func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject, delegate] in
             Self.metadataPublisher(id: id, input: input, delegate: delegate)
@@ -232,8 +233,8 @@ public extension Download {
     }
 
     func cancel() {
-        properties.taskProperties?.task.cancel()
         removeFile()
+        properties.taskProperties?.task.cancel()
     }
 
     func restart() {
