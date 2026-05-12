@@ -20,37 +20,25 @@ struct DownloadError: LocalizedError {
     }
 }
 
-class DemoAssetDownloadStore: AssetDownloadStore {
+final class DemoAssetDownloadStore: AssetDownloadStore {
     struct FileEntry: Codable {
         let url: URL
         let title: String
         let bookmarkData: Data?
         let errorDescription: String?
 
-        init(url: URL, title: String) {
-            self.url = url
-            self.title = title
+        init(input: DemoAssetLoader.Input) {
+            self.url = input.url
+            self.title = input.title
             self.bookmarkData = nil
             self.errorDescription = nil
         }
 
-        private init(url: URL, title: String, bookmarkData: Data?, errorDescription: String?) {
-            self.url = url
-            self.title = title
-            self.bookmarkData = bookmarkData
-            self.errorDescription = errorDescription
-        }
-
-        func withTitle(_ title: String) -> Self {
-            .init(url: url, title: title, bookmarkData: bookmarkData, errorDescription: errorDescription)
-        }
-
-        func withBookmarkData(_ bookmarkData: Data) -> Self {
-            .init(url: url, title: title, bookmarkData: bookmarkData, errorDescription: errorDescription)
-        }
-
-        func withErrorDescription(_ errorDescription: String) -> Self {
-            .init(url: url, title: title, bookmarkData: bookmarkData, errorDescription: errorDescription)
+        init(from record: DownloadRecord<DemoAssetLoader.Input, String>) {
+            self.url = record.input.url
+            self.title = record.input.title
+            self.bookmarkData = record.bookmarkData
+            self.errorDescription = record.error?.localizedDescription
         }
     }
 
@@ -96,7 +84,7 @@ class DemoAssetDownloadStore: AssetDownloadStore {
     }
 
     func addDownloadRecord(using input: DemoAssetLoader.Input, for identifier: String) -> DownloadRecord<DemoAssetLoader.Input, String> {
-        let fileEntry = FileEntry(url: input.url, title: input.title)
+        let fileEntry = FileEntry(input: input)
         fileEntries.append(fileEntry)
         save()
         return DownloadRecord(
@@ -112,24 +100,9 @@ class DemoAssetDownloadStore: AssetDownloadStore {
         save()
     }
 
-    func updateDownloadRecord(metadata: String, for identifier: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<DemoAssetLoader.Input, String>, for identifier: String) {
         guard let index = fileEntries.firstIndex(where: { $0.url.absoluteString == identifier }) else { return }
-        let fileEntry = fileEntries[index]
-        fileEntries[index] = fileEntry.withTitle(metadata)
-        save()
-    }
-
-    func updateDownloadRecord(bookmarkData: Data, for identifier: String) {
-        guard let index = fileEntries.firstIndex(where: { $0.url.absoluteString == identifier }) else { return }
-        let fileEntry = fileEntries[index]
-        fileEntries[index] = fileEntry.withBookmarkData(bookmarkData)
-        save()
-    }
-
-    func updateDownloadRecord(error: any Error, for identifier: String) {
-        guard let index = fileEntries.firstIndex(where: { $0.url.absoluteString == identifier }) else { return }
-        let fileEntry = fileEntries[index]
-        fileEntries[index] = fileEntry.withErrorDescription(error.localizedDescription)
+        fileEntries[index] = .init(from: record)
         save()
     }
 

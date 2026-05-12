@@ -23,9 +23,7 @@ public protocol AssetDownloadStore: AnyObject {
     func addDownloadRecord(using input: Input, for identifier: String) -> DownloadRecord<Input, Metadata>
     func removeDownloadRecord(for identifier: String)
 
-    func updateDownloadRecord(metadata: Metadata, for identifier: String)
-    func updateDownloadRecord(bookmarkData: Data, for identifier: String)
-    func updateDownloadRecord(error: Error, for identifier: String)
+    func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>, for identifier: String)
 }
 
 #endif

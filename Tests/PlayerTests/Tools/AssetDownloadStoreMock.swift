@@ -10,49 +10,47 @@ import PillarboxPlayer
 import Foundation
 
 final class AssetDownloadStoreMock: AssetDownloadStore {
-    struct StoreRecord<Input> {
+    struct StoreItem<Input> {
         let id: String
-        let input: Input
-        let metadata: PlayerMetadata
+        let record: DownloadRecord<Input, PlayerMetadata>
 
-        func toDownloadRecord() -> DownloadRecord<Input, PlayerMetadata> {
-            .init(input: input, metadata: metadata, bookmarkData: nil)
+        init(id: String, record: DownloadRecord<Input, PlayerMetadata>) {
+            self.id = id
+            self.record = record
         }
 
-        func withMetadata(_ metadata: PlayerMetadata) -> Self {
-            .init(id: id, input: input, metadata: metadata)
+        init(id: String, input: Input, metadata: PlayerMetadata) {
+            self.id = id
+            self.record = .init(input: input, metadata: metadata, bookmarkData: nil, error: nil)
         }
     }
 
-    private var records: [StoreRecord<AssetLoaderMock.Input>] = []
+    private var records: [StoreItem<AssetLoaderMock.Input>] = []
 
     func identifier(for input: AssetLoaderMock.Input) -> String {
         input.url.absoluteString
     }
 
     func downloadRecord(for identifier: String) -> DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>? {
-        records.first { $0.id == identifier }
-            .map { $0.toDownloadRecord() }
+        records.first { $0.id == identifier }.map(\.record)
     }
 
     func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>] {
-        records.map { $0.toDownloadRecord() }
+        records.map(\.record)
     }
 
     func addDownloadRecord(using input: AssetLoaderMock.Input, for identifier: String) -> DownloadRecord<AssetLoaderMock.Input, PlayerMetadata> {
-        let record = StoreRecord(id: identifier, input: input, metadata: input.metadata)
-        records.append(record)
-        return record.toDownloadRecord()
+        let item = StoreItem(id: identifier, input: input, metadata: input.metadata)
+        records.append(item)
+        return item.record
     }
 
     func removeDownloadRecord(for identifier: String) {
         records.removeAll { $0.id == identifier }
     }
 
-    func updateDownloadRecord(metadata: PlayerMetadata, for identifier: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>, for identifier: String) {
         guard let index = records.firstIndex(where: { $0.id == identifier }) else { return }
-        records[index] = records[index].withMetadata(metadata)
+        records[index] = .init(id: identifier, record: record)
     }
-
-    func updateDownloadRecord(bookmarkData: Data, for identifier: String) {}
 }

@@ -12,10 +12,10 @@ import Foundation
 
 @_spi(DownloaderPrivate)
 public struct DownloadRecord<Input, Metadata> {
-    let input: Input
-    let metadata: Metadata?
-    let bookmarkData: Data?
-    let error: Error?
+    public let input: Input
+    public let metadata: Metadata?
+    public let bookmarkData: Data?
+    public let error: Error?
 
     public init(input: Input, metadata: Metadata?, bookmarkData: Data?, error: Error?) {
         self.input = input
