@@ -16,7 +16,8 @@ import UIKit
 protocol DownloadDelegate<L>: AnyObject {
     associatedtype L: AssetLoader
 
-    func shouldUpdateRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String)
+    func location(for identifier: String) -> URL?
+    func updateDownloadRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String)
 }
 
 @available(tvOS, unavailable)
@@ -28,9 +29,8 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
     private let trigger = Trigger()
 
-    // TODO: Should these params be mandatory?
-    private let locationSubject = PassthroughSubject<URL?, Never>()
-    private let errorSubject = PassthroughSubject<Error?, Never>()
+    private let locationSubject = PassthroughSubject<URL, Never>()
+    private let errorSubject = PassthroughSubject<Error, Never>()
 
     private weak let delegate: (any DownloadDelegate<L>)?
 
@@ -75,9 +75,10 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         self.delegate = delegate
         self.properties = .init(from: record)
 
-        configurePropertiesPublisher(record: record, session: session)
+        configurePropertiesPublisher(input: record.input, session: session)
     }
 
+    // TODO: Duplicate implementation
     private static func url(fromBookmarkData bookmarkData: Data?) -> URL? {
         guard let bookmarkData else { return nil }
         var isStale = false
@@ -96,8 +97,8 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         return task
     }
 
-    private func configurePropertiesPublisher(record: DownloadRecord<L.Input, L.Metadata>, session: AVAssetDownloadURLSession) {
-        propertiesPublisher(id: id, record: record, session: session)
+    private func configurePropertiesPublisher(input: L.Input, session: AVAssetDownloadURLSession) {
+        propertiesPublisher(id: id, input: input, session: session)
             .receiveOnMainThread()
             .assign(to: &$properties)
     }
@@ -133,41 +134,6 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
 @available(tvOS, unavailable)
 private extension Download {
-    static func metadataPublisher(record: DownloadRecord<L.Input, L.Metadata>) -> AnyPublisher<L.Metadata, Error> {
-        if let metadata = record.metadata {
-            return Just(metadata)
-                .setFailureType(to: Error.self)
-                .eraseToAnyPublisher()
-        }
-        else {
-            return L.metadataPublisher(for: record.input)
-                .eraseToAnyPublisher()
-        }
-    }
-
-    static func taskPropertiesPublisher(
-        id: String,
-        record: DownloadRecord<L.Input, L.Metadata>,        // TODO: Provide input only
-        metadata: L.Metadata,
-        session: AVAssetDownloadURLSession
-    ) -> AnyPublisher<TaskProperties?, Never> {
-        session.taskPublisher(withDescription: id)
-            .map { task in
-                if let task {
-                    return task
-                }
-                else if record.bookmarkData != nil || record.error != nil {
-                    return nil
-                }
-                else {
-                    return Self.task(id: id, input: record.input, metadata: metadata, using: session)
-                }
-            }
-            .map { taskPropertiesPublisher(task: $0) }
-            .switchToLatest()
-            .eraseToAnyPublisher()
-    }
-
     static func taskPropertiesPublisher(task: URLSessionTask?) -> AnyPublisher<TaskProperties?, Never> {
         guard let task else { return Just(nil).eraseToAnyPublisher() }
         return Publishers.CombineLatest3(
@@ -180,20 +146,38 @@ private extension Download {
         .eraseToAnyPublisher()
     }
 
-    func propertiesPublisher(
-        id: String,
-        record: DownloadRecord<L.Input, L.Metadata>,
-        session: AVAssetDownloadURLSession
-    ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
+    static func taskPropertiesPublisher(id: String, input: L.Input, metadata: L.Metadata, createIfNeeded: Bool, session: AVAssetDownloadURLSession) -> AnyPublisher<TaskProperties?, Never> {
+        session.taskPublisher(withDescription: id)
+            .map { task in
+                if let task {
+                    return task
+                }
+                else if createIfNeeded {
+                    return Self.task(id: id, input: input, metadata: metadata, using: session)
+                }
+                else {
+                    return nil
+                }
+            }
+            .map { taskPropertiesPublisher(task: $0) }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject, delegate] in
-            Self.metadataPublisher(record: record)
+            L.metadataPublisher(for: input)
                 .map { metadata in
-                    Publishers.CombineLatest4(
+                    // TODO: Should likely avoid creating a task again if the user removed the file behind the bookmark
+                    let location = delegate?.location(for: id)
+                    return Publishers.CombineLatest4(
                         Just(metadata),
-                        Self.taskPropertiesPublisher(id: id, record: record, metadata: metadata, session: session),
+                        Self.taskPropertiesPublisher(id: id, input: input, metadata: metadata, createIfNeeded: location == nil, session: session),
                         locationSubject
-                            .prepend(nil),
+                            .map(\.self)
+                            .prepend(location),
                         errorSubject
+                            .map(\.self)
                             .prepend(nil)
                     )
                 }
@@ -205,12 +189,13 @@ private extension Download {
                 .handleEvents(
                     receiveOutput: { properties in
                         let record = DownloadRecord(
-                            input: record.input,
+                            input: input,
                             metadata: properties.metadata,
                             bookmarkData: try? properties.location?.bookmarkData(),
                             error: properties.error
                         )
-                        delegate?.shouldUpdateRecord(record, for: id)
+                        // TODO: What should we do if delegate is nil?
+                        delegate?.updateDownloadRecord(record, for: id)
                     },
                     receiveCompletion: nil)
                 .eraseToAnyPublisher()

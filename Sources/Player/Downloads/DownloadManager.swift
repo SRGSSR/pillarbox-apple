@@ -77,7 +77,18 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
 }
 
 extension DownloadManager: DownloadDelegate {
-    func shouldUpdateRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String) {
+    // TODO: Duplicate implementation
+    private static func url(fromBookmarkData bookmarkData: Data?) -> URL? {
+        guard let bookmarkData else { return nil }
+        var isStale = false
+        return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
+    }
+
+    func location(for identifier: String) -> URL? {
+        Self.url(fromBookmarkData: store.downloadRecord(for: identifier)?.bookmarkData)
+    }
+
+    func updateDownloadRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String) {
         store.updateDownloadRecord(record, for: identifier)
     }
 }
