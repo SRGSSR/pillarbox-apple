@@ -194,32 +194,34 @@ private extension Download {
         record: DownloadRecord<L.Input, L.Metadata>,
         session: AVAssetDownloadURLSession
     ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
-        Self.metadataPublisher(record: record)
-            .map { [locationSubject, errorSubject] metadata in
-                Publishers.CombineLatest4(
-                    Just(metadata),
-                    Self.taskPropertiesPublisher(id: id, record: record, metadata: metadata, session: session),
-                    locationSubject,
-                    errorSubject
-                )
-            }
-            .switchToLatest()
-            .map { metadata, taskProperties, location, error in
-                DownloadProperties(
-                    metadata: metadata,
-                    taskProperties: taskProperties,
-                    bookmarkData: try? location?.bookmarkData(),
-                    error: error
-                )
-            }
-            .catch { error in
-                Just(DownloadProperties(metadata: nil, taskProperties: nil, bookmarkData: nil, error: error))
-            }
-            .handleEvents(receiveOutput: { [delegate] properties in
-                let record = DownloadRecord(input: record.input, metadata: properties.metadata, bookmarkData: properties.bookmarkData, error: properties.error)
-                delegate?.shouldUpdateRecord(record, for: id)
-            }, receiveCompletion: nil)
-            .eraseToAnyPublisher()
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject, delegate] in
+            Self.metadataPublisher(record: record)
+                .map { metadata in
+                    Publishers.CombineLatest4(
+                        Just(metadata),
+                        Self.taskPropertiesPublisher(id: id, record: record, metadata: metadata, session: session),
+                        locationSubject,
+                        errorSubject
+                    )
+                }
+                .switchToLatest()
+                .map { metadata, taskProperties, location, error in
+                    DownloadProperties(
+                        metadata: metadata,
+                        taskProperties: taskProperties,
+                        bookmarkData: try? location?.bookmarkData(),
+                        error: error
+                    )
+                }
+                .catch { error in
+                    Just(DownloadProperties(metadata: nil, taskProperties: nil, bookmarkData: nil, error: error))
+                }
+                .handleEvents(receiveOutput: { properties in
+                    let record = DownloadRecord(input: record.input, metadata: properties.metadata, bookmarkData: properties.bookmarkData, error: properties.error)
+                    delegate?.shouldUpdateRecord(record, for: id)
+                }, receiveCompletion: nil)
+                .eraseToAnyPublisher()
+        }
     }
 }
 
