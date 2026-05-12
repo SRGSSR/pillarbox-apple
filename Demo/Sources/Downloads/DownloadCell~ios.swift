@@ -51,12 +51,12 @@ struct DownloadCell<L>: View where L: AssetLoader {
 
     @ViewBuilder
     private func progressBar() -> some View {
-        if download.isProgressAvailable {
-            ProgressView(value: download.progress) {
-                Text(download.progress, format: .percent.precision(.fractionLength(0)))
+        if let progress = download.progress {
+            ProgressView(value: progress) {
+                Text(progress, format: .percent.precision(.fractionLength(0)))
                     .contentTransition(.numericText())
             }
-            .animation(.linear, value: download.progress)
+            .animation(.linear, value: progress)
         }
     }
 
@@ -74,6 +74,8 @@ struct DownloadCell<L>: View where L: AssetLoader {
             case .failed:
                 button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
                     .tint(.red)
+            case .unknown:
+                EmptyView()
             }
         }
         .frame(width: 30, height: 30)

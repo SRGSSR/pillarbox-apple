@@ -5,6 +5,7 @@
 //
 
 public enum DownloadState {
+    case unknown
     case running
     case suspended
     case completed

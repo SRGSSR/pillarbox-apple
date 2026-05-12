@@ -35,14 +35,13 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
     private weak let delegate: (any DownloadDelegate<L>)?
 
-    public var isProgressAvailable: Bool {
-        guard let taskProperties = properties.taskProperties else { return false }
-        return taskProperties.state != .completed
-    }
-
-    public var progress: Double {
-        // TODO: This value is different after a download or a restoration. Make it consistent
-        properties.taskProperties?.progress ?? 0
+    public var progress: Double? {
+        switch state {
+        case .running, .suspended:
+            return properties.taskProperties?.progress ?? 0
+        default:
+            return nil
+        }
     }
 
     public var state: DownloadState {
@@ -62,8 +61,11 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
                 return .completed
             }
         }
-        else {
+        else if properties.location != nil {
             return .completed
+        }
+        else {
+            return .unknown
         }
     }
 
