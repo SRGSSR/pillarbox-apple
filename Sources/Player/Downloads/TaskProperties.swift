@@ -16,10 +16,4 @@ struct TaskProperties {
         self.state = state
         self.progress = progress
     }
-
-    init(task: URLSessionTask) {
-        self.task = task
-        self.state = task.state
-        self.progress = task.progress.fractionCompleted.clamped(to: 0...1)
-    }
 }
