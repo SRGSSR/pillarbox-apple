@@ -19,9 +19,10 @@ struct DemoAssetLoader: AssetLoader {
     }
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<String, any Error> {
-        Just(input.title)
+        URLSession.shared.dataTaskPublisher(for: URL(string: "https://httpbin.org/status/200")!)
+            .map { _ in input.title }
+            .mapError(\.self)
             .delay(for: .milliseconds(Int.random(in: 0...2000)), scheduler: DispatchQueue.main)
-            .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
