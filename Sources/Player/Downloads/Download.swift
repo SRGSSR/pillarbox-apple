@@ -28,8 +28,8 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
     private let trigger = Trigger()
 
-    private let locationSubject: CurrentValueSubject<URL?, Never>
-    private let errorSubject: CurrentValueSubject<Error?, Never>
+    private let locationSubject = PassthroughSubject<URL, Never>()
+    private let errorSubject = PassthroughSubject<Error, Never>()
 
     private weak let delegate: (any DownloadDelegate<L>)?
 
@@ -72,10 +72,7 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     ) {
         self.id = id
         self.delegate = delegate
-
         self.properties = .init(from: record)
-        self.locationSubject = .init(Self.url(fromBookmarkData: record.bookmarkData))
-        self.errorSubject = .init(record.error)
 
         configurePropertiesPublisher(record: record, session: session)
     }
@@ -134,9 +131,6 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         if let url = fileUrl() {
             try? FileManager.default.removeItem(at: url)
         }
-        if let url = locationSubject.value {
-            try? FileManager.default.removeItem(at: url)
-        }
     }
 }
 
@@ -156,7 +150,7 @@ private extension Download {
 
     static func taskPropertiesPublisher(
         id: String,
-        record: DownloadRecord<L.Input, L.Metadata>,
+        record: DownloadRecord<L.Input, L.Metadata>,        // TODO: Provide input only
         metadata: L.Metadata,
         session: AVAssetDownloadURLSession
     ) -> AnyPublisher<TaskProperties?, Never> {
@@ -200,8 +194,12 @@ private extension Download {
                     Publishers.CombineLatest4(
                         Just(metadata),
                         Self.taskPropertiesPublisher(id: id, record: record, metadata: metadata, session: session),
-                        locationSubject,
+                        locationSubject
+                            .map(\.self)
+                            .prepend(Self.url(fromBookmarkData: record.bookmarkData)),
                         errorSubject
+                            .map(\.self)
+                            .prepend(nil)
                     )
                 }
                 .switchToLatest()
