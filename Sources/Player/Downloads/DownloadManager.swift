@@ -77,19 +77,12 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
 }
 
 extension DownloadManager: DownloadDelegate {
-    // TODO: Duplicate implementation
-    private static func url(fromBookmarkData bookmarkData: Data?) -> URL? {
-        guard let bookmarkData else { return nil }
-        var isStale = false
-        return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
-    }
-
     func metadata(for identifier: String) -> L.Metadata? {
         store.downloadRecord(for: identifier)?.metadata
     }
 
     func location(for identifier: String) -> URL? {
-        Self.url(fromBookmarkData: store.downloadRecord(for: identifier)?.bookmarkData)
+        try? URL(resolvingBookmarkData: store.downloadRecord(for: identifier)?.bookmarkData)
     }
 
     func updateDownloadRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String) {

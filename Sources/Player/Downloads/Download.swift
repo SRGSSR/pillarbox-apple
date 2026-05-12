@@ -83,13 +83,6 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         configurePropertiesPublisher(input: record.input, session: session)
     }
 
-    // TODO: Duplicate implementation
-    private static func url(fromBookmarkData bookmarkData: Data?) -> URL? {
-        guard let bookmarkData else { return nil }
-        var isStale = false
-        return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
-    }
-
     private static func task(id: String, input: L.Input, metadata: L.Metadata, using session: AVAssetDownloadURLSession) -> URLSessionTask {
         let asset = L.asset(input: input, metadata: metadata)
         let configuration = AVAssetDownloadConfiguration(
