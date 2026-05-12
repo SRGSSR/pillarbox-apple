@@ -171,19 +171,14 @@ private extension Download {
     }
 
     static func metadataPublisher(id: String, input: L.Input, delegate: (any DownloadDelegate<L>)?) -> AnyPublisher<L.Metadata, Error> {
-        L.metadataPublisher(for: input)
-            .catch { error in
-                if let metadata = delegate?.metadata(for: id) {
-                    return Just(metadata)
-                        .setFailureType(to: Error.self)
-                        .eraseToAnyPublisher()
-                }
-                else {
-                    return Fail<L.Metadata, Error>(error: error)
-                        .eraseToAnyPublisher()
-                }
-            }
-            .eraseToAnyPublisher()
+        if let metadata = delegate?.metadata(for: id) {
+            return Just(metadata)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        else {
+            return L.metadataPublisher(for: input)
+        }
     }
 
     func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
