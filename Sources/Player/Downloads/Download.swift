@@ -36,10 +36,12 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     private weak let delegate: (any DownloadDelegate<L>)?
 
     public var isProgressAvailable: Bool {
-        properties.taskProperties != nil
+        guard let taskProperties = properties.taskProperties else { return false }
+        return taskProperties.state != .completed
     }
 
     public var progress: Double {
+        // TODO: This value is different after a download or a restoration. Make it consistent
         properties.taskProperties?.progress ?? 0
     }
 
