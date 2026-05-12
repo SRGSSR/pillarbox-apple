@@ -23,20 +23,20 @@ struct DownloadError: LocalizedError {
 final class DemoAssetDownloadStore: AssetDownloadStore {
     struct FileEntry: Codable {
         let url: URL
-        let title: String
+        let metadata: String?
         let bookmarkData: Data?
         let errorDescription: String?
 
         init(input: DemoAssetLoader.Input) {
             self.url = input.url
-            self.title = input.title
+            self.metadata = nil
             self.bookmarkData = nil
             self.errorDescription = nil
         }
 
         init(from record: DownloadRecord<DemoAssetLoader.Input, String>) {
             self.url = record.input.url
-            self.title = record.input.title
+            self.metadata = record.metadata
             self.bookmarkData = record.bookmarkData
             self.errorDescription = record.error?.localizedDescription
         }
@@ -65,8 +65,8 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
             return nil
         }
         return DownloadRecord(
-            input: DemoAssetLoader.Input(title: fileEntry.title, url: fileEntry.url),
-            metadata: fileEntry.title,
+            input: DemoAssetLoader.Input(url: fileEntry.url),
+            metadata: fileEntry.metadata,
             bookmarkData: fileEntry.bookmarkData,
             error: DownloadError(errorDescription: fileEntry.errorDescription)
         )
@@ -75,8 +75,8 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
     func downloadRecords() -> [DownloadRecord<DemoAssetLoader.Input, String>] {
         fileEntries.map { fileEntry in
             DownloadRecord(
-                input: DemoAssetLoader.Input(title: fileEntry.title, url: fileEntry.url),
-                metadata: fileEntry.title,
+                input: DemoAssetLoader.Input(url: fileEntry.url),
+                metadata: fileEntry.metadata,
                 bookmarkData: fileEntry.bookmarkData,
                 error: DownloadError(errorDescription: fileEntry.errorDescription)
             )
@@ -88,7 +88,7 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         fileEntries.append(fileEntry)
         save()
         return DownloadRecord(
-            input: DemoAssetLoader.Input(title: fileEntry.title, url: fileEntry.url),
+            input: DemoAssetLoader.Input(url: fileEntry.url),
             metadata: nil,
             bookmarkData: fileEntry.bookmarkData,
             error: DownloadError(errorDescription: fileEntry.errorDescription)

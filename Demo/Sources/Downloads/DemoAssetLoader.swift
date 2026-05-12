@@ -14,13 +14,14 @@ import PillarboxPlayer
 
 struct DemoAssetLoader: AssetLoader {
     struct Input {
-        let title: String
         let url: URL
     }
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<String, any Error> {
         URLSession.shared.dataTaskPublisher(for: URL(string: "https://httpbin.org/status/200")!)
-            .map { _ in input.title }
+            .map { _ in
+                UUID().uuidString
+            }
             .mapError(\.self)
             .delay(for: .milliseconds(Int.random(in: 0...2000)), scheduler: DispatchQueue.main)
             .eraseToAnyPublisher()

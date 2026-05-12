@@ -16,6 +16,7 @@ import UIKit
 protocol DownloadDelegate<L>: AnyObject {
     associatedtype L: AssetLoader
 
+    func metadata(for identifier: String) -> L.Metadata?
     func location(for identifier: String) -> URL?
     func updateDownloadRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String)
 }
@@ -126,6 +127,7 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     }
 
     private func removeFile() {
+        // TODO: Files are not properly removed in all cases
         if let location = properties.location {
             try? FileManager.default.removeItem(at: location)
         }
@@ -164,9 +166,25 @@ private extension Download {
             .eraseToAnyPublisher()
     }
 
+    static func metadataPublisher(id: String, input: L.Input, delegate: (any DownloadDelegate<L>)?) -> AnyPublisher<L.Metadata, Error> {
+        L.metadataPublisher(for: input)
+            .catch { error in
+                if let metadata = delegate?.metadata(for: id) {
+                    return Just(metadata)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+                else {
+                    return Fail<L.Metadata, Error>(error: error)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
     func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject, delegate] in
-            L.metadataPublisher(for: input)
+            Self.metadataPublisher(id: id, input: input, delegate: delegate)
                 .map { metadata in
                     // TODO: Should likely avoid creating a task again if the user removed the file behind the bookmark
                     let location = delegate?.location(for: id)
@@ -174,6 +192,7 @@ private extension Download {
                         Just(metadata),
                         Self.taskPropertiesPublisher(id: id, input: input, metadata: metadata, createIfNeeded: location == nil, session: session),
                         locationSubject
+                            .print("-->")
                             .map(\.self)
                             .prepend(location),
                         errorSubject

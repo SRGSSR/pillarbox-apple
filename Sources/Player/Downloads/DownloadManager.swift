@@ -84,6 +84,10 @@ extension DownloadManager: DownloadDelegate {
         return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
     }
 
+    func metadata(for identifier: String) -> L.Metadata? {
+        store.downloadRecord(for: identifier)?.metadata
+    }
+
     func location(for identifier: String) -> URL? {
         Self.url(fromBookmarkData: store.downloadRecord(for: identifier)?.bookmarkData)
     }
