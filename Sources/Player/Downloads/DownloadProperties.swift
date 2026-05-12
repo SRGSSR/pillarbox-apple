@@ -9,20 +9,27 @@ import Foundation
 struct DownloadProperties<Metadata> {
     let metadata: Metadata?
     let taskProperties: TaskProperties?
-    let bookmarkData: Data?
+    let location: URL?
     let error: Error?
 
-    init(metadata: Metadata?, taskProperties: TaskProperties?, bookmarkData: Data?, error: Error?) {
+    init(metadata: Metadata?, taskProperties: TaskProperties?, location: URL?, error: Error?) {
         self.metadata = metadata
         self.taskProperties = taskProperties
-        self.bookmarkData = bookmarkData
+        self.location = location
         self.error = error
     }
 
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
         self.metadata = record.metadata
         self.taskProperties = nil
-        self.bookmarkData = record.bookmarkData
+        self.location = Self.url(fromBookmarkData: record.bookmarkData)
         self.error = record.error
+    }
+
+    // TODO: Duplicate implementation
+    private static func url(fromBookmarkData bookmarkData: Data?) -> URL? {
+        guard let bookmarkData else { return nil }
+        var isStale = false
+        return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
     }
 }

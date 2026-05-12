@@ -28,8 +28,9 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
 
     private let trigger = Trigger()
 
-    private let locationSubject = PassthroughSubject<URL, Never>()
-    private let errorSubject = PassthroughSubject<Error, Never>()
+    // TODO: Should these params be mandatory?
+    private let locationSubject = PassthroughSubject<URL?, Never>()
+    private let errorSubject = PassthroughSubject<Error?, Never>()
 
     private weak let delegate: (any DownloadDelegate<L>)?
 
@@ -123,13 +124,9 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         task.taskDescription == id
     }
 
-    private func fileUrl() -> URL? {
-        Self.url(fromBookmarkData: properties.bookmarkData)
-    }
-
     private func removeFile() {
-        if let url = fileUrl() {
-            try? FileManager.default.removeItem(at: url)
+        if let location = properties.location {
+            try? FileManager.default.removeItem(at: location)
         }
     }
 }
@@ -195,29 +192,27 @@ private extension Download {
                         Just(metadata),
                         Self.taskPropertiesPublisher(id: id, record: record, metadata: metadata, session: session),
                         locationSubject
-                            .map(\.self)
-                            .prepend(Self.url(fromBookmarkData: record.bookmarkData)),
+                            .prepend(nil),
                         errorSubject
-                            .map(\.self)
                             .prepend(nil)
                     )
                 }
                 .switchToLatest()
-                .map { metadata, taskProperties, location, error in
-                    DownloadProperties(
-                        metadata: metadata,
-                        taskProperties: taskProperties,
-                        bookmarkData: try? location?.bookmarkData(),
-                        error: error
-                    )
-                }
+                .map { DownloadProperties(metadata: $0, taskProperties: $1, location: $2, error: $3) }
                 .catch { error in
-                    Just(DownloadProperties(metadata: nil, taskProperties: nil, bookmarkData: nil, error: error))
+                    Just(DownloadProperties(metadata: nil, taskProperties: nil, location: nil, error: error))
                 }
-                .handleEvents(receiveOutput: { properties in
-                    let record = DownloadRecord(input: record.input, metadata: properties.metadata, bookmarkData: properties.bookmarkData, error: properties.error)
-                    delegate?.shouldUpdateRecord(record, for: id)
-                }, receiveCompletion: nil)
+                .handleEvents(
+                    receiveOutput: { properties in
+                        let record = DownloadRecord(
+                            input: record.input,
+                            metadata: properties.metadata,
+                            bookmarkData: try? properties.location?.bookmarkData(),
+                            error: properties.error
+                        )
+                        delegate?.shouldUpdateRecord(record, for: id)
+                    },
+                    receiveCompletion: nil)
                 .eraseToAnyPublisher()
         }
     }
