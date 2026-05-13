@@ -49,4 +49,8 @@ struct DownloadProperties<Metadata> {
             self.error = nil
         }
     }
+
+    func bookmarkData() -> Data? {
+        try? location?.bookmarkData()
+    }
 }

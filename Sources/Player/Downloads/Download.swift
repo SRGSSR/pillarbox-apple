@@ -204,7 +204,7 @@ private extension Download {
                         let record = DownloadRecord(
                             input: input,
                             metadata: properties.metadata,
-                            bookmarkData: try? properties.location?.bookmarkData(),
+                            bookmarkData: properties.bookmarkData(),
                             error: properties.error
                         )
                         store.updateDownloadRecord(record, for: id)
