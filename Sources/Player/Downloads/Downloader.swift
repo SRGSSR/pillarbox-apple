@@ -16,7 +16,7 @@ import Foundation
 public final class Downloader<L, S>: ObservableObject where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
     private let manager: DownloadManager<L, S>
 
-    @Published public private(set) var downloads: [Download<L, S>] = []
+    @Published public private(set) var downloads: [Download] = []
 
     public init(loaderType: L.Type, configuration: URLSessionConfiguration, store: S) {
         manager = DownloadManager(loaderType: loaderType, configuration: configuration, store: store)
@@ -25,11 +25,11 @@ public final class Downloader<L, S>: ObservableObject where L: AssetLoader, S: A
     }
 
     @discardableResult
-    public func add(input: S.Input) -> Download<L, S> {
+    public func add(input: S.Input) -> Download {
         manager.add(input: input)
     }
 
-    public func remove(_ download: Download<L, S>) {
+    public func remove(_ download: Download) {
         manager.remove(download)
     }
 

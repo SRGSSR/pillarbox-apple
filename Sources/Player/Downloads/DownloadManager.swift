@@ -17,7 +17,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var session: AVAssetDownloadURLSession!
 
-    @Published private(set) var downloads: [Download<L, S>] = []
+    @Published private(set) var downloads: [Download] = []
 
     init(loaderType: L.Type, configuration: URLSessionConfiguration, store: S) {
         self.store = store
@@ -30,7 +30,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
     }
 
     @discardableResult
-    func add(input: S.Input) -> Download<L, S> {
+    func add(input: S.Input) -> Download {
         let id = S.identifier(for: input)
         if let download = downloads.first(where: { $0.id == id }) {
             return download
@@ -42,7 +42,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         }
     }
 
-    func remove(_ download: Download<L, S>) {
+    func remove(_ download: Download) {
         download.cancel()
         downloads.removeAll { $0.id == download.id }
     }
@@ -68,7 +68,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         download.fail(with: error)
     }
 
-    private func download(matching task: URLSessionTask) -> Download<L, S>? {
+    private func download(matching task: URLSessionTask) -> Download? {
         downloads.first { $0.matches(task: task) }
     }
 }

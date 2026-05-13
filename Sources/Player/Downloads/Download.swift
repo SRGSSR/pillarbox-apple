@@ -19,16 +19,17 @@ import UIKit
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Download<L, S>: ObservableObject where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+public final class Download: ObservableObject {
     let id: String
 
     @Published private var properties: DownloadPlayerProperties = .empty
 
-    private let store: S
     private let trigger = Trigger()
-
     private let locationSubject = PassthroughSubject<URL, Never>()
     private let errorSubject = PassthroughSubject<Error, Never>()
+
+    private let removeRecordForIdentifier: (String) -> Void
+    private let resetRecordForIdentifier: (String) -> Void
 
     public var progress: Double? {
         switch state {
@@ -68,21 +69,51 @@ public final class Download<L, S>: ObservableObject where L: AssetLoader, S: Ass
         properties.metadata
     }
 
-    init(id: String, loaderType: L.Type, input: L.Input, session: AVAssetDownloadURLSession, store: S) {
+    init<L, S>(
+        id: String,
+        loaderType: L.Type,
+        input: L.Input,
+        session: AVAssetDownloadURLSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.id = id
-        self.store = store
+        self.removeRecordForIdentifier = { identifier in
+            store.removeDownloadRecord(for: identifier)
+        }
+        self.resetRecordForIdentifier = { identifier in
+            guard let record = store.downloadRecord(for: id) else { return }
+            store.updateDownloadRecord(record.reset(), for: identifier)
+        }
         store.addDownloadRecord(using: input, for: id)
-        configurePropertiesPublisher(input: input, session: session)
+        configurePropertiesPublisher(loaderType: loaderType, input: input, session: session, store: store)
     }
 
-    init(id: String, loaderType: L.Type, record: DownloadRecord<L.Input, L.Metadata>, session: AVAssetDownloadURLSession, store: S) {
+    init<L, S>(
+        id: String,
+        loaderType: L.Type,
+        record: DownloadRecord<L.Input, L.Metadata>,
+        session: AVAssetDownloadURLSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.id = id
-        self.store = store
-        configurePropertiesPublisher(input: record.input, session: session)
+        self.removeRecordForIdentifier = { identifier in
+            store.removeDownloadRecord(for: identifier)
+        }
+        self.resetRecordForIdentifier = { identifier in
+            guard let record = store.downloadRecord(for: id) else { return }
+            store.updateDownloadRecord(record.reset(), for: identifier)
+        }
+        configurePropertiesPublisher(loaderType: loaderType, input: record.input, session: session, store: store)
     }
 
-    private static func task(id: String, input: L.Input, metadata: L.Metadata, using session: AVAssetDownloadURLSession) -> URLSessionTask {
-        let asset = L.asset(input: input, metadata: metadata)
+    private static func task<L>(
+        loaderType: L.Type,
+        id: String,
+        input: L.Input,
+        metadata: L.Metadata,
+        using session: AVAssetDownloadURLSession
+    ) -> URLSessionTask where L: AssetLoader {
+        let asset = loaderType.asset(input: input, metadata: metadata)
         let configuration = AVAssetDownloadConfiguration(
             asset: .init(url: asset.resource.url()),
             title: L.playerMetadata(from: metadata).title ?? id
@@ -93,8 +124,13 @@ public final class Download<L, S>: ObservableObject where L: AssetLoader, S: Ass
         return task
     }
 
-    private func configurePropertiesPublisher(input: L.Input, session: AVAssetDownloadURLSession) {
-        propertiesPublisher(id: id, input: input, session: session)
+    private func configurePropertiesPublisher<L, S>(
+        loaderType: L.Type,
+        input: L.Input,
+        session: AVAssetDownloadURLSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        propertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
             .receiveOnMainThread()
             .assign(to: &$properties)
     }
@@ -136,20 +172,21 @@ private extension Download {
         .eraseToAnyPublisher()
     }
 
-    static func taskPropertiesPublisher(
+    static func taskPropertiesPublisher<L>(
+        loaderType: L.Type,
         id: String,
         input: L.Input,
         metadata: L.Metadata,
         createIfNeeded: Bool,
         session: AVAssetDownloadURLSession
-    ) -> AnyPublisher<TaskProperties?, Never> {
+    ) -> AnyPublisher<TaskProperties?, Never> where L: AssetLoader {
         session.taskPublisher(withDescription: id)
             .map { task in
                 if let task {
                     return task
                 }
                 else if createIfNeeded {
-                    return Self.task(id: id, input: input, metadata: metadata, using: session)
+                    return Self.task(loaderType: loaderType, id: id, input: input, metadata: metadata, using: session)
                 }
                 else {
                     return nil
@@ -160,26 +197,37 @@ private extension Download {
             .eraseToAnyPublisher()
     }
 
-    static func metadataPublisher(input: L.Input, properties: DownloadProperties<L.Metadata>) -> AnyPublisher<L.Metadata, Error> {
+    static func metadataPublisher<L>(
+        loaderType: L.Type,
+        input: L.Input,
+        properties: DownloadProperties<L.Metadata>
+    ) -> AnyPublisher<L.Metadata, Error> where L: AssetLoader {
         if let metadata = properties.metadata {
             return Just(metadata)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
         else {
-            return L.metadataPublisher(for: input)
+            return loaderType.metadataPublisher(for: input)
         }
     }
 
-    func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadPlayerProperties, Never> {
+    func propertiesPublisher<L, S>(
+        loaderType: L.Type,
+        id: String,
+        input: L.Input,
+        session: AVAssetDownloadURLSession,
+        store: S
+    ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [store, locationSubject, errorSubject] in
             let properties = store.downloadProperties(for: id)
-            return Self.metadataPublisher(input: input, properties: properties)
+            return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
                 .map { metadata in
                     Publishers.CombineLatest4(
                         Just(metadata),
                         Self.taskPropertiesPublisher(
+                            loaderType: loaderType,
                             id: id,
                             input: input,
                             metadata: metadata,
@@ -243,15 +291,13 @@ public extension Download {
     }
 
     func cancel() {
-        store.removeDownloadRecord(for: id)
+        removeRecordForIdentifier(id)
         removeFile()
         properties.taskProperties?.task.cancel()
     }
 
     func restart() {
-        if let record = store.downloadRecord(for: id) {
-            store.updateDownloadRecord(record.reset(), for: id)
-        }
+        resetRecordForIdentifier(id)
         removeFile()
         trigger.activate(for: TriggerId.reload)
     }
