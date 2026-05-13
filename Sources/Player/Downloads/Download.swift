@@ -63,7 +63,7 @@ public final class Download<L, S>: ObservableObject where L: AssetLoader, S: Ass
     init(id: String, loaderType: L.Type, input: L.Input, session: AVAssetDownloadURLSession, store: S) {
         self.id = id
         self.store = store
-        self.properties = .init(metadata: nil, taskProperties: nil, location: nil, error: nil)
+        self.properties = .init()
         store.addDownloadRecord(using: input, for: id)
         configurePropertiesPublisher(input: input, session: session)
     }
@@ -159,8 +159,8 @@ private extension Download {
             .eraseToAnyPublisher()
     }
 
-    static func metadataPublisher(id: String, input: L.Input, store: S) -> AnyPublisher<L.Metadata, Error> {
-        if let metadata = store.downloadRecord(for: id)?.metadata {
+    static func metadataPublisher(input: L.Input, properties: DownloadProperties<L.Metadata>) -> AnyPublisher<L.Metadata, Error> {
+        if let metadata = properties.metadata {
             return Just(metadata)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
@@ -173,7 +173,7 @@ private extension Download {
     func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [store, locationSubject, errorSubject] in
             let properties = store.downloadProperties(for: id)
-            return Self.metadataPublisher(id: id, input: input, store: store)
+            return Self.metadataPublisher(input: input, properties: properties)
                 .map { metadata in
                     return Publishers.CombineLatest4(
                         Just(metadata),
