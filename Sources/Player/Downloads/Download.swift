@@ -13,12 +13,16 @@ import UIKit
 
 #if DEBUG
 
+// Type erasure:
+//    - where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata on init only
+//    - do not store S
+
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download<L, S>: ObservableObject where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
     let id: String
 
-    @Published private var properties: DownloadProperties<L.Metadata>
+    @Published private var properties: DownloadPlayerProperties = .empty
 
     private let store: S
     private let trigger = Trigger()
@@ -60,10 +64,13 @@ public final class Download<L, S>: ObservableObject where L: AssetLoader, S: Ass
         }
     }
 
+    public var metadata: PlayerMetadata {
+        properties.metadata
+    }
+
     init(id: String, loaderType: L.Type, input: L.Input, session: AVAssetDownloadURLSession, store: S) {
         self.id = id
         self.store = store
-        self.properties = .init()
         store.addDownloadRecord(using: input, for: id)
         configurePropertiesPublisher(input: input, session: session)
     }
@@ -71,7 +78,6 @@ public final class Download<L, S>: ObservableObject where L: AssetLoader, S: Ass
     init(id: String, loaderType: L.Type, record: DownloadRecord<L.Input, L.Metadata>, session: AVAssetDownloadURLSession, store: S) {
         self.id = id
         self.store = store
-        self.properties = .init(from: record)
         configurePropertiesPublisher(input: record.input, session: session)
     }
 
@@ -91,11 +97,6 @@ public final class Download<L, S>: ObservableObject where L: AssetLoader, S: Ass
         propertiesPublisher(id: id, input: input, session: session)
             .receiveOnMainThread()
             .assign(to: &$properties)
-    }
-
-    public func metadata() -> PlayerMetadata {
-        guard let metadata = properties.metadata else { return .empty }
-        return L.playerMetadata(from: metadata)
     }
 
     public func playerItem(allowsPartial: Bool = true) -> PlayerItem? {
@@ -170,7 +171,7 @@ private extension Download {
         }
     }
 
-    func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
+    func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadPlayerProperties, Never> {
         // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [store, locationSubject, errorSubject] in
             let properties = store.downloadProperties(for: id)
@@ -211,6 +212,14 @@ private extension Download {
                     },
                     receiveCompletion: nil
                 )
+                .map { properties in
+                    DownloadPlayerProperties(
+                        metadata: L.playerMetadata(from: properties.metadata),
+                        taskProperties: properties.taskProperties,
+                        location: properties.location,
+                        error: properties.error
+                    )
+                }
                 .eraseToAnyPublisher()
         }
     }

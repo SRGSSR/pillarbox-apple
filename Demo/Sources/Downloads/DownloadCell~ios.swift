@@ -16,7 +16,7 @@ struct DownloadCell<L, S>: View  where L: AssetLoader, S: AssetDownloadStore, L.
     @EnvironmentObject private var router: Router
 
     private var title: String {
-        download.metadata().title ?? "Untitled"
+        download.metadata.title ?? "Untitled"
     }
 
     var body: some View {

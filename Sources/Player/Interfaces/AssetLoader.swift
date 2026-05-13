@@ -30,3 +30,10 @@ public extension AssetLoader where Metadata == PlayerMetadata {
         metadata
     }
 }
+
+extension AssetLoader {
+    static func playerMetadata(from metadata: Metadata?) -> PlayerMetadata {
+        guard let metadata else { return .empty }
+        return playerMetadata(from: metadata)
+    }
+}
