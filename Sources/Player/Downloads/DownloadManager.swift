@@ -25,7 +25,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         self.session = .init(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
         self.downloads = store.downloadRecords().map { record in
             let id = S.identifier(for: record.input)
-            return Download(id: id, loaderType: loaderType, input: record.input, session: session, store: store, create: false)
+            return Download(id: id, loaderType: loaderType, record: record, session: session, store: store)
         }
     }
 
@@ -36,7 +36,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
             return download
         }
         else {
-            let download = Download(id: id, loaderType: L.self, input: input, session: session, store: store, create: true)
+            let download = Download(id: id, loaderType: L.self, input: input, session: session, store: store)
             downloads.append(download)
             return download
         }

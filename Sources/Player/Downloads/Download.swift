@@ -60,15 +60,19 @@ public final class Download<L, S>: ObservableObject where L: AssetLoader, S: Ass
         }
     }
 
-    // TODO: Better restore vs create API
-    init(id: String, loaderType: L.Type, input: L.Input, session: AVAssetDownloadURLSession, store: S, create: Bool) {
+    init(id: String, loaderType: L.Type, input: L.Input, session: AVAssetDownloadURLSession, store: S) {
         self.id = id
         self.store = store
         self.properties = .init(metadata: nil, taskProperties: nil, location: nil, error: nil)
-        if create {
-            store.addDownloadRecord(using: input, for: id)
-        }
+        store.addDownloadRecord(using: input, for: id)
         configurePropertiesPublisher(input: input, session: session)
+    }
+
+    init(id: String, loaderType: L.Type, record: DownloadRecord<L.Input, L.Metadata>, session: AVAssetDownloadURLSession, store: S) {
+        self.id = id
+        self.store = store
+        self.properties = .init(from: record)
+        configurePropertiesPublisher(input: record.input, session: session)
     }
 
     private static func task(id: String, input: L.Input, metadata: L.Metadata, using session: AVAssetDownloadURLSession) -> URLSessionTask {
