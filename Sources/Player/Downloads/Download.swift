@@ -162,9 +162,9 @@ private extension Download {
 
     func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [store, locationSubject, errorSubject] in
-            Self.metadataPublisher(id: id, input: input, store: store)
+            let record = store.downloadRecord(for: id)
+            return Self.metadataPublisher(id: id, input: input, store: store)
                 .map { metadata in
-                    let record = store.downloadRecord(for: id)
                     let location = try? URL(resolvingBookmarkData: record?.bookmarkData)
                     return Publishers.CombineLatest4(
                         Just(metadata),
@@ -183,6 +183,7 @@ private extension Download {
                 .catch { error in
                     Just(DownloadProperties(metadata: nil, taskProperties: nil, location: nil, error: error))
                 }
+                .prepend(DownloadProperties(from: record))
                 .handleEvents(
                     receiveOutput: { properties in
                         let record = DownloadRecord(
