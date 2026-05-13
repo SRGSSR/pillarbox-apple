@@ -86,8 +86,8 @@ struct DownloadCell<L, S>: View  where L: AssetLoader, S: AssetDownloadStore, L.
             case .failed:
                 button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
                     .tint(.red)
-            case .unknown:
-                EmptyView()
+            case .preparing:
+                ProgressView()
             }
         }
         .frame(width: 30, height: 30)

@@ -56,7 +56,7 @@ public final class Download<L, S>: ObservableObject where L: AssetLoader, S: Ass
             return .completed
         }
         else {
-            return .unknown
+            return .preparing
         }
     }
 
