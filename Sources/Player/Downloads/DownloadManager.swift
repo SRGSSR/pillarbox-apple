@@ -17,42 +17,39 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var session: AVAssetDownloadURLSession!
 
-    @Published private(set) var downloads: [Download<L>] = []
+    @Published private(set) var downloads: [Download<L, S>] = []
 
     init(loaderType: L.Type, configuration: URLSessionConfiguration, store: S) {
         self.store = store
         super.init()
         self.session = .init(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
         self.downloads = store.downloadRecords().map { record in
-            let id = store.identifier(for: record.input)
-            return Download(id: id, loaderType: loaderType, record: record, session: session, delegate: self)
+            let id = S.identifier(for: record.input)
+            return Download(id: id, loaderType: loaderType, input: record.input, session: session, store: store, create: false)
         }
     }
 
     @discardableResult
-    func add(input: S.Input) -> Download<L> {
-        let id = store.identifier(for: input)
+    func add(input: S.Input) -> Download<L, S> {
+        let id = S.identifier(for: input)
         if let download = downloads.first(where: { $0.id == id }) {
             return download
         }
         else {
-            let record = store.addDownloadRecord(using: input, for: id)
-            let download = Download(id: id, loaderType: L.self, record: record, session: session, delegate: self)
+            let download = Download(id: id, loaderType: L.self, input: input, session: session, store: store, create: true)
             downloads.append(download)
             return download
         }
     }
 
-    func remove(_ download: Download<L>) {
+    func remove(_ download: Download<L, S>) {
         download.cancel()
-        store.removeDownloadRecord(for: download.id)
         downloads.removeAll { $0.id == download.id }
     }
 
     func removeAll() {
         downloads.forEach { download in
             download.cancel()
-            store.removeDownloadRecord(for: download.id)
         }
         downloads.removeAll()
     }
@@ -71,22 +68,8 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         download.fail(with: error)
     }
 
-    private func download(matching task: URLSessionTask) -> Download<L>? {
+    private func download(matching task: URLSessionTask) -> Download<L, S>? {
         downloads.first { $0.matches(task: task) }
-    }
-}
-
-extension DownloadManager: DownloadDelegate {
-    func metadata(for identifier: String) -> L.Metadata? {
-        store.downloadRecord(for: identifier)?.metadata
-    }
-
-    func location(for identifier: String) -> URL? {
-        try? URL(resolvingBookmarkData: store.downloadRecord(for: identifier)?.bookmarkData)
-    }
-
-    func updateDownloadRecord(_ record: DownloadRecord<L.Input, L.Metadata>, for identifier: String) {
-        store.updateDownloadRecord(record, for: identifier)
     }
 }
 

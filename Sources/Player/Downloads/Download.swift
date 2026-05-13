@@ -15,17 +15,16 @@ import UIKit
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Download<L>: ObservableObject where L: AssetLoader {
+public final class Download<L, S>: ObservableObject where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
     let id: String
 
     @Published private var properties: DownloadProperties<L.Metadata>
 
+    private let store: S
     private let trigger = Trigger()
 
     private let locationSubject = PassthroughSubject<URL, Never>()
     private let errorSubject = PassthroughSubject<Error, Never>()
-
-    private weak let delegate: (any DownloadDelegate<L>)?
 
     public var progress: Double? {
         switch state {
@@ -61,18 +60,15 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
         }
     }
 
-    init(
-        id: String,
-        loaderType: L.Type,
-        record: DownloadRecord<L.Input, L.Metadata>,
-        session: AVAssetDownloadURLSession,
-        delegate: any DownloadDelegate<L>
-    ) {
+    // TODO: Better restore vs create API
+    init(id: String, loaderType: L.Type, input: L.Input, session: AVAssetDownloadURLSession, store: S, create: Bool) {
         self.id = id
-        self.delegate = delegate
-        self.properties = .init(from: record)
-
-        configurePropertiesPublisher(input: record.input, session: session)
+        self.store = store
+        self.properties = .init(metadata: nil, taskProperties: nil, location: nil, error: nil)
+        if create {
+            store.addDownloadRecord(using: input, for: id)
+        }
+        configurePropertiesPublisher(input: input, session: session)
     }
 
     private static func task(id: String, input: L.Input, metadata: L.Metadata, using session: AVAssetDownloadURLSession) -> URLSessionTask {
@@ -116,10 +112,8 @@ public final class Download<L>: ObservableObject where L: AssetLoader {
     }
 
     private func removeFile() {
-        // TODO: Files are not properly removed in all cases
-        if let location = properties.location {
-            try? FileManager.default.removeItem(at: location)
-        }
+        guard let location = properties.location else { return }
+        try? FileManager.default.removeItem(at: location)
     }
 }
 
@@ -155,8 +149,8 @@ private extension Download {
             .eraseToAnyPublisher()
     }
 
-    static func metadataPublisher(id: String, input: L.Input, delegate: (any DownloadDelegate<L>)?) -> AnyPublisher<L.Metadata, Error> {
-        if let metadata = delegate?.metadata(for: id) {
+    static func metadataPublisher(id: String, input: L.Input, store: S) -> AnyPublisher<L.Metadata, Error> {
+        if let metadata = store.downloadRecord(for: id)?.metadata {
             return Just(metadata)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
@@ -166,23 +160,22 @@ private extension Download {
         }
     }
 
-    // TODO: Must correctly deal with file deletion from system settings
     func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject, delegate] in
-            Self.metadataPublisher(id: id, input: input, delegate: delegate)
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [store, locationSubject, errorSubject] in
+            Self.metadataPublisher(id: id, input: input, store: store)
                 .map { metadata in
-                    // TODO: Should likely avoid creating a task again if the user removed the file behind the bookmark
-                    let location = delegate?.location(for: id)
+                    let record = store.downloadRecord(for: id)
+                    let location = try? URL(resolvingBookmarkData: record?.bookmarkData)
                     return Publishers.CombineLatest4(
                         Just(metadata),
-                        Self.taskPropertiesPublisher(id: id, input: input, metadata: metadata, createIfNeeded: location == nil, session: session),
+                        Self.taskPropertiesPublisher(id: id, input: input, metadata: metadata, createIfNeeded: location == nil && record?.error == nil, session: session),
                         locationSubject
                             .print("-->")
                             .map(\.self)
                             .prepend(location),
                         errorSubject
                             .map(\.self)
-                            .prepend(nil)
+                            .prepend(record?.error)
                     )
                 }
                 .switchToLatest()
@@ -198,8 +191,7 @@ private extension Download {
                             bookmarkData: try? properties.location?.bookmarkData(),
                             error: properties.error
                         )
-                        // TODO: What should we do if delegate is nil?
-                        delegate?.updateDownloadRecord(record, for: id)
+                        store.updateDownloadRecord(record, for: id)
                     },
                     receiveCompletion: nil)
                 .eraseToAnyPublisher()
@@ -225,11 +217,15 @@ public extension Download {
     }
 
     func cancel() {
+        store.removeDownloadRecord(for: id)
         removeFile()
         properties.taskProperties?.task.cancel()
     }
 
     func restart() {
+        if let record = store.downloadRecord(for: id) {
+            store.updateDownloadRecord(record.reset(), for: id)
+        }
         removeFile()
         trigger.activate(for: TriggerId.reload)
     }

@@ -56,7 +56,7 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         }
     }
 
-    func identifier(for input: DemoAssetLoader.Input) -> String {
+    static func identifier(for input: DemoAssetLoader.Input) -> String {
         input.url.absoluteString
     }
 
@@ -83,16 +83,10 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         }
     }
 
-    func addDownloadRecord(using input: DemoAssetLoader.Input, for identifier: String) -> DownloadRecord<DemoAssetLoader.Input, String> {
+    func addDownloadRecord(using input: DemoAssetLoader.Input, for identifier: String) {
         let fileEntry = FileEntry(input: input)
         fileEntries.append(fileEntry)
         save()
-        return DownloadRecord(
-            input: DemoAssetLoader.Input(url: fileEntry.url),
-            metadata: nil,
-            bookmarkData: fileEntry.bookmarkData,
-            error: DownloadError(errorDescription: fileEntry.errorDescription)
-        )
     }
 
     func removeDownloadRecord(for identifier: String) {

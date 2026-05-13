@@ -27,7 +27,7 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
 
     private var records: [StoreItem<AssetLoaderMock.Input>] = []
 
-    func identifier(for input: AssetLoaderMock.Input) -> String {
+    static func identifier(for input: AssetLoaderMock.Input) -> String {
         input.url.absoluteString
     }
 
@@ -39,10 +39,9 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
         records.map(\.record)
     }
 
-    func addDownloadRecord(using input: AssetLoaderMock.Input, for identifier: String) -> DownloadRecord<AssetLoaderMock.Input, PlayerMetadata> {
+    func addDownloadRecord(using input: AssetLoaderMock.Input, for identifier: String) {
         let item = StoreItem(id: identifier, input: input, metadata: input.metadata)
         records.append(item)
-        return item.record
     }
 
     func removeDownloadRecord(for identifier: String) {
