@@ -26,6 +26,12 @@ public protocol AssetDownloadStore: AnyObject {
     func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>, for identifier: String)
 }
 
+extension AssetDownloadStore {
+    func downloadProperties(for identifier: String) -> DownloadProperties<Metadata> {
+        .init(from: downloadRecord(for: identifier))
+    }
+}
+
 #endif
 
 // swiftlint:enable missing_docs

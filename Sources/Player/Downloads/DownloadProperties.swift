@@ -12,6 +12,10 @@ struct DownloadProperties<Metadata> {
     let location: URL?
     let error: Error?
 
+    var isPending: Bool {
+        location == nil && error == nil
+    }
+
     init(metadata: Metadata?, taskProperties: TaskProperties?, location: URL?, error: Error?) {
         self.metadata = metadata
         self.taskProperties = taskProperties

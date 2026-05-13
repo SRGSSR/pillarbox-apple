@@ -135,7 +135,13 @@ private extension Download {
         .eraseToAnyPublisher()
     }
 
-    static func taskPropertiesPublisher(id: String, input: L.Input, metadata: L.Metadata, createIfNeeded: Bool, session: AVAssetDownloadURLSession) -> AnyPublisher<TaskProperties?, Never> {
+    static func taskPropertiesPublisher(
+        id: String,
+        input: L.Input,
+        metadata: L.Metadata,
+        createIfNeeded: Bool,
+        session: AVAssetDownloadURLSession
+    ) -> AnyPublisher<TaskProperties?, Never> {
         session.taskPublisher(withDescription: id)
             .map { task in
                 if let task {
@@ -166,20 +172,25 @@ private extension Download {
 
     func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [store, locationSubject, errorSubject] in
-            let record = store.downloadRecord(for: id)
+            let properties = store.downloadProperties(for: id)
             return Self.metadataPublisher(id: id, input: input, store: store)
                 .map { metadata in
-                    let location = try? URL(resolvingBookmarkData: record?.bookmarkData)
                     return Publishers.CombineLatest4(
                         Just(metadata),
-                        Self.taskPropertiesPublisher(id: id, input: input, metadata: metadata, createIfNeeded: location == nil && record?.error == nil, session: session),
+                        Self.taskPropertiesPublisher(
+                            id: id,
+                            input: input,
+                            metadata: metadata,
+                            createIfNeeded: properties.isPending,
+                            session: session
+                        ),
                         locationSubject
                             .print("-->")
                             .map(\.self)
-                            .prepend(location),
+                            .prepend(properties.location),
                         errorSubject
                             .map(\.self)
-                            .prepend(record?.error)
+                            .prepend(properties.error)
                     )
                 }
                 .switchToLatest()
@@ -187,7 +198,7 @@ private extension Download {
                 .catch { error in
                     Just(DownloadProperties(metadata: nil, taskProperties: nil, location: nil, error: error))
                 }
-                .prepend(DownloadProperties(from: record))
+                .prepend(properties)
                 .handleEvents(
                     receiveOutput: { properties in
                         let record = DownloadRecord(
@@ -198,7 +209,8 @@ private extension Download {
                         )
                         store.updateDownloadRecord(record, for: id)
                     },
-                    receiveCompletion: nil)
+                    receiveCompletion: nil
+                )
                 .eraseToAnyPublisher()
         }
     }
