@@ -12,7 +12,7 @@ struct DownloadProperties<Metadata> {
     let location: URL?
     let error: Error?
 
-    var isPending: Bool {
+    var isPreparing: Bool {
         location == nil && error == nil
     }
 

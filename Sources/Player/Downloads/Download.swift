@@ -182,7 +182,7 @@ private extension Download {
                             id: id,
                             input: input,
                             metadata: metadata,
-                            createIfNeeded: properties.isPending,
+                            createIfNeeded: properties.isPreparing,
                             session: session
                         ),
                         locationSubject
