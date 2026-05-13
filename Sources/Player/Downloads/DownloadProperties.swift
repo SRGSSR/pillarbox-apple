@@ -28,29 +28,27 @@ struct DownloadProperties<Metadata> {
     }
 
     init<Input>(from record: DownloadRecord<Input, Metadata>?) {
-        if let record {
-            self.metadata = record.metadata
-            self.taskProperties = nil
-            if let bookmarkData = record.bookmarkData {
-                if let location = try? URL(resolvingBookmarkData: bookmarkData) {
-                    self.location = location
-                    self.error = record.error
-                }
-                else {
-                    self.location = nil
-                    self.error = MissingFileError()
-                }
+        guard let record else {
+            self = .init()
+            return
+        }
+
+        self.metadata = record.metadata
+        self.taskProperties = nil
+
+        if let bookmarkData = record.bookmarkData {
+            if let location = try? URL(resolvingBookmarkData: bookmarkData) {
+                self.location = location
+                self.error = record.error
             }
             else {
                 self.location = nil
-                self.error = record.error
+                self.error = MissingFileError()
             }
         }
         else {
-            self.metadata = nil
-            self.taskProperties = nil
             self.location = nil
-            self.error = nil
+            self.error = record.error
         }
     }
 
