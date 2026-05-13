@@ -179,7 +179,7 @@ private extension Download {
         let asset = loaderType.asset(input: input, metadata: metadata)
         let configuration = AVAssetDownloadConfiguration(
             asset: .init(url: asset.resource.url()),
-            title: L.playerMetadata(from: metadata).title ?? id
+            title: loaderType.playerMetadata(from: metadata).title ?? id
         )
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
         task.taskDescription = id
@@ -291,7 +291,7 @@ private extension Download {
                 )
                 .map { properties in
                     DownloadPlayerProperties(
-                        metadata: L.playerMetadata(from: properties.metadata),
+                        metadata: loaderType.playerMetadata(from: properties.metadata),
                         taskProperties: properties.taskProperties,
                         location: properties.location,
                         error: properties.error
