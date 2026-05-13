@@ -10,10 +10,4 @@ struct TaskProperties {
     let task: URLSessionTask
     let state: URLSessionTask.State
     let progress: Double
-
-    init(task: URLSessionTask, state: URLSessionTask.State, progress: Double) {
-        self.task = task
-        self.state = state
-        self.progress = progress
-    }
 }

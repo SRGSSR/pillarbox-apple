@@ -171,11 +171,12 @@ private extension Download {
     }
 
     func propertiesPublisher(id: String, input: L.Input, session: AVAssetDownloadURLSession) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> {
+        // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [store, locationSubject, errorSubject] in
             let properties = store.downloadProperties(for: id)
             return Self.metadataPublisher(input: input, properties: properties)
                 .map { metadata in
-                    return Publishers.CombineLatest4(
+                    Publishers.CombineLatest4(
                         Just(metadata),
                         Self.taskPropertiesPublisher(
                             id: id,
@@ -185,7 +186,6 @@ private extension Download {
                             session: session
                         ),
                         locationSubject
-                            .print("-->")
                             .map(\.self)
                             .prepend(properties.location),
                         errorSubject
