@@ -13,10 +13,6 @@ import UIKit
 
 #if DEBUG
 
-// Type erasure:
-//    - where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata on init only
-//    - do not store S
-
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject {
@@ -106,35 +102,6 @@ public final class Download: ObservableObject {
         configurePropertiesPublisher(loaderType: loaderType, input: record.input, session: session, store: store)
     }
 
-    private static func task<L>(
-        loaderType: L.Type,
-        id: String,
-        input: L.Input,
-        metadata: L.Metadata,
-        using session: AVAssetDownloadURLSession
-    ) -> URLSessionTask where L: AssetLoader {
-        let asset = loaderType.asset(input: input, metadata: metadata)
-        let configuration = AVAssetDownloadConfiguration(
-            asset: .init(url: asset.resource.url()),
-            title: L.playerMetadata(from: metadata).title ?? id
-        )
-        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
-        task.taskDescription = id
-        task.resume()
-        return task
-    }
-
-    private func configurePropertiesPublisher<L, S>(
-        loaderType: L.Type,
-        input: L.Input,
-        session: AVAssetDownloadURLSession,
-        store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        propertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
-            .receiveOnMainThread()
-            .assign(to: &$properties)
-    }
-
     public func playerItem(allowsPartial: Bool = true) -> PlayerItem? {
         // TODO:
         nil
@@ -159,7 +126,34 @@ public final class Download: ObservableObject {
 }
 
 @available(tvOS, unavailable)
+public extension Download {
+    func resume() {
+        properties.taskProperties?.task.resume()
+    }
+
+    func suspend() {
+        properties.taskProperties?.task.suspend()
+    }
+
+    func cancel() {
+        removeRecordForIdentifier(id)
+        removeFile()
+        properties.taskProperties?.task.cancel()
+    }
+
+    func restart() {
+        resetRecordForIdentifier(id)
+        removeFile()
+        trigger.activate(for: TriggerId.reload)
+    }
+}
+
+@available(tvOS, unavailable)
 private extension Download {
+    enum TriggerId: Hashable {
+        case reload
+    }
+
     static func taskPropertiesPublisher(task: URLSessionTask?) -> AnyPublisher<TaskProperties?, Never> {
         guard let task else { return Just(nil).eraseToAnyPublisher() }
         return Publishers.CombineLatest3(
@@ -170,6 +164,27 @@ private extension Download {
         )
         .map { .init(task: $0, state: $1, progress: $2) }
         .eraseToAnyPublisher()
+    }
+}
+
+@available(tvOS, unavailable)
+private extension Download {
+    static func task<L>(
+        loaderType: L.Type,
+        id: String,
+        input: L.Input,
+        metadata: L.Metadata,
+        using session: AVAssetDownloadURLSession
+    ) -> URLSessionTask where L: AssetLoader {
+        let asset = loaderType.asset(input: input, metadata: metadata)
+        let configuration = AVAssetDownloadConfiguration(
+            asset: .init(url: asset.resource.url()),
+            title: L.playerMetadata(from: metadata).title ?? id
+        )
+        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
+        task.taskDescription = id
+        task.resume()
+        return task
     }
 
     static func taskPropertiesPublisher<L>(
@@ -210,6 +225,20 @@ private extension Download {
         else {
             return loaderType.metadataPublisher(for: input)
         }
+    }
+}
+
+@available(tvOS, unavailable)
+private extension Download {
+    private func configurePropertiesPublisher<L, S>(
+        loaderType: L.Type,
+        input: L.Input,
+        session: AVAssetDownloadURLSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        propertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
+            .receiveOnMainThread()
+            .assign(to: &$properties)
     }
 
     func propertiesPublisher<L, S>(
@@ -270,36 +299,6 @@ private extension Download {
                 }
                 .eraseToAnyPublisher()
         }
-    }
-}
-
-@available(tvOS, unavailable)
-private extension Download {
-    enum TriggerId: Hashable {
-        case reload
-    }
-}
-
-@available(tvOS, unavailable)
-public extension Download {
-    func resume() {
-        properties.taskProperties?.task.resume()
-    }
-
-    func suspend() {
-        properties.taskProperties?.task.suspend()
-    }
-
-    func cancel() {
-        removeRecordForIdentifier(id)
-        removeFile()
-        properties.taskProperties?.task.cancel()
-    }
-
-    func restart() {
-        resetRecordForIdentifier(id)
-        removeFile()
-        trigger.activate(for: TriggerId.reload)
     }
 }
 
