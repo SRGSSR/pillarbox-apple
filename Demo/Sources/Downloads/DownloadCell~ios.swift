@@ -30,6 +30,7 @@ struct DownloadCell<L, S>: View  where L: AssetLoader, S: AssetDownloadStore, L.
         VStack(alignment: .leading, spacing: 20) {
             Text(title)
             progressBar()
+            errorMessage()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.rect)
@@ -57,6 +58,17 @@ struct DownloadCell<L, S>: View  where L: AssetLoader, S: AssetDownloadStore, L.
                     .contentTransition(.numericText())
             }
             .animation(.linear, value: progress)
+        }
+    }
+
+    @ViewBuilder
+    private func errorMessage() -> some View {
+        switch download.state {
+        case let .failed(error):
+            Text(error.localizedDescription)
+                .foregroundStyle(.red)
+        default:
+            EmptyView()
         }
     }
 
