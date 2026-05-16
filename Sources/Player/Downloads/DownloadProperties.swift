@@ -30,20 +30,13 @@ struct DownloadProperties<Metadata> {
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
         self.metadata = record.metadata
         self.taskProperties = nil
-
-        if let bookmarkData = record.bookmarkData {
-            if let location = try? URL(resolvingBookmarkData: bookmarkData) {
-                self.location = location
-                self.error = record.error
-            }
-            else {
-                self.location = nil
-                self.error = MissingFileError()
-            }
+        do {
+            self.location = try URL(resolvingBookmarkData: record.bookmarkData)
+            self.error = nil
         }
-        else {
+        catch {
             self.location = nil
-            self.error = record.error
+            self.error = error
         }
     }
 
