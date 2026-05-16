@@ -43,6 +43,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
     }
 
     func remove(_ download: Download) {
+        guard downloads.contains(download) else { return }
         download.cancel()
         downloads.removeAll { $0.id == download.id }
     }
