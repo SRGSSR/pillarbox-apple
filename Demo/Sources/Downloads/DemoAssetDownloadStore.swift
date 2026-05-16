@@ -11,7 +11,7 @@ import PillarboxPlayer
 
 #if DEBUG
 
-struct DownloadError: LocalizedError {
+private struct DownloadError: LocalizedError {
     let errorDescription: String?
 
     init?(errorDescription: String?) {
