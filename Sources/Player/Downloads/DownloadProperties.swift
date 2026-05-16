@@ -27,12 +27,7 @@ struct DownloadProperties<Metadata> {
         self.error = error
     }
 
-    init<Input>(from record: DownloadRecord<Input, Metadata>?) {
-        guard let record else {
-            self = .init()
-            return
-        }
-
+    init<Input>(from record: DownloadRecord<Input, Metadata>) {
         self.metadata = record.metadata
         self.taskProperties = nil
 

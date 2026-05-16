@@ -28,7 +28,8 @@ public protocol AssetDownloadStore: AnyObject {
 
 extension AssetDownloadStore {
     func downloadProperties(for identifier: String) -> DownloadProperties<Metadata> {
-        .init(from: downloadRecord(for: identifier))
+        guard let record = downloadRecord(for: identifier) else { return .init() }
+        return .init(from: record)
     }
 }
 
