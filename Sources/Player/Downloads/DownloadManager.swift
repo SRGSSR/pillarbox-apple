@@ -24,22 +24,15 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         super.init()
         self.session = .init(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
         self.downloads = store.downloadRecords().map { record in
-            let id = S.identifier(for: record.input)
-            return Download(id: id, loaderType: loaderType, record: record, session: session, store: store)
+            Download(loaderType: loaderType, record: record, session: session, store: store)
         }
     }
 
     @discardableResult
     func add(input: S.Input) -> Download {
-        let id = S.identifier(for: input)
-        if let download = downloads.first(where: { $0.id == id }) {
-            return download
-        }
-        else {
-            let download = Download(id: id, loaderType: L.self, input: input, session: session, store: store)
-            downloads.append(download)
-            return download
-        }
+        let download = Download(loaderType: L.self, input: input, session: session, store: store)
+        downloads.append(download)
+        return download
     }
 
     func remove(_ download: Download) {

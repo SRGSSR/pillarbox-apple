@@ -27,6 +27,10 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         let bookmarkData: Data?
         let errorDescription: String?
 
+        var id: String {
+            url.absoluteString
+        }
+
         init(input: DemoAssetLoader.Input) {
             self.url = input.url
             self.metadata = nil
@@ -39,6 +43,16 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
             self.metadata = record.metadata
             self.bookmarkData = record.bookmarkData
             self.errorDescription = record.error?.localizedDescription
+        }
+
+        func toDownloadRecord() -> DownloadRecord<DemoAssetLoader.Input, String> {
+            .init(
+                id: id,
+                input: DemoAssetLoader.Input(url: url),
+                metadata: metadata,
+                bookmarkData: bookmarkData,
+                error: DownloadError(errorDescription: errorDescription)
+            )
         }
     }
 
@@ -56,46 +70,28 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         }
     }
 
-    static func identifier(for input: DemoAssetLoader.Input) -> String {
-        input.url.absoluteString
-    }
-
-    func downloadRecord(for identifier: String) -> DownloadRecord<DemoAssetLoader.Input, String>? {
-        guard let fileEntry = fileEntries.first(where: { $0.url.absoluteString == identifier }) else {
-            return nil
-        }
-        return DownloadRecord(
-            input: DemoAssetLoader.Input(url: fileEntry.url),
-            metadata: fileEntry.metadata,
-            bookmarkData: fileEntry.bookmarkData,
-            error: DownloadError(errorDescription: fileEntry.errorDescription)
-        )
-    }
-
     func downloadRecords() -> [DownloadRecord<DemoAssetLoader.Input, String>] {
-        fileEntries.map { fileEntry in
-            DownloadRecord(
-                input: DemoAssetLoader.Input(url: fileEntry.url),
-                metadata: fileEntry.metadata,
-                bookmarkData: fileEntry.bookmarkData,
-                error: DownloadError(errorDescription: fileEntry.errorDescription)
-            )
-        }
+        fileEntries.map { $0.toDownloadRecord() }
     }
 
-    func addDownloadRecord(using input: DemoAssetLoader.Input, for identifier: String) {
+    func addDownloadRecord(using input: DemoAssetLoader.Input) -> DownloadRecord<DemoAssetLoader.Input, String> {
         let fileEntry = FileEntry(input: input)
         fileEntries.append(fileEntry)
         save()
+        return fileEntry.toDownloadRecord()
     }
 
     func removeDownloadRecord(for identifier: String) {
-        fileEntries.removeAll { $0.url.absoluteString == identifier }
+        fileEntries.removeAll { $0.id == identifier }
         save()
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<DemoAssetLoader.Input, String>, for identifier: String) {
-        guard let index = fileEntries.firstIndex(where: { $0.url.absoluteString == identifier }) else { return }
+    func downloadRecord(for identifier: String) -> DownloadRecord<DemoAssetLoader.Input, String>? {
+        fileEntries.first { $0.id == identifier }?.toDownloadRecord()
+    }
+
+    func updateDownloadRecord(_ record: DownloadRecord<DemoAssetLoader.Input, String>) {
+        guard let index = fileEntries.firstIndex(where: { $0.id == record.id }) else { return }
         fileEntries[index] = .init(from: record)
         save()
     }

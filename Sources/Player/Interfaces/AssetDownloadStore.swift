@@ -15,15 +15,13 @@ public protocol AssetDownloadStore: AnyObject {
     associatedtype Input
     associatedtype Metadata
 
-    static func identifier(for input: Input) -> String
-
-    func downloadRecord(for identifier: String) -> DownloadRecord<Input, Metadata>?
     func downloadRecords() -> [DownloadRecord<Input, Metadata>]
 
-    func addDownloadRecord(using input: Input, for identifier: String)
+    func addDownloadRecord(using input: Input) -> DownloadRecord<Input, Metadata>
     func removeDownloadRecord(for identifier: String)
 
-    func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>, for identifier: String)
+    func downloadRecord(for identifier: String) -> DownloadRecord<Input, Metadata>?
+    func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>)
 }
 
 extension AssetDownloadStore {

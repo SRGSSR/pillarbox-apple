@@ -24,8 +24,8 @@ public final class Download: ObservableObject {
     private let locationSubject = PassthroughSubject<URL, Never>()
     private let errorSubject = PassthroughSubject<Error, Never>()
 
-    private let removeRecordForIdentifier: (String) -> Void
-    private let resetRecordForIdentifier: (String) -> Void
+    private let removeRecord: () -> Void
+    private let resetRecord: () -> Void
 
     public var progress: Double? {
         switch state {
@@ -65,7 +65,7 @@ public final class Download: ObservableObject {
         properties.metadata
     }
 
-    init<L, S>(
+    private init<L, S>(
         id: String,
         loaderType: L.Type,
         input: L.Input,
@@ -73,33 +73,33 @@ public final class Download: ObservableObject {
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.id = id
-        self.removeRecordForIdentifier = { identifier in
-            store.removeDownloadRecord(for: identifier)
+        self.removeRecord = {
+            store.removeDownloadRecord(for: id)
         }
-        self.resetRecordForIdentifier = { identifier in
+        self.resetRecord = {
             guard let record = store.downloadRecord(for: id) else { return }
-            store.updateDownloadRecord(record.reset(), for: identifier)
+            store.updateDownloadRecord(record.reset())
         }
-        store.addDownloadRecord(using: input, for: id)
         configurePropertiesPublisher(loaderType: loaderType, input: input, session: session, store: store)
     }
 
-    init<L, S>(
-        id: String,
+    convenience init<L, S>(
+        loaderType: L.Type,
+        input: L.Input,
+        session: AVAssetDownloadURLSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        let record = store.addDownloadRecord(using: input)
+        self.init(id: record.id, loaderType: loaderType, input: input, session: session, store: store)
+    }
+
+    convenience init<L, S>(
         loaderType: L.Type,
         record: DownloadRecord<L.Input, L.Metadata>,
         session: AVAssetDownloadURLSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        self.id = id
-        self.removeRecordForIdentifier = { identifier in
-            store.removeDownloadRecord(for: identifier)
-        }
-        self.resetRecordForIdentifier = { identifier in
-            guard let record = store.downloadRecord(for: id) else { return }
-            store.updateDownloadRecord(record.reset(), for: identifier)
-        }
-        configurePropertiesPublisher(loaderType: loaderType, input: record.input, session: session, store: store)
+        self.init(id: record.id, loaderType: loaderType, input: record.input, session: session, store: store)
     }
 
     public func playerItem(allowsPartial: Bool = true) -> PlayerItem? {
@@ -136,13 +136,13 @@ public extension Download {
     }
 
     func cancel() {
-        removeRecordForIdentifier(id)
+        removeRecord()
         removeFile()
         properties.taskProperties?.task.cancel()
     }
 
     func restart() {
-        resetRecordForIdentifier(id)
+        resetRecord()
         removeFile()
         trigger.activate(for: TriggerId.reload)
     }
@@ -280,12 +280,13 @@ private extension Download {
                 .handleEvents(
                     receiveOutput: { properties in
                         let record = DownloadRecord(
+                            id: id,
                             input: input,
                             metadata: properties.metadata,
                             bookmarkData: properties.bookmarkData(),
                             error: properties.error
                         )
-                        store.updateDownloadRecord(record, for: id)
+                        store.updateDownloadRecord(record)
                     },
                     receiveCompletion: nil
                 )
