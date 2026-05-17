@@ -18,20 +18,16 @@ public struct DownloadRecord<Input, Metadata> {
     public let bookmarkData: Data?
     public let error: Error?
 
-    init(input: Input, metadata: Metadata?, bookmarkData: Data?, error: Error?) {
-        self.id = UUID().uuidString
-        self.input = input
-        self.metadata = metadata
-        self.bookmarkData = bookmarkData
-        self.error = error
-    }
-
     public init(id: String, input: Input, metadata: Metadata?, bookmarkData: Data?, error: Error?) {
         self.id = id
         self.input = input
         self.metadata = metadata
         self.bookmarkData = bookmarkData
         self.error = error
+    }
+
+    init(input: Input, metadata: Metadata?, bookmarkData: Data?, error: Error?) {
+        self.init(id: UUID().uuidString, input: input, metadata: metadata, bookmarkData: bookmarkData, error: error)
     }
 
     func reset() -> Self {
