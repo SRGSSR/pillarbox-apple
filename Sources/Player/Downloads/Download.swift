@@ -249,7 +249,7 @@ private extension Download {
         store: S
     ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         // swiftlint:disable:next closure_body_length
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [store, locationSubject, errorSubject] in
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
             let properties = store.downloadProperties(for: id)
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
                 .map { metadata in
