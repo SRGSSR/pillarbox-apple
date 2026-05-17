@@ -13,4 +13,38 @@ struct DownloadPlayerProperties {
     let taskProperties: TaskProperties?
     let location: URL?
     let error: Error?
+
+    var state: DownloadState {
+        if let error {
+            return .failed(error)
+        }
+        else if let taskProperties {
+            switch taskProperties.state {
+            case .running, .canceling:
+                return .running
+            case .suspended:
+                return .suspended
+            case .completed:
+                return .completed
+            @unknown default:
+                assertionFailure("Unhandled case")
+                return .completed
+            }
+        }
+        else if location != nil {
+            return .completed
+        }
+        else {
+            return .preparing
+        }
+    }
+
+    func location(allowsPartial: Bool) -> URL? {
+        switch state {
+        case .completed:
+            return location
+        default:
+            return allowsPartial ? location : nil
+        }
+    }
 }

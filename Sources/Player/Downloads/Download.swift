@@ -37,28 +37,7 @@ public final class Download: ObservableObject {
     }
 
     public var state: DownloadState {
-        if let error = properties.error {
-            return .failed(error)
-        }
-        else if let taskProperties = properties.taskProperties {
-            switch taskProperties.state {
-            case .running, .canceling:
-                return .running
-            case .suspended:
-                return .suspended
-            case .completed:
-                return .completed
-            @unknown default:
-                assertionFailure("Unhandled case")
-                return .completed
-            }
-        }
-        else if properties.location != nil {
-            return .completed
-        }
-        else {
-            return .preparing
-        }
+        properties.state
     }
 
     public var metadata: PlayerMetadata {
