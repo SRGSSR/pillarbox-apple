@@ -15,6 +15,9 @@ public protocol AssetDownloadStore: AnyObject {
     associatedtype Input
     associatedtype Metadata
 
+    static func asset(location: URL, input: Input, metadata: Metadata) -> Asset<Metadata>
+    static func playerMetadata(from metadata: Metadata) -> PlayerMetadata
+
     func downloadRecords() -> [DownloadRecord<Input, Metadata>]
 
     func addDownloadRecord(using input: Input) -> DownloadRecord<Input, Metadata>
@@ -22,6 +25,12 @@ public protocol AssetDownloadStore: AnyObject {
 
     func downloadRecord(for identifier: String) -> DownloadRecord<Input, Metadata>?
     func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>)
+}
+
+public extension AssetDownloadStore where Metadata == PlayerMetadata {
+    static func playerMetadata(from metadata: Metadata) -> PlayerMetadata {
+        metadata
+    }
 }
 
 extension AssetDownloadStore {

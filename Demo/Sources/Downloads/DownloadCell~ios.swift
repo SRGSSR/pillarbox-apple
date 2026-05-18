@@ -13,7 +13,6 @@ import SwiftUI
 
 struct DownloadCell: View {
     @ObservedObject var download: Download
-    @EnvironmentObject private var router: Router
 
     private var title: String {
         download.metadata.title ?? "Untitled"
@@ -33,21 +32,6 @@ struct DownloadCell: View {
             errorMessage()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .contentShape(.rect)
-        .accessibilityAddTraits(.isButton)
-        .onTapGesture {
-            if let item = download.playerItem() {
-                router.presented = .player(media: .init(title: title, type: .item(item)))
-            }
-            else {
-                switch download.state {
-                case .failed:
-                    download.restart()
-                default:
-                    break
-                }
-            }
-        }
     }
 
     @ViewBuilder

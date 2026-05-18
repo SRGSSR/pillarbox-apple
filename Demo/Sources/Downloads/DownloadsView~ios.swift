@@ -17,6 +17,7 @@ struct DownloadsView: View {
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.file-downloads"),
         store: DemoAssetDownloadStore(fileName: "file_downloads.json")
     )
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         ZStack {
@@ -43,6 +44,13 @@ struct DownloadsView: View {
         List {
             ForEach(Array(downloader.downloads), id: \.self) { download in
                 DownloadCell(download: download)
+                    .contentShape(.rect)
+                    .accessibilityAddTraits(.isButton)
+                    .onTapGesture {
+                        if let item = downloader.playerItem(for: download) {
+                            router.presented = .player(media: .init(title: download.metadata.title ?? "Untitled", type: .item(item)))
+                        }
+                    }
             }
             .onDelete { indexes in
                 for index in indexes.reversed() {

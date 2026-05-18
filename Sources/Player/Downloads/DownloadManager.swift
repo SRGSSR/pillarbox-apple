@@ -35,6 +35,19 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
         return download
     }
 
+    func playerItem(for download: Download, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
+        guard downloads.contains(download), let record = store.downloadRecord(for: download.id), let metadata = record.metadata, let location = download.location(allowsPartial: allowsPartial) else {
+            return nil
+        }
+        let storeType = type(of: store)
+        return .init(
+            storeType: storeType,
+            input: record.input,
+            asset: storeType.asset(location: location, input: record.input, metadata: metadata),
+            trackerAdapters: trackerAdapters
+        )
+    }
+
     func remove(_ download: Download) {
         guard downloads.contains(download) else { return }
         download.cancel()

@@ -29,6 +29,42 @@ public final class PlayerItem: Hashable {
 
     let id = UUID()
 
+    init<S>(storeType: S.Type, input: S.Input, asset: Asset<S.Metadata>, trackerAdapters: [TrackerAdapter<S.Metadata>] = []) where S: AssetDownloadStore {
+        self.trackerAdapters = trackerAdapters
+        self.content = .loading(id: id)
+
+        // TODO: Identical implementation as for remote playback below; just need different asset publishers
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
+            Just(asset)
+                .handleEvents(receiveOutput: { asset in
+                    trackerAdapters.forEach { adapter in
+                        adapter.updateMetadata(to: asset.metadata)
+                    }
+                }, receiveCompletion: nil)
+                .withInterval(clock: .suspending)
+                .map { asset, interval in
+                    Publishers.CombineLatest3(
+                        Just(asset),
+                        storeType.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
+                        Just(interval)
+                    )
+                }
+                .switchToLatest()
+                .map { asset, metadata, interval in
+                        .loaded(
+                            id: id,
+                            resource: asset.resource,
+                            metadata: metadata,
+                            configuration: asset.configuration,
+                            serviceInterval: interval
+                        )
+                }
+        }
+        .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
+        .receive(on: DispatchQueue.main)
+        .assign(to: &$content)
+    }
+
     /// Creates an item loaded using an ``AssetLoader``.
     ///
     /// - Parameters:
@@ -37,7 +73,8 @@ public final class PlayerItem: Hashable {
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     public init<A>(assetLoaderType: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
         self.trackerAdapters = trackerAdapters
-        content = .loading(id: id)
+        self.content = .loading(id: id)
+
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             assetLoaderType.metadataPublisher(for: input)
                 .handleEvents(receiveOutput: { metadata in
