@@ -53,10 +53,10 @@ public final class Download: ObservableObject {
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.id = id
         self.removeRecord = {
-            store.removeDownloadRecord(for: id)
+            store.removeDownloadRecord(forId: id)
         }
         self.resetRecord = {
-            guard let record = store.downloadRecord(for: id) else { return }
+            guard let record = store.downloadRecord(forId: id) else { return }
             store.updateDownloadRecord(record.reset())
         }
         configurePropertiesPublisher(loaderType: loaderType, input: input, session: session, store: store)
@@ -229,7 +229,7 @@ private extension Download {
     ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
-            let properties = store.downloadProperties(for: id)
+            let properties = store.downloadProperties(forId: id)
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
                 .map { metadata in
                     Publishers.CombineLatest4(

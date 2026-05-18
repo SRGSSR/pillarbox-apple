@@ -36,7 +36,7 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
     }
 
     func playerItem(for download: Download, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
-        guard let record = store.downloadRecord(for: download.id),
+        guard let record = store.downloadRecord(forId: download.id),
               let metadata = record.metadata,
               let location = download.location(allowsPartial: allowsPartial) else {
             return nil

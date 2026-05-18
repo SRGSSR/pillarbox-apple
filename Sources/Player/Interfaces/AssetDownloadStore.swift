@@ -21,9 +21,9 @@ public protocol AssetDownloadStore: AnyObject {
     func downloadRecords() -> [DownloadRecord<Input, Metadata>]
 
     func addDownloadRecord(using input: Input) -> DownloadRecord<Input, Metadata>
-    func removeDownloadRecord(for identifier: String)
+    func removeDownloadRecord(forId id: String)
 
-    func downloadRecord(for identifier: String) -> DownloadRecord<Input, Metadata>?
+    func downloadRecord(forId id: String) -> DownloadRecord<Input, Metadata>?
     func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>)
 }
 
@@ -34,8 +34,8 @@ public extension AssetDownloadStore where Metadata == PlayerMetadata {
 }
 
 extension AssetDownloadStore {
-    func downloadProperties(for identifier: String) -> DownloadProperties<Metadata> {
-        guard let record = downloadRecord(for: identifier) else { return .init() }
+    func downloadProperties(forId id: String) -> DownloadProperties<Metadata> {
+        guard let record = downloadRecord(forId: id) else { return .init() }
         return .init(from: record)
     }
 }

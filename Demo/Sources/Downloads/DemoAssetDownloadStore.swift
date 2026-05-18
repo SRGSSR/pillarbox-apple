@@ -89,13 +89,13 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         return fileEntry.toDownloadRecord()
     }
 
-    func removeDownloadRecord(for identifier: String) {
-        fileEntries.removeAll { $0.id == identifier }
+    func removeDownloadRecord(forId id: String) {
+        fileEntries.removeAll { $0.id == id }
         save()
     }
 
-    func downloadRecord(for identifier: String) -> DownloadRecord<DemoAssetLoader.Input, String>? {
-        fileEntries.first { $0.id == identifier }?.toDownloadRecord()
+    func downloadRecord(forId id: String) -> DownloadRecord<DemoAssetLoader.Input, String>? {
+        fileEntries.first { $0.id == id }?.toDownloadRecord()
     }
 
     func updateDownloadRecord(_ record: DownloadRecord<DemoAssetLoader.Input, String>) {

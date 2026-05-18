@@ -30,12 +30,12 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
         return record
     }
 
-    func removeDownloadRecord(for identifier: String) {
-        records.removeAll { $0.id == identifier }
+    func removeDownloadRecord(forId id: String) {
+        records.removeAll { $0.id == id }
     }
 
-    func downloadRecord(for identifier: String) -> DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>? {
-        records.first { $0.id == identifier }
+    func downloadRecord(forId id: String) -> DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>? {
+        records.first { $0.id == id }
     }
 
     func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>) {
