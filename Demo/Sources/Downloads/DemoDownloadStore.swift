@@ -23,7 +23,7 @@ private struct DownloadError: LocalizedError {
 final class DemoDownloadStore: DownloadStore {
     struct FileEntry: Codable {
         let url: URL
-        let metadata: String?
+        let title: String
         let bookmarkData: Data?
         let errorDescription: String?
 
@@ -33,14 +33,14 @@ final class DemoDownloadStore: DownloadStore {
 
         init(input: DemoAssetLoader.Input) {
             self.url = input.url
-            self.metadata = nil
+            self.title = input.title
             self.bookmarkData = nil
             self.errorDescription = nil
         }
 
         init(from record: DownloadRecord<DemoAssetLoader.Input, String>) {
             self.url = record.input.url
-            self.metadata = record.metadata
+            self.title = record.input.title
             self.bookmarkData = record.bookmarkData
             self.errorDescription = record.error?.localizedDescription
         }
@@ -48,8 +48,8 @@ final class DemoDownloadStore: DownloadStore {
         func toDownloadRecord() -> DownloadRecord<DemoAssetLoader.Input, String> {
             .init(
                 id: id,
-                input: DemoAssetLoader.Input(url: url),
-                metadata: metadata,
+                input: DemoAssetLoader.Input(title: title, url: url),
+                metadata: title,
                 bookmarkData: bookmarkData,
                 error: DownloadError(errorDescription: errorDescription)
             )
