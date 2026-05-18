@@ -36,4 +36,10 @@ extension AssetLoader {
         guard let metadata else { return .empty }
         return playerMetadata(from: metadata)
     }
+
+    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<Metadata>, Error> {
+        metadataPublisher(for: input)
+            .map { asset(input: input, metadata: $0) }
+            .eraseToAnyPublisher()
+    }
 }

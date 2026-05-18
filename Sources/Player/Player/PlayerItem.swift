@@ -29,13 +29,43 @@ public final class PlayerItem: Hashable {
 
     let id = UUID()
 
-    init<S>(storeType: S.Type, input: S.Input, asset: Asset<S.Metadata>, trackerAdapters: [TrackerAdapter<S.Metadata>] = []) where S: AssetDownloadStore {
+    /// Creates an item loaded using an ``AssetLoader``.
+    ///
+    /// - Parameters:
+    ///   - assetLoaderType: The asset loader type.
+    ///   - input: The input expected by the asset loader.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    public convenience init<A>(assetLoaderType: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
+        self.init(
+            assetPublisher: assetLoaderType.assetPublisher(for: input),
+            mapper: { assetLoaderType.playerMetadata(from: $0) },
+            trackerAdapters: trackerAdapters
+        )
+    }
+
+    convenience init<S>(
+        storeType: S.Type,
+        input: S.Input,
+        asset: Asset<S.Metadata>,
+        trackerAdapters: [TrackerAdapter<S.Metadata>]
+    ) where S: AssetDownloadStore {
+        self.init(
+            assetPublisher: Just(asset),
+            mapper: { storeType.playerMetadata(from: $0) },
+            trackerAdapters: trackerAdapters
+        )
+    }
+
+    private init<P, M>(
+        assetPublisher: P,
+        mapper: @escaping (M) -> PlayerMetadata,
+        trackerAdapters: [TrackerAdapter<M>]
+    ) where P: Publisher, P.Output == Asset<M> {
         self.trackerAdapters = trackerAdapters
         self.content = .loading(id: id)
 
-        // TODO: Identical implementation as for remote playback below; just need different asset publishers
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
-            Just(asset)
+            assetPublisher
                 .handleEvents(receiveOutput: { asset in
                     trackerAdapters.forEach { adapter in
                         adapter.updateMetadata(to: asset.metadata)
@@ -45,48 +75,7 @@ public final class PlayerItem: Hashable {
                 .map { asset, interval in
                     Publishers.CombineLatest3(
                         Just(asset),
-                        storeType.playerMetadata(from: asset.metadata).playerMetadataPublisher(),
-                        Just(interval)
-                    )
-                }
-                .switchToLatest()
-                .map { asset, metadata, interval in
-                        .loaded(
-                            id: id,
-                            resource: asset.resource,
-                            metadata: metadata,
-                            configuration: asset.configuration,
-                            serviceInterval: interval
-                        )
-                }
-        }
-        .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
-        .receive(on: DispatchQueue.main)
-        .assign(to: &$content)
-    }
-
-    /// Creates an item loaded using an ``AssetLoader``.
-    ///
-    /// - Parameters:
-    ///   - assetLoaderType: The asset loader type.
-    ///   - input: The input expected by the asset loader.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public init<A>(assetLoaderType: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
-        self.trackerAdapters = trackerAdapters
-        self.content = .loading(id: id)
-
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
-            assetLoaderType.metadataPublisher(for: input)
-                .handleEvents(receiveOutput: { metadata in
-                    trackerAdapters.forEach { adapter in
-                        adapter.updateMetadata(to: metadata)
-                    }
-                }, receiveCompletion: nil)
-                .withInterval(clock: .suspending)
-                .map { metadata, interval in
-                    Publishers.CombineLatest3(
-                        Just(assetLoaderType.asset(input: input, metadata: metadata)),
-                        assetLoaderType.playerMetadata(from: metadata).playerMetadataPublisher(),
+                        mapper(asset.metadata).playerMetadataPublisher(),
                         Just(interval)
                     )
                 }
