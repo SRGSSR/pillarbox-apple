@@ -43,7 +43,7 @@ public final class PlayerItem: Hashable {
         )
     }
 
-    convenience init<S>(storeType: S.Type, asset: Asset<S.Metadata>, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: AssetDownloadStore {
+    convenience init<S>(storeType: S.Type, asset: Asset<S.Metadata>, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: DownloadStore {
         self.init(
             assetPublisher: Just(asset),
             mapper: { storeType.playerMetadata(from: $0) },

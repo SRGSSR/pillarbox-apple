@@ -15,7 +15,7 @@ struct DownloadsView: View {
     @StateObject private var downloader = Downloader(
         loaderType: DemoAssetLoader.self,
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.file-downloads"),
-        store: DemoAssetDownloadStore(fileName: "file_downloads.json")
+        store: DemoDownloadStore(fileName: "file_downloads.json")
     )
     @EnvironmentObject private var router: Router
 

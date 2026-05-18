@@ -11,7 +11,7 @@
 import Foundation
 
 @_spi(DownloaderPrivate)
-public protocol AssetDownloadStore: AnyObject {
+public protocol DownloadStore: AnyObject {
     associatedtype Input
     associatedtype Metadata
 
@@ -27,13 +27,13 @@ public protocol AssetDownloadStore: AnyObject {
     func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>)
 }
 
-public extension AssetDownloadStore where Metadata == PlayerMetadata {
+public extension DownloadStore where Metadata == PlayerMetadata {
     static func playerMetadata(from metadata: Metadata) -> PlayerMetadata {
         metadata
     }
 }
 
-extension AssetDownloadStore {
+extension DownloadStore {
     func downloadProperties(forId id: String) -> DownloadProperties<Metadata> {
         guard let record = downloadRecord(forId: id) else { return .init() }
         return .init(from: record)

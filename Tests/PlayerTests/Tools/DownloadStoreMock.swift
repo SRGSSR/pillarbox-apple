@@ -9,7 +9,7 @@ import PillarboxPlayer
 
 import Foundation
 
-final class AssetDownloadStoreMock: AssetDownloadStore {
+final class DownloadStoreMock: DownloadStore {
     private var records: [DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>] = []
 
     static func asset(fileUrl: URL, input: AssetLoaderMock.Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {

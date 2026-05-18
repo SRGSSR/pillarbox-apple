@@ -50,7 +50,7 @@ public final class Download: ObservableObject {
         input: L.Input,
         session: AVAssetDownloadURLSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    ) where L: AssetLoader, S: DownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.id = id
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
@@ -67,7 +67,7 @@ public final class Download: ObservableObject {
         input: L.Input,
         session: AVAssetDownloadURLSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    ) where L: AssetLoader, S: DownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         let record = store.addDownloadRecord(using: input)
         self.init(id: record.id, loaderType: loaderType, input: input, session: session, store: store)
     }
@@ -77,7 +77,7 @@ public final class Download: ObservableObject {
         record: DownloadRecord<L.Input, L.Metadata>,
         session: AVAssetDownloadURLSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    ) where L: AssetLoader, S: DownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.init(id: record.id, loaderType: loaderType, input: record.input, session: session, store: store)
     }
 
@@ -213,7 +213,7 @@ private extension Download {
         input: L.Input,
         session: AVAssetDownloadURLSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    ) where L: AssetLoader, S: DownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         propertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
             .receiveOnMainThread()
             .assign(to: &$properties)
@@ -226,7 +226,7 @@ private extension Download {
         input: L.Input,
         session: AVAssetDownloadURLSession,
         store: S
-    ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: DownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
