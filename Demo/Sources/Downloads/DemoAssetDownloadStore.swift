@@ -70,8 +70,8 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         }
     }
 
-    static func asset(location: URL, input: DemoAssetLoader.Input, metadata: String) -> Asset<String> {
-        .simple(url: location, metadata: metadata)
+    static func asset(fileUrl: URL, input: DemoAssetLoader.Input, metadata: String) -> Asset<String> {
+        .simple(url: fileUrl, metadata: metadata)
     }
 
     static func playerMetadata(from metadata: String) -> PlayerMetadata {

@@ -39,7 +39,7 @@ struct DownloadPlayerProperties {
         }
     }
 
-    func location(allowsPartial: Bool) -> URL? {
+    func fileUrl(allowsPartial: Bool) -> URL? {
         switch state {
         case .completed:
             return location

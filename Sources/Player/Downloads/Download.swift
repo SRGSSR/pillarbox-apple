@@ -81,8 +81,8 @@ public final class Download: ObservableObject {
         self.init(id: record.id, loaderType: loaderType, input: record.input, session: session, store: store)
     }
 
-    func location(allowsPartial: Bool) -> URL? {
-        properties.location(allowsPartial: allowsPartial)
+    func fileUrl(allowsPartial: Bool) -> URL? {
+        properties.fileUrl(allowsPartial: allowsPartial)
     }
 
     func attach(to location: URL) {

@@ -12,8 +12,8 @@ import Foundation
 final class AssetDownloadStoreMock: AssetDownloadStore {
     private var records: [DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>] = []
 
-    static func asset(location: URL, input: AssetLoaderMock.Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {
-        .simple(url: location, metadata: metadata)
+    static func asset(fileUrl: URL, input: AssetLoaderMock.Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {
+        .simple(url: fileUrl, metadata: metadata)
     }
 
     static func playerMetadata(from metadata: PlayerMetadata) -> PlayerMetadata {

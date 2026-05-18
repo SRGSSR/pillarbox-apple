@@ -38,13 +38,13 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
     func playerItem(for download: Download, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
         guard let record = store.downloadRecord(forId: download.id),
               let metadata = record.metadata,
-              let location = download.location(allowsPartial: allowsPartial) else {
+              let fileUrl = download.fileUrl(allowsPartial: allowsPartial) else {
             return nil
         }
         let storeType = type(of: store)
         return .init(
             storeType: storeType,
-            asset: storeType.asset(location: location, input: record.input, metadata: metadata),
+            asset: storeType.asset(fileUrl: fileUrl, input: record.input, metadata: metadata),
             trackerAdapters: trackerAdapters
         )
     }

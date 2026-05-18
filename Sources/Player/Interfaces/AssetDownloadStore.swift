@@ -15,7 +15,7 @@ public protocol AssetDownloadStore: AnyObject {
     associatedtype Input
     associatedtype Metadata
 
-    static func asset(location: URL, input: Input, metadata: Metadata) -> Asset<Metadata>
+    static func asset(fileUrl: URL, input: Input, metadata: Metadata) -> Asset<Metadata>
     static func playerMetadata(from metadata: Metadata) -> PlayerMetadata
 
     func downloadRecords() -> [DownloadRecord<Input, Metadata>]
