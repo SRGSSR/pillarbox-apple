@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import Foundation
 
 struct DownloadProperties<Metadata> {
@@ -44,3 +46,5 @@ struct DownloadProperties<Metadata> {
         try? location?.bookmarkData()
     }
 }
+
+#endif

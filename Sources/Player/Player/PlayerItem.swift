@@ -44,6 +44,7 @@ public final class PlayerItem: Hashable {
         )
     }
 
+#if DEBUG
     convenience init?<S>(download: Download, store: S, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: DownloadStore {
         guard let record = store.downloadRecord(forId: download.id),
               let metadata = record.metadata,
@@ -58,6 +59,7 @@ public final class PlayerItem: Hashable {
             trackerAdapters: trackerAdapters
         )
     }
+#endif
 
     private init<P, M>(
         metadataPublisher: P,
