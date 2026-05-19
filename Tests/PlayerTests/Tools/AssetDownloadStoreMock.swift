@@ -16,10 +16,6 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
         .simple(url: fileUrl)
     }
 
-    static func playerMetadata(from metadata: PlayerMetadata) -> PlayerMetadata {
-        metadata
-    }
-
     func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>] {
         records
     }
