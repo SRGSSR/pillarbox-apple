@@ -18,7 +18,7 @@ import UIKit
 public final class Download: ObservableObject {
     let id: String
 
-    @Published private var properties: DownloadPlayerProperties = .empty
+    @Published private var properties: DownloadProperties<PlayerMetadata> = .init()
 
     private let trigger = Trigger()
     private let locationSubject = PassthroughSubject<URL, Never>()
@@ -41,7 +41,7 @@ public final class Download: ObservableObject {
     }
 
     public var metadata: PlayerMetadata {
-        properties.metadata
+        properties.metadata ?? .empty
     }
 
     private init<L, S>(
@@ -226,7 +226,7 @@ private extension Download {
         input: L.Input,
         session: AVAssetDownloadURLSession,
         store: S
-    ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: DownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    ) -> AnyPublisher<DownloadProperties<PlayerMetadata>, Never> where L: AssetLoader, S: DownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
@@ -270,7 +270,7 @@ private extension Download {
                     receiveCompletion: nil
                 )
                 .map { properties in
-                    DownloadPlayerProperties(
+                    DownloadProperties(
                         metadata: loaderType.playerMetadata(from: properties.metadata),
                         taskProperties: properties.taskProperties,
                         location: properties.location,

@@ -18,6 +18,31 @@ struct DownloadProperties<Metadata> {
         location == nil && error == nil
     }
 
+    var state: DownloadState {
+        if let error {
+            return .failed(error)
+        }
+        else if let taskProperties {
+            switch taskProperties.state {
+            case .running, .canceling:
+                return .running
+            case .suspended:
+                return .suspended
+            case .completed:
+                return .completed
+            @unknown default:
+                assertionFailure("Unhandled case")
+                return .completed
+            }
+        }
+        else if location != nil {
+            return .completed
+        }
+        else {
+            return .preparing
+        }
+    }
+
     init() {
         self.init(metadata: nil, taskProperties: nil, location: nil, error: nil)
     }
@@ -44,6 +69,15 @@ struct DownloadProperties<Metadata> {
 
     func bookmarkData() -> Data? {
         try? location?.bookmarkData()
+    }
+
+    func fileUrl(allowsPartial: Bool) -> URL? {
+        switch state {
+        case .completed:
+            return location
+        default:
+            return allowsPartial ? location : nil
+        }
     }
 }
 
