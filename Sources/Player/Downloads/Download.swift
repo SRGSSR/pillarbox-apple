@@ -222,7 +222,6 @@ private extension Download {
             .assign(to: &$properties)
     }
 
-    // swiftlint:disable:next function_body_length
     func propertiesPublisher<L, S>(
         loaderType: L.Type,
         id: String,
