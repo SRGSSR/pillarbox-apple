@@ -29,10 +29,20 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
     }
 
     @discardableResult
-    func add(input: S.Input) -> Download {
-        let download = Download(loaderType: L.self, input: input, session: session, store: store)
-        downloads.append(download)
-        return download
+    func add(input: L.Input) -> Download {
+        if let download = download(matching: input) {
+            return download
+        }
+        else {
+            let download = Download(loaderType: L.self, input: input, session: session, store: store)
+            downloads.append(download)
+            return download
+        }
+    }
+
+    func download(matching input: L.Input) -> Download? {
+        let id = type(of: store).id(from: input)
+        return downloads.first { $0.id == id }
     }
 
     func playerItem(for download: Download, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {

@@ -25,8 +25,12 @@ public final class Downloader<L, S>: ObservableObject where L: AssetLoader, S: A
     }
 
     @discardableResult
-    public func add(input: S.Input) -> Download {
+    public func add(input: L.Input) -> Download {
         manager.add(input: input)
+    }
+
+    public func download(matching input: L.Input) -> Download? {
+        manager.download(matching: input)
     }
 
     public func playerItem(for download: Download, allowsPartial: Bool = true, trackerAdapters: [TrackerAdapter<L.Metadata>] = []) -> PlayerItem? {
