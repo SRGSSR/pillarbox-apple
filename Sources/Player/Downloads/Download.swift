@@ -16,7 +16,7 @@ import UIKit
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject {
-    typealias DownloadPlayerProperties = DownloadProperties<PlayerMetadata>
+    private typealias DownloadPlayerProperties = DownloadProperties<PlayerMetadata>
 
     let id: String
 
@@ -210,7 +210,7 @@ private extension Download {
 }
 
 @available(tvOS, unavailable)
-private extension Download {
+extension Download {
     private func configurePropertiesPublisher<L, S>(
         loaderType: L.Type,
         input: L.Input,
@@ -222,7 +222,7 @@ private extension Download {
             .assign(to: &$properties)
     }
 
-    func propertiesPublisher<L, S>(
+    private func propertiesPublisher<L, S>(
         loaderType: L.Type,
         id: String,
         input: L.Input,
