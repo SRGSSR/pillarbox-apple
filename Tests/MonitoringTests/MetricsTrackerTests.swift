@@ -200,6 +200,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 let player = data.player
                 expect(player.name).to(equal("Pillarbox"))
                 expect(player.version).to(equal(Player.version))
+                expect(player.language).notTo(beNil())
             },
             heartbeat { payload in
                 expect(payload.version).to(equal(1))

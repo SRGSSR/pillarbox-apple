@@ -45,6 +45,7 @@ extension MetricStartData {
         let name: String
         let platform: String
         let version: String
+        let language: String?
     }
 
     struct ExperienceTimings: Encodable {
