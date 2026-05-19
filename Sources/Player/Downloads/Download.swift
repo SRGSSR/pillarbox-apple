@@ -16,9 +16,11 @@ import UIKit
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject {
+    typealias DownloadPlayerProperties = DownloadProperties<PlayerMetadata>
+
     let id: String
 
-    @Published private var properties: DownloadProperties<PlayerMetadata> = .init()
+    @Published private var properties: DownloadPlayerProperties = .init()
 
     private let trigger = Trigger()
     private let locationSubject = PassthroughSubject<URL, Never>()
@@ -226,7 +228,7 @@ private extension Download {
         input: L.Input,
         session: AVAssetDownloadURLSession,
         store: S
-    ) -> AnyPublisher<DownloadProperties<PlayerMetadata>, Never> where L: AssetLoader, S: DownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: DownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
