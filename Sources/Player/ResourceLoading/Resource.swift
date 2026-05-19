@@ -7,6 +7,10 @@
 import AVFoundation
 import os
 
+private var kResourceLoaderDelegate: Void?
+
+private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource-loader")
+
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
 private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content-key-session")
 
@@ -39,8 +43,8 @@ enum Resource {
             return asset(for: url, with: configuration)
         case let .custom(url: url, delegate: delegate):
             let asset = asset(for: url, with: configuration)
-            // FIXME:
-            // asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: kResourceLoaderQueue)
+            asset.resourceLoader.setDelegate(delegate, queue: kResourceLoaderQueue)
+            objc_setAssociatedObject(asset, &kResourceLoaderDelegate, delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return asset
         case let .encrypted(url: url, delegate: delegate):
 #if targetEnvironment(simulator)
