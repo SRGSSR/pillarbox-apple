@@ -154,7 +154,7 @@ private extension Download {
         metadata: L.Metadata,
         using session: AVAssetDownloadURLSession
     ) -> URLSessionTask where L: AssetLoader {
-        let asset = loaderType.asset(input: input, metadata: metadata)
+        let asset = loaderType.downloadableAsset(input: input, metadata: metadata)
         let configuration = AVAssetDownloadConfiguration(
             asset: asset.urlAsset(),
             title: loaderType.playerMetadata(from: metadata).title ?? id
