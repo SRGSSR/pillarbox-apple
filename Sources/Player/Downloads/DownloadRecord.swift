@@ -12,26 +12,20 @@ import Foundation
 
 @_spi(DownloaderPrivate)
 public struct DownloadRecord<Input, Metadata> {
-    public let id: String
     public let input: Input
     public let metadata: Metadata?
     public let bookmarkData: Data?
     public let error: Error?
 
-    public init(id: String, input: Input, metadata: Metadata?, bookmarkData: Data?, error: Error?) {
-        self.id = id
+    public init(input: Input, metadata: Metadata?, bookmarkData: Data?, error: Error?) {
         self.input = input
         self.metadata = metadata
         self.bookmarkData = bookmarkData
         self.error = error
     }
 
-    init(input: Input, metadata: Metadata?, bookmarkData: Data?, error: Error?) {
-        self.init(id: UUID().uuidString, input: input, metadata: metadata, bookmarkData: bookmarkData, error: error)
-    }
-
     func reset() -> Self {
-        .init(id: id, input: input, metadata: nil, bookmarkData: nil, error: nil)
+        .init(input: input, metadata: nil, bookmarkData: nil, error: nil)
     }
 }
 

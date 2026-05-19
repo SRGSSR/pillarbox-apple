@@ -22,23 +22,22 @@ private struct DownloadError: LocalizedError {
 
 final class DemoAssetDownloadStore: AssetDownloadStore {
     struct FileEntry: Codable {
+        let id: String
         let url: URL
         let title: String
         let bookmarkData: Data?
         let errorDescription: String?
 
-        var id: String {
-            url.absoluteString
-        }
-
-        init(input: DemoAssetLoader.Input) {
+        init(id: String, input: DemoAssetLoader.Input) {
+            self.id = id
             self.url = input.url
             self.title = input.title
             self.bookmarkData = nil
             self.errorDescription = nil
         }
 
-        init(from record: DownloadRecord<DemoAssetLoader.Input, String>) {
+        init(from record: DownloadRecord<DemoAssetLoader.Input, String>, forId id: String) {
+            self.id = id
             self.url = record.input.url
             self.title = record.input.title
             self.bookmarkData = record.bookmarkData
@@ -47,7 +46,6 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
 
         func toDownloadRecord() -> DownloadRecord<DemoAssetLoader.Input, String> {
             .init(
-                id: id,
                 input: DemoAssetLoader.Input(title: title, url: url),
                 metadata: title,
                 bookmarkData: bookmarkData,
@@ -70,6 +68,10 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         }
     }
 
+    static func id(from input: DemoAssetLoader.Input) -> String {
+        input.url.absoluteString
+    }
+
     static func asset(fileUrl: URL, input: DemoAssetLoader.Input, metadata: String) -> Asset {
         .simple(url: fileUrl)
     }
@@ -82,11 +84,10 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         fileEntries.map { $0.toDownloadRecord() }
     }
 
-    func addDownloadRecord(using input: DemoAssetLoader.Input) -> DownloadRecord<DemoAssetLoader.Input, String> {
-        let fileEntry = FileEntry(input: input)
+    func addDownloadRecord(using input: DemoAssetLoader.Input, forId id: String) {
+        let fileEntry = FileEntry(id: id, input: input)
         fileEntries.append(fileEntry)
         save()
-        return fileEntry.toDownloadRecord()
     }
 
     func removeDownloadRecord(forId id: String) {
@@ -98,9 +99,9 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         fileEntries.first { $0.id == id }?.toDownloadRecord()
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<DemoAssetLoader.Input, String>) {
-        guard let index = fileEntries.firstIndex(where: { $0.id == record.id }) else { return }
-        fileEntries[index] = .init(from: record)
+    func updateDownloadRecord(_ record: DownloadRecord<DemoAssetLoader.Input, String>, forId id: String) {
+        guard let index = fileEntries.firstIndex(where: { $0.id == id }) else { return }
+        fileEntries[index] = .init(from: record, forId: id)
         save()
     }
 

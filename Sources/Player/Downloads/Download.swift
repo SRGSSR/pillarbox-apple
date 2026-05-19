@@ -59,7 +59,7 @@ public final class Download: ObservableObject {
         }
         self.resetRecord = {
             guard let record = store.downloadRecord(forId: id) else { return }
-            store.updateDownloadRecord(record.reset())
+            store.updateDownloadRecord(record.reset(), forId: id)
         }
         configurePropertiesPublisher(loaderType: loaderType, input: input, session: session, store: store)
     }
@@ -70,8 +70,9 @@ public final class Download: ObservableObject {
         session: AVAssetDownloadURLSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        let record = store.addDownloadRecord(using: input)
-        self.init(id: record.id, loaderType: loaderType, input: input, session: session, store: store)
+        let id = type(of: store).id(from: input)
+        store.addDownloadRecord(using: input, forId: id)
+        self.init(id: id, loaderType: loaderType, input: input, session: session, store: store)
     }
 
     convenience init<L, S>(
@@ -80,7 +81,7 @@ public final class Download: ObservableObject {
         session: AVAssetDownloadURLSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        self.init(id: record.id, loaderType: loaderType, input: record.input, session: session, store: store)
+        self.init(id: type(of: store).id(from: record.input), loaderType: loaderType, input: record.input, session: session, store: store)
     }
 
     func fileUrl(allowsPartial: Bool) -> URL? {
@@ -261,13 +262,12 @@ private extension Download {
                 .handleEvents(
                     receiveOutput: { properties in
                         let record = DownloadRecord(
-                            id: id,
                             input: input,
                             metadata: properties.metadata,
                             bookmarkData: properties.bookmarkData(),
                             error: properties.error
                         )
-                        store.updateDownloadRecord(record)
+                        store.updateDownloadRecord(record, forId: id)
                     },
                     receiveCompletion: nil
                 )

@@ -8,34 +8,37 @@
 import PillarboxPlayer
 
 import Foundation
+import OrderedCollections
 
 final class AssetDownloadStoreMock: AssetDownloadStore {
-    private var records: [DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>] = []
+    private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>> = [:]
+
+    static func id(from input: AssetLoaderMock.Input) -> String {
+        input.url.absoluteString
+    }
 
     static func asset(fileUrl: URL, input: AssetLoaderMock.Input, metadata: PlayerMetadata) -> Asset {
         .simple(url: fileUrl)
     }
 
     func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>] {
-        records
+        Array(records.values)
     }
 
-    func addDownloadRecord(using input: AssetLoaderMock.Input) -> DownloadRecord<AssetLoaderMock.Input, PlayerMetadata> {
-        let record = DownloadRecord(id: input.url.absoluteString, input: input, metadata: input.metadata, bookmarkData: nil, error: nil)
-        records.append(record)
-        return record
+    func addDownloadRecord(using input: AssetLoaderMock.Input, forId id: String) {
+        let record = DownloadRecord(input: input, metadata: input.metadata, bookmarkData: nil, error: nil)
+        records[id] = record
     }
 
     func removeDownloadRecord(forId id: String) {
-        records.removeAll { $0.id == id }
+        records.removeValue(forKey: id)
     }
 
     func downloadRecord(forId id: String) -> DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>? {
-        records.first { $0.id == id }
+        records[id]
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>) {
-        guard let index = records.firstIndex(where: { $0.id == record.id }) else { return }
-        records[index] = record
+    func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>, forId id: String) {
+        records[id] = record
     }
 }
