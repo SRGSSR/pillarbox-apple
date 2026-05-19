@@ -14,6 +14,8 @@ import SwiftUI
 struct DownloadCell: View {
     @ObservedObject var download: Download
 
+    var action: () -> Void
+
     private var title: String {
         download.metadata.title ?? "Untitled"
     }
@@ -32,6 +34,9 @@ struct DownloadCell: View {
             errorMessage()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(.rect)
+        .accessibilityAddTraits(.isButton)
+        .onTapGesture(perform: action)
     }
 
     @ViewBuilder

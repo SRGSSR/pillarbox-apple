@@ -43,14 +43,11 @@ struct DownloadsView: View {
     private func mainView() -> some View {
         List {
             ForEach(Array(downloader.downloads), id: \.self) { download in
-                DownloadCell(download: download)
-                    .contentShape(.rect)
-                    .accessibilityAddTraits(.isButton)
-                    .onTapGesture {
-                        if let item = downloader.playerItem(for: download) {
-                            router.presented = .player(media: .init(title: download.metadata.title ?? "Untitled", type: .item(item)))
-                        }
+                DownloadCell(download: download) {
+                    if let item = downloader.playerItem(for: download) {
+                        router.presented = .player(media: .init(title: download.metadata.title ?? "Untitled", type: .item(item)))
                     }
+                }
             }
             .onDelete { indexes in
                 for index in indexes.reversed() {
