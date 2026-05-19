@@ -17,7 +17,7 @@ final class DownloadManagerTests: TestCase {
         let manager = DownloadManager(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
-            store: DownloadStoreMock()
+            store: AssetDownloadStoreMock()
         )
         expect(manager.downloads).to(beEmpty())
     }
@@ -26,7 +26,7 @@ final class DownloadManagerTests: TestCase {
         let manager = DownloadManager(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
-            store: DownloadStoreMock()
+            store: AssetDownloadStoreMock()
         )
         let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         expect(manager.downloads).to(equal([download]))
@@ -36,7 +36,7 @@ final class DownloadManagerTests: TestCase {
         let manager = DownloadManager(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
-            store: DownloadStoreMock()
+            store: AssetDownloadStoreMock()
         )
         let download1 = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         let download2 = manager.add(input: .init(url: Stream.mediumOnDemand.url, metadata: .empty))
@@ -48,7 +48,7 @@ final class DownloadManagerTests: TestCase {
         let manager = DownloadManager(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
-            store: DownloadStoreMock()
+            store: AssetDownloadStoreMock()
         )
         let download1 = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         let download2 = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
@@ -60,7 +60,7 @@ final class DownloadManagerTests: TestCase {
         let manager = DownloadManager(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
-            store: DownloadStoreMock()
+            store: AssetDownloadStoreMock()
         )
         let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         manager.remove(download)
@@ -71,7 +71,7 @@ final class DownloadManagerTests: TestCase {
         let manager = DownloadManager(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
-            store: DownloadStoreMock()
+            store: AssetDownloadStoreMock()
         )
         manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         manager.add(input: .init(url: Stream.mediumOnDemand.url, metadata: .empty))
