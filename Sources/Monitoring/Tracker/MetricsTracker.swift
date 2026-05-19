@@ -148,7 +148,8 @@ private extension MetricsTracker {
             player: .init(
                 name: "Pillarbox",
                 platform: "Apple",
-                version: Player.version
+                version: Player.version,
+                language: Self.playerLanguage
             ),
             media: .init(
                 assetUrl: metadata?.assetUrl,
@@ -245,6 +246,7 @@ private extension MetricsTracker {
 private extension MetricsTracker {
     static let applicationId = Bundle.main.bundleIdentifier
     static let applicationVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    static let playerLanguage = Bundle.main.preferredLocalizations.first
 }
 
 private extension MetricsTracker {
