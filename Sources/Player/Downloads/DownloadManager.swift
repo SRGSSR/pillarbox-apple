@@ -46,10 +46,12 @@ final class DownloadManager<L, S>: NSObject, AVAssetDownloadDelegate where L: As
     }
 
     func playerItem(for download: Download, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
-        .init(download: download, store: store, allowsPartial: allowsPartial, trackerAdapters: trackerAdapters)
+        guard downloads.contains(download) else { return nil }
+        return .init(download: download, store: store, allowsPartial: allowsPartial, trackerAdapters: trackerAdapters)
     }
 
     func remove(_ download: Download) {
+        guard downloads.contains(download) else { return }
         download.cancel()
         downloads.removeAll { $0.id == download.id }
     }
