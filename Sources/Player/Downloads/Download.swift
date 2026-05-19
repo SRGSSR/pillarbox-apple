@@ -156,7 +156,7 @@ private extension Download {
     ) -> URLSessionTask where L: AssetLoader {
         let asset = loaderType.asset(input: input, metadata: metadata)
         let configuration = AVAssetDownloadConfiguration(
-            asset: .init(url: asset.resource.url()),
+            asset: asset.urlAsset(),
             title: loaderType.playerMetadata(from: metadata).title ?? id
         )
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)

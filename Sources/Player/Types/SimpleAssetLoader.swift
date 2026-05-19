@@ -20,7 +20,7 @@ enum SimpleAssetLoader: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {
-        .simple(url: input.url, metadata: metadata, configuration: input.configuration)
+    static func asset(input: Input, metadata: PlayerMetadata) -> Asset {
+        .simple(url: input.url, configuration: input.configuration)
     }
 }

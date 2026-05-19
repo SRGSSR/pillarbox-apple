@@ -21,7 +21,7 @@ enum FailingAssetLoaderMock: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {
-        .unavailable(with: input.error, metadata: metadata)
+    static func asset(input: Input, metadata: PlayerMetadata) -> Asset {
+        .unavailable(with: input.error)
     }
 }

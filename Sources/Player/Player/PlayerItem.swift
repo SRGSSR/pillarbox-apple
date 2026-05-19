@@ -37,8 +37,9 @@ public final class PlayerItem: Hashable {
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     public convenience init<A>(assetLoaderType: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
         self.init(
-            assetPublisher: assetLoaderType.assetPublisher(for: input),
-            mapper: { assetLoaderType.playerMetadata(from: $0) },
+            metadataPublisher: assetLoaderType.metadataPublisher(for: input),
+            metadataMapper: { assetLoaderType.playerMetadata(from: $0) },
+            assetProvider: { assetLoaderType.asset(input: input, metadata: $0) },
             trackerAdapters: trackerAdapters
         )
     }
@@ -51,32 +52,34 @@ public final class PlayerItem: Hashable {
         }
         let storeType = type(of: store)
         self.init(
-            assetPublisher: Just(storeType.asset(fileUrl: fileUrl, input: record.input, metadata: metadata)),
-            mapper: { storeType.playerMetadata(from: $0) },
+            metadataPublisher: Just(metadata),
+            metadataMapper: { storeType.playerMetadata(from: $0) },
+            assetProvider: { storeType.asset(fileUrl: fileUrl, input: record.input, metadata: $0) },
             trackerAdapters: trackerAdapters
         )
     }
 
     private init<P, M>(
-        assetPublisher: P,
-        mapper: @escaping (M) -> PlayerMetadata,
+        metadataPublisher: P,
+        metadataMapper: @escaping (M) -> PlayerMetadata,
+        assetProvider: @escaping (M) -> Asset,
         trackerAdapters: [TrackerAdapter<M>]
-    ) where P: Publisher, P.Output == Asset<M> {
+    ) where P: Publisher, P.Output == M {
         self.trackerAdapters = trackerAdapters
         self.content = .loading(id: id)
 
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
-            assetPublisher
-                .handleEvents(receiveOutput: { asset in
+            metadataPublisher
+                .handleEvents(receiveOutput: { metadata in
                     trackerAdapters.forEach { adapter in
-                        adapter.updateMetadata(to: asset.metadata)
+                        adapter.updateMetadata(to: metadata)
                     }
                 }, receiveCompletion: nil)
                 .withInterval(clock: .suspending)
-                .map { asset, interval in
+                .map { metadata, interval in
                     Publishers.CombineLatest3(
-                        Just(asset),
-                        mapper(asset.metadata).playerMetadataPublisher(),
+                        Just(assetProvider(metadata)),
+                        metadataMapper(metadata).playerMetadataPublisher(),
                         Just(interval)
                     )
                 }

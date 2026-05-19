@@ -27,8 +27,8 @@ struct DemoAssetLoader: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: String) -> Asset<String> {
-        .simple(url: input.url, metadata: metadata)
+    static func asset(input: Input, metadata: String) -> Asset {
+        .simple(url: input.url)
     }
 
     static func playerMetadata(from metadata: String) -> PlayerMetadata {

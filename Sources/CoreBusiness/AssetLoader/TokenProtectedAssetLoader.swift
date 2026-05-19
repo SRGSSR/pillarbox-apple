@@ -21,7 +21,7 @@ enum TokenProtectedAssetLoader: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {
-        .tokenProtected(url: input.url, metadata: input.metadata, configuration: input.configuration)
+    static func asset(input: Input, metadata: PlayerMetadata) -> Asset {
+        .tokenProtected(url: input.url, configuration: input.configuration)
     }
 }

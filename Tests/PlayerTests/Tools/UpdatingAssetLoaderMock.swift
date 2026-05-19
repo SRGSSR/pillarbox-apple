@@ -23,7 +23,7 @@ enum UpdatingAssetLoaderMock: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: Metadata) -> Asset<Metadata> {
-        .simple(url: input.url, metadata: metadata)
+    static func asset(input: Input, metadata: Metadata) -> Asset {
+        .simple(url: input.url)
     }
 }

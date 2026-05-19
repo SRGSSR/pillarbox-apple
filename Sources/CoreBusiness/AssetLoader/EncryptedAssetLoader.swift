@@ -22,7 +22,7 @@ enum EncryptedAssetLoader: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: PlayerMetadata) -> Asset<PlayerMetadata> {
-        .encrypted(url: input.url, certificateUrl: input.certificateUrl, metadata: metadata, configuration: input.configuration)
+    static func asset(input: Input, metadata: PlayerMetadata) -> Asset {
+        .encrypted(url: input.url, certificateUrl: input.certificateUrl, configuration: input.configuration)
     }
 }

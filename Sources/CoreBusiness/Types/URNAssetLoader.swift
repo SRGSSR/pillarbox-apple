@@ -23,7 +23,7 @@ enum URNAssetLoader: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: MediaMetadata) -> Asset<MediaMetadata> {
+    static func asset(input: Input, metadata: MediaMetadata) -> Asset {
         asset(metadata: metadata, configuration: input.configuration)
     }
 
@@ -33,23 +33,23 @@ enum URNAssetLoader: AssetLoader {
 }
 
 private extension URNAssetLoader {
-    private static func asset(metadata: MediaMetadata, configuration: PlaybackConfiguration) -> Asset<MediaMetadata> {
+    private static func asset(metadata: MediaMetadata, configuration: PlaybackConfiguration) -> Asset {
         if let blockingReason = metadata.blockingReason {
-            return .unavailable(with: BlockingError(reason: blockingReason), metadata: metadata)
+            return .unavailable(with: BlockingError(reason: blockingReason))
         }
         guard let resource = metadata.resource else {
-            return .unavailable(with: SourceError(), metadata: metadata)
+            return .unavailable(with: SourceError())
         }
         let configuration = assetConfiguration(for: resource, configuration: configuration)
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
-            return .encrypted(url: resource.url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration)
+            return .encrypted(url: resource.url, certificateUrl: certificateUrl, configuration: configuration)
         }
         else {
             switch resource.tokenType {
             case .akamai:
-                return .tokenProtected(url: resource.url, metadata: metadata, configuration: configuration)
+                return .tokenProtected(url: resource.url, configuration: configuration)
             default:
-                return .simple(url: resource.url, metadata: metadata, configuration: configuration)
+                return .simple(url: resource.url, configuration: configuration)
             }
         }
     }

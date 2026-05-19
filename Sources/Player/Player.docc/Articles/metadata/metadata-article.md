@@ -38,7 +38,7 @@ enum MediaAssetLoader: AssetLoader {
         // ...
     }
 
-    static func assetPublisher(for input: Input) -> AnyPublisher<Asset<Media>, Error> {
+    static func assetPublisher(for input: Input) -> AnyPublisher<Asset, Error> {
         // ...
     }
 

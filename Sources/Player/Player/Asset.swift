@@ -13,20 +13,18 @@ import AVFoundation
 /// - Simple assets which can be played directly.
 /// - Custom assets which require a custom resource loader delegate.
 /// - Encrypted assets which require a FairPlay content key session delegate.
-public struct Asset<M> {
+public struct Asset {
     let resource: Resource
-    let metadata: M
     let configuration: PlaybackConfiguration
 
     /// Returns a simple asset playable from a URL.
     /// 
     /// - Parameters:
     ///   - url: The URL to be played.
-    ///   - metadata: The metadata associated with the asset.
     ///   - configuration: The configuration to apply to the asset.
     /// - Returns: The asset.
-    public static func simple(url: URL, metadata: M, configuration: PlaybackConfiguration = .default) -> Self {
-        .init(resource: .simple(url: url), metadata: metadata, configuration: configuration)
+    public static func simple(url: URL, configuration: PlaybackConfiguration = .default) -> Self {
+        .init(resource: .simple(url: url), configuration: configuration)
     }
 
     /// Returns an asset loaded with custom resource loading.
@@ -34,7 +32,6 @@ public struct Asset<M> {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
-    ///   - metadata: The metadata associated with the asset.
     ///   - configuration: The configuration to apply to the asset.
     /// - Returns: The asset.
     ///
@@ -42,12 +39,10 @@ public struct Asset<M> {
     public static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        metadata: M,
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         .init(
             resource: .custom(url: url, delegate: delegate),
-            metadata: metadata,
             configuration: configuration
         )
     }
@@ -57,18 +52,15 @@ public struct Asset<M> {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
-    ///   - metadata: The metadata associated with the asset.
     ///   - configuration: The configuration to apply to the asset.
     /// - Returns: The asset.
     public static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        metadata: M,
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         .init(
             resource: .encrypted(url: url, delegate: delegate),
-            metadata: metadata,
             configuration: configuration
         )
     }
@@ -77,78 +69,20 @@ public struct Asset<M> {
     ///
     /// - Parameters:
     ///   - error: The reason why the asset is not available.
-    ///   - metadata: The metadata associated with the asset.
     /// - Returns: The asset
     ///
     /// Use an unavailable asset when a business reason prevents the content from being played but metadata is
     /// nonetheless available.
     public static func unavailable(
         with error: Error,
-        metadata: M
     ) -> Self {
         .init(
             resource: .failing(error: error),
-            metadata: metadata,
             configuration: .default
         )
     }
-}
 
-public extension Asset where M == PlayerMetadata {
-    /// Returns a simple asset playable from a URL.
-    ///
-    /// - Parameters:
-    ///   - url: The URL to be played.
-    ///   - configuration: The configuration to apply to the asset.
-    /// - Returns: The asset.
-    static func simple(
-        url: URL,
-        configuration: PlaybackConfiguration = .default
-    ) -> Self {
-        .init(
-            resource: .simple(url: url),
-            metadata: .empty,
-            configuration: configuration
-        )
-    }
-
-    /// Returns an asset loaded with custom resource loading.
-    ///
-    /// - Parameters:
-    ///   - url: The URL to be played.
-    ///   - delegate: The custom resource loader to use.
-    ///   - configuration: The configuration to apply to the asset.
-    /// - Returns: The asset.
-    ///
-    /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
-    static func custom(
-        url: URL,
-        delegate: AVAssetResourceLoaderDelegate,
-        configuration: PlaybackConfiguration = .default
-    ) -> Self {
-        .init(
-            resource: .custom(url: url, delegate: delegate),
-            metadata: .empty,
-            configuration: configuration
-        )
-    }
-
-    /// Returns an encrypted asset loaded with a content key session.
-    ///
-    /// - Parameters:
-    ///   - url: The URL to be played.
-    ///   - delegate: The content key session delegate to use.
-    ///   - configuration: The configuration to apply to the asset.
-    /// - Returns: The asset.
-    static func encrypted(
-        url: URL,
-        delegate: AVContentKeySessionDelegate,
-        configuration: PlaybackConfiguration = .default
-    ) -> Self {
-        .init(
-            resource: .encrypted(url: url, delegate: delegate),
-            metadata: .empty,
-            configuration: configuration
-        )
+    func urlAsset() -> AVURLAsset {
+        resource.urlAsset(configuration: .default)
     }
 }

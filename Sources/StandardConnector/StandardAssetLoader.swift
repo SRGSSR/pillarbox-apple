@@ -12,7 +12,7 @@ enum StandardAssetLoader<CustomData>: AssetLoader where CustomData: Decodable {
     struct Input {
         let request: URLRequest
         let decoder: JSONDecoder
-        let assetProvider: (PlayerData<CustomData>) -> Asset<PlayerData<CustomData>>
+        let assetProvider: (PlayerData<CustomData>) -> Asset
     }
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerData<CustomData>, any Error> {
@@ -23,7 +23,7 @@ enum StandardAssetLoader<CustomData>: AssetLoader where CustomData: Decodable {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: PlayerData<CustomData>) -> Asset<PlayerData<CustomData>> {
+    static func asset(input: Input, metadata: PlayerData<CustomData>) -> Asset {
         input.assetProvider(metadata)
     }
 

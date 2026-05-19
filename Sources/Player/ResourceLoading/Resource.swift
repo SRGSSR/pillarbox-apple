@@ -33,28 +33,30 @@ enum Resource {
         ])
     }
 
-    func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
-        let automaticallyLoadedAssetKeys = ["duration"]
+    func urlAsset(configuration: PlayerConfiguration) -> AVURLAsset {
         switch self {
         case let .simple(url: url):
-            return AVPlayerItem(asset: asset(for: url, with: configuration), automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+            return asset(for: url, with: configuration)
         case let .custom(url: url, delegate: delegate):
-            return ResourceLoadedPlayerItem(
-                asset: asset(for: url, with: configuration),
-                resourceLoaderDelegate: delegate,
-                automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
-            )
+            let asset = asset(for: url, with: configuration)
+            // FIXME:
+            // asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: kResourceLoaderQueue)
+            return asset
         case let .encrypted(url: url, delegate: delegate):
 #if targetEnvironment(simulator)
             Self.logger.error("FairPlay-encrypted assets cannot be played in the simulator")
-            return AVPlayerItem(asset: asset(for: url, with: configuration))
+            return asset(for: url, with: configuration)
 #else
             let asset = asset(for: url, with: configuration)
             kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
             kContentKeySession.addContentKeyRecipient(asset)
-            return AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+            return asset
 #endif
         }
+    }
+
+    func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
+        .init(asset: urlAsset(configuration: configuration), automaticallyLoadedAssetKeys: ["duration"])
     }
 }
 
