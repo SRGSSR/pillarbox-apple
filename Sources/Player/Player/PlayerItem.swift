@@ -43,9 +43,15 @@ public final class PlayerItem: Hashable {
         )
     }
 
-    convenience init<S>(storeType: S.Type, asset: Asset<S.Metadata>, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: DownloadStore {
+    convenience init?<S>(download: Download, store: S, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: DownloadStore {
+        guard let record = store.downloadRecord(forId: download.id),
+              let metadata = record.metadata,
+              let fileUrl = download.fileUrl(allowsPartial: allowsPartial) else {
+            return nil
+        }
+        let storeType = type(of: store)
         self.init(
-            assetPublisher: Just(asset),
+            assetPublisher: Just(storeType.asset(fileUrl: fileUrl, input: record.input, metadata: metadata)),
             mapper: { storeType.playerMetadata(from: $0) },
             trackerAdapters: trackerAdapters
         )
