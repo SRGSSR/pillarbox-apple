@@ -34,13 +34,7 @@ When implementing an ``AssetLoader``, use ``AssetLoader/playerMetadata(from:)`` 
 
 ```swift
 enum MediaAssetLoader: AssetLoader {
-    struct Input {
-        // ...
-    }
-
-    static func assetPublisher(for input: Input) -> AnyPublisher<Asset, Error> {
-        // ...
-    }
+    // ...
 
     static func playerMetadata(from metadata: Media) -> PlayerMetadata {
         .init(title: show, subtitle: name, imageSource: .url(artworkUrl))

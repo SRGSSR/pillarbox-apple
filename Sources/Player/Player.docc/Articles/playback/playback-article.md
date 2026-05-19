@@ -68,9 +68,10 @@ Follow these steps:
 
 1. Create a type (typically an enum) that conforms to ``AssetLoader``.
 2. Define an associated ``AssetLoader/Input`` type that encapsulates all the information required to load the asset.
-3. Implement ``AssetLoader/assetPublisher(for:)`` to fetch the content URL along with any associated metadata for a given input.
-4. Implement ``AssetLoader/playerMetadata(from:)`` to transform the loaded asset metadata into ``PlayerMetadata`` understood by the player. For more details, see <doc:metadata-article>.
-5. Create a PlayerItem using ``PlayerItem/init(assetLoaderType:input:trackerAdapters:)`` to load content through your custom asset loader.
+3. Implement ``AssetLoader/metadataPublisher(for:)`` to fetch metadata for a given input.
+4. Implement ``AssetLoader/asset(input:metadata:)`` to build an ``Asset`` from available input and metadata. 
+5. Implement ``AssetLoader/playerMetadata(from:)`` to transform the loaded asset metadata into ``PlayerMetadata`` understood by the player. For more details, see <doc:metadata-article>.
+6. Create a PlayerItem using ``PlayerItem/init(assetLoaderType:input:trackerAdapters:)`` to load content through your custom asset loader.
 
 For improved ergonomics, consider adding a convenience initializer in a dedicated ``PlayerItem`` extension that exposes a more streamlined API based on your input parameters.
 
