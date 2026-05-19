@@ -36,7 +36,7 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
             self.errorDescription = nil
         }
 
-        init(from record: DownloadRecord<DemoAssetLoader.Input, String>, forId id: String) {
+        init(id: String, record: DownloadRecord<DemoAssetLoader.Input, String>) {
             self.id = id
             self.url = record.input.url
             self.title = record.input.title
@@ -101,7 +101,7 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
 
     func updateDownloadRecord(_ record: DownloadRecord<DemoAssetLoader.Input, String>, forId id: String) {
         guard let index = fileEntries.firstIndex(where: { $0.id == id }) else { return }
-        fileEntries[index] = .init(from: record, forId: id)
+        fileEntries[index] = .init(id: id, record: record)
         save()
     }
 
