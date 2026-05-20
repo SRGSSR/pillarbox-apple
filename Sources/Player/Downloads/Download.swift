@@ -201,8 +201,11 @@ private extension Download {
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
-        else {
+        else if properties.error == nil {
             return loaderType.metadataPublisher(for: input)
+        }
+        else {
+            return Empty().eraseToAnyPublisher()
         }
     }
 }
