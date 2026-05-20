@@ -228,6 +228,7 @@ struct ShowcaseView: View {
     }
 
     private func systemPlayerSection() -> some View {
+        // swiftlint:disable:next closure_body_length
         CustomSection("System player (using Pillarbox)") {
             cell(
                 title: "Apple Basic 16:9",
@@ -252,6 +253,10 @@ struct ShowcaseView: View {
             cell(
                 title: "Video URN - Livestream with DRM",
                 destination: .systemPlayer(media: URNMedia.dvrVideo)
+            )
+            cell(
+                title: "AOD - MP3",
+                destination: .systemPlayer(media: URLMedia.onDemandAudioMP3)
             )
             cell(
                 title: "Unknown",
@@ -417,6 +422,10 @@ struct ShowcaseView: View {
             cell(
                 title: "VOD - MP4",
                 destination: .vanillaPlayer(item: URLMedia.onDemandVideoMP4.playerItem()!)
+            )
+            cell(
+                title: "AOD - MP3",
+                destination: .vanillaPlayer(item: URLMedia.onDemandAudioMP3.playerItem()!)
             )
             cell(
                 title: "Unknown",

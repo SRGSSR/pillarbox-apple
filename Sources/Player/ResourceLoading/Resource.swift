@@ -34,13 +34,15 @@ enum Resource {
     }
 
     func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
+        let automaticallyLoadedAssetKeys = ["duration"]
         switch self {
         case let .simple(url: url):
-            return AVPlayerItem(asset: asset(for: url, with: configuration))
+            return AVPlayerItem(asset: asset(for: url, with: configuration), automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         case let .custom(url: url, delegate: delegate):
             return ResourceLoadedPlayerItem(
                 asset: asset(for: url, with: configuration),
-                resourceLoaderDelegate: delegate
+                resourceLoaderDelegate: delegate,
+                automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
             )
         case let .encrypted(url: url, delegate: delegate):
 #if targetEnvironment(simulator)
@@ -50,7 +52,7 @@ enum Resource {
             let asset = asset(for: url, with: configuration)
             kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
             kContentKeySession.addContentKeyRecipient(asset)
-            return AVPlayerItem(asset: asset)
+            return AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
 #endif
         }
     }

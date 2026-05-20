@@ -13,10 +13,11 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
     // swiftlint:disable:next weak_delegate
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
 
-    init(asset: AVURLAsset, resourceLoaderDelegate: AVAssetResourceLoaderDelegate) {
+    // swiftlint:disable:next discouraged_optional_collection
+    init(asset: AVURLAsset, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]?) {
         self.resourceLoaderDelegate = resourceLoaderDelegate
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: kResourceLoaderQueue)
         // Provide same key as for a standard asset, see `AVPlayerItem.init(asset:)` documentation.
-        super.init(asset: asset, automaticallyLoadedAssetKeys: ["duration"])
+        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }
