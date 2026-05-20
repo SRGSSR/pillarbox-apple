@@ -36,7 +36,8 @@ struct DownloadProperties<Metadata> {
             }
         }
         else if location != nil {
-            return .completed
+            // When incomplete return the same error as when the file has been removed from the system Settings.
+            return progress == 1 ? .completed : .failed(CocoaError(.fileNoSuchFile))
         }
         else {
             return .preparing
