@@ -21,7 +21,7 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     public init<L>(loaderType: L.Type, configuration: URLSessionConfiguration, store: S) where L: AssetLoader, L.Input == S.Input, L.Metadata == S.Metadata {
         let manager = DownloadManager(loaderType: loaderType, configuration: configuration, store: store)
         self.manager = manager
-        
+
         manager.$downloads
             .assign(to: &$downloads)
     }

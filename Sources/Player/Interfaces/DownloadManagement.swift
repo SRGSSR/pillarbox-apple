@@ -4,12 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
-protocol DownloadManagement<S> {
-    associatedtype S: AssetDownloadStore
+protocol DownloadManagement<Store> {
+    associatedtype Store: AssetDownloadStore
 
-    func add(input: S.Input) -> Download
-    func download(matching input: S.Input) -> Download?
-    func playerItem(for download: Download, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<S.Metadata>]) -> PlayerItem?
+    func add(input: Store.Input) -> Download
+    func download(matching input: Store.Input) -> Download?
+    func playerItem(for download: Download, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<Store.Metadata>]) -> PlayerItem?
     func remove(_ download: Download)
     func removeAll()
 }

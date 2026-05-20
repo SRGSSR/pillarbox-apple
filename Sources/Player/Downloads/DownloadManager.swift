@@ -11,7 +11,8 @@ import UIKit
 #if DEBUG
 
 @available(tvOS, unavailable)
-final class DownloadManager<L, S>: NSObject, DownloadManagement, AVAssetDownloadDelegate where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+final class DownloadManager<L, S>: NSObject, DownloadManagement<S>, AVAssetDownloadDelegate
+where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
     private let store: S
 
     // swiftlint:disable:next implicitly_unwrapped_optional
