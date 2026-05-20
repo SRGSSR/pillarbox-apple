@@ -46,6 +46,10 @@ public final class Download: ObservableObject {
         properties.metadata ?? .empty
     }
 
+    var location: URL? {
+        properties.location
+    }
+
     private init<L, S>(
         id: String,
         loaderType: L.Type,
@@ -82,10 +86,6 @@ public final class Download: ObservableObject {
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.init(id: type(of: store).id(from: record.input), loaderType: loaderType, input: record.input, session: session, store: store)
-    }
-
-    func fileUrl(allowsPartial: Bool) -> URL? {
-        properties.fileUrl(allowsPartial: allowsPartial)
     }
 
     func attach(to location: URL) {

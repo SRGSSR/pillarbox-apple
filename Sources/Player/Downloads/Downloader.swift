@@ -35,8 +35,8 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
         manager.download(matching: input)
     }
 
-    public func playerItem(for download: Download, allowsPartial: Bool = true, trackerAdapters: [TrackerAdapter<S.Metadata>] = []) -> PlayerItem? {
-        manager.playerItem(for: download, allowsPartial: allowsPartial, trackerAdapters: trackerAdapters)
+    public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<S.Metadata>] = []) -> PlayerItem? {
+        manager.playerItem(for: download, trackerAdapters: trackerAdapters)
     }
 
     public func remove(_ download: Download) {

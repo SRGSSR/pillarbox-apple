@@ -45,10 +45,8 @@ public final class PlayerItem: Hashable {
     }
 
 #if DEBUG
-    convenience init?<S>(download: Download, store: S, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: AssetDownloadStore {
-        guard let record = store.downloadRecord(forId: download.id),
-              let metadata = record.metadata,
-              let fileUrl = download.fileUrl(allowsPartial: allowsPartial) else {
+    convenience init?<S>(download: Download, store: S, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: AssetDownloadStore {
+        guard let record = store.downloadRecord(forId: download.id), let metadata = record.metadata, let fileUrl = download.location else {
             return nil
         }
         let storeType = type(of: store)

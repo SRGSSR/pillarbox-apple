@@ -46,9 +46,9 @@ where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S
         return downloads.first { $0.id == id }
     }
 
-    func playerItem(for download: Download, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
+    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
         guard downloads.contains(download) else { return nil }
-        return .init(download: download, store: store, allowsPartial: allowsPartial, trackerAdapters: trackerAdapters)
+        return .init(download: download, store: store, trackerAdapters: trackerAdapters)
     }
 
     func remove(_ download: Download) {

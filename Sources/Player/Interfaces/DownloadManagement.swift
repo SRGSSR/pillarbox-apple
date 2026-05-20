@@ -9,7 +9,7 @@ protocol DownloadManagement<Store> {
 
     func add(input: Store.Input) -> Download
     func download(matching input: Store.Input) -> Download?
-    func playerItem(for download: Download, allowsPartial: Bool, trackerAdapters: [TrackerAdapter<Store.Metadata>]) -> PlayerItem?
+    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<Store.Metadata>]) -> PlayerItem?
     func remove(_ download: Download)
     func removeAll()
 }

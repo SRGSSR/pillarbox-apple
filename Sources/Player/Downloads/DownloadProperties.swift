@@ -75,15 +75,6 @@ struct DownloadProperties<Metadata> {
     func bookmarkData() -> Data? {
         try? location?.bookmarkData()
     }
-
-    func fileUrl(allowsPartial: Bool) -> URL? {
-        switch state {
-        case .completed:
-            return location
-        default:
-            return allowsPartial ? location : nil
-        }
-    }
 }
 
 #endif
