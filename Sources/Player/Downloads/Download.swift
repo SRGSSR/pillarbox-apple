@@ -215,20 +215,18 @@ extension Download {
         session: AVAssetDownloadURLSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        propertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
+        downloadPlayerPropertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
             .receiveOnMainThread()
             .assign(to: &$properties)
     }
 
-    // swiftlint:disable:next function_body_length
-    private func propertiesPublisher<L, S>(
+    private func downloadPropertiesPublisher<L, S>(
         loaderType: L.Type,
         id: String,
         input: L.Input,
         session: AVAssetDownloadURLSession,
         store: S
-    ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        // swiftlint:disable:next closure_body_length
+    ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
@@ -257,29 +255,39 @@ extension Download {
                     Just(DownloadProperties(metadata: nil, job: .none(estimatedProgress: 0), location: nil, error: error))
                 }
                 .prepend(properties)
-                .handleEvents(
-                    receiveOutput: { properties in
-                        let record = DownloadRecord(
-                            input: input,
-                            metadata: properties.metadata,
-                            bookmarkData: properties.bookmarkData(),
-                            progress: properties.progress,
-                            error: properties.error
-                        )
-                        store.updateDownloadRecord(record, forId: id)
-                    },
-                    receiveCompletion: nil
-                )
-                .map { properties in
-                    DownloadProperties(
-                        metadata: loaderType.playerMetadata(from: properties.metadata),
-                        job: properties.job,
-                        location: properties.location,
+        }
+    }
+
+    private func downloadPlayerPropertiesPublisher<L, S>(
+        loaderType: L.Type,
+        id: String,
+        input: L.Input,
+        session: AVAssetDownloadURLSession,
+        store: S
+    ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        downloadPropertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
+            .handleEvents(
+                receiveOutput: { properties in
+                    let record = DownloadRecord(
+                        input: input,
+                        metadata: properties.metadata,
+                        bookmarkData: properties.bookmarkData(),
+                        progress: properties.progress,
                         error: properties.error
                     )
-                }
-                .eraseToAnyPublisher()
-        }
+                    store.updateDownloadRecord(record, forId: id)
+                },
+                receiveCompletion: nil
+            )
+            .map { properties in
+                DownloadProperties(
+                    metadata: loaderType.playerMetadata(from: properties.metadata),
+                    job: properties.job,
+                    location: properties.location,
+                    error: properties.error
+                )
+            }
+            .eraseToAnyPublisher()
     }
 }
 
