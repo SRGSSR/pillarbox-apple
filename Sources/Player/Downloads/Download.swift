@@ -23,7 +23,7 @@ public final class Download: ObservableObject {
     @Published private var properties: DownloadPlayerProperties = .init()
 
     private let trigger = Trigger()
-    
+
     private let locationSubject = PassthroughSubject<URL, Never>()
     private let errorSubject = PassthroughSubject<Error, Never>()
 
@@ -132,7 +132,7 @@ private extension Download {
     }
 
     static func downloadTaskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadTaskProperties, Never> {
-        return Publishers.CombineLatest3(
+        Publishers.CombineLatest3(
             Just(task),
             task.publisher(for: \.state),
             task.progress.publisher(for: \.fractionCompleted)
@@ -220,6 +220,7 @@ extension Download {
             .assign(to: &$properties)
     }
 
+    // swiftlint:disable:next function_body_length
     private func propertiesPublisher<L, S>(
         loaderType: L.Type,
         id: String,
@@ -227,6 +228,7 @@ extension Download {
         session: AVAssetDownloadURLSession,
         store: S
     ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
