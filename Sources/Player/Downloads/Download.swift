@@ -231,8 +231,7 @@ extension Download {
             let properties = store.downloadProperties(forId: id)
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
                 .map { metadata in
-                    Publishers.CombineLatest4(
-                        Just(metadata),
+                    Publishers.CombineLatest3(
                         Self.downloadJobPublisher(
                             loaderType: loaderType,
                             id: id,
@@ -249,9 +248,9 @@ extension Download {
                             .map(\.self)
                             .prepend(properties.error)
                     )
+                    .map { DownloadProperties(metadata: metadata, job: $0, location: $1, error: $2) }
                 }
                 .switchToLatest()
-                .map { DownloadProperties(metadata: $0, job: $1, location: $2, error: $3) }
                 .catch { error in
                     Just(DownloadProperties(metadata: nil, job: .none(estimatedProgress: 0), location: nil, error: error))
                 }
