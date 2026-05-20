@@ -41,13 +41,11 @@ struct DownloadCell: View {
 
     @ViewBuilder
     private func progressBar() -> some View {
-        if let progress = download.progress {
-            ProgressView(value: progress) {
-                Text(progress, format: .percent.precision(.fractionLength(0)))
-                    .contentTransition(.numericText())
-            }
-            .animation(.linear, value: progress)
+        ProgressView(value: download.progress) {
+            Text(download.progress, format: .percent.precision(.fractionLength(0)))
+                .contentTransition(.numericText())
         }
+        .animation(.linear, value: download.progress)
     }
 
     @ViewBuilder

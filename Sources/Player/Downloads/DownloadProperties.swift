@@ -10,11 +10,11 @@ import Foundation
 
 struct DownloadProperties<Metadata> {
     let metadata: Metadata?
-    let taskProperties: TaskProperties?
+    let job: DownloadJob
     let location: URL?
     let error: Error?
 
-    var isPreparing: Bool {
+    var shouldCreateJob: Bool {
         location == nil && error == nil
     }
 
@@ -22,8 +22,16 @@ struct DownloadProperties<Metadata> {
         if let error {
             return .failed(error)
         }
-        else if let taskProperties {
-            switch taskProperties.state {
+        switch job {
+        case let .none(estimatedProgress: progress):
+            if location != nil {
+                return progress == 1 ? .completed : .failed(CocoaError(.fileNoSuchFile))
+            }
+            else {
+                return progress > 0 ? .failed(CocoaError(.fileNoSuchFile)) : .preparing
+            }
+        case let .task(properties: properties):
+            switch properties.state {
             case .running, .canceling:
                 return .running
             case .suspended:
@@ -35,39 +43,41 @@ struct DownloadProperties<Metadata> {
                 return .completed
             }
         }
-        else if location != nil {
-            // When incomplete return the same error as when the file has been removed from the system Settings.
-            return progress == 1 ? .completed : .failed(CocoaError(.fileNoSuchFile))
-        }
-        else {
-            return .preparing
-        }
     }
 
     var progress: Double {
-        taskProperties?.progress ?? 0
+        if error != nil {
+            return 0
+        }
+        switch job {
+        case let .none(estimatedProgress: progress):
+            return location != nil ? progress : 0
+        case let .task(properties: properties):
+            return properties.progress
+        }
     }
 
     init() {
-        self.init(metadata: nil, taskProperties: nil, location: nil, error: nil)
+        self.init(metadata: nil, job: .none(estimatedProgress: 0), location: nil, error: nil)
     }
 
-    init(metadata: Metadata?, taskProperties: TaskProperties?, location: URL?, error: Error?) {
+    init(metadata: Metadata?, job: DownloadJob, location: URL?, error: Error?) {
         self.metadata = metadata
-        self.taskProperties = taskProperties
+        self.job = job
         self.location = location
         self.error = error
     }
 
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
         self.metadata = record.metadata
-        self.taskProperties = nil
         do {
             self.location = try URL(resolvingBookmarkData: record.bookmarkData)
-            self.error = nil
+            self.job = .none(estimatedProgress: record.progress)
+            self.error = record.error
         }
         catch {
             self.location = nil
+            self.job = .none(estimatedProgress: 0)
             self.error = error
         }
     }

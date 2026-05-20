@@ -23,19 +23,15 @@ public final class Download: ObservableObject {
     @Published private var properties: DownloadPlayerProperties = .init()
 
     private let trigger = Trigger()
+    
     private let locationSubject = PassthroughSubject<URL, Never>()
     private let errorSubject = PassthroughSubject<Error, Never>()
 
     private let removeRecord: () -> Void
     private let resetRecord: () -> Void
 
-    public var progress: Double? {
-        switch state {
-        case .running, .suspended:
-            return properties.taskProperties?.progress ?? 0
-        default:
-            return nil
-        }
+    public var progress: Double {
+        properties.progress
     }
 
     public var state: DownloadState {
@@ -109,17 +105,17 @@ public final class Download: ObservableObject {
 @available(tvOS, unavailable)
 public extension Download {
     func resume() {
-        properties.taskProperties?.task.resume()
+        properties.job.resume()
     }
 
     func suspend() {
-        properties.taskProperties?.task.suspend()
+        properties.job.suspend()
     }
 
     func cancel() {
         removeRecord()
         removeFile()
-        properties.taskProperties?.task.cancel()
+        properties.job.cancel()
     }
 
     func restart() {
@@ -135,8 +131,7 @@ private extension Download {
         case reload
     }
 
-    static func taskPropertiesPublisher(task: URLSessionTask?) -> AnyPublisher<TaskProperties?, Never> {
-        guard let task else { return Just(nil).eraseToAnyPublisher() }
+    static func downloadTaskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadTaskProperties, Never> {
         return Publishers.CombineLatest3(
             Just(task),
             task.publisher(for: \.state),
@@ -168,16 +163,17 @@ private extension Download {
         return task
     }
 
-    static func taskPropertiesPublisher<L>(
+    static func downloadJobPublisher<L>(
         loaderType: L.Type,
         id: String,
         input: L.Input,
         metadata: L.Metadata,
+        lastKnownProgress: Double,
         createIfNeeded: Bool,
         session: AVAssetDownloadURLSession
-    ) -> AnyPublisher<TaskProperties?, Never> where L: AssetLoader {
+    ) -> AnyPublisher<DownloadJob, Never> where L: AssetLoader {
         session.taskPublisher(withDescription: id)
-            .map { task in
+            .compactMap { task in
                 if let task {
                     return task
                 }
@@ -188,8 +184,10 @@ private extension Download {
                     return nil
                 }
             }
-            .map { taskPropertiesPublisher(task: $0) }
+            .map { downloadTaskPropertiesPublisher(for: $0) }
             .switchToLatest()
+            .map { .task(properties: $0) }
+            .prepend(.none(estimatedProgress: lastKnownProgress))
             .eraseToAnyPublisher()
     }
 
@@ -222,7 +220,6 @@ extension Download {
             .assign(to: &$properties)
     }
 
-    // swiftlint:disable:next function_body_length
     private func propertiesPublisher<L, S>(
         loaderType: L.Type,
         id: String,
@@ -230,19 +227,19 @@ extension Download {
         session: AVAssetDownloadURLSession,
         store: S
     ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
                 .map { metadata in
                     Publishers.CombineLatest4(
                         Just(metadata),
-                        Self.taskPropertiesPublisher(
+                        Self.downloadJobPublisher(
                             loaderType: loaderType,
                             id: id,
                             input: input,
                             metadata: metadata,
-                            createIfNeeded: properties.isPreparing,
+                            lastKnownProgress: properties.progress,
+                            createIfNeeded: properties.shouldCreateJob,
                             session: session
                         ),
                         locationSubject
@@ -254,9 +251,9 @@ extension Download {
                     )
                 }
                 .switchToLatest()
-                .map { DownloadProperties(metadata: $0, taskProperties: $1, location: $2, error: $3) }
+                .map { DownloadProperties(metadata: $0, job: $1, location: $2, error: $3) }
                 .catch { error in
-                    Just(DownloadProperties(metadata: nil, taskProperties: nil, location: nil, error: error))
+                    Just(DownloadProperties(metadata: nil, job: .none(estimatedProgress: 0), location: nil, error: error))
                 }
                 .prepend(properties)
                 .handleEvents(
@@ -275,7 +272,7 @@ extension Download {
                 .map { properties in
                     DownloadProperties(
                         metadata: loaderType.playerMetadata(from: properties.metadata),
-                        taskProperties: properties.taskProperties,
+                        job: properties.job,
                         location: properties.location,
                         error: properties.error
                     )
