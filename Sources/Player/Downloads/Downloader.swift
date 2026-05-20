@@ -13,27 +13,29 @@ import Foundation
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Downloader<L, S>: ObservableObject where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-    private let manager: DownloadManager<L, S>
+public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
+    private let manager: any DownloadManagement<S>
 
     @Published public private(set) var downloads: [Download] = []
 
-    public init(loaderType: L.Type, configuration: URLSessionConfiguration, store: S) {
-        manager = DownloadManager(loaderType: loaderType, configuration: configuration, store: store)
+    public init<L>(loaderType: L.Type, configuration: URLSessionConfiguration, store: S) where L: AssetLoader, L.Input == S.Input, L.Metadata == S.Metadata {
+        let manager = DownloadManager(loaderType: loaderType, configuration: configuration, store: store)
+        self.manager = manager
+        
         manager.$downloads
             .assign(to: &$downloads)
     }
 
     @discardableResult
-    public func add(input: L.Input) -> Download {
+    public func add(input: S.Input) -> Download {
         manager.add(input: input)
     }
 
-    public func download(matching input: L.Input) -> Download? {
+    public func download(matching input: S.Input) -> Download? {
         manager.download(matching: input)
     }
 
-    public func playerItem(for download: Download, allowsPartial: Bool = true, trackerAdapters: [TrackerAdapter<L.Metadata>] = []) -> PlayerItem? {
+    public func playerItem(for download: Download, allowsPartial: Bool = true, trackerAdapters: [TrackerAdapter<S.Metadata>] = []) -> PlayerItem? {
         manager.playerItem(for: download, allowsPartial: allowsPartial, trackerAdapters: trackerAdapters)
     }
 
