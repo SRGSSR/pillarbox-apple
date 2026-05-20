@@ -27,6 +27,7 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
         let url: URL
         let metadata: String?
         let bookmarkData: Data?
+        let progress: Double
         let errorDescription: String?
 
         init(id: String, input: DemoAssetLoader.Input) {
@@ -35,6 +36,7 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
             self.url = input.url
             self.metadata = nil
             self.bookmarkData = nil
+            self.progress = 0
             self.errorDescription = nil
         }
 
@@ -44,6 +46,7 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
             self.url = record.input.url
             self.metadata = record.metadata
             self.bookmarkData = record.bookmarkData
+            self.progress = record.progress
             self.errorDescription = record.error?.localizedDescription
         }
 
@@ -52,6 +55,7 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
                 input: DemoAssetLoader.Input(title: title, url: url),
                 metadata: metadata,
                 bookmarkData: bookmarkData,
+                progress: progress,
                 error: DownloadError(errorDescription: errorDescription)
             )
         }

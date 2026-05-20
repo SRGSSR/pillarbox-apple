@@ -264,6 +264,7 @@ extension Download {
                             input: input,
                             metadata: properties.metadata,
                             bookmarkData: properties.bookmarkData(),
+                            progress: properties.progress,
                             error: properties.error
                         )
                         store.updateDownloadRecord(record, forId: id)

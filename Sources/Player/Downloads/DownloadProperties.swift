@@ -43,6 +43,10 @@ struct DownloadProperties<Metadata> {
         }
     }
 
+    var progress: Double {
+        taskProperties?.progress ?? 0
+    }
+
     init() {
         self.init(metadata: nil, taskProperties: nil, location: nil, error: nil)
     }
