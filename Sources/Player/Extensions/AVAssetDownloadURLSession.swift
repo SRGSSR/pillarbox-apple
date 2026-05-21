@@ -8,7 +8,7 @@ import AVFoundation
 import Combine
 
 extension AVAssetDownloadURLSession: DownloadSession {
-    func downloadSessionTaskPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<DownloadSessionTask, Never> {
+    func sessionTaskPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<URLSessionTask, Never> {
         taskPublisher(withDescription: id)
             .compactMap { task in
                 if let task {
@@ -21,24 +21,11 @@ extension AVAssetDownloadURLSession: DownloadSession {
                     return nil
                 }
             }
-            .map { Self.downloadSessionTaskPublisher(for: $0) }
-            .switchToLatest()
             .eraseToAnyPublisher()
     }
 }
 
 private extension AVAssetDownloadURLSession {
-    static func downloadSessionTaskPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTask, Never> {
-        Publishers.CombineLatest3(
-            Just(task),
-            task.publisher(for: \.state),
-            task.progress.publisher(for: \.fractionCompleted)
-                .map { $0.clamped(to: 0...1) }
-        )
-        .map { .init(task: $0, state: $1, progress: $2) }
-        .eraseToAnyPublisher()
-    }
-
     func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask {
         let configuration = AVAssetDownloadConfiguration(
             asset: asset.urlAsset(),
