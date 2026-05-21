@@ -115,6 +115,10 @@ final class DownloadTests: TestCase {
     func testRestoreFromRunning() {
     }
 
+    func testRestoreWithMissingTask() {
+        // TODO: Use inactive DownloadSessionMock that is not able to deliver tasks
+    }
+
     func testRestoreFromEnded() {
     }
 
