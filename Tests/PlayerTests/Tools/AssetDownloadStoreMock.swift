@@ -11,10 +11,20 @@ import Foundation
 import OrderedCollections
 
 final class AssetDownloadStoreMock: AssetDownloadStore {
-    private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>> = [:]
+    private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>>
+
+    init(preloadedInputs: [AssetLoaderMock.Input] = []) {
+        records = preloadedInputs.reduce(into: [:]) { partialResult, input in
+            partialResult.updateValue(Self.record(from: input), forKey: Self.id(from: input))
+        }
+    }
 
     static func id(from input: AssetLoaderMock.Input) -> String {
         input.url.absoluteString
+    }
+
+    static func record(from input: AssetLoaderMock.Input) -> DownloadRecord<AssetLoaderMock.Input, PlayerMetadata> {
+        .init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
     }
 
     static func asset(fileUrl: URL, input: AssetLoaderMock.Input, metadata: PlayerMetadata) -> Asset {
@@ -26,7 +36,7 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
     }
 
     func addDownloadRecord(using input: AssetLoaderMock.Input, forId id: String) {
-        records[id] = DownloadRecord(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
+        records[id] = Self.record(from: input)
     }
 
     func removeDownloadRecord(forId id: String) {
