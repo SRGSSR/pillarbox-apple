@@ -26,7 +26,7 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
     }
 
     func addDownloadRecord(using input: AssetLoaderMock.Input, forId id: String) {
-        records[id] = DownloadRecord(input: input, metadata: input.metadata, bookmarkData: nil, progress: 0, error: nil)
+        records[id] = DownloadRecord(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
     }
 
     func removeDownloadRecord(forId id: String) {

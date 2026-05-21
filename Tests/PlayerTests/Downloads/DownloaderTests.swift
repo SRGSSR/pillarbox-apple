@@ -56,6 +56,18 @@ final class DownloaderTests: TestCase {
         expect(manager.downloads).to(equal([download1]))
     }
 
+    func testDownloadWithMatchingInput() {
+    }
+
+    func testDownloadWithNonMatchingInput() {
+    }
+
+    func testPlayerItemForDownload() {
+    }
+
+    func testPlayerItemForUnrelatedDownload() {
+    }
+
     func testRemove() {
         let manager = Downloader(
             loaderType: AssetLoaderMock.self,
