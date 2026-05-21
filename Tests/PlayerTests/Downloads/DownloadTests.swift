@@ -55,15 +55,49 @@ final class DownloadTests: TestCase {
     }
 
     func testLifeCycleSuccess() {
+        let download = Download(
+            loaderType: AssetLoaderMock.self,
+            input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1),
+            session: DownloadSessionMock(delay: 0.1),
+            store: AssetDownloadStoreMock()
+        )
+        expectAtLeastSimilarPublished(values: [
+            .preparing, .running, .completed
+        ], from: download.changePublisher(at: \.state).removeDuplicates(by: ~~))
     }
 
     func testLifeCycleFailure() {
     }
 
+    func testMetadata() {
+    }
+
+    func testLocation() {
+    }
+
     func testSuspend() {
+        let download = Download(
+            loaderType: AssetLoaderMock.self,
+            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
+            session: DownloadSessionMock(),
+            store: AssetDownloadStoreMock()
+        )
+        download.suspend()
+        expect(download.state).to(beSimilarTo(.suspended))
     }
 
     func testResume() {
+        let download = Download(
+            loaderType: AssetLoaderMock.self,
+            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
+            session: DownloadSessionMock(),
+            store: AssetDownloadStoreMock()
+        )
+        download.suspend()
+        expect(download.state).to(beSimilarTo(.suspended))
+
+        download.resume()
+        expect(download.state).to(beSimilarTo(.running))
     }
 
     func testCancel() {
@@ -84,7 +118,7 @@ final class DownloadTests: TestCase {
     func testRestoreFromEnded() {
     }
 
-    func testRestoreFromFailure() {
+    func testRestoreFromFailed() {
     }
 
     func testProgress() {
