@@ -50,7 +50,7 @@ public final class Download: ObservableObject {
         id: String,
         loaderType: L.Type,
         input: L.Input,
-        session: AVAssetDownloadURLSession,
+        session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.id = id
@@ -67,7 +67,7 @@ public final class Download: ObservableObject {
     convenience init<L, S>(
         loaderType: L.Type,
         input: L.Input,
-        session: AVAssetDownloadURLSession,
+        session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         let id = type(of: store).id(from: input)
@@ -78,7 +78,7 @@ public final class Download: ObservableObject {
     convenience init<L, S>(
         loaderType: L.Type,
         record: DownloadRecord<L.Input, L.Metadata>,
-        session: AVAssetDownloadURLSession,
+        session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.init(id: type(of: store).id(from: record.input), loaderType: loaderType, input: record.input, session: session, store: store)
@@ -130,67 +130,10 @@ private extension Download {
     enum TriggerId: Hashable {
         case reload
     }
-
-    static func downloadTaskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadTaskProperties, Never> {
-        Publishers.CombineLatest3(
-            Just(task),
-            task.publisher(for: \.state),
-            task.progress.publisher(for: \.fractionCompleted)
-                .map { $0.clamped(to: 0...1) }
-        )
-        .map { .init(task: $0, state: $1, progress: $2) }
-        .eraseToAnyPublisher()
-    }
 }
 
 @available(tvOS, unavailable)
 private extension Download {
-    static func task<L>(
-        loaderType: L.Type,
-        id: String,
-        input: L.Input,
-        metadata: L.Metadata,
-        using session: AVAssetDownloadURLSession
-    ) -> URLSessionTask where L: AssetLoader {
-        let asset = loaderType.downloadableAsset(input: input, metadata: metadata)
-        let configuration = AVAssetDownloadConfiguration(
-            asset: asset.urlAsset(),
-            title: loaderType.playerMetadata(from: metadata).title ?? id
-        )
-        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
-        task.taskDescription = id
-        task.resume()
-        return task
-    }
-
-    static func downloadJobPublisher<L>(
-        loaderType: L.Type,
-        id: String,
-        input: L.Input,
-        metadata: L.Metadata,
-        lastKnownProgress: Double,
-        createIfNeeded: Bool,
-        session: AVAssetDownloadURLSession
-    ) -> AnyPublisher<DownloadJob, Never> where L: AssetLoader {
-        session.taskPublisher(withDescription: id)
-            .compactMap { task in
-                if let task {
-                    return task
-                }
-                else if createIfNeeded {
-                    return Self.task(loaderType: loaderType, id: id, input: input, metadata: metadata, using: session)
-                }
-                else {
-                    return nil
-                }
-            }
-            .map { downloadTaskPropertiesPublisher(for: $0) }
-            .switchToLatest()
-            .map { .task(properties: $0) }
-            .prepend(.none(estimatedProgress: lastKnownProgress))
-            .eraseToAnyPublisher()
-    }
-
     static func metadataPublisher<L>(
         loaderType: L.Type,
         input: L.Input,
@@ -215,7 +158,7 @@ extension Download {
     private func configurePropertiesPublisher<L, S>(
         loaderType: L.Type,
         input: L.Input,
-        session: AVAssetDownloadURLSession,
+        session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         downloadPlayerPropertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
@@ -227,7 +170,7 @@ extension Download {
         loaderType: L.Type,
         id: String,
         input: L.Input,
-        session: AVAssetDownloadURLSession,
+        session: DownloadSession,
         store: S
     ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
@@ -235,14 +178,12 @@ extension Download {
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
                 .map { metadata in
                     Publishers.CombineLatest3(
-                        Self.downloadJobPublisher(
-                            loaderType: loaderType,
+                        session.downloadJobPublisher(
                             id: id,
-                            input: input,
-                            metadata: metadata,
+                            asset: loaderType.downloadableAsset(input: input, metadata: metadata),
+                            title: loaderType.playerMetadata(from: metadata).title,
                             lastKnownProgress: properties.progress,
-                            createIfNeeded: properties.shouldCreateJob,
-                            session: session
+                            createIfNeeded: properties.shouldCreateJob
                         ),
                         locationSubject
                             .map(\.self)
@@ -265,7 +206,7 @@ extension Download {
         loaderType: L.Type,
         id: String,
         input: L.Input,
-        session: AVAssetDownloadURLSession,
+        session: DownloadSession,
         store: S
     ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         downloadPropertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
