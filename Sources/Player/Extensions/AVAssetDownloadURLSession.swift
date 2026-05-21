@@ -19,7 +19,7 @@ extension AVAssetDownloadURLSession: DownloadSession {
         return task
     }
 
-    func downloadJobPublisher(id: String, asset: Asset, title: String?, lastKnownProgress: Double, createIfNeeded: Bool) -> AnyPublisher<DownloadJob, Never> {
+    func downloadTaskPropertiesPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<DownloadTaskProperties, Never> {
         taskPublisher(withDescription: id)
             .compactMap { task in
                 if let task {
@@ -34,8 +34,6 @@ extension AVAssetDownloadURLSession: DownloadSession {
             }
             .map { Self.downloadTaskPropertiesPublisher(for: $0) }
             .switchToLatest()
-            .map { .task(properties: $0) }
-            .prepend(.none(estimatedProgress: lastKnownProgress))
             .eraseToAnyPublisher()
     }
 
@@ -50,7 +48,6 @@ extension AVAssetDownloadURLSession: DownloadSession {
         .eraseToAnyPublisher()
     }
 }
-
 
 extension AVAssetDownloadURLSession {
     func taskPublisher(withDescription description: String) -> AnyPublisher<URLSessionTask?, Never> {

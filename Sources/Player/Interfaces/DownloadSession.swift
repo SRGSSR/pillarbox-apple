@@ -7,5 +7,5 @@
 import Combine
 
 protocol DownloadSession {
-    func downloadJobPublisher(id: String, asset: Asset, title: String?, lastKnownProgress: Double, createIfNeeded: Bool) -> AnyPublisher<DownloadJob, Never>
+    func downloadTaskPropertiesPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<DownloadTaskProperties, Never>
 }
