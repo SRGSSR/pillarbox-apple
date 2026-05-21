@@ -130,10 +130,7 @@ private extension Download {
     enum TriggerId: Hashable {
         case reload
     }
-}
 
-@available(tvOS, unavailable)
-private extension Download {
     static func metadataPublisher<L>(
         loaderType: L.Type,
         input: L.Input,
