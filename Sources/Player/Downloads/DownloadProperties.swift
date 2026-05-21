@@ -71,7 +71,7 @@ struct DownloadProperties<Metadata> {
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
         self.metadata = record.metadata
         do {
-            self.location = try URL(resolvingBookmarkData: record.bookmarkData)
+            self.location = try Self.url(resolvingBookmarkData: record.bookmarkData)
             self.job = .none(estimatedProgress: record.progress)
             self.error = record.error
         }
@@ -80,6 +80,12 @@ struct DownloadProperties<Metadata> {
             self.job = .none(estimatedProgress: 0)
             self.error = error
         }
+    }
+
+    private static func url(resolvingBookmarkData bookmarkData: Data?) throws -> URL? {
+        guard let bookmarkData else { return nil }
+        var isStale = false
+        return try URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
     }
 
     func bookmarkData() -> Data? {
