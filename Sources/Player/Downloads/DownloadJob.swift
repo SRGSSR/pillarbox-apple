@@ -8,14 +8,14 @@ import Foundation
 
 enum DownloadJob {
     case none(estimatedProgress: Double)
-    case task(properties: DownloadTaskProperties)
+    case task(DownloadTask)
 
     private var task: URLSessionTask? {
         switch self {
         case .none:
             return nil
-        case let .task(properties: properties):
-            return properties.task
+        case let .task(task):
+            return task.task
         }
     }
 

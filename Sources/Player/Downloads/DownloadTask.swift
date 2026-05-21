@@ -6,8 +6,7 @@
 
 import Foundation
 
-// TODO: Rename as DownloadTask
-struct DownloadTaskProperties {
+struct DownloadTask {
     let task: URLSessionTask
     let state: URLSessionTask.State
     let progress: Double

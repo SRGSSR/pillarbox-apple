@@ -30,8 +30,8 @@ struct DownloadProperties<Metadata> {
             else {
                 return progress > 0 ? .failed(CocoaError(.fileNoSuchFile)) : .preparing
             }
-        case let .task(properties: properties):
-            switch properties.state {
+        case let .task(task):
+            switch task.state {
             case .running, .canceling:
                 return .running
             case .suspended:
@@ -52,8 +52,8 @@ struct DownloadProperties<Metadata> {
         switch job {
         case let .none(estimatedProgress: progress):
             return location != nil ? progress : 0
-        case let .task(properties: properties):
-            return properties.progress
+        case let .task(task):
+            return task.progress
         }
     }
 
