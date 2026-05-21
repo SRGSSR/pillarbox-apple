@@ -178,15 +178,13 @@ extension Download {
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
                 .map { metadata in
                     Publishers.CombineLatest3(
-                        session.downloadSessionTaskPublisher(
+                        session.downloadSourcePublisher(
                             id: id,
                             asset: loaderType.downloadableAsset(input: input, metadata: metadata),
                             title: loaderType.playerMetadata(from: metadata).title,
-                            createIfNeeded: properties.shouldCreateTask
-                        )
-                        .map { .task($0) }
-                        .prepend(.estimate(properties.progress))
-                        .eraseToAnyPublisher(),
+                            createTaskIfNeeded: properties.shouldCreateTask,
+                            progressEstimate: properties.progress
+                        ),
                         locationSubject
                             .map(\.self)
                             .prepend(properties.location),
