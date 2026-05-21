@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+@available(tvOS, unavailable)
 protocol DownloadManagement<Store> {
     associatedtype Store: AssetDownloadStore
 
