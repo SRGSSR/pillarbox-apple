@@ -10,11 +10,11 @@ import Foundation
 
 struct DownloadProperties<Metadata> {
     let metadata: Metadata?
-    let job: DownloadJob
+    let source: DownloadSource
     let location: URL?
     let error: Error?
 
-    var shouldCreateJob: Bool {
+    var shouldCreateTask: Bool {
         location == nil && error == nil
     }
 
@@ -22,16 +22,16 @@ struct DownloadProperties<Metadata> {
         if let error {
             return .failed(error)
         }
-        switch job {
-        case let .none(estimatedProgress: progress):
+        switch source {
+        case let .estimate(progress):
             if location != nil {
                 return progress == 1 ? .completed : .failed(CocoaError(.fileNoSuchFile))
             }
             else {
                 return progress > 0 ? .failed(CocoaError(.fileNoSuchFile)) : .preparing
             }
-        case let .task(task):
-            switch task.state {
+        case let .task(properties):
+            switch properties.state {
             case .running, .canceling:
                 return .running
             case .suspended:
@@ -49,21 +49,21 @@ struct DownloadProperties<Metadata> {
         if error != nil {
             return 0
         }
-        switch job {
-        case let .none(estimatedProgress: progress):
+        switch source {
+        case let .estimate(progress):
             return location != nil ? progress : 0
-        case let .task(task):
-            return task.progress
+        case let .task(properties):
+            return properties.progress
         }
     }
 
     init() {
-        self.init(metadata: nil, job: .none(estimatedProgress: 0), location: nil, error: nil)
+        self.init(metadata: nil, source: .estimate(0), location: nil, error: nil)
     }
 
-    init(metadata: Metadata?, job: DownloadJob, location: URL?, error: Error?) {
+    init(metadata: Metadata?, source: DownloadSource, location: URL?, error: Error?) {
         self.metadata = metadata
-        self.job = job
+        self.source = source
         self.location = location
         self.error = error
     }
@@ -72,12 +72,12 @@ struct DownloadProperties<Metadata> {
         self.metadata = record.metadata
         do {
             self.location = try Self.url(resolvingBookmarkData: record.bookmarkData)
-            self.job = .none(estimatedProgress: record.progress)
+            self.source = .estimate(record.progress)
             self.error = record.error
         }
         catch {
             self.location = nil
-            self.job = .none(estimatedProgress: 0)
+            self.source = .estimate(0)
             self.error = error
         }
     }

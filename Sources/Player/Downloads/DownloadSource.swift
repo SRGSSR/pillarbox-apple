@@ -6,16 +6,16 @@
 
 import Foundation
 
-enum DownloadJob {
-    case none(estimatedProgress: Double)
-    case task(DownloadTask)
+enum DownloadSource {
+    case estimate(Double)
+    case task(DownloadSessionTask)
 
     private var task: URLSessionTask? {
         switch self {
-        case .none:
+        case .estimate:
             return nil
-        case let .task(task):
-            return task.task
+        case let .task(properties):
+            return properties.task
         }
     }
 

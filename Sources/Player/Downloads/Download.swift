@@ -105,17 +105,17 @@ public final class Download: ObservableObject {
 @available(tvOS, unavailable)
 public extension Download {
     func resume() {
-        properties.job.resume()
+        properties.source.resume()
     }
 
     func suspend() {
-        properties.job.suspend()
+        properties.source.suspend()
     }
 
     func cancel() {
         removeRecord()
         removeFile()
-        properties.job.cancel()
+        properties.source.cancel()
     }
 
     func restart() {
@@ -178,14 +178,14 @@ extension Download {
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
                 .map { metadata in
                     Publishers.CombineLatest3(
-                        session.downloadTaskPublisher(
+                        session.downloadSessionTaskPublisher(
                             id: id,
                             asset: loaderType.downloadableAsset(input: input, metadata: metadata),
                             title: loaderType.playerMetadata(from: metadata).title,
-                            createIfNeeded: properties.shouldCreateJob
+                            createIfNeeded: properties.shouldCreateTask
                         )
                         .map { .task($0) }
-                        .prepend(.none(estimatedProgress: properties.progress))
+                        .prepend(.estimate(properties.progress))
                         .eraseToAnyPublisher(),
                         locationSubject
                             .map(\.self)
@@ -194,11 +194,11 @@ extension Download {
                             .map(\.self)
                             .prepend(properties.error)
                     )
-                    .map { DownloadProperties(metadata: metadata, job: $0, location: $1, error: $2) }
+                    .map { DownloadProperties(metadata: metadata, source: $0, location: $1, error: $2) }
                 }
                 .switchToLatest()
                 .catch { error in
-                    Just(DownloadProperties(metadata: nil, job: .none(estimatedProgress: 0), location: nil, error: error))
+                    Just(DownloadProperties(metadata: nil, source: .estimate(0), location: nil, error: error))
                 }
                 .prepend(properties)
         }
@@ -228,7 +228,7 @@ extension Download {
             .map { properties in
                 DownloadProperties(
                     metadata: loaderType.playerMetadata(from: properties.metadata),
-                    job: properties.job,
+                    source: properties.source,
                     location: properties.location,
                     error: properties.error
                 )
