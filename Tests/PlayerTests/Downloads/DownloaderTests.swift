@@ -12,9 +12,9 @@ import PillarboxStreams
 import XCTest
 
 @available(tvOS, unavailable)
-final class DownloadManagerTests: TestCase {
+final class DownloaderTests: TestCase {
     func testEmpty() {
-        let manager = DownloadManager(
+        let manager = Downloader(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
             store: AssetDownloadStoreMock()
@@ -23,7 +23,7 @@ final class DownloadManagerTests: TestCase {
     }
 
     func testAddSingle() {
-        let manager = DownloadManager(
+        let manager = Downloader(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
             store: AssetDownloadStoreMock()
@@ -33,7 +33,7 @@ final class DownloadManagerTests: TestCase {
     }
 
     func testAddMany() {
-        let manager = DownloadManager(
+        let manager = Downloader(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
             store: AssetDownloadStoreMock()
@@ -45,7 +45,7 @@ final class DownloadManagerTests: TestCase {
     }
 
     func testAddIdentical() {
-        let manager = DownloadManager(
+        let manager = Downloader(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
             store: AssetDownloadStoreMock()
@@ -57,7 +57,7 @@ final class DownloadManagerTests: TestCase {
     }
 
     func testRemove() {
-        let manager = DownloadManager(
+        let manager = Downloader(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
             store: AssetDownloadStoreMock()
@@ -68,7 +68,7 @@ final class DownloadManagerTests: TestCase {
     }
 
     func testRemoveAll() {
-        let manager = DownloadManager(
+        let manager = Downloader(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
             store: AssetDownloadStoreMock()
