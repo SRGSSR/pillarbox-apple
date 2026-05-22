@@ -10,16 +10,14 @@ import Combine
 import Foundation
 
 final class DownloadSessionMock: DownloadSession {
-    private let isActive: Bool
     private let delay: TimeInterval
 
-    init(isActive: Bool = true, delay: TimeInterval = 0) {
-        self.isActive = isActive
+    init(delay: TimeInterval = 0) {
         self.delay = delay
     }
 
     func sessionTaskPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<URLSessionTask, Never> {
-        guard isActive else {
+        guard createIfNeeded else {
             return Empty().eraseToAnyPublisher()
         }
         // TODO: Local network call
