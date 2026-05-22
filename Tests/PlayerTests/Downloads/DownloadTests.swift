@@ -21,7 +21,7 @@ final class DownloadTests: TestCase {
             session: DownloadSessionMock(),
             store: AssetDownloadStoreMock()
         )
-        expect(download.state).to(beSimilarTo(.running))
+        expect(download.state).to(equal(.running))
     }
 
     func testMetadataLatency() {
@@ -31,7 +31,7 @@ final class DownloadTests: TestCase {
             session: DownloadSessionMock(),
             store: AssetDownloadStoreMock()
         )
-        expect(download.state).to(beSimilarTo(.preparing))
+        expect(download.state).to(equal(.preparing))
     }
 
     func testSessionLatency() {
@@ -41,7 +41,7 @@ final class DownloadTests: TestCase {
             session: DownloadSessionMock(delay: 0.1),
             store: AssetDownloadStoreMock()
         )
-        expect(download.state).to(beSimilarTo(.preparing))
+        expect(download.state).to(equal(.preparing))
     }
 
     func testMetadataAndSessionLatency() {
@@ -51,7 +51,7 @@ final class DownloadTests: TestCase {
             session: DownloadSessionMock(delay: 0.1),
             store: AssetDownloadStoreMock()
         )
-        expect(download.state).to(beSimilarTo(.preparing))
+        expect(download.state).to(equal(.preparing))
     }
 
     func testLifeCycleSuccess() {
@@ -61,9 +61,9 @@ final class DownloadTests: TestCase {
             session: DownloadSessionMock(delay: 0.1),
             store: AssetDownloadStoreMock()
         )
-        expectAtLeastSimilarPublished(values: [
+        expectAtLeastEqualPublished(values: [
             .preparing, .running, .completed
-        ], from: download.changePublisher(at: \.state).removeDuplicates(by: ~~))
+        ], from: download.changePublisher(at: \.state).removeDuplicates())
     }
 
     func testLifeCycleFailure() {
@@ -83,7 +83,7 @@ final class DownloadTests: TestCase {
             store: AssetDownloadStoreMock()
         )
         download.suspend()
-        expect(download.state).to(beSimilarTo(.suspended))
+        expect(download.state).to(equal(.suspended))
     }
 
     func testResume() {
@@ -94,10 +94,10 @@ final class DownloadTests: TestCase {
             store: AssetDownloadStoreMock()
         )
         download.suspend()
-        expect(download.state).to(beSimilarTo(.suspended))
+        expect(download.state).to(equal(.suspended))
 
         download.resume()
-        expect(download.state).to(beSimilarTo(.running))
+        expect(download.state).to(equal(.running))
     }
 
     func testCancel() {

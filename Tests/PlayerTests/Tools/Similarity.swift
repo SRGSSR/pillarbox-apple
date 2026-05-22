@@ -11,18 +11,6 @@ import CoreMedia
 import PillarboxCircumspect
 import UIKit
 
-extension DownloadState: Similar {
-    // swiftlint:disable:next missing_docs
-    public static func ~~ (lhs: DownloadState, rhs: DownloadState) -> Bool {
-        switch (lhs, rhs) {
-        case (.preparing, .preparing), (.running, .running), (.suspended, .suspended), (.completed, .completed), (.failed, .failed):
-            return true
-        default:
-            return false
-        }
-    }
-}
-
 extension ImageSource: Similar {
     // swiftlint:disable:next missing_docs
     public static func ~~ (lhs: ImageSource, rhs: ImageSource) -> Bool {

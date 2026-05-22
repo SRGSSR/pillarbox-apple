@@ -12,24 +12,24 @@ struct DownloadProperties<Metadata> {
     let metadata: Metadata?
     let source: DownloadSource
     let location: URL?
-    let error: Error?
+    private let _error: Error?
 
     var shouldCreateTask: Bool {
         location == nil && error == nil
     }
 
     var state: DownloadState {
-        if let error {
-            return .failed(error)
+        if _error != nil {
+            return .completed
         }
         switch source {
         case let .estimate(progress):
-            // TODO: Check conditions here
+            // TODO: Check conditions here with UTs
             if location != nil {
-                return progress == 1 ? .completed : .failed(CocoaError(.fileNoSuchFile))
+                return .completed
             }
             else {
-                return progress > 0 ? .failed(CocoaError(.fileNoSuchFile)) : .preparing
+                return progress > 0 ? .completed : .preparing
             }
         case let .task(properties):
             switch properties.state {
@@ -43,6 +43,24 @@ struct DownloadProperties<Metadata> {
                 assertionFailure("Unhandled case")
                 return .completed
             }
+        }
+    }
+
+    var error: Error? {
+        if let _error {
+            return _error
+        }
+        switch source {
+        case let .estimate(progress):
+            // TODO: Check conditions here with UTs
+            if location != nil {
+                return progress == 1 ? nil : CocoaError(.fileNoSuchFile)
+            }
+            else {
+                return progress > 0 ? CocoaError(.fileNoSuchFile) : nil
+            }
+        default:
+            return nil
         }
     }
 
@@ -66,7 +84,7 @@ struct DownloadProperties<Metadata> {
         self.metadata = metadata
         self.source = source
         self.location = location
-        self.error = error
+        self._error = error
     }
 
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
@@ -74,12 +92,12 @@ struct DownloadProperties<Metadata> {
         do {
             self.location = try Self.url(resolvingBookmarkData: record.bookmarkData)
             self.source = .estimate(record.progress)
-            self.error = record.error
+            self._error = record.error
         }
         catch {
             self.location = nil
             self.source = .estimate(0)
-            self.error = error
+            self._error = error
         }
     }
 

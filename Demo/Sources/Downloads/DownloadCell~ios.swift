@@ -50,12 +50,9 @@ struct DownloadCell: View {
 
     @ViewBuilder
     private func errorMessage() -> some View {
-        switch download.state {
-        case let .failed(error):
+        if let error = download.error {
             Text(error.localizedDescription)
                 .foregroundStyle(.red)
-        default:
-            EmptyView()
         }
     }
 
@@ -67,12 +64,15 @@ struct DownloadCell: View {
             case .suspended:
                 button(systemImage: "play.circle", action: download.resume)
             case .completed:
-                Image(systemName: "checkmark")
-                    .resizable()
-                    .foregroundStyle(.green)
-            case .failed:
-                button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
-                    .tint(.red)
+                if download.error != nil {
+                    button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
+                        .tint(.red)
+                }
+                else {
+                    Image(systemName: "checkmark")
+                        .resizable()
+                        .foregroundStyle(.green)
+                }
             case .preparing:
                 ProgressView()
             }

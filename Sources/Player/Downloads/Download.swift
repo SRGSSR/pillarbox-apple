@@ -42,6 +42,10 @@ public final class Download: ObservableObject {
         properties.metadata ?? .empty
     }
 
+    public var error: Error? {
+        properties.error
+    }
+
     var location: URL? {
         properties.location
     }
