@@ -7,7 +7,6 @@
 import Foundation
 
 protocol DownloadSessionDelegate: AnyObject {
-    // TODO: associated type for session?
-    func downloadSession(_ session: some DownloadSession, willDownloadToLocation location: URL, forId id: String)
-    func downloadSession(_ session: some DownloadSession, didFailWithError error: any Error, forId id: String)
+    func downloadSessionWillDownloadToLocation(_ location: URL, forId id: String)
+    func downloadSessionDidFailWithError(_ error: any Error, forId id: String)
 }

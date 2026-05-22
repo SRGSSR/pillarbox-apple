@@ -63,12 +63,12 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
 }
 
 extension DownloadManager: DownloadSessionDelegate {
-    func downloadSession(_ session: some DownloadSession, willDownloadToLocation location: URL, forId id: String) {
+    func downloadSessionWillDownloadToLocation(_ location: URL, forId id: String) {
         guard let download = download(matchingId: id) else { return }
         download.attach(to: location)
     }
 
-    func downloadSession(_ session: some DownloadSession, didFailWithError error: any Error, forId id: String) {
+    func downloadSessionDidFailWithError(_ error: any Error, forId id: String) {
         guard let download = download(matchingId: id) else { return }
         download.fail(with: error)
     }

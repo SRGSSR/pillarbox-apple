@@ -65,12 +65,12 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
 #if os(iOS)
     func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         guard let id = assetDownloadTask.taskDescription else { return }
-        delegate?.downloadSession(self, willDownloadToLocation: location, forId: id)
+        delegate?.downloadSessionWillDownloadToLocation(location, forId: id)
     }
 #endif
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let id = task.taskDescription, let error else { return }
-        delegate?.downloadSession(self, didFailWithError: error, forId: id)
+        delegate?.downloadSessionDidFailWithError(error, forId: id)
     }
 }

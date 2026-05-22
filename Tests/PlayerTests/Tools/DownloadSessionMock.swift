@@ -25,15 +25,15 @@ extension DownloadSessionMock: DownloadSession {
             return Empty().eraseToAnyPublisher()
         }
         // TODO: Local network call
-        let task = URLSession.shared.downloadTask(with: URLRequest(url: URL(string: "https://httpbin.org/bytes/50")!)) { [weak self] url, _, error in
+        let task = URLSession.shared.downloadTask(with: URLRequest(url: URL(string: "https://httpbin.org/bytes/50")!)) { [weak self] fileUrl, _, error in
             guard let self else { return }
             if let error {
-                delegate?.downloadSession(self, didFailWithError: error, forId: id)
+                delegate?.downloadSessionDidFailWithError(error, forId: id)
             }
-            else if let url {
+            else if let fileUrl {
                 // TODO: Removal might require moving this file somewhere else
                 // See https://developer.apple.com/documentation/foundation/downloading-files-from-websites
-                delegate?.downloadSession(self, willDownloadToLocation: url, forId: id)
+                delegate?.downloadSessionWillDownloadToLocation(fileUrl, forId: id)
             }
         }
         task.resume()
