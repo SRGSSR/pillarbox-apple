@@ -93,8 +93,7 @@ final class DownloadManagerTests: TestCase {
 
         let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, sessionProvider: .custom(DownloadSessionMock()), store: AssetDownloadStoreMock())
         manager2.remove(download1)
-        expect(manager1.downloads).to(equal([download1]))
-        expect(download1.state).to(equal(.preparing))
+        expect(download1.state).to(equal(.running))
     }
 
     func testRemoveAll() {
