@@ -24,8 +24,8 @@ public final class Download: ObservableObject {
 
     private let trigger = Trigger()
 
-    private let locationSubject = PassthroughSubject<URL, Never>()
-    private let errorSubject = PassthroughSubject<Error, Never>()
+    private let locationSubject = PassthroughSubject<URL?, Never>()
+    private let errorSubject = PassthroughSubject<Error?, Never>()
 
     private let removeRecord: () -> Void
     private let resetRecord: () -> Void
@@ -193,23 +193,17 @@ extension Download {
                         .setFailureType(to: URLError.self)
                         .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled)),
                         locationSubject
-                            .map(\.self)
                             .setFailureType(to: URLError.self)
                             .prepend(properties.location),
                         errorSubject
-                            .map(\.self)
                             .setFailureType(to: URLError.self)
                             .prepend(properties.error)
                     )
                     .map { DownloadProperties(metadata: metadata, source: $0, location: $1, error: $2) }
-                    .catch { error in
-                        Just(DownloadProperties(metadata: metadata, source: .estimate(0), location: nil, error: error))
-                    }
+                    .catch { Just(DownloadProperties(metadata: metadata, source: .estimate(0), location: nil, error: $0)) }
                 }
                 .switchToLatest()
-                .catch { error in
-                    Just(DownloadProperties(metadata: nil, source: .estimate(0), location: nil, error: error))
-                }
+                .catch { Just(DownloadProperties(metadata: nil, source: .estimate(0), location: nil, error: $0)) }
                 .prepend(properties)
         }
     }
