@@ -96,10 +96,6 @@ public final class Download: ObservableObject {
         errorSubject.send(error)
     }
 
-    func matches(task: URLSessionTask) -> Bool {
-        task.taskDescription == id
-    }
-
     private func removeFile() {
         guard let location = properties.location else { return }
         try? FileManager.default.removeItem(at: location)

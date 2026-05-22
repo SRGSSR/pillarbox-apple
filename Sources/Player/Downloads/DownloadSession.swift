@@ -4,16 +4,17 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Combine
-import Foundation
 
-// TODO:
-// - Design a better protocol that separates looking for an existing task and creating the task from an asset
-// - Improve AV-implementation to only fetch existing tasks once?
-protocol DownloadSession {
+@available(tvOS, unavailable)
+protocol DownloadSession: AnyObject {
+    var delegate: DownloadSessionDelegate? { get set }
+
     func sessionTaskPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<URLSessionTask, Never>
 }
 
+@available(tvOS, unavailable)
 extension DownloadSession {
     private static func downloadSessionTaskPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTask, Never> {
         Publishers.CombineLatest3(

@@ -11,23 +11,19 @@ import UIKit
 #if DEBUG
 
 @available(tvOS, unavailable)
-final class DownloadManager<L, S>: NSObject, DownloadManagement<S>, AVAssetDownloadDelegate
-where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    private let session: any DownloadSession
     private let store: S
-
-    // swiftlint:disable:next implicitly_unwrapped_optional
-    private var session: (any DownloadSession)!
 
     @Published private(set) var downloads: [Download] = []
 
-    init(loaderType: L.Type, sessionProvider: DownloadSessionProvider, store: S) {
-        self.store = store
-        super.init()
-        let session = makeSession(using: sessionProvider)
+    init(loaderType: L.Type, session: some DownloadSession, store: S) {
         self.session = session
+        self.store = store
         self.downloads = store.downloadRecords().map { record in
             Download(loaderType: loaderType, record: record, session: session, store: store)
         }
+        session.delegate = self
     }
 
     @discardableResult
@@ -64,35 +60,21 @@ where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S
         }
         downloads.removeAll()
     }
+}
 
-    private func makeSession(using sessionProvider: DownloadSessionProvider) -> any DownloadSession {
-        switch sessionProvider {
-        case let .urlSession(configuration):
-            return AVAssetDownloadURLSession(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
-        case let .custom(session):
-            return session
-        }
-    }
-
-    // MARK: AVAssetDownloadDelegate
-
-    // TODO: Probably DownloadSessionProvider should be an object conforming to a protocol, either implemented using AVAssetDownloadURLSession
-    //       (with delegate implementation) or simply wrapping a custom session.
-
-#if os(iOS)
-    func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
-        guard let download = download(matching: assetDownloadTask) else { return }
+extension DownloadManager: DownloadSessionDelegate {
+    func downloadSession(_ session: some DownloadSession, willDownloadToLocation location: URL, forId id: String) {
+        guard let download = download(matchingId: id) else { return }
         download.attach(to: location)
     }
-#endif
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
-        guard let error, let download = download(matching: task) else { return }
+    func downloadSession(_ session: some DownloadSession, didFailWithError error: any Error, forId id: String) {
+        guard let download = download(matchingId: id) else { return }
         download.fail(with: error)
     }
 
-    private func download(matching task: URLSessionTask) -> Download? {
-        downloads.first { $0.matches(task: task) }
+    private func download(matchingId id: String) -> Download? {
+        downloads.first { $0.id == id }
     }
 }
 
