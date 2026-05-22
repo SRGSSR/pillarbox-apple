@@ -59,7 +59,7 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
         totalBytesExpectedToWrite: Int64
     ) {
         guard let delegate, let id = downloadTask.taskDescription else { return }
-        let location = FileManager.default.temporaryDirectory.appendingPathExtension(UUID().uuidString)
+        let location = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         delegate.downloadSessionWillDownloadToLocation(location, forId: id)
         FileManager.default.createFile(atPath: location.path(), contents: nil)
     }
