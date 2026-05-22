@@ -33,10 +33,12 @@ struct DownloadProperties<Metadata> {
             }
         case let .task(properties):
             switch properties.state {
-            case .running, .canceling:
+            case .running:
                 return .running
             case .suspended:
                 return .suspended
+            case .canceling:
+                return .completed
             case .completed:
                 return .completed
             @unknown default:
