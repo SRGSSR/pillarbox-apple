@@ -45,6 +45,7 @@ public final class PlayerItem: Hashable {
     }
 
 #if DEBUG
+    @available(tvOS, unavailable)
     convenience init?<S>(download: Download, store: S, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: AssetDownloadStore {
         guard let record = store.downloadRecord(forId: download.id), let metadata = record.metadata, let fileUrl = download.location else {
             return nil

@@ -62,6 +62,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
     }
 }
 
+@available(tvOS, unavailable)
 extension DownloadManager: DownloadSessionDelegate {
     func downloadSessionWillDownloadToLocation(_ location: URL, forId id: String) {
         guard let download = download(matchingId: id) else { return }
