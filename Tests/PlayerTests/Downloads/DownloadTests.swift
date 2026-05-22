@@ -117,15 +117,29 @@ final class DownloadTests: TestCase {
     }
 
     func testCancelWhileRunning() {
+        let store = AssetDownloadStoreMock()
         let download = Download(
             loaderType: AssetLoaderMock.self,
             input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
             session: DownloadSessionMock(),
-            store: AssetDownloadStoreMock()
+            store: store
         )
         expect(download.state).to(equal(.running))
         download.cancel()
         expect(download.state).toEventually(equal(.cancelled))
+        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
+    }
+
+    func testCancelWhileDownloadingFile() {
+        let store = AssetDownloadStoreMock()
+        let download = Download(
+            loaderType: AssetLoaderMock.self,
+            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
+            session: DownloadSessionMock(),
+            store: store
+        )
+        expect(download.location).toEventuallyNot(beNil())
+        // ...
     }
 
     func testCancelWhileSuspended() {
