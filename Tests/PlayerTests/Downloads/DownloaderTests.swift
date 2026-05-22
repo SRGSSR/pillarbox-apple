@@ -88,7 +88,7 @@ final class DownloaderTests: TestCase {
         expect(downloader.download(matching: .init(url: Stream.mediumOnDemand.url, metadata: .empty))).to(beNil())
     }
 
-    func testPlayerItemForRelatedDownload() {
+    func testRelatedPlayerItem() {
         let downloader = Downloader(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads"),
@@ -99,7 +99,7 @@ final class DownloaderTests: TestCase {
         expect(downloader.playerItem(for: download)).notTo(beNil())
     }
 
-    func testPlayerItemForUnrelatedDownload() {
+    func testUnrelatedPlayerItem() {
         let downloader1 = Downloader(
             loaderType: AssetLoaderMock.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads1"),
