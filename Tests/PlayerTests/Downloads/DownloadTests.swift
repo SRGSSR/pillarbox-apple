@@ -118,7 +118,7 @@ final class DownloadTests: TestCase {
 
     func testRemoveWhileRunning() {
     }
-    
+
     func testRemoveWhileDownloadingFile() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
