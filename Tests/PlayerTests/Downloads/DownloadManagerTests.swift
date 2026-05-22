@@ -85,6 +85,7 @@ final class DownloadManagerTests: TestCase {
         let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         manager.remove(download)
         expect(manager.downloads).to(beEmpty())
+        expect(download.state).to(equal(.completed))
     }
 
     func testRemoveUnrelated() {
@@ -98,9 +99,11 @@ final class DownloadManagerTests: TestCase {
 
     func testRemoveAll() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, sessionProvider: .custom(DownloadSessionMock()), store: AssetDownloadStoreMock())
-        manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
-        manager.add(input: .init(url: Stream.mediumOnDemand.url, metadata: .empty))
+        let download1 = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download2 = manager.add(input: .init(url: Stream.mediumOnDemand.url, metadata: .empty))
         manager.removeAll()
         expect(manager.downloads).to(beEmpty())
+        expect(download1.state).to(equal(.completed))
+        expect(download2.state).to(equal(.completed))
     }
 }
