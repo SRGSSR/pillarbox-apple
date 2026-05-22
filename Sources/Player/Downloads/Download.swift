@@ -114,12 +114,12 @@ public extension Download {
 
     func cancel() {
         guard state != .completed else { return }
-        remove()
+        removeFile()
+        cancelOperations()
     }
 
     func remove() {
-        properties.source.cancel()
-        trigger.activate(for: TriggerId.cancel)
+        cancelOperations()
         removeRecord()
         removeFile()
     }
@@ -128,6 +128,11 @@ public extension Download {
         resetRecord()
         removeFile()
         trigger.activate(for: TriggerId.reload)
+    }
+
+    private func cancelOperations() {
+        properties.source.cancel()
+        trigger.activate(for: TriggerId.cancel)
     }
 }
 
