@@ -7,6 +7,9 @@
 import Combine
 import Foundation
 
+// TODO:
+// - Design a better protocol that separates looking for an existing task and creating the task from an asset
+// - Improve AV-implementation to only fetch existing tasks once?
 protocol DownloadSession {
     func sessionTaskPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<URLSessionTask, Never>
 }

@@ -24,6 +24,7 @@ struct DownloadProperties<Metadata> {
         }
         switch source {
         case let .estimate(progress):
+            // TODO: Check conditions here
             if location != nil {
                 return progress == 1 ? .completed : .failed(CocoaError(.fileNoSuchFile))
             }

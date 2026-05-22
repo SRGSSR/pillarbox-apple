@@ -22,6 +22,7 @@ final class DownloadSessionMock: DownloadSession {
         guard isActive else {
             return Empty().eraseToAnyPublisher()
         }
+        // TODO: Local network call
         let task = URLSession.shared.downloadTask(with: URLRequest(url: URL(string: "https://httpbin.org/bytes/50")!))
         task.resume()
         return Just(task)
