@@ -36,7 +36,7 @@ extension DownloadSessionMock: DownloadSession {
 
     private func sessionTask(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> URLSessionTask {
         // TODO: Local network call
-        let task = session.downloadTask(with: URLRequest(url: URL(string: "https://httpbin.org/bytes/50")!))
+        let task = session.downloadTask(with: URLRequest(url: URL(string: "https://httpbin.org/bytes/50000")!))
         task.taskDescription = id
         task.resume()
         return task

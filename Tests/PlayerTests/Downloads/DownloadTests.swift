@@ -14,6 +14,10 @@ import XCTest
 
 @available(tvOS, unavailable)
 final class DownloadTests: TestCase {
+    override static func setUp() {
+        URLCache.shared.removeAllCachedResponses()
+    }
+
     // TODO: Also verify entry/cleanup in storage/movpkg from relevant tests
 
     func testWithoutLatency() {
@@ -82,24 +86,32 @@ final class DownloadTests: TestCase {
     }
 
     func testCancelWhileDownloadingFile() {
-        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         expect(download.location).toEventuallyNot(beNil())
         let location = download.location
         download.cancel()
+        expect(download.state).to(equal(.cancelled))
+        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
         expect(download.location).to(beNil())
         expect(FileManager.default.fileExists(atPath: location!.path())).to(beFalse())
     }
 
-    func testCancelWhileSuspended() {
-    }
-
     func testCancelWhileCompleted() {
-        // TODO: Must not do anything if completed
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        expect(download.state).toEventually(equal(.completed))
+        expect(download.location).notTo(beNil())
+        download.cancel()
+        expect(download.state).toEventually(equal(.completed))
+        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
+        expect(download.location).notTo(beNil())
+        expect(FileManager.default.fileExists(atPath: download.location!.path())).to(beTrue())
     }
 
     func testCancelWhileCancelled() {
-        // TODO: Must not do anything if completed
     }
 
     func testRemoveWhilePreparing() {
@@ -109,9 +121,6 @@ final class DownloadTests: TestCase {
     }
 
     func testRemoveWhileDownloadingFile() {
-    }
-
-    func testRemoveWhileSuspended() {
     }
 
     func testRemoveWhileCompleted() {
