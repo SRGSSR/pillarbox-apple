@@ -66,15 +66,7 @@ struct DownloadCell: View {
             case .suspended:
                 button(systemImage: "play.circle", action: download.resume)
             case .completed:
-                if download.error != nil {
-                    button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
-                        .tint(.red)
-                }
-                else {
-                    Image(systemName: "checkmark")
-                        .resizable()
-                        .foregroundStyle(.green)
-                }
+                completedButton()
             case .cancelled:
                 button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
                     .tint(.red)
@@ -82,6 +74,19 @@ struct DownloadCell: View {
         }
         .frame(width: 30, height: 30)
         .padding()
+    }
+
+    @ViewBuilder
+    private func completedButton() -> some View {
+        if download.error != nil {
+            button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
+                .tint(.red)
+        }
+        else {
+            Image(systemName: "checkmark")
+                .resizable()
+                .foregroundStyle(.green)
+        }
     }
 
     private func button(systemImage: String, action: @escaping () -> Void) -> some View {
