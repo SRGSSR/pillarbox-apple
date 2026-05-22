@@ -14,6 +14,8 @@ import XCTest
 
 @available(tvOS, unavailable)
 final class DownloadTests: TestCase {
+    // TODO: Also verify entry/cleanup in storage/movpkg from relevant tests
+
     func testWithoutLatency() {
         let download = Download(
             loaderType: AssetLoaderMock.self,
@@ -97,15 +99,30 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.running))
     }
 
+    func testRemoveWhilePreparing() {
+    }
+
+    func testRemoveWhileRunning() {
+    }
+
     func testCancelWhilePreparing() {
     }
 
     func testCancelWhileRunning() {
+        let download = Download(
+            loaderType: AssetLoaderMock.self,
+            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
+            session: DownloadSessionMock(),
+            store: AssetDownloadStoreMock()
+        )
+        expect(download.state).to(equal(.running))
+        download.cancel()
+        expect(download.state).to(equal(.completed))
     }
 
     func testCancelWhileSuspended() {
     }
-    
+
     func testCancelWhileEnded() {
     }
 

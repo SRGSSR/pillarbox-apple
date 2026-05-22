@@ -117,9 +117,13 @@ public extension Download {
     }
 
     func cancel() {
+        properties.source.cancel()
+    }
+
+    func remove() {
+        cancel()
         removeRecord()
         removeFile()
-        properties.source.cancel()
     }
 
     func restart() {

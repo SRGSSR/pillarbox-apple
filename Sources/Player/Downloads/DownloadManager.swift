@@ -54,13 +54,13 @@ where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S
 
     func remove(_ download: Download) {
         guard downloads.contains(download) else { return }
-        download.cancel()
+        download.remove()
         downloads.removeAll { $0.id == download.id }
     }
 
     func removeAll() {
         downloads.forEach { download in
-            download.cancel()
+            download.remove()
         }
         downloads.removeAll()
     }

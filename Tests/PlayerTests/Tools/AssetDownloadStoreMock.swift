@@ -14,7 +14,7 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
     private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>>
 
     init(preloadedInputs: [AssetLoaderMock.Input] = []) {
-        records = OrderedDictionary(uniqueKeysWithValues: preloadedInputs.map { (Self.id(from: $0), Self.record(from: $0)) }) 
+        records = OrderedDictionary(uniqueKeysWithValues: preloadedInputs.map { (Self.id(from: $0), Self.record(from: $0)) })
     }
 
     static func id(from input: AssetLoaderMock.Input) -> String {
