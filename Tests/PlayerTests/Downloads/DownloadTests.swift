@@ -91,8 +91,10 @@ final class DownloadTests: TestCase {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         expect(download.location).toEventuallyNot(beNil())
+        let location = download.location
         download.cancel()
-        expect(FileManager.default.fileExists(atPath: download.location!.path())).to(beFalse())
+        expect(download.location).to(beNil())
+        expect(FileManager.default.fileExists(atPath: location!.path())).to(beFalse())
     }
 
     func testCancelWhileSuspended() {

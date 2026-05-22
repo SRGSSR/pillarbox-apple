@@ -113,20 +113,20 @@ public extension Download {
     }
 
     func cancel() {
+        removeFile()
         properties.source.cancel()
         trigger.activate(for: TriggerId.cancel)
-        removeFile()
     }
 
     func remove() {
+        removeFile()
         cancel()
         removeRecord()
-        removeFile()
     }
 
     func restart() {
-        resetRecord()
         removeFile()
+        resetRecord()
         trigger.activate(for: TriggerId.reload)
     }
 }
@@ -180,7 +180,7 @@ extension Download {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger, locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
-                .prefix(untilOutputFrom: trigger.signal(activatedBy: TriggerId.cancel))
+                .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
                 .map { metadata in
                     Publishers.CombineLatest3(
                         session.downloadSourcePublisher(
@@ -190,15 +190,21 @@ extension Download {
                             createTaskIfNeeded: properties.shouldCreateTask,
                             progressEstimate: properties.progress
                         )
-                        .prefix(untilOutputFrom: trigger.signal(activatedBy: TriggerId.cancel)),
+                        .setFailureType(to: URLError.self)
+                        .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled)),
                         locationSubject
                             .map(\.self)
+                            .setFailureType(to: URLError.self)
                             .prepend(properties.location),
                         errorSubject
                             .map(\.self)
+                            .setFailureType(to: URLError.self)
                             .prepend(properties.error)
                     )
                     .map { DownloadProperties(metadata: metadata, source: $0, location: $1, error: $2) }
+                    .catch { error in
+                        Just(DownloadProperties(metadata: metadata, source: .estimate(0), location: nil, error: error))
+                    }
                 }
                 .switchToLatest()
                 .catch { error in

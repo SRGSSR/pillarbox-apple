@@ -19,8 +19,9 @@ struct DownloadProperties<Metadata> {
     }
 
     var state: DownloadState {
-        if _error != nil {
-            return .completed
+        if let _error {
+            let isCancelledError = (_error as NSError == URLError(.cancelled) as NSError)
+            return isCancelledError ? .cancelled : .completed
         }
         switch source {
         case let .estimate(progress):
