@@ -25,8 +25,6 @@ public protocol AssetDownloadStore: AnyObject {
     func addDownloadRecord(using input: Input, forId id: String)
     func removeDownloadRecord(forId id: String)
 
-    // TODO: Could have a removeAll with default implementation
-
     func downloadRecord(forId id: String) -> DownloadRecord<Input, Metadata>?
     func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>, forId id: String)
 }
