@@ -118,15 +118,15 @@ public extension Download {
     }
 
     func remove() {
-        removeFile()
-        removeRecord()
         properties.source.cancel()
         trigger.activate(for: TriggerId.cancel)
+        removeRecord()
+        removeFile()
     }
 
     func restart() {
-        removeFile()
         resetRecord()
+        removeFile()
         trigger.activate(for: TriggerId.reload)
     }
 }
