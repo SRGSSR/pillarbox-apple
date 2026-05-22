@@ -18,14 +18,13 @@ struct DownloadProperties<Metadata> {
         location == nil && error == nil
     }
 
+    // TODO: Check conditions here with UTs
     var state: DownloadState {
         if let _error {
-            let isCancelledError = (_error as NSError == URLError(.cancelled) as NSError)
-            return isCancelledError ? .cancelled : .completed
+            return Self.isCancellationError(_error) ? .cancelled : .completed
         }
         switch source {
         case let .estimate(progress):
-            // TODO: Check conditions here with UTs
             if location != nil {
                 return .completed
             }
@@ -49,13 +48,13 @@ struct DownloadProperties<Metadata> {
         }
     }
 
+    // TODO: Check conditions here with UTs
     var error: Error? {
         if let _error {
-            return _error
+            return Self.isCancellationError(_error) ? nil : _error
         }
         switch source {
         case let .estimate(progress):
-            // TODO: Check conditions here with UTs
             if location != nil {
                 return progress == 1 ? nil : CocoaError(.fileNoSuchFile)
             }
@@ -108,6 +107,10 @@ struct DownloadProperties<Metadata> {
         guard let bookmarkData else { return nil }
         var isStale = false
         return try URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
+    }
+
+    private static func isCancellationError(_ error: Error) -> Bool {
+        error as NSError == URLError(.cancelled) as NSError
     }
 
     func bookmarkData() -> Data? {
