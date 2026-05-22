@@ -16,16 +16,17 @@ where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S
     private let store: S
 
     // swiftlint:disable:next implicitly_unwrapped_optional
-    private var session: AVAssetDownloadURLSession!
+    private var session: (any DownloadSession)!
 
     @Published private(set) var downloads: [Download] = []
 
-    init(loaderType: L.Type, configuration: URLSessionConfiguration, store: S) {
+    init(loaderType: L.Type, configuration: URLSessionConfiguration, session: DownloadSession? = nil, store: S) {
         self.store = store
         super.init()
-        self.session = .init(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
+        let downloadSession = session ?? AVAssetDownloadURLSession(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
+        self.session = downloadSession
         self.downloads = store.downloadRecords().map { record in
-            Download(loaderType: loaderType, record: record, session: session, store: store)
+            Download(loaderType: loaderType, record: record, session: downloadSession, store: store)
         }
     }
 
