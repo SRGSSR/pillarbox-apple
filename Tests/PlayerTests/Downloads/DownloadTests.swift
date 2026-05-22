@@ -118,8 +118,17 @@ final class DownloadTests: TestCase {
 
     func testRemoveWhileRunning() {
     }
-
-    func testRemoveWhileDownloadingFile() {
+    
+    func testRemoveWhileDownloadingFile() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let location = try pollUnwrap(download.location)
+        download.remove()
+        expect(download.state).to(equal(.cancelled))
+        expect(store.downloadRecord(forId: download.id)).to(beNil())
+        expect(download.location).to(beNil())
+        expect(FileManager.default.fileExists(atPath: location.path())).to(beFalse())
     }
 
     func testRemoveWhileCompleted() {

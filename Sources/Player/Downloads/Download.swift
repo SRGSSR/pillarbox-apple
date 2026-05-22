@@ -119,9 +119,9 @@ public extension Download {
     }
 
     func remove() {
-        cancelOperations()
         removeRecord()
         removeFile()
+        cancelOperations()
     }
 
     func restart() {
@@ -223,6 +223,7 @@ extension Download {
         downloadPropertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
             .handleEvents(
                 receiveOutput: { properties in
+                    guard store.downloadRecord(forId: id) != nil else { return }
                     let record = DownloadRecord(
                         input: input,
                         metadata: properties.metadata,
