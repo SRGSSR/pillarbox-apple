@@ -26,9 +26,8 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         session.delegate = self
     }
 
-    // TODO: Probably addDownload/removeDownload/removeAllDownloads to avoid confusion with item API
     @discardableResult
-    func add(input: L.Input) -> Download {
+    func addDownload(input: L.Input) -> Download {
         if let download = download(matching: input) {
             return download
         }
@@ -49,13 +48,13 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         return .init(download: download, store: store, trackerAdapters: trackerAdapters)
     }
 
-    func remove(_ download: Download) {
+    func removeDownload(_ download: Download) {
         guard downloads.contains(download) else { return }
         download.remove()
         downloads.removeAll { $0.id == download.id }
     }
 
-    func removeAll() {
+    func removeAllDownloads() {
         downloads.forEach { download in
             download.remove()
         }

@@ -59,6 +59,8 @@ struct DownloadCell: View {
     private func statusButton() -> some View {
         ZStack {
             switch download.state {
+            case .preparing:
+                ProgressView()
             case .running:
                 button(systemImage: "pause.circle", action: download.suspend)
             case .suspended:
@@ -73,8 +75,9 @@ struct DownloadCell: View {
                         .resizable()
                         .foregroundStyle(.green)
                 }
-            case .preparing:
-                ProgressView()
+            case .cancelled:
+                button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
+                    .tint(.red)
             }
         }
         .frame(width: 30, height: 30)

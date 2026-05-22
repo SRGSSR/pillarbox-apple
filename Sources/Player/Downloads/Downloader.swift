@@ -27,8 +27,8 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     }
 
     @discardableResult
-    public func add(input: S.Input) -> Download {
-        manager.add(input: input)
+    public func addDownload(input: S.Input) -> Download {
+        manager.addDownload(input: input)
     }
 
     public func download(matching input: S.Input) -> Download? {
@@ -39,12 +39,12 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
         manager.playerItem(for: download, trackerAdapters: trackerAdapters)
     }
 
-    public func remove(_ download: Download) {
-        manager.remove(download)
+    public func removeDownload(_ download: Download) {
+        manager.removeDownload(download)
     }
 
-    public func removeAll() {
-        manager.removeAll()
+    public func removeAllDownloads() {
+        manager.removeAllDownloads()
     }
 }
 

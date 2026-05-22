@@ -51,7 +51,7 @@ struct DownloadsView: View {
             }
             .onDelete { indexes in
                 for index in indexes.reversed() {
-                    downloader.remove(downloader.downloads[index])
+                    downloader.removeDownload(downloader.downloads[index])
                 }
             }
         }
@@ -93,7 +93,7 @@ struct DownloadsView: View {
 
     private func addDownloadButton(title: String, url: URL) -> some View {
         Button {
-            downloader.add(input: .init(title: title, url: url))
+            downloader.addDownload(input: .init(title: title, url: url))
         } label: {
             Text(title)
         }
@@ -102,7 +102,7 @@ struct DownloadsView: View {
     @ViewBuilder
     private func removeAllButton() -> some View {
         if !downloader.downloads.isEmpty {
-            Button(action: downloader.removeAll) {
+            Button(action: downloader.removeAllDownloads) {
                 Image(systemName: "trash")
             }
         }
