@@ -106,6 +106,14 @@ final class DownloadTests: TestCase {
     }
 
     func testCancelWhilePreparing() {
+        let download = Download(
+            loaderType: AssetLoaderMock.self,
+            input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1),
+            session: DownloadSessionMock(),
+            store: AssetDownloadStoreMock()
+        )
+        expect(download.state).to(equal(.preparing))
+        // ...
     }
 
     func testCancelWhileRunning() {
@@ -117,7 +125,7 @@ final class DownloadTests: TestCase {
         )
         expect(download.state).to(equal(.running))
         download.cancel()
-        expect(download.state).to(equal(.completed))
+        expect(download.state).toEventually(equal(.cancelled))
     }
 
     func testCancelWhileSuspended() {

@@ -76,6 +76,9 @@ where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S
 
     // MARK: AVAssetDownloadDelegate
 
+    // TODO: Probably DownloadSessionProvider should be an object conforming to a protocol, either implemented using AVAssetDownloadURLSession
+    //       (with delegate implementation) or simply wrapping a custom session.
+
 #if os(iOS)
     func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         guard let download = download(matching: assetDownloadTask) else { return }

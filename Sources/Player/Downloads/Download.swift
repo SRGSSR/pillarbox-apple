@@ -118,6 +118,7 @@ public extension Download {
 
     func cancel() {
         properties.source.cancel()
+        trigger.activate(for: TriggerId.cancel)
     }
 
     func remove() {
@@ -137,6 +138,7 @@ public extension Download {
 private extension Download {
     enum TriggerId: Hashable {
         case reload
+        case cancel
     }
 
     static func metadataPublisher<L>(
@@ -178,9 +180,10 @@ extension Download {
         session: DownloadSession,
         store: S
     ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [locationSubject, errorSubject] in
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger, locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
+                .prefix(untilOutputFrom: trigger.signal(activatedBy: TriggerId.cancel))
                 .map { metadata in
                     Publishers.CombineLatest3(
                         session.downloadSourcePublisher(
@@ -189,7 +192,8 @@ extension Download {
                             title: loaderType.playerMetadata(from: metadata).title,
                             createTaskIfNeeded: properties.shouldCreateTask,
                             progressEstimate: properties.progress
-                        ),
+                        )
+                        .prefix(untilOutputFrom: trigger.signal(activatedBy: TriggerId.cancel)),
                         locationSubject
                             .map(\.self)
                             .prepend(properties.location),

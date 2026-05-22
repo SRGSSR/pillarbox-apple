@@ -12,6 +12,7 @@ public enum DownloadState: Equatable {
     case running
     case suspended
     case completed
+    case cancelled
 }
 
 // swiftlint:enable missing_docs

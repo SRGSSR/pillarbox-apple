@@ -38,7 +38,7 @@ struct DownloadProperties<Metadata> {
             case .suspended:
                 return .suspended
             case .canceling:
-                return .completed
+                return .cancelled
             case .completed:
                 return .completed
             @unknown default:
