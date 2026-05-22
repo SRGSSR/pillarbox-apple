@@ -115,6 +115,7 @@ public extension Download {
     func cancel() {
         properties.source.cancel()
         trigger.activate(for: TriggerId.cancel)
+        removeFile()
     }
 
     func remove() {
