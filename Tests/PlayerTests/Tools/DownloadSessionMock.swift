@@ -10,8 +10,6 @@ import Combine
 import Foundation
 
 final class DownloadSessionMock: NSObject {
-    private let identifier = UUID().uuidString
-
     private let delay: TimeInterval
 
     // swiftlint:disable:next implicitly_unwrapped_optional
@@ -46,24 +44,12 @@ extension DownloadSessionMock: DownloadSession {
 }
 
 extension DownloadSessionMock: URLSessionDownloadDelegate {
-    private func location(forId id: String) -> URL {
-        FileManager.default.temporaryDirectory.appendingPathExtension("\(identifier)-\(id)")
-    }
-
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let delegate, let error, let id = task.taskDescription else { return }
         delegate.downloadSessionDidFailWithError(error, forId: id)
     }
 
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        guard let delegate, let id = downloadTask.taskDescription else { return }
-        do {
-            try FileManager.default.moveItem(at: location, to: self.location(forId: id))
-        }
-        catch {
-            delegate.downloadSessionDidFailWithError(error, forId: id)
-        }
-    }
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {}
 
     func urlSession(
         _ session: URLSession,
@@ -73,7 +59,7 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
         totalBytesExpectedToWrite: Int64
     ) {
         guard let delegate, let id = downloadTask.taskDescription else { return }
-        let location = location(forId: id)
+        let location = FileManager.default.temporaryDirectory.appendingPathExtension(UUID().uuidString)
         delegate.downloadSessionWillDownloadToLocation(location, forId: id)
         FileManager.default.createFile(atPath: location.path(), contents: nil)
     }
