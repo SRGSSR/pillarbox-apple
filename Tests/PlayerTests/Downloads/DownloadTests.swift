@@ -17,52 +17,20 @@ final class DownloadTests: TestCase {
     // TODO: Also verify entry/cleanup in storage/movpkg from relevant tests
 
     func testWithoutLatency() {
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
-            session: DownloadSessionMock(),
-            store: AssetDownloadStoreMock()
-        )
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         expect(download.state).to(equal(.running))
     }
 
-    func testMetadataLatency() {
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1),
-            session: DownloadSessionMock(),
-            store: AssetDownloadStoreMock()
-        )
-        expect(download.state).to(equal(.preparing))
-    }
-
-    func testSessionLatency() {
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
-            session: DownloadSessionMock(delay: 0.1),
-            store: AssetDownloadStoreMock()
-        )
-        expect(download.state).to(equal(.preparing))
-    }
-
-    func testMetadataAndSessionLatency() {
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
-            session: DownloadSessionMock(delay: 0.1),
-            store: AssetDownloadStoreMock()
-        )
+    func testWithLatency() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1))
         expect(download.state).to(equal(.preparing))
     }
 
     func testMetadataAndSessionSuccess() {
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1),
-            session: DownloadSessionMock(delay: 0.1),
-            store: AssetDownloadStoreMock()
-        )
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(delay: 0.1), store: AssetDownloadStoreMock())
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1))
         expectAtLeastEqualPublished(values: [
             .preparing, .running, .completed
         ], from: download.changePublisher(at: \.state).removeDuplicates())
@@ -75,23 +43,15 @@ final class DownloadTests: TestCase {
     }
 
     func testSuspend() {
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
-            session: DownloadSessionMock(),
-            store: AssetDownloadStoreMock()
-        )
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         download.suspend()
         expect(download.state).to(equal(.suspended))
     }
 
     func testResume() {
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
-            session: DownloadSessionMock(),
-            store: AssetDownloadStoreMock()
-        )
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         download.suspend()
         expect(download.state).to(equal(.suspended))
 
@@ -106,24 +66,16 @@ final class DownloadTests: TestCase {
     }
 
     func testCancelWhilePreparing() {
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1),
-            session: DownloadSessionMock(),
-            store: AssetDownloadStoreMock()
-        )
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1))
         expect(download.state).to(equal(.preparing))
         // ...
     }
 
     func testCancelWhileRunning() {
         let store = AssetDownloadStoreMock()
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
-            session: DownloadSessionMock(),
-            store: store
-        )
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         expect(download.state).to(equal(.running))
         download.cancel()
         expect(download.state).toEventually(equal(.cancelled))
@@ -131,13 +83,8 @@ final class DownloadTests: TestCase {
     }
 
     func testCancelWhileDownloadingFile() {
-        let store = AssetDownloadStoreMock()
-        let download = Download(
-            loaderType: AssetLoaderMock.self,
-            input: .init(url: Stream.shortOnDemand.url, metadata: .empty),
-            session: DownloadSessionMock(),
-            store: store
-        )
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         expect(download.location).toEventuallyNot(beNil())
         // ...
     }

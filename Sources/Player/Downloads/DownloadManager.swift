@@ -26,6 +26,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         session.delegate = self
     }
 
+    // TODO: Probably addDownload/removeDownload/removeAllDownloads to avoid confusion with item API
     @discardableResult
     func add(input: L.Input) -> Download {
         if let download = download(matching: input) {
