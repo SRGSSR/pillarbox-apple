@@ -54,7 +54,7 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.preparing))
     }
 
-    func testLifeCycleSuccess() {
+    func testMetadataAndSessionSuccess() {
         let download = Download(
             loaderType: AssetLoaderMock.self,
             input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1),
@@ -66,13 +66,10 @@ final class DownloadTests: TestCase {
         ], from: download.changePublisher(at: \.state).removeDuplicates())
     }
 
-    func testLifeCycleFailure() {
+    func testMetadataFailure() {
     }
 
-    func testMetadata() {
-    }
-
-    func testLocation() {
+    func testSessionFailure() {
     }
 
     func testSuspend() {
@@ -100,31 +97,36 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.running))
     }
 
-    func testCancel() {
+    func testCancelWhilePreparing() {
     }
 
-    func testRestartAfterFailure() {
+    func testCancelWhileRunning() {
+    }
+
+    func testCancelWhileSuspended() {
+    }
+    
+    func testCancelWhileEnded() {
     }
 
     func testRestartAfterSuccess() {
     }
 
-    func testExternalFileRemoval() {
+    func testRestartAfterFailure() {
     }
 
-    func testRestoreFromRunning() {
+    func testRestoreRunning() {
     }
 
-    func testRestoreWithMissingTask() {
-        // TODO: Use inactive DownloadSessionMock that is not able to deliver tasks
+    func testRestoreRunningWithMissingFile() {
     }
 
-    func testRestoreFromEnded() {
+    func testRestoreRunningWithMissingTask() {
     }
 
-    func testRestoreFromFailed() {
+    func testRestoreEnded() {
     }
 
-    func testProgress() {
+    func testRestoreFailed() {
     }
 }
