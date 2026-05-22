@@ -23,11 +23,11 @@ private enum TriggerId: Hashable {
 public final class PlayerItem: Hashable {
     private static let trigger = Trigger()
 
-    @Published private(set) var content: AssetContent
-    private let trackerAdapters: [any PlayerItemTracking]
-    private let queue = DispatchQueue(label: "ch.srgssr.player-item")
-
     let id = UUID()
+    let trackerAdapters: [any PlayerItemTracking]
+
+    @Published private(set) var content: AssetContent
+    private let queue = DispatchQueue(label: "ch.srgssr.player-item")
 
     /// Creates an item loaded using an ``AssetLoader``.
     ///

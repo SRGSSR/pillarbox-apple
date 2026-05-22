@@ -68,7 +68,11 @@ final class DownloadManagerTests: TestCase {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, sessionProvider: .custom(DownloadSessionMock()), store: AssetDownloadStoreMock())
         let download = manager.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
         download.attach(to: URL(filePath: "file"))
-        expect(manager.playerItem(for: download, trackerAdapters: [])).notTo(beNil())
+        let item = manager.playerItem(for: download, trackerAdapters: [
+            PlayerItemTrackerMock.adapter(configuration: .init())
+        ])
+        expect(item).notTo(beNil())
+        expect(item?.trackerAdapters.count).to(equal(1))
     }
 
     func testUnrelatedPlayerItem() {
