@@ -148,14 +148,14 @@ final class MediaSelectionTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url))
         await expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
-        let group = try await player.group(for: .legible)!
-        let option = AVMediaSelectionGroup.mediaSelectionOptions(
+        let group = try await unwrap { try await player.group(for: .legible) }
+        let option = try unwrap(AVMediaSelectionGroup.mediaSelectionOptions(
             from: group.options,
             withMediaCharacteristics: [.containsOnlyForcedSubtitles]
         )
         .first { option in
             option.languageIdentifier == "ja"
-        }!
+        })
 
         // Simulates an external change using the low-level player API directly.
         player.systemPlayer.currentItem?.select(option, in: group)
@@ -163,13 +163,14 @@ final class MediaSelectionTests: TestCase {
         await expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.off))
     }
 
-    func testSelectAudibleOnOption() {
+    func testSelectAudibleOnOption() throws {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
 
-        player.select(mediaOption: player.mediaSelectionOptions(for: .audible).first { option in
+        let mediaOption = try unwrap(player.mediaSelectionOptions(for: .audible).first { option in
             option.languageIdentifier == "fr"
-        }!, for: .audible)
+        })
+        player.select(mediaOption: mediaOption, for: .audible)
         expect(player.selectedMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
         expect(player.currentMediaOption(for: .audible)).to(haveLanguageIdentifier("fr"))
     }
@@ -192,15 +193,16 @@ final class MediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .audible)).to(haveLanguageIdentifier("en"))
     }
 
-    func testSelectLegibleOnOption() {
+    func testSelectLegibleOnOption() throws {
         MediaAccessibilityDisplayType.forcedOnly.apply()
 
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
-        player.select(mediaOption: player.mediaSelectionOptions(for: .legible).first { option in
+        let mediaOption = try unwrap(player.mediaSelectionOptions(for: .legible).first { option in
             option.languageIdentifier == "ja"
-        }!, for: .legible)
+        })
+        player.select(mediaOption: mediaOption, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
         expect(player.currentMediaOption(for: .legible)).to(haveLanguageIdentifier("ja"))
     }
@@ -227,7 +229,7 @@ final class MediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).to(equal(.off))
     }
 
-    func testAudibleSelectionIsPreservedBetweenItems() {
+    func testAudibleSelectionIsPreservedBetweenItems() throws {
         MediaAccessibilityDisplayType.alwaysOn(languageCode: "en").apply()
 
         let player = Player(items: [
@@ -236,16 +238,17 @@ final class MediaSelectionTests: TestCase {
         ])
         expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
 
-        player.select(mediaOption: player.mediaSelectionOptions(for: .audible).first { option in
+        let mediaOption = try unwrap(player.mediaSelectionOptions(for: .audible).first { option in
             option.languageIdentifier == "fr"
-        }!, for: .audible)
+        })
+        player.select(mediaOption: mediaOption, for: .audible)
         expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
 
         player.advanceToNextItem()
         expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
     }
 
-    func testLegibleSelectionIsPreservedBetweenItems() {
+    func testLegibleSelectionIsPreservedBetweenItems() throws {
         MediaAccessibilityDisplayType.alwaysOn(languageCode: "en").apply()
 
         let player = Player(items: [
@@ -254,9 +257,10 @@ final class MediaSelectionTests: TestCase {
         ])
         expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
-        player.select(mediaOption: player.mediaSelectionOptions(for: .legible).first { option in
+        let mediaOption = try unwrap(player.mediaSelectionOptions(for: .legible).first { option in
             option.languageIdentifier == "fr"
-        }!, for: .legible)
+        })
+        player.select(mediaOption: mediaOption, for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
 
         player.advanceToNextItem()

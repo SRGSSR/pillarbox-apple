@@ -16,11 +16,11 @@ final class PlayerMetadataTests: TestCase {
         return try await item.load(.value)
     }
 
-    func testNowPlayingInfo() {
+    func testNowPlayingInfo() throws {
         let metadata = PlayerMetadata(
             title: "title",
             subtitle: "subtitle",
-            imageSource: .image(.init(systemName: "circle")!)
+            imageSource: .image(try unwrap(.init(systemName: "circle")))
         )
         let nowPlayingInfo = metadata.nowPlayingInfo
         expect(nowPlayingInfo[MPMediaItemPropertyTitle] as? String).to(equal("title"))
@@ -28,13 +28,13 @@ final class PlayerMetadataTests: TestCase {
         expect(nowPlayingInfo[MPMediaItemPropertyArtwork]).notTo(beNil())
     }
 
-    func testExternalMetadata() async {
+    func testExternalMetadata() async throws {
         let metadata = PlayerMetadata(
             identifier: "identifier",
             title: "title",
             subtitle: "subtitle",
             description: "description",
-            imageSource: .image(.init(systemName: "circle")!),
+            imageSource: .image(try unwrap(.init(systemName: "circle"))),
             episodeInformation: .long(season: 2, episode: 3)
         )
         let externalMetadata = metadata.externalMetadata

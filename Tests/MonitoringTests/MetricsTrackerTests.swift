@@ -149,7 +149,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
         expect(player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)).to(beEmpty())
     }
 
-    func testSessionIdentifierPersistenceAfterFatalError() {
+    func testSessionIdentifierPersistenceAfterFatalError() throws {
         let player = Player(item: .simple(
             url: Stream.unavailable.url,
             trackerAdapters: [
@@ -163,7 +163,8 @@ final class MetricsTrackerTests: MonitoringTestCase {
             },
             error()
         )
-        expect(player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)).to(equalDiff([sessionId!]))
+        let currentSessionId = try unwrap(sessionId)
+        expect(player.currentSessionIdentifiers(trackedBy: MetricsTracker.self)).to(equalDiff([currentSessionId]))
     }
 
     func testPayloads() {
