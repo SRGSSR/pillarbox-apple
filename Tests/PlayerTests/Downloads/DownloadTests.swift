@@ -59,12 +59,6 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.running))
     }
 
-    func testRemoveWhilePreparing() {
-    }
-
-    func testRemoveWhileRunning() {
-    }
-
     func testCancelWhilePreparing() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
@@ -100,13 +94,36 @@ final class DownloadTests: TestCase {
     func testCancelWhileSuspended() {
     }
 
-    func testCancelWhileEnded() {
+    func testCancelWhileCompleted() {
+        // TODO: Must not do anything if completed
     }
 
-    func testRestartAfterSuccess() {
+    func testCancelWhileCancelled() {
+        // TODO: Must not do anything if completed
     }
 
-    func testRestartAfterFailure() {
+    func testRemoveWhilePreparing() {
+    }
+
+    func testRemoveWhileRunning() {
+    }
+
+    func testRemoveWhileDownloadingFile() {
+    }
+
+    func testRemoveWhileSuspended() {
+    }
+
+    func testRemoveWhileCompleted() {
+    }
+
+    func testRemoveWhileCancelled() {
+    }
+
+    func testRestartWhenCompleted() {
+    }
+
+    func testRestartWhenCompletedWithError() {
     }
 
     func testRestoreRunning() {
