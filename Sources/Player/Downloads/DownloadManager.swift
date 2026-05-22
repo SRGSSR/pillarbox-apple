@@ -20,13 +20,13 @@ where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S
 
     @Published private(set) var downloads: [Download] = []
 
-    init(loaderType: L.Type, configuration: URLSessionConfiguration, session: DownloadSession? = nil, store: S) {
+    init(loaderType: L.Type, sessionProvider: DownloadSessionProvider, store: S) {
         self.store = store
         super.init()
-        let downloadSession = session ?? AVAssetDownloadURLSession(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
-        self.session = downloadSession
+        let session = makeSession(using: sessionProvider)
+        self.session = session
         self.downloads = store.downloadRecords().map { record in
-            Download(loaderType: loaderType, record: record, session: downloadSession, store: store)
+            Download(loaderType: loaderType, record: record, session: session, store: store)
         }
     }
 
@@ -63,6 +63,15 @@ where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S
             download.cancel()
         }
         downloads.removeAll()
+    }
+
+    private func makeSession(using sessionProvider: DownloadSessionProvider) -> any DownloadSession {
+        switch sessionProvider {
+        case let .urlSession(configuration):
+            return AVAssetDownloadURLSession(configuration: configuration, assetDownloadDelegate: self, delegateQueue: .main)
+        case let .custom(session):
+            return session
+        }
     }
 
     // MARK: AVAssetDownloadDelegate
