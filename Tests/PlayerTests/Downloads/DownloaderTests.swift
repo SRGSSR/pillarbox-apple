@@ -127,6 +127,24 @@ final class DownloaderTests: TestCase {
         expect(downloader.downloads).to(beEmpty())
     }
 
+    func testRemoveUnrelated() {
+        let downloader1 = Downloader(
+            loaderType: AssetLoaderMock.self,
+            configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads1"),
+            store: AssetDownloadStoreMock()
+        )
+        let download1 = downloader1.add(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+
+        let downloader2 = Downloader(
+            loaderType: AssetLoaderMock.self,
+            configuration: .background(withIdentifier: "ch.srgssr.pillarbox.downloads2"),
+            store: AssetDownloadStoreMock()
+        )
+        downloader2.remove(download1)
+        expect(downloader1.downloads).to(equal([download1]))
+        expect(download1.state).to(equal(.running))
+    }
+
     func testRemoveAll() {
         let downloader = Downloader(
             loaderType: AssetLoaderMock.self,
