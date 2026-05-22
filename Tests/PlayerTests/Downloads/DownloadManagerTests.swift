@@ -13,6 +13,10 @@ import XCTest
 
 @available(tvOS, unavailable)
 final class DownloadManagerTests: TestCase {
+    override static func setUp() {
+        URLCache.shared.removeAllCachedResponses()
+    }
+
     func testEmpty() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         expect(manager.downloads).to(beEmpty())
@@ -67,7 +71,7 @@ final class DownloadManagerTests: TestCase {
     func testRelatedPlayerItem() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
-        download.attach(to: URL(filePath: "file"))
+        expect(download.state).toEventually(equal(.completed))
         let item = manager.playerItem(for: download, trackerAdapters: [
             PlayerItemTrackerMock.adapter(configuration: .init())
         ])
@@ -78,7 +82,7 @@ final class DownloadManagerTests: TestCase {
     func testUnrelatedPlayerItem() {
         let manager1 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         let download1 = manager1.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
-        download1.attach(to: URL(filePath: "file"))
+        expect(download1.state).toEventually(equal(.completed))
 
         let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         expect(manager2.playerItem(for: download1, trackerAdapters: [])).to(beNil())
