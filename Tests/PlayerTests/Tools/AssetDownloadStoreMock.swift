@@ -25,8 +25,8 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
         .init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
     }
 
-    static func asset(fileUrl: URL, input: AssetLoaderMock.Input, metadata: PlayerMetadata) -> Asset {
-        .simple(url: fileUrl)
+    static func asset(location: URL, input: AssetLoaderMock.Input, metadata: PlayerMetadata) -> Asset {
+        .simple(url: location)
     }
 
     func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>] {

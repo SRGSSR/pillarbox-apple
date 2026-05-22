@@ -47,14 +47,14 @@ public final class PlayerItem: Hashable {
 #if DEBUG
     @available(tvOS, unavailable)
     convenience init?<S>(download: Download, store: S, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: AssetDownloadStore {
-        guard let record = store.downloadRecord(forId: download.id), let metadata = record.metadata, let fileUrl = download.location else {
+        guard let record = store.downloadRecord(forId: download.id), let metadata = record.metadata, let location = download.location else {
             return nil
         }
         let storeType = type(of: store)
         self.init(
             metadataPublisher: Just(metadata),
             metadataMapper: { storeType.playerMetadata(from: $0) },
-            assetProvider: { storeType.asset(fileUrl: fileUrl, input: record.input, metadata: $0) },
+            assetProvider: { storeType.asset(location: location, input: record.input, metadata: $0) },
             trackerAdapters: trackerAdapters
         )
     }
