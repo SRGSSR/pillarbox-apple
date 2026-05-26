@@ -22,7 +22,7 @@ final class DownloadManagerTests: TestCase {
 
     func testRestore() {
         let store = AssetDownloadStoreMock(preloadedInputs: [
-            .init(url: Stream.shortOnDemand.url, metadata: .empty)
+            .init(url: Stream.smallDownload.url, metadata: .empty)
         ])
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         expect(manager.downloads).to(haveCount(1))
@@ -32,7 +32,7 @@ final class DownloadManagerTests: TestCase {
     func testAddSingle() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         expect(manager.downloads).to(equal([download]))
         expect(store.downloadRecords()).to(haveCount(1))
     }
@@ -40,7 +40,7 @@ final class DownloadManagerTests: TestCase {
     func testAddMany() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download1 = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download1 = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         let download2 = manager.addDownload(input: .init(url: Stream.mediumOnDemand.url, metadata: .empty))
         expect(download1).notTo(equal(download2))
         expect(manager.downloads).to(equal([download1, download2]))
@@ -50,8 +50,8 @@ final class DownloadManagerTests: TestCase {
     func testAddIdentical() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download1 = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
-        let download2 = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download1 = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        let download2 = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         expect(download1).to(equal(download2))
         expect(manager.downloads).to(equal([download1]))
         expect(store.downloadRecords()).to(haveCount(1))
@@ -59,20 +59,20 @@ final class DownloadManagerTests: TestCase {
 
     func testDownloadWithMatchingInput() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let input = AssetLoaderMock.Input(url: Stream.shortOnDemand.url, metadata: .empty)
+        let input = AssetLoaderMock.Input(url: Stream.smallDownload.url, metadata: .empty)
         let download = manager.addDownload(input: input)
         expect(manager.download(matching: input)).to(equal(download))
     }
 
     func testDownloadWithNonMatchingInput() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         expect(manager.download(matching: .init(url: Stream.mediumOnDemand.url, metadata: .empty))).to(beNil())
     }
 
     func testRelatedPlayerItem() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         expect(download.state).toEventually(equal(.completed))
         let item = manager.playerItem(for: download, trackerAdapters: [
             PlayerItemTrackerMock.adapter(configuration: .init())
@@ -83,7 +83,7 @@ final class DownloadManagerTests: TestCase {
 
     func testUnrelatedPlayerItem() {
         let manager1 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download1 = manager1.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download1 = manager1.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         expect(download1.state).toEventually(equal(.completed))
 
         let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
@@ -93,7 +93,7 @@ final class DownloadManagerTests: TestCase {
     func testRemove() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         manager.removeDownload(download)
         expect(manager.downloads).to(beEmpty())
         expect(download.state).to(equal(.cancelled))
@@ -103,7 +103,7 @@ final class DownloadManagerTests: TestCase {
     func testRemoveUnrelated() {
         let store1 = AssetDownloadStoreMock()
         let manager1 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store1)
-        let download1 = manager1.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download1 = manager1.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
 
         let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         manager2.removeDownload(download1)
@@ -114,7 +114,7 @@ final class DownloadManagerTests: TestCase {
     func testRemoveAll() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download1 = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download1 = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         let download2 = manager.addDownload(input: .init(url: Stream.mediumOnDemand.url, metadata: .empty))
         manager.removeAllDownloads()
         expect(manager.downloads).to(beEmpty())
