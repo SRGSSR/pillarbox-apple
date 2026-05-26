@@ -127,10 +127,12 @@ final class DownloadTests: TestCase {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         expect(download.state).toEventually(equal(.completed))
+        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
         let location1 = try unwrap(download.location)
         download.restart()
         expect(download.state).toEventually(equal(.running))
         expect(download.state).toEventually(equal(.completed))
+        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
         let location2 = try unwrap(download.location)
         expect(location1).notTo(equal(location2))
     }

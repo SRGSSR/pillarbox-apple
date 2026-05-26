@@ -27,6 +27,7 @@ public final class Download: ObservableObject {
     private let locationSubject = PassthroughSubject<URL?, Never>()
     private let errorSubject = PassthroughSubject<Error?, Never>()
 
+    private let addRecord: () -> Void
     private let removeRecord: () -> Void
     private let resetRecord: () -> Void
 
@@ -59,6 +60,9 @@ public final class Download: ObservableObject {
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.id = id
+        self.addRecord = {
+            store.addDownloadRecord(using: input, forId: id)
+        }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
         }
@@ -121,6 +125,7 @@ public extension Download {
 
     func restart() {
         remove()
+        addRecord()
         trigger.activate(for: TriggerId.reload)
     }
 
