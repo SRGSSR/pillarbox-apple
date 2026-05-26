@@ -10,26 +10,11 @@ import PillarboxCore
 import PillarboxPlayer
 
 enum AssetLoaderMock: AssetLoader {
-    struct Input {
-        let url: URL
-        let metadata: PlayerMetadata
-        let delay: TimeInterval
-
-        init(url: URL, metadata: PlayerMetadata, delay: TimeInterval = 0) {
-            self.url = url
-            self.metadata = metadata
-            self.delay = delay
-        }
+    static func metadataPublisher(for input: AssetLoaderMockInput) -> AnyPublisher<PlayerMetadata, any Error> {
+        input.metadataPublisher()
     }
 
-    static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerMetadata, any Error> {
-        Just(input.metadata)
-            .delayIfNeeded(for: .seconds(input.delay), scheduler: DispatchQueue.main)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-    }
-
-    static func asset(input: Input, metadata: PlayerMetadata) -> Asset {
-        .simple(url: input.url)
+    static func asset(input: AssetLoaderMockInput, metadata: PlayerMetadata) -> Asset {
+        input.asset()
     }
 }

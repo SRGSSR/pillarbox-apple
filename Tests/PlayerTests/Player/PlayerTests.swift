@@ -45,7 +45,12 @@ final class PlayerTests: TestCase {
     }
 
     func testMetadataUpdatesMustNotChangePlayerItem() {
-        let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
+        let player = Player(item: .updatable(
+            url: Stream.onDemand.url,
+            metadata: .init(title: "title1"),
+            to: .init(title: "title2"),
+            after: 1
+        ))
         expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
         let currentItem = player.queuePlayer.currentItem
         expect(player.queuePlayer.currentItem).toAlways(equal(currentItem), until: .seconds(2))
@@ -61,13 +66,11 @@ final class PlayerTests: TestCase {
     }
 
     func testPreloadedItems() {
-        let player = Player(
-            items: [
-                .simple(url: Stream.onDemand.url),
-                .simple(url: Stream.onDemand.url),
-                .simple(url: Stream.onDemand.url)
-            ]
-        )
+        let player = Player(items: [
+            .simple(url: Stream.onDemand.url),
+            .simple(url: Stream.onDemand.url),
+            .simple(url: Stream.onDemand.url)
+        ])
         let expectedResources: [Resource] = [
             .simple(url: Stream.onDemand.url),
             .simple(url: Stream.onDemand.url),

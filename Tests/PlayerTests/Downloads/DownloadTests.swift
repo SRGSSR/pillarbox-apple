@@ -12,29 +12,42 @@ import PillarboxCircumspect
 import PillarboxStreams
 import XCTest
 
+private struct MetadataError: Error {}
+
 @available(tvOS, unavailable)
 final class DownloadTests: TestCase {
     // TODO: Also verify entry/cleanup in storage/movpkg from relevant tests
 
     func testWithoutLatency() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         expect(download.state).to(equal(.running))
     }
 
     func testWithLatency() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty, delay: 0.1))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url, after: 0.1))
         expect(download.state).to(equal(.preparing))
     }
 
     func testCompletion() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(delay: 0.1), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty, delay: 0.1))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url, after: 0.1))
         expect(download.state).toEventually(equal(.completed))
     }
 
+    func testMetadata() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url, metadata: .init(title: "Title"), after: 0.1))
+        expect(download.metadata.title).toEventually(equal("Title"))
+        expect(download.error).to(beNil())
+    }
+
     func testMetadataFailure() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.addDownload(input: .failing(with: MetadataError()))
+        expect(download.state).toEventually(equal(.completed))
+        expect(download.error).notTo(beNil())
     }
 
     func testSessionFailure() {
@@ -42,14 +55,14 @@ final class DownloadTests: TestCase {
 
     func testSuspend() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         download.suspend()
         expect(download.state).to(equal(.suspended))
     }
 
     func testResume() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         download.suspend()
         expect(download.state).to(equal(.suspended))
 
@@ -60,7 +73,7 @@ final class DownloadTests: TestCase {
     func testRemoveWhilePreparing() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty, delay: 0.1))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url, after: 0.1))
         expect(download.state).to(equal(.preparing))
         download.remove()
         expect(download.state).to(equal(.cancelled))
@@ -71,7 +84,7 @@ final class DownloadTests: TestCase {
     func testRemoveWhileRunning() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         expect(download.state).to(equal(.running))
         download.remove()
         expect(download.state).to(equal(.cancelled))
@@ -82,7 +95,7 @@ final class DownloadTests: TestCase {
     func testRemoveWhileDownloadingFile() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.largeDownload.url, metadata: .empty))
+        let download = manager.addDownload(input: .playable(url: Stream.largeDownload.url))
         let location = try pollUnwrap(timeout: .seconds(5)) {
             download.location
         }
@@ -96,7 +109,7 @@ final class DownloadTests: TestCase {
     func testRemoveWhileCompleted() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         expect(download.state).toEventually(equal(.completed))
         expect(download.location).notTo(beNil())
         download.remove()
@@ -108,7 +121,7 @@ final class DownloadTests: TestCase {
     func testRestart() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         expect(download.state).toEventually(equal(.completed))
         let location1 = try unwrap(download.location)
         download.restart()
@@ -135,7 +148,7 @@ final class DownloadTests: TestCase {
 
     func testNonUserFacingCancellationErrors() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         download.remove()
         expect(download.state).to(equal(.cancelled))
         expect(download.error).to(beNil())

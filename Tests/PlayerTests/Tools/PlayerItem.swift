@@ -11,46 +11,45 @@ import Foundation
 import PillarboxStreams
 
 extension PlayerItem {
-    static func mock(
-        url: URL,
-        loadedAfter delay: TimeInterval,
-        withMetadata metadata: PlayerMetadata = .empty,
+    private static func mock(
+        input: AssetLoaderMockInput,
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
-        self.init(
-            assetLoaderType: AssetLoaderMock.self,
-            input: .init(url: url, metadata: metadata, delay: delay),
-            trackerAdapters: trackerAdapters
-        )
+        self.init(assetLoaderType: AssetLoaderMock.self, input: input, trackerAdapters: trackerAdapters)
     }
 
-    static func mock(
+    static func playable(
         url: URL,
-        withMetadataUpdateAfter delay: TimeInterval,
+        metadata: PlayerMetadata = .empty,
+        after delay: TimeInterval = 0,
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
-        self.init(
-            assetLoaderType: UpdatingAssetLoaderMock.self,
-            input: .init(url: url, delay: delay),
-            trackerAdapters: trackerAdapters
-        )
+        mock(input: .playable(url: url, metadata: metadata, after: delay), trackerAdapters: trackerAdapters)
     }
 
-    static func failing(with error: Error, after delay: TimeInterval) -> Self {
-        self.init(
-            assetLoaderType: FailingAssetLoaderMock.self,
-            input: .init(error: error, delay: delay)
-        )
+    static func updatable(
+        url: URL,
+        metadata: PlayerMetadata,
+        to updatedMetadata: PlayerMetadata,
+        after interval: TimeInterval = 0,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
+    ) -> Self {
+        mock(input: .updatable(url: url, metadata: metadata, to: updatedMetadata, after: interval), trackerAdapters: trackerAdapters)
+    }
+
+    static func failing(
+        with error: Error,
+        after delay: TimeInterval = 0,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
+    ) -> Self {
+        mock(input: .failing(with: error, after: delay), trackerAdapters: trackerAdapters)
     }
 
     static func unavailable(
         with error: Error,
-        metadata: PlayerMetadata = .empty,
-        after delay: TimeInterval
+        after delay: TimeInterval = 0,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
-        self.init(
-            assetLoaderType: UnavailableAssetLoaderMock.self,
-            input: .init(error: error, metadata: metadata, delay: delay)
-        )
+        mock(input: .unavailable(with: error, after: delay), trackerAdapters: trackerAdapters)
     }
 }

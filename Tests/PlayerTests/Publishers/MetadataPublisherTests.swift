@@ -33,7 +33,7 @@ final class MetadataPublisherTests: TestCase {
 
     func testAvailableAfterDelay() {
         let player = Player(
-            item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .init(title: "title"))
+            item: .playable(url: Stream.onDemand.url, metadata: .init(title: "title"), after: 0.1)
         )
         expectAtLeastEqualPublished(
             values: [nil, "title"],
@@ -42,11 +42,7 @@ final class MetadataPublisherTests: TestCase {
     }
 
     func testImmediatelyAvailableWithMetadata() {
-        let player = Player(item: .mock(
-            url: Stream.onDemand.url,
-            loadedAfter: 0,
-            withMetadata: .init(title: "title")
-        ))
+        let player = Player(item: .playable(url: Stream.onDemand.url, metadata: .init(title: "title")))
         expectAtLeastEqualPublished(
             values: [nil, "title"],
             from: Self.titlePublisherTest(for: player)
@@ -54,15 +50,15 @@ final class MetadataPublisherTests: TestCase {
     }
 
     func testUpdate() {
-        let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 0.1))
+        let player = Player(item: .updatable(url: Stream.onDemand.url, metadata: .init(title: "title1"), to: .init(title: "title2"), after: 0.1))
         expectAtLeastEqualPublished(
-            values: [nil, "title0", "title1"],
+            values: [nil, "title1", "title2"],
             from: Self.titlePublisherTest(for: player)
         )
     }
 
     func testNetworkItemReloading() {
-        let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .init(title: "title1")))
+        let player = Player(item: .playable(url: Stream.onDemand.url, metadata: .init(title: "title1"), after: 0.1))
         expectAtLeastEqualPublished(
             values: [nil, "title1"],
             from: Self.titlePublisherTest(for: player)
@@ -71,12 +67,12 @@ final class MetadataPublisherTests: TestCase {
             values: [nil, "title2"],
             from: Self.titlePublisherTest(for: player)
         ) {
-            player.items = [.mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: .init(title: "title2"))]
+            player.items = [.playable(url: Stream.onDemand.url, metadata: .init(title: "title2"), after: 0.1)]
         }
     }
 
     func testEntirePlayback() {
-        let player = Player(item: .mock(url: Stream.shortOnDemand.url, loadedAfter: 0, withMetadata: .init(title: "title")))
+        let player = Player(item: .playable(url: Stream.shortOnDemand.url, metadata: .init(title: "title")))
         expectAtLeastEqualPublished(
             values: [nil, "title", nil],
             from: Self.titlePublisherTest(for: player)

@@ -97,7 +97,7 @@ final class CurrentItemTests: TestCase {
     }
 
     func testSlowFirstCurrentItem() {
-        let item1 = PlayerItem.mock(url: Stream.shortOnDemand.url, loadedAfter: 1)
+        let item1 = PlayerItem.playable(url: Stream.shortOnDemand.url, after: 1)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expectAtLeastEqualPublished(
