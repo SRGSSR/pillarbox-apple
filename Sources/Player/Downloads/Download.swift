@@ -119,8 +119,7 @@ public extension Download {
     }
 
     func restart() {
-        resetRecord()
-        removeFile()
+        remove()
         trigger.activate(for: TriggerId.reload)
     }
 
