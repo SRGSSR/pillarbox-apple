@@ -116,6 +116,20 @@ public extension Stream {
 }
 
 public extension Stream {
+    /// An small downloadable file (not playable).
+    static let smallDownload = Self(
+        url: URL(string: "http://localhost:8123/downloads/small.mp3")!,
+        duration: .indefinite
+    )
+
+    /// An large downloadable file (not playable).
+    static let largeDownload = Self(
+        url: URL(string: "http://localhost:8123/downloads/large.mp3")!,
+        duration: .indefinite
+    )
+}
+
+public extension Stream {
     /// A stream with a custom scheme.
     ///
     /// Not intended to be playable.

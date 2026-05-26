@@ -18,6 +18,7 @@ function serve_test_streams {
     generate_sources "$sources_dir"
     generate_simple_streams "$sources_dir" "$dest_dir/simple"
     generate_packaged_streams "$sources_dir" "$dest_dir/packaged"
+    generate_downloads "$dest_dir/downloads"
     serve_directory "$dest_dir"
 }
 
@@ -96,6 +97,17 @@ function generate_packaged_streams {
         "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_with_single_audible_option_dir/640x360/\$Number\$.ts" \
         "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_single_audible_option_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
         --hls_master_playlist_output "$on_demand_with_single_audible_option_dir/master.m3u8" > /dev/null 2>&1
+}
+
+function generate_downloads {
+    local dest_dir="$1"
+
+    mkdir -p "$dest_dir"
+
+    pushd "$dest_dir" > /dev/null || exit
+    truncate -s 1M small.mp3
+    truncate -s 30M large.mp3
+    popd > /dev/null || exit
 }
 
 function serve_directory {

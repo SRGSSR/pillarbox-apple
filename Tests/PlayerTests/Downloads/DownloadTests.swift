@@ -18,19 +18,19 @@ final class DownloadTests: TestCase {
 
     func testWithoutLatency() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         expect(download.state).to(equal(.running))
     }
 
     func testWithLatency() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty, delay: 0.1))
         expect(download.state).to(equal(.preparing))
     }
 
     func testCompletion() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(delay: 0.1), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty, delay: 0.1))
         expect(download.state).toEventually(equal(.completed))
     }
 
@@ -42,14 +42,14 @@ final class DownloadTests: TestCase {
 
     func testSuspend() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         download.suspend()
         expect(download.state).to(equal(.suspended))
     }
 
     func testResume() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         download.suspend()
         expect(download.state).to(equal(.suspended))
 
@@ -60,7 +60,7 @@ final class DownloadTests: TestCase {
     func testCancelWhilePreparing() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty, delay: 0.1))
         expect(download.state).to(equal(.preparing))
         download.cancel()
         expect(download.state).to(equal(.cancelled))
@@ -71,7 +71,7 @@ final class DownloadTests: TestCase {
     func testCancelWhileRunning() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         expect(download.state).to(equal(.running))
         download.cancel()
         expect(download.state).to(equal(.cancelled))
@@ -82,8 +82,7 @@ final class DownloadTests: TestCase {
     func testCancelWhileDownloadingFile() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
-        // TODO: Timeout extension likely might not be needed if DownloadSessionMock works with local URLs
+        let download = manager.addDownload(input: .init(url: Stream.largeDownload.url, metadata: .empty))
         let location = try pollUnwrap(timeout: .seconds(5)) {
             download.location
         }
@@ -97,7 +96,7 @@ final class DownloadTests: TestCase {
     func testCancelWhileCompleted() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         expect(download.state).toEventually(equal(.completed))
         expect(download.location).notTo(beNil())
         download.cancel()
@@ -119,7 +118,7 @@ final class DownloadTests: TestCase {
     func testRemoveWhileDownloadingFile() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
+        let download = manager.addDownload(input: .init(url: Stream.largeDownload.url, metadata: .empty))
         let location = try pollUnwrap(download.location)
         download.remove()
         expect(download.state).to(equal(.cancelled))

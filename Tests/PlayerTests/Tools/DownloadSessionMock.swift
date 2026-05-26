@@ -35,10 +35,7 @@ extension DownloadSessionMock: DownloadSession {
     }
 
     private func sessionTask(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> URLSessionTask {
-        // TODO: Local network call
-        let task = session.downloadTask(
-            with: URLRequest(url: URL(string: "http://localhost:8123/sources/source_360x360.mp4")!)
-        )
+        let task = session.downloadTask(with: asset.urlAsset().url)
         task.taskDescription = id
         task.resume()
         return task
