@@ -39,8 +39,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
     }
 
     func download(matching input: L.Input) -> Download? {
-        let id = type(of: store).id(from: input)
-        return downloads.first { $0.id == id }
+        download(matchingId: type(of: store).id(from: input))
     }
 
     func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
@@ -60,6 +59,10 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         }
         downloads.removeAll()
     }
+
+    private func download(matchingId id: String) -> Download? {
+        downloads.first { $0.id == id }
+    }
 }
 
 @available(tvOS, unavailable)
@@ -72,10 +75,6 @@ extension DownloadManager: DownloadSessionDelegate {
     func downloadSessionDidFailWithError(_ error: any Error, forId id: String) {
         guard let download = download(matchingId: id) else { return }
         download.fail(with: error)
-    }
-
-    private func download(matchingId id: String) -> Download? {
-        downloads.first { $0.id == id }
     }
 }
 
