@@ -20,7 +20,7 @@ struct DownloadProperties<Metadata> {
 
     var state: DownloadState {
         if let error {
-            return Self.isCancellationError(error) ? .cancelled : .completed
+            return URLError.isCancellationError(error) ? .cancelled : .completed
         }
         switch source {
         case let .estimate(progress):
@@ -89,10 +89,6 @@ struct DownloadProperties<Metadata> {
         guard let bookmarkData else { return nil }
         var isStale = false
         return try URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
-    }
-
-    private static func isCancellationError(_ error: Error) -> Bool {
-        error as NSError == URLError(.cancelled) as NSError
     }
 
     func bookmarkData() -> Data? {

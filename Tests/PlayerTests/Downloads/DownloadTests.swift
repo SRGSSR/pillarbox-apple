@@ -125,4 +125,12 @@ final class DownloadTests: TestCase {
 
     func testRestoreFailed() {
     }
+
+    func testNonUserFacingCancellationErrors() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        download.remove()
+        expect(download.state).to(equal(.cancelled))
+        expect(download.error).to(beNil())
+    }
 }
