@@ -127,6 +127,12 @@ public extension Stream {
         url: URL(string: "http://localhost:8123/downloads/large.mp3")!,
         duration: .indefinite
     )
+
+    /// An missing downloadable file.
+    static let missingDownload = Self(
+        url: URL(string: "http://localhost:8123/downloads/missing.mp3")!,
+        duration: .indefinite
+    )
 }
 
 public extension Stream {

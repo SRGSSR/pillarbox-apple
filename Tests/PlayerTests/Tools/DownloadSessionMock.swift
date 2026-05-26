@@ -9,6 +9,8 @@
 import Combine
 import Foundation
 
+struct HTTPError: Error {}
+
 final class DownloadSessionMock: NSObject {
     private let delay: TimeInterval
 
@@ -48,7 +50,14 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
         delegate.downloadSessionDidFailWithError(error, forId: id)
     }
 
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {}
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        guard let delegate,
+              let id = downloadTask.taskDescription,
+              let httpResponse = downloadTask.response as? HTTPURLResponse, httpResponse.statusCode >= 400 else {
+            return
+        }
+        delegate.downloadSessionDidFailWithError(HTTPError(), forId: id)
+    }
 
     func urlSession(
         _ session: URLSession,
