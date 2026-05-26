@@ -89,7 +89,10 @@ final class DownloadTests: TestCase {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty))
-        let location = try pollUnwrap(download.location)
+        // TODO: Timeout extension likely might not be needed if DownloadSessionMock works with local URLs
+        let location = try pollUnwrap(timeout: .seconds(5)) {
+            download.location
+        }
         download.cancel()
         expect(download.state).to(equal(.cancelled))
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
