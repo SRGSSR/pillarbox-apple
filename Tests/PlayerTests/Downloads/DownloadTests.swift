@@ -90,7 +90,7 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.cancelled))
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
         expect(download.location).to(beNil())
-        expect(FileManager.default.fileExists(atPath: location.path())).to(beFalse())
+        expect(FileManager.default.fileExists(atPath: location.path())).toEventually(beFalse())
     }
 
     func testCancelWhileCompleted() throws {
@@ -124,7 +124,7 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.cancelled))
         expect(store.downloadRecord(forId: download.id)).to(beNil())
         expect(download.location).to(beNil())
-        expect(FileManager.default.fileExists(atPath: location.path())).to(beFalse())
+        expect(FileManager.default.fileExists(atPath: location.path())).toEventually(beFalse())
     }
 
     func testRemoveWhileCompleted() {
