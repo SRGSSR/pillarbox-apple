@@ -173,8 +173,30 @@ extension Download {
         session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        downloadPlayerPropertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
+        downloadPropertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
             .receiveOnMainThread()
+            .handleEvents(
+                receiveOutput: { [id] properties in
+                    guard store.downloadRecord(forId: id) != nil else { return }
+                    let record = DownloadRecord(
+                        input: input,
+                        metadata: properties.metadata,
+                        bookmarkData: properties.bookmarkData(),
+                        progress: properties.progress,
+                        error: properties.error
+                    )
+                    store.updateDownloadRecord(record, forId: id)
+                },
+                receiveCompletion: nil
+            )
+            .map { properties in
+                DownloadProperties(
+                    metadata: loaderType.playerMetadata(from: properties.metadata),
+                    source: properties.source,
+                    location: properties.location,
+                    error: properties.error
+                )
+            }
             .assign(to: &$properties)
     }
 
@@ -214,39 +236,6 @@ extension Download {
                 .catch { Just(DownloadProperties(metadata: nil, source: .estimate(0), location: nil, error: $0)) }
                 .prepend(properties)
         }
-    }
-
-    private func downloadPlayerPropertiesPublisher<L, S>(
-        loaderType: L.Type,
-        id: String,
-        input: L.Input,
-        session: DownloadSession,
-        store: S
-    ) -> AnyPublisher<DownloadPlayerProperties, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        downloadPropertiesPublisher(loaderType: loaderType, id: id, input: input, session: session, store: store)
-            .handleEvents(
-                receiveOutput: { properties in
-                    guard store.downloadRecord(forId: id) != nil else { return }
-                    let record = DownloadRecord(
-                        input: input,
-                        metadata: properties.metadata,
-                        bookmarkData: properties.bookmarkData(),
-                        progress: properties.progress,
-                        error: properties.error
-                    )
-                    store.updateDownloadRecord(record, forId: id)
-                },
-                receiveCompletion: nil
-            )
-            .map { properties in
-                DownloadProperties(
-                    metadata: loaderType.playerMetadata(from: properties.metadata),
-                    source: properties.source,
-                    location: properties.location,
-                    error: properties.error
-                )
-            }
-            .eraseToAnyPublisher()
     }
 }
 

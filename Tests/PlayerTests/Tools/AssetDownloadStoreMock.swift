@@ -30,22 +30,27 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
     }
 
     func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>] {
-        Array(records.values)
+        assert(Thread.isMainThread)
+        return Array(records.values)
     }
 
     func addDownloadRecord(using input: AssetLoaderMock.Input, forId id: String) {
+        assert(Thread.isMainThread)
         records[id] = Self.record(from: input)
     }
 
     func removeDownloadRecord(forId id: String) {
+        assert(Thread.isMainThread)
         records.removeValue(forKey: id)
     }
 
     func downloadRecord(forId id: String) -> DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>? {
-        records[id]
+        assert(Thread.isMainThread)
+        return records[id]
     }
 
     func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, PlayerMetadata>, forId id: String) {
+        assert(Thread.isMainThread)
         records[id] = record
     }
 }
