@@ -112,12 +112,6 @@ public extension Download {
         properties.source.suspend()
     }
 
-    func cancel() {
-        guard state != .completed else { return }
-        removeFile()
-        cancelOperations()
-    }
-
     func remove() {
         removeRecord()
         removeFile()

@@ -57,69 +57,35 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.running))
     }
 
-    func testCancelWhilePreparing() {
+    func testRemoveWhilePreparing() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty, delay: 0.1))
         expect(download.state).to(equal(.preparing))
-        download.cancel()
+        download.remove()
         expect(download.state).to(equal(.cancelled))
-        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
+        expect(store.downloadRecord(forId: download.id)).to(beNil())
         expect(download.location).toAlways(beNil(), until: .milliseconds(500))
     }
 
-    func testCancelWhileRunning() {
+    func testRemoveWhileRunning() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
         expect(download.state).to(equal(.running))
-        download.cancel()
+        download.remove()
         expect(download.state).to(equal(.cancelled))
-        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
+        expect(store.downloadRecord(forId: download.id)).to(beNil())
         expect(download.location).toAlways(beNil(), until: .milliseconds(500))
-    }
-
-    func testCancelWhileDownloadingFile() throws {
-        let store = AssetDownloadStoreMock()
-        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.largeDownload.url, metadata: .empty))
-        let location = try pollUnwrap(timeout: .seconds(5)) {
-            download.location
-        }
-        download.cancel()
-        expect(download.state).to(equal(.cancelled))
-        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
-        expect(download.location).to(beNil())
-        expect(FileManager.default.fileExists(atPath: location.path())).toEventually(beFalse())
-    }
-
-    func testCancelWhileCompleted() throws {
-        let store = AssetDownloadStoreMock()
-        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
-        expect(download.state).toEventually(equal(.completed))
-        expect(download.location).notTo(beNil())
-        download.cancel()
-        expect(download.state).toEventually(equal(.completed))
-        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
-        let location = try unwrap(download.location)
-        expect(FileManager.default.fileExists(atPath: location.path())).to(beTrue())
-    }
-
-    func testCancelWhileCancelled() {
-    }
-
-    func testRemoveWhilePreparing() {
-    }
-
-    func testRemoveWhileRunning() {
     }
 
     func testRemoveWhileDownloadingFile() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download = manager.addDownload(input: .init(url: Stream.largeDownload.url, metadata: .empty))
-        let location = try pollUnwrap(download.location)
+        let location = try pollUnwrap(timeout: .seconds(5)) {
+            download.location
+        }
         download.remove()
         expect(download.state).to(equal(.cancelled))
         expect(store.downloadRecord(forId: download.id)).to(beNil())
@@ -127,10 +93,16 @@ final class DownloadTests: TestCase {
         expect(FileManager.default.fileExists(atPath: location.path())).toEventually(beFalse())
     }
 
-    func testRemoveWhileCompleted() {
-    }
-
-    func testRemoveWhileCancelled() {
+    func testRemoveWhileCompleted() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        expect(download.state).toEventually(equal(.completed))
+        expect(download.location).notTo(beNil())
+        download.remove()
+        expect(download.state).toEventually(equal(.cancelled))
+        expect(store.downloadRecord(forId: download.id)).to(beNil())
+        expect(download.location).to(beNil())
     }
 
     func testRestartWhenCompleted() {
