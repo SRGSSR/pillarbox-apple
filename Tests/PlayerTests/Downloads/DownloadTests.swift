@@ -14,10 +14,6 @@ import XCTest
 
 @available(tvOS, unavailable)
 final class DownloadTests: TestCase {
-    override static func setUp() {
-        URLCache.shared.removeAllCachedResponses()
-    }
-
     // TODO: Also verify entry/cleanup in storage/movpkg from relevant tests
 
     func testWithoutLatency() {

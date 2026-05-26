@@ -20,7 +20,7 @@ final class DownloadSessionMock: NSObject {
     init(delay: TimeInterval = 0) {
         self.delay = delay
         super.init()
-        self.session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
+        self.session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: .main)
     }
 }
 

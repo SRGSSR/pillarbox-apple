@@ -13,10 +13,6 @@ import XCTest
 
 @available(tvOS, unavailable)
 final class DownloadManagerTests: TestCase {
-    override static func setUp() {
-        URLCache.shared.removeAllCachedResponses()
-    }
-
     func testEmpty() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
