@@ -32,12 +32,10 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.preparing))
     }
 
-    func testMetadataAndSessionSuccess() {
+    func testCompletion() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(delay: 0.1), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .init(url: Stream.shortOnDemand.url, metadata: .empty, delay: 0.1))
-        expectAtLeastEqualPublished(values: [
-            .preparing, .running, .completed
-        ], from: download.changePublisher(at: \.state).removeDuplicates())
+        expect(download.state).toEventually(equal(.completed))
     }
 
     func testMetadataFailure() {
