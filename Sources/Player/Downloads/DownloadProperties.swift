@@ -12,16 +12,15 @@ struct DownloadProperties<Metadata> {
     let metadata: Metadata?
     let source: DownloadSource
     let location: URL?
-    private let _error: Error?
+    let error: Error?
 
     var shouldCreateTask: Bool {
         location == nil && error == nil
     }
 
     var state: DownloadState {
-        if let _error {
-            let isCancelledError = (_error as NSError == URLError(.cancelled) as NSError)
-            return isCancelledError ? .cancelled : .completed
+        if let error {
+            return Self.isCancellationError(error) ? .cancelled : .completed
         }
         switch source {
         case let .estimate(progress):
@@ -49,24 +48,6 @@ struct DownloadProperties<Metadata> {
         }
     }
 
-    var error: Error? {
-        if let _error {
-            return _error
-        }
-        switch source {
-        case let .estimate(progress):
-            // TODO: Check conditions here with UTs
-            if location != nil {
-                return progress == 1 ? nil : CocoaError(.fileNoSuchFile)
-            }
-            else {
-                return progress > 0 ? CocoaError(.fileNoSuchFile) : nil
-            }
-        default:
-            return nil
-        }
-    }
-
     var progress: Double {
         if error != nil {
             return 0
@@ -87,7 +68,7 @@ struct DownloadProperties<Metadata> {
         self.metadata = metadata
         self.source = source
         self.location = location
-        self._error = error
+        self.error = error
     }
 
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
@@ -95,12 +76,12 @@ struct DownloadProperties<Metadata> {
         do {
             self.location = try Self.url(resolvingBookmarkData: record.bookmarkData)
             self.source = .estimate(record.progress)
-            self._error = record.error
+            self.error = record.error
         }
         catch {
             self.location = nil
             self.source = .estimate(0)
-            self._error = error
+            self.error = error
         }
     }
 
@@ -108,6 +89,10 @@ struct DownloadProperties<Metadata> {
         guard let bookmarkData else { return nil }
         var isStale = false
         return try URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
+    }
+
+    private static func isCancellationError(_ error: Error) -> Bool {
+        error as NSError == URLError(.cancelled) as NSError
     }
 
     func bookmarkData() -> Data? {
