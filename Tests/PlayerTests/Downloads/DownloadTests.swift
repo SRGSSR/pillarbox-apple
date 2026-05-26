@@ -105,10 +105,17 @@ final class DownloadTests: TestCase {
         expect(download.location).to(beNil())
     }
 
-    func testRestartWhenCompleted() {
-    }
-
-    func testRestartWhenCompletedWithError() {
+    func testRestart() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download = manager.addDownload(input: .init(url: Stream.smallDownload.url, metadata: .empty))
+        expect(download.state).toEventually(equal(.completed))
+        let location1 = try unwrap(download.location)
+        download.restart()
+        expect(download.state).toEventually(equal(.running))
+        expect(download.state).toEventually(equal(.completed))
+        let location2 = try unwrap(download.location)
+        expect(location1).notTo(equal(location2))
     }
 
     func testRestoreRunning() {
