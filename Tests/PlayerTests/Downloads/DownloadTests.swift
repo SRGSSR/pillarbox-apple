@@ -16,15 +16,13 @@ private struct MetadataError: Error {}
 
 @available(tvOS, unavailable)
 final class DownloadTests: TestCase {
-    // TODO: Also verify entry/cleanup in storage/movpkg from relevant tests
-
-    func testWithoutLatency() {
+    func testRunningWithImmediatePreparation() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         expect(download.state).to(equal(.running))
     }
 
-    func testWithLatency() {
+    func testRunningWithAsynchronousPreparation() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url, after: 0.1))
         expect(download.state).to(equal(.preparing))
@@ -34,6 +32,23 @@ final class DownloadTests: TestCase {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(delay: 0.1), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url, after: 0.1))
         expect(download.state).toEventually(equal(.completed))
+    }
+
+    func testSuspend() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
+        download.suspend()
+        expect(download.state).to(equal(.suspended))
+    }
+
+    func testResume() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
+        download.suspend()
+        expect(download.state).to(equal(.suspended))
+
+        download.resume()
+        expect(download.state).to(equal(.running))
     }
 
     func testMetadata() {
@@ -56,23 +71,6 @@ final class DownloadTests: TestCase {
         expect(download.state).toEventually(equal(.completed))
         expect(download.error).notTo(beNil())
         expect(download.location).to(beNil())
-    }
-
-    func testSuspend() {
-        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
-        download.suspend()
-        expect(download.state).to(equal(.suspended))
-    }
-
-    func testResume() {
-        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
-        download.suspend()
-        expect(download.state).to(equal(.suspended))
-
-        download.resume()
-        expect(download.state).to(equal(.running))
     }
 
     func testRemoveWhilePreparing() {
@@ -138,7 +136,10 @@ final class DownloadTests: TestCase {
         expect(location1).notTo(equal(location2))
     }
 
-    func testRestoreRunning() {
+    func testRestoreRunningWithRunningTask() {
+    }
+
+    func testRestoreRunningWithMissingTask() {
     }
 
     func testRestoreRunningWithMissingFile() throws {
@@ -156,9 +157,6 @@ final class DownloadTests: TestCase {
         expect(download2.state).to(equal(.completed))
         expect(download2.error).notTo(beNil())
         expect(download2.location).to(beNil())
-    }
-
-    func testRestoreRunningWithMissingTask() {
     }
 
     func testRestoreCompleted() throws {
