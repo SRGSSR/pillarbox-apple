@@ -6,7 +6,7 @@
 
 import Foundation
 
-struct DownloadSessionTask {
+struct DownloadSessionTaskProperties {
     let task: URLSessionTask
     let state: URLSessionTask.State
     let progress: Double

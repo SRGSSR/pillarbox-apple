@@ -19,7 +19,7 @@ protocol DownloadSession: AnyObject {
 
 @available(tvOS, unavailable)
 extension DownloadSession {
-    private static func downloadSessionTaskPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTask, Never> {
+    private static func downloadSessionTaskPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
         Publishers.CombineLatest3(
             Just(task),
             task.publisher(for: \.state),

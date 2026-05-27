@@ -8,7 +8,7 @@ import Foundation
 
 enum DownloadSource {
     case estimate(Double)
-    case task(DownloadSessionTask)
+    case task(DownloadSessionTaskProperties)
 
     private var task: URLSessionTask? {
         switch self {
