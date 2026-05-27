@@ -158,11 +158,26 @@ final class DownloadTests: TestCase {
 
         let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download2 = try unwrap(manager2.download(matching: input))
-        expect(download2.state).toEventually(equal(.completed))
+        expect(download2.state).to(equal(.completed))
         expect(download2.location).to(equal(location1))
     }
 
-    func testRestoreFailed() {
+    func testRestoreFailed() throws {
+        let store = AssetDownloadStoreMock()
+        let input = AssetLoaderMockInput.playable(url: Stream.unavailableDownload.url)
+
+        let manager1 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download1 = manager1.addDownload(input: input)
+        expect(download1.state).toEventually(equal(.completed))
+        let error1 = try unwrap(download1.error)
+        expect(download1.location).to(beNil())
+
+        let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download2 = try unwrap(manager2.download(matching: input))
+        expect(download2.state).to(equal(.completed))
+        let error2 = try unwrap(download2.error)
+        expect(error2.localizedDescription).to(equal(error1.localizedDescription))
+        expect(download1.location).to(beNil())
     }
 
     func testNonUserFacingCancellationErrors() {
