@@ -94,6 +94,7 @@ public final class Download: ObservableObject {
 
     func fail(with error: Error) {
         errorSubject.send(error)
+        removeFile()
     }
 
     private func removeFile() {
