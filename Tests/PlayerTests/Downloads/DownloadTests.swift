@@ -63,6 +63,9 @@ final class DownloadTests: TestCase {
         expect(download.error).to(beNil())
     }
 
+    func testMetadataUpdate() {
+    }
+
     func testMetadataFailure() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .failing(with: MetadataError()))
