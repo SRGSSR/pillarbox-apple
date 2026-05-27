@@ -95,10 +95,11 @@ public final class Download: ObservableObject {
     func fail(with error: Error) {
         errorSubject.send(error)
         removeFile()
+        cancelOperations()
     }
 
     private func removeFile() {
-        guard let location = properties.location else { return }
+        guard let location else { return }
         try? FileManager.default.removeItem(at: location)
     }
 }

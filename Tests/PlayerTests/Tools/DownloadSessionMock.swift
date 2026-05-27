@@ -13,6 +13,7 @@ struct HTTPError: Error {}
 
 final class DownloadSessionMock: NSObject {
     private let delay: TimeInterval
+    private var destinations: [String: URL] = [:]
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var session: URLSession!
@@ -56,10 +57,21 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
     }
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        guard let delegate, let id = downloadTask.taskDescription, let error = Self.error(from: downloadTask) else {
+        guard let delegate, let id = downloadTask.taskDescription else {
             return
         }
-        delegate.downloadSessionDidFailWithError(error, forId: id)
+        if let error = Self.error(from: downloadTask) {
+            delegate.downloadSessionDidFailWithError(error, forId: id)
+        }
+        else if let destination = destinations[id] {
+            do {
+                try FileManager.default.replaceItem(at: destination, withItemAt: location, backupItemName: nil, resultingItemURL: nil)
+            }
+            catch {
+                delegate.downloadSessionDidFailWithError(error, forId: id)
+            }
+        }
+        destinations[id] = nil
     }
 
     func urlSession(
@@ -69,9 +81,15 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
         totalBytesWritten: Int64,
         totalBytesExpectedToWrite: Int64
     ) {
-        guard let delegate, let id = downloadTask.taskDescription, Self.error(from: downloadTask) == nil else { return }
-        let location = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        delegate.downloadSessionWillDownloadToLocation(location, forId: id)
-        FileManager.default.createFile(atPath: location.path(), contents: nil)
+        guard let delegate, let id = downloadTask.taskDescription, Self.error(from: downloadTask) == nil else {
+            return
+        }
+        // Creates a dummy file when the first chunk is received to approximate the behavior of `AVAssetDownloadURLSession`.
+        if bytesWritten == totalBytesWritten {
+            let destination = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            destinations[id] = destination
+            delegate.downloadSessionWillDownloadToLocation(destination, forId: id)
+            FileManager.default.createFile(atPath: destination.path(), contents: nil)
+        }
     }
 }
