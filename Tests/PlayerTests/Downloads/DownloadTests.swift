@@ -146,7 +146,19 @@ final class DownloadTests: TestCase {
     func testRestoreRunningWithMissingTask() {
     }
 
-    func testRestoreEnded() {
+    func testRestoreCompleted() throws {
+        let store = AssetDownloadStoreMock()
+        let input = AssetLoaderMockInput.playable(url: Stream.smallDownload.url)
+
+        let manager1 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download1 = manager1.addDownload(input: input)
+        expect(download1.state).toEventually(equal(.completed))
+        let location1 = try unwrap(download1.location)
+
+        let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download2 = try unwrap(manager2.download(matching: input))
+        expect(download2.state).toEventually(equal(.completed))
+        expect(download2.location).to(equal(location1))
     }
 
     func testRestoreFailed() {
