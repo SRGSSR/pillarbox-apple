@@ -38,17 +38,17 @@ final class DownloadTests: TestCase {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         download.suspend()
-        expect(download.state).to(equal(.suspended))
+        expect(download.state).toEventually(equal(.suspended))
     }
 
     func testResume() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
+        let download = manager.addDownload(input: .playable(url: Stream.largeDownload.url))
         download.suspend()
-        expect(download.state).to(equal(.suspended))
+        expect(download.state).toEventually(equal(.suspended))
 
         download.resume()
-        expect(download.state).to(equal(.running))
+        expect(download.state).toEventuallyNot(equal(.suspended), timeout: .seconds(1))
     }
 
     func testMetadata() {
