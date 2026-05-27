@@ -29,7 +29,6 @@ public final class Download: ObservableObject {
 
     private let addRecord: () -> Void
     private let removeRecord: () -> Void
-    private let resetRecord: () -> Void
 
     public var progress: Double {
         properties.progress
@@ -65,10 +64,6 @@ public final class Download: ObservableObject {
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
-        }
-        self.resetRecord = {
-            guard let record = store.downloadRecord(forId: id) else { return }
-            store.updateDownloadRecord(record.reset(), forId: id)
         }
         configurePropertiesPublisher(loaderType: loaderType, input: input, session: session, store: store)
     }

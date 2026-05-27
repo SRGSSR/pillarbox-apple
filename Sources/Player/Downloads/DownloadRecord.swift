@@ -25,10 +25,6 @@ public struct DownloadRecord<Input, Metadata> {
         self.progress = progress
         self.error = error
     }
-
-    func reset() -> Self {
-        .init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
-    }
 }
 
 // swiftlint:enable missing_docs
