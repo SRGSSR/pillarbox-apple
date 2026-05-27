@@ -136,12 +136,6 @@ final class DownloadTests: TestCase {
         expect(location1).notTo(equal(location2))
     }
 
-    func testRestoreRunningWithRunningTask() {
-    }
-
-    func testRestoreRunningWithMissingTask() {
-    }
-
     func testRestoreRunningWithMissingFile() throws {
         let store = AssetDownloadStoreMock()
         let input = AssetLoaderMockInput.playable(url: Stream.smallDownload.url)
