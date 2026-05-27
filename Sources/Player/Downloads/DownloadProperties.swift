@@ -24,13 +24,7 @@ struct DownloadProperties<Metadata> {
         }
         switch source {
         case let .estimate(progress):
-            // TODO: Check conditions here with UTs
-            if location != nil {
-                return .completed
-            }
-            else {
-                return progress > 0 ? .completed : .preparing
-            }
+            return progress == 1 ? .completed : .preparing
         case let .task(properties):
             switch properties.state {
             case .running:
@@ -54,7 +48,7 @@ struct DownloadProperties<Metadata> {
         }
         switch source {
         case let .estimate(progress):
-            return location != nil ? progress : 0
+            return progress
         case let .task(properties):
             return properties.progress
         }
