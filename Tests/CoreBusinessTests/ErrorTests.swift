@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-import Combine
 @testable import PillarboxCoreBusiness
-@testable import PillarboxPlayer
 
+import Combine
 import Nimble
+import PillarboxPlayer
 import XCTest
 
 private enum FailedAssetLoader: AssetLoader {
