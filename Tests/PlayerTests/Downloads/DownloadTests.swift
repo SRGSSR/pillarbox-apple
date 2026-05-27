@@ -83,7 +83,7 @@ final class DownloadTests: TestCase {
         expect(download.location).to(beNil())
     }
 
-    func testRemoveWhilePreparing() {
+    func testRemoveWhileInitiallyPreparing() {       // 100 OK
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url, after: 0.1))
@@ -96,7 +96,7 @@ final class DownloadTests: TestCase {
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
 
-    func testRemoveWhileRunning() {
+    func testRemoveWhileInitiallyRunning() {           // 100 OK
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
