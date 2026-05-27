@@ -45,18 +45,21 @@ extension DownloadSessionMock: DownloadSession {
 }
 
 extension DownloadSessionMock: URLSessionDownloadDelegate {
+    private static func error(from downloadTask: URLSessionDownloadTask) -> Error? {
+        guard let httpResponse = downloadTask.response as? HTTPURLResponse else { return nil }
+        return httpResponse.statusCode >= 400 ? HTTPError() : nil
+    }
+
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let delegate, let error, let id = task.taskDescription else { return }
         delegate.downloadSessionDidFailWithError(error, forId: id)
     }
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        guard let delegate,
-              let id = downloadTask.taskDescription,
-              let httpResponse = downloadTask.response as? HTTPURLResponse, httpResponse.statusCode >= 400 else {
+        guard let delegate, let id = downloadTask.taskDescription, let error = Self.error(from: downloadTask) else {
             return
         }
-        delegate.downloadSessionDidFailWithError(HTTPError(), forId: id)
+        delegate.downloadSessionDidFailWithError(error, forId: id)
     }
 
     func urlSession(
@@ -66,7 +69,7 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
         totalBytesWritten: Int64,
         totalBytesExpectedToWrite: Int64
     ) {
-        guard let delegate, let id = downloadTask.taskDescription else { return }
+        guard let delegate, let id = downloadTask.taskDescription, Self.error(from: downloadTask) == nil else { return }
         let location = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         delegate.downloadSessionWillDownloadToLocation(location, forId: id)
         FileManager.default.createFile(atPath: location.path(), contents: nil)

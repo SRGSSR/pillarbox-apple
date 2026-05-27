@@ -52,9 +52,10 @@ final class DownloadTests: TestCase {
 
     func testSessionFailure() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
-        let download = manager.addDownload(input: .playable(url: Stream.missingDownload.url))
+        let download = manager.addDownload(input: .playable(url: Stream.unavailableDownload.url))
         expect(download.state).toEventually(equal(.completed))
         expect(download.error).notTo(beNil())
+        expect(download.location).to(beNil())
     }
 
     func testSuspend() {
