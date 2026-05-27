@@ -215,18 +215,20 @@ extension Download {
                             title: loaderType.playerMetadata(from: metadata).title,
                             createTaskIfNeeded: properties.shouldCreateTask,
                             progressEstimate: properties.progress
-                        )
-                        .setFailureType(to: URLError.self)
-                        .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled)),
+                        ),
+                        // .setFailureType(to: URLError.self),
+                        // FIXME: Bad since can fail an open publisher, but should be applied to the task retrieval
+                        //        publisher only. At the moment best to remove it.
+                        // .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled)),
                         locationSubject
-                            .setFailureType(to: URLError.self)
+                            // .setFailureType(to: URLError.self)
                             .prepend(properties.location),
                         errorSubject
-                            .setFailureType(to: URLError.self)
+                            // .setFailureType(to: URLError.self)
                             .prepend(properties.error)
                     )
                     .map { DownloadProperties(metadata: metadata, source: $0, location: $1, error: $2) }
-                    .catch { Just(DownloadProperties(metadata: metadata, source: .estimate(0), location: nil, error: $0)) }
+                    // .catch { Just(DownloadProperties(metadata: metadata, source: .estimate(0), location: nil, error: $0)) }
                 }
                 .switchToLatest()
                 .catch { Just(DownloadProperties(metadata: nil, source: .estimate(0), location: nil, error: $0)) }
