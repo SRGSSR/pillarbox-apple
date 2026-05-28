@@ -118,7 +118,7 @@ final class DownloadTests: TestCase {
         expect(download.progress).to(equal(0))
         expect(download.location).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
-        // expect(FileManager.default.fileExists(atPath: location.path())).toEventually(beFalse())             <-- flakiness here when run 100 times
+        expect(FileManager.default.fileExists(atPath: location.path())).toEventually(beFalse())
     }
 
     func testRemoveWhileCompleted() throws {

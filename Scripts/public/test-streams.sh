@@ -106,7 +106,7 @@ function generate_downloads {
 
     pushd "$dest_dir" > /dev/null || exit
     truncate -s 1M small.mp3
-    truncate -s 30M large.mp3
+    truncate -s 500M large.mp3
     popd > /dev/null || exit
 }
 
