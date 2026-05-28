@@ -100,6 +100,7 @@ final class DownloadTests: TestCase {
         download.remove()
         expect(download.state).to(equal(.cancelled))
         expect(download.progress).to(equal(0))
+        expect(download.error).to(beNil())
         expect(download.location).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
@@ -113,6 +114,7 @@ final class DownloadTests: TestCase {
         download.remove()
         expect(download.state).to(equal(.cancelled))
         expect(download.progress).to(equal(0))
+        expect(download.error).to(beNil())
         expect(download.location).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
@@ -126,6 +128,7 @@ final class DownloadTests: TestCase {
         download.remove()
         expect(download.state).to(equal(.cancelled))
         expect(download.progress).to(equal(0))
+        expect(download.error).to(beNil())
         expect(download.location).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
         expect(FileManager.default.fileExists(atPath: location.path())).toEventually(beFalse())
@@ -141,11 +144,9 @@ final class DownloadTests: TestCase {
         download.remove()
         expect(download.state).toEventually(equal(.cancelled))
         expect(download.progress).to(equal(0))
+        expect(download.error).to(beNil())
         expect(download.location).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
-    }
-
-    func testRemoveFileWhileDownloading() {
     }
 
     func testRestart() throws {
