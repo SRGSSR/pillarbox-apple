@@ -15,7 +15,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
     private let session: any DownloadSession
     private let store: S
 
-    @Published private(set) var downloads: [Download] = []
+    @Published private(set) var downloads: [Download]
 
     private var locations: [String: URL] = [:]
 
