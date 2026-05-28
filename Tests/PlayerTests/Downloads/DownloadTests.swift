@@ -56,7 +56,7 @@ final class DownloadTests: TestCase {
         expect(download.state).toEventually(equal(.suspended))
 
         download.resume()
-        expect(download.state).toEventuallyNot(equal(.suspended), timeout: .seconds(5))
+        expect(download.state).toEventuallyNot(equal(.suspended))
     }
 
     func testMetadata() {
@@ -71,7 +71,7 @@ final class DownloadTests: TestCase {
         let download = manager.addDownload(
             input: .updatable(url: Stream.largeDownload.url, metadata: .init(title: "Title1"), to: .init(title: "Title2"), after: 0.1)
         )
-        expect(download.metadata.title).toAlways(equal("Title1"), until: .milliseconds(500))
+        expect(download.metadata.title).toAlways(equal("Title1"), until: .milliseconds(200))
     }
 
     func testMetadataFailure() {
