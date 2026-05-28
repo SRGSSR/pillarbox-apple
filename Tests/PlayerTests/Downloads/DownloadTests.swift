@@ -66,7 +66,10 @@ final class DownloadTests: TestCase {
         expect(download.error).to(beNil())
     }
 
-    func testMetadataUpdate() {
+    func testIgnoreMetadataUpdates() {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
+        let download = manager.addDownload(input: .updatable(url: Stream.largeDownload.url, metadata: .init(title: "Title1"), to: .init(title: "Title2"), after: 0.1))
+        expect(download.metadata.title).toAlways(equal("Title1"), until: .milliseconds(500))
     }
 
     func testMetadataFailure() {

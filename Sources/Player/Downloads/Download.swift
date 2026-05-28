@@ -150,8 +150,7 @@ private extension Download {
         }
         else if properties.error == nil {
             return loaderType.metadataPublisher(for: input)
-                // TODO: Data sources could be periodically updated for some reason. Take first value. Write UT.
-                // .first()
+                .first()
                 .eraseToAnyPublisher()
         }
         else {
