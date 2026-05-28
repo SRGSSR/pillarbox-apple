@@ -17,6 +17,8 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
 
     @Published private(set) var downloads: [Download]
 
+    // Store locations separately. If a location was created but not associated with a download, we still need to be able
+    // to properly clean associated downloaded data.
     private var locations: [String: URL] = [:]
 
     init(loaderType: L.Type, session: some DownloadSession, store: S) {
