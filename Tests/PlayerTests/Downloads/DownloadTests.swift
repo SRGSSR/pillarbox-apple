@@ -206,7 +206,6 @@ final class DownloadTests: TestCase {
         expect(download1.location).to(beNil())
     }
 
-    // TODO: Fix
     func testNoUserFacingCancellationErrors() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
