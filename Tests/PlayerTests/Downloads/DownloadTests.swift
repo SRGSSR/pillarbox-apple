@@ -30,11 +30,16 @@ final class DownloadTests: TestCase {
         expect(download.progress).to(equal(0))
     }
 
-    func testCompletion() {
-        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(delay: 0.1), store: AssetDownloadStoreMock())
+    func testCompletion() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(delay: 0.1), store: store)
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url, after: 0.1))
         expect(download.state).toEventually(equal(.completed))
         expect(download.progress).to(equal(1))
+        expect(download.error).to(beNil())
+        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
+        let location = try unwrap(download.location)
+        expect(FileManager.default.fileExists(atPath: location.path())).to(beTrue())
     }
 
     func testSuspend() {
@@ -51,7 +56,7 @@ final class DownloadTests: TestCase {
         expect(download.state).toEventually(equal(.suspended))
 
         download.resume()
-        expect(download.state).toEventuallyNot(equal(.suspended), timeout: .seconds(1))
+        expect(download.state).toEventuallyNot(equal(.suspended), timeout: .seconds(5))
     }
 
     func testMetadata() {

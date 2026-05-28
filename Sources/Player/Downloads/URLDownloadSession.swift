@@ -70,7 +70,7 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
 #endif
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
-        guard let delegate, let id = task.taskDescription, let error else { return }
-        delegate.downloadSessionDidFailWithError(error, forId: id)
+        guard let delegate, let id = task.taskDescription else { return }
+        delegate.downloadSessionDidCompleteWithError(error, forId: id)
     }
 }

@@ -11,9 +11,6 @@ import Combine
 protocol DownloadSession: AnyObject {
     var delegate: DownloadSessionDelegate? { get set }
 
-    // TODO: A publisher that delivers the list of existing tasks? Would also make it possible to mock
-    //       such scenarios easily.
-
     func sessionTaskPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<URLSessionTask, Never>
 }
 

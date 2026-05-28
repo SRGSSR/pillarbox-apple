@@ -48,8 +48,7 @@ extension AsyncPublisher {
                 guard let subscriber = subscriber.locked() else { return }
                 send(output)
                 subscriber.receive(completion: .finished)
-            }
-            catch {
+            } catch {
                 guard let subscriber = subscriber.locked() else { return }
                 subscriber.receive(completion: .failure(error))
             }

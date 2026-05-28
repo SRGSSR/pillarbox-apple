@@ -17,6 +17,8 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
 
     @Published private(set) var downloads: [Download] = []
 
+    private var locations: [String: URL] = [:]
+
     init(loaderType: L.Type, session: some DownloadSession, store: S) {
         self.session = session
         self.store = store
@@ -68,13 +70,18 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
 @available(tvOS, unavailable)
 extension DownloadManager: DownloadSessionDelegate {
     func downloadSessionWillDownloadToLocation(_ location: URL, forId id: String) {
-        guard let download = download(matchingId: id) else { return }
-        download.attach(to: location)
+        locations[id] = location
+        download(matchingId: id)?.attach(to: location)
     }
 
-    func downloadSessionDidFailWithError(_ error: any Error, forId id: String) {
-        guard let download = download(matchingId: id) else { return }
-        download.fail(with: error)
+    func downloadSessionDidCompleteWithError(_ error: (any Error)?, forId id: String) {
+        if let error {
+            if let location = locations[id] {
+                try? FileManager.default.removeItem(at: location)
+            }
+            download(matchingId: id)?.fail(with: error)
+        }
+        locations[id] = nil
     }
 }
 

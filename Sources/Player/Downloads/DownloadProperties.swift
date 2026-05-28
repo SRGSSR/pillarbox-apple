@@ -71,8 +71,7 @@ struct DownloadProperties<Metadata> {
             self.location = try Self.url(resolvingBookmarkData: record.bookmarkData)
             self.source = .estimate(record.progress)
             self.error = record.error
-        }
-        catch {
+        } catch {
             self.location = nil
             self.source = .estimate(0)
             self.error = error

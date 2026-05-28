@@ -13,7 +13,6 @@ struct HTTPError: Error {}
 
 final class DownloadSessionMock: NSObject {
     private let delay: TimeInterval
-    private var destinations: [String: URL] = [:]
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var session: URLSession!
@@ -46,50 +45,29 @@ extension DownloadSessionMock: DownloadSession {
 }
 
 extension DownloadSessionMock: URLSessionDownloadDelegate {
-    private static func error(from downloadTask: URLSessionDownloadTask) -> Error? {
-        guard let httpResponse = downloadTask.response as? HTTPURLResponse else { return nil }
+    private static func error(from task: URLSessionTask) -> Error? {
+        guard let httpResponse = task.response as? HTTPURLResponse else { return nil }
         return httpResponse.statusCode >= 400 ? HTTPError() : nil
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
-        guard let delegate, let error, let id = task.taskDescription else { return }
-        delegate.downloadSessionDidFailWithError(error, forId: id)
+        guard let delegate, let id = task.taskDescription else { return }
+        delegate.downloadSessionDidCompleteWithError(error ?? Self.error(from: task), forId: id)
     }
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        guard let delegate, let id = downloadTask.taskDescription else {
-            return
-        }
+        guard let delegate, let id = downloadTask.taskDescription else { return }
         if let error = Self.error(from: downloadTask) {
-            delegate.downloadSessionDidFailWithError(error, forId: id)
+            delegate.downloadSessionDidCompleteWithError(error, forId: id)
         }
-        else if let destination = destinations[id] {
-            do {
-                try FileManager.default.replaceItem(at: destination, withItemAt: location, backupItemName: nil, resultingItemURL: nil)
-            }
-            catch {
-                delegate.downloadSessionDidFailWithError(error, forId: id)
-            }
-        }
-        destinations[id] = nil
-    }
-
-    func urlSession(
-        _ session: URLSession,
-        downloadTask: URLSessionDownloadTask,
-        didWriteData bytesWritten: Int64,
-        totalBytesWritten: Int64,
-        totalBytesExpectedToWrite: Int64
-    ) {
-        guard let delegate, let id = downloadTask.taskDescription, Self.error(from: downloadTask) == nil else {
-            return
-        }
-        // Creates a dummy file when the first chunk is received to approximate the behavior of `AVAssetDownloadURLSession`.
-        if bytesWritten == totalBytesWritten {
+        else {
             let destination = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-            destinations[id] = destination
-            delegate.downloadSessionWillDownloadToLocation(destination, forId: id)
-            FileManager.default.createFile(atPath: destination.path(), contents: nil)
+            do {
+                try FileManager.default.moveItem(at: location, to: destination)
+                delegate.downloadSessionWillDownloadToLocation(destination, forId: id)
+            } catch {
+                delegate.downloadSessionDidCompleteWithError(error, forId: id)
+            }
         }
     }
 }
