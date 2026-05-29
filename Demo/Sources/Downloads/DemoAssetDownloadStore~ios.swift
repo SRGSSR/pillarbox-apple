@@ -89,8 +89,7 @@ extension DemoAssetDownloadStore: AssetDownloadStore {
     }
 
     func addDownloadRecord(using input: DemoAssetLoader.Input, forId id: String) {
-        let fileEntry = FileEntry(id: id, input: input)
-        fileEntries.append(fileEntry)
+        fileEntries.append(FileEntry(id: id, input: input))
         save()
     }
 
