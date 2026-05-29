@@ -21,9 +21,12 @@ extension DownloadSession {
             Just(task),
             task.publisher(for: \.state),
             task.progress.publisher(for: \.fractionCompleted)
+                .throttle(for: 0.1, scheduler: DispatchQueue.main, latest: true)
+                .prepend(task.progress.fractionCompleted)
                 .map { $0.clamped(to: 0...1) }
         )
         .map { .init(task: $0, state: $1, progress: $2) }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
