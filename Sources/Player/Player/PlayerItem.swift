@@ -61,7 +61,7 @@ public final class PlayerItem: Hashable {
         self.init(
             metadataPublisher: Just(metadata),
             metadataMapper: { storeType.playerMetadata(from: $0) },
-            assetProvider: { storeType.asset(location: location, input: record.input, metadata: $0) },
+            assetProvider: { storeType.downloadedAsset(fileUrl: location, input: record.input, metadata: $0) },
             trackerAdapters: trackerAdapters
         )
     }

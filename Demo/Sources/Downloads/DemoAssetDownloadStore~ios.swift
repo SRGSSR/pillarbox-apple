@@ -80,10 +80,6 @@ extension DemoAssetDownloadStore: AssetDownloadStore {
         input.url.absoluteString
     }
 
-    static func asset(location: URL, input: DemoAssetLoader.Input, metadata: String) -> Asset {
-        .simple(url: location)
-    }
-
     static func playerMetadata(from metadata: String) -> PlayerMetadata {
         .init(title: metadata)
     }

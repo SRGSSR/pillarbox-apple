@@ -18,7 +18,7 @@ public protocol AssetDownloadStore: AnyObject {
 
     static func id(from input: Input) -> String
 
-    static func asset(location: URL, input: Input, metadata: Metadata) -> Asset
+    static func downloadedAsset(fileUrl: URL, input: Input, metadata: Metadata) -> Asset
     static func playerMetadata(from metadata: Metadata) -> PlayerMetadata
 
     func downloadRecords() -> [DownloadRecord<Input, Metadata>]
@@ -28,6 +28,13 @@ public protocol AssetDownloadStore: AnyObject {
 
     func downloadRecord(forId id: String) -> DownloadRecord<Input, Metadata>?
     func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>, forId id: String)
+}
+
+@available(tvOS, unavailable)
+public extension AssetDownloadStore {
+    static func downloadedAsset(fileUrl: URL, input: Input, metadata: Metadata) -> Asset {
+        .simple(url: fileUrl)
+    }
 }
 
 @available(tvOS, unavailable)

@@ -31,10 +31,6 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
         .init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
     }
 
-    static func asset(location: URL, input: AssetLoaderMockInput, metadata: PlayerMetadata) -> Asset {
-        .simple(url: location)
-    }
-
     func downloadRecords() -> [DownloadRecord<AssetLoaderMockInput, PlayerMetadata>] {
         assert(Thread.isMainThread)
         return Array(records.values)
