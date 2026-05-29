@@ -116,7 +116,7 @@ public extension Stream {
 }
 
 public extension Stream {
-    /// An small downloadable file (not playable).
+    /// An small downloadable file (playable).
     static let smallDownload = Self(
         url: URL(string: "http://localhost:8123/downloads/small.mp3")!,
         duration: .indefinite

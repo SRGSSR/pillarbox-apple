@@ -50,6 +50,12 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
         return httpResponse.statusCode >= 400 ? HTTPError() : nil
     }
 
+    private static func fileExtension(from task: URLSessionTask) -> String {
+        // Files need to be saved with a proper extension to be locally playable
+        guard let url = task.originalRequest?.url else { return "mp4" }
+        return url.pathExtension
+    }
+
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let delegate, let id = task.taskDescription else { return }
         delegate.downloadSessionDidCompleteWithError(error ?? Self.error(from: task), forId: id)
@@ -61,7 +67,9 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
             delegate.downloadSessionDidCompleteWithError(error, forId: id)
         }
         else {
-            let destination = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            let destination = FileManager.default.temporaryDirectory
+                .appendingPathComponent(UUID().uuidString)
+                .appendingPathExtension(Self.fileExtension(from: downloadTask))
             do {
                 try FileManager.default.moveItem(at: location, to: destination)
                 delegate.downloadSessionWillDownloadToLocation(destination, forId: id)

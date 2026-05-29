@@ -105,8 +105,13 @@ function generate_downloads {
     mkdir -p "$dest_dir"
 
     pushd "$dest_dir" > /dev/null || exit
-    truncate -s 1M small.mp3
+
+    # Small file (~1 MB)
+    ffmpeg -f lavfi -i anullsrc=r=44100:cl=stereo -t 60 -c:a libmp3lame small.mp3
+
+    # Generating a large file would be time-consuming. Create a large unplayable file instead.
     truncate -s 500M large.mp3
+
     popd > /dev/null || exit
 }
 

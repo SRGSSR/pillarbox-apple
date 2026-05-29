@@ -16,15 +16,17 @@ final class DownloadPlayerItemTests: TestCase {
     func testItemFromDownloadWithoutFile() {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .playable(url: Stream.largeDownload.url))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         expect(PlayerItem(download: download, store: store)).to(beNil())
     }
 
-    func testItemFromDownloadWithFile() {
+    func testItemFromDownloadWithFile() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
-        let download = manager.addDownload(input: .playable(url: Stream.largeDownload.url))
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         expect(download.location).toEventuallyNot(beNil())
-        expect(PlayerItem(download: download, store: store)).notTo(beNil())
+        let item = try unwrap(PlayerItem(download: download, store: store))
+        let player = Player(item: item)
+        expect(player.playbackState).toEventually(equal(.paused))
     }
 }
