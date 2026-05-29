@@ -25,8 +25,22 @@ final class DownloadPlayerItemTests: TestCase {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
         let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
         expect(download.location).toEventuallyNot(beNil())
+
         let item = try unwrap(PlayerItem(download: download, store: store))
         let player = Player(item: item)
         expect(player.playbackState).toEventually(equal(.paused))
+    }
+
+    func testItemFromDownloadWithRemovedFile() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: store)
+        let download = manager.addDownload(input: .playable(url: Stream.smallDownload.url))
+        expect(download.state).toEventually(equal(.completed))
+        let location = try unwrap(download.location)
+        try FileManager.default.removeItem(at: location)
+
+        let item = try unwrap(PlayerItem(download: download, store: store))
+        let player = Player(item: item)
+        expect(player.error).toEventuallyNot(beNil())
     }
 }
