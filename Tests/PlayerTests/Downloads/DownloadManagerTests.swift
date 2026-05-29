@@ -124,4 +124,15 @@ final class DownloadManagerTests: TestCase {
         expect(download1.state).to(equal(.cancelled))
         expect(download2.state).to(equal(.cancelled))
     }
+
+    func testDeallocation() {
+        var manager: DownloadManager? = .init(loaderType: AssetLoaderMock.self, session: session, store: AssetDownloadStoreMock())
+        manager?.addDownload(input: .playable(url: Stream.download.url))
+
+        weak let weakManager = manager
+        autoreleasepool {
+            manager = nil
+        }
+        expect(weakManager).to(beNil())
+    }
 }

@@ -162,7 +162,7 @@ final class VisibilityTrackerTests: TestCase {
     }
 
     func testDeallocation() {
-        var visibilityTracker: VisibilityTracker? = VisibilityTracker()
+        var visibilityTracker: VisibilityTracker? = .init()
         weak let weakVisibilityTracker = visibilityTracker
         autoreleasepool {
             visibilityTracker = nil
@@ -171,7 +171,7 @@ final class VisibilityTrackerTests: TestCase {
     }
 
     func testDeallocationWhilePlaying() {
-        var visibilityTracker: VisibilityTracker? = VisibilityTracker()
+        var visibilityTracker: VisibilityTracker? = .init()
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         player.play()
         visibilityTracker?.player = player

@@ -59,7 +59,7 @@ final class ObservableObjectTests: XCTestCase {
     }
 
     func testDeallocation() {
-        var object: TestObservableObject? = TestObservableObject()
+        var object: TestObservableObject? = .init()
         _ = object?.changePublisher(at: \.nonPublishedProperty)
         weak let weakObject = object
         autoreleasepool {

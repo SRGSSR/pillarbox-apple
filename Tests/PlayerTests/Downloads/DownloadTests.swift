@@ -244,4 +244,24 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.cancelled))
         expect(download.error).to(beNil())
     }
+
+    func testDeallocationWithManager() throws {
+        var manager: DownloadManager? = .init(loaderType: AssetLoaderMock.self, session: session, store: AssetDownloadStoreMock())
+        weak let weakDownload = try unwrap(manager?.addDownload(input: .playable(url: Stream.download.url)))
+        autoreleasepool {
+            manager = nil
+        }
+        expect(weakDownload).to(beNil())
+    }
+
+    func testDeallocationOnRemoval() throws {
+        let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: AssetDownloadStoreMock())
+        weak let weakDownload = try unwrap(manager.addDownload(input: .playable(url: Stream.download.url)))
+        autoreleasepool {
+            if let weakDownload {
+                manager.removeDownload(weakDownload)
+            }
+        }
+        expect(weakDownload).to(beNil())
+    }
 }

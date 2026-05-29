@@ -16,7 +16,7 @@ private struct MockError: Error {}
 final class PlayerTests: TestCase {
     func testDeallocation() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
-        var player: Player? = Player(item: item)
+        var player: Player? = .init(item: item)
 
         weak let weakPlayer = player
         autoreleasepool {
