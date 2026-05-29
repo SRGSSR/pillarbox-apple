@@ -47,8 +47,8 @@ public final class Download: ObservableObject {
         return URLError.isCancellationError(error) ? nil : error
     }
 
-    var location: URL? {
-        properties.location
+    var fileUrl: URL? {
+        properties.fileUrl
     }
 
     private init<L, S>(
@@ -98,8 +98,8 @@ public final class Download: ObservableObject {
     }
 
     private func removeFile() {
-        guard let location else { return }
-        try? FileManager.default.removeItem(at: location)
+        guard let fileUrl else { return }
+        try? FileManager.default.removeItem(at: fileUrl)
     }
 }
 
@@ -186,7 +186,7 @@ extension Download {
                 DownloadProperties(
                     metadata: loaderType.playerMetadata(from: properties.metadata),
                     source: properties.source,
-                    location: properties.location,
+                    fileUrl: properties.fileUrl,
                     error: properties.error
                 )
             }
@@ -214,14 +214,14 @@ extension Download {
                             progressEstimate: properties.progress
                         ),
                         locationSubject
-                            .prepend(properties.location),
+                            .prepend(properties.fileUrl),
                         errorSubject
                             .prepend(properties.error)
                     )
-                    .map { DownloadProperties(metadata: metadata, source: $0, location: $1, error: $2) }
+                    .map { DownloadProperties(metadata: metadata, source: $0, fileUrl: $1, error: $2) }
                 }
                 .switchToLatest()
-                .catch { Just(DownloadProperties(metadata: nil, source: .estimate(0), location: nil, error: $0)) }
+                .catch { Just(DownloadProperties(metadata: nil, source: .estimate(0), fileUrl: nil, error: $0)) }
                 .prepend(properties)
         }
     }

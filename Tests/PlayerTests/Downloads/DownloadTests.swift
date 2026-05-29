@@ -39,8 +39,8 @@ final class DownloadTests: TestCase {
         expect(download.progress).to(equal(1))
         expect(download.error).to(beNil())
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
-        let location = try unwrap(download.location)
-        expect(FileManager.default.fileExists(atPath: location.path())).to(beTrue())
+        let fileUrl = try unwrap(download.fileUrl)
+        expect(FileManager.default.fileExists(atPath: fileUrl.path())).to(beTrue())
     }
 
     func testSuspend() {
@@ -90,7 +90,7 @@ final class DownloadTests: TestCase {
         expect(download.state).toEventually(equal(.completed))
         expect(download.progress).to(equal(0))
         expect(download.error).notTo(beNil())
-        expect(download.location).to(beNil())
+        expect(download.fileUrl).to(beNil())
     }
 
     func testRemoveWhileInitiallyPreparing() {
@@ -103,7 +103,7 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.cancelled))
         expect(download.progress).to(equal(0))
         expect(download.error).to(beNil())
-        expect(download.location).to(beNil())
+        expect(download.fileUrl).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
 
@@ -117,7 +117,7 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.cancelled))
         expect(download.progress).to(equal(0))
         expect(download.error).to(beNil())
-        expect(download.location).to(beNil())
+        expect(download.fileUrl).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
 
@@ -125,15 +125,15 @@ final class DownloadTests: TestCase {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download = manager.addDownload(input: .playable(url: Stream.download.url))
-        let location = try pollUnwrap(download.location)
+        let fileUrl = try pollUnwrap(download.fileUrl)
 
         download.remove()
         expect(download.state).to(equal(.cancelled))
         expect(download.progress).to(equal(0))
         expect(download.error).to(beNil())
-        expect(download.location).to(beNil())
+        expect(download.fileUrl).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
-        expect(FileManager.default.fileExists(atPath: location.path())).toEventually(beFalse())
+        expect(FileManager.default.fileExists(atPath: fileUrl.path())).toEventually(beFalse())
     }
 
     func testRemoveWhileCompleted() throws {
@@ -141,13 +141,13 @@ final class DownloadTests: TestCase {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download = manager.addDownload(input: .playable(url: Stream.download.url))
         expect(download.state).toEventually(equal(.completed))
-        expect(download.location).notTo(beNil())
+        expect(download.fileUrl).notTo(beNil())
 
         download.remove()
         expect(download.state).toEventually(equal(.cancelled))
         expect(download.progress).to(equal(0))
         expect(download.error).to(beNil())
-        expect(download.location).to(beNil())
+        expect(download.fileUrl).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
 
@@ -156,14 +156,14 @@ final class DownloadTests: TestCase {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download = manager.addDownload(input: .playable(url: Stream.download.url))
         expect(download.state).toEventually(equal(.completed))
-        let location1 = try unwrap(download.location)
+        let location1 = try unwrap(download.fileUrl)
 
         download.restart()
         expect(download.state).toEventually(equal(.running))
         expect(download.progress).to(equal(0))
         expect(download.state).toEventually(equal(.completed))
         expect(download.progress).to(equal(1))
-        let location2 = try unwrap(download.location)
+        let location2 = try unwrap(download.fileUrl)
         expect(location1).notTo(equal(location2))
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
     }
@@ -175,7 +175,7 @@ final class DownloadTests: TestCase {
         let manager1 = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download1 = manager1.addDownload(input: input)
         expect(download1.state).toEventually(equal(.completed))
-        let location1 = try unwrap(download1.location)
+        let location1 = try unwrap(download1.fileUrl)
         try FileManager.default.removeItem(at: location1)
 
         let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
@@ -183,7 +183,7 @@ final class DownloadTests: TestCase {
         expect(download2.state).to(equal(.completed))
         expect(download2.progress).to(equal(0))
         expect(download2.error).notTo(beNil())
-        expect(download2.location).to(beNil())
+        expect(download2.fileUrl).to(beNil())
     }
 
     func testRestoreCompleted() throws {
@@ -193,12 +193,12 @@ final class DownloadTests: TestCase {
         let manager1 = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download1 = manager1.addDownload(input: input)
         expect(download1.state).toEventually(equal(.completed))
-        let location1 = try unwrap(download1.location)
+        let location1 = try unwrap(download1.fileUrl)
 
         let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download2 = try unwrap(manager2.download(matching: input))
         expect(download2.state).to(equal(.completed))
-        expect(download2.location).to(equal(location1))
+        expect(download2.fileUrl).to(equal(location1))
     }
 
     func testRestoreFailedWithMissingMetadata() throws {
@@ -209,14 +209,14 @@ final class DownloadTests: TestCase {
         let download1 = manager1.addDownload(input: input)
         expect(download1.state).toEventually(equal(.completed))
         let error1 = try unwrap(download1.error)
-        expect(download1.location).to(beNil())
+        expect(download1.fileUrl).to(beNil())
 
         let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download2 = try unwrap(manager2.download(matching: input))
         expect(download2.state).to(equal(.completed))
         let error2 = try unwrap(download2.error)
         expect(error2.localizedDescription).to(equal(error1.localizedDescription))
-        expect(download1.location).to(beNil())
+        expect(download1.fileUrl).to(beNil())
     }
 
     func testRestoreFailedWithMissingFile() throws {
@@ -227,14 +227,14 @@ final class DownloadTests: TestCase {
         let download1 = manager1.addDownload(input: input)
         expect(download1.state).toEventually(equal(.completed))
         let error1 = try unwrap(download1.error)
-        expect(download1.location).to(beNil())
+        expect(download1.fileUrl).to(beNil())
 
         let manager2 = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download2 = try unwrap(manager2.download(matching: input))
         expect(download2.state).to(equal(.completed))
         let error2 = try unwrap(download2.error)
         expect(error2.localizedDescription).to(equal(error1.localizedDescription))
-        expect(download1.location).to(beNil())
+        expect(download1.fileUrl).to(beNil())
     }
 
     func testNoUserFacingCancellationErrors() {

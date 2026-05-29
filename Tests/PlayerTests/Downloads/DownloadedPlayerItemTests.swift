@@ -26,7 +26,7 @@ final class DownloadPlayerItemTests: TestCase {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download = manager.addDownload(input: .playable(url: Stream.download.url))
-        expect(download.location).toEventuallyNot(beNil())
+        expect(download.fileUrl).toEventuallyNot(beNil())
 
         let item = try unwrap(PlayerItem(download: download, store: store))
         let player = Player(item: item)
@@ -38,8 +38,8 @@ final class DownloadPlayerItemTests: TestCase {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: session, store: store)
         let download = manager.addDownload(input: .playable(url: Stream.download.url))
         expect(download.state).toEventually(equal(.completed))
-        let location = try unwrap(download.location)
-        try FileManager.default.removeItem(at: location)
+        let fileUrl = try unwrap(download.fileUrl)
+        try FileManager.default.removeItem(at: fileUrl)
 
         let item = try unwrap(PlayerItem(download: download, store: store))
         let player = Player(item: item)

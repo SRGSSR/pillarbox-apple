@@ -12,11 +12,11 @@ import Foundation
 struct DownloadProperties<Metadata> {
     let metadata: Metadata?
     let source: DownloadSource
-    let location: URL?
+    let fileUrl: URL?
     let error: Error?
 
     var shouldCreateTask: Bool {
-        location == nil && error == nil
+        fileUrl == nil && error == nil
     }
 
     var state: DownloadState {
@@ -56,31 +56,31 @@ struct DownloadProperties<Metadata> {
     }
 
     init() {
-        self.init(metadata: nil, source: .estimate(0), location: nil, error: nil)
+        self.init(metadata: nil, source: .estimate(0), fileUrl: nil, error: nil)
     }
 
-    init(metadata: Metadata?, source: DownloadSource, location: URL?, error: Error?) {
+    init(metadata: Metadata?, source: DownloadSource, fileUrl: URL?, error: Error?) {
         self.metadata = metadata
         self.source = source
-        self.location = location
+        self.fileUrl = fileUrl
         self.error = error
     }
 
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
         self.metadata = record.metadata
         do {
-            self.location = try URL(resolvingBookmarkData: record.bookmarkData)
+            self.fileUrl = try URL(resolvingBookmarkData: record.bookmarkData)
             self.source = .estimate(record.progress)
             self.error = record.error
         } catch {
-            self.location = nil
+            self.fileUrl = nil
             self.source = .estimate(0)
             self.error = error
         }
     }
 
     func bookmarkData() -> Data? {
-        try? location?.bookmarkData()
+        try? fileUrl?.bookmarkData()
     }
 }
 
