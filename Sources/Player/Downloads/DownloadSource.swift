@@ -6,6 +6,7 @@
 
 import Foundation
 
+@available(tvOS, unavailable)
 enum DownloadSource {
     case estimate(Double)
     case task(DownloadSessionTaskProperties)

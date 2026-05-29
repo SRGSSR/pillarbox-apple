@@ -11,6 +11,7 @@ import Foundation
 
 struct HTTPError: Error {}
 
+@available(tvOS, unavailable)
 final class DownloadSessionMock: NSObject {
     private let delay: TimeInterval
 
@@ -26,6 +27,7 @@ final class DownloadSessionMock: NSObject {
     }
 }
 
+@available(tvOS, unavailable)
 extension DownloadSessionMock: DownloadSession {
     func sessionTaskPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<URLSessionTask, Never> {
         guard createIfNeeded else {
@@ -44,6 +46,7 @@ extension DownloadSessionMock: DownloadSession {
     }
 }
 
+@available(tvOS, unavailable)
 extension DownloadSessionMock: URLSessionDownloadDelegate {
     private static func error(from task: URLSessionTask) -> Error? {
         guard let httpResponse = task.response as? HTTPURLResponse else { return nil }

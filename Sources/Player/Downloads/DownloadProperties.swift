@@ -8,6 +8,7 @@
 
 import Foundation
 
+@available(tvOS, unavailable)
 struct DownloadProperties<Metadata> {
     let metadata: Metadata?
     let source: DownloadSource

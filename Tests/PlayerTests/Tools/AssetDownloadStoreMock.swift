@@ -10,6 +10,7 @@ import PillarboxPlayer
 import Foundation
 import OrderedCollections
 
+@available(tvOS, unavailable)
 final class AssetDownloadStoreMock: AssetDownloadStore {
     private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMockInput, PlayerMetadata>>
 
