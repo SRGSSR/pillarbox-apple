@@ -7,7 +7,7 @@
 import Foundation
 
 @available(tvOS, unavailable)
-struct DownloadSessionTaskProperties: Equatable {
+struct DownloadSessionTaskProperties {
     let task: URLSessionTask
     let state: URLSessionTask.State
     let progress: Double
