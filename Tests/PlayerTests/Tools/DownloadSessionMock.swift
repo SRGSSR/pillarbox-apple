@@ -13,17 +13,23 @@ struct HTTPError: Error {}
 
 @available(tvOS, unavailable)
 final class DownloadSessionMock: NSObject {
-    private let delay: TimeInterval
+    private let directoryUrl: URL
 
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var session: URLSession!
 
     weak var delegate: (any DownloadSessionDelegate)?
 
-    init(delay: TimeInterval = 0) {
-        self.delay = delay
+    init(name: String) {
+        self.directoryUrl = FileManager.default.temporaryDirectory.appendingPathComponent("DownloadSessionMock").appendingPathComponent(name)
         super.init()
         self.session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: .main)
+        createEmptyDirectory()
+    }
+
+    private func createEmptyDirectory() {
+        try? FileManager.default.removeItem(at: directoryUrl)
+        try? FileManager.default.createDirectory(at: directoryUrl, withIntermediateDirectories: true)
     }
 }
 
@@ -34,7 +40,6 @@ extension DownloadSessionMock: DownloadSession {
             return Empty().eraseToAnyPublisher()
         }
         return Just(sessionTask(id: id, asset: asset, title: title, createIfNeeded: createIfNeeded))
-            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
@@ -70,9 +75,7 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
             delegate.downloadSessionDidCompleteWithError(error, forId: id)
         }
         else {
-            let destination = FileManager.default.temporaryDirectory
-                .appendingPathComponent(UUID().uuidString)
-                .appendingPathExtension(Self.fileExtension(from: downloadTask))
+            let destination = directoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension(Self.fileExtension(from: downloadTask))
             do {
                 try FileManager.default.moveItem(at: location, to: destination)
                 delegate.downloadSessionWillDownloadToLocation(destination, forId: id)

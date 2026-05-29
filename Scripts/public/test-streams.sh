@@ -101,18 +101,9 @@ function generate_packaged_streams {
 
 function generate_downloads {
     local dest_dir="$1"
-
     mkdir -p "$dest_dir"
 
-    pushd "$dest_dir" > /dev/null || exit
-
-    # Small file (~1 MB)
-    ffmpeg -f lavfi -i anullsrc=r=44100:cl=stereo -t 60 -c:a libmp3lame small.mp3
-
-    # Generating a large file would be time-consuming. Create a large unplayable file instead.
-    truncate -s 500M large.mp3
-
-    popd > /dev/null || exit
+    ffmpeg -f lavfi -i anullsrc=r=44100:cl=stereo -t 60 -c:a libmp3lame "$dest_dir/silence.mp3" > /dev/null 2>&1 &
 }
 
 function serve_directory {
