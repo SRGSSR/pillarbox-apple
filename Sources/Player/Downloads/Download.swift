@@ -203,6 +203,7 @@ extension Download {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger, locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Self.metadataPublisher(loaderType: loaderType, input: input, properties: properties)
+                .receiveOnMainThread()
                 .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
                 .map { metadata in
                     Publishers.CombineLatest3(
