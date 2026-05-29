@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 @available(tvOS, unavailable)
 protocol DownloadManagement<Store> {
     associatedtype Store: AssetDownloadStore
@@ -16,3 +18,5 @@ protocol DownloadManagement<Store> {
     func removeDownload(_ download: Download)
     func removeAllDownloads()
 }
+
+#endif
