@@ -20,7 +20,8 @@ public extension PlayerItem {
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - context: Contextual information associated with the item.
+    ///   - configuration: The configuration to apply to the player item.
+    ///   - commandersActSource: The source of events sent to Commanders Act.
     ///
     /// Metadata is automatically associated with the item. In addition to trackers you provide, tracking is performed
     /// according to SRG SSR analytics standards.
@@ -28,14 +29,15 @@ public extension PlayerItem {
         _ urn: String,
         server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
-        context: PlaybackContext = .default
+        configuration: PlaybackConfiguration = .default,
+        commandersActSource: CommandersActSource? = nil
     ) -> Self {
         self.init(
             assetLoaderType: URNAssetLoader.self,
-            input: .init(urn: urn, server: server, configuration: context.configuration),
+            input: .init(urn: urn, server: server, configuration: configuration),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
-                CommandersActTracker.adapter(configuration: context.commandersActSource) { $0.analyticsMetadata },
+                CommandersActTracker.adapter(configuration: commandersActSource) { $0.analyticsMetadata },
                 MetricsTracker.adapter(
                     configuration: .init(
                         identifier: urn,
@@ -51,7 +53,10 @@ public extension PlayerItem {
             ] + trackerAdapters
         )
     }
+}
 
+@_spi(CoreBusinessPrivate)
+public extension PlayerItem {
     /// Creates a player item from a URL, loaded with standard SRG SSR token protection.
     ///
     /// - Parameters:
@@ -60,8 +65,9 @@ public extension PlayerItem {
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: The configuration to apply to the player item.
     ///
-    /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
-    /// tracking.
+    /// No SRG SSR standard tracking is made.
+    ///
+    /// > Important: This API is reserved to the Pillarbox development team.
     static func tokenProtected(
         url: URL,
         metadata: PlayerMetadata = .empty,
@@ -84,8 +90,9 @@ public extension PlayerItem {
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: The configuration to apply to the player item.
     ///
-    /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
-    /// tracking.
+    /// No SRG SSR standard tracking is made.
+    ///
+    /// > Important: This API is reserved to the Pillarbox development team.
     static func encrypted(
         url: URL,
         certificateUrl: URL,

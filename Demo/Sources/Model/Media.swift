@@ -8,9 +8,11 @@ import AVFoundation
 import Combine
 import CoreMedia
 import Foundation
-import PillarboxCoreBusiness
 import PillarboxPlayer
 import UIKit
+
+@_spi(CoreBusinessPrivate)
+import PillarboxCoreBusiness
 
 struct Media: Hashable {
     enum `Type`: Hashable {
@@ -115,7 +117,7 @@ struct Media: Hashable {
                         DemoTracker.Metadata(title: metadata.mainChapter.title)
                     }
                 ],
-                context: .init(configuration: .init(position: at(startTime)))
+                configuration: .init(position: at(startTime))
             )
         case let .item(item):
             return item
