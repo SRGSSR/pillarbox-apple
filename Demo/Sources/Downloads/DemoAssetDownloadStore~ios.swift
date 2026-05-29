@@ -21,7 +21,7 @@ private struct DownloadError: LocalizedError {
 }
 
 final class DemoAssetDownloadStore: AssetDownloadStore {
-    struct FileEntry: Codable {
+    private struct FileEntry: Codable {
         let id: String
         let title: String
         let url: URL
