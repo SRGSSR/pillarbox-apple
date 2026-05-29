@@ -61,6 +61,7 @@ final class DownloadTests: TestCase {
     func testMetadata() {
         let manager = DownloadManager(loaderType: AssetLoaderMock.self, session: DownloadSessionMock(), store: AssetDownloadStoreMock())
         let download = manager.addDownload(input: .playable(url: Stream.largeDownload.url, metadata: .init(title: "Title"), after: 0.1))
+        expect(download.metadata.title).to(beNil())
         expect(download.metadata.title).toEventually(equal("Title"))
         expect(download.error).to(beNil())
     }
