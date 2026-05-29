@@ -45,8 +45,15 @@ public final class PlayerItem: Hashable {
     }
 
 #if DEBUG
+    /// Creates an item from a download.
+    ///
+    /// - Parameters:
+    ///   - download: The download.
+    ///   - store: The store to which the download belongs.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     @available(tvOS, unavailable)
-    convenience init?<S>(download: Download, store: S, trackerAdapters: [TrackerAdapter<S.Metadata>]) where S: AssetDownloadStore {
+    @_spi(DownloaderPrivate)
+    public convenience init?<S>(download: Download, store: S, trackerAdapters: [TrackerAdapter<S.Metadata>] = []) where S: AssetDownloadStore {
         guard let record = store.downloadRecord(forId: download.id), let metadata = record.metadata, let location = download.location else {
             return nil
         }

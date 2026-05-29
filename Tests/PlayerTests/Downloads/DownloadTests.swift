@@ -8,7 +8,6 @@
 @testable import PillarboxPlayer
 
 import Nimble
-import PillarboxCircumspect
 import PillarboxStreams
 import XCTest
 
