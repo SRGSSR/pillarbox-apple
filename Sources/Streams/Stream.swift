@@ -96,8 +96,8 @@ public extension Stream {
         duration: .indefinite
     )
 
-    /// An MP3 stream.
-    static let mp3 = Self(
+    /// An MP3 stream stored in the app bundle.
+    static let bundledMp3 = Self(
         url: Bundle.module.url(forResource: "silence", withExtension: "mp3")!,
         duration: CMTime(value: 1, timescale: 1)
     )
