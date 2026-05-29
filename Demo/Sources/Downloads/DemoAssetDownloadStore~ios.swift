@@ -20,7 +20,7 @@ private struct DownloadError: LocalizedError {
     }
 }
 
-final class DemoAssetDownloadStore: AssetDownloadStore {
+final class DemoAssetDownloadStore {
     private struct FileEntry: Codable {
         let id: String
         let title: String
@@ -66,15 +66,16 @@ final class DemoAssetDownloadStore: AssetDownloadStore {
 
     init(fileName: String) {
         metadataFileUrl = URL.libraryDirectory.appending(component: fileName)
-        if let jsonData = try? Data(contentsOf: metadataFileUrl),
-           let fileEntries = try? JSONDecoder().decode([FileEntry].self, from: jsonData) {
+        if let jsonData = try? Data(contentsOf: metadataFileUrl), let fileEntries = try? JSONDecoder().decode([FileEntry].self, from: jsonData) {
             self.fileEntries = fileEntries
         }
         else {
             self.fileEntries = []
         }
     }
+}
 
+extension DemoAssetDownloadStore: AssetDownloadStore {
     static func id(from input: DemoAssetLoader.Input) -> String {
         input.url.absoluteString
     }

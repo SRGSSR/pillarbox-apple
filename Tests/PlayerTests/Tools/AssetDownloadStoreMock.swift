@@ -11,7 +11,7 @@ import Foundation
 import OrderedCollections
 
 @available(tvOS, unavailable)
-final class AssetDownloadStoreMock: AssetDownloadStore {
+final class AssetDownloadStoreMock {
     private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMockInput, PlayerMetadata>>
 
     init(preloadedInputs: [AssetLoaderMockInput] = []) {
@@ -19,7 +19,10 @@ final class AssetDownloadStoreMock: AssetDownloadStore {
             records.updateValue(Self.record(from: input), forKey: Self.id(from: input))
         }
     }
+}
 
+@available(tvOS, unavailable)
+extension AssetDownloadStoreMock: AssetDownloadStore {
     static func id(from input: AssetLoaderMockInput) -> String {
         input.id
     }
