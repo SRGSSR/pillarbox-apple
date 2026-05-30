@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-@_spi(DownloaderPrivate)
 @testable import PillarboxPlayer
 
 import CoreMedia
