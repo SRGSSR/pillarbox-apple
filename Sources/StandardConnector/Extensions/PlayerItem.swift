@@ -27,7 +27,7 @@ public extension PlayerItem {
         type: CustomData.Type,
         decoder: JSONDecoder = JSONDecoder(),
         trackerAdapters: [TrackerAdapter<PlayerData<CustomData>>] = [],
-        assetProvider: @escaping (PlayerData<CustomData>) -> Asset<PlayerData<CustomData>>
+        assetProvider: @escaping (PlayerData<CustomData>) -> Asset
     ) -> Self where CustomData: Decodable {
         self.init(
             assetLoaderType: StandardAssetLoader.self,
@@ -52,7 +52,7 @@ public extension PlayerItem {
         request: URLRequest,
         decoder: JSONDecoder = JSONDecoder(),
         trackerAdapters: [TrackerAdapter<PlayerData<EmptyCustomData>>] = [],
-        assetProvider: @escaping (PlayerData<EmptyCustomData>) -> Asset<PlayerData<EmptyCustomData>>
+        assetProvider: @escaping (PlayerData<EmptyCustomData>) -> Asset
     ) -> Self {
         Self.standard(request: request, type: EmptyCustomData.self, decoder: decoder, trackerAdapters: trackerAdapters, assetProvider: assetProvider)
     }

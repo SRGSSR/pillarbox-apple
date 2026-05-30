@@ -20,7 +20,6 @@ public extension Collection {
     /// - Parameter index: The index.
     /// - Returns: The item at the specified index or `nil` if the index is not within range.
     subscript(safeIndex index: Index) -> Element? {
-        guard indices.contains(index) else { return nil }
-        return self[index]
+        indices.contains(index) ? self[index] : nil
     }
 }

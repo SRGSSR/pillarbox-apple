@@ -7,6 +7,10 @@
 import AVFoundation
 import os
 
+private var kResourceLoaderDelegate: Void?
+
+private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource-loader")
+
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
 private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content-key-session")
 
@@ -33,28 +37,30 @@ enum Resource {
         ])
     }
 
-    func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
-        let automaticallyLoadedAssetKeys = ["duration"]
+    func urlAsset(with configuration: PlayerConfiguration) -> AVURLAsset {
         switch self {
         case let .simple(url: url):
-            return AVPlayerItem(asset: asset(for: url, with: configuration), automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+            return asset(for: url, with: configuration)
         case let .custom(url: url, delegate: delegate):
-            return ResourceLoadedPlayerItem(
-                asset: asset(for: url, with: configuration),
-                resourceLoaderDelegate: delegate,
-                automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
-            )
+            let asset = asset(for: url, with: configuration)
+            asset.resourceLoader.setDelegate(delegate, queue: kResourceLoaderQueue)
+            objc_setAssociatedObject(asset, &kResourceLoaderDelegate, delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return asset
         case let .encrypted(url: url, delegate: delegate):
 #if targetEnvironment(simulator)
             Self.logger.error("FairPlay-encrypted assets cannot be played in the simulator")
-            return AVPlayerItem(asset: asset(for: url, with: configuration))
+            return asset(for: url, with: configuration)
 #else
             let asset = asset(for: url, with: configuration)
             kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
             kContentKeySession.addContentKeyRecipient(asset)
-            return AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+            return asset
 #endif
         }
+    }
+
+    func playerItem(with configuration: PlayerConfiguration) -> AVPlayerItem {
+        .init(asset: urlAsset(with: configuration), automaticallyLoadedAssetKeys: ["duration"])
     }
 }
 

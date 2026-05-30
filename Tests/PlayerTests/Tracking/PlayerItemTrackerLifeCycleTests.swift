@@ -60,9 +60,9 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         let player = Player()
         let publisher = PlayerItemTrackerMock.StatePublisher()
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .metricEvents, .metricEvents, .disabled], from: publisher) {
-            player.append(.mock(
+            player.append(.playable(
                 url: Stream.shortOnDemand.url,
-                loadedAfter: 1,
+                after: 1,
                 trackerAdapters: [PlayerItemTrackerMock.adapter(statePublisher: publisher)]
             ))
             player.play()

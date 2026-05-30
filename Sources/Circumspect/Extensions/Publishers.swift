@@ -143,16 +143,16 @@ public extension XCTestCase {
     }
 }
 
-public extension Publisher where Failure == Never {
+public extension Publisher {
     /// Collects the specified number of items (including the current one) before completing.
-    func collectFirst(_ count: Int) -> AnyPublisher<[Output], Never> {
+    func collectFirst(_ count: Int) -> AnyPublisher<[Output], Failure> {
         collect(count)
             .first()
             .eraseToAnyPublisher()
     }
 
     /// Collects the next number of items before completing.
-    func collectNext(_ count: Int) -> AnyPublisher<[Output], Never> {
+    func collectNext(_ count: Int) -> AnyPublisher<[Output], Failure> {
         dropFirst()
             .collect(count)
             .first()

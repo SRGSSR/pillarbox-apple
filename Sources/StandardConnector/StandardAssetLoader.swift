@@ -9,22 +9,25 @@ import Foundation
 import PillarboxPlayer
 
 enum StandardAssetLoader<CustomData>: AssetLoader where CustomData: Decodable {
-    struct StandardAsset {
+    struct Input {
         let request: URLRequest
         let decoder: JSONDecoder
-        let assetProvider: (PlayerData<CustomData>) -> Asset<PlayerData<CustomData>>
+        let assetProvider: (PlayerData<CustomData>) -> Asset
     }
 
-    static func assetPublisher(for input: StandardAsset) -> AnyPublisher<Asset<PlayerData<CustomData>>, Error> {
+    static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerData<CustomData>, any Error> {
         URLSession.shared.dataTaskPublisher(for: input.request)
             .mapHttpErrors()
             .map(\.data)
             .decode(type: PlayerData<CustomData>.self, decoder: input.decoder)
-            .map { input.assetProvider($0) }
             .eraseToAnyPublisher()
     }
 
-    static func playerMetadata(from metadata: PlayerData<CustomData>) -> PlayerMetadata {
-        metadata.playerMetadata()
+    static func asset(from input: Input, metadata: PlayerData<CustomData>) -> Asset {
+        input.assetProvider(metadata)
+    }
+
+    static func playerMetadata(from input: Input, metadata: PlayerData<CustomData>?) -> PlayerMetadata {
+        metadata?.playerMetadata() ?? .empty
     }
 }

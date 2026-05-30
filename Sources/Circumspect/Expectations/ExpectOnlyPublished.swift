@@ -17,7 +17,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         expectOnlyPublished(
             next: false,
             values: values,
@@ -39,7 +39,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never, P.Output: Equatable {
+    ) where P: Publisher, P.Output: Equatable {
         expectOnlyPublished(
             values: values,
             from: publisher,
@@ -59,7 +59,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never, P.Output: Similar {
+    ) where P: Publisher, P.Output: Similar {
         expectOnlyPublished(
             values: values,
             from: publisher,
@@ -82,7 +82,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         expectOnlyPublished(
             next: true,
             values: values,
@@ -106,7 +106,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never, P.Output: Equatable {
+    ) where P: Publisher, P.Output: Equatable {
         expectOnlyPublished(
             next: true,
             values: values,
@@ -130,7 +130,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never, P.Output: Similar {
+    ) where P: Publisher, P.Output: Similar {
         expectOnlyPublished(
             next: true,
             values: values,
@@ -155,7 +155,7 @@ public extension XCTestCase {
         file: StaticString,
         line: UInt,
         while executing: (() -> Void)?
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         precondition(!values.isEmpty)
         guard let actualValues = try? waitForOutput(
             from: next ? publisher.dropFirst().eraseToAnyPublisher() : publisher.eraseToAnyPublisher(),

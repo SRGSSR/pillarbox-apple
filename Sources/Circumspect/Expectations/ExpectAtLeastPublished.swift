@@ -155,7 +155,7 @@ public extension XCTestCase {
         file: StaticString,
         line: UInt,
         while executing: (() -> Void)?
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         precondition(!values.isEmpty)
         guard let actualValues = try? waitForOutput(
             from: next ? publisher.collectNext(values.count) : publisher.collectFirst(values.count),

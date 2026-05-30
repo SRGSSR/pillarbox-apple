@@ -12,7 +12,7 @@ private struct MockError: Error {}
 
 final class PlayerItemMetricEventPublisherTests: TestCase {
     func testPlayableItemMetricEvent() {
-        let item = PlayerItem.mock(url: Stream.onDemand.url, loadedAfter: 0.1)
+        let item = PlayerItem.playable(url: Stream.onDemand.url, after: 0.1)
         expectAtLeastSimilarPublished(
             values: [.anyMetadata],
             from: item.metricEventPublisher()

@@ -57,7 +57,7 @@ final class AVPlayerBoundaryTimePublisherTests: TestCase {
     }
 
     func testDeallocation() {
-        var player: AVPlayer? = AVPlayer()
+        var player: AVPlayer? = .init()
         _ = Publishers.BoundaryTimePublisher(
             for: player!,
             times: [

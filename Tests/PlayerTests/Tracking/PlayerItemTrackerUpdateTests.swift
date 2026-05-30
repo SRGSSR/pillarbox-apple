@@ -37,15 +37,21 @@ final class PlayerItemTrackerUpdateTests: TestCase {
     func testMetadataUpdate() {
         let player = Player()
         let publisher = TrackerUpdateMock.StatePublisher()
-        let item = PlayerItem.mock(url: Stream.shortOnDemand.url, withMetadataUpdateAfter: 1, trackerAdapters: [
-            TrackerUpdateMock.adapter(statePublisher: publisher)
-        ])
+        let item = PlayerItem.updatable(
+            url: Stream.shortOnDemand.url,
+            metadata: .init(title: "title1"),
+            to: .init(title: "title2"),
+            after: 1,
+            trackerAdapters: [
+                TrackerUpdateMock.adapter(statePublisher: publisher)
+            ]
+        )
         expectAtLeastEqualPublished(
             values: [
-                .updatedMetadata(.init(title: "title0")),
+                .updatedMetadata(.init(title: "title1")),
                 .enabled,
                 .updatedProperties,
-                .updatedMetadata(.init(title: "title1")),
+                .updatedMetadata(.init(title: "title2")),
                 .updatedProperties,
                 .disabled
             ],

@@ -10,7 +10,7 @@ public extension MediaComposition {
         /// Progressive streaming.
         case progressive = "PROGRESSIVE"
 
-        /// M3U8 streaming.
+        /// M3U streaming.
         case m3uPlaylist = "M3UPLAYLIST"
 
         /// HTTP Live Streaming.

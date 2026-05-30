@@ -19,7 +19,7 @@ final class ResourceItemTests: TestCase {
     }
 
     func testNativePlayerItem() {
-        let item = Resource.simple(url: Stream.onDemand.url).playerItem(configuration: .default)
+        let item = Resource.simple(url: Stream.onDemand.url).playerItem(with: .default)
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true],
@@ -28,7 +28,7 @@ final class ResourceItemTests: TestCase {
     }
 
     func testLoadingPlayerItem() {
-        let item = Resource.loading().playerItem(configuration: .default)
+        let item = Resource.loading().playerItem(with: .default)
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false],
@@ -37,7 +37,7 @@ final class ResourceItemTests: TestCase {
     }
 
     func testFailingPlayerItem() {
-        let item = Resource.failing(error: StructError()).playerItem(configuration: .default)
+        let item = Resource.failing(error: StructError()).playerItem(with: .default)
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.unknown],

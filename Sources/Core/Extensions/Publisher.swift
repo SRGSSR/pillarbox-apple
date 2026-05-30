@@ -153,6 +153,22 @@ public extension Publisher {
         )
         .eraseToAnyPublisher()
     }
+
+    /// Make the upstream publisher fail if a second signal publisher emits some value.
+    ///
+    /// - Parameters:
+    ///    - signal: The signal publisher.
+    ///    - error: The error to report on failure.
+    /// - Returns: A publisher emitting values until the signal publisher emits a value, which leads to the publisher
+    ///   completing with an error.
+    func fail<S>(onOutputFrom signal: S, with error: Failure) -> AnyPublisher<Output, Failure> where S: Publisher, S.Failure == Never {
+        merge(
+            with: signal.first()
+                .map { _ in Fail<Output, Failure>(error: error) }
+                .switchToLatest()
+        )
+        .eraseToAnyPublisher()
+    }
 }
 
 // Borrowed from https://www.swiftbysundell.com/articles/combine-self-cancellable-memory-management/

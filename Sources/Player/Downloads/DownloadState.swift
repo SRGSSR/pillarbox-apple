@@ -6,19 +6,14 @@
 
 // swiftlint:disable missing_docs
 
-import Foundation
-
-#if DEBUG
-
-@available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public enum DownloadedFile {
-    case unavailable
-    case partial(URL)
-    case complete(URL)
-    case failed
+@available(tvOS, unavailable)
+public enum DownloadState: Equatable {
+    case preparing
+    case running
+    case suspended
+    case completed
+    case cancelled
 }
-
-#endif
 
 // swiftlint:enable missing_docs
