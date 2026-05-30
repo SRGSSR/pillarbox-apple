@@ -98,7 +98,7 @@ public final class PlayerItem: Hashable {
 }
 
 public extension PlayerItem {
-    /// Creates a player item from an ``Asset`` and standard player metadata.
+    /// Creates a player item from an ``Asset`` and custom metadata.
     ///
     /// - Parameters:
     ///   - asset: The asset to play.
@@ -118,7 +118,7 @@ public extension PlayerItem {
         )
     }
 
-    /// Creates an simple player item with standard player metadata.
+    /// Creates an simple player item with custom metadata.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
@@ -142,7 +142,7 @@ public extension PlayerItem {
         )
     }
 
-    /// Creates an custom player item with standard player metadata.
+    /// Creates an custom player item with custom metadata.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
@@ -170,7 +170,7 @@ public extension PlayerItem {
         )
     }
 
-    /// Creates an encrypted player item with standard player metadata.
+    /// Creates an encrypted player item with custom metadata.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
