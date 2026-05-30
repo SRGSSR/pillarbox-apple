@@ -19,7 +19,7 @@ struct DemoAssetLoader: AssetLoader {
     }
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<String, any Error> {
-        // Use a dummy network connection (might fail)
+        // Use a dummy network connection that might fail in Airplane Mode.
         URLSession.shared.dataTaskPublisher(for: URL(string: "https://httpbin.org/status/200")!)
             .map { _ in input.title }
             .mapError(\.self)

@@ -7,6 +7,7 @@
 @testable import PillarboxCore
 
 import Combine
+import Nimble
 import PillarboxCircumspect
 import XCTest
 
@@ -32,5 +33,19 @@ final class FailPublisherTests: XCTestCase {
         expectFailure(CancellationError(), from: publisher) {
             signal.send(())
         }
+    }
+
+    func testValuesPublishedAfterFailure() {
+        let signal = PassthroughSubject<Void, Never>()
+        let subject = PassthroughSubject<String, CancellationError>()
+        let publisher = subject
+            .fail(onOutputFrom: signal, with: CancellationError())
+        let values = collectOutput(from: publisher, during: .milliseconds(100)) {
+            subject.send("A")
+            subject.send("B")
+            signal.send(())
+            subject.send("C")
+        }
+        expect(values).to(equalDiff(["A", "B"]))
     }
 }
