@@ -15,6 +15,7 @@ public protocol AssetLoader {
     associatedtype Metadata
 
     /// A publisher that delivers the metadata associated with a given input.
+    // TODO: Remove "for"
     static func metadataPublisher(for input: Input) -> AnyPublisher<Metadata, Error>
 
     /// Converts input and metadata to an asset.
@@ -23,8 +24,8 @@ public protocol AssetLoader {
     /// Converts input and metadata to a downloadable asset.
     static func downloadableAsset(input: Input, metadata: Metadata) -> Asset
 
-    /// Converts metadata to player metadata.
-    static func playerMetadata(from metadata: Metadata) -> PlayerMetadata
+    /// Converts input and metadata to player metadata.
+    static func playerMetadata(input: Input, metadata: Metadata) -> PlayerMetadata
 }
 
 public extension AssetLoader {
@@ -36,14 +37,14 @@ public extension AssetLoader {
 
 public extension AssetLoader where Metadata == PlayerMetadata {
     // swiftlint:disable:next missing_docs
-    static func playerMetadata(from metadata: Metadata) -> PlayerMetadata {
+    static func playerMetadata(input: Input, metadata: Metadata) -> PlayerMetadata {
         metadata
     }
 }
 
 extension AssetLoader {
-    static func playerMetadata(from metadata: Metadata?) -> PlayerMetadata? {
+    static func playerMetadata(input: Input, metadata: Metadata?) -> PlayerMetadata? {
         guard let metadata else { return nil }
-        return playerMetadata(from: metadata)
+        return playerMetadata(input: input, metadata: metadata)
     }
 }

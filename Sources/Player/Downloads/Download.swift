@@ -184,7 +184,7 @@ extension Download {
             )
             .map { properties in
                 DownloadProperties(
-                    metadata: loaderType.playerMetadata(from: properties.metadata),
+                    metadata: loaderType.playerMetadata(input: input, metadata: properties.metadata),
                     source: properties.source,
                     fileUrl: properties.fileUrl,
                     error: properties.error
@@ -210,7 +210,7 @@ extension Download {
                         session.downloadSourcePublisher(
                             id: id,
                             asset: loaderType.downloadableAsset(input: input, metadata: metadata),
-                            title: loaderType.playerMetadata(from: metadata).title,
+                            title: loaderType.playerMetadata(input: input, metadata: metadata).title,
                             createTaskIfNeeded: properties.shouldCreateTask,
                             progressEstimate: properties.progress
                         ),

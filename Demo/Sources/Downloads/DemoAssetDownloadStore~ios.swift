@@ -80,7 +80,7 @@ extension DemoAssetDownloadStore: AssetDownloadStore {
         input.url.absoluteString
     }
 
-    static func playerMetadata(from metadata: String) -> PlayerMetadata {
+    static func playerMetadata(input: Input, metadata: String) -> PlayerMetadata {
         .init(title: metadata)
     }
 
