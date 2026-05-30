@@ -31,8 +31,8 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     }
 
     @discardableResult
-    public func addDownload(input: S.Input) -> Download {
-        manager.addDownload(input: input)
+    public func addDownload(for input: S.Input) -> Download {
+        manager.addDownload(for: input)
     }
 
     public func download(matching input: S.Input) -> Download? {

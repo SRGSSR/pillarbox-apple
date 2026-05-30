@@ -31,7 +31,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
     }
 
     @discardableResult
-    func addDownload(input: L.Input) -> Download {
+    func addDownload(for input: L.Input) -> Download {
         if let download = download(matching: input) {
             return download
         }
