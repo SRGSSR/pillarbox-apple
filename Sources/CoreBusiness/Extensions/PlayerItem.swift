@@ -96,7 +96,7 @@ public extension PlayerItem {
     static func encrypted(
         url: URL,
         certificateUrl: URL,
-        metadata: PlayerMetadata,
+        metadata: PlayerMetadata = .empty,
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
