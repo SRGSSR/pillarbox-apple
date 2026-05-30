@@ -37,7 +37,7 @@ enum Resource {
         ])
     }
 
-    func urlAsset(configuration: PlayerConfiguration) -> AVURLAsset {
+    func urlAsset(with configuration: PlayerConfiguration) -> AVURLAsset {
         switch self {
         case let .simple(url: url):
             return asset(for: url, with: configuration)
@@ -59,8 +59,8 @@ enum Resource {
         }
     }
 
-    func playerItem(configuration: PlayerConfiguration) -> AVPlayerItem {
-        .init(asset: urlAsset(configuration: configuration), automaticallyLoadedAssetKeys: ["duration"])
+    func playerItem(with configuration: PlayerConfiguration) -> AVPlayerItem {
+        .init(asset: urlAsset(with: configuration), automaticallyLoadedAssetKeys: ["duration"])
     }
 }
 

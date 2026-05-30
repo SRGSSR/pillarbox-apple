@@ -82,7 +82,7 @@ final class PlaybackConfigurationTests: TestCase {
         let startTime = CMTime(value: 7, timescale: 1)
         let configuration = PlaybackConfiguration(position: at(startTime))
         let id = UUID()
-        let playerItem = Resource.loading().playerItem(configuration: .default).withId(id)
+        let playerItem = Resource.loading().playerItem(with: .default).withId(id)
         configuration.apply(to: playerItem, metadata: .init(), resumeState: .init(position: at(.init(value: 14, timescale: 1)), id: id))
         expect(playerItem.currentTime()).to(equal(startTime))
     }
@@ -91,7 +91,7 @@ final class PlaybackConfigurationTests: TestCase {
         let startTime = CMTime(value: 7, timescale: 1)
         let configuration = PlaybackConfiguration(position: at(startTime))
         let id = UUID()
-        let playerItem = Resource.failing(error: AnyError()).playerItem(configuration: .default).withId(id)
+        let playerItem = Resource.failing(error: AnyError()).playerItem(with: .default).withId(id)
         configuration.apply(to: playerItem, metadata: .init(), resumeState: .init(position: at(.init(value: 14, timescale: 1)), id: id))
         expect(playerItem.currentTime()).to(equal(startTime))
     }

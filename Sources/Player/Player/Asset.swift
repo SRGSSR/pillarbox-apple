@@ -83,6 +83,6 @@ public struct Asset {
     }
 
     func urlAsset() -> AVURLAsset {
-        resource.urlAsset(configuration: .default)
+        resource.urlAsset(with: .default)
     }
 }

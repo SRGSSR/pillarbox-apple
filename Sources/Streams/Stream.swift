@@ -122,7 +122,7 @@ public extension Stream {
         duration: .indefinite
     )
 
-    /// An unavailable (supposedly) downloadable file.
+    /// An unavailable (supposedly downloadable) file.
     static let unavailableDownload = Self(
         url: URL(string: "http://localhost:8123/downloads/unavailable.mp3")!,
         duration: .indefinite
