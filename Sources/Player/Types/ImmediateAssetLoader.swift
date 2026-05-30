@@ -14,7 +14,7 @@ enum ImmediateAssetLoader<M>: AssetLoader {
         let mapper: (M) -> PlayerMetadata
     }
 
-    static func metadataPublisher(for input: Input) -> AnyPublisher<M, Error> {
+    static func metadataPublisher(for input: Input) -> AnyPublisher<M, any Error> {
         Just(input.metadata)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
