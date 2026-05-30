@@ -21,11 +21,11 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
     // to properly clean associated downloaded data.
     private var locations: [String: URL] = [:]
 
-    init(loaderType: L.Type, session: some DownloadSession, store: S) {
+    init(assetLoaderType: L.Type, session: some DownloadSession, store: S) {
         self.session = session
         self.store = store
         self.downloads = store.downloadRecords().map { record in
-            Download(loaderType: loaderType, record: record, session: session, store: store)
+            Download(assetLoaderType: assetLoaderType, record: record, session: session, store: store)
         }
         session.delegate = self
     }
@@ -36,7 +36,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
             return download
         }
         else {
-            let download = Download(loaderType: L.self, input: input, session: session, store: store)
+            let download = Download(assetLoaderType: L.self, input: input, session: session, store: store)
             downloads.append(download)
             return download
         }

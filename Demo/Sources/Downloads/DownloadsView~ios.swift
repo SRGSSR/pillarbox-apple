@@ -13,7 +13,7 @@ import SwiftUI
 
 struct DownloadsView: View {
     @StateObject private var downloader = Downloader(
-        loaderType: DemoAssetLoader.self,
+        assetLoaderType: DemoAssetLoader.self,
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.file-downloads"),
         store: DemoAssetDownloadStore(fileName: "file_downloads.json")
     )
