@@ -18,32 +18,32 @@ public protocol AssetLoader {
     static func metadataPublisher(for input: Input) -> AnyPublisher<Metadata, Error>
 
     /// Converts input and metadata to an asset.
-    static func asset(input: Input, metadata: Metadata) -> Asset
+    static func asset(from input: Input, metadata: Metadata) -> Asset
 
     /// Converts input and metadata to a downloadable asset.
-    static func downloadableAsset(input: Input, metadata: Metadata) -> Asset
+    static func downloadableAsset(from input: Input, metadata: Metadata) -> Asset
 
     /// Converts input and metadata to player metadata.
-    static func playerMetadata(input: Input, metadata: Metadata) -> PlayerMetadata
+    static func playerMetadata(from input: Input, metadata: Metadata) -> PlayerMetadata
 }
 
 public extension AssetLoader {
     // swiftlint:disable:next missing_docs
-    static func downloadableAsset(input: Input, metadata: Metadata) -> Asset {
-        asset(input: input, metadata: metadata)
+    static func downloadableAsset(from input: Input, metadata: Metadata) -> Asset {
+        asset(from: input, metadata: metadata)
     }
 }
 
 public extension AssetLoader where Metadata == PlayerMetadata {
     // swiftlint:disable:next missing_docs
-    static func playerMetadata(input: Input, metadata: Metadata) -> PlayerMetadata {
+    static func playerMetadata(from input: Input, metadata: Metadata) -> PlayerMetadata {
         metadata
     }
 }
 
 extension AssetLoader {
-    static func playerMetadata(input: Input, metadata: Metadata?) -> PlayerMetadata? {
+    static func playerMetadata(from input: Input, metadata: Metadata?) -> PlayerMetadata? {
         guard let metadata else { return nil }
-        return playerMetadata(input: input, metadata: metadata)
+        return playerMetadata(from: input, metadata: metadata)
     }
 }

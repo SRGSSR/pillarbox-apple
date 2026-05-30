@@ -14,7 +14,7 @@ enum AssetLoaderMock: AssetLoader {
         input.metadataPublisher()
     }
 
-    static func asset(input: AssetLoaderMockInput, metadata: PlayerMetadata) -> Asset {
+    static func asset(from input: AssetLoaderMockInput, metadata: PlayerMetadata) -> Asset {
         input.asset()
     }
 }

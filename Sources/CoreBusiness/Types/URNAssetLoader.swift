@@ -23,17 +23,17 @@ enum URNAssetLoader: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: MediaMetadata) -> Asset {
-        asset(metadata: metadata, configuration: input.configuration)
+    static func asset(from input: Input, metadata: MediaMetadata) -> Asset {
+        asset(from: metadata, configuration: input.configuration)
     }
 
-    static func playerMetadata(input: Input, metadata: MediaMetadata) -> PlayerMetadata {
+    static func playerMetadata(from input: Input, metadata: MediaMetadata) -> PlayerMetadata {
         metadata.playerMetadata()
     }
 }
 
 private extension URNAssetLoader {
-    private static func asset(metadata: MediaMetadata, configuration: PlaybackConfiguration) -> Asset {
+    private static func asset(from metadata: MediaMetadata, configuration: PlaybackConfiguration) -> Asset {
         if let blockingReason = metadata.blockingReason {
             return .unavailable(with: BlockingError(reason: blockingReason))
         }

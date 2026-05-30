@@ -26,11 +26,11 @@ struct DemoAssetLoader: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: String) -> Asset {
+    static func asset(from input: Input, metadata: String) -> Asset {
         .simple(url: input.url)
     }
 
-    static func playerMetadata(input: Input, metadata: String) -> PlayerMetadata {
+    static func playerMetadata(from input: Input, metadata: String) -> PlayerMetadata {
         .init(title: metadata)
     }
 }

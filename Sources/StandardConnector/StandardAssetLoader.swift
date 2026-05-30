@@ -23,11 +23,11 @@ enum StandardAssetLoader<CustomData>: AssetLoader where CustomData: Decodable {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: PlayerData<CustomData>) -> Asset {
+    static func asset(from input: Input, metadata: PlayerData<CustomData>) -> Asset {
         input.assetProvider(metadata)
     }
 
-    static func playerMetadata(input: Input, metadata: PlayerData<CustomData>) -> PlayerMetadata {
+    static func playerMetadata(from input: Input, metadata: PlayerData<CustomData>) -> PlayerMetadata {
         metadata.playerMetadata()
     }
 }

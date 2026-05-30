@@ -16,11 +16,11 @@ private enum FailedAssetLoader: AssetLoader {
         Fail(error: input).eraseToAnyPublisher()
     }
 
-    static func asset(input: Error, metadata: Void) -> Asset {
+    static func asset(from input: Error, metadata: Void) -> Asset {
         .unavailable(with: input)
     }
 
-    static func playerMetadata(input: Error, metadata: Void) -> PlayerMetadata {
+    static func playerMetadata(from input: Error, metadata: Void) -> PlayerMetadata {
         .empty
     }
 }

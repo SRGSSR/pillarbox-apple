@@ -49,8 +49,8 @@ public final class PlayerItem: Hashable {
                 .withInterval(clock: .suspending)
                 .map { metadata, interval in
                     Publishers.CombineLatest3(
-                        Just(assetLoaderType.asset(input: input, metadata: metadata)),
-                        assetLoaderType.playerMetadata(input: input, metadata: metadata).playerMetadataPublisher(),
+                        Just(assetLoaderType.asset(from: input, metadata: metadata)),
+                        assetLoaderType.playerMetadata(from: input, metadata: metadata).playerMetadataPublisher(),
                         Just(interval)
                     )
                 }

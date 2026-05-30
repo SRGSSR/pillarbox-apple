@@ -20,11 +20,11 @@ enum ImmediateAssetLoader<M>: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(input: Input, metadata: M) -> Asset {
+    static func asset(from input: Input, metadata: M) -> Asset {
         input.asset
     }
 
-    static func playerMetadata(input: Input, metadata: M) -> PlayerMetadata {
+    static func playerMetadata(from input: Input, metadata: M) -> PlayerMetadata {
         input.mapper(metadata)
     }
 }

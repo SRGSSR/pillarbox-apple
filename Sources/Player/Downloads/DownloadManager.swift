@@ -54,7 +54,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         return .simple(
             url: fileUrl,
             metadata: metadata,
-            mapper: { L.playerMetadata(input: record.input, metadata: $0) },
+            mapper: { L.playerMetadata(from: record.input, metadata: $0) },
             trackerAdapters: trackerAdapters,
             configuration: .default
         )
