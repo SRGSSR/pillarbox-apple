@@ -24,7 +24,8 @@ enum ImmediateAssetLoader<M>: AssetLoader {
         input.asset
     }
 
-    static func playerMetadata(from input: Input, metadata: M) -> PlayerMetadata {
-        input.mapper(metadata)
+    static func playerMetadata(from input: Input, metadata: M?) -> PlayerMetadata {
+        guard let metadata else { return .empty }
+        return input.mapper(metadata)
     }
 }

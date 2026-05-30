@@ -24,7 +24,7 @@ public protocol AssetLoader {
     static func downloadableAsset(from input: Input, metadata: Metadata) -> Asset
 
     /// Converts input and metadata to player metadata.
-    static func playerMetadata(from input: Input, metadata: Metadata) -> PlayerMetadata
+    static func playerMetadata(from input: Input, metadata: Metadata?) -> PlayerMetadata
 }
 
 public extension AssetLoader {
@@ -36,14 +36,7 @@ public extension AssetLoader {
 
 public extension AssetLoader where Metadata == PlayerMetadata {
     // swiftlint:disable:next missing_docs
-    static func playerMetadata(from input: Input, metadata: Metadata) -> PlayerMetadata {
-        metadata
-    }
-}
-
-extension AssetLoader {
-    static func playerMetadata(from input: Input, metadata: Metadata?) -> PlayerMetadata? {
-        guard let metadata else { return nil }
-        return playerMetadata(from: input, metadata: metadata)
+    static func playerMetadata(from input: Input, metadata: Metadata?) -> PlayerMetadata {
+        metadata ?? .empty
     }
 }

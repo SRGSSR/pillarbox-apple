@@ -36,7 +36,7 @@ When implementing an ``AssetLoader``, use ``AssetLoader/playerMetadata(from:meta
 enum MediaAssetLoader: AssetLoader {
     // ...
 
-    static func playerMetadata(from metadata: Media) -> PlayerMetadata {
+    static func playerMetadata(from input: Input, metadata: Media?) -> PlayerMetadata {
         .init(title: show, subtitle: name, imageSource: .url(artworkUrl))
     }
 }

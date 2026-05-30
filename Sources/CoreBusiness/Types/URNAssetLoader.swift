@@ -27,8 +27,8 @@ enum URNAssetLoader: AssetLoader {
         asset(from: metadata, configuration: input.configuration)
     }
 
-    static func playerMetadata(from input: Input, metadata: MediaMetadata) -> PlayerMetadata {
-        metadata.playerMetadata()
+    static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
+        metadata?.playerMetadata() ?? .empty
     }
 }
 

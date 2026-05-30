@@ -20,7 +20,7 @@ private enum FailedAssetLoader: AssetLoader {
         .unavailable(with: input)
     }
 
-    static func playerMetadata(from input: Error, metadata: Void) -> PlayerMetadata {
+    static func playerMetadata(from input: Error, metadata: Void?) -> PlayerMetadata {
         .empty
     }
 }

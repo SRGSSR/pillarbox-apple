@@ -27,7 +27,7 @@ enum StandardAssetLoader<CustomData>: AssetLoader where CustomData: Decodable {
         input.assetProvider(metadata)
     }
 
-    static func playerMetadata(from input: Input, metadata: PlayerData<CustomData>) -> PlayerMetadata {
-        metadata.playerMetadata()
+    static func playerMetadata(from input: Input, metadata: PlayerData<CustomData>?) -> PlayerMetadata {
+        metadata?.playerMetadata() ?? .empty
     }
 }

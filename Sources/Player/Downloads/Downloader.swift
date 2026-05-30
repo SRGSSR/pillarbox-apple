@@ -18,7 +18,11 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
 
     @Published public private(set) var downloads: [Download] = []
 
-    public init<L>(assetLoaderType: L.Type, configuration: URLSessionConfiguration, store: S) where L: AssetLoader, L.Input == S.Input, L.Metadata == S.Metadata {
+    public init<L>(
+        assetLoaderType: L.Type,
+        configuration: URLSessionConfiguration,
+        store: S
+    ) where L: AssetLoader, L.Input == S.Input, L.Metadata == S.Metadata {
         let manager = DownloadManager(assetLoaderType: assetLoaderType, session: URLDownloadSession(configuration: configuration), store: store)
         self.manager = manager
 

@@ -30,8 +30,8 @@ struct DemoAssetLoader: AssetLoader {
         .simple(url: input.url)
     }
 
-    static func playerMetadata(from input: Input, metadata: String) -> PlayerMetadata {
-        .init(title: metadata)
+    static func playerMetadata(from input: Input, metadata: String?) -> PlayerMetadata {
+        .init(title: metadata ?? input.title)
     }
 }
 
