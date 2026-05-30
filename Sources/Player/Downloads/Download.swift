@@ -11,8 +11,6 @@ import Combine
 import PillarboxCore
 import UIKit
 
-// TODO: loaderType -> assetLoaderType
-
 #if DEBUG
 
 @available(tvOS, unavailable)

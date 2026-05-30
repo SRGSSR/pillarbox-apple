@@ -51,10 +51,11 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
               let metadata = record.metadata, let fileUrl = download.fileUrl else {
             return nil
         }
+        let storeType = type(of: store)
         return .simple(
             url: fileUrl,
             metadata: metadata,
-            mapper: { L.playerMetadata(from: record.input, metadata: $0) },
+            mapper: { storeType.playerMetadata(from: record.input, metadata: $0) },
             trackerAdapters: trackerAdapters,
             configuration: .default
         )

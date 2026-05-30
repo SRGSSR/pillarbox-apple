@@ -81,7 +81,7 @@ extension DemoAssetDownloadStore: AssetDownloadStore {
     }
 
     static func playerMetadata(from input: Input, metadata: String?) -> PlayerMetadata {
-        .init(title: metadata)
+        .init(title: metadata ?? input.title)
     }
 
     func downloadRecords() -> [DownloadRecord<DemoAssetLoader.Input, String>] {
