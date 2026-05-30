@@ -12,7 +12,7 @@ enum DownloadAssetLoader<L>: AssetLoader where L: AssetLoader {
         let metadata: L.Metadata
     }
 
-    static func metadataPublisher(for input: Input) -> AnyPublisher<Metadata, Error> {
+    static func metadataPublisher(for input: Input) -> AnyPublisher<L.Metadata, Error> {
         Just(input.metadata)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
