@@ -24,10 +24,11 @@ public final class PlayerItem: Hashable {
     private static let trigger = Trigger()
 
     let id = UUID()
-    let trackerAdapters: [any PlayerItemTracking]
+
+    private let trackerAdapters: [any PlayerItemTracking]
+    private let queue = DispatchQueue(label: "ch.srgssr.player-item")
 
     @Published private(set) var content: AssetContent
-    private let queue = DispatchQueue(label: "ch.srgssr.player-item")
 
     /// Creates an item loaded using an ``AssetLoader``.
     ///
@@ -35,49 +36,11 @@ public final class PlayerItem: Hashable {
     ///   - assetLoaderType: The asset loader type.
     ///   - input: The input expected by the asset loader.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init<A>(assetLoaderType: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
-        self.init(
-            metadataPublisher: assetLoaderType.metadataPublisher(for: input),
-            metadataMapper: { assetLoaderType.playerMetadata(from: $0) },
-            assetProvider: { assetLoaderType.asset(input: input, metadata: $0) },
-            trackerAdapters: trackerAdapters
-        )
-    }
-
-#if DEBUG
-    /// Creates an item from a download.
-    ///
-    /// - Parameters:
-    ///   - download: The download.
-    ///   - store: The store to which the download belongs.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    @available(tvOS, unavailable)
-    @_spi(DownloaderPrivate)
-    public convenience init?<S>(download: Download, store: S, trackerAdapters: [TrackerAdapter<S.Metadata>] = []) where S: AssetDownloadStore {
-        guard let record = store.downloadRecord(forId: download.id), let metadata = record.metadata, let fileUrl = download.fileUrl else {
-            return nil
-        }
-        let storeType = type(of: store)
-        self.init(
-            metadataPublisher: Just(metadata),
-            metadataMapper: { storeType.playerMetadata(from: $0) },
-            assetProvider: { storeType.downloadedAsset(fileUrl: fileUrl, input: record.input, metadata: $0) },
-            trackerAdapters: trackerAdapters
-        )
-    }
-#endif
-
-    private init<P, M>(
-        metadataPublisher: P,
-        metadataMapper: @escaping (M) -> PlayerMetadata,
-        assetProvider: @escaping (M) -> Asset,
-        trackerAdapters: [TrackerAdapter<M>]
-    ) where P: Publisher, P.Output == M {
+    public init<A>(assetLoaderType: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
         self.trackerAdapters = trackerAdapters
         self.content = .loading(id: id)
-
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
-            metadataPublisher
+            assetLoaderType.metadataPublisher(for: input)
                 .handleEvents(receiveOutput: { metadata in
                     trackerAdapters.forEach { adapter in
                         adapter.updateMetadata(to: metadata)
@@ -86,8 +49,8 @@ public final class PlayerItem: Hashable {
                 .withInterval(clock: .suspending)
                 .map { metadata, interval in
                     Publishers.CombineLatest3(
-                        Just(assetProvider(metadata)),
-                        metadataMapper(metadata).playerMetadataPublisher(),
+                        Just(assetLoaderType.asset(input: input, metadata: metadata)),
+                        assetLoaderType.playerMetadata(from: metadata).playerMetadataPublisher(),
                         Just(interval)
                     )
                 }

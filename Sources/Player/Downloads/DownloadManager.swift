@@ -47,8 +47,15 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
     }
 
     func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
-        guard downloads.contains(download) else { return nil }
-        return .init(download: download, store: store, trackerAdapters: trackerAdapters)
+        guard downloads.contains(download), let record = store.downloadRecord(forId: download.id),
+              let metadata = record.metadata, let fileUrl = download.fileUrl else {
+            return nil
+        }
+        return .init(
+            assetLoaderType: DownloadAssetLoader<L>.self,
+            input: .init(asset: .simple(url: fileUrl), metadata: metadata),
+            trackerAdapters: trackerAdapters
+        )
     }
 
     func removeDownload(_ download: Download) {
