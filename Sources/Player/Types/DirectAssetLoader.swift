@@ -7,11 +7,10 @@
 import Combine
 import Foundation
 
-enum SimpleAssetLoader: AssetLoader {
+enum DirectAssetLoader: AssetLoader {
     struct Input {
-        let url: URL
+        let asset: Asset
         let metadata: PlayerMetadata
-        let configuration: PlaybackConfiguration
     }
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerMetadata, Error> {
@@ -21,6 +20,6 @@ enum SimpleAssetLoader: AssetLoader {
     }
 
     static func asset(input: Input, metadata: PlayerMetadata) -> Asset {
-        .simple(url: input.url, configuration: input.configuration)
+        input.asset
     }
 }

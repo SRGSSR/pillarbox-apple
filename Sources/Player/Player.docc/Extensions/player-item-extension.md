@@ -8,4 +8,7 @@
 
 ### Creating a Standard Player Item with Metadata
 
+- ``init(asset:metadata:trackerAdapters:)``
 - ``simple(url:metadata:trackerAdapters:configuration:)``
+- ``custom(url:delegate:metadata:trackerAdapters:configuration:)``
+- ``encrypted(url:delegate:metadata:trackerAdapters:configuration:)``
