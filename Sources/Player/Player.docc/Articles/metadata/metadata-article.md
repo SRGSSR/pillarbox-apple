@@ -30,7 +30,9 @@ struct Media {
 }
 ```
 
-When implementing an ``AssetLoader``, use ``AssetLoader/playerMetadata(from:metadata:)`` to transform this model into a ``PlayerMetadata`` instance that the player can understand and expose:
+and a given `Input`.
+
+When implementing an ``AssetLoader``, use ``AssetLoader/playerMetadata(from:metadata:)`` to build a ``PlayerMetadata`` instance that the player can understand and expose:
 
 ```swift
 enum MediaAssetLoader: AssetLoader {
