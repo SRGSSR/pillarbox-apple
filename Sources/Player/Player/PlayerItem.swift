@@ -112,7 +112,7 @@ public extension PlayerItem {
         trackerAdapters: [TrackerAdapter<M>] = []
     ) {
         self.init(
-            assetLoaderType: DirectAssetLoader<M>.self,
+            assetLoaderType: ImmediateAssetLoader.self,
             input: .init(asset: asset, metadata: metadata, mapper: mapper),
             trackerAdapters: trackerAdapters
         )

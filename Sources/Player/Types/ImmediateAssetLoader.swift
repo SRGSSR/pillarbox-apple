@@ -7,8 +7,7 @@
 import Combine
 import Foundation
 
-// TODO: Rename as UniversalAssetLoader or ImmediateAssetLoader (or sth similar)
-enum DirectAssetLoader<M>: AssetLoader {
+enum ImmediateAssetLoader<M>: AssetLoader {
     struct Input {
         let asset: Asset
         let metadata: M
