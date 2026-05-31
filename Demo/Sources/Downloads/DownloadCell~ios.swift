@@ -68,8 +68,7 @@ struct DownloadCell: View {
             case .completed:
                 completedButton()
             case .cancelled:
-                button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
-                    .tint(.red)
+                EmptyView()
             }
         }
         .frame(width: 30, height: 30)
