@@ -80,10 +80,6 @@ extension DemoAssetDownloadStore: AssetDownloadStore {
         input.url.absoluteString
     }
 
-    static func playerMetadata(from input: Input, metadata: String?) -> PlayerMetadata {
-        .init(title: metadata ?? input.title)
-    }
-
     func downloadRecords() -> [DownloadRecord<DemoAssetLoader.Input, String>] {
         fileEntries.map { $0.toDownloadRecord() }
     }
