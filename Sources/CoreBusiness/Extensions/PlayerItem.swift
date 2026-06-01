@@ -62,65 +62,6 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - metadata: The metadata associated with the item.
-    ///   - mapper: A closure that maps an item metadata to player metadata.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
-    ///
-    /// No SRG SSR standard tracking is made.
-    ///
-    /// > Important: This API is reserved to the Pillarbox development team.
-    static func tokenProtected<M>(
-        url: URL,
-        metadata: M,
-        mapper: @escaping (M) -> PlayerMetadata,
-        trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlaybackConfiguration = .default
-    ) -> Self {
-        self.init(
-            asset: .tokenProtected(url: url, configuration: configuration),
-            metadata: metadata,
-            mapper: mapper,
-            trackerAdapters: trackerAdapters
-        )
-    }
-
-    /// Creates a player item from a URL, loaded with standard SRG SSR DRM protection.
-    ///
-    /// - Parameters:
-    ///   - url: The URL to play.
-    ///   - certificateUrl: The URL of the certificate to use.
-    ///   - metadata: The metadata associated with the item.
-    ///   - mapper: A closure that maps an item metadata to player metadata.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
-    ///
-    /// No SRG SSR standard tracking is made.
-    ///
-    /// > Important: This API is reserved to the Pillarbox development team.
-    static func encrypted<M>(
-        url: URL,
-        certificateUrl: URL,
-        metadata: M,
-        mapper: @escaping (M) -> PlayerMetadata,
-        trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: PlaybackConfiguration = .default
-    ) -> Self {
-        self.init(
-            asset: .encrypted(url: url, certificateUrl: certificateUrl, configuration: configuration),
-            metadata: metadata,
-            mapper: mapper,
-            trackerAdapters: trackerAdapters
-        )
-    }
-}
-
-@_spi(CoreBusinessPrivate)
-public extension PlayerItem {
-    /// Creates a player item from a URL, loaded with standard SRG SSR token protection.
-    ///
-    /// - Parameters:
-    ///   - url: The URL to play.
-    ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: The configuration to apply to the player item.
     ///
@@ -133,12 +74,10 @@ public extension PlayerItem {
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
-        tokenProtected(
-            url: url,
+        self.init(
+            asset: .tokenProtected(url: url, configuration: configuration),
             metadata: metadata,
-            mapper: \.self,
-            trackerAdapters: trackerAdapters,
-            configuration: configuration
+            trackerAdapters: trackerAdapters
         )
     }
 
@@ -161,13 +100,10 @@ public extension PlayerItem {
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
-        encrypted(
-            url: url,
-            certificateUrl: certificateUrl,
+        self.init(
+            asset: .encrypted(url: url, certificateUrl: certificateUrl, configuration: configuration),
             metadata: metadata,
-            mapper: \.self,
-            trackerAdapters: trackerAdapters,
-            configuration: configuration
+            trackerAdapters: trackerAdapters
         )
     }
 }
