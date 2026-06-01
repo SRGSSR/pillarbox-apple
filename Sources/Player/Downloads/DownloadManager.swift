@@ -88,7 +88,9 @@ extension DownloadManager: DownloadSessionDelegate {
     func downloadSessionDidCompleteWithError(_ error: (any Error)?, forId id: String) {
         if let error {
             if let location = locations[id] {
-                try? FileManager.default.removeItem(at: location)
+                Task {
+                    try? FileManager.default.removeItem(at: location)
+                }
             }
             download(matchingId: id)?.fail(with: error)
         }

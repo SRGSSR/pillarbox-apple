@@ -99,7 +99,9 @@ public final class Download: ObservableObject {
 
     private func removeFile() {
         guard let fileUrl else { return }
-        try? FileManager.default.removeItem(at: fileUrl)
+        Task {
+            try? FileManager.default.removeItem(at: fileUrl)
+        }
     }
 }
 
