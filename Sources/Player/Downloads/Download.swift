@@ -6,12 +6,12 @@
 
 // swiftlint:disable missing_docs
 
+#if DEBUG
+
 import AVFoundation
 import Combine
 import PillarboxCore
 import UIKit
-
-#if DEBUG
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)

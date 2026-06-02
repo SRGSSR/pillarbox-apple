@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
+// swiftlint:disable missing_docs
+
 #if DEBUG
 
 import Foundation
-
-// swiftlint:disable missing_docs
 
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
@@ -28,6 +28,6 @@ public struct DownloadRecord<Input, Metadata> {
     }
 }
 
-// swiftlint:enable missing_docs
-
 #endif
+
+// swiftlint:enable missing_docs

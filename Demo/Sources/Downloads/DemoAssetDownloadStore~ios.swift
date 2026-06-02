@@ -4,12 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import Foundation
 
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
-
-#if DEBUG
 
 private struct DownloadError: LocalizedError {
     let errorDescription: String?

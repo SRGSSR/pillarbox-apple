@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import AVFoundation
 import Combine
 import UIKit
-
-#if DEBUG
 
 @available(tvOS, unavailable)
 final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {

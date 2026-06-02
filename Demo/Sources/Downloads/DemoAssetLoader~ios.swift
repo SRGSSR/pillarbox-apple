@@ -4,13 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import Combine
 import Foundation
 
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
-
-#if DEBUG
 
 struct DemoAssetLoader: AssetLoader {
     struct Input {

@@ -6,10 +6,10 @@
 
 // swiftlint:disable missing_docs
 
+#if DEBUG
+
 import Combine
 import Foundation
-
-#if DEBUG
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
