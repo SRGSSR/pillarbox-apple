@@ -30,24 +30,38 @@ final class DemoAssetDownloadStore {
         let progress: Double
         let errorDescription: String?
 
-        init(id: String, input: DemoAssetLoader.Input) {
+private init(id: String, title: String, url: URL, metadata: String?, bookmarkData: Data?, progress: Double, errorDescription: String?) {
             self.id = id
-            self.title = input.title
-            self.url = input.url
-            self.metadata = nil
-            self.bookmarkData = nil
-            self.progress = 0
-            self.errorDescription = nil
+            self.title = title
+            self.url = url
+            self.metadata = metadata
+            self.bookmarkData = bookmarkData
+            self.progress = progress
+            self.errorDescription = errorDescription
+        }
+
+        init(id: String, input: DemoAssetLoader.Input) {
+            self.init(
+                id: id,
+                title: input.title,
+                url: input.url,
+                metadata: nil,
+                bookmarkData: nil,
+                progress: 0,
+                errorDescription: nil
+            )
         }
 
         init(id: String, record: DownloadRecord<DemoAssetLoader.Input, String>) {
-            self.id = id
-            self.title = record.input.title
-            self.url = record.input.url
-            self.metadata = record.metadata
-            self.bookmarkData = record.bookmarkData
-            self.progress = record.progress
-            self.errorDescription = record.error?.localizedDescription
+            self.init(
+                id: id,
+                title: record.input.title,
+                url: record.input.url,
+                metadata: record.metadata,
+                bookmarkData: record.bookmarkData,
+                progress: record.progress,
+                errorDescription: record.error?.localizedDescription
+            )
         }
 
         func toDownloadRecord() -> DownloadRecord<DemoAssetLoader.Input, String> {
