@@ -44,7 +44,6 @@ enum Resource {
         case let .custom(url: url, delegate: delegate):
             let asset = asset(for: url, with: configuration)
             asset.resourceLoader.setDelegate(delegate, queue: kResourceLoaderQueue)
-            objc_setAssociatedObject(asset, &kResourceLoaderDelegate, delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return asset
         case let .encrypted(url: url, delegate: delegate):
 #if targetEnvironment(simulator)
