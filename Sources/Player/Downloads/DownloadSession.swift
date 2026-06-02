@@ -23,7 +23,7 @@ extension DownloadSession {
             task.progress.publisher(for: \.fractionCompleted)
                 .map { $0.clamped(to: 0...1) }
         )
-        .map { .init(task: $0, state: $1, progress: $2) }
+        .map(DownloadSessionTaskProperties.init)
         .eraseToAnyPublisher()
     }
 
