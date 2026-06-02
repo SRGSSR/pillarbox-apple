@@ -30,7 +30,7 @@ final class DemoAssetDownloadStore {
         let progress: Double
         let errorDescription: String?
 
-private init(id: String, title: String, url: URL, metadata: String?, bookmarkData: Data?, progress: Double, errorDescription: String?) {
+        private init(id: String, title: String, url: URL, metadata: String?, bookmarkData: Data?, progress: Double, errorDescription: String?) {
             self.id = id
             self.title = title
             self.url = url
