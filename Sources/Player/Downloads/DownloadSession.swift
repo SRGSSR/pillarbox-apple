@@ -35,7 +35,7 @@ extension DownloadSession {
         progressEstimate: Double
     ) -> AnyPublisher<DownloadSource, Never> {
         sessionTaskPublisher(id: id, asset: asset, title: title, createIfNeeded: createTaskIfNeeded)
-            .map { Self.downloadSessionTaskPublisher(for: $0) }
+            .map(Self.downloadSessionTaskPublisher)
             .switchToLatest()
             .map { .task($0) }
             .prepend(.estimate(progressEstimate))
