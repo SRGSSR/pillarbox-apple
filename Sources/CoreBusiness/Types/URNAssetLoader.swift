@@ -24,23 +24,13 @@ enum URNAssetLoader: AssetLoader {
     }
 
     static func asset(from input: Input, metadata: MediaMetadata) -> Asset {
-        asset(from: metadata, configuration: input.configuration)
-    }
-
-    static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
-        metadata?.playerMetadata() ?? .empty
-    }
-}
-
-private extension URNAssetLoader {
-    private static func asset(from metadata: MediaMetadata, configuration: PlaybackConfiguration) -> Asset {
         if let blockingReason = metadata.blockingReason {
             return .unavailable(with: BlockingError(reason: blockingReason))
         }
         guard let resource = metadata.resource else {
             return .unavailable(with: SourceError())
         }
-        let configuration = assetConfiguration(for: resource, configuration: configuration)
+        let configuration = assetConfiguration(for: resource, configuration: input.configuration)
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
             return .encrypted(url: resource.url, certificateUrl: certificateUrl, configuration: configuration)
         }
@@ -52,6 +42,10 @@ private extension URNAssetLoader {
                 return .simple(url: resource.url, configuration: configuration)
             }
         }
+    }
+
+    static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
+        metadata?.playerMetadata() ?? .empty
     }
 
     private static func assetConfiguration(
