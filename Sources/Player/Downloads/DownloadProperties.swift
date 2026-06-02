@@ -67,15 +67,15 @@ struct DownloadProperties<Metadata> {
     }
 
     init<Input>(from record: DownloadRecord<Input, Metadata>) {
-        self.metadata = record.metadata
         do {
-            self.fileUrl = try URL(resolvingBookmarkData: record.bookmarkData)
-            self.source = .estimate(record.progress)
-            self.error = record.error
+            self.init(
+                metadata: record.metadata,
+                source: .estimate(record.progress),
+                fileUrl: try URL(resolvingBookmarkData: record.bookmarkData),
+                error: record.error
+            )
         } catch {
-            self.fileUrl = nil
-            self.source = .estimate(0)
-            self.error = error
+            self.init(metadata: record.metadata, source: .estimate(0), fileUrl: nil, error: error)
         }
     }
 
