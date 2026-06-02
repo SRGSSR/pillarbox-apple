@@ -39,10 +39,7 @@ extension URLDownloadSession: DownloadSession {
     }
 
     private func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask {
-        let configuration = AVAssetDownloadConfiguration(
-            asset: asset.urlAsset(),
-            title: title ?? id
-        )
+        let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: title ?? id)
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
         task.taskDescription = id
         task.resume()
