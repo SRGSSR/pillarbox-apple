@@ -39,7 +39,6 @@ struct DownloadCell: View {
         .onTapGesture(perform: action)
     }
 
-    @ViewBuilder
     private func progressBar() -> some View {
         ProgressView(value: download.progress) {
             Text(download.progress, format: .percent.precision(.fractionLength(0)))
