@@ -162,12 +162,15 @@ public extension Publisher {
     /// - Returns: A publisher emitting values until the signal publisher emits a value, which leads to the publisher
     ///   completing with an error.
     func fail<S>(onOutputFrom signal: S, with error: Failure) -> AnyPublisher<Output, Failure> where S: Publisher, S.Failure == Never {
-        merge(
-            with: signal.first()
-                .map { _ in Fail<Output, Failure>(error: error) }
-                .switchToLatest()
-        )
-        .eraseToAnyPublisher()
+        let completionTrigger = PassthroughSubject<Void, Never>()
+        return handleEvents(receiveCompletion: { _ in completionTrigger.send(()) })
+            .merge(
+                with: signal.first()
+                    .prefix(untilOutputFrom: completionTrigger)
+                    .map { _ in Fail<Output, Failure>(error: error) }
+                    .switchToLatest()
+            )
+            .eraseToAnyPublisher()
     }
 }
 

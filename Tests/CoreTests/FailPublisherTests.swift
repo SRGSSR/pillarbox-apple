@@ -48,4 +48,15 @@ final class FailPublisherTests: XCTestCase {
         }
         expect(values).to(equalDiff(["A", "B"]))
     }
+    
+    func testCompletionWithoutFailure() {
+        let signal = PassthroughSubject<Void, Never>()
+        let subject = PassthroughSubject<String, CancellationError>()
+        let publisher = subject
+            .fail(onOutputFrom: signal, with: CancellationError())
+
+        expectSuccess(from: publisher) {
+            subject.send(completion: .finished)
+        }
+    }
 }
