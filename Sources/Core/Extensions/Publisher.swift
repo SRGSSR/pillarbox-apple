@@ -163,6 +163,7 @@ public extension Publisher {
     ///   completing with an error.
     func fail<S>(onOutputFrom signal: S, with error: Failure) -> AnyPublisher<Output, Failure> where S: Publisher, S.Failure == Never {
         let completionTrigger = PassthroughSubject<Void, Never>()
+        // swiftlint:disable:next trailing_closure
         return handleEvents(receiveCompletion: { _ in completionTrigger.send(()) })
             .merge(
                 with: signal.first()
