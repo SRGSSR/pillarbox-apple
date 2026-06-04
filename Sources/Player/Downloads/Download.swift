@@ -6,204 +6,227 @@
 
 // swiftlint:disable missing_docs
 
+#if DEBUG
+
 import AVFoundation
 import Combine
+import PillarboxCore
 import UIKit
-
-#if DEBUG
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject {
-    private let id: String
+    private typealias DownloadPlayerProperties = DownloadProperties<PlayerMetadata>
 
-    public let title: String
-    public let url: URL
+    let id: String
 
-    private var task: URLSessionTask? {
-        didSet {
-            configureTaskPublishers()
-        }
-    }
+    @Published private var properties: DownloadPlayerProperties = .init()
 
-    private weak let session: AVAssetDownloadURLSession?
+    private let trigger = Trigger()
+
+    private let locationSubject = PassthroughSubject<URL?, Never>()
+    private let errorSubject = PassthroughSubject<Error?, Never>()
+
+    private let addRecord: () -> Void
+    private let removeRecord: () -> Void
 
     public var progress: Double {
-        hasFailed ? 0 : _progress
+        properties.progress
     }
 
-    @Published public private(set) var state: URLSessionTask.State = .completed
-    @Published private var _progress: Double = 1
-
-    @Published private var hasFailed: Bool {
-        didSet {
-            notifyUpdate()
-        }
+    public var state: DownloadState {
+        properties.state
     }
 
-    @Published private var bookmarkData: Data? {
-        didSet {
-            notifyUpdate()
-        }
+    public var metadata: PlayerMetadata {
+        properties.metadata ?? .empty
     }
 
-    private let locationSubject = CurrentValueSubject<URL?, Never>(nil)
-    private var cancellables = Set<AnyCancellable>()
-
-    public var file: DownloadedFile {
-        guard !hasFailed else { return .failed }
-        switch state {
-        case .running, .suspended, .canceling:
-            guard let url = fileUrl() else { return .unavailable }
-            return .partial(url)
-        case .completed:
-            guard let url = fileUrl() else { return .failed }
-            return .complete(url)
-        @unknown default:
-            return .failed
-        }
+    public var error: Error? {
+        guard let error = properties.error else { return nil }
+        return URLError.isCancellationError(error) ? nil : error
     }
 
-    private init(id: String, title: String, url: URL, bookmarkData: Data?, hasFailed: Bool, task: URLSessionTask?, session: AVAssetDownloadURLSession) {
+    var fileUrl: URL? {
+        properties.fileUrl
+    }
+
+    private init<L, S>(
+        id: String,
+        assetLoaderType: L.Type,
+        input: L.Input,
+        session: DownloadSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.id = id
-        self.title = title
-        self.url = url
-        self.bookmarkData = bookmarkData
-        self.hasFailed = hasFailed
-        self.task = task
-        self.session = session
-
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
-        configureTaskPublishers()
-    }
-
-    convenience init(title: String, url: URL, using session: AVAssetDownloadURLSession) {
-        let id = UUID().uuidString
-        let task = Self.task(id: id, title: title, url: url, using: session)
-        self.init(id: id, title: title, url: url, bookmarkData: nil, hasFailed: false, task: task, session: session)
-    }
-
-    convenience init(from metadata: DownloadMetadata, reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) {
-        if let bookmarkData = metadata.bookmarkData {
-            self.init(
-                id: metadata.id,
-                title: metadata.title,
-                url: metadata.url,
-                bookmarkData: bookmarkData,
-                hasFailed: metadata.hasFailed,
-                task: tasks.first { $0.taskDescription == metadata.id },
-                session: session
-            )
+        self.addRecord = {
+            store.addDownloadRecord(using: input, forId: id)
         }
-        else {
-            self.init(title: metadata.title, url: metadata.url, using: session)
+        self.removeRecord = {
+            store.removeDownloadRecord(forId: id)
         }
+        configurePropertiesPublisher(assetLoaderType: assetLoaderType, input: input, session: session, store: store)
     }
 
-    private static func task(id: String, title: String, url: URL, using session: AVAssetDownloadURLSession?) -> URLSessionTask? {
-        guard let session else { return nil }
-        let configuration = AVAssetDownloadConfiguration(asset: .init(url: url), title: title)
-        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
-        task.taskDescription = id
-        task.resume()
-        return task
+    convenience init<L, S>(
+        assetLoaderType: L.Type,
+        input: L.Input,
+        session: DownloadSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        let id = type(of: store).id(from: input)
+        store.addDownloadRecord(using: input, forId: id)
+        self.init(id: id, assetLoaderType: assetLoaderType, input: input, session: session, store: store)
     }
 
-    func matches(task: URLSessionTask) -> Bool {
-        task.taskDescription == id
-    }
-
-    func metadata() -> DownloadMetadata {
-        .init(id: id, title: title, url: url, bookmarkData: bookmarkData, hasFailed: hasFailed)
-    }
-
-    func cancel() {
-        task?.cancel()
-        removeFile()
-    }
-
-    func removeFile() {
-        if let url = fileUrl() {
-            try? FileManager.default.removeItem(at: url)
-        }
-        if let url = locationUrl() {
-            try? FileManager.default.removeItem(at: url)
-        }
+    convenience init<L, S>(
+        assetLoaderType: L.Type,
+        record: DownloadRecord<L.Input, L.Metadata>,
+        session: DownloadSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        self.init(id: type(of: store).id(from: record.input), assetLoaderType: assetLoaderType, input: record.input, session: session, store: store)
     }
 
     func attach(to location: URL) {
         locationSubject.send(location)
     }
 
-    func complete(with error: Error?) {
-        hasFailed = error != nil
+    func fail(with error: Error) {
+        errorSubject.send(error)
+        properties.source.cancel()
     }
 
-    private func fileUrl() -> URL? {
-        guard let bookmarkData else { return nil }
-        var isStale = false
-        return try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &isStale)
-    }
-
-    private func locationUrl() -> URL? {
-        locationSubject.value
-    }
-
-    private func configureTaskPublishers() {
-        cancellables = []
-        guard let task else { return }
-        task.publisher(for: \.state)
-            .receiveOnMainThread()
-            .weakAssign(to: \.state, on: self)
-            .store(in: &cancellables)
-        task.progress.publisher(for: \.fractionCompleted)
-            .map { $0.clamped(to: 0...1) }
-            .receiveOnMainThread()
-            .weakAssign(to: \._progress, on: self)
-            .store(in: &cancellables)
-        bookmarkDataPublisher(for: task)
-            .receiveOnMainThread()
-            .map { Optional($0) }
-            .weakAssign(to: \.bookmarkData, on: self)
-            .store(in: &cancellables)
-    }
-
-    private func bookmarkDataPublisher(for task: URLSessionTask) -> AnyPublisher<Data, Never> {
-        locationSubject.map { url in
-            task.progress.publisher(for: \.fractionCompleted)
-                .first { $0 > 0 }
-                .compactMap { _ in try? url?.bookmarkData() }
+    private func removeFile() {
+        guard let fileUrl else { return }
+        Task {
+            try? FileManager.default.removeItem(at: fileUrl)
         }
-        .switchToLatest()
-        .eraseToAnyPublisher()
-    }
-
-    @objc
-    private func applicationWillTerminate() {
-        guard bookmarkData == nil else { return }
-        task?.cancel()
-    }
-
-    private func notifyUpdate() {
-        NotificationCenter.default.post(name: .didUpdateDownload, object: self)
     }
 }
 
 @available(tvOS, unavailable)
 public extension Download {
     func resume() {
-        task?.resume()
+        properties.source.resume()
     }
 
     func suspend() {
-        task?.suspend()
+        properties.source.suspend()
+    }
+
+    func remove() {
+        removeFile()
+        cancelOperations()
+        removeRecord()
     }
 
     func restart() {
-        removeFile()
+        remove()
+        addRecord()
+        trigger.activate(for: TriggerId.reload)
+    }
 
-        task = Self.task(id: id, title: title, url: url, using: session)
-        hasFailed = false
+    private func cancelOperations() {
+        properties.source.cancel()
+        trigger.activate(for: TriggerId.cancel)
+    }
+}
+
+@available(tvOS, unavailable)
+private extension Download {
+    enum TriggerId: Hashable {
+        case reload
+        case cancel
+    }
+
+    static func metadataPublisher<L>(
+        assetLoaderType: L.Type,
+        input: L.Input,
+        properties: DownloadProperties<L.Metadata>
+    ) -> AnyPublisher<L.Metadata, Error> where L: AssetLoader {
+        if let metadata = properties.metadata {
+            return Just(metadata)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        else if properties.error == nil {
+            return assetLoaderType.metadataPublisher(for: input)
+                .first()
+                .eraseToAnyPublisher()
+        }
+        else {
+            return Empty().eraseToAnyPublisher()
+        }
+    }
+}
+
+@available(tvOS, unavailable)
+extension Download {
+    private func configurePropertiesPublisher<L, S>(
+        assetLoaderType: L.Type,
+        input: L.Input,
+        session: DownloadSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        downloadPropertiesPublisher(assetLoaderType: assetLoaderType, id: id, input: input, session: session, store: store)
+            .receiveOnMainThread()
+            .handleEvents(
+                receiveOutput: { [id] properties in
+                    let record = DownloadRecord(
+                        input: input,
+                        metadata: properties.metadata,
+                        bookmarkData: properties.bookmarkData(),
+                        progress: properties.progress,
+                        error: properties.error
+                    )
+                    store.updateDownloadRecord(record, forId: id)
+                },
+                receiveCompletion: nil
+            )
+            .map { properties in
+                DownloadProperties(
+                    metadata: assetLoaderType.playerMetadata(from: input, metadata: properties.metadata),
+                    source: properties.source,
+                    fileUrl: properties.fileUrl,
+                    error: properties.error
+                )
+            }
+            .assign(to: &$properties)
+    }
+
+    private func downloadPropertiesPublisher<L, S>(
+        assetLoaderType: L.Type,
+        id: String,
+        input: L.Input,
+        session: DownloadSession,
+        store: S
+    ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger, locationSubject, errorSubject] in
+            let properties = store.downloadProperties(forId: id)
+            return Self.metadataPublisher(assetLoaderType: assetLoaderType, input: input, properties: properties)
+                .receiveOnMainThread()
+                .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
+                .map { metadata in
+                    Publishers.CombineLatest3(
+                        session.downloadSourcePublisher(
+                            id: id,
+                            asset: assetLoaderType.downloadableAsset(from: input, metadata: metadata),
+                            title: assetLoaderType.playerMetadata(from: input, metadata: metadata).title,
+                            createTaskIfNeeded: properties.shouldCreateTask,
+                            progressEstimate: properties.progress
+                        ),
+                        locationSubject
+                            .prepend(properties.fileUrl),
+                        errorSubject
+                            .prepend(properties.error)
+                    )
+                    .map { DownloadProperties(metadata: metadata, source: $0, fileUrl: $1, error: $2) }
+                }
+                .switchToLatest()
+                .catch { Just(DownloadProperties(metadata: nil, source: .estimate(0), fileUrl: nil, error: $0)) }
+                .prepend(properties)
+        }
     }
 }
 

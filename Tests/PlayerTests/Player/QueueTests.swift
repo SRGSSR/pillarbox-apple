@@ -163,7 +163,7 @@ final class QueueTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        player.remove(player.items.first!)
+        player.remove(item1)
         expect(player.urls).toEventually(equal([
             Stream.onDemand.url
         ]))

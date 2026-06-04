@@ -17,7 +17,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         expectPublished(
             next: false,
             values: values,
@@ -39,7 +39,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never, P.Output: Equatable {
+    ) where P: Publisher, P.Output: Equatable {
         expectPublished(
             next: false,
             values: values,
@@ -61,7 +61,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never, P.Output: Similar {
+    ) where P: Publisher, P.Output: Similar {
         expectPublished(
             next: false,
             values: values,
@@ -87,7 +87,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         expectPublished(
             next: true,
             values: values,
@@ -112,7 +112,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never, P.Output: Equatable {
+    ) where P: Publisher, P.Output: Equatable {
         expectPublished(
             next: true,
             values: values,
@@ -137,7 +137,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never, P.Output: Similar {
+    ) where P: Publisher, P.Output: Similar {
         expectPublished(
             next: true,
             values: values,
@@ -161,7 +161,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         precondition(!values.isEmpty)
         var actualValues = collectOutput(from: publisher, during: interval, while: executing)
         if next, !actualValues.isEmpty {

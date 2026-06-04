@@ -66,7 +66,7 @@ final class PlayerLimitsTests: TestCase {
     }
 
     func testLoadedItem() {
-        let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1))
+        let player = Player(item: .playable(url: Stream.onDemand.url, after: 0.1))
         player.limits = Self.limits
         expect(player.playbackState).toEventually(equal(.paused))
         player.queuePlayer.items().forEach { item in

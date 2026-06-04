@@ -48,25 +48,27 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).toNever(haveLanguageIdentifier("it"), until: .seconds(2))
     }
 
-    func testPreferredAudibleLanguageOverrideSelection() {
+    func testPreferredAudibleLanguageOverrideSelection() throws {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
 
-        player.select(mediaOption: player.mediaSelectionOptions(for: .audible).first { option in
+        let mediaOption = try unwrap(player.mediaSelectionOptions(for: .audible).first { option in
             option.languageIdentifier == "fr"
-        }!, for: .audible)
+        })
+        player.select(mediaOption: mediaOption, for: .audible)
 
         player.setMediaSelectionPreference(.on(languages: "en"), for: .audible)
         expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
     }
 
-    func testPreferredLegibleLanguageOverrideSelection() {
+    func testPreferredLegibleLanguageOverrideSelection() throws {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
-        player.select(mediaOption: player.mediaSelectionOptions(for: .legible).first { option in
+        let mediaOption = try unwrap(player.mediaSelectionOptions(for: .legible).first { option in
             option.languageIdentifier == "ja"
-        }!, for: .legible)
+        })
+        player.select(mediaOption: mediaOption, for: .legible)
 
         player.setMediaSelectionPreference(.on(languages: "fr"), for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
@@ -166,7 +168,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.off))
     }
 
-    func testSelectLegibleOptionWithEmptyLanguages() {
+    func testSelectLegibleOptionWithEmptyLanguages() throws {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
@@ -174,9 +176,10 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
 
         expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
-        player.select(mediaOption: player.mediaSelectionOptions(for: .legible).first { option in
+        let mediaOption = try unwrap(player.mediaSelectionOptions(for: .legible).first { option in
             option.languageIdentifier == "fr"
-        }!, for: .legible)
+        })
+        player.select(mediaOption: mediaOption, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
     }
 

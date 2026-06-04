@@ -8,9 +8,11 @@ import AVFoundation
 import Combine
 import CoreMedia
 import Foundation
-import PillarboxCoreBusiness
 import PillarboxPlayer
 import UIKit
+
+@_spi(CoreBusinessPrivate)
+import PillarboxCoreBusiness
 
 struct Media: Hashable {
     enum `Type`: Hashable {
@@ -20,6 +22,7 @@ struct Media: Hashable {
         case encryptedUrl(URL, certificateUrl: URL)
         case unbufferedUrl(URL)
         case urn(String, serverSetting: ServerSetting)
+        case item(PlayerItem)
 
         static func urn(_ urn: String) -> Self {
             .urn(urn, serverSetting: .production)
@@ -52,7 +55,7 @@ struct Media: Hashable {
         self.timeRanges = timeRanges
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func item() -> PlayerItem {
         switch type {
         case let .url(url), let .monoscopicUrl(url):
@@ -75,7 +78,7 @@ struct Media: Hashable {
                         DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
-                context: .init(configuration: .init(position: at(startTime)))
+                configuration: .init(position: at(startTime))
             )
         case let .encryptedUrl(url, certificateUrl: certificateUrl):
             return .encrypted(
@@ -87,7 +90,7 @@ struct Media: Hashable {
                         DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
-                context: .init(configuration: .init(position: at(startTime)))
+                configuration: .init(position: at(startTime))
             )
         case let .unbufferedUrl(url):
             let configuration = PlaybackConfiguration(
@@ -114,8 +117,10 @@ struct Media: Hashable {
                         DemoTracker.Metadata(title: metadata.mainChapter.title)
                     }
                 ],
-                context: .init(configuration: .init(position: at(startTime)))
+                configuration: .init(position: at(startTime))
             )
+        case let .item(item):
+            return item
         }
     }
 

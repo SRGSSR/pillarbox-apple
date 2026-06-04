@@ -28,7 +28,7 @@ final class PlaybackTests: XCTestCase {
     }
 
     func testMP3() {
-        let item = PlayerItem.simple(url: Stream.mp3.url)
+        let item = PlayerItem.simple(url: Stream.bundledMp3.url)
         let player = Player(item: item)
         expectAtLeastEqualPublished(
             values: [.idle, .paused],

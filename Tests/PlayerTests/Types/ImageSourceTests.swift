@@ -6,6 +6,7 @@
 
 @testable import PillarboxPlayer
 
+import Nimble
 import PillarboxCircumspect
 import UIKit
 
@@ -17,16 +18,16 @@ final class ImageSourceTests: TestCase {
         )
     }
 
-    func testImage() {
-        let image = UIImage(systemName: "circle")!
+    func testImage() throws {
+        let image = try unwrap(UIImage(systemName: "circle"))
         expectAtLeastEqualPublished(
             values: [.image(image)],
             from: ImageSource.image(image).imageSourcePublisher()
         )
     }
 
-    func testNonLoadedImageForValidUrl() {
-        let url = Bundle.module.url(forResource: "pixel", withExtension: "jpg")!
+    func testNonLoadedImageForValidUrl() throws {
+        let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastSimilarPublished(
             values: [.url(standardResolution: url)],
@@ -34,9 +35,9 @@ final class ImageSourceTests: TestCase {
         )
     }
 
-    func testLoadedImageForValidUrl() {
-        let url = Bundle.module.url(forResource: "pixel", withExtension: "jpg")!
-        let image = UIImage(contentsOfFile: url.path())!
+    func testLoadedImageForValidUrl() throws {
+        let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
+        let image = try unwrap(UIImage(contentsOfFile: url.path()))
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastSimilarPublished(
             values: [.url(standardResolution: url), .image(image)],
@@ -46,8 +47,8 @@ final class ImageSourceTests: TestCase {
         }
     }
 
-    func testInvalidImageFormat() {
-        let url = Bundle.module.url(forResource: "invalid", withExtension: "jpg")!
+    func testInvalidImageFormat() throws {
+        let url = try unwrap(Bundle.module.url(forResource: "invalid", withExtension: "jpg"))
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastSimilarPublished(
             values: [.url(standardResolution: url), .none],
@@ -57,7 +58,7 @@ final class ImageSourceTests: TestCase {
         }
     }
 
-    func testFailingUrl() {
+    func testFailingUrl() throws {
         let url = URL(string: "https://localhost:8123/missing.jpg")!
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastSimilarPublished(

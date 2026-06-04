@@ -15,7 +15,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         expectNothingPublished(
             next: false,
             from: publisher,
@@ -33,7 +33,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         expectNothingPublished(
             next: true,
             from: publisher,
@@ -51,7 +51,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P: Publisher, P.Failure == Never {
+    ) where P: Publisher {
         var actualValues = collectOutput(from: publisher, during: interval, while: executing)
         if next, !actualValues.isEmpty {
             actualValues.removeFirst()

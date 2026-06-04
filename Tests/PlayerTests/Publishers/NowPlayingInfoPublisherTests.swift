@@ -20,7 +20,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
     }
 
     func testInactive() {
-        let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0, withMetadata: .init(title: "title")))
+        let player = Player(item: .playable(url: Stream.onDemand.url, metadata: .init(title: "title")))
         expectAtLeastSimilarPublished(
             values: [[:]],
             from: Self.nowPlayingInfoPublisher(for: player)
@@ -28,7 +28,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
     }
 
     func testToggleActive() {
-        let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0, withMetadata: .init(title: "title")))
+        let player = Player(item: .playable(url: Stream.onDemand.url, metadata: .init(title: "title")))
         expectAtLeastSimilarPublished(
             values: [[:], ["title": ""], ["title": "title"]],
             from: Self.nowPlayingInfoPublisher(for: player)
@@ -45,9 +45,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
     }
 
     func testPlayerError() {
-        let player = Player(
-            item: .mock(url: Stream.unavailable.url, loadedAfter: 0, withMetadata: .init(title: "title"))
-        )
+        let player = Player(item: .playable(url: Stream.unavailable.url, metadata: .init(title: "title")))
         expectAtLeastSimilarPublished(
             values: [[:], ["title": ""], ["title": "title"], [:]],
             from: Self.nowPlayingInfoPublisher(for: player)

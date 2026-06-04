@@ -4,100 +4,97 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import AVFoundation
 import Combine
 import UIKit
 
-#if DEBUG
-
 @available(tvOS, unavailable)
-final class DownloadManager: NSObject {
-    private lazy var session = AVAssetDownloadURLSession(
-        configuration: .background(withIdentifier: "ch.srgssr.player.downloader"),
-        assetDownloadDelegate: self,
-        delegateQueue: .main
-    )
+final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    private let session: any DownloadSession
+    private let store: S
 
-    @Published private(set) var downloads: [Download] = [] {
-        didSet {
-            Self.saveDownloads(downloads)
+    @Published private(set) var downloads: [Download]
+
+    // Store locations separately. If a location was created but not associated with a download, we still need to be able
+    // to properly clean associated downloaded data.
+    private var locations: [String: URL] = [:]
+
+    init(assetLoaderType: L.Type, session: some DownloadSession, store: S) {
+        self.session = session
+        self.store = store
+        self.downloads = store.downloadRecords().map { record in
+            Download(assetLoaderType: assetLoaderType, record: record, session: session, store: store)
         }
-    }
-
-    override init() {
-        super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateDownload(_:)), name: .didUpdateDownload, object: nil)
-        restore()
+        session.delegate = self
     }
 
     @discardableResult
-    func add(title: String, url: URL) -> Download {
-        let download = Download(title: title, url: url, using: session)
-        downloads.append(download)
-        return download
+    func addDownload(for input: L.Input) -> Download {
+        if let download = download(matching: input) {
+            return download
+        }
+        else {
+            let download = Download(assetLoaderType: L.self, input: input, session: session, store: store)
+            downloads.append(download)
+            return download
+        }
     }
 
-    func remove(_ download: Download) {
-        download.cancel()
-        downloads.removeAll { $0 == download }
+    func download(matching input: L.Input) -> Download? {
+        download(matchingId: type(of: store).id(from: input))
     }
 
-    func removeAll() {
+    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
+        guard downloads.contains(download), let record = store.downloadRecord(forId: download.id),
+              let metadata = record.metadata, let fileUrl = download.fileUrl else {
+            return nil
+        }
+        return .init(
+            assetLoaderType: ImmediateAssetLoader.self,
+            input: .init(asset: .simple(url: fileUrl), metadata: metadata) { metadata in
+                L.playerMetadata(from: record.input, metadata: metadata)
+            },
+            trackerAdapters: trackerAdapters
+        )
+    }
+
+    func removeDownload(_ download: Download) {
+        guard downloads.contains(download) else { return }
+        download.remove()
+        downloads.removeAll { $0.id == download.id }
+    }
+
+    func removeAllDownloads() {
         downloads.forEach { download in
-            download.cancel()
+            download.remove()
         }
         downloads.removeAll()
     }
 
-    @objc
-    private func didUpdateDownload(_ notification: Notification) {
-        guard let download = notification.object as? Download, downloads.contains(download) else { return }
-        Self.saveDownloads(downloads)
+    private func download(matchingId id: String) -> Download? {
+        downloads.first { $0.id == id }
     }
 }
 
 @available(tvOS, unavailable)
-private extension DownloadManager {
-    private static let metadataFileUrl = URL.libraryDirectory.appending(component: "downloads.json")
+extension DownloadManager: DownloadSessionDelegate {
+    func downloadSessionWillDownloadToLocation(_ location: URL, forId id: String) {
+        locations[id] = location
+        download(matchingId: id)?.attach(to: location)
+    }
 
-    static func restoreDownloads(reusing tasks: [URLSessionTask], in session: AVAssetDownloadURLSession) -> [Download] {
-        guard let jsonData = try? Data(contentsOf: metadataFileUrl),
-              let metadata = try? JSONDecoder().decode([DownloadMetadata].self, from: jsonData) else {
-            return []
+    func downloadSessionDidCompleteWithError(_ error: (any Error)?, forId id: String) {
+        if let error {
+            if let location = locations[id] {
+                Task {
+                    try? FileManager.default.removeItem(at: location)
+                }
+            }
+            download(matchingId: id)?.fail(with: error)
         }
-        return metadata.map { Download(from: $0, reusing: tasks, in: session) }
-    }
-
-    static func saveDownloads(_ downloads: [Download]) {
-        let metadata = downloads.map { $0.metadata() }
-        guard let jsonData = try? JSONEncoder().encode(metadata) else { return }
-        try? jsonData.write(to: metadataFileUrl)
-    }
-
-    func restore() {
-        session.getAllTasks { [weak self] tasks in
-            guard let self else { return }
-            downloads = Self.restoreDownloads(reusing: tasks, in: session)
-        }
-    }
-}
-
-@available(tvOS, unavailable)
-extension DownloadManager: AVAssetDownloadDelegate {
-#if os(iOS)
-    func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
-        guard let download = download(matching: assetDownloadTask) else { return }
-        download.attach(to: location)
-    }
-#endif
-
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
-        guard let download = download(matching: task) else { return }
-        download.complete(with: error)
-    }
-
-    private func download(matching task: URLSessionTask) -> Download? {
-        downloads.first { $0.matches(task: task) }
+        locations[id] = nil
     }
 }
 

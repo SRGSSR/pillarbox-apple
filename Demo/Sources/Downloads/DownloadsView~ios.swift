@@ -4,15 +4,20 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 import SwiftUI
 
-#if DEBUG
-
 struct DownloadsView: View {
-    @StateObject private var downloader = Downloader()
+    @StateObject private var downloader = Downloader(
+        assetLoaderType: DemoAssetLoader.self,
+        configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.file-downloads"),
+        store: DemoAssetDownloadStore(fileName: "file_downloads.json")
+    )
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         ZStack {
@@ -38,11 +43,15 @@ struct DownloadsView: View {
     private func mainView() -> some View {
         List {
             ForEach(Array(downloader.downloads), id: \.self) { download in
-                DownloadCell(download: download)
+                DownloadCell(download: download) {
+                    if let item = downloader.playerItem(for: download) {
+                        router.presented = .player(media: .init(title: download.metadata.title ?? "Untitled", type: .item(item)))
+                    }
+                }
             }
             .onDelete { indexes in
                 for index in indexes.reversed() {
-                    downloader.remove(downloader.downloads[index])
+                    downloader.removeDownload(downloader.downloads[index])
                 }
             }
         }
@@ -84,7 +93,7 @@ struct DownloadsView: View {
 
     private func addDownloadButton(title: String, url: URL) -> some View {
         Button {
-            downloader.add(title: title, url: url)
+            downloader.addDownload(for: .init(title: title, url: url))
         } label: {
             Text(title)
         }
@@ -93,7 +102,7 @@ struct DownloadsView: View {
     @ViewBuilder
     private func removeAllButton() -> some View {
         if !downloader.downloads.isEmpty {
-            Button(action: downloader.removeAll) {
+            Button(action: downloader.removeAllDownloads) {
                 Image(systemName: "trash")
             }
         }

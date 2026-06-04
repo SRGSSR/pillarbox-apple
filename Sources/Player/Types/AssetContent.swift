@@ -47,7 +47,7 @@ struct AssetContent {
     }
 
     private func playerItem(for resource: Resource, configuration: PlayerConfiguration, resumeState: ResumeState?) -> AVPlayerItem {
-        let item = resource.playerItem(configuration: configuration)
+        let item = resource.playerItem(with: configuration)
             .withId(id)
             .updated(with: self)
         self.configuration.apply(to: item, metadata: metadata, resumeState: resumeState)

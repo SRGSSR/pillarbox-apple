@@ -45,7 +45,7 @@ final class AVPlayerPeriodicTimePublisherTests: TestCase {
     }
 
     func testDeallocation() {
-        var player: AVPlayer? = AVPlayer()
+        var player: AVPlayer? = .init()
         _ = Publishers.PeriodicTimePublisher(
             for: player!,
             interval: CMTime(value: 1, timescale: 1)

@@ -12,7 +12,7 @@ import XCTest
 
 final class WeakCapturePublisherTests: XCTestCase {
     func testDeallocation() {
-        var object: TestObject? = TestObject()
+        var object: TestObject? = .init()
         let publisher = Just("output")
             .weakCapture(object)
 

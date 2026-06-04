@@ -39,8 +39,8 @@ final class ErrorsTests: XCTestCase {
         expect(NSError.error(from: error)).to(equal(error))
     }
 
-    func testNSErrorFromSwiftError() {
-        let error = NSError.error(from: EnumError.someError)!
+    func testNSErrorFromSwiftError() throws {
+        let error = try unwrap(NSError.error(from: EnumError.someError))
         expect(error.localizedDescription).to(equal("Enum error description"))
         expect(error.localizedFailureReason).to(equal("Enum failure reason"))
         expect(error.localizedRecoverySuggestion).to(equal("Enum recovery suggestion"))
