@@ -13,6 +13,7 @@ import PillarboxCoreBusiness
 
 import SwiftUI
 
+@available(iOS 17.0, *)
 struct DownloadsView: View {
     @StateObject private var urlDownloader = Downloader(
         assetLoaderType: DemoAssetLoader.self,
@@ -140,7 +141,9 @@ struct DownloadsView: View {
 
 #Preview {
     NavigationStack {
-        DownloadsView()
+        if #available(iOS 17.0, *) {
+            DownloadsView()
+        }
     }
 }
 

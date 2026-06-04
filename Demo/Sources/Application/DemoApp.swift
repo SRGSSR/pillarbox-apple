@@ -70,7 +70,9 @@ struct DemoApp: App {
 #if DEBUG && os(iOS)
     private func downloadsTab() -> some View {
         RoutedNavigationStack(keyPath: \.downloadsPath) {
-            DownloadsView()
+            if #available(iOS 17.0, *) {
+                DownloadsView()
+            }
         }
         .tabItem {
             Label("Downloads", systemImage: "square.and.arrow.down")
