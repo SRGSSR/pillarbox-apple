@@ -7,14 +7,22 @@
 import Combine
 import PillarboxPlayer
 
-enum URNAssetLoader: AssetLoader {
-    struct Input {
+// swiftlint:disable missing_docs
+
+public enum URNAssetLoader: AssetLoader {
+    public struct Input {
         let urn: String
         let server: Server
         let configuration: PlaybackConfiguration
+
+        public init(urn: String, server: Server, configuration: PlaybackConfiguration) {
+            self.urn = urn
+            self.server = server
+            self.configuration = configuration
+        }
     }
 
-    static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
+    public static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
         let dataProvider = DataProvider(server: input.server)
         return dataProvider.mediaCompositionPublisher(forUrn: input.urn)
             .tryMap { response in
@@ -23,7 +31,7 @@ enum URNAssetLoader: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    static func asset(from input: Input, metadata: MediaMetadata) -> Asset {
+    public static func asset(from input: Input, metadata: MediaMetadata) -> Asset {
         if let blockingReason = metadata.blockingReason {
             return .unavailable(with: BlockingError(reason: blockingReason))
         }
@@ -44,7 +52,7 @@ enum URNAssetLoader: AssetLoader {
         }
     }
 
-    static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
+    public static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
         metadata?.playerMetadata() ?? .empty
     }
 
@@ -58,3 +66,5 @@ enum URNAssetLoader: AssetLoader {
         return .init(automaticallyPreservesTimeOffsetFromLive: true, preferredForwardBufferDuration: 1)
     }
 }
+
+// swiftlint:enable missing_docs

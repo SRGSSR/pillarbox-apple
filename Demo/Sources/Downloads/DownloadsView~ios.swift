@@ -9,26 +9,37 @@
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
+import PillarboxCoreBusiness
+
 import SwiftUI
 
 struct DownloadsView: View {
-    @StateObject private var downloader = Downloader(
+    @StateObject private var urlDownloader = Downloader(
         assetLoaderType: DemoAssetLoader.self,
-        configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.file-downloads"),
+        configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
         store: DemoAssetDownloadStore(fileName: "file_downloads.json")
+    )
+    @StateObject private var urnDownloader = Downloader(
+        assetLoaderType: URNAssetLoader.self,
+        configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"),
+        store: URNAssetDownloadStore()
     )
     @EnvironmentObject private var router: Router
 
+    private var downloads: [Download] {
+        urlDownloader.downloads + urnDownloader.downloads
+    }
+
     var body: some View {
         ZStack {
-            if !downloader.downloads.isEmpty {
+            if !downloads.isEmpty {
                 mainView()
             }
             else {
                 emptyView()
             }
         }
-        .animation(.defaultLinear, value: downloader.downloads)
+        .animation(.defaultLinear, value: urlDownloader.downloads)
         .toolbar {
             ToolbarItem {
                 removeAllButton()
@@ -42,17 +53,22 @@ struct DownloadsView: View {
 
     private func mainView() -> some View {
         List {
-            ForEach(Array(downloader.downloads), id: \.self) { download in
-                DownloadCell(download: download) {
-                    if let item = downloader.playerItem(for: download) {
-                        router.presented = .player(media: .init(title: download.metadata.title ?? "Untitled", type: .item(item)))
-                    }
+            list(for: urlDownloader)
+            list(for: urnDownloader)
+        }
+    }
+
+    private func list<S>(for downloader: Downloader<S>) -> some View where S: AssetDownloadStore {
+        ForEach(downloader.downloads, id: \.self) { download in
+            DownloadCell(download: download) {
+                if let item = downloader.playerItem(for: download) {
+                    router.presented = .player(media: .init(title: download.metadata.title ?? "Untitled", type: .item(item)))
                 }
             }
-            .onDelete { indexes in
-                for index in indexes.reversed() {
-                    downloader.removeDownload(downloader.downloads[index])
-                }
+        }
+        .onDelete { indexes in
+            for index in indexes.reversed() {
+                downloader.removeDownload(downloader.downloads[index])
             }
         }
     }
@@ -86,6 +102,10 @@ struct DownloadsView: View {
                 title: "MP3",
                 url: "https://rts-aod-dd.akamaized.net/ww/13306839/63cc2653-8305-3894-a448-108810b553ef.mp3"
             )
+            addDownloadButton(
+                title: "Final de cœur à cœur 2025 - MERCI",
+                urn: "urn:rts:video:538114c0-8855-3b60-9965-981838532d09"
+            )
         } label: {
             Image(systemName: "plus")
         }
@@ -93,7 +113,15 @@ struct DownloadsView: View {
 
     private func addDownloadButton(title: String, url: URL) -> some View {
         Button {
-            downloader.addDownload(for: .init(title: title, url: url))
+            urlDownloader.addDownload(for: .init(title: title, url: url))
+        } label: {
+            Text(title)
+        }
+    }
+
+    private func addDownloadButton(title: String, urn: String) -> some View {
+        Button {
+            urnDownloader.addDownload(for: .init(urn: urn, server: .production, configuration: .default))
         } label: {
             Text(title)
         }
@@ -101,10 +129,11 @@ struct DownloadsView: View {
 
     @ViewBuilder
     private func removeAllButton() -> some View {
-        if !downloader.downloads.isEmpty {
-            Button(action: downloader.removeAllDownloads) {
-                Image(systemName: "trash")
-            }
+        Button {
+            urlDownloader.removeAllDownloads()
+            urnDownloader.removeAllDownloads()
+        } label: {
+            Image(systemName: "trash")
         }
     }
 }
