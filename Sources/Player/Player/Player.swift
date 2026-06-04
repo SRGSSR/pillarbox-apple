@@ -321,6 +321,9 @@ private extension Player {
     }
 
     func configureControlCenterPublishers() {
+        if ProcessInfo.processInfo.isiOSAppOnMac {
+            guard #available(iOS 26, *) else { return }
+        }
         configureControlCenterMetadataUpdatePublisher()
         configureControlCenterRemoteCommandUpdatePublisher()
     }
