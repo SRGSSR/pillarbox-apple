@@ -65,6 +65,13 @@ extension URNAssetDownloadStore {
                 error: DownloadError(errorDescription: errorDescription)
             )
         }
+
+        func update(with record: DownloadRecord<URNAssetLoader.Input, MediaMetadata>) {
+            self.urn = record.input.urn
+            self.bookmarkData = record.bookmarkData
+            self.progress = record.progress
+            self.errorDescription = record.error?.localizedDescription
+        }
     }
 }
 
@@ -89,10 +96,19 @@ extension URNAssetDownloadStore: AssetDownloadStore {
     }
 
     public func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, MediaMetadata>? {
-        nil
+        entry(forId: id)?.toRecord()
     }
 
-    public func updateDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, MediaMetadata>, forId id: String) {}
+    public func updateDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, MediaMetadata>, forId id: String) {
+        guard let entry = entry(forId: id) else { return }
+        entry.update(with: record)
+        try? context.save()
+    }
+
+    private func entry(forId id: String) -> Entry? {
+        let descriptor = FetchDescriptor(predicate: Entry.predicate(for: id))
+        return try? context.fetch(descriptor).first
+    }
 }
 
 // swiftlint:enable missing_docs
