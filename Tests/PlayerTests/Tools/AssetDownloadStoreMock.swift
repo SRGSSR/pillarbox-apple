@@ -27,6 +27,10 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
         input.id
     }
 
+    static func playerMetadata(from input: AssetLoaderMockInput, metadata: PlayerMetadata?) -> PlayerMetadata {
+        .init(title: metadata?.title)
+    }
+
     static func record(from input: AssetLoaderMockInput) -> DownloadRecord<AssetLoaderMockInput, PlayerMetadata> {
         .init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
     }

@@ -35,7 +35,7 @@ public final class URNAssetDownloadStore {
 @available(iOS 17.0, *)
 extension URNAssetDownloadStore {
     @Model
-    class EntryMetadata {
+    public class EntryMetadata {
         var identifier: String?
         var title: String?
         var subtitle: String?
@@ -71,18 +71,19 @@ extension URNAssetDownloadStore {
             }
         }
 
-        func toRecord() -> DownloadRecord<URNAssetLoader.Input, MediaMetadata> {
+        func toRecord() -> DownloadRecord<URNAssetLoader.Input, EntryMetadata> {
             .init(
                 input: .init(urn: urn, server: .production, configuration: .default),
-                metadata: nil,
+                metadata: metadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: DownloadError(errorDescription: errorDescription)
             )
         }
 
-        func update(with record: DownloadRecord<URNAssetLoader.Input, MediaMetadata>) {
+        func update(with record: DownloadRecord<URNAssetLoader.Input, EntryMetadata>) {
             self.urn = record.input.urn
+            self.metadata = record.metadata
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
             self.errorDescription = record.error?.localizedDescription
@@ -97,7 +98,11 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         input.urn
     }
 
-    public func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, MediaMetadata>] {
+    public static func playerMetadata(from input: URNAssetLoader.Input, metadata: EntryMetadata?) -> PlayerMetadata {
+        .init(title: metadata?.title ?? input.urn)
+    }
+
+    public func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, EntryMetadata>] {
         guard let entries = try? context.fetch(FetchDescriptor<Entry>()) else { return [] }
         return entries.map { $0.toRecord() }
     }
@@ -110,11 +115,11 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         try? context.delete(model: Entry.self, where: Entry.predicate(for: id))
     }
 
-    public func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, MediaMetadata>? {
+    public func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, EntryMetadata>? {
         entry(forId: id)?.toRecord()
     }
 
-    public func updateDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, MediaMetadata>, forId id: String) {
+    public func updateDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, EntryMetadata>, forId id: String) {
         guard let entry = entry(forId: id) else { return }
         entry.update(with: record)
         try? context.save()

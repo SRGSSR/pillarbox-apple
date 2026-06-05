@@ -51,41 +51,52 @@ public final class Download: ObservableObject {
         properties.fileUrl
     }
 
-    private init<L, S>(
+    private init<L, M, S>(
         id: String,
         assetLoaderType: L.Type,
+        mapperType: M.Type,
         input: L.Input,
         session: DownloadSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    ) where L: AssetLoader, M: DownloadMapper, S: AssetDownloadStore, M.Loader == L, M.Store == S {
         self.id = id
         self.addRecord = {
-            store.addDownloadRecord(using: input, forId: id)
+            store.addDownloadRecord(using: mapperType.storeInput(from: input), forId: id)
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
         }
-        configurePropertiesPublisher(assetLoaderType: assetLoaderType, input: input, session: session, store: store)
+        configurePropertiesPublisher(assetLoaderType: assetLoaderType, mapperType: mapperType, input: input, session: session, store: store)
     }
 
-    convenience init<L, S>(
+    convenience init<L, M, S>(
         assetLoaderType: L.Type,
+        mapperType: M.Type,
         input: L.Input,
         session: DownloadSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        let id = type(of: store).id(from: input)
-        store.addDownloadRecord(using: input, forId: id)
-        self.init(id: id, assetLoaderType: assetLoaderType, input: input, session: session, store: store)
+    ) where L: AssetLoader, M: DownloadMapper, S: AssetDownloadStore, M.Loader == L, M.Store == S {
+        let storeInput = mapperType.storeInput(from: input)
+        let id = type(of: store).id(from: storeInput)
+        store.addDownloadRecord(using: storeInput, forId: id)
+        self.init(id: id, assetLoaderType: assetLoaderType, mapperType: mapperType, input: input, session: session, store: store)
     }
 
-    convenience init<L, S>(
+    convenience init<L, M, S>(
         assetLoaderType: L.Type,
-        record: DownloadRecord<L.Input, L.Metadata>,
+        mapperType: M.Type,
+        record: DownloadRecord<S.Input, S.Metadata>,
         session: DownloadSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        self.init(id: type(of: store).id(from: record.input), assetLoaderType: assetLoaderType, input: record.input, session: session, store: store)
+    ) where L: AssetLoader, M: DownloadMapper, S: AssetDownloadStore, M.Loader == L, M.Store == S {
+        self.init(
+            id: type(of: store).id(from: record.input),
+            assetLoaderType: assetLoaderType,
+            mapperType: mapperType,
+            input: mapperType.loaderInput(from: record.input),
+            session: session,
+            store: store
+        )
     }
 
     func attach(to location: URL) {
@@ -140,13 +151,15 @@ private extension Download {
         case cancel
     }
 
-    static func downloadSourcePublisher<L>(
+    static func downloadSourcePublisher<L, M, S>(
         assetLoaderType: L.Type,
+        mapperType: M.Type,
+        storeType: S.Type,
         id: String,
         input: L.Input,
         session: DownloadSession,
-        properties: DownloadProperties<L.Metadata>
-    ) -> AnyPublisher<DownloadSource<L.Metadata>, Error> where L: AssetLoader {
+        properties: DownloadProperties<S.Metadata>
+    ) -> AnyPublisher<DownloadSource<S.Metadata>, Error> where L: AssetLoader, M: DownloadMapper, S: AssetDownloadStore, M.Loader == L, M.Store == S {
         if let metadata = properties.source.metadata {
             return session.sessionTaskPublisher(id: id)
                 .setFailureType(to: Error.self)
@@ -171,7 +184,7 @@ private extension Download {
                     )
                 }
                 .switchToLatest()
-                .map { .init(kind: .task($0), metadata: $1) }
+                .map { .init(kind: .task($0), metadata: mapperType.storeMetadata(from: $1)) }
                 .prepend(.init(kind: .estimate(0), metadata: nil))
                 .eraseToAnyPublisher()
         }
@@ -180,18 +193,20 @@ private extension Download {
 
 @available(tvOS, unavailable)
 extension Download {
-    private func configurePropertiesPublisher<L, S>(
+    private func configurePropertiesPublisher<L, M, S>(
         assetLoaderType: L.Type,
+        mapperType: M.Type,
         input: L.Input,
         session: DownloadSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-        downloadPropertiesPublisher(assetLoaderType: assetLoaderType, id: id, input: input, session: session, store: store)
+    ) where L: AssetLoader, M: DownloadMapper, S: AssetDownloadStore, M.Loader == L, M.Store == S {
+        let storeInput = mapperType.storeInput(from: input)
+        downloadPropertiesPublisher(assetLoaderType: assetLoaderType, mapperType: mapperType, id: id, input: input, session: session, store: store)
             .receiveOnMainThread()
             .handleEvents(
                 receiveOutput: { [id] properties in
                     let record = DownloadRecord(
-                        input: input,
+                        input: storeInput,
                         metadata: properties.source.metadata,
                         bookmarkData: properties.bookmarkData(),
                         progress: properties.progress,
@@ -203,7 +218,10 @@ extension Download {
             )
             .map { properties in
                 DownloadProperties(
-                    source: .init(kind: properties.source.kind, metadata: assetLoaderType.playerMetadata(from: input, metadata: properties.source.metadata)),
+                    source: .init(
+                        kind: properties.source.kind,
+                        metadata: type(of: store).playerMetadata(from: storeInput, metadata: properties.source.metadata)
+                    ),
                     fileUrl: properties.fileUrl,
                     error: properties.error
                 )
@@ -211,17 +229,26 @@ extension Download {
             .assign(to: &$properties)
     }
 
-    private func downloadPropertiesPublisher<L, S>(
+    private func downloadPropertiesPublisher<L, M, S>(
         assetLoaderType: L.Type,
+        mapperType: M.Type,
         id: String,
         input: L.Input,
         session: DownloadSession,
         store: S
-    ) -> AnyPublisher<DownloadProperties<L.Metadata>, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+    ) -> AnyPublisher<DownloadProperties<S.Metadata>, Never> where L: AssetLoader, M: DownloadMapper, S: AssetDownloadStore, M.Loader == L, M.Store == S {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger, locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Publishers.CombineLatest3(
-                Self.downloadSourcePublisher(assetLoaderType: assetLoaderType, id: id, input: input, session: session, properties: properties),
+                Self.downloadSourcePublisher(
+                    assetLoaderType: assetLoaderType,
+                    mapperType: mapperType,
+                    storeType: type(of: store),
+                    id: id,
+                    input: input,
+                    session: session,
+                    properties: properties
+                ),
                 locationSubject
                     .setFailureType(to: Error.self)
                     .prepend(properties.fileUrl),
@@ -229,7 +256,7 @@ extension Download {
                     .setFailureType(to: Error.self)
                     .prepend(properties.error)
             )
-            .map { DownloadProperties(source: $0, fileUrl: $1, error: $2) }
+            .map { DownloadProperties(source: .init(kind: $0.kind, metadata: $0.metadata), fileUrl: $1, error: $2) }
             .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
             .catch { Just(DownloadProperties(source: .init(kind: .estimate(0), metadata: nil), fileUrl: nil, error: $0)) }
             .prepend(properties)

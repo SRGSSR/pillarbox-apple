@@ -20,6 +20,23 @@ private struct DownloadError: LocalizedError {
     }
 }
 
+enum DemoAssetMapper: DownloadMapper {
+    typealias Loader = DemoAssetLoader
+    typealias Store = DemoAssetDownloadStore
+
+    static func storeInput(from input: DemoAssetLoader.Input) -> DemoAssetDownloadStore.Input {
+        .init(title: input.title, url: input.url)
+    }
+
+    static func loaderInput(from input: DemoAssetDownloadStore.Input) -> DemoAssetLoader.Input {
+        .init(title: input.title, url: input.url)
+    }
+
+    static func storeMetadata(from metadata: String) -> String {
+        metadata
+    }
+}
+
 final class DemoAssetDownloadStore {
     private struct FileEntry: Codable {
         let id: String
@@ -92,6 +109,10 @@ final class DemoAssetDownloadStore {
 extension DemoAssetDownloadStore: AssetDownloadStore {
     static func id(from input: DemoAssetLoader.Input) -> String {
         input.url.absoluteString
+    }
+
+    static func playerMetadata(from input: DemoAssetLoader.Input, metadata: String?) -> PlayerMetadata {
+        .init(title: metadata ?? input.title)
     }
 
     func downloadRecords() -> [DownloadRecord<DemoAssetLoader.Input, String>] {
