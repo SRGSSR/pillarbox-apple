@@ -35,16 +35,31 @@ public final class URNAssetDownloadStore {
 @available(iOS 17.0, *)
 extension URNAssetDownloadStore {
     @Model
+    class EntryMetadata {
+        var identifier: String?
+        var title: String?
+        var subtitle: String?
+
+        init(identifier: String? = nil, title: String? = nil, subtitle: String? = nil) {
+            self.identifier = identifier
+            self.title = title
+            self.subtitle = subtitle
+        }
+    }
+
+    @Model
     class Entry {
         var id: String
         var urn: String
+        var metadata: EntryMetadata?
         var bookmarkData: Data?
         var progress: Double
         var errorDescription: String?
 
-        init(id: String, urn: String, bookmarkData: Data? = nil, progress: Double, errorDescription: String? = nil) {
+        init(id: String, urn: String, metadata: EntryMetadata? = nil, bookmarkData: Data? = nil, progress: Double, errorDescription: String? = nil) {
             self.id = id
             self.urn = urn
+            self.metadata = metadata
             self.bookmarkData = bookmarkData
             self.progress = progress
             self.errorDescription = errorDescription
