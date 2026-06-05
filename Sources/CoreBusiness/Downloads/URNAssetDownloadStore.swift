@@ -50,6 +50,12 @@ extension URNAssetDownloadStore {
             self.errorDescription = errorDescription
         }
 
+        static func predicate(for id: String) -> Predicate<Entry> {
+            #Predicate { entry in
+                entry.id == id
+            }
+        }
+
         func toRecord() -> DownloadRecord<URNAssetLoader.Input, MediaMetadata> {
             .init(
                 input: .init(urn: urn, server: .production, configuration: .default),
@@ -78,7 +84,9 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         context.insert(Entry(id: id, urn: input.urn, progress: 0))
     }
 
-    public func removeDownloadRecord(forId id: String) {}
+    public func removeDownloadRecord(forId id: String) {
+        try? context.delete(model: Entry.self, where: Entry.predicate(for: id))
+    }
 
     public func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, MediaMetadata>? {
         nil
