@@ -7,12 +7,18 @@
 import Foundation
 
 @available(tvOS, unavailable)
-enum DownloadSource {
+enum DownloadSourceKind {
     case estimate(Double)
     case task(DownloadSessionTaskProperties)
+}
+
+@available(tvOS, unavailable)
+struct DownloadSource<Metadata> {
+    let kind: DownloadSourceKind
+    let metadata: Metadata?
 
     private var task: URLSessionTask? {
-        switch self {
+        switch kind {
         case .estimate:
             return nil
         case let .task(properties):
