@@ -9,6 +9,7 @@
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
+@_spi(DownloaderPrivate)
 import PillarboxCoreBusiness
 
 import SwiftUI
@@ -17,11 +18,13 @@ import SwiftUI
 struct DownloadsView: View {
     @StateObject private var urlDownloader = Downloader(
         assetLoaderType: DemoAssetLoader.self,
+        mapperType: DemoAssetMapper.self,
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
         store: DemoAssetDownloadStore(fileName: "file_downloads.json")
     )
     @StateObject private var urnDownloader = Downloader(
         assetLoaderType: URNAssetLoader.self,
+        mapperType: URNAssetMapper.self,
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"),
         store: URNAssetDownloadStore()
     )
