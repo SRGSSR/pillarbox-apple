@@ -12,12 +12,12 @@ import PillarboxPlayer
 @_spi(DownloaderPrivate)
 import PillarboxCoreBusiness
 
-final class Downloaders: ObservableObject {
+final class DemoDownloader: ObservableObject {
     private let urlDownloader = Downloader(
-        assetLoaderType: DemoAssetLoader.self,
-        mapperType: DemoAssetMapper.self,
+        assetLoaderType: URLAssetLoader.self,
+        mapperType: URLAssetMapper.self,
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
-        store: DemoAssetDownloadStore(fileName: "file_downloads.json")
+        store: URLAssetDownloadStore(fileName: "file_downloads.json")
     )
 
     private let _urnDownloader: Any? = {
@@ -49,7 +49,7 @@ final class Downloaders: ObservableObject {
 
     init() {}
 
-    func addUrlDownload(input: DemoAssetLoader.Input) {
+    func addUrlDownload(input: URLAssetLoader.Input) {
         objectWillChange.send()
         urlDownloader.addDownload(for: input)
     }

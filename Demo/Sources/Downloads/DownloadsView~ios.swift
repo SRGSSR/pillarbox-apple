@@ -15,19 +15,19 @@ import PillarboxCoreBusiness
 import SwiftUI
 
 struct DownloadsView: View {
-    @EnvironmentObject private var downloaders: Downloaders
+    @EnvironmentObject private var downloader: DemoDownloader
     @EnvironmentObject private var router: Router
 
     var body: some View {
         ZStack {
-            if !downloaders.downloads.isEmpty {
+            if !downloader.downloads.isEmpty {
                 mainView()
             }
             else {
                 emptyView()
             }
         }
-        .animation(.defaultLinear, value: downloaders.downloads)
+        .animation(.defaultLinear, value: downloader.downloads)
         .toolbar {
             removeAllButton()
         }
@@ -36,16 +36,16 @@ struct DownloadsView: View {
 
     private func mainView() -> some View {
         List {
-            ForEach(downloaders.downloads, id: \.self) { download in
+            ForEach(downloader.downloads, id: \.self) { download in
                 DownloadCell(download: download) {
-                    if let item = downloaders.playerItem(for: download) {
+                    if let item = downloader.playerItem(for: download) {
                         router.presented = .player(media: .init(title: download.metadata.title ?? "Untitled", type: .item(item)))
                     }
                 }
             }
             .onDelete { indexes in
                 for index in indexes.reversed() {
-                    downloaders.removeDownload(downloaders.downloads[index])
+                    downloader.removeDownload(downloader.downloads[index])
                 }
             }
         }
@@ -64,7 +64,7 @@ struct DownloadsView: View {
     @ViewBuilder
     private func removeAllButton() -> some View {
         Button {
-            downloaders.removeAllDownloads()
+            downloader.removeAllDownloads()
         } label: {
             Image(systemName: "trash")
         }
