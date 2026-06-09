@@ -6,12 +6,6 @@
 
 import SwiftUI
 
-@_spi(DownloaderPrivate)
-import PillarboxPlayer
-
-@_spi(DownloaderPrivate)
-import PillarboxCoreBusiness
-
 @main
 struct DemoApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
