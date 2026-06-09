@@ -212,6 +212,23 @@ struct ExamplesView: View {
                 Cell(title: media.title, subtitle: media.subtitle, imageUrl: media.imageUrl) {
                     router.presented = .player(media: media)
                 }
+#if os(iOS)
+                .swipeActions {
+                    switch media.type {
+                    case let .url(url):
+                        URLDownloadAction(title: media.title, url: url)
+                    case let .urn(urn, serverSetting: serverSetting):
+                        if #available(iOS 17, *) {
+                            URNDownloadAction(urn: urn, serverSetting: serverSetting)
+                        }
+                        else {
+                            EmptyView()
+                        }
+                    default:
+                        EmptyView()
+                    }
+                }
+#endif
             }
         }
     }

@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-private struct URLDownloadAction: View {
+struct URLDownloadAction: View {
     let title: String
     let url: URL
 
