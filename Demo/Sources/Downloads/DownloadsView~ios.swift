@@ -63,10 +63,12 @@ struct DownloadsView: View {
 
     @ViewBuilder
     private func removeAllButton() -> some View {
-        Button {
-            downloader.removeAllDownloads()
-        } label: {
-            Image(systemName: "trash")
+        if !downloader.downloads.isEmpty {
+            Button {
+                downloader.removeAllDownloads()
+            } label: {
+                Image(systemName: "trash")
+            }
         }
     }
 }
