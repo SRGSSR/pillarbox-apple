@@ -48,8 +48,6 @@ final class DemoDownloader: ObservableObject {
         return downloads
     }
 
-    init() {}
-
     func addUrlDownload(title: String, url: URL) {
         objectWillChange.send()
         urlDownloader.addDownload(for: .init(title: title, url: url))
