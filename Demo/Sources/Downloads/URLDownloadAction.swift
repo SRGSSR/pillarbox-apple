@@ -14,7 +14,7 @@ private struct URLDownloadAction: View {
 
     var body: some View {
         Button {
-            downloader.addUrlDownload(input: .init(title: title, url: url))
+            downloader.addUrlDownload(title: title, url: url)
         } label: {
             Image(systemName: "arrow.down")
         }

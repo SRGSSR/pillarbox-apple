@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Foundation
 
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
@@ -49,16 +50,15 @@ final class DemoDownloader: ObservableObject {
 
     init() {}
 
-    // TOOD: Pass title/urn/settings/url directly
-    func addUrlDownload(input: URLAssetLoader.Input) {
+    func addUrlDownload(title: String, url: URL) {
         objectWillChange.send()
-        urlDownloader.addDownload(for: input)
+        urlDownloader.addDownload(for: .init(title: title, url: url))
     }
 
     @available(iOS 17, *)
-    func addUrnDownload(input: URNAssetDownloadStore.Input) {
+    func addUrnDownload(urn: String, serverSetting: ServerSetting) {
         objectWillChange.send()
-        urnDownloader?.addDownload(for: input)
+        urnDownloader?.addDownload(for: .init(urn: urn, server: serverSetting.server, configuration: .default))
     }
 
     func playerItem(for download: Download) -> PlayerItem? {
