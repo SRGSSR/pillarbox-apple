@@ -8,6 +8,9 @@ import SRGDataProviderCombine
 import SRGDataProviderModel
 import SwiftUI
 
+@_spi(DownloaderPrivate)
+import PillarboxCoreBusiness
+
 private struct LoadedView: View {
     @ObservedObject var model: ContentListViewModel
     let contents: [ContentListViewModel.Content]
@@ -104,7 +107,12 @@ private struct ContentCell: View {
                 router.presented = .player(media: media)
             }
 #if os(iOS)
-            .swipeActions { CopyActions(text: media.urn) }
+            .swipeActions {
+                if #available(iOS 17, *) {
+                    DownloadAction(title: title, urn: media.urn, serverSetting: serverSetting)
+                }
+                CopyActions(text: media.urn)
+            }
 #endif
         case let .show(show):
             CustomNavigationLink(
@@ -121,6 +129,23 @@ private struct ContentCell: View {
 #if os(iOS)
             .swipeActions { CopyActions(text: show.urn) }
 #endif
+        }
+    }
+}
+
+@available(iOS 17, *)
+struct DownloadAction: View {
+    let title: String
+    let urn: String
+    let serverSetting: ServerSetting
+
+    @EnvironmentObject private var downloaders: Downloaders
+
+    var body: some View {
+        Button {
+            downloaders.addDownload(ofType: URNAssetDownloadStore.self, input: .init(urn: urn, server: serverSetting.server, configuration: .default))
+        } label: {
+            Image(systemName: "arrow.down")
         }
     }
 }
