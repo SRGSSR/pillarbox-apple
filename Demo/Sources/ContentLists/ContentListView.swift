@@ -106,7 +106,7 @@ private struct ContentCell: View {
 #if os(iOS)
             .swipeActions {
                 if #available(iOS 17, *) {
-                    URNDownloadAction(title: title, urn: media.urn, serverSetting: serverSetting)
+                    URNDownloadAction(urn: media.urn, serverSetting: serverSetting)
                 }
                 CopyActions(text: media.urn)
             }

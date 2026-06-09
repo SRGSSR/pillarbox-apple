@@ -8,7 +8,6 @@ import SwiftUI
 
 @available(iOS 17, *)
 struct URNDownloadAction: View {
-    let title: String
     let urn: String
     let serverSetting: ServerSetting
 
@@ -16,7 +15,7 @@ struct URNDownloadAction: View {
 
     var body: some View {
         Button {
-            downloader.addUrnDownload(input: .init(urn: urn, server: serverSetting.server, configuration: .default))
+            downloader.addUrnDownload(urn: urn, serverSetting: serverSetting)
         } label: {
             Image(systemName: "arrow.down")
         }
