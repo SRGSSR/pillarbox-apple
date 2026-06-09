@@ -13,28 +13,59 @@ import PillarboxPlayer
 import PillarboxCoreBusiness
 
 final class Downloaders: ObservableObject {
-    private let downloaders: [any DownloadManagement]
+    private let urlDownloader = Downloader(
+        assetLoaderType: DemoAssetLoader.self,
+        mapperType: DemoAssetMapper.self,
+        configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
+        store: DemoAssetDownloadStore(fileName: "file_downloads.json")
+    )
+
+    private let _urnDownloader: Any? = {
+        if #available(iOS 17, *) {
+            Downloader(
+                assetLoaderType: URNAssetLoader.self,
+                mapperType: URNAssetMapper.self,
+                configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"),
+                store: URNAssetDownloadStore()
+            )
+        }
+        else {
+            nil
+        }
+    }()
+
+    @available(iOS 17, *)
+    private var urnDownloader: Downloader<URNAssetDownloadStore>? {
+        _urnDownloader as? Downloader<URNAssetDownloadStore>
+    }
 
     var downloads: [Download] {
-        downloaders.reduce([]) { total, increment in
-            total + increment.downloads
+        var downloads = urlDownloader.downloads
+        if #available(iOS 17, *), let urnDownloader {
+            downloads += urnDownloader.downloads
         }
+        return downloads
     }
 
-    init(downloaders: [any DownloadManagement]) {
-        self.downloaders = downloaders
+    init() {}
+
+    func addUrlDownload(input: DemoAssetLoader.Input) {
+        objectWillChange.send()
+        urlDownloader.addDownload(for: input)
     }
 
-    func addDownload<S>(ofType type: S.Type, input: S.Input) -> Download? where S: AssetDownloadStore {
-        downloader(ofType: type)?.addDownload(for: input)
+    @available(iOS 17, *)
+    func addUrnDownload(input: URNAssetDownloadStore.Input) {
+        objectWillChange.send()
+        urnDownloader?.addDownload(for: input)
     }
 
     func playerItem(for download: Download) -> PlayerItem? {
-        if let download = downloader(ofType: DemoAssetDownloadStore.self)?.playerItem(for: download, trackerAdapters: []) {
-            return download
+        if let item = urlDownloader.playerItem(for: download) {
+            return item
         }
-        else if #available(iOS 17, *), let download = downloader(ofType: URNAssetDownloadStore.self)?.playerItem(for: download, trackerAdapters: []) {
-            return download
+        else if #available(iOS 17, *), let urnDownloader, let item = urnDownloader.playerItem(for: download) {
+            return item
         }
         else {
             return nil
@@ -43,23 +74,17 @@ final class Downloaders: ObservableObject {
 
     func removeDownload(_ download: Download) {
         objectWillChange.send()
-        downloaders.forEach { downloader in
-            downloader.removeDownload(download)
+        urlDownloader.removeDownload(download)
+        if #available(iOS 17, *) {
+            urnDownloader?.removeDownload(download)
         }
     }
 
     func removeAllDownloads() {
         objectWillChange.send()
-        downloaders.forEach { downloader in
-            downloader.removeAllDownloads()
+        urlDownloader.removeAllDownloads()
+        if #available(iOS 17, *) {
+            urnDownloader?.removeAllDownloads()
         }
-    }
-
-    private func downloader<S>(ofType type: S.Type) -> (any DownloadManagement<S>)? {
-        for downloader in downloaders {
-            guard let typedDownloader = downloader as? any DownloadManagement<S> else { continue }
-            return typedDownloader
-        }
-        return nil
     }
 }

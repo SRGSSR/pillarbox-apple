@@ -13,7 +13,7 @@ import Foundation
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Downloader<S>: ObservableObject, DownloadManagement<S> where S: AssetDownloadStore {
+public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     private let manager: any DownloadManagement<S>
 
     @Published public private(set) var downloads: [Download] = []

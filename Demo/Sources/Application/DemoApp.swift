@@ -17,25 +17,7 @@ struct DemoApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
 
     @StateObject private var router = Router()
-    @StateObject private var downloaders: Downloaders = {
-        var downloaders: [any DownloadManagement] = [
-            Downloader(
-                assetLoaderType: DemoAssetLoader.self,
-                mapperType: DemoAssetMapper.self,
-                configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
-                store: DemoAssetDownloadStore(fileName: "file_downloads.json")
-            )
-        ]
-        if #available(iOS 17, *) {
-            downloaders.append(Downloader(
-                assetLoaderType: URNAssetLoader.self,
-                mapperType: URNAssetMapper.self,
-                configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"),
-                store: URNAssetDownloadStore()
-            ))
-        }
-        return .init(downloaders: downloaders)
-    }()
+    @StateObject private var downloaders = Downloaders()
 
     @SceneBuilder var body: some Scene {
         WindowGroup {

@@ -143,7 +143,7 @@ struct DownloadAction: View {
 
     var body: some View {
         Button {
-            downloaders.addDownload(ofType: URNAssetDownloadStore.self, input: .init(urn: urn, server: serverSetting.server, configuration: .default))
+            downloaders.addUrnDownload(input: .init(urn: urn, server: serverSetting.server, configuration: .default))
         } label: {
             Image(systemName: "arrow.down")
         }
