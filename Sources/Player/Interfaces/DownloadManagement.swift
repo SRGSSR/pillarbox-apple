@@ -7,11 +7,8 @@
 #if DEBUG
 
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
-public protocol DownloadManagement<Store> {
+protocol DownloadManagement<Store> {
     associatedtype Store: AssetDownloadStore
-
-    var downloads: [Download] { get }
 
     func addDownload(for input: Store.Input) -> Download
 
