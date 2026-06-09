@@ -8,9 +8,6 @@ import SRGDataProviderCombine
 import SRGDataProviderModel
 import SwiftUI
 
-@_spi(DownloaderPrivate)
-import PillarboxCoreBusiness
-
 private struct LoadedView: View {
     @ObservedObject var model: ContentListViewModel
     let contents: [ContentListViewModel.Content]
@@ -139,11 +136,11 @@ struct DownloadAction: View {
     let urn: String
     let serverSetting: ServerSetting
 
-    @EnvironmentObject private var downloaders: Downloaders
+    @EnvironmentObject private var downloader: DemoDownloader
 
     var body: some View {
         Button {
-            downloaders.addUrnDownload(input: .init(urn: urn, server: serverSetting.server, configuration: .default))
+            downloader.addUrnDownload(input: .init(urn: urn, server: serverSetting.server, configuration: .default))
         } label: {
             Image(systemName: "arrow.down")
         }

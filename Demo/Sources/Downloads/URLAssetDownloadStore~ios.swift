@@ -20,24 +20,7 @@ private struct DownloadError: LocalizedError {
     }
 }
 
-enum DemoAssetMapper: DownloadMapper {
-    typealias Loader = DemoAssetLoader
-    typealias Store = DemoAssetDownloadStore
-
-    static func storeInput(from input: DemoAssetLoader.Input) -> DemoAssetDownloadStore.Input {
-        .init(title: input.title, url: input.url)
-    }
-
-    static func loaderInput(from input: DemoAssetDownloadStore.Input) -> DemoAssetLoader.Input {
-        .init(title: input.title, url: input.url)
-    }
-
-    static func storeMetadata(from metadata: String) -> String {
-        metadata
-    }
-}
-
-final class DemoAssetDownloadStore {
+final class URLAssetDownloadStore {
     private struct FileEntry: Codable {
         let id: String
         let title: String
@@ -57,7 +40,7 @@ final class DemoAssetDownloadStore {
             self.errorDescription = errorDescription
         }
 
-        init(id: String, input: DemoAssetLoader.Input) {
+        init(id: String, input: URLAssetLoader.Input) {
             self.init(
                 id: id,
                 title: input.title,
@@ -69,7 +52,7 @@ final class DemoAssetDownloadStore {
             )
         }
 
-        init(id: String, record: DownloadRecord<DemoAssetLoader.Input, String>) {
+        init(id: String, record: DownloadRecord<URLAssetLoader.Input, String>) {
             self.init(
                 id: id,
                 title: record.input.title,
@@ -81,9 +64,9 @@ final class DemoAssetDownloadStore {
             )
         }
 
-        func toDownloadRecord() -> DownloadRecord<DemoAssetLoader.Input, String> {
+        func toDownloadRecord() -> DownloadRecord<URLAssetLoader.Input, String> {
             .init(
-                input: DemoAssetLoader.Input(title: title, url: url),
+                input: URLAssetLoader.Input(title: title, url: url),
                 metadata: metadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
@@ -106,20 +89,20 @@ final class DemoAssetDownloadStore {
     }
 }
 
-extension DemoAssetDownloadStore: AssetDownloadStore {
-    static func id(from input: DemoAssetLoader.Input) -> String {
+extension URLAssetDownloadStore: AssetDownloadStore {
+    static func id(from input: URLAssetLoader.Input) -> String {
         input.url.absoluteString
     }
 
-    static func playerMetadata(from input: DemoAssetLoader.Input, metadata: String?) -> PlayerMetadata {
+    static func playerMetadata(from input: URLAssetLoader.Input, metadata: String?) -> PlayerMetadata {
         .init(title: metadata ?? input.title)
     }
 
-    func downloadRecords() -> [DownloadRecord<DemoAssetLoader.Input, String>] {
+    func downloadRecords() -> [DownloadRecord<URLAssetLoader.Input, String>] {
         fileEntries.map { $0.toDownloadRecord() }
     }
 
-    func addDownloadRecord(using input: DemoAssetLoader.Input, forId id: String) {
+    func addDownloadRecord(using input: URLAssetLoader.Input, forId id: String) {
         fileEntries.append(FileEntry(id: id, input: input))
         save()
     }
@@ -129,11 +112,11 @@ extension DemoAssetDownloadStore: AssetDownloadStore {
         save()
     }
 
-    func downloadRecord(forId id: String) -> DownloadRecord<DemoAssetLoader.Input, String>? {
+    func downloadRecord(forId id: String) -> DownloadRecord<URLAssetLoader.Input, String>? {
         fileEntries.first { $0.id == id }?.toDownloadRecord()
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<DemoAssetLoader.Input, String>, forId id: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<URLAssetLoader.Input, String>, forId id: String) {
         guard let index = fileEntries.firstIndex(where: { $0.id == id }) else { return }
         fileEntries[index] = .init(id: id, record: record)
         save()

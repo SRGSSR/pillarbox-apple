@@ -12,7 +12,7 @@ import Foundation
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
-struct DemoAssetLoader: AssetLoader {
+struct URLAssetLoader: AssetLoader {
     struct Input {
         let title: String
         let url: URL
