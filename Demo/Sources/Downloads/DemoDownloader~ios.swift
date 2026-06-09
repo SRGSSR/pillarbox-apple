@@ -49,6 +49,7 @@ final class DemoDownloader: ObservableObject {
 
     init() {}
 
+    // TOOD: Pass title/urn/settings/url directly
     func addUrlDownload(input: URLAssetLoader.Input) {
         objectWillChange.send()
         urlDownloader.addDownload(for: input)

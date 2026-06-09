@@ -106,7 +106,7 @@ private struct ContentCell: View {
 #if os(iOS)
             .swipeActions {
                 if #available(iOS 17, *) {
-                    DownloadAction(title: title, urn: media.urn, serverSetting: serverSetting)
+                    URNDownloadAction(title: title, urn: media.urn, serverSetting: serverSetting)
                 }
                 CopyActions(text: media.urn)
             }
@@ -126,23 +126,6 @@ private struct ContentCell: View {
 #if os(iOS)
             .swipeActions { CopyActions(text: show.urn) }
 #endif
-        }
-    }
-}
-
-@available(iOS 17, *)
-struct DownloadAction: View {
-    let title: String
-    let urn: String
-    let serverSetting: ServerSetting
-
-    @EnvironmentObject private var downloader: DemoDownloader
-
-    var body: some View {
-        Button {
-            downloader.addUrnDownload(input: .init(urn: urn, server: serverSetting.server, configuration: .default))
-        } label: {
-            Image(systemName: "arrow.down")
         }
     }
 }
