@@ -40,22 +40,29 @@ final class DemoDownloader: ObservableObject {
         _urnDownloader as? Downloader<URNAssetDownloadStore>
     }
 
-    var downloads: [Download] {
-        var downloads = urlDownloader.downloads
+    @Published private(set) var downloads: [Download] = []
+
+    init() {
         if #available(iOS 17, *), let urnDownloader {
-            downloads += urnDownloader.downloads
+            Publishers.CombineLatest(
+                urlDownloader.$downloads,
+                urnDownloader.$downloads
+            )
+            .map { $0 + $1 }
+            .assign(to: &$downloads)
         }
-        return downloads
+        else {
+            urlDownloader.$downloads
+                .assign(to: &$downloads)
+        }
     }
 
     func addUrlDownload(title: String, url: URL) {
-        objectWillChange.send()
         urlDownloader.addDownload(for: .init(title: title, url: url))
     }
 
     @available(iOS 17, *)
     func addUrnDownload(urn: String, serverSetting: ServerSetting) {
-        objectWillChange.send()
         urnDownloader?.addDownload(for: .init(urn: urn, server: serverSetting.server, configuration: .default))
     }
 
@@ -72,7 +79,6 @@ final class DemoDownloader: ObservableObject {
     }
 
     func removeDownload(_ download: Download) {
-        objectWillChange.send()
         urlDownloader.removeDownload(download)
         if #available(iOS 17, *) {
             urnDownloader?.removeDownload(download)
@@ -80,7 +86,6 @@ final class DemoDownloader: ObservableObject {
     }
 
     func removeAllDownloads() {
-        objectWillChange.send()
         urlDownloader.removeAllDownloads()
         if #available(iOS 17, *) {
             urnDownloader?.removeAllDownloads()
