@@ -23,6 +23,17 @@ public enum Server {
     private static let vector = "tvplay"
 #endif
 
+    var id: String {
+        switch self {
+        case .production:
+            return "production"
+        case .stage:
+            return "stage"
+        case .test:
+            return "test"
+        }
+    }
+
     var baseUrl: URL {
         switch self {
         case .production:

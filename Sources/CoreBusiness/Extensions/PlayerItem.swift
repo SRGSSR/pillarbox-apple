@@ -20,7 +20,6 @@ public extension PlayerItem {
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
     ///   - commandersActSource: The source of events sent to Commanders Act.
     ///
     /// Metadata is automatically associated with the item. In addition to trackers you provide, tracking is performed
@@ -29,12 +28,11 @@ public extension PlayerItem {
         _ urn: String,
         server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
-        configuration: PlaybackConfiguration = .default,
         commandersActSource: CommandersActSource? = nil
     ) -> Self {
         self.init(
             assetLoaderType: URNAssetLoader.self,
-            input: .init(urn: urn, server: server, configuration: configuration),
+            input: .init(urn: urn, server: server),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
                 CommandersActTracker.adapter(configuration: commandersActSource) { $0.analyticsMetadata },

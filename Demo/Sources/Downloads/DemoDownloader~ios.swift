@@ -71,7 +71,7 @@ final class DemoDownloader: ObservableObject {
 
     @available(iOS 17, *)
     func addUrnDownload(urn: String, serverSetting: ServerSetting) {
-        urnDownloader.addDownload(for: .init(urn: urn, server: serverSetting.server, configuration: .default))
+        urnDownloader.addDownload(for: .init(urn: urn, server: serverSetting.server))
     }
 
     func playerItem(for download: Download) -> PlayerItem? {
