@@ -4,10 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
+// swiftlint:disable missing_docs
+
+#if DEBUG
+
 import Foundation
 import SwiftData
-
-// swiftlint:disable missing_docs
 
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
@@ -133,5 +135,7 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         return try? context.fetch(descriptor).first
     }
 }
+
+#endif
 
 // swiftlint:enable missing_docs

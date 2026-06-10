@@ -12,7 +12,7 @@ struct DemoApp: App {
 
     @StateObject private var router = Router()
 
-#if os(iOS)
+#if DEBUG && os(iOS)
     @StateObject private var downloader = DemoDownloader()
 #endif
 
@@ -32,7 +32,7 @@ struct DemoApp: App {
                 presented.view()
             }
             .environmentObject(router)
-#if os(iOS)
+#if DEBUG && os(iOS)
             .environmentObject(downloader)
 #endif
         }

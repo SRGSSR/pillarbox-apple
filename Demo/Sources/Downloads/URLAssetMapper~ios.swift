@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
@@ -23,3 +25,5 @@ enum URLAssetMapper: DownloadMapper {
         metadata
     }
 }
+
+#endif
