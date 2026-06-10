@@ -16,6 +16,13 @@ struct URLAssetLoader: AssetLoader {
     struct Input {
         let title: String
         let url: URL
+        let isMonoscopic: Bool
+
+        init(title: String, url: URL, isMonoscopic: Bool = false) {
+            self.title = title
+            self.url = url
+            self.isMonoscopic = isMonoscopic
+        }
     }
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<String, any Error> {
@@ -31,7 +38,10 @@ struct URLAssetLoader: AssetLoader {
     }
 
     static func playerMetadata(from input: Input, metadata: String?) -> PlayerMetadata {
-        .init(title: metadata ?? input.title)
+        .init(
+            title: metadata ?? input.title,
+            viewport: input.isMonoscopic ? .monoscopic : .standard
+        )
     }
 }
 

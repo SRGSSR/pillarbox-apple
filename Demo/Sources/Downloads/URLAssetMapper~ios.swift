@@ -14,11 +14,11 @@ enum URLAssetMapper: DownloadMapper {
     typealias Store = URLAssetDownloadStore
 
     static func storeInput(from input: URLAssetLoader.Input) -> URLAssetDownloadStore.Input {
-        .init(title: input.title, url: input.url)
+        input
     }
 
     static func loaderInput(from input: URLAssetDownloadStore.Input) -> URLAssetLoader.Input {
-        .init(title: input.title, url: input.url)
+        input
     }
 
     static func storeMetadata(from metadata: String) -> String {
