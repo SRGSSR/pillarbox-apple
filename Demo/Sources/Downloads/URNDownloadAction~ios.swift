@@ -19,8 +19,9 @@ struct URNDownloadAction: View {
         Button {
             downloader.addUrnDownload(urn: urn, serverSetting: serverSetting)
         } label: {
-            Image(systemName: "arrow.down")
+            Image(systemName: "arrow.down.circle")
         }
+        .tint(.green)
     }
 }
 
