@@ -18,8 +18,9 @@ struct URLDownloadAction: View {
         Button {
             downloader.addUrlDownload(title: title, url: url)
         } label: {
-            Image(systemName: "arrow.down")
+            Image(systemName: "arrow.down.circle")
         }
+        .tint(.green)
     }
 }
 

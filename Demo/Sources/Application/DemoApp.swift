@@ -80,7 +80,7 @@ struct DemoApp: App {
             DownloadsView()
         }
         .tabItem {
-            Label("Downloads", systemImage: "square.and.arrow.down")
+            Label("Downloads", systemImage: "arrow.down.circle.fill")
         }
     }
 #endif
