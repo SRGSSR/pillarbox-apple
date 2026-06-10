@@ -25,28 +25,24 @@ final class DemoDownloader: ObservableObject {
     )
 
     private let _urnDownloader: Any? = {
-        if #available(iOS 17, *) {
-            Downloader(
-                assetLoaderType: URNAssetLoader.self,
-                storableMetadata: DemoDownloader.storableMetadata,
-                configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"),
-                store: URNAssetDownloadStore()
-            )
-        }
-        else {
-            nil
-        }
+        guard #available(iOS 17, *) else { return nil }
+        return Downloader(
+            assetLoaderType: URNAssetLoader.self,
+            storableMetadata: DemoDownloader.storableMetadata,
+            configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"),
+            store: URNAssetDownloadStore()
+        )
     }()
 
     @available(iOS 17, *)
-    private var urnDownloader: Downloader<URNAssetDownloadStore>? {
-        _urnDownloader as? Downloader<URNAssetDownloadStore>
+    private var urnDownloader: Downloader<URNAssetDownloadStore> {
+        _urnDownloader as! Downloader<URNAssetDownloadStore>
     }
 
     @Published private(set) var downloads: [Download] = []
 
     init() {
-        if #available(iOS 17, *), let urnDownloader {
+        if #available(iOS 17, *) {
             Publishers.CombineLatest(
                 urlDownloader.$downloads,
                 urnDownloader.$downloads
@@ -75,14 +71,14 @@ final class DemoDownloader: ObservableObject {
 
     @available(iOS 17, *)
     func addUrnDownload(urn: String, serverSetting: ServerSetting) {
-        urnDownloader?.addDownload(for: .init(urn: urn, server: serverSetting.server, configuration: .default))
+        urnDownloader.addDownload(for: .init(urn: urn, server: serverSetting.server, configuration: .default))
     }
 
     func playerItem(for download: Download) -> PlayerItem? {
         if let item = urlDownloader.playerItem(for: download) {
             return item
         }
-        else if #available(iOS 17, *), let urnDownloader, let item = urnDownloader.playerItem(for: download) {
+        else if #available(iOS 17, *), let item = urnDownloader.playerItem(for: download) {
             return item
         }
         else {
@@ -93,14 +89,14 @@ final class DemoDownloader: ObservableObject {
     func removeDownload(_ download: Download) {
         urlDownloader.removeDownload(download)
         if #available(iOS 17, *) {
-            urnDownloader?.removeDownload(download)
+            urnDownloader.removeDownload(download)
         }
     }
 
     func removeAllDownloads() {
         urlDownloader.removeAllDownloads()
         if #available(iOS 17, *) {
-            urnDownloader?.removeAllDownloads()
+            urnDownloader.removeAllDownloads()
         }
     }
 }
