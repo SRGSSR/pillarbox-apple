@@ -19,11 +19,11 @@ public enum URNAssetMapper: DownloadMapper {
     public typealias Store = URNAssetDownloadStore
 
     public static func storeInput(from input: URNAssetLoader.Input) -> URNAssetDownloadStore.Input {
-        .init(urn: input.urn, server: input.server, configuration: input.configuration)
+        input
     }
 
     public static func loaderInput(from input: URNAssetDownloadStore.Input) -> URNAssetLoader.Input {
-        .init(urn: input.urn, server: input.server, configuration: input.configuration)
+        input
     }
 
     public static func storeMetadata(from metadata: MediaMetadata) -> URNAssetDownloadStore.EntryMetadata {
