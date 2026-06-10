@@ -25,15 +25,17 @@ final class URLAssetDownloadStore {
         let id: String
         let title: String
         let url: URL
+        let isMonoscopic: Bool
         let metadata: String?
         let bookmarkData: Data?
         let progress: Double
         let errorDescription: String?
 
-        private init(id: String, title: String, url: URL, metadata: String?, bookmarkData: Data?, progress: Double, errorDescription: String?) {
+        private init(id: String, title: String, url: URL, isMonoscopic: Bool, metadata: String?, bookmarkData: Data?, progress: Double, errorDescription: String?) {
             self.id = id
             self.title = title
             self.url = url
+            self.isMonoscopic = isMonoscopic
             self.metadata = metadata
             self.bookmarkData = bookmarkData
             self.progress = progress
@@ -45,6 +47,7 @@ final class URLAssetDownloadStore {
                 id: id,
                 title: input.title,
                 url: input.url,
+                isMonoscopic: input.isMonoscopic,
                 metadata: nil,
                 bookmarkData: nil,
                 progress: 0,
@@ -57,6 +60,7 @@ final class URLAssetDownloadStore {
                 id: id,
                 title: record.input.title,
                 url: record.input.url,
+                isMonoscopic: record.input.isMonoscopic,
                 metadata: record.metadata,
                 bookmarkData: record.bookmarkData,
                 progress: record.progress,
@@ -66,7 +70,7 @@ final class URLAssetDownloadStore {
 
         func toDownloadRecord() -> DownloadRecord<URLAssetLoader.Input, String> {
             .init(
-                input: URLAssetLoader.Input(title: title, url: url),
+                input: URLAssetLoader.Input(title: title, url: url, isMonoscopic: isMonoscopic),
                 metadata: metadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
@@ -95,7 +99,10 @@ extension URLAssetDownloadStore: AssetDownloadStore {
     }
 
     static func playerMetadata(from input: URLAssetLoader.Input, metadata: String?) -> PlayerMetadata {
-        .init(title: metadata ?? input.title)
+        .init(
+            title: metadata ?? input.title,
+            viewport: input.isMonoscopic ? .monoscopic : .standard
+        )
     }
 
     func downloadRecords() -> [DownloadRecord<URLAssetLoader.Input, String>] {

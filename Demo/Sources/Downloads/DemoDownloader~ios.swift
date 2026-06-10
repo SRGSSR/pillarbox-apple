@@ -60,8 +60,8 @@ final class DemoDownloader: ObservableObject {
         }
     }
 
-    func addUrlDownload(title: String, url: URL) {
-        urlDownloader.addDownload(for: .init(title: title, url: url))
+    func addUrlDownload(title: String, url: URL, isMonoscopic: Bool) {
+        urlDownloader.addDownload(for: .init(title: title, url: url, isMonoscopic: isMonoscopic))
     }
 
     @available(iOS 17, *)

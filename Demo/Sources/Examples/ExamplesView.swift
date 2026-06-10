@@ -217,6 +217,8 @@ struct ExamplesView: View {
                     switch media.type {
                     case let .url(url):
                         URLDownloadAction(title: media.title, url: url)
+                    case let .monoscopicUrl(url):
+                        URLDownloadAction(title: media.title, url: url, isMonoscopic: true)
                     case let .urn(urn, serverSetting: serverSetting):
                         if #available(iOS 17, *) {
                             URNDownloadAction(urn: urn, serverSetting: serverSetting)
