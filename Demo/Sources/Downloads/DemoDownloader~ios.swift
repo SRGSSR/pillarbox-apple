@@ -19,7 +19,7 @@ import PillarboxCoreBusiness
 final class DemoDownloader: ObservableObject {
     private let urlDownloader = Downloader(
         assetLoaderType: URLAssetLoader.self,
-        mapperType: URLAssetMapper.self,
+        storableMetadata: \.self,
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
         store: URLAssetDownloadStore(fileName: "file_downloads.json")
     )
@@ -28,7 +28,7 @@ final class DemoDownloader: ObservableObject {
         if #available(iOS 17, *) {
             Downloader(
                 assetLoaderType: URNAssetLoader.self,
-                mapperType: URNAssetMapper.self,
+                storableMetadata: DemoDownloader.storableMetadata,
                 configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"),
                 store: URNAssetDownloadStore()
             )
@@ -58,6 +58,15 @@ final class DemoDownloader: ObservableObject {
             urlDownloader.$downloads
                 .assign(to: &$downloads)
         }
+    }
+
+    @available(iOS 17.0, *)
+    private static func storableMetadata(_ metadata: MediaMetadata) -> URNAssetDownloadStore.EntryMetadata {
+        .init(
+            identifier: metadata.mainChapter.urn,
+            title: "metadata.title", // TODO: Make EntryMetadata internal !
+            subtitle: "metadata.subtitle"
+        )
     }
 
     func addUrlDownload(title: String, url: URL, isMonoscopic: Bool) {

@@ -44,7 +44,8 @@ extension URNAssetDownloadStore {
         var title: String?
         var subtitle: String?
 
-        init(identifier: String? = nil, title: String? = nil, subtitle: String? = nil) {
+        // TODO: Make it internal
+        public init(identifier: String? = nil, title: String? = nil, subtitle: String? = nil) {
             self.identifier = identifier
             self.title = title
             self.subtitle = subtitle
