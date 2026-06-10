@@ -11,9 +11,10 @@ import Combine
 import UIKit
 
 @available(tvOS, unavailable)
-final class DownloadManager<L, M, S>: DownloadManagement<S> where L: AssetLoader, M: DownloadMapper, S: AssetDownloadStore, M.Loader == L, M.Store == S {
+final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input {
     private let store: S
     private let session: any DownloadSession
+    private let storableMetadata: (L.Metadata) -> S.Metadata
 
     @Published private(set) var downloads: [Download]
 
@@ -21,11 +22,12 @@ final class DownloadManager<L, M, S>: DownloadManagement<S> where L: AssetLoader
     // to properly clean associated downloaded data.
     private var locations: [String: URL] = [:]
 
-    init(assetLoaderType: L.Type, mapperType: M.Type, store: S, session: some DownloadSession) {
+    init(assetLoaderType: L.Type, storableMetadata: @escaping (L.Metadata) -> S.Metadata, store: S, session: some DownloadSession) {
         self.store = store
         self.session = session
+        self.storableMetadata = storableMetadata
         self.downloads = store.downloadRecords().map { record in
-            Download(assetLoaderType: assetLoaderType, mapperType: mapperType, record: record, session: session, store: store)
+            Download(assetLoaderType: assetLoaderType, storableMetadata: storableMetadata, record: record, session: session, store: store)
         }
         session.delegate = self
     }
@@ -36,7 +38,7 @@ final class DownloadManager<L, M, S>: DownloadManagement<S> where L: AssetLoader
             return download
         }
         else {
-            let download = Download(assetLoaderType: L.self, mapperType: M.self, input: M.loaderInput(from: input), session: session, store: store)
+            let download = Download(assetLoaderType: L.self, storableMetadata: storableMetadata, input: input, session: session, store: store)
             downloads.append(download)
             return download
         }
