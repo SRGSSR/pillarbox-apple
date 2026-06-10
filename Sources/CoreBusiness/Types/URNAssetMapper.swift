@@ -4,10 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
+// swiftlint:disable missing_docs
+
+#if DEBUG
+
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
-
-// swiftlint:disable missing_docs
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
@@ -32,5 +34,7 @@ public enum URNAssetMapper: DownloadMapper {
         )
     }
 }
+
+#endif
 
 // swiftlint:enable missing_docs

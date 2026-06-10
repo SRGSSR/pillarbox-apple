@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import Combine
 import Foundation
 
@@ -93,3 +95,5 @@ final class DemoDownloader: ObservableObject {
         }
     }
 }
+
+#endif

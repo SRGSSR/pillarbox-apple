@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import SwiftUI
 
 @available(iOS 17, *)
@@ -21,3 +23,5 @@ struct URNDownloadAction: View {
         }
     }
 }
+
+#endif

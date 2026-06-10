@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import SwiftUI
 
 struct URLDownloadAction: View {
@@ -20,3 +22,5 @@ struct URLDownloadAction: View {
         }
     }
 }
+
+#endif
