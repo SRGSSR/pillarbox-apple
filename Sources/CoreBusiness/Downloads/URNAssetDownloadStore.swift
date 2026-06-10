@@ -78,7 +78,7 @@ extension URNAssetDownloadStore {
 
         func toRecord() -> DownloadRecord<URNAssetLoader.Input, EntryMetadata> {
             .init(
-                input: .init(urn: urn, server: .production, configuration: .default),
+                input: .init(urn: urn, server: .production),
                 metadata: metadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
@@ -101,7 +101,7 @@ extension URNAssetDownloadStore {
 @available(tvOS, unavailable)
 extension URNAssetDownloadStore: AssetDownloadStore {
     public static func id(from input: URNAssetLoader.Input) -> String {
-        input.urn
+        input.id
     }
 
     public static func playerMetadata(from input: URNAssetLoader.Input, metadata: EntryMetadata?) -> PlayerMetadata {
