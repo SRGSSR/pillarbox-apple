@@ -19,6 +19,7 @@ public protocol DownloadMapper {
     static func storeMetadata(from metadata: Loader.Metadata) -> Store.Metadata
 }
 
+@available(tvOS, unavailable)
 extension DownloadMapper {
     static func storeMetadata(from metadata: Loader.Metadata?) -> Store.Metadata? {
         guard let metadata else { return nil }
