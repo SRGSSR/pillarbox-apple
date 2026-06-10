@@ -22,6 +22,7 @@ private struct DownloadError: LocalizedError {
 }
 
 @available(iOS 17.0, *)
+@available(tvOS, unavailable)
 public final class URNAssetDownloadStore {
     let context: ModelContext
 
@@ -33,6 +34,7 @@ public final class URNAssetDownloadStore {
 }
 
 @available(iOS 17.0, *)
+@available(tvOS, unavailable)
 extension URNAssetDownloadStore {
     @Model
     public class EntryMetadata {
@@ -93,6 +95,7 @@ extension URNAssetDownloadStore {
 
 @_spi(DownloaderPrivate)
 @available(iOS 17.0, *)
+@available(tvOS, unavailable)
 extension URNAssetDownloadStore: AssetDownloadStore {
     public static func id(from input: URNAssetLoader.Input) -> String {
         input.urn

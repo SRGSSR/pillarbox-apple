@@ -13,6 +13,7 @@ import PillarboxPlayer
 @_spi(DownloaderPrivate)
 import PillarboxCoreBusiness
 
+@available(tvOS, unavailable)
 final class DemoDownloader: ObservableObject {
     private let urlDownloader = Downloader(
         assetLoaderType: URLAssetLoader.self,

@@ -11,7 +11,10 @@ struct DemoApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
 
     @StateObject private var router = Router()
+
+#if os(iOS)
     @StateObject private var downloader = DemoDownloader()
+#endif
 
     @SceneBuilder var body: some Scene {
         WindowGroup {
@@ -29,7 +32,9 @@ struct DemoApp: App {
                 presented.view()
             }
             .environmentObject(router)
+#if os(iOS)
             .environmentObject(downloader)
+#endif
         }
     }
 

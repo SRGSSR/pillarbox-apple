@@ -10,6 +10,7 @@ import PillarboxPlayer
 // swiftlint:disable missing_docs
 
 @available(iOS 17.0, *)
+@available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public enum URNAssetMapper: DownloadMapper {
     public typealias Loader = URNAssetLoader
