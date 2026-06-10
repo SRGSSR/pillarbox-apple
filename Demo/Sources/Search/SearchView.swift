@@ -67,14 +67,8 @@ struct SearchView: View {
                     }
                 }
 #if os(iOS)
-                .swipeActions {
-#if DEBUG
-                    if #available(iOS 17, *) {
-                        URNDownloadAction(urn: media.urn, serverSetting: serverSetting)
-                    }
-#endif
-                    CopyActions(text: media.urn)
-                }
+                .swipeActions { swipeActions(for: media) }
+
                 .refreshable { await model.refresh() }
 #else
                 .ignoresSafeArea(.all, edges: .horizontal)
@@ -93,6 +87,18 @@ struct SearchView: View {
             }
         }
     }
+
+#if os(iOS)
+    @ViewBuilder
+    private func swipeActions(for media: SRGMedia) -> some View {
+#if DEBUG
+        if #available(iOS 17, *) {
+            URNDownloadAction(urn: media.urn, serverSetting: serverSetting)
+        }
+#endif
+        CopyActions(text: media.urn)
+    }
+#endif
 
     private func unavailableModelView(title: String, icon: String) -> some View {
         UnavailableModelView(model: model) {

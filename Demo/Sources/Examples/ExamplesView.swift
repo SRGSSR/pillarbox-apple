@@ -213,27 +213,32 @@ struct ExamplesView: View {
                     router.presented = .player(media: media)
                 }
 #if DEBUG && os(iOS)
-                .swipeActions {
-                    switch media.type {
-                    case let .url(url):
-                        URLDownloadAction(title: media.title, url: url)
-                    case let .monoscopicUrl(url):
-                        URLDownloadAction(title: media.title, url: url, isMonoscopic: true)
-                    case let .urn(urn, serverSetting: serverSetting):
-                        if #available(iOS 17, *) {
-                            URNDownloadAction(urn: urn, serverSetting: serverSetting)
-                        }
-                        else {
-                            EmptyView()
-                        }
-                    default:
-                        EmptyView()
-                    }
-                }
+                .swipeActions { swipeActions(for: media) }
 #endif
             }
         }
     }
+
+#if DEBUG && os(iOS)
+    @ViewBuilder
+    private func swipeActions(for media: Media) -> some View {
+        switch media.type {
+        case let .url(url):
+            URLDownloadAction(title: media.title, url: url)
+        case let .monoscopicUrl(url):
+            URLDownloadAction(title: media.title, url: url, isMonoscopic: true)
+        case let .urn(urn, serverSetting: serverSetting):
+            if #available(iOS 17, *) {
+                URNDownloadAction(urn: urn, serverSetting: serverSetting)
+            }
+            else {
+                EmptyView()
+            }
+        default:
+            EmptyView()
+        }
+    }
+#endif
 }
 
 #Preview {
