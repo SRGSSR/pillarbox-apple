@@ -26,17 +26,12 @@ final class DemoDownloader: ObservableObject {
 
     private let _urnDownloader: Any? = {
         guard #available(iOS 17, *) else { return nil }
-        return Downloader(
-            assetLoaderType: URNAssetLoader.self,
-            storableMetadata: DemoDownloader.storableMetadata,
-            configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"),
-            store: URNAssetDownloadStore()
-        )
+        return URNDownloader(configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"))
     }()
 
     @available(iOS 17, *)
-    private var urnDownloader: Downloader<URNAssetDownloadStore> {
-        _urnDownloader as! Downloader<URNAssetDownloadStore>
+    private var urnDownloader: URNDownloader {
+        _urnDownloader as! URNDownloader
     }
 
     @Published private(set) var downloads: [Download] = []
@@ -56,22 +51,13 @@ final class DemoDownloader: ObservableObject {
         }
     }
 
-    @available(iOS 17.0, *)
-    private static func storableMetadata(_ metadata: MediaMetadata) -> URNAssetDownloadStore.EntryMetadata {
-        .init(
-            identifier: metadata.mainChapter.urn,
-            title: "metadata.title", // TODO: Make EntryMetadata internal !
-            subtitle: "metadata.subtitle"
-        )
-    }
-
     func addUrlDownload(title: String, url: URL, isMonoscopic: Bool) {
         urlDownloader.addDownload(for: .init(title: title, url: url, isMonoscopic: isMonoscopic))
     }
 
     @available(iOS 17, *)
     func addUrnDownload(urn: String, serverSetting: ServerSetting) {
-        urnDownloader.addDownload(for: .init(urn: urn, server: serverSetting.server))
+        urnDownloader.addDownload(urn: urn, server: serverSetting.server)
     }
 
     func playerItem(for download: Download) -> PlayerItem? {
