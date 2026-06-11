@@ -13,19 +13,25 @@ import Foundation
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
+@available(iOS 17.0, *)
+@available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-@available(iOS 17.0, *)
-public typealias URNDownloader = Downloader<URNAssetDownloadStore>
+public final class URNDownloader: ObservableObject {
+    private let downloader: Downloader<URNAssetDownloadStore>
 
-@available(iOS 17.0, *)
-public extension URNDownloader {
-    convenience init(configuration: URLSessionConfiguration) {
-        self.init(
+    @Published public private(set) var downloads: [Download] = []
+
+    public init(configuration: URLSessionConfiguration) {
+        let downloader = Downloader(
             assetLoaderType: URNAssetLoader.self,
-            storableMetadata: Downloader.storableMetadata,
+            storableMetadata: URNDownloader.storableMetadata,
             configuration: configuration,
             store: URNAssetDownloadStore()
         )
+        self.downloader = downloader
+
+        downloader.$downloads
+            .assign(to: &$downloads)
     }
 
     private static func storableMetadata(_ metadata: MediaMetadata) -> URNAssetDownloadStore.EntryMetadata {
@@ -36,12 +42,25 @@ public extension URNDownloader {
         )
     }
 
-    func addDownload(urn: String, server: Server = .production) {
-        addDownload(for: .init(urn: urn, server: server))
+    @discardableResult
+    public func addDownload(urn: String, server: Server = .production) -> Download {
+        downloader.addDownload(for: .init(urn: urn, server: server))
     }
 
-    func download(urn: String, server: Server) -> Download? {
-        download(matching: .init(urn: urn, server: server))
+    public func download(urn: String, server: Server) -> Download? {
+        downloader.download(matching: .init(urn: urn, server: server))
+    }
+
+    public func playerItem(for download: Download) -> PlayerItem? { // TODO: What should we do with trackers?
+        downloader.playerItem(for: download, trackerAdapters: [])
+    }
+
+    public func removeDownload(_ download: Download) {
+        downloader.removeDownload(download)
+    }
+
+    public func removeAllDownloads() {
+        downloader.removeAllDownloads()
     }
 }
 

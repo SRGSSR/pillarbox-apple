@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 #if DEBUG
 
 import Foundation
@@ -25,7 +23,7 @@ private struct DownloadError: LocalizedError {
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-public final class URNAssetDownloadStore {
+final class URNAssetDownloadStore {
     let context: ModelContext
 
     init() {
@@ -39,7 +37,7 @@ public final class URNAssetDownloadStore {
 @available(tvOS, unavailable)
 extension URNAssetDownloadStore {
     @Model
-    public class EntryMetadata {
+    class EntryMetadata {
         var identifier: String?
         var title: String?
         var subtitle: String?
@@ -99,32 +97,32 @@ extension URNAssetDownloadStore {
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 extension URNAssetDownloadStore: AssetDownloadStore {
-    public static func id(from input: URNAssetLoader.Input) -> String {
+    static func id(from input: URNAssetLoader.Input) -> String {
         input.id
     }
 
-    public static func playerMetadata(from input: URNAssetLoader.Input, metadata: EntryMetadata?) -> PlayerMetadata {
+    static func playerMetadata(from input: URNAssetLoader.Input, metadata: EntryMetadata?) -> PlayerMetadata {
         .init(title: metadata?.title ?? input.urn)
     }
 
-    public func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, EntryMetadata>] {
+    func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, EntryMetadata>] {
         guard let entries = try? context.fetch(FetchDescriptor<Entry>()) else { return [] }
         return entries.map { $0.toRecord() }
     }
 
-    public func addDownloadRecord(using input: URNAssetLoader.Input, forId id: String) {
+    func addDownloadRecord(using input: URNAssetLoader.Input, forId id: String) {
         context.insert(Entry(id: id, urn: input.urn, progress: 0))
     }
 
-    public func removeDownloadRecord(forId id: String) {
+    func removeDownloadRecord(forId id: String) {
         try? context.delete(model: Entry.self, where: Entry.predicate(for: id))
     }
 
-    public func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, EntryMetadata>? {
+    func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, EntryMetadata>? {
         entry(forId: id)?.toRecord()
     }
 
-    public func updateDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, EntryMetadata>, forId id: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, EntryMetadata>, forId id: String) {
         guard let entry = entry(forId: id) else { return }
         entry.update(with: record)
         try? context.save()
@@ -137,5 +135,3 @@ extension URNAssetDownloadStore: AssetDownloadStore {
 }
 
 #endif
-
-// swiftlint:enable missing_docs
