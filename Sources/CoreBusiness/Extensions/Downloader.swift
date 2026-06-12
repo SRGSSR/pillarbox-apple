@@ -38,7 +38,9 @@ public final class URNDownloader: ObservableObject {
         .init(
             identifier: metadata.mainChapter.urn,
             title: metadata.title,
-            subtitle: metadata.subtitle
+            subtitle: metadata.subtitle,
+            analyticsData: metadata.analyticsData,
+            analyticsMetadata: metadata.analyticsMetadata,
         )
     }
 
