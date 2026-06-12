@@ -42,6 +42,10 @@ extension URNAssetDownloadStore {
         var title: String?
         var subtitle: String?
 
+        var urnMetadata: URNMetadata {
+            URNMetadata(identifier: identifier, title: title, subtitle: subtitle)
+        }
+
         init(identifier: String? = nil, title: String? = nil, subtitle: String? = nil) {
             self.identifier = identifier
             self.title = title
@@ -73,19 +77,19 @@ extension URNAssetDownloadStore {
             }
         }
 
-        func toRecord() -> DownloadRecord<URNAssetLoader.Input, EntryMetadata> {
+        func toRecord() -> DownloadRecord<URNAssetLoader.Input, URNMetadata> {
             .init(
                 input: .init(urn: urn, server: .production),
-                metadata: metadata,
+                metadata: metadata?.urnMetadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: DownloadError(errorDescription: errorDescription)
             )
         }
 
-        func update(with record: DownloadRecord<URNAssetLoader.Input, EntryMetadata>) {
+        func update(with record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
             self.urn = record.input.urn
-            self.metadata = record.metadata
+            self.metadata = record.metadata?.entryMetadata
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
             self.errorDescription = record.error?.localizedDescription
@@ -101,11 +105,11 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         input.id
     }
 
-    static func playerMetadata(from input: URNAssetLoader.Input, metadata: EntryMetadata?) -> PlayerMetadata {
+    static func playerMetadata(from input: URNAssetLoader.Input, metadata: URNMetadata?) -> PlayerMetadata {
         .init(title: metadata?.title ?? input.urn)
     }
 
-    func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, EntryMetadata>] {
+    func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {
         guard let entries = try? context.fetch(FetchDescriptor<Entry>()) else { return [] }
         return entries.map { $0.toRecord() }
     }
@@ -118,11 +122,11 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         try? context.delete(model: Entry.self, where: Entry.predicate(for: id))
     }
 
-    func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, EntryMetadata>? {
+    func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, URNMetadata>? {
         entry(forId: id)?.toRecord()
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, EntryMetadata>, forId id: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, URNMetadata>, forId id: String) {
         guard let entry = entry(forId: id) else { return }
         entry.update(with: record)
         try? context.save()
