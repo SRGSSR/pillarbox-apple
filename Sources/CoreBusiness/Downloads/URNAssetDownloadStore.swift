@@ -41,15 +41,31 @@ extension URNAssetDownloadStore {
         var identifier: String?
         var title: String?
         var subtitle: String?
+        var analyticsData: [String: String]
+        var analyticsMetadata: [String: String]
 
         var urnMetadata: URNMetadata {
-            URNMetadata(identifier: identifier, title: title, subtitle: subtitle)
+            URNMetadata(
+                identifier: identifier,
+                title: title,
+                subtitle: subtitle,
+                analyticsData: analyticsData,
+                analyticsMetadata: analyticsMetadata
+            )
         }
 
-        init(identifier: String? = nil, title: String? = nil, subtitle: String? = nil) {
+        init(
+            identifier: String? = nil,
+            title: String? = nil,
+            subtitle: String? = nil,
+            analyticsData: [String: String],
+            analyticsMetadata: [String: String]
+        ) {
             self.identifier = identifier
             self.title = title
             self.subtitle = subtitle
+            self.analyticsData = analyticsData
+            self.analyticsMetadata = analyticsMetadata
         }
     }
 

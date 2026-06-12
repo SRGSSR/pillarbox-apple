@@ -14,10 +14,18 @@ public struct URNMetadata {
     let identifier: String?
     let title: String?
     let subtitle: String?
+    let analyticsData: [String: String]
+    let analyticsMetadata: [String: String]
 
     @available(iOS 17.0, *)
     var entryMetadata: URNAssetDownloadStore.EntryMetadata {
-        .init(identifier: identifier, title: title, subtitle: subtitle)
+        .init(
+            identifier: identifier,
+            title: title,
+            subtitle: subtitle,
+            analyticsData: analyticsData,
+            analyticsMetadata: analyticsMetadata
+        )
     }
 }
 
