@@ -134,6 +134,26 @@ public struct PlayerMetadata: Equatable {
 }
 
 extension PlayerMetadata {
+    init(from metadata: MinimalStandardPlayerMetadata) {
+        self.init(
+            identifier: metadata.identifier,
+            title: metadata.title,
+            subtitle: metadata.subtitle,
+            description: metadata.description,
+            imageSource: metadata.imageSource,
+            viewport: metadata.viewport,
+            episodeInformation: metadata.episodeInformation,
+            chapters: metadata.chapters,
+            timeRanges: metadata.timeRanges
+        )
+    }
+
+//    public func data() -> Data {
+//
+//    }
+}
+
+extension PlayerMetadata {
     func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
         Publishers.CombineLatest(
             imageSource.imageSourcePublisher(),
