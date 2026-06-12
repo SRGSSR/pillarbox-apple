@@ -9,6 +9,7 @@
 #if DEBUG
 
 import Foundation
+import PillarboxAnalytics
 
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
@@ -54,7 +55,11 @@ public final class URNDownloader: ObservableObject {
     }
 
     public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<URNMetadata>] = []) -> PlayerItem? {
-        downloader.playerItem(for: download, trackerAdapters: trackerAdapters) // TODO: Should we add default trackers here?
+        let defaultAdapters: [TrackerAdapter<URNMetadata>] = [
+            ComScoreTracker.adapter(mapper: \.analyticsData),
+            CommandersActTracker.adapter(configuration: nil, mapper: \.analyticsMetadata)
+        ]
+        return downloader.playerItem(for: download, trackerAdapters: defaultAdapters + trackerAdapters)
     }
 
     public func removeDownload(_ download: Download) {

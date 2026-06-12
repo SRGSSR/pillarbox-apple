@@ -41,16 +41,18 @@ extension URNAssetDownloadStore {
         var identifier: String?
         var title: String?
         var subtitle: String?
-        var analyticsData: [String: String]
-        var analyticsMetadata: [String: String]
+        // swiftlint:disable:next discouraged_optional_collection
+        var analyticsData: [String: String]?
+        // swiftlint:disable:next discouraged_optional_collection
+        var analyticsMetadata: [String: String]?
 
         var urnMetadata: URNMetadata {
             URNMetadata(
                 identifier: identifier,
                 title: title,
                 subtitle: subtitle,
-                analyticsData: analyticsData,
-                analyticsMetadata: analyticsMetadata
+                analyticsData: analyticsData ?? [:],
+                analyticsMetadata: analyticsMetadata ?? [:]
             )
         }
 
@@ -58,8 +60,10 @@ extension URNAssetDownloadStore {
             identifier: String? = nil,
             title: String? = nil,
             subtitle: String? = nil,
-            analyticsData: [String: String],
-            analyticsMetadata: [String: String]
+            // swiftlint:disable:next discouraged_optional_collection
+            analyticsData: [String: String]? = nil,
+            // swiftlint:disable:next discouraged_optional_collection
+            analyticsMetadata: [String: String]? = nil
         ) {
             self.identifier = identifier
             self.title = title
