@@ -34,7 +34,7 @@ public final class URNDownloader: ObservableObject {
             .assign(to: &$downloads)
     }
 
-    private static func storableMetadata(_ metadata: MediaMetadata) -> URNAssetDownloadStore.EntryMetadata {
+    private static func storableMetadata(_ metadata: MediaMetadata) -> URNMetadata {
         .init(
             identifier: metadata.mainChapter.urn,
             title: metadata.title,
@@ -51,8 +51,8 @@ public final class URNDownloader: ObservableObject {
         downloader.download(matching: .init(urn: urn, server: server))
     }
 
-    public func playerItem(for download: Download) -> PlayerItem? { // TODO: What should we do with trackers?
-        downloader.playerItem(for: download, trackerAdapters: [])
+    public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<URNMetadata>] = []) -> PlayerItem? {
+        downloader.playerItem(for: download, trackerAdapters: trackerAdapters) // TODO: Should we add default trackers here?
     }
 
     public func removeDownload(_ download: Download) {
