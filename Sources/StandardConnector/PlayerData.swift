@@ -12,61 +12,47 @@ import PillarboxPlayer
 /// An object representing the absence of custom data.
 public struct EmptyCustomData: Decodable {}
 
+// TODO: Design public API. Might not need to expose much stuff.
+
 /// Metadata associated with content loaded in a player.
 ///
 /// Represents the standard metadata returned by a backend endpoint and used to configure a playable `Asset`.
 public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
     enum CodingKeys: String, CodingKey {
         case _chapters = "chapters"
+        case _drm = "drm"
+        case _episodeNumber = "episodeNumber"
+        case _posterUrl = "posterUrl"
+        case _seasonNumber = "seasonNumber"
+        case _source = "source"
         case _timeRanges = "timeRanges"
         case _viewport = "viewport"
         case customData
         case description
-        case drm
-        case episodeNumber
         case identifier
-        case posterUrl
-        case seasonNumber
-        case source
         case subtitle
         case title
     }
 
-    private let identifier: String?
-    private let title: String?
-    private let subtitle: String?
-    private let description: String?
-    private let posterUrl: URL?
-    private let seasonNumber: Int?
-    private let episodeNumber: Int?
-    private let _viewport: _Viewport?
+    let customData: CustomData?
+    let description: String?
+    let identifier: String?
+    let subtitle: String?
+    let title: String?
 
     // swiftlint:disable:next discouraged_optional_collection
     private let _chapters: [_Chapter]?
+    private let _drm: _DRM?
+    private let _episodeNumber: Int?
+    private let _posterUrl: URL?
+    private let _seasonNumber: Int?
+    private let _source: _Source?
     // swiftlint:disable:next discouraged_optional_collection
     private let _timeRanges: [_TimeRange]?
-
-    /// The source.
-    public let source: Source?
-
-    /// The DRM.
-    public let drm: DRM?
-
-    /// Custom data.
-    public let customData: CustomData?
+    private let _viewport: _Viewport?
 }
 
 extension PlayerData {
-    var episodeInformation: EpisodeInformation? {
-        guard let episodeNumber else { return nil }
-        if let seasonNumber {
-            return .long(season: seasonNumber, episode: episodeNumber)
-        }
-        else {
-            return .short(episode: episodeNumber)
-        }
-    }
-
     var chapters: [Chapter] {
         guard let _chapters else { return [] }
         return _chapters.map { chapter in
@@ -82,8 +68,31 @@ extension PlayerData {
         }
     }
 
+    var episodeInformation: EpisodeInformation? {
+        guard let _episodeNumber else { return nil }
+        if let _seasonNumber {
+            return .long(season: _seasonNumber, episode: _episodeNumber)
+        }
+        else {
+            return .short(episode: _episodeNumber)
+        }
+    }
+
+    var imageSource: ImageSource {
+        Self.imageSource(from: _posterUrl)
+    }
+
     var timeRanges: [TimeRange] {
         _timeRanges?.map(\.timeRange) ?? []
+    }
+
+    var viewport: Viewport {
+        switch _viewport {
+        case .standard, .none:
+            return .standard
+        case .monoscopic:
+            return .monoscopic
+        }
     }
 
     private static func imageSource(from url: URL?) -> ImageSource {
@@ -97,7 +106,7 @@ extension PlayerData {
             title: title,
             subtitle: subtitle,
             description: description,
-            imageSource: Self.imageSource(from: posterUrl),
+            imageSource: imageSource,
             viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
@@ -106,8 +115,8 @@ extension PlayerData {
     }
 }
 
-extension PlayerData {
-    private struct _Chapter: Decodable {
+private extension PlayerData {
+    struct _Chapter: Decodable {
         let identifier: String?
         let title: String
         let posterUrl: URL?
@@ -115,7 +124,20 @@ extension PlayerData {
         let endTime: Int
     }
 
-    private struct _TimeRange: Decodable {
+    struct _DRM: Decodable {
+        let certificateUrl: URL?
+    }
+
+    struct _Source: Decodable {
+        let url: URL
+    }
+
+    enum _Viewport: String, Decodable {
+        case standard = "STANDARD"
+        case monoscopic = "MONOSCOPIC"
+    }
+
+    struct _TimeRange: Decodable {
         let startTime: Int
         let endTime: Int
         let type: String
@@ -140,29 +162,5 @@ extension PlayerData {
                 end: .init(value: CMTimeValue(endTime), timescale: 1000)
             )
         }
-    }
-}
-
-extension PlayerData {
-    private enum _Viewport: String, Decodable {
-        case standard = "STANDARD"
-        case monoscopic = "MONOSCOPIC"
-    }
-
-    var viewport: Viewport {
-        switch _viewport {
-        case .standard, .none:
-            return .standard
-        case .monoscopic:
-            return .monoscopic
-        }
-    }
-}
-
-public extension PlayerData {
-    /// A DRM protection description.
-    struct DRM: Decodable {
-        /// The certificate URL.
-        public let certificateUrl: URL?
     }
 }
