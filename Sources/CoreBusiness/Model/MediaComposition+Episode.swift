@@ -4,18 +4,14 @@
 //  License information is available from the LICENSE file.
 //
 
-public extension MediaComposition {
-    /// A description of an episode.
+extension MediaComposition {
     struct Episode: Decodable {
         enum CodingKeys: String, CodingKey {
             case number
             case seasonNumber
         }
 
-        /// The season number.
-        public let seasonNumber: Int?
-
-        /// The episode number.
-        public let number: Int?
+        let number: Int?
+        let seasonNumber: Int?
     }
 }

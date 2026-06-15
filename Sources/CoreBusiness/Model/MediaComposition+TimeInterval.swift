@@ -6,8 +6,7 @@
 
 import CoreMedia
 
-public extension MediaComposition {
-    /// A time interval.
+extension MediaComposition {
     struct TimeInterval: Decodable {
         enum CodingKeys: String, CodingKey {
             case kind = "type"
@@ -15,27 +14,21 @@ public extension MediaComposition {
             case _markOut = "markOut"
         }
 
-        /// A kind of time interval.
-        public enum Kind: String, Decodable {
-            /// Opening credits.
+        enum Kind: String, Decodable {
             case openingCredits = "OPENING_CREDITS"
-
-            /// Closing credits.
             case closingCredits = "CLOSING_CREDITS"
         }
 
-        /// The kind of interval.
-        public let kind: Kind
+        private let _markIn: Int64
+        private let _markOut: Int64
 
-        /// The associated time range.
-        public var timeRange: CMTimeRange {
+        let kind: Kind
+
+        var timeRange: CMTimeRange {
             CMTimeRange(
                 start: .init(value: _markIn, timescale: 1000),
                 end: .init(value: _markOut, timescale: 1000)
             )
         }
-
-        private let _markIn: Int64
-        private let _markOut: Int64
     }
 }

@@ -45,7 +45,7 @@ struct ErrorView: View {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    private static func imageName(for reason: MediaComposition.BlockingReason) -> String {
+    private static func imageName(for reason: BlockingReason) -> String {
         switch reason {
         case .ageRating12:
             return "12.circle.fill"

@@ -7,7 +7,6 @@
 import PillarboxPlayer
 import UIKit
 
-/// Metadata associated with content loaded from a URN.
 public struct MediaMetadata {
     private static let dateFormatter = {
         let dateFormatter = DateFormatter()
@@ -18,41 +17,13 @@ public struct MediaMetadata {
         return dateFormatter
     }()
 
-    /// The playback context.
-    public let mediaComposition: MediaComposition
-
-    /// The URL at which the playback context was retrieved.
-    public let mediaCompositionUrl: URL?
-
-    /// The main chapter.
-    public let mainChapter: MediaComposition.Chapter
-
-    /// The resource to be played.
-    public let resource: MediaComposition.Resource?
+    let mainChapter: MediaComposition.Chapter
+    let mediaComposition: MediaComposition
+    let mediaCompositionUrl: URL?
+    let resource: MediaComposition.Resource?
 
     private let dataProvider: DataProvider
 
-    /// The stream type.
-    public var streamType: StreamType {
-        resource?.streamType ?? .unknown
-    }
-
-    /// The available chapters.
-    public var chapters: [Chapter] {
-        mediaComposition.chapters(relatedTo: mainChapter).map { chapter in
-            .init(
-                identifier: chapter.urn,
-                title: chapter.title,
-                imageSource: .url(
-                    standardResolution: standardResolutionImageUrl(for: chapter),
-                    lowResolution: lowResolutionImageUrl(for: chapter)
-                ),
-                timeRange: chapter.timeRange
-            )
-        }
-    }
-
-    /// The consolidated comScore analytics data.
     var analyticsData: [String: String] {
         var analyticsData = mainChapter.analyticsData
         guard !analyticsData.isEmpty else { return [:] }
@@ -63,7 +34,6 @@ public struct MediaMetadata {
         return analyticsData
     }
 
-    /// The consolidated Commanders Act analytics data.
     var analyticsMetadata: [String: String] {
         var analyticsMetadata = mainChapter.analyticsMetadata
         guard !analyticsMetadata.isEmpty else { return [:] }
@@ -72,6 +42,14 @@ public struct MediaMetadata {
             analyticsMetadata.merge(resource.analyticsMetadata) { _, new in new }
         }
         return analyticsMetadata
+    }
+
+    var blockingReason: BlockingReason? {
+        mainChapter.blockingReason
+    }
+
+    var streamType: StreamType {
+        resource?.streamType ?? .unknown
     }
 
     init(mediaCompositionResponse: MediaCompositionResponse, dataProvider: DataProvider) throws {
@@ -88,6 +66,23 @@ public struct MediaMetadata {
 
     private static func areRedundant(chapter: MediaComposition.Chapter, show: MediaComposition.Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
+    }
+
+    func playerMetadata() -> PlayerMetadata {
+        .init(
+            identifier: mediaComposition.chapterUrn,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            imageSource: .url(
+                standardResolution: standardResolutionImageUrl(for: mainChapter),
+                lowResolution: lowResolutionImageUrl(for: mainChapter)
+            ),
+            viewport: viewport,
+            episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges
+        )
     }
 }
 
@@ -121,6 +116,15 @@ extension MediaMetadata {
         mainChapter.description
     }
 
+    var viewport: Viewport {
+        switch resource?.presentation {
+        case .video360:
+            return .monoscopic
+        default:
+            return .standard
+        }
+    }
+
     var episodeInformation: EpisodeInformation? {
         guard let episode = mediaComposition.episode, let episodeNumber = episode.number else { return nil }
         if let seasonNumber = episode.seasonNumber {
@@ -131,24 +135,25 @@ extension MediaMetadata {
         }
     }
 
-    var viewport: Viewport {
-        switch resource?.presentation {
-        case .video360:
-            return .monoscopic
-        default:
-            return .standard
+    var chapters: [Chapter] {
+        mediaComposition.chapters(relatedTo: mainChapter).map { chapter in
+            .init(
+                identifier: chapter.urn,
+                title: chapter.title,
+                imageSource: .url(
+                    standardResolution: standardResolutionImageUrl(for: chapter),
+                    lowResolution: lowResolutionImageUrl(for: chapter)
+                ),
+                timeRange: chapter.timeRange
+            )
         }
     }
 
-    var blockingReason: MediaComposition.BlockingReason? {
-        mainChapter.blockingReason
-    }
-
-    private var timeRanges: [TimeRange] {
+    var timeRanges: [TimeRange] {
         blockedTimeRanges + creditsTimeRanges
     }
 
-    private var blockedTimeRanges: [TimeRange] {
+    var blockedTimeRanges: [TimeRange] {
         mainChapter.segments
             .filter { $0.blockingReason != nil }
             .map { segment in
@@ -156,7 +161,7 @@ extension MediaMetadata {
             }
     }
 
-    private var creditsTimeRanges: [TimeRange] {
+    var creditsTimeRanges: [TimeRange] {
         mainChapter.timeIntervals.map { interval in
             switch interval.kind {
             case .openingCredits:
@@ -167,28 +172,11 @@ extension MediaMetadata {
         }
     }
 
-    func playerMetadata() -> PlayerMetadata {
-        .init(
-            identifier: mediaComposition.chapterUrn,
-            title: title,
-            subtitle: subtitle,
-            description: description,
-            imageSource: .url(
-                standardResolution: standardResolutionImageUrl(for: mainChapter),
-                lowResolution: lowResolutionImageUrl(for: mainChapter)
-            ),
-            viewport: viewport,
-            episodeInformation: episodeInformation,
-            chapters: chapters,
-            timeRanges: timeRanges
-        )
-    }
-
-    private func standardResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
+    func standardResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
         dataProvider.resizedImageUrl(chapter.imageUrl, width: .width720)
     }
 
-    private func lowResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
+    func lowResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
         dataProvider.resizedImageUrl(chapter.imageUrl, width: .width320)
     }
 }

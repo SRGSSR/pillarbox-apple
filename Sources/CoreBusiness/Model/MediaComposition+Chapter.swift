@@ -7,8 +7,7 @@
 import CoreMedia
 import Foundation
 
-public extension MediaComposition {
-    /// A content providing a playable resource.
+extension MediaComposition {
     struct Chapter: Decodable {
         enum CodingKeys: String, CodingKey {
             case _analyticsData = "analyticsData"
@@ -31,83 +30,14 @@ public extension MediaComposition {
             case fullLengthUrn
         }
 
-        /// The chapter URN.
-        public let urn: String
-
-        /// The full-length URN.
-        public let fullLengthUrn: String?
-
-        /// The chapter title
-        public let title: String
-
-        /// The chapter description.
-        public let description: String?
-
-        /// The chapter image URL.
-        ///
-        /// Use `DataProvider.imagePublisher(for:width:)` to obtain a scaled downloadable version.
-        public let imageUrl: URL
-
-        /// The content type.
-        public let contentType: ContentType
-
-        /// The media type.
-        public let mediaType: MediaType
-
-        /// The publication date.
-        public let date: Date
-
-        /// Returns whether the content is blocked for some reason.
-        public var blockingReason: BlockingReason? {
-            _blockingReason?.blockingReason(startDate: _validFrom, endDate: _validTo)
-        }
-
-        /// The available segments.
-        public var segments: [Segment] {
-            _segments ?? []
-        }
-
-        /// The available resources.
-        public var resources: [Resource] {
-            _resources ?? []
-        }
-
-        /// comScore analytics data.
-        public var analyticsData: [String: String] {
-            _analyticsData ?? [:]
-        }
-
-        /// Commanders Act analytics data.
-        public var analyticsMetadata: [String: String] {
-            _analyticsMetadata ?? [:]
-        }
-
-        /// The time interval associated with the chapter.
-        public var timeIntervals: [TimeInterval] {
-            _timeIntervals ?? []
-        }
-
-        /// Time range associated with the chapter.
-        public var timeRange: CMTimeRange {
-            guard let _markIn, let _markOut else { return .zero }
-            return CMTimeRange(
-                start: .init(value: _markIn, timescale: 1000),
-                end: .init(value: _markOut, timescale: 1000)
-            )
-        }
-
         // swiftlint:disable:next discouraged_optional_collection
         private let _analyticsData: [String: String]?
-
         // swiftlint:disable:next discouraged_optional_collection
         private let _analyticsMetadata: [String: String]?
-
-        // swiftlint:disable:next discouraged_optional_collection
-        private let _segments: [Segment]?
-
         // swiftlint:disable:next discouraged_optional_collection
         private let _resources: [Resource]?
-
+        // swiftlint:disable:next discouraged_optional_collection
+        private let _segments: [Segment]?
         // swiftlint:disable:next discouraged_optional_collection
         private let _timeIntervals: [TimeInterval]?
 
@@ -116,11 +46,50 @@ public extension MediaComposition {
         private let _markOut: Int64?
         private let _validFrom: Date?
         private let _validTo: Date?
+
+        let urn: String
+        let fullLengthUrn: String?
+        let title: String
+        let description: String?
+        let imageUrl: URL
+        let contentType: ContentType
+        let mediaType: MediaType
+        let date: Date
+
+        var analyticsData: [String: String] {
+            _analyticsData ?? [:]
+        }
+
+        var analyticsMetadata: [String: String] {
+            _analyticsMetadata ?? [:]
+        }
+
+        var blockingReason: BlockingReason? {
+            _blockingReason?.blockingReason(startDate: _validFrom, endDate: _validTo)
+        }
+
+        var resources: [Resource] {
+            _resources ?? []
+        }
+
+        var segments: [Segment] {
+            _segments ?? []
+        }
+
+        var timeIntervals: [TimeInterval] {
+            _timeIntervals ?? []
+        }
+
+        var timeRange: CMTimeRange {
+            guard let _markIn, let _markOut else { return .zero }
+            return CMTimeRange(
+                start: .init(value: _markIn, timescale: 1000),
+                end: .init(value: _markOut, timescale: 1000)
+            )
+        }
     }
 }
-
-public extension MediaComposition.Chapter {
-    /// The resource recommended for playback on Apple platforms.
+extension MediaComposition.Chapter {
     var recommendedResource: MediaComposition.Resource? {
         let resourceBuckets = Dictionary(grouping: resources) { $0.streamingMethod }
         guard let preferredMethod = MediaComposition.StreamingMethod.supportedMethods.first(where: { method in

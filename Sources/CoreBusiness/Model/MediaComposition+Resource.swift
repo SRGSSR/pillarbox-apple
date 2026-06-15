@@ -7,8 +7,7 @@
 import Foundation
 import PillarboxPlayer
 
-public extension MediaComposition {
-    /// A description of a playable resource.
+extension MediaComposition {
     struct Resource: Decodable {
         enum CodingKeys: String, CodingKey {
             case _analyticsData = "analyticsData"
@@ -22,27 +21,33 @@ public extension MediaComposition {
             case url
         }
 
-        /// The resource URL.
-        public let url: URL
+        // swiftlint:disable:next discouraged_optional_collection
+        private let _analyticsData: [String: String]?
+        // swiftlint:disable:next discouraged_optional_collection
+        private let _analyticsMetadata: [String: String]?
+        // swiftlint:disable:next discouraged_optional_collection
+        private let _drms: [DRM]?
 
-        /// The streaming method.
-        public let streamingMethod: StreamingMethod
+        let isDvr: Bool
+        let isLive: Bool
+        let presentation: Presentation
+        let streamingMethod: StreamingMethod
+        let tokenType: TokenType
+        let url: URL
 
-        /// The content presentation.
-        public let presentation: Presentation
-
-        /// comScore analytics data.
-        public var analyticsData: [String: String] {
+        var analyticsData: [String: String] {
             _analyticsData ?? [:]
         }
 
-        /// Commanders Act analytics data.
-        public var analyticsMetadata: [String: String] {
+        var analyticsMetadata: [String: String] {
             _analyticsMetadata ?? [:]
         }
 
-        /// The stream type.
-        public var streamType: StreamType {
+        var drms: [DRM] {
+            _drms ?? []
+        }
+
+        var streamType: StreamType {
             if isDvr {
                 return .dvr
             }
@@ -53,22 +58,5 @@ public extension MediaComposition {
                 return .onDemand
             }
         }
-
-        /// The token type.
-        public let tokenType: TokenType
-
-        /// The list of DRMs required to play the resource.
-        public var drms: [DRM] {
-            _drms ?? []
-        }
-
-        private let isDvr: Bool
-        private let isLive: Bool
-        // swiftlint:disable:next discouraged_optional_collection
-        private let _drms: [DRM]?
-        // swiftlint:disable:next discouraged_optional_collection
-        private let _analyticsData: [String: String]?
-        // swiftlint:disable:next discouraged_optional_collection
-        private let _analyticsMetadata: [String: String]?
     }
 }

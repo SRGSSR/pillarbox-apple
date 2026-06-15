@@ -6,25 +6,15 @@
 
 import Foundation
 
-public extension MediaComposition {
-    /// A DRM protection description.
+extension MediaComposition {
     struct DRM: Decodable {
-        /// A DRM type.
-        public enum `Type`: String, Decodable {
-            /// FairPlay.
+        enum `Type`: String, Decodable {
             case fairPlay = "FAIRPLAY"
-
-            /// PlayReady.
             case playReady = "PLAYREADY"
-
-            /// Widevine.
             case widevine = "WIDEVINE"
         }
 
-        /// The DRM type.
-        let type: `Type`
-
-        /// The certificate URL.
         let certificateUrl: URL?
+        let type: `Type`
     }
 }

@@ -4,8 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A description of a playback context.
-public struct MediaComposition: Decodable {
+struct MediaComposition: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"
         case _analyticsMetadata = "analyticsMetadata"
@@ -15,32 +14,23 @@ public struct MediaComposition: Decodable {
         case show
     }
 
-    /// The URN of the chapter to be played.
-    public let chapterUrn: String
-
-    /// The related show.
-    public let show: Show?
-
-    /// The episode information.
-    public let episode: Episode?
-
-    /// comScore analytics data.
-    public var analyticsData: [String: String] {
-        _analyticsData ?? [:]
-    }
-
-    /// Commanders Act analytics data.
-    public var analyticsMetadata: [String: String] {
-        _analyticsMetadata ?? [:]
-    }
-
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsData: [String: String]?
-
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsMetadata: [String: String]?
 
-    private let chapters: [Chapter]
+    let chapters: [Chapter]
+    let chapterUrn: String
+    let episode: Episode?
+    let show: Show?
+
+    var analyticsData: [String: String] {
+        _analyticsData ?? [:]
+    }
+
+    var analyticsMetadata: [String: String] {
+        _analyticsMetadata ?? [:]
+    }
 }
 
 extension MediaComposition {

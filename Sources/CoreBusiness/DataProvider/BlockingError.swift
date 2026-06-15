@@ -9,12 +9,12 @@ import Foundation
 /// Blocking error.
 public struct BlockingError: LocalizedError {
     /// A reason.
-    public let reason: MediaComposition.BlockingReason
+    public let reason: BlockingReason
 
     /// A readable error description.
     public let errorDescription: String?
 
-    init(reason: MediaComposition.BlockingReason) {
+    init(reason: BlockingReason) {
         self.reason = reason
         self.errorDescription = reason.description
     }
