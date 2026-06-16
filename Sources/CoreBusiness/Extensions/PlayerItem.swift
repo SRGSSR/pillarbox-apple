@@ -27,15 +27,15 @@ public extension PlayerItem {
     static func urn(
         _ urn: String,
         server: Server = .production,
-        trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
+        trackerAdapters: [TrackerAdapter<URNMetadata>] = [],
         commandersActSource: CommandersActSource? = nil
     ) -> Self {
         self.init(
             assetLoaderType: URNAssetLoader.self,
             input: .init(urn: urn, server: server),
             trackerAdapters: [
-                ComScoreTracker.adapter { $0.analyticsData },
-                CommandersActTracker.adapter(configuration: commandersActSource) { $0.analyticsMetadata },
+                ComScoreTracker.adapter(mapper: \.customData.analyticsData),
+                CommandersActTracker.adapter(configuration: commandersActSource, mapper: \.customData.analyticsMetadata),
                 MetricsTracker.adapter(
                     configuration: .init(
                         identifier: urn,
@@ -44,8 +44,8 @@ public extension PlayerItem {
                     behavior: .mandatory
                 ) { metadata in
                     MetricsTracker.Metadata(
-                        metadataUrl: metadata.mediaCompositionUrl,
-                        assetUrl: metadata.resource?.url
+                        metadataUrl: metadata.customData.mediaCompositionUrl,
+                        assetUrl: metadata.customData.resource?.url
                     )
                 }
             ] + trackerAdapters

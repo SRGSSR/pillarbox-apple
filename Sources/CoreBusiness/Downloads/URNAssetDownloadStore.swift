@@ -49,12 +49,17 @@ extension URNAssetDownloadStore {
         var analyticsMetadata: [String: String]?
 
         var urnMetadata: URNMetadata {
-            URNMetadata(
+            .init(
                 identifier: identifier,
                 title: title,
                 subtitle: subtitle,
-                analyticsData: analyticsData ?? [:],
-                analyticsMetadata: analyticsMetadata ?? [:]
+                customData: .init(
+                    blockingReason: .none,
+                    resource: nil,
+                    mediaCompositionUrl: nil,
+                    analyticsData: analyticsData ?? [:],
+                    analyticsMetadata: analyticsMetadata ?? [:]
+                )
             )
         }
 

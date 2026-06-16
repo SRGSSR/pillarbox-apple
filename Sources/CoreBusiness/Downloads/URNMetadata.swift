@@ -1,16 +1,18 @@
 //
 //  Copyright (c) SRG SSR. All rights reserved.
-//
+//x tow
 //  License information is available from the LICENSE file.
 //
 
 // swiftlint:disable missing_docs
 
+import Foundation
 import PillarboxPlayer
 
 public struct URNCustomData {
     let blockingReason: BlockingReason?
     let resource: MediaComposition.Resource?
+    let mediaCompositionUrl: URL?
     let analyticsData: [String: String]
     let analyticsMetadata: [String: String]
 }

@@ -27,8 +27,8 @@ extension ImageSource: Similar {
             )
         ):
             return lhsStandardResolutionUrl == rhsStandardResolutionUrl && lhsLowResolutionUrl == rhsLowResolutionUrl
-        case let (.image(lhsImage), .image(rhsImage)):
-            return lhsImage.pngData() == rhsImage.pngData()
+        case let (.image(lhsData), .image(rhsData)):
+            return lhsData == rhsData
         default:
             return false
         }

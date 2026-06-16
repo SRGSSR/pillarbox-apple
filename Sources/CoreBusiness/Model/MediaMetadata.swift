@@ -85,6 +85,7 @@ struct MediaMetadata {
             customData: .init(
                 blockingReason: blockingReason,
                 resource: resource,
+                mediaCompositionUrl: mediaCompositionUrl,
                 analyticsData: analyticsData,
                 analyticsMetadata: analyticsMetadata
             )
