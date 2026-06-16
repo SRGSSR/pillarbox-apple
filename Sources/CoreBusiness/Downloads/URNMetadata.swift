@@ -19,13 +19,17 @@ public struct URNCustomData {
 
 public typealias URNMetadata = AssetMetadata<URNCustomData>
 
+@available(iOS 17.0, *)
 extension URNMetadata {
-    @available(iOS 17.0, *)
     var entryMetadata: URNAssetDownloadStore.EntryMetadata {
         .init(
             identifier: identifier,
             title: title,
             subtitle: subtitle,
+            summary: description,
+            imageData: imageSource.image?.pngData(),
+            viewport: viewport,
+            episodeInformation: episodeInformation,
             analyticsData: customData.analyticsData,
             analyticsMetadata: customData.analyticsMetadata
         )

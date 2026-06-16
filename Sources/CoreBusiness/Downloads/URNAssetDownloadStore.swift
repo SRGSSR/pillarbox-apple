@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftData
+import UIKit
 
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
@@ -43,38 +44,55 @@ extension URNAssetDownloadStore {
         var identifier: String?
         var title: String?
         var subtitle: String?
-        // swiftlint:disable:next discouraged_optional_collection
-        var analyticsData: [String: String]?
-        // swiftlint:disable:next discouraged_optional_collection
-        var analyticsMetadata: [String: String]?
+        var summary: String?
+        var imageData: Data?
+        var viewport: Viewport
+        var episodeInformation: EpisodeInformation?
+        var analyticsData: [String: String]
+        var analyticsMetadata: [String: String]
 
         var urnMetadata: URNMetadata {
             .init(
                 identifier: identifier,
                 title: title,
                 subtitle: subtitle,
+                description: summary,
+                imageSource: imageSource,
+                viewport: viewport,
+                episodeInformation: episodeInformation,
                 customData: .init(
                     blockingReason: .none,
                     resource: nil,
                     mediaCompositionUrl: nil,
-                    analyticsData: analyticsData ?? [:],
-                    analyticsMetadata: analyticsMetadata ?? [:]
+                    analyticsData: analyticsData,
+                    analyticsMetadata: analyticsMetadata
                 )
             )
         }
 
+        private var imageSource: ImageSource {
+            guard let imageData, let image = UIImage(data: imageData) else { return .none }
+            return .image(image)
+        }
+
         init(
-            identifier: String? = nil,
-            title: String? = nil,
-            subtitle: String? = nil,
-            // swiftlint:disable:next discouraged_optional_collection
-            analyticsData: [String: String]? = nil,
-            // swiftlint:disable:next discouraged_optional_collection
-            analyticsMetadata: [String: String]? = nil
+            identifier: String?,
+            title: String?,
+            subtitle: String?,
+            summary: String?,
+            imageData: Data?,
+            viewport: Viewport,
+            episodeInformation: EpisodeInformation?,
+            analyticsData: [String: String],
+            analyticsMetadata: [String: String]
         ) {
             self.identifier = identifier
             self.title = title
             self.subtitle = subtitle
+            self.summary = summary
+            self.imageData = imageData
+            self.viewport = viewport
+            self.episodeInformation = episodeInformation
             self.analyticsData = analyticsData
             self.analyticsMetadata = analyticsMetadata
         }
