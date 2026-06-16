@@ -20,13 +20,11 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
 
     public init<L>(
         assetLoaderType: L.Type,
-        storableMetadata: @escaping (L.Metadata) -> S.Metadata,
         configuration: URLSessionConfiguration,
         store: S
-    ) where L: AssetLoader, L.Input == S.Input {
+    ) where L: AssetLoader, L.Input == S.Input, L.Metadata == S.Metadata {
         let manager = DownloadManager(
             assetLoaderType: assetLoaderType,
-            storableMetadata: storableMetadata,
             store: store,
             session: URLDownloadSession(configuration: configuration)
         )

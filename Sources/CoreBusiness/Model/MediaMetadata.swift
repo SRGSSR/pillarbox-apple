@@ -7,7 +7,7 @@
 import PillarboxPlayer
 import UIKit
 
-public struct MediaMetadata {
+struct MediaMetadata {
     private static let dateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone(identifier: "Europe/Zurich")
@@ -68,7 +68,7 @@ public struct MediaMetadata {
         chapter.title.lowercased() == show.title.lowercased()
     }
 
-    func playerMetadata() -> PlayerMetadata {
+    func urnMetadata() -> URNMetadata {
         .init(
             identifier: mediaComposition.chapterUrn,
             title: title,
@@ -81,7 +81,13 @@ public struct MediaMetadata {
             viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
-            timeRanges: timeRanges
+            timeRanges: timeRanges,
+            customData: .init(
+                blockingReason: blockingReason,
+                resource: resource,
+                analyticsData: analyticsData,
+                analyticsMetadata: analyticsMetadata
+            )
         )
     }
 }

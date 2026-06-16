@@ -19,7 +19,6 @@ final class DownloadManagerTests: TestCase {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: store,
             session: session
         )
@@ -33,7 +32,6 @@ final class DownloadManagerTests: TestCase {
         ])
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: store,
             session: session
         )
@@ -45,7 +43,6 @@ final class DownloadManagerTests: TestCase {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: store,
             session: session
         )
@@ -58,7 +55,6 @@ final class DownloadManagerTests: TestCase {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: store,
             session: session
         )
@@ -73,7 +69,6 @@ final class DownloadManagerTests: TestCase {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: store,
             session: session
         )
@@ -87,7 +82,6 @@ final class DownloadManagerTests: TestCase {
     func testDownloadWithMatchingInput() {
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: AssetDownloadStoreMock(),
             session: session
         )
@@ -99,7 +93,6 @@ final class DownloadManagerTests: TestCase {
     func testDownloadWithNonMatchingInput() {
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: AssetDownloadStoreMock(),
             session: session
         )
@@ -110,7 +103,6 @@ final class DownloadManagerTests: TestCase {
     func testRelatedPlayerItem() {
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: AssetDownloadStoreMock(),
             session: session
         )
@@ -123,7 +115,6 @@ final class DownloadManagerTests: TestCase {
     func testUnrelatedPlayerItem() {
         let manager1 = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: AssetDownloadStoreMock(),
             session: session
         )
@@ -132,7 +123,6 @@ final class DownloadManagerTests: TestCase {
 
         let manager2 = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: AssetDownloadStoreMock(),
             session: session
         )
@@ -143,7 +133,6 @@ final class DownloadManagerTests: TestCase {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: store,
             session: session
         )
@@ -158,7 +147,6 @@ final class DownloadManagerTests: TestCase {
         let store1 = AssetDownloadStoreMock()
         let manager1 = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: store1,
             session: session
         )
@@ -166,7 +154,6 @@ final class DownloadManagerTests: TestCase {
 
         let manager2 = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: AssetDownloadStoreMock(),
             session: session
         )
@@ -179,7 +166,6 @@ final class DownloadManagerTests: TestCase {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: store,
             session: session
         )
@@ -195,7 +181,6 @@ final class DownloadManagerTests: TestCase {
     func testDeallocation() {
         var manager: DownloadManager? = .init(
             assetLoaderType: AssetLoaderMock.self,
-            storableMetadata: \.self,
             store: AssetDownloadStoreMock(),
             session: session
         )

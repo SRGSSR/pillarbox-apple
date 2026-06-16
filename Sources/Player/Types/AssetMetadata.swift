@@ -141,7 +141,21 @@ public struct AssetMetadata<CustomData>: Codable where CustomData: Codable {
 }
 
 extension AssetMetadata {
-    func playerMetadataPublisher() -> AnyPublisher<Self, Never> {
+    public func playerMetadata() -> PlayerMetadata {
+        .init(
+            identifier: identifier,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            imageSource: imageSource,
+            viewport: viewport,
+            episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges
+        )
+    }
+
+    func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
         Publishers.CombineLatest(
             imageSource.imageSourcePublisher(),
             chaptersPublisher()
@@ -154,7 +168,7 @@ extension AssetMetadata {
         Publishers.AccumulateLatestMany(chapters.map { $0.chapterPublisher() })
     }
 
-    private func with(imageSource: ImageSource, chapters: [Chapter]) -> Self {
+    private func with(imageSource: ImageSource, chapters: [Chapter]) -> PlayerMetadata {
         .init(
             identifier: identifier,
             title: title,
@@ -164,8 +178,7 @@ extension AssetMetadata {
             viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
-            timeRanges: timeRanges,
-            customData: customData
+            timeRanges: timeRanges
         )
     }
 }

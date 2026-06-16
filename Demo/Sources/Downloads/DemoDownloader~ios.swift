@@ -19,7 +19,6 @@ import PillarboxCoreBusiness
 final class DemoDownloader: ObservableObject {
     private let urlDownloader = Downloader(
         assetLoaderType: URLAssetLoader.self,
-        storableMetadata: \.self,
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
         store: URLAssetDownloadStore(fileName: "file_downloads.json")
     )

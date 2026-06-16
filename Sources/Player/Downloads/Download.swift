@@ -54,11 +54,10 @@ public final class Download: ObservableObject {
     private init<L, S>(
         id: String,
         assetLoaderType: L.Type,
-        storableMetadata: @escaping (L.Metadata) -> S.Metadata,
         input: L.Input,
         session: DownloadSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input {
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.id = id
         self.addRecord = {
             store.addDownloadRecord(using: input, forId: id)
@@ -66,32 +65,29 @@ public final class Download: ObservableObject {
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
         }
-        configurePropertiesPublisher(assetLoaderType: assetLoaderType, storableMetadata: storableMetadata, input: input, session: session, store: store)
+        configurePropertiesPublisher(assetLoaderType: assetLoaderType, input: input, session: session, store: store)
     }
 
     convenience init<L, S>(
         assetLoaderType: L.Type,
-        storableMetadata: @escaping (L.Metadata) -> S.Metadata,
         input: L.Input,
         session: DownloadSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input {
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         let id = type(of: store).id(from: input)
         store.addDownloadRecord(using: input, forId: id)
-        self.init(id: id, assetLoaderType: assetLoaderType, storableMetadata: storableMetadata, input: input, session: session, store: store)
+        self.init(id: id, assetLoaderType: assetLoaderType, input: input, session: session, store: store)
     }
 
     convenience init<L, S>(
         assetLoaderType: L.Type,
-        storableMetadata: @escaping (L.Metadata) -> S.Metadata,
         record: DownloadRecord<S.Input, S.Metadata>,
         session: DownloadSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input {
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         self.init(
             id: type(of: store).id(from: record.input),
             assetLoaderType: assetLoaderType,
-            storableMetadata: storableMetadata,
             input: record.input,
             session: session,
             store: store
@@ -152,13 +148,12 @@ private extension Download {
 
     static func downloadSourcePublisher<L, S>(
         assetLoaderType: L.Type,
-        storableMetadata: @escaping (L.Metadata) -> S.Metadata,
         storeType: S.Type,
         id: String,
         input: L.Input,
         session: DownloadSession,
         properties: DownloadProperties<S.Metadata>
-    ) -> AnyPublisher<DownloadSource<S.Metadata>, Error> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input {
+    ) -> AnyPublisher<DownloadSource<S.Metadata>, Error> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         if let metadata = properties.source.metadata {
             return session.sessionTaskPublisher(id: id)
                 .setFailureType(to: Error.self)
@@ -183,7 +178,7 @@ private extension Download {
                     )
                 }
                 .switchToLatest()
-                .map { .init(kind: .task($0), metadata: storableMetadata($1)) }
+                .map { .init(kind: .task($0), metadata: $1) }
                 .prepend(.init(kind: .estimate(0), metadata: nil))
                 .eraseToAnyPublisher()
         }
@@ -194,12 +189,11 @@ private extension Download {
 extension Download {
     private func configurePropertiesPublisher<L, S>(
         assetLoaderType: L.Type,
-        storableMetadata: @escaping (L.Metadata) -> S.Metadata,
         input: L.Input,
         session: DownloadSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input {
-        downloadPropertiesPublisher(assetLoaderType: assetLoaderType, storableMetadata: storableMetadata, id: id, input: input, session: session, store: store)
+    ) where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
+        downloadPropertiesPublisher(assetLoaderType: assetLoaderType, id: id, input: input, session: session, store: store)
             .receiveOnMainThread()
             .handleEvents(
                 receiveOutput: { [id] properties in
@@ -229,18 +223,16 @@ extension Download {
 
     private func downloadPropertiesPublisher<L, S>(
         assetLoaderType: L.Type,
-        storableMetadata: @escaping (L.Metadata) -> S.Metadata,
         id: String,
         input: L.Input,
         session: DownloadSession,
         store: S
-    ) -> AnyPublisher<DownloadProperties<S.Metadata>, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input {
+    ) -> AnyPublisher<DownloadProperties<S.Metadata>, Never> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger, locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Publishers.CombineLatest3(
                 Self.downloadSourcePublisher(
                     assetLoaderType: assetLoaderType,
-                    storableMetadata: storableMetadata,
                     storeType: type(of: store),
                     id: id,
                     input: input,

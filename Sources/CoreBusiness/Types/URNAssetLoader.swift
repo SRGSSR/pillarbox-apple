@@ -26,20 +26,21 @@ public enum URNAssetLoader: AssetLoader {
         }
     }
 
-    public static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
+    public static func metadataPublisher(for input: Input) -> AnyPublisher<URNMetadata, any Error> {
         let dataProvider = DataProvider(server: input.server)
         return dataProvider.mediaCompositionPublisher(forUrn: input.urn)
             .tryMap { response in
                 try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
             }
+            .map { $0.urnMetadata() }
             .eraseToAnyPublisher()
     }
 
-    public static func asset(from input: Input, metadata: MediaMetadata) -> Asset {
-        if let blockingReason = metadata.blockingReason {
+    public static func asset(from input: Input, metadata: URNMetadata) -> Asset {
+        if let blockingReason = metadata.customData.blockingReason {
             return .unavailable(with: BlockingError(reason: blockingReason))
         }
-        guard let resource = metadata.resource else {
+        guard let resource = metadata.customData.resource else {
             return .unavailable(with: SourceError())
         }
         let configuration = assetConfiguration(for: resource)
@@ -56,7 +57,7 @@ public enum URNAssetLoader: AssetLoader {
         }
     }
 
-    public static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
+    public static func playerMetadata(from input: Input, metadata: URNMetadata?) -> PlayerMetadata {
         metadata?.playerMetadata() ?? .empty
     }
 
