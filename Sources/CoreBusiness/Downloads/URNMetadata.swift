@@ -27,9 +27,11 @@ extension URNMetadata {
             title: title,
             subtitle: subtitle,
             summary: description,
-            imageData: imageSource.image?.pngData(),
+            imageData: nil /* FIXME */,
             viewport: viewport,
             episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges,
             analyticsData: customData.analyticsData,
             analyticsMetadata: customData.analyticsMetadata
         )

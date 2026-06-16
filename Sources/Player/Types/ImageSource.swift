@@ -62,7 +62,7 @@ public struct ImageSource: Codable, Equatable {
 }
 
 extension ImageSource {
-    public var image: UIImage? {
+    var image: UIImage? {
         switch kind {
         case let .image(data):
             return UIImage(data: data)

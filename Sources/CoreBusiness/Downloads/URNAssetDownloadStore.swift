@@ -48,6 +48,8 @@ extension URNAssetDownloadStore {
         var imageData: Data?
         var viewport: Viewport
         var episodeInformation: EpisodeInformation?
+        var chapters: [Chapter]
+        var timeRanges: [TimeRange]
         var analyticsData: [String: String]
         var analyticsMetadata: [String: String]
 
@@ -60,6 +62,8 @@ extension URNAssetDownloadStore {
                 imageSource: imageSource,
                 viewport: viewport,
                 episodeInformation: episodeInformation,
+                chapters: chapters,
+                timeRanges: timeRanges,
                 customData: .init(
                     blockingReason: .none,
                     resource: nil,
@@ -83,6 +87,8 @@ extension URNAssetDownloadStore {
             imageData: Data?,
             viewport: Viewport,
             episodeInformation: EpisodeInformation?,
+            chapters: [Chapter],
+            timeRanges: [TimeRange],
             analyticsData: [String: String],
             analyticsMetadata: [String: String]
         ) {
@@ -93,6 +99,8 @@ extension URNAssetDownloadStore {
             self.imageData = imageData
             self.viewport = viewport
             self.episodeInformation = episodeInformation
+            self.chapters = chapters
+            self.timeRanges = timeRanges
             self.analyticsData = analyticsData
             self.analyticsMetadata = analyticsMetadata
         }
@@ -107,7 +115,14 @@ extension URNAssetDownloadStore {
         var progress: Double
         var errorDescription: String?
 
-        init(id: String, urn: String, metadata: EntryMetadata? = nil, bookmarkData: Data? = nil, progress: Double, errorDescription: String? = nil) {
+        init(
+            id: String,
+            urn: String,
+            metadata: EntryMetadata? = nil,
+            bookmarkData: Data? = nil,
+            progress: Double,
+            errorDescription: String? = nil
+        ) {
             self.id = id
             self.urn = urn
             self.metadata = metadata
