@@ -10,31 +10,6 @@ import CoreMedia
 import PillarboxCircumspect
 import UIKit
 
-extension ImageSource: Similar {
-    // swiftlint:disable:next missing_docs
-    public static func ~~ (lhs: ImageSource, rhs: ImageSource) -> Bool {
-        switch (lhs.kind, rhs.kind) {
-        case (.none, .none):
-            return true
-        case let (
-            .url(
-                standardResolution: lhsStandardResolutionUrl,
-                lowResolution: lhsLowResolutionUrl
-            ),
-            .url(
-                standardResolution: rhsStandardResolutionUrl,
-                lowResolution: rhsLowResolutionUrl
-            )
-        ):
-            return lhsStandardResolutionUrl == rhsStandardResolutionUrl && lhsLowResolutionUrl == rhsLowResolutionUrl
-        case let (.image(lhsData), .image(rhsData)):
-            return lhsData == rhsData
-        default:
-            return false
-        }
-    }
-}
-
 extension Resource: Similar {
     // swiftlint:disable:next missing_docs
     public static func ~~ (lhs: PillarboxPlayer.Resource, rhs: PillarboxPlayer.Resource) -> Bool {
