@@ -16,7 +16,7 @@ public struct EmptyCustomData: Equatable, Codable {}
 public typealias PlayerMetadata = AssetMetadata<EmptyCustomData>
 
 /// Metadata associated with an asset.
-public struct AssetMetadata<CustomData>: Codable where CustomData: Codable {
+public struct AssetMetadata<CustomData> {
     /// An identifier for the content.
     public let identifier: String?
 
@@ -183,7 +183,7 @@ extension AssetMetadata {
     }
 }
 
-extension AssetMetadata: Equatable where CustomData: Equatable {}
+extension AssetMetadata: Codable, Equatable where CustomData: Codable & Equatable {}
 
 public extension AssetMetadata where CustomData == EmptyCustomData {
     /// Empty metadata.

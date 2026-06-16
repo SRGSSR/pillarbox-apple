@@ -8,39 +8,11 @@
 
 import PillarboxPlayer
 
-public struct URNCustomData: Codable {
-    enum CodingKeys: String, CodingKey {
-        case analyticsData
-        case analyticsMetadata
-    }
-
+public struct URNCustomData {
     let blockingReason: BlockingReason?
     let resource: MediaComposition.Resource?
-
-    // TODO: Probably should name as comScore and commandersAct labels
-    public let analyticsData: [String: String]
-    public let analyticsMetadata: [String: String]
-
-    init(blockingReason: BlockingReason?, resource: MediaComposition.Resource?, analyticsData: [String : String], analyticsMetadata: [String : String]) {
-        self.blockingReason = blockingReason
-        self.resource = resource
-        self.analyticsData = analyticsData
-        self.analyticsMetadata = analyticsMetadata
-    }
-
-    public init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        analyticsData = try container.decode([String: String].self, forKey: .analyticsData)
-        analyticsMetadata = try container.decode([String: String].self, forKey: .analyticsMetadata)
-        blockingReason = nil
-        resource = nil
-    }
-
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(analyticsData, forKey: .analyticsData)
-        try container.encode(analyticsMetadata, forKey: .analyticsMetadata)
-    }
+    let analyticsData: [String: String]
+    let analyticsMetadata: [String: String]
 }
 
 public typealias URNMetadata = AssetMetadata<URNCustomData>
