@@ -141,6 +141,7 @@ public struct AssetMetadata<CustomData> {
 }
 
 extension AssetMetadata {
+    /// Converts to player metadata, removing custom data in the process.
     public func playerMetadata() -> PlayerMetadata {
         .init(
             identifier: identifier,

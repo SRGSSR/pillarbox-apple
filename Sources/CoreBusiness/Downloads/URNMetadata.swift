@@ -1,6 +1,6 @@
 //
 //  Copyright (c) SRG SSR. All rights reserved.
-//x tow
+//
 //  License information is available from the LICENSE file.
 //
 
