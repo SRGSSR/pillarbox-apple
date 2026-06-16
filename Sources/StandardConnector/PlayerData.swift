@@ -8,12 +8,6 @@ import CoreMedia
 import Foundation
 import PillarboxPlayer
 
-// FIXME: Remove when minimum target is 17 and use `Never` instead.
-/// An object representing the absence of custom data.
-public struct EmptyCustomData: Decodable {}
-
-// TODO: Design public API. Might not need to expose much stuff.
-
 /// Metadata associated with content loaded in a player.
 ///
 /// Represents the standard metadata returned by a backend endpoint and used to configure a playable `Asset`.
