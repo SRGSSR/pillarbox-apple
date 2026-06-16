@@ -8,11 +8,15 @@ import AVFoundation
 import Combine
 import MediaPlayer
 
-/// Metadata associated with playback.
-public struct PlayerMetadata: Codable, Equatable {
-    /// Empty metadata.
-    public static let empty = Self()
+// FIXME: Remove when minimum target is 17 and use `Never` instead.
+/// A special type representing the absence of custom data.
+public struct EmptyCustomData: Equatable, Codable {}
 
+/// Metadata associated with playback.
+public typealias PlayerMetadata = AssetMetadata<EmptyCustomData>
+
+/// Metadata associated with an asset.
+public struct AssetMetadata<CustomData>: Codable where CustomData: Codable {
     /// An identifier for the content.
     public let identifier: String?
 
@@ -44,6 +48,9 @@ public struct PlayerMetadata: Codable, Equatable {
 
     /// Time ranges associated with the content.
     public let timeRanges: [TimeRange]
+
+    /// Custom data associated with the content.
+    public let customData: CustomData
 
     var blockedTimeRanges: [CMTimeRange] {
         CMTimeRange.flatten(timeRanges.filter { $0.kind == .blocked }.map { .init(start: $0.start, end: $0.end) })
@@ -105,6 +112,7 @@ public struct PlayerMetadata: Codable, Equatable {
     ///   - episodeInformation: Episode information associated with the content.
     ///   - chapters: Chapter associated with the content.
     ///   - timeRanges: Time ranges associated with the content.
+    ///   - customData: Custom data associated with the content.
     ///
     /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
     public init(
@@ -116,7 +124,8 @@ public struct PlayerMetadata: Codable, Equatable {
         viewport: Viewport = .standard,
         episodeInformation: EpisodeInformation? = nil,
         chapters: [Chapter] = [],
-        timeRanges: [TimeRange] = []
+        timeRanges: [TimeRange] = [],
+        customData: CustomData
     ) {
         self.identifier = identifier
         self.title = title
@@ -127,11 +136,12 @@ public struct PlayerMetadata: Codable, Equatable {
         self.episodeInformation = episodeInformation
         self.chapters = chapters
         self.timeRanges = timeRanges
+        self.customData = customData
     }
 }
 
-extension PlayerMetadata {
-    func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
+extension AssetMetadata {
+    func playerMetadataPublisher() -> AnyPublisher<Self, Never> {
         Publishers.CombineLatest(
             imageSource.imageSourcePublisher(),
             chaptersPublisher()
@@ -154,7 +164,54 @@ extension PlayerMetadata {
             viewport: viewport,
             episodeInformation: episodeInformation,
             chapters: chapters,
-            timeRanges: timeRanges
+            timeRanges: timeRanges,
+            customData: customData
+        )
+    }
+}
+
+extension AssetMetadata: Equatable where CustomData: Equatable {}
+
+public extension AssetMetadata where CustomData == EmptyCustomData {
+    /// Empty metadata.
+    static let empty = Self(customData: .init())
+
+    /// Creates metadata.
+    ///
+    /// - Parameters:
+    ///   - identifier: An identifier for the content.
+    ///   - title: The content title.
+    ///   - subtitle: A subtitle for the content.
+    ///   - description: A description of the content.
+    ///   - imageSource: The source of the image associated with the content.
+    ///   - viewport: The content viewport.
+    ///   - episodeInformation: Episode information associated with the content.
+    ///   - chapters: Chapter associated with the content.
+    ///   - timeRanges: Time ranges associated with the content.
+    ///
+    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
+    init(
+        identifier: String? = nil,
+        title: String? = nil,
+        subtitle: String? = nil,
+        description: String? = nil,
+        imageSource: ImageSource = .none,
+        viewport: Viewport = .standard,
+        episodeInformation: EpisodeInformation? = nil,
+        chapters: [Chapter] = [],
+        timeRanges: [TimeRange] = []
+    ) {
+        self.init(
+            identifier: identifier,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            imageSource: imageSource,
+            viewport: viewport,
+            episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges,
+            customData: .init()
         )
     }
 }
