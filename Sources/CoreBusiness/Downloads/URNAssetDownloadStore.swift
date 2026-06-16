@@ -27,6 +27,8 @@ final class URNAssetDownloadStore {
     let context: ModelContext
 
     init() {
+        // TODO: There moight be only one `ModelConfiguration` for the entire app, in which case we should receive a context
+        //       prepared once.
         let schema = Schema([Entry.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         self.context = .init(try! ModelContainer(for: schema, configurations: [modelConfiguration]))
