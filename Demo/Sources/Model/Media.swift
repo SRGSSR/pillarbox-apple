@@ -114,8 +114,7 @@ struct Media: Hashable {
                 server: serverSetting.server,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        // FIXME:
-                        DemoTracker.Metadata(title: nil)
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ]
             )
