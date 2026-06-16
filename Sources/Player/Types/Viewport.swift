@@ -5,7 +5,7 @@
 //
 
 /// A video viewport.
-public enum Viewport {
+public enum Viewport: Codable {
     /// Standard viewport.
     case standard
 
