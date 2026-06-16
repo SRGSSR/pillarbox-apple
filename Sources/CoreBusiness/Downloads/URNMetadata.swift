@@ -23,15 +23,15 @@ public typealias URNMetadata = AssetMetadata<URNCustomData>
 extension URNMetadata {
     var entryMetadata: URNAssetDownloadStore.EntryMetadata {
         .init(
-            identifier: identifier,
-            title: title,
-            subtitle: subtitle,
-            summary: description,
+            identifier: playerMetadata.identifier,
+            title: playerMetadata.title,
+            subtitle: playerMetadata.subtitle,
+            summary: playerMetadata.description,
             imageData: nil /* FIXME */,
-            viewport: viewport,
-            episodeInformation: episodeInformation,
-            chapters: chapters,
-            timeRanges: timeRanges,
+            viewport: playerMetadata.viewport,
+            episodeInformation: playerMetadata.episodeInformation,
+            chapters: playerMetadata.chapters,
+            timeRanges: playerMetadata.timeRanges,
             analyticsData: customData.analyticsData,
             analyticsMetadata: customData.analyticsMetadata
         )

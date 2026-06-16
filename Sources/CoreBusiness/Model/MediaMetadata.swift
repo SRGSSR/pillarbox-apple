@@ -70,18 +70,20 @@ struct MediaMetadata {
 
     func urnMetadata() -> URNMetadata {
         .init(
-            identifier: mediaComposition.chapterUrn,
-            title: title,
-            subtitle: subtitle,
-            description: description,
-            imageSource: .url(
-                standardResolution: standardResolutionImageUrl(for: mainChapter),
-                lowResolution: lowResolutionImageUrl(for: mainChapter)
+            playerMetadata: .init(
+                identifier: mediaComposition.chapterUrn,
+                title: title,
+                subtitle: subtitle,
+                description: description,
+                imageSource: .url(
+                    standardResolution: standardResolutionImageUrl(for: mainChapter),
+                    lowResolution: lowResolutionImageUrl(for: mainChapter)
+                ),
+                viewport: viewport,
+                episodeInformation: episodeInformation,
+                chapters: chapters,
+                timeRanges: timeRanges
             ),
-            viewport: viewport,
-            episodeInformation: episodeInformation,
-            chapters: chapters,
-            timeRanges: timeRanges,
             customData: .init(
                 blockingReason: blockingReason,
                 resource: resource,

@@ -55,15 +55,17 @@ extension URNAssetDownloadStore {
 
         var urnMetadata: URNMetadata {
             .init(
-                identifier: identifier,
-                title: title,
-                subtitle: subtitle,
-                description: summary,
-                imageSource: imageSource,
-                viewport: viewport,
-                episodeInformation: episodeInformation,
-                chapters: chapters,
-                timeRanges: timeRanges,
+                playerMetadata: .init(
+                    identifier: identifier,
+                    title: title,
+                    subtitle: subtitle,
+                    description: summary,
+                    imageSource: imageSource,
+                    viewport: viewport,
+                    episodeInformation: episodeInformation,
+                    chapters: chapters,
+                    timeRanges: timeRanges
+                ),
                 customData: .init(
                     blockingReason: .none,
                     resource: nil,
@@ -166,7 +168,7 @@ extension URNAssetDownloadStore: AssetDownloadStore {
     }
 
     static func playerMetadata(from input: URNAssetLoader.Input, metadata: URNMetadata?) -> PlayerMetadata {
-        metadata?.playerMetadata() ?? .init(title: input.urn)
+        metadata?.playerMetadata ?? .init(title: input.urn)
     }
 
     func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {

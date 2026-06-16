@@ -58,7 +58,7 @@ public enum URNAssetLoader: AssetLoader {
     }
 
     public static func playerMetadata(from input: Input, metadata: URNMetadata?) -> PlayerMetadata {
-        metadata?.playerMetadata() ?? .empty
+        metadata?.playerMetadata ?? .empty
     }
 
     private static func assetConfiguration(for resource: MediaComposition.Resource) -> PlaybackConfiguration {
