@@ -133,7 +133,7 @@ extension URNAssetDownloadStore: AssetDownloadStore {
     }
 
     static func playerMetadata(from input: URNAssetLoader.Input, metadata: URNMetadata?) -> PlayerMetadata {
-        .init(title: metadata?.title ?? input.urn)
+        metadata?.playerMetadata() ?? .init(title: input.urn)
     }
 
     func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {
