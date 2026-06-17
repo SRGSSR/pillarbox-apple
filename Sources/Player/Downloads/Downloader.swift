@@ -43,7 +43,7 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
         manager.download(matching: input)
     }
 
-    public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<DownloadMetadata<S.CustomData>>] = []) -> PlayerItem? {
+    public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<AssetMetadata<S.CustomData>>] = []) -> PlayerItem? {
         manager.playerItem(for: download, trackerAdapters: trackerAdapters)
     }
 

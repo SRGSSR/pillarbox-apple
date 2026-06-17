@@ -10,20 +10,20 @@ import Foundation
 enum ImmediateAssetLoader<CustomData>: AssetLoader {
     struct Input {
         let asset: Asset
-        let metadata: DownloadMetadata<CustomData>
+        let metadata: AssetMetadata<CustomData>
     }
 
-    static func metadataPublisher(for input: Input) -> AnyPublisher<DownloadMetadata<CustomData>, any Error> {
+    static func metadataPublisher(for input: Input) -> AnyPublisher<AssetMetadata<CustomData>, any Error> {
         Just(input.metadata)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
-    static func asset(from input: Input, metadata: DownloadMetadata<CustomData>) -> Asset {
+    static func asset(from input: Input, metadata: AssetMetadata<CustomData>) -> Asset {
         input.asset
     }
 
-    static func playerMetadata(from input: Input, metadata: DownloadMetadata<CustomData>?) -> PlayerMetadata {
+    static func playerMetadata(from input: Input, metadata: AssetMetadata<CustomData>?) -> PlayerMetadata {
         input.metadata.playerMetadata
     }
 }

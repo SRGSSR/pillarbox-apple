@@ -15,7 +15,7 @@ enum DownloadSourceKind {
 @available(tvOS, unavailable)
 struct DownloadSource<CustomData> {
     let kind: DownloadSourceKind
-    let metadata: DownloadMetadata<CustomData>?
+    let metadata: AssetMetadata<CustomData>?
 
     private var task: URLSessionTask? {
         switch kind {

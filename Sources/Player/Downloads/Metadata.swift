@@ -9,7 +9,7 @@
 #if DEBUG
 
 @available(tvOS, unavailable)
-public struct DownloadMetadata<CustomData> {
+public struct AssetMetadata<CustomData> {
     public let playerMetadata: PlayerMetadata
     public let customData: CustomData
 
@@ -18,12 +18,12 @@ public struct DownloadMetadata<CustomData> {
         self.customData = customData
     }
 
-    func withoutCustomData() -> DownloadMetadata<Void> {
+    func withoutCustomData() -> AssetMetadata<Void> {
         .init(playerMetadata: playerMetadata, customData: ())
     }
 }
 
-public extension DownloadMetadata where CustomData == Void {
+public extension AssetMetadata where CustomData == Void {
     static let empty = Self(playerMetadata: .empty, customData: ())
 }
 

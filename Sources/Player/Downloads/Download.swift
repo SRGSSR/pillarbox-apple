@@ -175,7 +175,7 @@ private extension Download {
                     )
                     return Publishers.CombineLatest(
                         session.downloadSessionTaskPropertiesPublisher(for: task),
-                        Just(DownloadMetadata(playerMetadata: playerMetadata, customData: S.customData(from: metadata)))
+                        Just(AssetMetadata(playerMetadata: playerMetadata, customData: S.customData(from: metadata)))
                     )
                 }
                 .switchToLatest()

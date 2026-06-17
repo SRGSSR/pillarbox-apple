@@ -30,7 +30,7 @@ final class URLAssetDownloadStore {
         let progress: Double
         let errorDescription: String?
 
-        var downloadMetadata: DownloadMetadata<Void> {
+        var downloadMetadata: AssetMetadata<Void> {
             .init(
                 playerMetadata: .init(identifier: id, title: title, viewport: isMonoscopic ? .monoscopic : .standard),
                 customData: ()

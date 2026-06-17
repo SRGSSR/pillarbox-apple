@@ -68,8 +68,8 @@ public extension PlayerItem {
     /// > Important: This API is reserved to the Pillarbox development team.
     static func tokenProtected<CustomData>(
         url: URL,
-        metadata: DownloadMetadata<CustomData>,
-        trackerAdapters: [TrackerAdapter<DownloadMetadata<CustomData>>],
+        metadata: AssetMetadata<CustomData>,
+        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
@@ -94,8 +94,8 @@ public extension PlayerItem {
     static func encrypted<CustomData>(
         url: URL,
         certificateUrl: URL,
-        metadata: DownloadMetadata<CustomData>,
-        trackerAdapters: [TrackerAdapter<DownloadMetadata<CustomData>>],
+        metadata: AssetMetadata<CustomData>,
+        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(

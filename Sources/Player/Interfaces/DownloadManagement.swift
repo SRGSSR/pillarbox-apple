@@ -13,7 +13,7 @@ protocol DownloadManagement<Store> {
     func addDownload(for input: Store.Loader.Input) -> Download
 
     func download(matching input: Store.Loader.Input) -> Download?
-    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<DownloadMetadata<Store.CustomData>>]) -> PlayerItem?
+    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<AssetMetadata<Store.CustomData>>]) -> PlayerItem?
 
     func removeDownload(_ download: Download)
     func removeAllDownloads()

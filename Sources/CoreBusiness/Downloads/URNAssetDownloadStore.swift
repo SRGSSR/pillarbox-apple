@@ -44,7 +44,7 @@ extension URNAssetDownloadStore {
         var analyticsData: [String: String]
         var analyticsMetadata: [String: String]
 
-        var downloadMetadata: DownloadMetadata<URNMetadata> {
+        var downloadMetadata: AssetMetadata<URNMetadata> {
             .init(
                 playerMetadata: .init(identifier: identifier, title: title, subtitle: subtitle),
                 customData: .init(
