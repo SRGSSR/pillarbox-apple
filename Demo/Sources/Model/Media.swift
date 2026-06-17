@@ -160,7 +160,10 @@ extension Media {
         }
     }
 
-    private func metadata() -> PlayerMetadata {
-        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
+    private func metadata() -> DownloadMetadata<Void> {
+        .init(
+            playerMetadata: .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges),
+            customData: ()
+        )
     }
 }

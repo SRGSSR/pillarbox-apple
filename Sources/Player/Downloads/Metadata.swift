@@ -23,6 +23,10 @@ public struct DownloadMetadata<CustomData> {
     }
 }
 
+public extension DownloadMetadata where CustomData == Void {
+    static let empty = Self(playerMetadata: .empty, customData: ())
+}
+
 #endif
 
 // swiftlint:enable missing_docs

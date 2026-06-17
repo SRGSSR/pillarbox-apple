@@ -46,11 +46,11 @@ public final class URNDownloader: ObservableObject {
     public func playerItem(
         for download: Download,
         commandersActSource: CommandersActSource? = nil,
-        trackerAdapters: [TrackerAdapter<URNMetadata>] = []
+        trackerAdapters: [TrackerAdapter<DownloadMetadata<URNMetadata>>] = []
     ) -> PlayerItem? {
         downloader.playerItem(for: download, trackerAdapters: [
-            ComScoreTracker.adapter(mapper: \.analyticsData),
-            CommandersActTracker.adapter(configuration: commandersActSource, mapper: \.analyticsMetadata)
+            ComScoreTracker.adapter(mapper: \.customData.analyticsData),
+            CommandersActTracker.adapter(configuration: commandersActSource, mapper: \.customData.analyticsMetadata)
         ] + trackerAdapters)
     }
 

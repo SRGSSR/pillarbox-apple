@@ -46,7 +46,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         download(matchingId: type(of: store).id(from: input))
     }
 
-    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<S.CustomData>]) -> PlayerItem? {
+    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<DownloadMetadata<S.CustomData>>]) -> PlayerItem? {
         guard downloads.contains(download), let record = store.downloadRecord(forId: download.id),
               let metadata = record.metadata, let fileUrl = download.fileUrl else {
             return nil
@@ -54,7 +54,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         let asset = S.asset(fileUrl: fileUrl, input: record.input, customData: metadata.customData)
         return .init(
             assetLoaderType: ImmediateAssetLoader.self,
-            input: .init(asset: asset, metadata: metadata.playerMetadata, customData: metadata.customData),
+            input: .init(asset: asset, metadata: metadata),
             trackerAdapters: trackerAdapters
         )
     }

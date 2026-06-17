@@ -66,10 +66,10 @@ public extension PlayerItem {
     /// No SRG SSR standard tracking is made.
     ///
     /// > Important: This API is reserved to the Pillarbox development team.
-    static func tokenProtected(
+    static func tokenProtected<CustomData>(
         url: URL,
-        metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<Void>] = [],
+        metadata: DownloadMetadata<CustomData>,
+        trackerAdapters: [TrackerAdapter<DownloadMetadata<CustomData>>],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
@@ -91,11 +91,11 @@ public extension PlayerItem {
     /// No SRG SSR standard tracking is made.
     ///
     /// > Important: This API is reserved to the Pillarbox development team.
-    static func encrypted(
+    static func encrypted<CustomData>(
         url: URL,
         certificateUrl: URL,
-        metadata: PlayerMetadata,
-        trackerAdapters: [TrackerAdapter<Void>] = [],
+        metadata: DownloadMetadata<CustomData>,
+        trackerAdapters: [TrackerAdapter<DownloadMetadata<CustomData>>],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
