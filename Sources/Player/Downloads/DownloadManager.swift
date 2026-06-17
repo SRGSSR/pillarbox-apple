@@ -55,7 +55,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         }
         return .init(
             assetLoaderType: ImmediateAssetLoader.self,
-            input: .init(asset: .simple(url: fileUrl), metadata: metadata) { metadata in
+            input: .init(asset: S.asset(fileUrl: fileUrl, input: record.input, metadata: metadata), metadata: metadata) { metadata in
                 S.playerMetadata(from: record.input, metadata: metadata)
             },
             trackerAdapters: trackerAdapters
