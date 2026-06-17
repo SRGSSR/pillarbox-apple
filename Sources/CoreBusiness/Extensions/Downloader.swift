@@ -25,7 +25,6 @@ public final class URNDownloader: ObservableObject {
     public init(configuration: URLSessionConfiguration) {
         let downloader = Downloader(
             assetLoaderType: URNAssetLoader.self,
-            storableMetadata: URNDownloader.storableMetadata,
             configuration: configuration,
             store: URNAssetDownloadStore()
         )
@@ -33,16 +32,6 @@ public final class URNDownloader: ObservableObject {
 
         downloader.$downloads
             .assign(to: &$downloads)
-    }
-
-    private static func storableMetadata(_ metadata: MediaMetadata) -> URNMetadata {
-        .init(
-            identifier: metadata.mainChapter.urn,
-            title: metadata.title,
-            subtitle: metadata.subtitle,
-            analyticsData: metadata.analyticsData,
-            analyticsMetadata: metadata.analyticsMetadata,
-        )
     }
 
     @discardableResult
@@ -59,11 +48,10 @@ public final class URNDownloader: ObservableObject {
         commandersActSource: CommandersActSource? = nil,
         trackerAdapters: [TrackerAdapter<URNMetadata>] = []
     ) -> PlayerItem? {
-        let defaultAdapters: [TrackerAdapter<URNMetadata>] = [
+        downloader.playerItem(for: download, trackerAdapters: [
             ComScoreTracker.adapter(mapper: \.analyticsData),
             CommandersActTracker.adapter(configuration: commandersActSource, mapper: \.analyticsMetadata)
-        ]
-        return downloader.playerItem(for: download, trackerAdapters: defaultAdapters + trackerAdapters)
+        ] + trackerAdapters)
     }
 
     public func removeDownload(_ download: Download) {

@@ -107,11 +107,11 @@ public extension PlayerItem {
     convenience init(
         asset: Asset,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
+        trackerAdapters: [TrackerAdapter<Void>] = []
     ) {
         self.init(
             assetLoaderType: ImmediateAssetLoader.self,
-            input: .init(asset: asset, metadata: metadata, mapper: \.self),
+            input: .init(asset: asset, metadata: metadata, customData: ()),
             trackerAdapters: trackerAdapters
         )
     }
@@ -127,7 +127,7 @@ public extension PlayerItem {
     static func simple(
         url: URL,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
@@ -152,7 +152,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
@@ -175,7 +175,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(

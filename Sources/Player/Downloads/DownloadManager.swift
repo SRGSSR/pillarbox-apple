@@ -11,10 +11,9 @@ import Combine
 import UIKit
 
 @available(tvOS, unavailable)
-final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input {
+final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
     private let store: S
     private let session: any DownloadSession
-    private let storableMetadata: (L.Metadata) -> S.Metadata
 
     @Published private(set) var downloads: [Download]
 
@@ -22,42 +21,40 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
     // to properly clean associated downloaded data.
     private var locations: [String: URL] = [:]
 
-    init(assetLoaderType: L.Type, storableMetadata: @escaping (L.Metadata) -> S.Metadata, store: S, session: some DownloadSession) {
+    init(assetLoaderType: L.Type, store: S, session: some DownloadSession) {
         self.store = store
         self.session = session
-        self.storableMetadata = storableMetadata
         self.downloads = store.downloadRecords().map { record in
-            Download(assetLoaderType: assetLoaderType, storableMetadata: storableMetadata, record: record, session: session, store: store)
+            Download(assetLoaderType: assetLoaderType, record: record, session: session, store: store)
         }
         session.delegate = self
     }
 
     @discardableResult
-    func addDownload(for input: S.Input) -> Download {
+    func addDownload(for input: S.Loader.Input) -> Download {
         if let download = download(matching: input) {
             return download
         }
         else {
-            let download = Download(assetLoaderType: L.self, storableMetadata: storableMetadata, input: input, session: session, store: store)
+            let download = Download(assetLoaderType: L.self, input: input, session: session, store: store)
             downloads.append(download)
             return download
         }
     }
 
-    func download(matching input: S.Input) -> Download? {
+    func download(matching input: S.Loader.Input) -> Download? {
         download(matchingId: type(of: store).id(from: input))
     }
 
-    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<S.Metadata>]) -> PlayerItem? {
+    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<S.CustomData>]) -> PlayerItem? {
         guard downloads.contains(download), let record = store.downloadRecord(forId: download.id),
               let metadata = record.metadata, let fileUrl = download.fileUrl else {
             return nil
         }
+        let asset = S.asset(fileUrl: fileUrl, input: record.input, customData: metadata.customData)
         return .init(
             assetLoaderType: ImmediateAssetLoader.self,
-            input: .init(asset: S.asset(fileUrl: fileUrl, input: record.input, metadata: metadata), metadata: metadata) { metadata in
-                S.playerMetadata(from: record.input, metadata: metadata)
-            },
+            input: .init(asset: asset, metadata: metadata.playerMetadata, customData: metadata.customData),
             trackerAdapters: trackerAdapters
         )
     }

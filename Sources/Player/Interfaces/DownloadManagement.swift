@@ -10,10 +10,10 @@
 protocol DownloadManagement<Store> {
     associatedtype Store: AssetDownloadStore
 
-    func addDownload(for input: Store.Input) -> Download
+    func addDownload(for input: Store.Loader.Input) -> Download
 
-    func download(matching input: Store.Input) -> Download?
-    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<Store.Metadata>]) -> PlayerItem?
+    func download(matching input: Store.Loader.Input) -> Download?
+    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<Store.CustomData>]) -> PlayerItem?
 
     func removeDownload(_ download: Download)
     func removeAllDownloads()

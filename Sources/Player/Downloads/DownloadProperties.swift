@@ -9,8 +9,8 @@
 import Foundation
 
 @available(tvOS, unavailable)
-struct DownloadProperties<Metadata> {
-    let source: DownloadSource<Metadata>
+struct DownloadProperties<CustomData> {
+    let source: DownloadSource<CustomData>
     let fileUrl: URL?
     let error: Error?
 
@@ -62,13 +62,13 @@ struct DownloadProperties<Metadata> {
         )
     }
 
-    init(source: DownloadSource<Metadata>, fileUrl: URL?, error: Error?) {
+    init(source: DownloadSource<CustomData>, fileUrl: URL?, error: Error?) {
         self.source = source
         self.fileUrl = fileUrl
         self.error = error
     }
 
-    init<Input>(from record: DownloadRecord<Input, Metadata>) {
+    init<Input>(from record: DownloadRecord<Input, CustomData>) {
         do {
             self.init(
                 source: .init(kind: .estimate(record.progress), metadata: record.metadata),

@@ -41,30 +41,20 @@ extension URNAssetDownloadStore {
         var identifier: String?
         var title: String?
         var subtitle: String?
-        // swiftlint:disable:next discouraged_optional_collection
-        var analyticsData: [String: String]?
-        // swiftlint:disable:next discouraged_optional_collection
-        var analyticsMetadata: [String: String]?
+        var analyticsData: [String: String]
+        var analyticsMetadata: [String: String]
 
-        var urnMetadata: URNMetadata {
-            URNMetadata(
-                identifier: identifier,
-                title: title,
-                subtitle: subtitle,
-                analyticsData: analyticsData ?? [:],
-                analyticsMetadata: analyticsMetadata ?? [:]
+        var downloadMetadata: DownloadMetadata<URNMetadata> {
+            .init(
+                playerMetadata: .init(identifier: identifier, title: title, subtitle: subtitle),
+                customData: .init(
+                    analyticsData: analyticsData,
+                    analyticsMetadata: analyticsMetadata
+                )
             )
         }
 
-        init(
-            identifier: String? = nil,
-            title: String? = nil,
-            subtitle: String? = nil,
-            // swiftlint:disable:next discouraged_optional_collection
-            analyticsData: [String: String]? = nil,
-            // swiftlint:disable:next discouraged_optional_collection
-            analyticsMetadata: [String: String]? = nil
-        ) {
+        init(identifier: String?, title: String?, subtitle: String?, analyticsData: [String: String], analyticsMetadata: [String: String]) {
             self.identifier = identifier
             self.title = title
             self.subtitle = subtitle
@@ -100,7 +90,7 @@ extension URNAssetDownloadStore {
         func toRecord() -> DownloadRecord<URNAssetLoader.Input, URNMetadata> {
             .init(
                 input: .init(urn: urn, server: .production),
-                metadata: metadata?.urnMetadata,
+                metadata: metadata?.downloadMetadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: DownloadError(errorDescription: errorDescription)
@@ -121,12 +111,17 @@ extension URNAssetDownloadStore {
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 extension URNAssetDownloadStore: AssetDownloadStore {
+    typealias Loader = URNAssetLoader
+
     static func id(from input: URNAssetLoader.Input) -> String {
         input.id
     }
 
-    static func playerMetadata(from input: URNAssetLoader.Input, metadata: URNMetadata?) -> PlayerMetadata {
-        .init(title: metadata?.title ?? input.urn)
+    static func customData(from metadata: MediaMetadata) -> URNMetadata {
+        .init(
+            analyticsData: metadata.analyticsData,
+            analyticsMetadata: metadata.analyticsMetadata
+        )
     }
 
     func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {

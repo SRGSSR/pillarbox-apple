@@ -26,26 +26,22 @@ final class URLAssetDownloadStore {
         let title: String
         let url: URL
         let isMonoscopic: Bool
-        let metadata: String?
         let bookmarkData: Data?
         let progress: Double
         let errorDescription: String?
 
-        private init(
-            id: String,
-            title: String,
-            url: URL,
-            isMonoscopic: Bool,
-            metadata: String?,
-            bookmarkData: Data?,
-            progress: Double,
-            errorDescription: String?
-        ) {
+        var downloadMetadata: DownloadMetadata<Void> {
+            .init(
+                playerMetadata: .init(identifier: id, title: title, viewport: isMonoscopic ? .monoscopic : .standard),
+                customData: ()
+            )
+        }
+
+        private init(id: String, title: String, url: URL, isMonoscopic: Bool, bookmarkData: Data?, progress: Double, errorDescription: String?) {
             self.id = id
             self.title = title
             self.url = url
             self.isMonoscopic = isMonoscopic
-            self.metadata = metadata
             self.bookmarkData = bookmarkData
             self.progress = progress
             self.errorDescription = errorDescription
@@ -57,30 +53,28 @@ final class URLAssetDownloadStore {
                 title: input.title,
                 url: input.url,
                 isMonoscopic: input.isMonoscopic,
-                metadata: nil,
                 bookmarkData: nil,
                 progress: 0,
                 errorDescription: nil
             )
         }
 
-        init(id: String, record: DownloadRecord<URLAssetLoader.Input, String>) {
+        init(id: String, record: DownloadRecord<URLAssetLoader.Input, Void>) {
             self.init(
                 id: id,
                 title: record.input.title,
                 url: record.input.url,
                 isMonoscopic: record.input.isMonoscopic,
-                metadata: record.metadata,
                 bookmarkData: record.bookmarkData,
                 progress: record.progress,
                 errorDescription: record.error?.localizedDescription
             )
         }
 
-        func toDownloadRecord() -> DownloadRecord<URLAssetLoader.Input, String> {
+        func toDownloadRecord() -> DownloadRecord<URLAssetLoader.Input, Void> {
             .init(
                 input: URLAssetLoader.Input(title: title, url: url, isMonoscopic: isMonoscopic),
-                metadata: metadata,
+                metadata: downloadMetadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: DownloadError(errorDescription: errorDescription)
@@ -103,18 +97,15 @@ final class URLAssetDownloadStore {
 }
 
 extension URLAssetDownloadStore: AssetDownloadStore {
+    typealias Loader = URLAssetLoader
+
     static func id(from input: URLAssetLoader.Input) -> String {
         input.url.absoluteString
     }
 
-    static func playerMetadata(from input: URLAssetLoader.Input, metadata: String?) -> PlayerMetadata {
-        .init(
-            title: metadata ?? input.title,
-            viewport: input.isMonoscopic ? .monoscopic : .standard
-        )
-    }
+    static func customData(from metadata: Void) {}
 
-    func downloadRecords() -> [DownloadRecord<URLAssetLoader.Input, String>] {
+    func downloadRecords() -> [DownloadRecord<URLAssetLoader.Input, Void>] {
         fileEntries.map { $0.toDownloadRecord() }
     }
 
@@ -128,11 +119,11 @@ extension URLAssetDownloadStore: AssetDownloadStore {
         save()
     }
 
-    func downloadRecord(forId id: String) -> DownloadRecord<URLAssetLoader.Input, String>? {
+    func downloadRecord(forId id: String) -> DownloadRecord<URLAssetLoader.Input, Void>? {
         fileEntries.first { $0.id == id }?.toDownloadRecord()
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<URLAssetLoader.Input, String>, forId id: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<URLAssetLoader.Input, Void>, forId id: String) {
         guard let index = fileEntries.firstIndex(where: { $0.id == id }) else { return }
         fileEntries[index] = .init(id: id, record: record)
         save()

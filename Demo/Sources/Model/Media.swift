@@ -63,8 +63,8 @@ struct Media: Hashable {
                 url: url,
                 metadata: metadata(),
                 trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
+                    DemoTracker.adapter { _ in
+                        DemoTracker.Metadata(title: title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -74,8 +74,8 @@ struct Media: Hashable {
                 url: url,
                 metadata: metadata(),
                 trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
+                    DemoTracker.adapter { _ in
+                        DemoTracker.Metadata(title: title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -86,8 +86,8 @@ struct Media: Hashable {
                 certificateUrl: certificateUrl,
                 metadata: metadata(),
                 trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
+                    DemoTracker.adapter { _ in
+                        DemoTracker.Metadata(title: title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -102,8 +102,8 @@ struct Media: Hashable {
                 url: url,
                 metadata: metadata(),
                 trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
+                    DemoTracker.adapter { _ in
+                        DemoTracker.Metadata(title: title)
                     }
                 ],
                 configuration: configuration

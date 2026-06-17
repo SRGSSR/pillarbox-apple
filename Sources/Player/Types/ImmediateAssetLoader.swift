@@ -7,25 +7,24 @@
 import Combine
 import Foundation
 
-enum ImmediateAssetLoader<M>: AssetLoader {
+enum ImmediateAssetLoader<CustomData>: AssetLoader {
     struct Input {
         let asset: Asset
-        let metadata: M
-        let mapper: (M) -> PlayerMetadata
+        let metadata: PlayerMetadata
+        let customData: CustomData
     }
 
-    static func metadataPublisher(for input: Input) -> AnyPublisher<M, any Error> {
-        Just(input.metadata)
+    static func metadataPublisher(for input: Input) -> AnyPublisher<CustomData, any Error> {
+        Just(input.customData)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
-    static func asset(from input: Input, metadata: M) -> Asset {
+    static func asset(from input: Input, metadata: CustomData) -> Asset {
         input.asset
     }
 
-    static func playerMetadata(from input: Input, metadata: M?) -> PlayerMetadata {
-        guard let metadata else { return .empty }
-        return input.mapper(metadata)
+    static func playerMetadata(from input: Input, metadata: CustomData?) -> PlayerMetadata {
+        input.metadata
     }
 }

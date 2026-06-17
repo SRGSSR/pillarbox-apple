@@ -69,7 +69,7 @@ public extension PlayerItem {
     static func tokenProtected(
         url: URL,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
@@ -95,7 +95,7 @@ public extension PlayerItem {
         url: URL,
         certificateUrl: URL,
         metadata: PlayerMetadata,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(

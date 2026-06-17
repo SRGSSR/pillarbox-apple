@@ -13,33 +13,34 @@ import Foundation
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public protocol AssetDownloadStore: AnyObject {
-    associatedtype Input
-    associatedtype Metadata
+    associatedtype Loader: AssetLoader
+    associatedtype CustomData
 
-    static func id(from input: Input) -> String
+    static func id(from input: Loader.Input) -> String
 
-    static func asset(fileUrl: URL, input: Input, metadata: Metadata) -> Asset
-    static func playerMetadata(from input: Input, metadata: Metadata?) -> PlayerMetadata
+    static func asset(fileUrl: URL, input: Loader.Input, customData: CustomData) -> Asset
 
-    func downloadRecords() -> [DownloadRecord<Input, Metadata>]
+    static func customData(from metadata: Loader.Metadata) -> CustomData
 
-    func addDownloadRecord(using input: Input, forId id: String)
+    func downloadRecords() -> [DownloadRecord<Loader.Input, CustomData>]
+
+    func addDownloadRecord(using input: Loader.Input, forId id: String)
     func removeDownloadRecord(forId id: String)
 
-    func downloadRecord(forId id: String) -> DownloadRecord<Input, Metadata>?
-    func updateDownloadRecord(_ record: DownloadRecord<Input, Metadata>, forId id: String)
+    func downloadRecord(forId id: String) -> DownloadRecord<Loader.Input, CustomData>?
+    func updateDownloadRecord(_ record: DownloadRecord<Loader.Input, CustomData>, forId id: String)
 }
 
 @available(tvOS, unavailable)
 public extension AssetDownloadStore {
-    static func asset(fileUrl: URL, input: Input, metadata: Metadata) -> Asset {
+    static func asset(fileUrl: URL, input: Loader.Input, customData: CustomData) -> Asset {
         .simple(url: fileUrl)
     }
 }
 
 @available(tvOS, unavailable)
 extension AssetDownloadStore {
-    func downloadProperties(forId id: String) -> DownloadProperties<Metadata> {
+    func downloadProperties(forId id: String) -> DownloadProperties<CustomData> {
         guard let record = downloadRecord(forId: id) else { return .init() }
         return .init(from: record)
     }
