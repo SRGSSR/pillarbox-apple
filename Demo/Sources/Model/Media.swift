@@ -75,7 +75,7 @@ struct Media: Hashable {
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: title)
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
                 configuration: .init(position: at(startTime))

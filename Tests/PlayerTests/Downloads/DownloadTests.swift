@@ -100,7 +100,7 @@ final class DownloadTests: TestCase {
             session: session
         )
         let download = manager.addDownload(
-            for: .updatable(url: Stream.download.url, metadata: .init(title: "Title1"), to: .init(title: "Title2"), after: 0.1)
+            for: .playable(url: Stream.download.url, metadata: .init(title: "Title1"), updatedWithMetadata: .init(title: "Title2"), interval: 0.1)
         )
         expect(download.metadata.title).toAlways(equal("Title1"), until: .milliseconds(200))
     }
@@ -227,7 +227,7 @@ final class DownloadTests: TestCase {
 
     func testRestoreRunningWithMissingFile() throws {
         let store = AssetDownloadStoreMock()
-        let input = AssetLoaderMockInput.playable(url: Stream.download.url)
+        let input = AssetLoaderMock.Input.playable(url: Stream.download.url)
 
         let manager1 = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
@@ -253,7 +253,7 @@ final class DownloadTests: TestCase {
 
     func testRestoreCompleted() throws {
         let store = AssetDownloadStoreMock()
-        let input = AssetLoaderMockInput.playable(url: Stream.download.url)
+        let input = AssetLoaderMock.Input.playable(url: Stream.download.url)
 
         let manager1 = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
@@ -276,7 +276,7 @@ final class DownloadTests: TestCase {
 
     func testRestoreFailedWithMissingMetadata() throws {
         let store = AssetDownloadStoreMock()
-        let input = AssetLoaderMockInput.failing(with: MetadataError())
+        let input = AssetLoaderMock.Input.failing(with: MetadataError())
 
         let manager1 = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,
@@ -302,7 +302,7 @@ final class DownloadTests: TestCase {
 
     func testRestoreFailedWithMissingFile() throws {
         let store = AssetDownloadStoreMock()
-        let input = AssetLoaderMockInput.playable(url: Stream.unavailableDownload.url)
+        let input = AssetLoaderMock.Input.playable(url: Stream.unavailableDownload.url)
 
         let manager1 = DownloadManager(
             assetLoaderType: AssetLoaderMock.self,

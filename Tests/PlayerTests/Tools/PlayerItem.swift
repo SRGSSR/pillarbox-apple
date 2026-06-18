@@ -12,7 +12,7 @@ import PillarboxStreams
 
 extension PlayerItem {
     private static func mock(
-        input: AssetLoaderMockInput,
+        input: AssetLoaderMock.Input,
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
         self.init(assetLoaderType: AssetLoaderMock.self, input: input, trackerAdapters: trackerAdapters)
@@ -27,14 +27,18 @@ extension PlayerItem {
         mock(input: .playable(url: url, metadata: metadata, after: delay), trackerAdapters: trackerAdapters)
     }
 
-    static func updatable(
+    static func playable(
         url: URL,
         metadata: PlayerMetadata,
-        to updatedMetadata: PlayerMetadata,
-        after interval: TimeInterval = 0,
+        after delay: TimeInterval = 0,
+        updatedWithMetadata updatedMetadata: PlayerMetadata,
+        interval: TimeInterval = 0,
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
-        mock(input: .updatable(url: url, metadata: metadata, to: updatedMetadata, after: interval), trackerAdapters: trackerAdapters)
+        mock(
+            input: .playable(url: url, metadata: metadata, after: delay, updatedWithMetadata: updatedMetadata, interval: interval),
+            trackerAdapters: trackerAdapters
+        )
     }
 
     static func failing(

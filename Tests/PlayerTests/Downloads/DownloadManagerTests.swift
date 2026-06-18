@@ -85,7 +85,7 @@ final class DownloadManagerTests: TestCase {
             store: AssetDownloadStoreMock(),
             session: session
         )
-        let input = AssetLoaderMockInput.playable(url: Stream.download.url)
+        let input = AssetLoaderMock.Input.playable(url: Stream.download.url)
         let download = manager.addDownload(for: input)
         expect(manager.download(matching: input)).to(equal(download))
     }
