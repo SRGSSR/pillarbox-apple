@@ -29,7 +29,7 @@ final class ImageSourceTests: TestCase {
     func testNonLoadedImageForValidUrl() throws {
         let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
         let source = ImageSource.url(standardResolution: url)
-        expectAtLeastSimilarPublished(
+        expectAtLeastEqualPublished(
             values: [.url(standardResolution: url)],
             from: source.imageSourcePublisher()
         )
@@ -39,7 +39,7 @@ final class ImageSourceTests: TestCase {
         let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
         let image = try unwrap(UIImage(contentsOfFile: url.path()))
         let source = ImageSource.url(standardResolution: url)
-        expectAtLeastSimilarPublished(
+        expectAtLeastEqualPublished(
             values: [.url(standardResolution: url), .image(image)],
             from: source.imageSourcePublisher()
         ) {
@@ -50,7 +50,7 @@ final class ImageSourceTests: TestCase {
     func testInvalidImageFormat() throws {
         let url = try unwrap(Bundle.module.url(forResource: "invalid", withExtension: "jpg"))
         let source = ImageSource.url(standardResolution: url)
-        expectAtLeastSimilarPublished(
+        expectAtLeastEqualPublished(
             values: [.url(standardResolution: url), .none],
             from: source.imageSourcePublisher()
         ) {
@@ -61,7 +61,7 @@ final class ImageSourceTests: TestCase {
     func testFailingUrl() throws {
         let url = URL(string: "https://localhost:8123/missing.jpg")!
         let source = ImageSource.url(standardResolution: url)
-        expectAtLeastSimilarPublished(
+        expectAtLeastEqualPublished(
             values: [.url(standardResolution: url), .none],
             from: source.imageSourcePublisher()
         ) {
