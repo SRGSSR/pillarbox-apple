@@ -33,10 +33,3 @@ public extension AssetLoader {
         asset(from: input, metadata: metadata)
     }
 }
-
-public extension AssetLoader where Metadata == PlayerMetadata {
-    // swiftlint:disable:next missing_docs
-    static func playerMetadata(from input: Input, metadata: Metadata?) -> PlayerMetadata {
-        metadata ?? .empty
-    }
-}
