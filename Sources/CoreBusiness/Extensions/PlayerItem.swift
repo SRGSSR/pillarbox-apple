@@ -105,3 +105,56 @@ public extension PlayerItem {
         )
     }
 }
+
+@_spi(CoreBusinessPrivate)
+public extension PlayerItem {
+    /// Creates a player item from a URL, loaded with standard SRG SSR token protection.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: The configuration to apply to the player item.
+    ///
+    /// No SRG SSR standard tracking is made.
+    ///
+    /// > Important: This API is reserved to the Pillarbox development team.
+    static func tokenProtected(
+        url: URL,
+        metadata: PlayerMetadata = .empty,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        configuration: PlaybackConfiguration = .default
+    ) -> Self {
+        self.init(
+            asset: .tokenProtected(url: url, configuration: configuration),
+            metadata: metadata,
+            trackerAdapters: trackerAdapters
+        )
+    }
+
+    /// Creates a player item from a URL, loaded with standard SRG SSR DRM protection.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - certificateUrl: The URL of the certificate to use.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: The configuration to apply to the player item.
+    ///
+    /// No SRG SSR standard tracking is made.
+    ///
+    /// > Important: This API is reserved to the Pillarbox development team.
+    static func encrypted(
+        url: URL,
+        certificateUrl: URL,
+        metadata: PlayerMetadata = .empty,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        configuration: PlaybackConfiguration = .default
+    ) -> Self {
+        self.init(
+            asset: .encrypted(url: url, certificateUrl: certificateUrl, configuration: configuration),
+            metadata: metadata,
+            trackerAdapters: trackerAdapters
+        )
+    }
+}

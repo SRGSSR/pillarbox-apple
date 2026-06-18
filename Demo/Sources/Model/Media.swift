@@ -63,8 +63,8 @@ struct Media: Hashable {
                 url: url,
                 metadata: metadata(),
                 trackerAdapters: [
-                    DemoTracker.adapter { _ in
-                        DemoTracker.Metadata(title: title)
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -74,7 +74,7 @@ struct Media: Hashable {
                 url: url,
                 metadata: metadata(),
                 trackerAdapters: [
-                    DemoTracker.adapter { _ in
+                    DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: title)
                     }
                 ],
@@ -86,8 +86,8 @@ struct Media: Hashable {
                 certificateUrl: certificateUrl,
                 metadata: metadata(),
                 trackerAdapters: [
-                    DemoTracker.adapter { _ in
-                        DemoTracker.Metadata(title: title)
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -102,8 +102,8 @@ struct Media: Hashable {
                 url: url,
                 metadata: metadata(),
                 trackerAdapters: [
-                    DemoTracker.adapter { _ in
-                        DemoTracker.Metadata(title: title)
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
                 configuration: configuration
@@ -160,10 +160,7 @@ extension Media {
         }
     }
 
-    private func metadata() -> AssetMetadata<Void> {
-        .init(
-            playerMetadata: .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges),
-            customData: ()
-        )
+    private func metadata() -> PlayerMetadata {
+        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
     }
 }
