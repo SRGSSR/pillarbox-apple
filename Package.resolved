@@ -1,15 +1,6 @@
 {
-  "originHash" : "30e57fd2ab52f9dbc09240ea62dbd41bdbae0674313067bd94f08126a7ac7101",
+  "originHash" : "b00e9f6f2dcc79d30330aef09d0e11c39c8ef2821f8b8173fd048bba7e990a7a",
   "pins" : [
-    {
-      "identity" : "commanders-act-apple",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SRGSSR/commanders-act-apple.git",
-      "state" : {
-        "revision" : "bed2a1fb87885bc535a2c8a7de891b8f2ae820ed",
-        "version" : "5.4.19"
-      }
-    },
     {
       "identity" : "comscore-swift-package-manager",
       "kind" : "remoteSourceControl",
@@ -47,6 +38,15 @@
       }
     },
     {
+      "identity" : "iosv5-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CommandersAct/iOSV5-spm.git",
+      "state" : {
+        "revision" : "39eb694d2df118f435dc82900cb864a568972a7c",
+        "version" : "5.5.0"
+      }
+    },
+    {
       "identity" : "nimble",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble.git",
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "6675bc0ff86e61436e615df6fc5174e043e57924",
-        "version" : "1.4.1"
+        "revision" : "a0cb0954ecb21e4e31b0070e6ed5674e8556685a",
+        "version" : "1.6.0"
       }
     }
   ],
