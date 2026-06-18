@@ -6,6 +6,7 @@
 
 import PillarboxPlayer
 
+@available(tvOS, unavailable)
 extension AssetMetadata where CustomData == URNMetadata {
     @available(iOS 17.0, *)
     var entryMetadata: URNAssetDownloadStore.EntryMetadata {

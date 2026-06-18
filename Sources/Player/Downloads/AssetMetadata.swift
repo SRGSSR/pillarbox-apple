@@ -8,7 +8,6 @@
 
 #if DEBUG
 
-@available(tvOS, unavailable)
 public struct AssetMetadata<CustomData> {
     public let playerMetadata: PlayerMetadata
     public let customData: CustomData
