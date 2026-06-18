@@ -32,7 +32,13 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
     static func customData(from metadata: PlayerMetadata) {}
 
     static func record(from input: AssetLoaderMock.Input) -> DownloadRecord<AssetLoaderMock.Input, Void> {
-        .init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
+        .init(
+            input: input,
+            metadata: .init(playerMetadata: input.metadata, customData: ()),
+            bookmarkData: nil,
+            progress: 0,
+            error: nil
+        )
     }
 
     func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, Void>] {

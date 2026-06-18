@@ -154,7 +154,7 @@ private extension Download {
         session: DownloadSession,
         properties: DownloadProperties<S.CustomData>
     ) -> AnyPublisher<DownloadSource<S.CustomData>, Error> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        if let metadata = properties.source.metadata {
+        if !properties.shouldCreateTask, let metadata = properties.source.metadata {
             return session.sessionTaskPublisher(id: id)
                 .setFailureType(to: Error.self)
                 .map { session.downloadSessionTaskPropertiesPublisher(for: $0) }
