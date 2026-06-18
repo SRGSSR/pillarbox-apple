@@ -98,7 +98,7 @@ public final class PlayerItem: Hashable {
 }
 
 public extension PlayerItem {
-    /// Creates a player item from an ``Asset`` and standard player metadata.
+    /// Creates a player item from an ``Asset`` and asset metadata.
     ///
     /// - Parameters:
     ///   - asset: The asset to play.
@@ -110,13 +110,13 @@ public extension PlayerItem {
         trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>]
     ) {
         self.init(
-            assetLoaderType: ImmediateAssetLoader.self,
+            assetLoaderType: CustomDirectAssetLoader.self,
             input: .init(asset: asset, metadata: metadata),
             trackerAdapters: trackerAdapters
         )
     }
 
-    /// Creates an simple player item with standard player metadata.
+    /// Creates an simple player item with asset metadata.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
@@ -137,7 +137,7 @@ public extension PlayerItem {
         )
     }
 
-    /// Creates an custom player item with standard player metadata.
+    /// Creates an custom player item with asset metadata.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
@@ -162,7 +162,7 @@ public extension PlayerItem {
         )
     }
 
-    /// Creates an encrypted player item with standard player metadata.
+    /// Creates an encrypted player item with asset metadata.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
@@ -199,7 +199,7 @@ public extension PlayerItem {
         trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) {
         self.init(
-            assetLoaderType: ImmediateAssetLoader2.self,
+            assetLoaderType: DirectAssetLoader.self,
             input: .init(asset: asset, metadata: metadata),
             trackerAdapters: trackerAdapters
         )

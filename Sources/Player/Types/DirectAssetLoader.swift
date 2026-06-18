@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 
-enum ImmediateAssetLoader2: AssetLoader {
+enum DirectAssetLoader: AssetLoader {
     struct Input {
         let asset: Asset
         let metadata: PlayerMetadata

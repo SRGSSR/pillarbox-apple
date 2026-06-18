@@ -53,7 +53,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         }
         let asset = S.asset(fileUrl: fileUrl, input: record.input, customData: metadata.customData)
         return .init(
-            assetLoaderType: ImmediateAssetLoader.self,
+            assetLoaderType: CustomDirectAssetLoader.self,
             input: .init(asset: asset, metadata: metadata),
             trackerAdapters: trackerAdapters
         )

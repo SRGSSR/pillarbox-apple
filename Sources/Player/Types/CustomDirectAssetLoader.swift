@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 
-enum ImmediateAssetLoader<CustomData>: AssetLoader {
+enum CustomDirectAssetLoader<CustomData>: AssetLoader {
     struct Input {
         let asset: Asset
         let metadata: AssetMetadata<CustomData>
