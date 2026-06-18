@@ -12,7 +12,7 @@ import OrderedCollections
 
 @available(tvOS, unavailable)
 final class AssetDownloadStoreMock {
-    private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMockInput, PlayerMetadata>>
+    private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMockInput, Void>>
 
     init(preloadedInputs: [AssetLoaderMockInput] = []) {
         records = preloadedInputs.reduce(into: [:]) { records, input in
@@ -23,19 +23,19 @@ final class AssetDownloadStoreMock {
 
 @available(tvOS, unavailable)
 extension AssetDownloadStoreMock: AssetDownloadStore {
+    typealias Loader = AssetLoaderMock
+
     static func id(from input: AssetLoaderMockInput) -> String {
         input.id
     }
 
-    static func playerMetadata(from input: AssetLoaderMockInput, metadata: PlayerMetadata?) -> PlayerMetadata {
-        .init(title: metadata?.title)
-    }
+    static func customData(from metadata: PlayerMetadata) {}
 
-    static func record(from input: AssetLoaderMockInput) -> DownloadRecord<AssetLoaderMockInput, PlayerMetadata> {
+    static func record(from input: AssetLoaderMockInput) -> DownloadRecord<AssetLoaderMockInput, Void> {
         .init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
     }
 
-    func downloadRecords() -> [DownloadRecord<AssetLoaderMockInput, PlayerMetadata>] {
+    func downloadRecords() -> [DownloadRecord<AssetLoaderMockInput, Void>] {
         assert(Thread.isMainThread)
         return Array(records.values)
     }
@@ -50,12 +50,12 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
         records.removeValue(forKey: id)
     }
 
-    func downloadRecord(forId id: String) -> DownloadRecord<AssetLoaderMockInput, PlayerMetadata>? {
+    func downloadRecord(forId id: String) -> DownloadRecord<AssetLoaderMockInput, Void>? {
         assert(Thread.isMainThread)
         return records[id]
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMockInput, PlayerMetadata>, forId id: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMockInput, Void>, forId id: String) {
         assert(Thread.isMainThread)
         records[id] = record
     }

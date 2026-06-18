@@ -20,9 +20,9 @@ final class PlayerItemTrackerSessionTests: TestCase {
             item: .simple(
                 url: Stream.onDemand.url,
                 trackerAdapters: [
-                    PlayerItemTrackerMock.adapter(configuration: .init(sessionIdentifier: "A")),
-                    PlayerItemTrackerMock.adapter(configuration: .init()),
-                    PlayerItemTrackerMock.adapter(configuration: .init(sessionIdentifier: "B"))
+                    PlayerItemTrackerMock.adapter(configuration: .init(sessionIdentifier: "A"), mapper: \.self),
+                    PlayerItemTrackerMock.adapter(configuration: .init(), mapper: \.self),
+                    PlayerItemTrackerMock.adapter(configuration: .init(sessionIdentifier: "B"), mapper: \.self)
                 ]
             )
         )
