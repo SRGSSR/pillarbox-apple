@@ -5,7 +5,7 @@
 //
 
 /// Information about an episode.
-public enum EpisodeInformation: Equatable {
+public enum EpisodeInformation: Codable, Equatable {
     /// Season and episode number.
     case long(season: Int, episode: Int)
 
