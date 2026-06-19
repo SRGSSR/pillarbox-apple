@@ -17,10 +17,8 @@ public protocol AssetDownloadStore: AnyObject {
     associatedtype CustomData
 
     static func id(from input: Loader.Input) -> String
-
-    static func asset(fileUrl: URL, input: Loader.Input, customData: CustomData) -> Asset
-
     static func customData(from metadata: Loader.Metadata) -> CustomData
+    static func asset(fileUrl: URL, input: Loader.Input, customData: CustomData) -> Asset
 
     func downloadRecords() -> [DownloadRecord<Loader.Input, CustomData>]
 
