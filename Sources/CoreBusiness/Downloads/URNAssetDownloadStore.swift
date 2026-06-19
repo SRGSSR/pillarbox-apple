@@ -37,14 +37,14 @@ final class URNAssetDownloadStore {
 @available(tvOS, unavailable)
 private extension URNAssetDownloadStore {
     struct EntryPlayerMetadata: Codable {
-        let identifier: String?
-        let title: String?
-        let subtitle: String?
-        let summary: String?
-        let viewport: Viewport
-        let episodeInformation: SafeSwiftDataOptional<EpisodeInformation>
-        let chapters: [Chapter]
-        let timeRanges: [TimeRange]
+        private let identifier: String?
+        private let title: String?
+        private let subtitle: String?
+        private let summary: String?
+        private let viewport: Viewport
+        private let episodeInformation: SafeSwiftDataOptional<EpisodeInformation>
+        private let chapters: [Chapter]
+        private let timeRanges: [TimeRange]
 
         init(playerMetadata: PlayerMetadata) {
             self.identifier = playerMetadata.identifier
@@ -72,8 +72,8 @@ private extension URNAssetDownloadStore {
     }
 
     struct EntryAssetMetadata: Codable {
-        let entryPlayerMetadata: EntryPlayerMetadata
-        let customData: URNMetadata
+        private let entryPlayerMetadata: EntryPlayerMetadata
+        private let customData: URNMetadata
 
         init?(assetMetadata: AssetMetadata<URNMetadata>?) {
             guard let assetMetadata else { return nil }
@@ -90,11 +90,12 @@ private extension URNAssetDownloadStore {
     final class Entry {
         @Attribute(.unique)
         var id: String
-        var input: URNAssetLoader.Input
-        var entryAssetMetadata: EntryAssetMetadata?
-        var bookmarkData: Data?
-        var progress: Double
-        var errorDescription: String?
+
+        private var input: URNAssetLoader.Input
+        private var entryAssetMetadata: EntryAssetMetadata?
+        private var bookmarkData: Data?
+        private var progress: Double
+        private var errorDescription: String?
 
         init(
             id: String,
