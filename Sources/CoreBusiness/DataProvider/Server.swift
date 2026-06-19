@@ -7,7 +7,7 @@
 import Foundation
 
 /// A server environment.
-public enum Server {
+public enum Server: Codable {
     /// Production.
     case production
 

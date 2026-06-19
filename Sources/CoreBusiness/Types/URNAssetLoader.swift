@@ -12,7 +12,7 @@ import PillarboxPlayer
 // swiftlint:disable missing_docs
 
 public enum URNAssetLoader: AssetLoader {
-    public struct Input {
+    public struct Input: Codable {
         let urn: String
         let server: Server
 

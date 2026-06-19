@@ -36,46 +36,77 @@ final class URNAssetDownloadStore {
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 extension URNAssetDownloadStore {
-    @Model
-    class EntryMetadata {
-        var identifier: String?
-        var title: String?
-        var subtitle: String?
-        var analyticsData: [String: String]
-        var analyticsMetadata: [String: String]
+    struct EntryPlayerMetadata: Codable {
+        let identifier: String?
+        let title: String?
+        let subtitle: String?
+        let summary: String?
+        let viewport: Viewport
+        let episodeInformation: EpisodeInformation?
+        let chapters: [Chapter]
+        let timeRanges: [TimeRange]
 
-        var downloadMetadata: AssetMetadata<URNMetadata> {
-            .init(
-                playerMetadata: .init(identifier: identifier, title: title, subtitle: subtitle),
-                customData: .init(
-                    analyticsData: analyticsData,
-                    analyticsMetadata: analyticsMetadata
-                )
-            )
+        init(playerMetadata: PlayerMetadata) {
+            self.identifier = playerMetadata.identifier
+            self.title = playerMetadata.title
+            self.subtitle = playerMetadata.subtitle
+            self.summary = playerMetadata.description
+            self.viewport = playerMetadata.viewport
+            self.episodeInformation = playerMetadata.episodeInformation
+            self.chapters = playerMetadata.chapters
+            self.timeRanges = playerMetadata.timeRanges
         }
 
-        init(identifier: String?, title: String?, subtitle: String?, analyticsData: [String: String], analyticsMetadata: [String: String]) {
-            self.identifier = identifier
-            self.title = title
-            self.subtitle = subtitle
-            self.analyticsData = analyticsData
-            self.analyticsMetadata = analyticsMetadata
+        func playerMetadata() -> PlayerMetadata {
+            .init(
+                identifier: identifier,
+                title: title,
+                subtitle: subtitle,
+                description: summary,
+                viewport: viewport,
+                episodeInformation: episodeInformation,
+                chapters: chapters,
+                timeRanges: timeRanges
+            )
+        }
+    }
+
+    struct EntryAssetMetadata: Codable {
+        let entryPlayerMetadata: EntryPlayerMetadata
+        let customData: URNMetadata
+
+        init?(assetMetadata: AssetMetadata<URNMetadata>?) {
+            guard let assetMetadata else { return nil }
+            self.entryPlayerMetadata = .init(playerMetadata: assetMetadata.playerMetadata)
+            self.customData = assetMetadata.customData
+        }
+
+        func assetMetadata() -> AssetMetadata<URNMetadata> {
+            .init(playerMetadata: entryPlayerMetadata.playerMetadata(), customData: customData)
         }
     }
 
     @Model
-    class Entry {
+    final class Entry {
+        @Attribute(.unique)
         var id: String
-        var urn: String
-        var metadata: EntryMetadata?
+        var input: URNAssetLoader.Input
+        var entryAssetMetadata: EntryAssetMetadata?
         var bookmarkData: Data?
         var progress: Double
         var errorDescription: String?
 
-        init(id: String, urn: String, metadata: EntryMetadata? = nil, bookmarkData: Data? = nil, progress: Double, errorDescription: String? = nil) {
+        init(
+            id: String,
+            input: URNAssetLoader.Input,
+            entryAssetMetadata: EntryAssetMetadata? = nil,
+            bookmarkData: Data? = nil,
+            progress: Double,
+            errorDescription: String? = nil
+        ) {
             self.id = id
-            self.urn = urn
-            self.metadata = metadata
+            self.input = input
+            self.entryAssetMetadata = entryAssetMetadata
             self.bookmarkData = bookmarkData
             self.progress = progress
             self.errorDescription = errorDescription
@@ -89,8 +120,8 @@ extension URNAssetDownloadStore {
 
         func toRecord() -> DownloadRecord<URNAssetLoader.Input, URNMetadata> {
             .init(
-                input: .init(urn: urn, server: .production),
-                metadata: metadata?.downloadMetadata,
+                input: input,
+                metadata: entryAssetMetadata?.assetMetadata(),
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: DownloadError(errorDescription: errorDescription)
@@ -98,8 +129,8 @@ extension URNAssetDownloadStore {
         }
 
         func update(with record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
-            self.urn = record.input.urn
-            self.metadata = record.metadata?.entryMetadata
+            self.input = record.input
+            self.entryAssetMetadata = .init(assetMetadata: record.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
             self.errorDescription = record.error?.localizedDescription
@@ -130,7 +161,7 @@ extension URNAssetDownloadStore: AssetDownloadStore {
     }
 
     func addDownloadRecord(using input: URNAssetLoader.Input, forId id: String) {
-        context.insert(Entry(id: id, urn: input.urn, progress: 0))
+        context.insert(Entry(id: id, input: input, progress: 0))
     }
 
     func removeDownloadRecord(forId id: String) {

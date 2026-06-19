@@ -26,6 +26,8 @@ public extension AssetMetadata where CustomData == Void {
     static let empty = Self(playerMetadata: .empty, customData: ())
 }
 
+extension AssetMetadata: Codable where CustomData: Codable {}
+
 #endif
 
 // swiftlint:enable missing_docs
