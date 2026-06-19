@@ -9,8 +9,6 @@ import Combine
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
-// swiftlint:disable missing_docs
-
 enum URNAssetLoader: AssetLoader {
     struct Input: Codable {
         let urn: String
@@ -71,5 +69,3 @@ enum URNAssetLoader: AssetLoader {
         }
     }
 }
-
-// swiftlint:enable missing_docs

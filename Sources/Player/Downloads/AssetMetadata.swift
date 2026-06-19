@@ -22,10 +22,6 @@ public struct AssetMetadata<CustomData> {
     }
 }
 
-public extension AssetMetadata where CustomData == Void {
-    static let empty = Self(playerMetadata: .empty, customData: ())
-}
-
 extension AssetMetadata: Codable where CustomData: Codable {}
 
 #endif
