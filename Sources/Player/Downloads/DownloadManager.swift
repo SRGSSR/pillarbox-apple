@@ -51,7 +51,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
               let metadata = record.metadata, let fileUrl = download.fileUrl else {
             return nil
         }
-        let asset = S.asset(fileUrl: fileUrl, input: record.input, customData: metadata.customData)
+        let asset = S.asset(fileUrl: fileUrl, customData: metadata.customData)
         return .init(
             assetLoaderType: CustomDirectAssetLoader.self,
             input: .init(asset: asset, metadata: metadata),

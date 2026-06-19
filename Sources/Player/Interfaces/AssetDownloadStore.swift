@@ -18,7 +18,7 @@ public protocol AssetDownloadStore: AnyObject {
 
     static func id(from input: Loader.Input) -> String
     static func customData(from metadata: Loader.Metadata) -> CustomData
-    static func asset(fileUrl: URL, input: Loader.Input, customData: CustomData) -> Asset
+    static func asset(fileUrl: URL, customData: CustomData) -> Asset
 
     func downloadRecords() -> [DownloadRecord<Loader.Input, CustomData>]
 
@@ -31,7 +31,7 @@ public protocol AssetDownloadStore: AnyObject {
 
 @available(tvOS, unavailable)
 public extension AssetDownloadStore {
-    static func asset(fileUrl: URL, input: Loader.Input, customData: CustomData) -> Asset {
+    static func asset(fileUrl: URL, customData: CustomData) -> Asset {
         .simple(url: fileUrl)
     }
 }
