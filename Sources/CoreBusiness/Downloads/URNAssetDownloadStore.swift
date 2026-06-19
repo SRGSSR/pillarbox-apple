@@ -35,7 +35,7 @@ final class URNAssetDownloadStore {
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-extension URNAssetDownloadStore {
+private extension URNAssetDownloadStore {
     struct EntryPlayerMetadata: Codable {
         let identifier: String?
         let title: String?
