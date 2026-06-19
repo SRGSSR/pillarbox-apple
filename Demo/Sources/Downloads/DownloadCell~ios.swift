@@ -17,7 +17,11 @@ struct DownloadCell: View {
     private(set) var action: () -> Void
 
     private var title: String {
-        download.metadata.title ?? "Untitled"
+        download.metadata.subtitle ?? "Untitled"
+    }
+
+    private var subtitle: String? {
+        download.metadata.title
     }
 
     var body: some View {
@@ -29,7 +33,7 @@ struct DownloadCell: View {
 
     private func infoView() -> some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text(title)
+            descriptionView()
             progressBar()
             errorMessage()
         }
@@ -37,6 +41,17 @@ struct DownloadCell: View {
         .contentShape(.rect)
         .accessibilityAddTraits(.isButton)
         .onTapGesture(perform: action)
+    }
+
+    private func descriptionView() -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+            if let subtitle {
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
     }
 
     private func progressBar() -> some View {
