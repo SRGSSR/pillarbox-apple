@@ -10,17 +10,17 @@ import Combine
 import Foundation
 
 @_spi(DownloaderPrivate)
-import PillarboxPlayer
+import PillarboxCoreBusiness
 
 @_spi(DownloaderPrivate)
-import PillarboxCoreBusiness
+import PillarboxPlayer
 
 @available(tvOS, unavailable)
 final class DemoDownloader: ObservableObject {
     private let urlDownloader = Downloader(
         assetLoaderType: URLAssetLoader.self,
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
-        store: URLAssetDownloadStore(fileName: "file_downloads.json")
+        store: URLAssetDownloadStore(fileName: "url_downloads.json")
     )
 
     private let _urnDownloader: Any? = {
