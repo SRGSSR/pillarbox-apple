@@ -149,10 +149,7 @@ extension URNAssetDownloadStore: AssetDownloadStore {
     }
 
     static func customData(from metadata: MediaMetadata) -> URNMetadata {
-        .init(
-            analyticsData: metadata.analyticsData,
-            analyticsMetadata: metadata.analyticsMetadata
-        )
+        .init(analyticsMetadata: metadata.analyticsMetadata)
     }
 
     func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {
