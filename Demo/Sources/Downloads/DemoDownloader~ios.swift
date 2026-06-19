@@ -25,7 +25,7 @@ final class DemoDownloader: ObservableObject {
 
     private let _urnDownloader: Any? = {
         guard #available(iOS 17, *) else { return nil }
-        return URNDownloader(configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"))
+        return try! URNDownloader(configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"))
     }()
 
     @available(iOS 17, *)

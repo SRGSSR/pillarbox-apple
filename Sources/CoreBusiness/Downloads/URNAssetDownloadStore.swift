@@ -26,10 +26,10 @@ private struct DownloadError: LocalizedError {
 final class URNAssetDownloadStore {
     let context: ModelContext
 
-    init() {
+    init(name: String? = nil) throws {
         let schema = Schema([Entry.self])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        self.context = .init(try! ModelContainer(for: schema, configurations: [modelConfiguration]))
+        let modelConfiguration = ModelConfiguration(name, schema: schema, isStoredInMemoryOnly: false)
+        self.context = .init(try ModelContainer(for: schema, configurations: [modelConfiguration]))
     }
 }
 
