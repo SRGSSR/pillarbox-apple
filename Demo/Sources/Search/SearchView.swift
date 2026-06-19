@@ -91,12 +91,12 @@ struct SearchView: View {
 #if os(iOS)
     @ViewBuilder
     private func swipeActions(for media: SRGMedia) -> some View {
+        CopyActions(text: media.urn)
 #if DEBUG
         if #available(iOS 17, *) {
             URNDownloadAction(urn: media.urn, serverSetting: serverSetting)
         }
 #endif
-        CopyActions(text: media.urn)
     }
 #endif
 

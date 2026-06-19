@@ -105,12 +105,12 @@ private struct ContentCell: View {
             }
 #if os(iOS)
             .swipeActions {
+                CopyActions(text: media.urn)
 #if DEBUG
                 if #available(iOS 17, *) {
                     URNDownloadAction(urn: media.urn, serverSetting: serverSetting)
                 }
 #endif
-                CopyActions(text: media.urn)
             }
 #endif
         case let .show(show):
