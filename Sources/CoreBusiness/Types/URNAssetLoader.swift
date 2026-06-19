@@ -11,8 +11,8 @@ import PillarboxPlayer
 
 // swiftlint:disable missing_docs
 
-public enum URNAssetLoader: AssetLoader {
-    public struct Input: Codable {
+enum URNAssetLoader: AssetLoader {
+    struct Input: Codable {
         let urn: String
         let server: Server
 
@@ -20,13 +20,13 @@ public enum URNAssetLoader: AssetLoader {
             "\(urn)-\(server.id)"
         }
 
-        public init(urn: String, server: Server) {
+        init(urn: String, server: Server) {
             self.urn = urn
             self.server = server
         }
     }
 
-    public static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
+    static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
         let dataProvider = DataProvider(server: input.server)
         return dataProvider.mediaCompositionPublisher(forUrn: input.urn)
             .tryMap { response in
@@ -35,7 +35,7 @@ public enum URNAssetLoader: AssetLoader {
             .eraseToAnyPublisher()
     }
 
-    public static func asset(from input: Input, metadata: MediaMetadata) -> Asset {
+    static func asset(from input: Input, metadata: MediaMetadata) -> Asset {
         if let blockingReason = metadata.blockingReason {
             return .unavailable(with: BlockingError(reason: blockingReason))
         }
@@ -56,7 +56,7 @@ public enum URNAssetLoader: AssetLoader {
         }
     }
 
-    public static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
+    static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
         metadata?.playerMetadata() ?? .empty
     }
 
