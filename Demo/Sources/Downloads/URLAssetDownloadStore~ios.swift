@@ -30,7 +30,7 @@ final class URLAssetDownloadStore {
         let progress: Double
         let errorDescription: String?
 
-        var downloadMetadata: AssetMetadata<Void> {
+        private var metadata: AssetMetadata<Void> {
             .init(
                 playerMetadata: .init(identifier: id, title: title, viewport: isMonoscopic ? .monoscopic : .standard),
                 customData: ()
@@ -74,7 +74,7 @@ final class URLAssetDownloadStore {
         func toDownloadRecord() -> DownloadRecord<URLAssetLoader.Input, Void> {
             .init(
                 input: URLAssetLoader.Input(title: title, url: url, isMonoscopic: isMonoscopic),
-                metadata: downloadMetadata,
+                metadata: metadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: DownloadError(errorDescription: errorDescription)

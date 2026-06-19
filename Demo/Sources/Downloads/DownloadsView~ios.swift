@@ -7,10 +7,10 @@
 #if DEBUG
 
 @_spi(DownloaderPrivate)
-import PillarboxPlayer
+import PillarboxCoreBusiness
 
 @_spi(DownloaderPrivate)
-import PillarboxCoreBusiness
+import PillarboxPlayer
 
 import SwiftUI
 
