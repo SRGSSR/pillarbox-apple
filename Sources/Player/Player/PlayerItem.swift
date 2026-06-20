@@ -137,7 +137,7 @@ public extension PlayerItem {
         )
     }
 
-    /// Creates an custom player item with asset metadata.
+    /// Creates a custom player item with asset metadata.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
@@ -226,7 +226,7 @@ public extension PlayerItem {
         )
     }
 
-    /// Creates an custom player item with standard player metadata.
+    /// Creates a custom player item with standard player metadata.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
