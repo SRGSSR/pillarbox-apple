@@ -50,7 +50,7 @@ final class DemoDownloader: ObservableObject {
         }
     }
 
-    func addUrlDownload(title: String, subtitle: String? = nil, url: URL, isMonoscopic: Bool) {
+    func addUrlDownload(url: URL, title: String, subtitle: String? = nil, isMonoscopic: Bool) {
         urlDownloader.addDownload(for: .init(url: url, title: title, subtitle: subtitle, isMonoscopic: isMonoscopic))
     }
 

@@ -18,7 +18,7 @@ struct URLDownloadAction: View {
 
     var body: some View {
         Button {
-            downloader.addUrlDownload(title: title, subtitle: subtitle, url: url, isMonoscopic: isMonoscopic)
+            downloader.addUrlDownload(url: url, title: title, subtitle: subtitle, isMonoscopic: isMonoscopic)
         } label: {
             Image(systemName: "arrow.down.circle")
         }
