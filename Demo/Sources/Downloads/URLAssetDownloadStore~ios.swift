@@ -23,8 +23,9 @@ private struct DownloadError: LocalizedError {
 final class URLAssetDownloadStore {
     private struct FileEntry: Codable {
         let id: String
-        let title: String
         let url: URL
+        let title: String
+        let subtitle: String?
         let isMonoscopic: Bool
         let bookmarkData: Data?
         let progress: Double
@@ -37,10 +38,20 @@ final class URLAssetDownloadStore {
             )
         }
 
-        private init(id: String, title: String, url: URL, isMonoscopic: Bool, bookmarkData: Data?, progress: Double, errorDescription: String?) {
+        private init(
+            id: String,
+            url: URL,
+            title: String,
+            subtitle: String?,
+            isMonoscopic: Bool,
+            bookmarkData: Data?,
+            progress: Double,
+            errorDescription: String?
+        ) {
             self.id = id
-            self.title = title
             self.url = url
+            self.title = title
+            self.subtitle = subtitle
             self.isMonoscopic = isMonoscopic
             self.bookmarkData = bookmarkData
             self.progress = progress
@@ -50,8 +61,9 @@ final class URLAssetDownloadStore {
         init(id: String, input: URLAssetLoader.Input) {
             self.init(
                 id: id,
-                title: input.title,
                 url: input.url,
+                title: input.title,
+                subtitle: input.subtitle,
                 isMonoscopic: input.isMonoscopic,
                 bookmarkData: nil,
                 progress: 0,
@@ -62,8 +74,9 @@ final class URLAssetDownloadStore {
         init(id: String, record: DownloadRecord<URLAssetLoader.Input, Void>) {
             self.init(
                 id: id,
-                title: record.input.title,
                 url: record.input.url,
+                title: record.input.title,
+                subtitle: record.input.subtitle,
                 isMonoscopic: record.input.isMonoscopic,
                 bookmarkData: record.bookmarkData,
                 progress: record.progress,
@@ -73,7 +86,7 @@ final class URLAssetDownloadStore {
 
         func toDownloadRecord() -> DownloadRecord<URLAssetLoader.Input, Void> {
             .init(
-                input: URLAssetLoader.Input(title: title, url: url, isMonoscopic: isMonoscopic),
+                input: URLAssetLoader.Input(url: url, title: title, subtitle: subtitle, isMonoscopic: isMonoscopic),
                 metadata: metadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
@@ -87,7 +100,8 @@ final class URLAssetDownloadStore {
 
     init(fileName: String) {
         metadataFileUrl = URL.libraryDirectory.appending(component: fileName)
-        if let jsonData = try? Data(contentsOf: metadataFileUrl), let fileEntries = try? JSONDecoder().decode([FileEntry].self, from: jsonData) {
+        if let jsonData = try? Data(contentsOf: metadataFileUrl),
+           let fileEntries = try? JSONDecoder().decode([FileEntry].self, from: jsonData) {
             self.fileEntries = fileEntries
         }
         else {
