@@ -5,7 +5,8 @@
 //
 
 // TODO: Remove if Swift Data is improved.
-/// Fixes "Failed to decode a composite attribute" issue for optional enums with associated values.
+/// Avoids "Failed to decode a composite attribute" crash when reading Swift Data model containing optional enums having
+/// associated values.
 enum SafeSwiftDataOptional<T> {
     case none
     case some(T)
