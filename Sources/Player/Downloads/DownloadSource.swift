@@ -9,12 +9,6 @@
 import Foundation
 
 @available(tvOS, unavailable)
-enum DownloadSourceKind {
-    case estimate(Double)
-    case task(DownloadSessionTaskProperties)
-}
-
-@available(tvOS, unavailable)
 struct DownloadSource<CustomData> {
     let kind: DownloadSourceKind
     let metadata: AssetMetadata<CustomData>?
