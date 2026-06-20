@@ -12,6 +12,8 @@ import SwiftData
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
+@available(iOS 17.0, *)
+@available(tvOS, unavailable)
 private struct DownloadError: LocalizedError {
     let errorDescription: String?
 
@@ -92,7 +94,7 @@ private extension URNAssetDownloadStore {
         var id: String
 
         private var input: URNAssetLoader.Input
-        private var entryAssetMetadata: EntryAssetMetadata?
+        private var metadata: EntryAssetMetadata?
         private var bookmarkData: Data?
         private var progress: Double
         private var errorDescription: String?
@@ -100,14 +102,14 @@ private extension URNAssetDownloadStore {
         init(
             id: String,
             input: URNAssetLoader.Input,
-            entryAssetMetadata: EntryAssetMetadata? = nil,
+            metadata: EntryAssetMetadata? = nil,
             bookmarkData: Data? = nil,
             progress: Double,
             errorDescription: String? = nil
         ) {
             self.id = id
             self.input = input
-            self.entryAssetMetadata = entryAssetMetadata
+            self.metadata = metadata
             self.bookmarkData = bookmarkData
             self.progress = progress
             self.errorDescription = errorDescription
@@ -122,7 +124,7 @@ private extension URNAssetDownloadStore {
         func toRecord() -> DownloadRecord<URNAssetLoader.Input, URNMetadata> {
             .init(
                 input: input,
-                metadata: entryAssetMetadata?.assetMetadata(),
+                metadata: metadata?.assetMetadata(),
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: DownloadError(errorDescription: errorDescription)
@@ -131,7 +133,7 @@ private extension URNAssetDownloadStore {
 
         func update(with record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
             self.input = record.input
-            self.entryAssetMetadata = .init(assetMetadata: record.metadata)
+            self.metadata = .init(assetMetadata: record.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
             self.errorDescription = record.error?.localizedDescription
