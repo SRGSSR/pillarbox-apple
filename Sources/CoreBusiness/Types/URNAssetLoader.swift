@@ -17,11 +17,6 @@ enum URNAssetLoader: AssetLoader {
         var id: String {
             "\(urn)-\(server.id)"
         }
-
-        init(urn: String, server: Server) {
-            self.urn = urn
-            self.server = server
-        }
     }
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
