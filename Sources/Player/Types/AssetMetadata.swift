@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 public struct AssetMetadata<CustomData> {
     public let playerMetadata: PlayerMetadata
     public let customData: CustomData
@@ -23,7 +21,5 @@ public struct AssetMetadata<CustomData> {
 }
 
 extension AssetMetadata: Codable where CustomData: Codable {}
-
-#endif
 
 // swiftlint:enable missing_docs

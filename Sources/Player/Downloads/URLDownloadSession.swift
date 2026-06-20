@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import AVFoundation
 import Combine
 
@@ -61,3 +63,5 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
         delegate.downloadSessionDidCompleteWithError(error, forId: id)
     }
 }
+
+#endif

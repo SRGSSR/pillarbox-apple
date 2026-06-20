@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import Foundation
 
 @available(tvOS, unavailable)
@@ -21,3 +23,5 @@ struct DownloadSessionTaskProperties {
         self.progress = (state == .completed) ? 1 : progress
     }
 }
+
+#endif

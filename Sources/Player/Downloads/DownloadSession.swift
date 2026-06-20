@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import AVFoundation
 import Combine
 
@@ -28,3 +30,5 @@ extension DownloadSession {
         .eraseToAnyPublisher()
     }
 }
+
+#endif
