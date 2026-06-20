@@ -17,11 +17,11 @@ struct DownloadCell: View {
     private(set) var action: () -> Void
 
     private var title: String {
-        download.metadata.subtitle ?? "Untitled"
+        download.metadata.title ?? "Untitled"
     }
 
     private var subtitle: String? {
-        download.metadata.title
+        download.metadata.subtitle
     }
 
     var body: some View {
