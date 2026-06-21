@@ -402,6 +402,6 @@ enum URLMedia {
     static let apple_360 = Media(
         title: "Apple 360°",
         imageUrl: kAppleImageUrl,
-        type: .monoscopicUrl("https://rts-vod-amd.akamaized.net/ww/8414077/5c100765-dcfb-3d1a-831c-b98fe68def59/master.m3u8")
+        type: .monoscopicUrl("https://devstreaming-cdn.apple.com/videos/streaming/examples/immersive-media/360Lighthouse/mvp.m3u8")
     )
 }
