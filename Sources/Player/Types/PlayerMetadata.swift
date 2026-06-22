@@ -51,13 +51,12 @@ public struct PlayerMetadata: Codable, Equatable {
     }
 
     var episodeDescription: String? {
-        switch episodeInformation {
-        case let .long(season: season, episode: episode):
-            return String(localized: "S\(season), E\(episode)", bundle: .module, comment: "Short season / episode information")
-        case let .short(episode: episode):
-            return String(localized: "E\(episode)", bundle: .module, comment: "Short episode information")
-        case nil:
-            return nil
+        guard let episodeInformation else { return nil }
+        if let season = episodeInformation.season {
+            return String(localized: "S\(season), E\(episodeInformation.episode)", bundle: .module, comment: "Short season / episode information")
+        }
+        else {
+            return String(localized: "E\(episodeInformation.episode)", bundle: .module, comment: "Short episode information")
         }
     }
 

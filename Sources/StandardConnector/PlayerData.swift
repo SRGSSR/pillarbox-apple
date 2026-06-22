@@ -59,12 +59,7 @@ public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
 extension PlayerData {
     var episodeInformation: EpisodeInformation? {
         guard let episodeNumber else { return nil }
-        if let seasonNumber {
-            return .long(season: seasonNumber, episode: episodeNumber)
-        }
-        else {
-            return .short(episode: episodeNumber)
-        }
+        return .init(episode: episodeNumber, season: seasonNumber)
     }
 
     var chapters: [Chapter] {

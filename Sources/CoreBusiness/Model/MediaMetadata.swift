@@ -124,10 +124,10 @@ extension MediaMetadata {
     var episodeInformation: EpisodeInformation? {
         guard let episode = mediaComposition.episode, let episodeNumber = episode.number else { return nil }
         if let seasonNumber = episode.seasonNumber {
-            return .long(season: seasonNumber, episode: episodeNumber)
+            return .init(episode: episodeNumber, season: seasonNumber)
         }
         else {
-            return .short(episode: episodeNumber)
+            return .init(episode: episodeNumber)
         }
     }
 

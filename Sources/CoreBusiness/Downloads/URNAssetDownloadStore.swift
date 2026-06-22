@@ -44,7 +44,7 @@ private extension URNAssetDownloadStore {
         private let subtitle: String?
         private let summary: String?
         private let viewport: Viewport
-        private let episodeInformation: SafeSwiftDataOptional<EpisodeInformation>
+        private let episodeInformation: EpisodeInformation?
         private let chapters: [Chapter]
         private let timeRanges: [TimeRange]
 
@@ -54,7 +54,7 @@ private extension URNAssetDownloadStore {
             self.subtitle = playerMetadata.subtitle
             self.summary = playerMetadata.description
             self.viewport = playerMetadata.viewport
-            self.episodeInformation = .init(wrappedValue: playerMetadata.episodeInformation)
+            self.episodeInformation = playerMetadata.episodeInformation
             self.chapters = playerMetadata.chapters
             self.timeRanges = playerMetadata.timeRanges
         }
@@ -66,7 +66,7 @@ private extension URNAssetDownloadStore {
                 subtitle: subtitle,
                 description: summary,
                 viewport: viewport,
-                episodeInformation: episodeInformation.wrappedValue,
+                episodeInformation: episodeInformation,
                 chapters: chapters,
                 timeRanges: timeRanges
             )

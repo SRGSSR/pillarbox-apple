@@ -5,10 +5,16 @@
 //
 
 /// Information about an episode.
-public enum EpisodeInformation: Codable, Equatable {
-    /// Season and episode number.
-    case long(season: Int, episode: Int)
+public struct EpisodeInformation: Codable, Equatable {
+    /// Episode number.
+    public let episode: Int
 
-    /// Episode number only.
-    case short(episode: Int)
+    /// Season number.
+    public let season: Int?
+
+    /// Creates episode information.
+    public init(episode: Int, season: Int? = nil) {
+        self.episode = episode
+        self.season = season
+    }
 }
