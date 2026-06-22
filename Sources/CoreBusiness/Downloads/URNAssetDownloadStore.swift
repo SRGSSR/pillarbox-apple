@@ -44,9 +44,20 @@ private extension URNAssetDownloadStore {
         private let subtitle: String?
         private let summary: String?
         private let viewport: Viewport
-        private let episodeInformation: EpisodeInformation?
+        private let episode: Int?
+        private let season: Int?
         private let chapters: [Chapter]
         private let timeRanges: [TimeRange]
+
+        private var episodeInformation: EpisodeInformation? {
+            guard let episode else { return nil }
+            if let season {
+                return .init(episode: episode, season: season)
+            }
+            else {
+                return .init(episode: episode)
+            }
+        }
 
         init(playerMetadata: PlayerMetadata) {
             self.identifier = playerMetadata.identifier
@@ -54,7 +65,8 @@ private extension URNAssetDownloadStore {
             self.subtitle = playerMetadata.subtitle
             self.summary = playerMetadata.description
             self.viewport = playerMetadata.viewport
-            self.episodeInformation = playerMetadata.episodeInformation
+            self.episode = playerMetadata.episodeInformation?.episode
+            self.season = playerMetadata.episodeInformation?.season
             self.chapters = playerMetadata.chapters
             self.timeRanges = playerMetadata.timeRanges
         }
