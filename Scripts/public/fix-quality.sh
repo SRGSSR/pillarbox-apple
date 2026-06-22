@@ -3,7 +3,7 @@
 set -e
 
 function install_tools {
-    curl -Ssf https://pkgx.sh | sh &> /dev/null
+    brew install pkgx &> /dev/null
     set -a
     eval "$(pkgx +swiftlint)"
     set +a
