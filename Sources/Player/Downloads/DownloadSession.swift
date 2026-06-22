@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import AVFoundation
 import Combine
 
@@ -11,12 +13,13 @@ import Combine
 protocol DownloadSession: AnyObject {
     var delegate: DownloadSessionDelegate? { get set }
 
-    func sessionTaskPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<URLSessionTask, Never>
+    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask, Never>
+    func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask
 }
 
 @available(tvOS, unavailable)
 extension DownloadSession {
-    private static func downloadSessionTaskPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
+    func downloadSessionTaskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
         Publishers.CombineLatest3(
             Just(task),
             task.publisher(for: \.state),
@@ -26,19 +29,6 @@ extension DownloadSession {
         .map(DownloadSessionTaskProperties.init)
         .eraseToAnyPublisher()
     }
-
-    func downloadSourcePublisher(
-        id: String,
-        asset: Asset,
-        title: String?,
-        createTaskIfNeeded: Bool,
-        progressEstimate: Double
-    ) -> AnyPublisher<DownloadSource, Never> {
-        sessionTaskPublisher(id: id, asset: asset, title: title, createIfNeeded: createTaskIfNeeded)
-            .map(Self.downloadSessionTaskPublisher)
-            .switchToLatest()
-           .map(DownloadSource.task)
-            .prepend(.estimate(progressEstimate))
-            .eraseToAnyPublisher()
-    }
 }
+
+#endif

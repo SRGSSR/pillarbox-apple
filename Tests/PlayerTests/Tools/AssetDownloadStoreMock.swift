@@ -12,9 +12,9 @@ import OrderedCollections
 
 @available(tvOS, unavailable)
 final class AssetDownloadStoreMock {
-    private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMockInput, PlayerMetadata>>
+    private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMock.Input, Void>>
 
-    init(preloadedInputs: [AssetLoaderMockInput] = []) {
+    init(preloadedInputs: [AssetLoaderMock.Input] = []) {
         records = preloadedInputs.reduce(into: [:]) { records, input in
             records.updateValue(Self.record(from: input), forKey: Self.id(from: input))
         }
@@ -23,20 +23,30 @@ final class AssetDownloadStoreMock {
 
 @available(tvOS, unavailable)
 extension AssetDownloadStoreMock: AssetDownloadStore {
-    static func id(from input: AssetLoaderMockInput) -> String {
+    typealias Loader = AssetLoaderMock
+
+    static func id(from input: AssetLoaderMock.Input) -> String {
         input.id
     }
 
-    static func record(from input: AssetLoaderMockInput) -> DownloadRecord<AssetLoaderMockInput, PlayerMetadata> {
-        .init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil)
+    static func customData(from metadata: PlayerMetadata) {}
+
+    static func record(from input: AssetLoaderMock.Input) -> DownloadRecord<AssetLoaderMock.Input, Void> {
+        .init(
+            input: input,
+            metadata: .init(playerMetadata: input.metadata, customData: ()),
+            bookmarkData: nil,
+            progress: 0,
+            error: nil
+        )
     }
 
-    func downloadRecords() -> [DownloadRecord<AssetLoaderMockInput, PlayerMetadata>] {
+    func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, Void>] {
         assert(Thread.isMainThread)
         return Array(records.values)
     }
 
-    func addDownloadRecord(using input: AssetLoaderMockInput, forId id: String) {
+    func addDownloadRecord(using input: AssetLoaderMock.Input, forId id: String) {
         assert(Thread.isMainThread)
         records[id] = Self.record(from: input)
     }
@@ -46,12 +56,12 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
         records.removeValue(forKey: id)
     }
 
-    func downloadRecord(forId id: String) -> DownloadRecord<AssetLoaderMockInput, PlayerMetadata>? {
+    func downloadRecord(forId id: String) -> DownloadRecord<AssetLoaderMock.Input, Void>? {
         assert(Thread.isMainThread)
         return records[id]
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMockInput, PlayerMetadata>, forId id: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, Void>, forId id: String) {
         assert(Thread.isMainThread)
         records[id] = record
     }

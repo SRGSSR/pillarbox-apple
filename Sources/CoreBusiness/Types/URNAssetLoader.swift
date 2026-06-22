@@ -5,13 +5,18 @@
 //
 
 import Combine
+
+@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 enum URNAssetLoader: AssetLoader {
-    struct Input {
+    struct Input: Codable {
         let urn: String
         let server: Server
-        let configuration: PlaybackConfiguration
+
+        var id: String {
+            "\(urn)-\(server.id)"
+        }
     }
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
@@ -30,7 +35,7 @@ enum URNAssetLoader: AssetLoader {
         guard let resource = metadata.resource else {
             return .unavailable(with: SourceError())
         }
-        let configuration = assetConfiguration(for: resource, configuration: input.configuration)
+        let configuration = assetConfiguration(for: resource)
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
             return .encrypted(url: resource.url, certificateUrl: certificateUrl, configuration: configuration)
         }
@@ -48,13 +53,14 @@ enum URNAssetLoader: AssetLoader {
         metadata?.playerMetadata() ?? .empty
     }
 
-    private static func assetConfiguration(
-        for resource: MediaComposition.Resource,
-        configuration: PlaybackConfiguration
-    ) -> PlaybackConfiguration {
-        // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
-        // livestreams cannot be paused and resumed in the past, as requested by business people.
-        guard resource.streamType == .live else { return configuration }
-        return .init(automaticallyPreservesTimeOffsetFromLive: true, preferredForwardBufferDuration: 1)
+    private static func assetConfiguration(for resource: MediaComposition.Resource) -> PlaybackConfiguration {
+        switch resource.streamType {
+        case .live:
+            // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
+            // livestreams cannot be paused and resumed in the past, as requested by business people.
+            return .init(automaticallyPreservesTimeOffsetFromLive: true, preferredForwardBufferDuration: 1)
+        default:
+            return .default
+        }
     }
 }

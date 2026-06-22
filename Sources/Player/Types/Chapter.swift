@@ -9,7 +9,7 @@ import Combine
 import UIKit
 
 /// A chapter representation.
-public struct Chapter: Equatable {
+public struct Chapter: Codable, Equatable {
     private static let placeholderImage = {
         let rect = CGRect(x: 0, y: 0, width: 16, height: 9)
         let renderer = UIGraphicsImageRenderer(bounds: rect)
@@ -28,8 +28,16 @@ public struct Chapter: Equatable {
     /// The source of the image associated with the content.
     public let imageSource: ImageSource
 
+    private let startTimeMs: Int64
+    private let endTimeMs: Int64
+
     /// The time range covered by the chapter.
-    public let timeRange: CMTimeRange
+    public var timeRange: CMTimeRange {
+        .init(
+            start: .init(value: CMTimeValue(startTimeMs), timescale: 1000),
+            end: .init(value: CMTimeValue(endTimeMs), timescale: 1000)
+        )
+    }
 
     var timedNavigationMarker: AVTimedMetadataGroup {
         .init(
@@ -64,7 +72,8 @@ public struct Chapter: Equatable {
         self.identifier = identifier
         self.title = title
         self.imageSource = imageSource
-        self.timeRange = timeRange
+        self.startTimeMs = Int64(timeRange.start.seconds * 1000)
+        self.endTimeMs = Int64(timeRange.end.seconds * 1000)
     }
 }
 

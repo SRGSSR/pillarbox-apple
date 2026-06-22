@@ -11,12 +11,14 @@
 		6F09A2922B48744000700365 /* PillarboxCoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F09A2912B48744000700365 /* PillarboxCoreBusiness */; };
 		6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9B5BC828CF8C530074B9E0 /* OrderedCollections */; };
 		6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCA4746292CBEC7008C2812 /* ShowTime */; };
+		6FEDBA6B2FE56EA800DB3970 /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FEDBA6A2FE56EA800DB3970 /* SwiftData.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F7A2B252A707708005701C7 /* pillarbox-apple */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "pillarbox-apple"; path = ..; sourceTree = "<group>"; };
+		6FEDBA6A2FE56EA800DB3970 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS27.0.sdk/System/Library/Frameworks/SwiftData.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -31,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FEDBA6B2FE56EA800DB3970 /* SwiftData.framework in Frameworks */,
 				6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */,
 				0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */,
 				6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */,
@@ -74,6 +77,7 @@
 		6F7A2B272A707742005701C7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6FEDBA6A2FE56EA800DB3970 /* SwiftData.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

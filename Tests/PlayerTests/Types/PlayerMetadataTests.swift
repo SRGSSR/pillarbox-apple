@@ -35,7 +35,7 @@ final class PlayerMetadataTests: TestCase {
             subtitle: "subtitle",
             description: "description",
             imageSource: .image(try unwrap(.init(systemName: "circle"))),
-            episodeInformation: .long(season: 2, episode: 3)
+            episodeInformation: .init(episode: 3, season: 2)
         )
         let externalMetadata = metadata.externalMetadata
         await expect {

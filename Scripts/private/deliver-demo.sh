@@ -10,7 +10,7 @@ function usage {
 }
 
 function install_tools {
-    curl -Ssf https://pkgx.sh | sh &> /dev/null
+    brew install pkgx &> /dev/null
     set -a
     eval "$(pkgx +ruby@3.3.0 +bundle +magick)"
     set +a

@@ -104,7 +104,14 @@ private struct ContentCell: View {
                 router.presented = .player(media: media)
             }
 #if os(iOS)
-            .swipeActions { CopyActions(text: media.urn) }
+            .swipeActions {
+                CopyActions(text: media.urn)
+#if DEBUG
+                if #available(iOS 17, *) {
+                    URNDownloadAction(urn: media.urn, serverSetting: serverSetting)
+                }
+#endif
+            }
 #endif
         case let .show(show):
             CustomNavigationLink(

@@ -7,7 +7,7 @@
 import Foundation
 
 /// A server environment.
-public enum Server {
+public enum Server: Codable {
     /// Production.
     case production
 
@@ -22,6 +22,17 @@ public enum Server {
 #else
     private static let vector = "tvplay"
 #endif
+
+    var id: String {
+        switch self {
+        case .production:
+            return "production"
+        case .stage:
+            return "stage"
+        case .test:
+            return "test"
+        }
+    }
 
     var baseUrl: URL {
         switch self {

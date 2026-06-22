@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import AVFoundation
 import Combine
 
@@ -22,23 +24,13 @@ final class URLDownloadSession: NSObject {
 
 @available(tvOS, unavailable)
 extension URLDownloadSession: DownloadSession {
-    func sessionTaskPublisher(id: String, asset: Asset, title: String?, createIfNeeded: Bool) -> AnyPublisher<URLSessionTask, Never> {
+    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask, Never> {
         taskPublisher(withDescription: id)
-            .compactMap { task in
-                if let task {
-                    return task
-                }
-                else if createIfNeeded {
-                    return self.createTask(id: id, asset: asset, title: title)
-                }
-                else {
-                    return nil
-                }
-            }
+            .compactMap(\.self)
             .eraseToAnyPublisher()
     }
 
-    private func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask {
+    func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask {
         let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: title ?? id)
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
         task.taskDescription = id
@@ -71,3 +63,5 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
         delegate.downloadSessionDidCompleteWithError(error, forId: id)
     }
 }
+
+#endif

@@ -22,8 +22,12 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
         assetLoaderType: L.Type,
         configuration: URLSessionConfiguration,
         store: S
-    ) where L: AssetLoader, L.Input == S.Input, L.Metadata == S.Metadata {
-        let manager = DownloadManager(assetLoaderType: assetLoaderType, session: URLDownloadSession(configuration: configuration), store: store)
+    ) where L: AssetLoader, L == S.Loader {
+        let manager = DownloadManager(
+            assetLoaderType: assetLoaderType,
+            store: store,
+            session: URLDownloadSession(configuration: configuration)
+        )
         self.manager = manager
 
         manager.$downloads
@@ -31,15 +35,15 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     }
 
     @discardableResult
-    public func addDownload(for input: S.Input) -> Download {
+    public func addDownload(for input: S.Loader.Input) -> Download {
         manager.addDownload(for: input)
     }
 
-    public func download(matching input: S.Input) -> Download? {
+    public func download(matching input: S.Loader.Input) -> Download? {
         manager.download(matching: input)
     }
 
-    public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<S.Metadata>] = []) -> PlayerItem? {
+    public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<AssetMetadata<S.CustomData>>] = []) -> PlayerItem? {
         manager.playerItem(for: download, trackerAdapters: trackerAdapters)
     }
 

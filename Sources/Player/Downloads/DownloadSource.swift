@@ -4,15 +4,17 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DEBUG
+
 import Foundation
 
 @available(tvOS, unavailable)
-enum DownloadSource {
-    case estimate(Double)
-    case task(DownloadSessionTaskProperties)
+struct DownloadSource<CustomData> {
+    let kind: DownloadSourceKind
+    let metadata: AssetMetadata<CustomData>?
 
     private var task: URLSessionTask? {
-        switch self {
+        switch kind {
         case .estimate:
             return nil
         case let .task(properties):
@@ -32,3 +34,5 @@ enum DownloadSource {
         task?.cancel()
     }
 }
+
+#endif

@@ -50,7 +50,9 @@ final class MetadataPublisherTests: TestCase {
     }
 
     func testUpdate() {
-        let player = Player(item: .updatable(url: Stream.onDemand.url, metadata: .init(title: "title1"), to: .init(title: "title2"), after: 0.1))
+        let player = Player(
+            item: .playable(url: Stream.onDemand.url, metadata: .init(title: "title1"), updatedWithMetadata: .init(title: "title2"), interval: 0.1)
+        )
         expectAtLeastEqualPublished(
             values: [nil, "title1", "title2"],
             from: Self.titlePublisherTest(for: player)

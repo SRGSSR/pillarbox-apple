@@ -28,7 +28,7 @@ final class MediaMetadataTests: XCTestCase {
         Dans ce nouvel épisode de YADEBAT, Mélissa réunit 3 couples qui se sont séparés récemment. \
         Elles les a questionné en face à face pour connaître leurs différents ressentis et réactions.
         """))
-        expect(metadata.episodeInformation).to(equal(.long(season: 2, episode: 12)))
+        expect(metadata.episodeInformation).to(equal(.init(episode: 12, season: 2)))
     }
 
     func testRedundantMetadata() throws {

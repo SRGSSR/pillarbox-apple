@@ -45,11 +45,11 @@ final class PlayerTests: TestCase {
     }
 
     func testMetadataUpdatesMustNotChangePlayerItem() {
-        let player = Player(item: .updatable(
+        let player = Player(item: .playable(
             url: Stream.onDemand.url,
             metadata: .init(title: "title1"),
-            to: .init(title: "title2"),
-            after: 1
+            updatedWithMetadata: .init(title: "title2"),
+            interval: 1
         ))
         expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
         let currentItem = player.queuePlayer.currentItem

@@ -12,14 +12,14 @@ import Foundation
 
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
-public struct DownloadRecord<Input, Metadata> {
+public struct DownloadRecord<Input, CustomData> {
     public let input: Input
-    public let metadata: Metadata?
+    public let metadata: AssetMetadata<CustomData>?
     public let bookmarkData: Data?
     public let progress: Double
     public let error: Error?
 
-    public init(input: Input, metadata: Metadata?, bookmarkData: Data?, progress: Double, error: Error?) {
+    public init(input: Input, metadata: AssetMetadata<CustomData>?, bookmarkData: Data?, progress: Double, error: Error?) {
         self.input = input
         self.metadata = metadata
         self.bookmarkData = bookmarkData

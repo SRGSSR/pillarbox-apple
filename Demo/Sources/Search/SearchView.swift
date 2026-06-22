@@ -12,6 +12,9 @@ struct SearchView: View {
     @StateObject private var model = SearchViewModel()
     @EnvironmentObject private var router: Router
 
+    @AppStorage(UserDefaults.DemoSettingKey.serverSetting.rawValue)
+    private var serverSetting: ServerSetting = .production
+
     var body: some View {
         ZStack {
             switch model.state {
@@ -64,7 +67,8 @@ struct SearchView: View {
                     }
                 }
 #if os(iOS)
-                .swipeActions { CopyActions(text: media.urn) }
+                .swipeActions { swipeActions(for: media) }
+
                 .refreshable { await model.refresh() }
 #else
                 .ignoresSafeArea(.all, edges: .horizontal)
@@ -83,6 +87,18 @@ struct SearchView: View {
             }
         }
     }
+
+#if os(iOS)
+    @ViewBuilder
+    private func swipeActions(for media: SRGMedia) -> some View {
+        CopyActions(text: media.urn)
+#if DEBUG
+        if #available(iOS 17, *) {
+            URNDownloadAction(urn: media.urn, serverSetting: serverSetting)
+        }
+#endif
+    }
+#endif
 
     private func unavailableModelView(title: String, icon: String) -> some View {
         UnavailableModelView(model: model) {

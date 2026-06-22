@@ -9,9 +9,8 @@
 import Foundation
 
 @available(tvOS, unavailable)
-struct DownloadProperties<Metadata> {
-    let metadata: Metadata?
-    let source: DownloadSource
+struct DownloadProperties<CustomData> {
+    let source: DownloadSource<CustomData>
     let fileUrl: URL?
     let error: Error?
 
@@ -23,7 +22,7 @@ struct DownloadProperties<Metadata> {
         if let error {
             return URLError.isCancellationError(error) ? .cancelled : .completed
         }
-        switch source {
+        switch source.kind {
         case let .estimate(progress):
             return progress == 1 ? .completed : .preparing
         case let .task(properties):
@@ -47,7 +46,7 @@ struct DownloadProperties<Metadata> {
         if error != nil {
             return 0
         }
-        switch source {
+        switch source.kind {
         case let .estimate(progress):
             return progress
         case let .task(properties):
@@ -56,26 +55,32 @@ struct DownloadProperties<Metadata> {
     }
 
     init() {
-        self.init(metadata: nil, source: .estimate(0), fileUrl: nil, error: nil)
+        self.init(
+            source: .init(kind: .estimate(0), metadata: nil),
+            fileUrl: nil,
+            error: nil
+        )
     }
 
-    init(metadata: Metadata?, source: DownloadSource, fileUrl: URL?, error: Error?) {
-        self.metadata = metadata
+    init(source: DownloadSource<CustomData>, fileUrl: URL?, error: Error?) {
         self.source = source
         self.fileUrl = fileUrl
         self.error = error
     }
 
-    init<Input>(from record: DownloadRecord<Input, Metadata>) {
+    init<Input>(from record: DownloadRecord<Input, CustomData>) {
         do {
             self.init(
-                metadata: record.metadata,
-                source: .estimate(record.progress),
+                source: .init(kind: .estimate(record.progress), metadata: record.metadata),
                 fileUrl: try URL(resolvingBookmarkData: record.bookmarkData),
                 error: record.error
             )
         } catch {
-            self.init(metadata: record.metadata, source: .estimate(0), fileUrl: nil, error: error)
+            self.init(
+                source: .init(kind: .estimate(0), metadata: record.metadata),
+                fileUrl: nil,
+                error: error
+            )
         }
     }
 

@@ -11,9 +11,9 @@ import Combine
 import UIKit
 
 @available(tvOS, unavailable)
-final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L.Input == S.Input, L.Metadata == S.Metadata {
-    private let session: any DownloadSession
+final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
     private let store: S
+    private let session: any DownloadSession
 
     @Published private(set) var downloads: [Download]
 
@@ -21,9 +21,9 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
     // to properly clean associated downloaded data.
     private var locations: [String: URL] = [:]
 
-    init(assetLoaderType: L.Type, session: some DownloadSession, store: S) {
-        self.session = session
+    init(assetLoaderType: L.Type, store: S, session: some DownloadSession) {
         self.store = store
+        self.session = session
         self.downloads = store.downloadRecords().map { record in
             Download(assetLoaderType: assetLoaderType, record: record, session: session, store: store)
         }
@@ -31,7 +31,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
     }
 
     @discardableResult
-    func addDownload(for input: L.Input) -> Download {
+    func addDownload(for input: S.Loader.Input) -> Download {
         if let download = download(matching: input) {
             return download
         }
@@ -42,20 +42,19 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
         }
     }
 
-    func download(matching input: L.Input) -> Download? {
+    func download(matching input: S.Loader.Input) -> Download? {
         download(matchingId: type(of: store).id(from: input))
     }
 
-    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<L.Metadata>]) -> PlayerItem? {
+    func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<AssetMetadata<S.CustomData>>]) -> PlayerItem? {
         guard downloads.contains(download), let record = store.downloadRecord(forId: download.id),
               let metadata = record.metadata, let fileUrl = download.fileUrl else {
             return nil
         }
+        let asset = S.asset(fileUrl: fileUrl, customData: metadata.customData)
         return .init(
-            assetLoaderType: ImmediateAssetLoader.self,
-            input: .init(asset: .simple(url: fileUrl), metadata: metadata) { metadata in
-                L.playerMetadata(from: record.input, metadata: metadata)
-            },
+            assetLoaderType: CustomDirectAssetLoader.self,
+            input: .init(asset: asset, metadata: metadata),
             trackerAdapters: trackerAdapters
         )
     }

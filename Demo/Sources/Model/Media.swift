@@ -116,8 +116,7 @@ struct Media: Hashable {
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.mainChapter.title)
                     }
-                ],
-                configuration: .init(position: at(startTime))
+                ]
             )
         case let .item(item):
             return item

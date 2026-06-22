@@ -20,13 +20,11 @@ public struct TrackerAdapter<M> {
         trackerType: T.Type,
         configuration: T.Configuration,
         behavior: TrackingBehavior,
-        mapper: ((M) -> T.Metadata)?
+        mapper: @escaping (M) -> T.Metadata
     ) where T: PlayerItemTracker {
         let tracker = trackerType.init(configuration: configuration, queue: queue)
         update = { metadata in
-            if let mapper {
-                tracker.updateMetadata(to: mapper(metadata))
-            }
+            tracker.updateMetadata(to: mapper(metadata))
         }
         self.tracker = tracker
         self.behavior = behavior

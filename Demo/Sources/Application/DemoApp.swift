@@ -12,6 +12,10 @@ struct DemoApp: App {
 
     @StateObject private var router = Router()
 
+#if DEBUG && os(iOS)
+    @StateObject private var downloader = DemoDownloader()
+#endif
+
     @SceneBuilder var body: some Scene {
         WindowGroup {
             TabView {
@@ -28,6 +32,9 @@ struct DemoApp: App {
                 presented.view()
             }
             .environmentObject(router)
+#if DEBUG && os(iOS)
+            .environmentObject(downloader)
+#endif
         }
     }
 
@@ -73,7 +80,7 @@ struct DemoApp: App {
             DownloadsView()
         }
         .tabItem {
-            Label("Downloads", systemImage: "square.and.arrow.down")
+            Label("Downloads", systemImage: "arrow.down.circle.fill")
         }
     }
 #endif

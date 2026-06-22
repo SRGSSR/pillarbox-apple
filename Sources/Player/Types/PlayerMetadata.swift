@@ -6,10 +6,11 @@
 
 import AVFoundation
 import Combine
+import CoreMedia
 import MediaPlayer
 
 /// Metadata associated with playback.
-public struct PlayerMetadata: Equatable {
+public struct PlayerMetadata: Codable, Equatable {
     /// Empty metadata.
     public static let empty = Self()
 
@@ -45,16 +46,17 @@ public struct PlayerMetadata: Equatable {
     /// Time ranges associated with the content.
     public let timeRanges: [TimeRange]
 
-    let blockedTimeRanges: [CMTimeRange]
+    var blockedTimeRanges: [CMTimeRange] {
+        CMTimeRange.flatten(timeRanges.filter { $0.kind == .blocked }.map { .init(start: $0.start, end: $0.end) })
+    }
 
     var episodeDescription: String? {
-        switch episodeInformation {
-        case let .long(season: season, episode: episode):
-            return String(localized: "S\(season), E\(episode)", bundle: .module, comment: "Short season / episode information")
-        case let .short(episode: episode):
-            return String(localized: "E\(episode)", bundle: .module, comment: "Short episode information")
-        case nil:
-            return nil
+        guard let episodeInformation else { return nil }
+        if let season = episodeInformation.season {
+            return String(localized: "S\(season), E\(episodeInformation.episode)", bundle: .module, comment: "Short season / episode information")
+        }
+        else {
+            return String(localized: "E\(episodeInformation.episode)", bundle: .module, comment: "Short episode information")
         }
     }
 
@@ -125,11 +127,6 @@ public struct PlayerMetadata: Equatable {
         self.episodeInformation = episodeInformation
         self.chapters = chapters
         self.timeRanges = timeRanges
-        self.blockedTimeRanges = Self.flattenedBlockedTimeRanges(from: timeRanges)
-    }
-
-    private static func flattenedBlockedTimeRanges(from timeRanges: [TimeRange]) -> [CMTimeRange] {
-        CMTimeRange.flatten(timeRanges.filter { $0.kind == .blocked }.map { .init(start: $0.start, end: $0.end) })
     }
 }
 

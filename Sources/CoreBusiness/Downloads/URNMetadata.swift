@@ -8,14 +8,12 @@
 
 #if DEBUG
 
-@_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
-public enum DownloadState: Equatable {
-    case preparing
-    case running
-    case suspended
-    case completed
-    case cancelled
+@_spi(DownloaderPrivate)
+public struct URNMetadata: Codable {
+    static let empty = Self(analyticsMetadata: [:])
+
+    let analyticsMetadata: [String: String]
 }
 
 #endif

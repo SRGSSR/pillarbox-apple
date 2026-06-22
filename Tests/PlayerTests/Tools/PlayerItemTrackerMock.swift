@@ -65,6 +65,6 @@ final class PlayerItemTrackerMock: PlayerItemTracker {
 
 extension PlayerItemTrackerMock {
     static func adapter(statePublisher: StatePublisher, behavior: TrackingBehavior = .optional) -> TrackerAdapter<PlayerMetadata> {
-        adapter(configuration: Configuration(statePublisher: statePublisher), behavior: behavior)
+        adapter(configuration: Configuration(statePublisher: statePublisher), behavior: behavior, mapper: \.self)
     }
 }
