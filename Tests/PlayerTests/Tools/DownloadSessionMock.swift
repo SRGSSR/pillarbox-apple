@@ -39,7 +39,7 @@ extension DownloadSessionMock: DownloadSession {
         Empty().eraseToAnyPublisher()
     }
 
-    func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask {
+    func createTask(id: String, asset: Asset, title: String?, artworkData: Data?) -> URLSessionTask {
         let task = session.downloadTask(with: asset.urlAsset().url)
         task.taskDescription = id
         task.resume()

@@ -14,7 +14,7 @@ protocol DownloadSession: AnyObject {
     var delegate: DownloadSessionDelegate? { get set }
 
     func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask, Never>
-    func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask
+    func createTask(id: String, asset: Asset, title: String?, artworkData: Data?) -> URLSessionTask
 }
 
 @available(tvOS, unavailable)

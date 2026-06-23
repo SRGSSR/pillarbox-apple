@@ -168,10 +168,16 @@ private extension Download {
                 .first()
                 .map { metadata in
                     let playerMetadata = assetLoaderType.playerMetadata(from: input, metadata: metadata)
+                    return playerMetadata.imageSource.imageSourceDownloadPublisher()
+                        .map { (playerMetadata.withImageSource($0), metadata) }
+                }
+                .switchToLatest()
+                .map { playerMetadata, metadata in
                     let task = session.createTask(
                         id: id,
                         asset: assetLoaderType.downloadableAsset(from: input, metadata: metadata),
-                        title: playerMetadata.title
+                        title: playerMetadata.title,
+                        artworkData: playerMetadata.imageSource.image?.pngData()
                     )
                     return Publishers.CombineLatest(
                         session.downloadSessionTaskPropertiesPublisher(for: task),
