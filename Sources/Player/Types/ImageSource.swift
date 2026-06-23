@@ -59,6 +59,10 @@ public struct ImageSource: Codable, Equatable {
         guard let data = image.pngData() else { return .none }
         return .image(data)
     }
+
+    func fetch() {
+        trigger.activate(for: TriggerId.load)
+    }
 }
 
 extension ImageSource {
@@ -66,9 +70,6 @@ extension ImageSource {
         switch kind {
         case let .image(data):
             return UIImage(data: data)
-        case .url:
-            trigger.activate(for: TriggerId.load)
-            return nil
         default:
             return nil
         }
