@@ -80,6 +80,18 @@ extension ImageSource {
         }
     }
 
+    func fetchImage() -> UIImage? {
+        switch kind {
+        case let .image(data):
+            return UIImage(data: data)
+        case .url:
+            fetch()
+            return nil
+        default:
+            return nil
+        }
+    }
+
     func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
         switch kind {
         case let .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl):
