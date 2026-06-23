@@ -140,11 +140,15 @@ extension PlayerMetadata {
         .eraseToAnyPublisher()
     }
 
-    private func chaptersPublisher() -> AnyPublisher<[Chapter], Never> {
+    func chaptersPublisher() -> AnyPublisher<[Chapter], Never> {
         Publishers.AccumulateLatestMany(chapters.map { $0.chapterPublisher() })
     }
 
-    private func withChapters(_ chapters: [Chapter]) -> Self {
+    func chaptersDownloadPublisher() -> AnyPublisher<[Chapter], Never> {
+        Publishers.AccumulateLatestMany(chapters.map { $0.chapterDownloadPublisher() })
+    }
+
+    func withChapters(_ chapters: [Chapter]) -> Self {
         .init(
             identifier: identifier,
             title: title,

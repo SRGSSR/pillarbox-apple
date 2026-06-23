@@ -155,6 +155,7 @@ private extension Download {
         properties: DownloadProperties<S.CustomData>
     ) -> AnyPublisher<DownloadSource<S.CustomData>, Error> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         if !properties.shouldCreateTask, let metadata = properties.source.metadata {
+            // TODO: A playerMetadata stream should deliver images here as well
             return session.sessionTaskPublisher(id: id)
                 .setFailureType(to: Error.self)
                 .map { session.downloadSessionTaskPropertiesPublisher(for: $0) }
@@ -181,7 +182,10 @@ private extension Download {
                     )
                     return Publishers.CombineLatest(
                         session.downloadSessionTaskPropertiesPublisher(for: task),
-                        Just(AssetMetadata(playerMetadata: playerMetadata, customData: S.customData(from: metadata)))
+                        playerMetadata.chaptersDownloadPublisher()
+                            .map { chapters in
+                                AssetMetadata(playerMetadata: playerMetadata.withChapters(chapters), customData: S.customData(from: metadata))
+                            }
                     )
                 }
                 .switchToLatest()
