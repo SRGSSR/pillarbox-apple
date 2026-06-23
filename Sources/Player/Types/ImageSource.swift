@@ -70,7 +70,16 @@ public struct ImageSource: Codable, Equatable {
     }
 }
 
-extension ImageSource {
+public extension ImageSource {
+    var url: URL? {
+        switch kind {
+        case let .url(standardResolution: standardResolutionUrl, lowResolution: _):
+            return standardResolutionUrl
+        default:
+            return nil
+        }
+    }
+
     var image: UIImage? {
         switch kind {
         case let .image(data):
@@ -79,7 +88,9 @@ extension ImageSource {
             return nil
         }
     }
+}
 
+extension ImageSource {
     func fetchImage() -> UIImage? {
         switch kind {
         case let .image(data):

@@ -7,6 +7,7 @@
 #if DEBUG
 
 import Foundation
+import UIKit
 import SwiftData
 
 @_spi(DownloaderPrivate)
@@ -43,6 +44,8 @@ private extension URNAssetDownloadStore {
         private let title: String?
         private let subtitle: String?
         private let summary: String?
+        private let imageUrl: URL?
+        private let imageData: Data?
         private let viewport: Viewport
         private let episode: Int?
         private let season: Int?
@@ -59,11 +62,25 @@ private extension URNAssetDownloadStore {
             }
         }
 
+        private var imageSource: ImageSource {
+            if let imageData, let image = UIImage(data: imageData) {
+                return .image(image)
+            }
+            else if let imageUrl {
+                return .url(standardResolution: imageUrl)
+            }
+            else {
+                return .none
+            }
+        }
+
         init(playerMetadata: PlayerMetadata) {
             self.identifier = playerMetadata.identifier
             self.title = playerMetadata.title
             self.subtitle = playerMetadata.subtitle
             self.summary = playerMetadata.description
+            self.imageUrl = playerMetadata.imageSource.url
+            self.imageData = playerMetadata.imageSource.image?.pngData()
             self.viewport = playerMetadata.viewport
             self.episode = playerMetadata.episodeInformation?.episode
             self.season = playerMetadata.episodeInformation?.season
@@ -77,6 +94,7 @@ private extension URNAssetDownloadStore {
                 title: title,
                 subtitle: subtitle,
                 description: summary,
+                imageSource: imageSource,
                 viewport: viewport,
                 episodeInformation: episodeInformation,
                 chapters: chapters,
