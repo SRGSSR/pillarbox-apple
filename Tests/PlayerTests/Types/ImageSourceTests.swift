@@ -62,7 +62,7 @@ final class ImageSourceTests: TestCase {
         let url = URL(string: "https://localhost:8123/missing.jpg")!
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastEqualPublished(
-            values: [.url(standardResolution: url), .none],
+            values: [.url(standardResolution: url)],
             from: source.imageSourcePublisher()
         ) {
             source.fetchImage()

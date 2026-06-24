@@ -99,21 +99,23 @@ extension ImageSource {
     ) -> AnyPublisher<ImageSource, Never> {
         var request = URLRequest(url: standardResolutionUrl)
         request.allowsConstrainedNetworkAccess = false
-        return kSession.dataTaskPublisher(for: request)
-            .wait(untilOutputFrom: trigger.signal(activatedBy: TriggerId.load))
-            .tryCatch { error in
-                guard error.networkUnavailableReason == .constrained else {
-                    throw error
+        return Publishers.Publish(onOutputFrom: trigger.signal(activatedBy: TriggerId.load)) {
+            kSession.dataTaskPublisher(for: request)
+                .tryCatch { error in
+                    guard error.networkUnavailableReason == .constrained else {
+                        throw error
+                    }
+                    return kSession.dataTaskPublisher(for: lowResolutionUrl)
                 }
-                return kSession.dataTaskPublisher(for: lowResolutionUrl)
-            }
-            .map { data, _ in
-                guard let image = UIImage(data: data) else { return .none }
-                return .image(image)
-            }
-            .replaceError(with: .none)
-            .prepend(self)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
+                .map { data, _ in
+                    guard let image = UIImage(data: data) else { return .none }
+                    return .image(image)
+                }
+                .catch { _ in
+                    Empty()
+                }
+        }
+        .prepend(self)
+        .eraseToAnyPublisher()
     }
 }
