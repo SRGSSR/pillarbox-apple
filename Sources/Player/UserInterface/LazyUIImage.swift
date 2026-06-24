@@ -10,5 +10,5 @@ import UIKit
 ///
 /// The image is loaded when needed and delivered through usual `PlayerMetadata` updates.
 public func LazyUIImage(source: ImageSource) -> UIImage? {
-    source.image
+    source.fetchImage()
 }

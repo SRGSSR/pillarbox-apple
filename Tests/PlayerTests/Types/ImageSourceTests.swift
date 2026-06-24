@@ -43,7 +43,7 @@ final class ImageSourceTests: TestCase {
             values: [.url(standardResolution: url), .image(image)],
             from: source.imageSourcePublisher()
         ) {
-            _ = source.image
+            source.fetchImage()
         }
     }
 
@@ -54,7 +54,7 @@ final class ImageSourceTests: TestCase {
             values: [.url(standardResolution: url), .none],
             from: source.imageSourcePublisher()
         ) {
-            _ = source.image
+            source.fetchImage()
         }
     }
 
@@ -65,7 +65,7 @@ final class ImageSourceTests: TestCase {
             values: [.url(standardResolution: url), .none],
             from: source.imageSourcePublisher()
         ) {
-            _ = source.image
+            source.fetchImage()
         }
     }
 }

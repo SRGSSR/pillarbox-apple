@@ -66,6 +66,16 @@ extension ImageSource {
         switch kind {
         case let .image(data):
             return UIImage(data: data)
+        default:
+            return nil
+        }
+    }
+
+    @discardableResult
+    func fetchImage() -> UIImage? {
+        switch kind {
+        case let .image(data):
+            return UIImage(data: data)
         case .url:
             trigger.activate(for: TriggerId.load)
             return nil

@@ -85,7 +85,7 @@ private struct ChaptersList: View {
     }
 
     private func chaptersList() -> some View {
-        HStack(spacing: 15) {
+        LazyHStack(spacing: 15) {
             ForEach(chapters, id: \.timeRange) { chapter in
                 Button {
                     player.seek(to: chapter)
@@ -95,6 +95,7 @@ private struct ChaptersList: View {
                 .buttonStyle(PlainButtonStyle())
             }
         }
+        .fixedSize()
         .padding(.horizontal)
     }
 }

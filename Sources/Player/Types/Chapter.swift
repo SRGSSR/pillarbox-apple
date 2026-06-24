@@ -51,7 +51,7 @@ public struct Chapter: Codable, Equatable {
     }
 
     private var artworkImage: UIImage {
-        imageSource.image ?? Self.placeholderImage
+        imageSource.fetchImage() ?? Self.placeholderImage
     }
 
     /// Creates a chapter.
