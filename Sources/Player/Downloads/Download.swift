@@ -178,7 +178,7 @@ private extension Download {
                         id: id,
                         asset: assetLoaderType.downloadableAsset(from: input, metadata: metadata),
                         title: playerMetadata.title,
-                        artworkData: playerMetadata.imageSource.image?.pngData()
+                        artworkData: playerMetadata.imageSource.image?.jpegData(compressionQuality: 1)
                     )
                     return Publishers.CombineLatest(
                         session.downloadSessionTaskPropertiesPublisher(for: task),

@@ -56,7 +56,7 @@ public struct ImageSource: Codable, Equatable {
     }
 
     private static func kind(from image: UIImage) -> Kind {
-        guard let data = image.pngData() else { return .none }
+        guard let data = image.jpegData(compressionQuality: 1) else { return .none }
         return .image(data)
     }
 

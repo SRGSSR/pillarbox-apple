@@ -80,7 +80,7 @@ private extension URNAssetDownloadStore {
             self.subtitle = playerMetadata.subtitle
             self.summary = playerMetadata.description
             self.imageUrl = playerMetadata.imageSource.url
-            self.imageData = playerMetadata.imageSource.image?.pngData()
+            self.imageData = playerMetadata.imageSource.image?.jpegData(compressionQuality: 1)
             self.viewport = playerMetadata.viewport
             self.episode = playerMetadata.episodeInformation?.episode
             self.season = playerMetadata.episodeInformation?.season
