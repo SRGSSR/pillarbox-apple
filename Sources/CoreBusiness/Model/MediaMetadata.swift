@@ -185,10 +185,10 @@ extension MediaMetadata {
     }
 
     private func standardResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
-        dataProvider.resizedImageUrl(chapter.imageUrl, width: .width720)
+        dataProvider.resizedImageUrl(chapter.imageUrl, width: .width1920)
     }
 
     private func lowResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
-        dataProvider.resizedImageUrl(chapter.imageUrl, width: .width320)
+        dataProvider.resizedImageUrl(chapter.imageUrl, width: .width1920)
     }
 }

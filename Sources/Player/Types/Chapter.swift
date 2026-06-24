@@ -85,7 +85,7 @@ extension Chapter {
     }
 
     func chapterDownloadPublisher() -> AnyPublisher<Chapter, Never> {
-        imageSource.imageSourceDownloadPublisher()
+        imageSource.chapterImageSourceDownloadPublisher()
             .map { self.with(imageSource: $0) }
             .eraseToAnyPublisher()
     }

@@ -19,8 +19,23 @@ public struct LazyImage<Content>: View where Content: View {
             if let image = source.image {
                 content(Image(uiImage: image))
             }
+            else {
+                content(Image(""))
+            }
         }
+        .border(color, width: 4)
         .onAppear(perform: source.fetch)
+    }
+
+    var color: Color {
+        switch source.kind {
+        case .url:
+            return .red
+        case .image:
+            return .green
+        case .none:
+            return .blue
+        }
     }
 
     /// Creates a lazy image.

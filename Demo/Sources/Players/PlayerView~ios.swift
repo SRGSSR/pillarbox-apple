@@ -125,7 +125,6 @@ private struct ChapterCell: View {
         .aspectRatio(16 / 9, contentMode: .fit)
         .frame(width: Self.width)
         .clipShape(RoundedRectangle(cornerRadius: 5))
-        .saturation(isHighlighted ? 1 : 0)
         .scaleEffect17(isHighlighted ? 1.07 : 1)
         .animation(.defaultLinear, value: isHighlighted)
     }

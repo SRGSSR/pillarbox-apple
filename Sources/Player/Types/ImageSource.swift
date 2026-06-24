@@ -152,4 +152,21 @@ extension ImageSource {
             Just(self).eraseToAnyPublisher()
         }
     }
+
+    func chapterImageSourceDownloadPublisher() -> AnyPublisher<ImageSource, Never> {
+        switch kind {
+        case let .url(standardResolution: standardResolutionUrl, lowResolution: _):
+            kSession.dataTaskPublisher(for: standardResolutionUrl)
+                .map { data, _ in
+                    guard let image = UIImage(data: data) else { return .none }
+                    return .image(image)
+                }
+                .replaceError(with: self)
+                .prepend(self)
+                .removeDuplicates()
+                .eraseToAnyPublisher()
+        default:
+            Just(self).eraseToAnyPublisher()
+        }
+    }
 }
