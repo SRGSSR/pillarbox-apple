@@ -213,32 +213,13 @@ struct ExamplesView: View {
                     router.presented = .player(media: media)
                 }
 #if DEBUG && os(iOS)
-                .swipeActions { swipeActions(for: media) }
+                .swipeActions {
+                    DownloadAction(media: media)
+                }
 #endif
             }
         }
     }
-
-#if DEBUG && os(iOS)
-    @ViewBuilder
-    private func swipeActions(for media: Media) -> some View {
-        switch media.type {
-        case let .url(url):
-            URLDownloadAction(url: url, metadata: .init(title: media.title, subtitle: media.subtitle))
-        case let .monoscopicUrl(url):
-            URLDownloadAction(url: url, metadata: .init(title: media.title, subtitle: media.subtitle, viewport: .monoscopic))
-        case let .urn(urn, serverSetting: serverSetting):
-            if #available(iOS 17, *) {
-                URNDownloadAction(urn: urn, serverSetting: serverSetting)
-            }
-            else {
-                EmptyView()
-            }
-        default:
-            EmptyView()
-        }
-    }
-#endif
 }
 
 #Preview {
