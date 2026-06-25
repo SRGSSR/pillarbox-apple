@@ -119,7 +119,7 @@ extension ImageSource {
                 guard let image = UIImage(data: data) else { return .none }
                 return .image(image)
             }
-            .catch { _ in Empty() }
+            .replaceError(with: self)
             .eraseToAnyPublisher()
     }
 }

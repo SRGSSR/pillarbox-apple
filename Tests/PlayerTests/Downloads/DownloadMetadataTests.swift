@@ -42,6 +42,16 @@ final class DownloadMetadataTests: TestCase {
         ], from: publisher)
     }
 
+    func testFailure() {
+        let url = URL(string: "https://localhost:8123/missing.jpg")!
+        let source = ImageSource.url(standardResolution: url)
+        let playerMetadata = PlayerMetadata(imageSource: source)
+        let input = AssetLoaderMock.Input.playable(url: Stream.download.url, metadata: playerMetadata)
+        let publisher = AssetDownloadStoreMock.downloadMetadataPublisher(for: input)
+            .map(\.assetMetadata.playerMetadata)
+        expectOnlyEqualPublished(values: [playerMetadata], from: publisher)
+    }
+
     func testIgnoreMetadataUpdate() throws {
         let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
         let image = try unwrap(UIImage(contentsOfFile: url.path()))
