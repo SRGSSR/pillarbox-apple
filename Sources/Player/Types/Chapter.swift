@@ -80,11 +80,11 @@ public struct Chapter: Codable, Equatable {
 extension Chapter {
     func chapterPublisher() -> AnyPublisher<Chapter, Never> {
         imageSource.lazyImageSourcePublisher()
-            .map { self.with(imageSource: $0) }
+            .map(withImageSource)
             .eraseToAnyPublisher()
     }
 
-    private func with(imageSource: ImageSource) -> Self {
+    private func withImageSource(_ imageSource: ImageSource) -> Self {
         .init(identifier: identifier, title: title, imageSource: imageSource, timeRange: timeRange)
     }
 }

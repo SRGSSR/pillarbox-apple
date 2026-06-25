@@ -136,7 +136,7 @@ extension PlayerMetadata {
             imageSource.lazyImageSourcePublisher(),
             chaptersPublisher()
         )
-        .map { self.with(imageSource: $0, chapters: $1) }
+        .map { withImageSource($0).withChapters($1) }
         .eraseToAnyPublisher()
     }
 
@@ -144,7 +144,21 @@ extension PlayerMetadata {
         Publishers.AccumulateLatestMany(chapters.map { $0.chapterPublisher() })
     }
 
-    private func with(imageSource: ImageSource, chapters: [Chapter]) -> Self {
+    private func withImageSource(_ imageSource: ImageSource) -> Self {
+        .init(
+            identifier: identifier,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            imageSource: imageSource,
+            viewport: viewport,
+            episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges
+        )
+    }
+
+    private func withChapters(_ chapters: [Chapter]) -> Self {
         .init(
             identifier: identifier,
             title: title,
