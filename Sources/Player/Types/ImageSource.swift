@@ -104,15 +104,23 @@ extension ImageSource {
                     guard let image = UIImage(data: data) else { return .none }
                     return .image(image)
                 }
-                .catch { _ in
-                    Empty()
-                }
+                .catch { _ in Empty() }
         }
         .prepend(self)
         .eraseToAnyPublisher()
     }
 
     func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
-        Empty().eraseToAnyPublisher()
+        guard case let .url(standardResolution: standardResolutionUrl, lowResolution: _) = kind else {
+            return Just(self).eraseToAnyPublisher()
+        }
+        return kSession.dataTaskPublisher(for: standardResolutionUrl)
+            .map { data, _ in
+                guard let image = UIImage(data: data) else { return .none }
+                return .image(image)
+            }
+            .catch { _ in Empty() }
+            .prepend(self)
+            .eraseToAnyPublisher()
     }
 }
