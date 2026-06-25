@@ -49,7 +49,7 @@ public enum Server: Codable {
         }
     }
 
-    var baseUrl: URL {
+    private var baseUrl: URL {
         switch self {
         case .production:
             URL(string: "https://il.srgssr.ch")!
@@ -63,6 +63,17 @@ public enum Server: Codable {
             URL(string: "https://api.int.playplus.ch")!
         case .playPlusDevelopment:
             URL(string: "https://api.dev.playplus.ch")!
+        }
+    }
+
+    private var resizedImageBaseUrl: URL {
+        switch self {
+        case .production, .playPlusProduction:
+            URL(string: "https://il.srgssr.ch")!
+        case .stage, .playPlusIntegration:
+            URL(string: "https://il-stage.srgssr.ch")!
+        case .test, .playPlusDevelopment:
+            URL(string: "https://il-test.srgssr.ch")!
         }
     }
 
@@ -80,7 +91,7 @@ public enum Server: Codable {
 
     func resizedImageUrl(_ url: URL, width: ImageWidth) -> URL {
         guard var components = URLComponents(
-            url: baseUrl.appending(path: "images/"),
+            url: resizedImageBaseUrl.appending(path: "images/"),
             resolvingAgainstBaseURL: false
         ) else {
             return url
