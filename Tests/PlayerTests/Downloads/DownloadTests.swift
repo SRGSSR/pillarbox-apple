@@ -366,3 +366,15 @@ final class DownloadTests: TestCase {
         expect(weakDownload).to(beNil())
     }
 }
+
+extension DownloadTests {
+    func testImage() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(assetLoaderType: AssetLoaderMock.self, store: store, session: session)
+        let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
+        let image = try unwrap(UIImage(contentsOfFile: url.path()))
+        let metadata = PlayerMetadata(imageSource: .url(standardResolution: url))
+        let download = manager.addDownload(for: .playable(url: Stream.download.url, metadata: metadata, after: 0.1))
+        expect(download.metadata.imageSource).toEventually(equal(.image(image)))
+    }
+}
