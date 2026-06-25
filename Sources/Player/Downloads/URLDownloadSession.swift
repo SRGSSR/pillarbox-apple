@@ -30,8 +30,9 @@ extension URLDownloadSession: DownloadSession {
             .eraseToAnyPublisher()
     }
 
-    func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask {
-        let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: title ?? id)
+    func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
+        let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: metadata.title ?? id)
+        configuration.artworkData = metadata.imageSource.image?.jpegData(compressionQuality: 1)
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
         task.taskDescription = id
         task.resume()

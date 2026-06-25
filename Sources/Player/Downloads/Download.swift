@@ -166,11 +166,10 @@ private extension Download {
         else {
             return S.downloadMetadataPublisher(for: input)
                 .map { downloadMetadata in
-                    let playerMetadata = downloadMetadata.assetMetadata.playerMetadata
                     let task = session.createTask(
                         id: id,
                         asset: downloadMetadata.asset,
-                        title: playerMetadata.title
+                        metadata: downloadMetadata.assetMetadata.playerMetadata,
                     )
                     return Publishers.CombineLatest(
                         session.downloadSessionTaskPropertiesPublisher(for: task),
