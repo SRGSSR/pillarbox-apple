@@ -18,7 +18,9 @@ public protocol AssetDownloadStore: AnyObject {
     associatedtype CustomData
 
     static func id(from input: Loader.Input) -> String
+
     static func assetPublisher(from input: Loader.Input, metadata: Loader.Metadata) -> AnyPublisher<Asset, Never>
+
     static func customData(from metadata: Loader.Metadata) -> CustomData
     static func asset(fileUrl: URL, customData: CustomData) -> Asset
 
@@ -55,7 +57,7 @@ extension AssetDownloadStore {
 
 @available(tvOS, unavailable)
 extension AssetDownloadStore {
-    static func downloadMetadataPublisher(for input: Loader.Input) -> AnyPublisher<DownloadMetadata<Loader.Metadata, CustomData>, any Error> {
+    static func downloadMetadataPublisher(for input: Loader.Input) -> AnyPublisher<DownloadMetadata<CustomData>, any Error> {
         Loader.metadataPublisher(for: input)
             .first()
             .map { metadata in
@@ -69,7 +71,7 @@ extension AssetDownloadStore {
             .switchToLatest()
             .map { metadata, playerMetadata, imageSource in
                 DownloadMetadata(
-                    metadata: metadata,
+                    asset: Loader.asset(from: input, metadata: metadata),
                     assetMetadata: .init(playerMetadata: playerMetadata.withImageSource(imageSource), customData: customData(from: metadata))
                 )
             }
