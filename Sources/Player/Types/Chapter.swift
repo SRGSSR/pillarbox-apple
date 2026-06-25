@@ -84,6 +84,12 @@ extension Chapter {
             .eraseToAnyPublisher()
     }
 
+    func chapterPublisher() -> AnyPublisher<Chapter, Never> {
+        imageSource.imageSourcePublisher()
+            .map(withImageSource)
+            .eraseToAnyPublisher()
+    }
+
     private func withImageSource(_ imageSource: ImageSource) -> Self {
         .init(identifier: identifier, title: title, imageSource: imageSource, timeRange: timeRange)
     }

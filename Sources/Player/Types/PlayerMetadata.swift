@@ -143,8 +143,25 @@ extension PlayerMetadata {
     private func lazyChaptersPublisher() -> AnyPublisher<[Chapter], Never> {
         Publishers.AccumulateLatestMany(chapters.map { $0.lazyChapterPublisher() })
     }
+}
 
-    private func withImageSource(_ imageSource: ImageSource) -> Self {
+extension PlayerMetadata {
+    func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
+        Publishers.CombineLatest(
+            imageSource.imageSourcePublisher(),
+            chaptersPublisher()
+        )
+        .map { withImageSource($0).withChapters($1) }
+        .eraseToAnyPublisher()
+    }
+
+    private func chaptersPublisher() -> AnyPublisher<[Chapter], Never> {
+        Publishers.AccumulateLatestMany(chapters.map { $0.chapterPublisher() })
+    }
+}
+
+private extension PlayerMetadata {
+    func withImageSource(_ imageSource: ImageSource) -> Self {
         .init(
             identifier: identifier,
             title: title,
@@ -158,7 +175,7 @@ extension PlayerMetadata {
         )
     }
 
-    private func withChapters(_ chapters: [Chapter]) -> Self {
+    func withChapters(_ chapters: [Chapter]) -> Self {
         .init(
             identifier: identifier,
             title: title,
