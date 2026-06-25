@@ -12,6 +12,9 @@ enum ServerSetting: Int, CaseIterable {
     case production
     case stage
     case test
+    case playPlusProduction
+    case playPlusIntegration
+    case playPlusDevelopment
 
     var title: String {
         switch self {
@@ -21,6 +24,12 @@ enum ServerSetting: Int, CaseIterable {
             return "Stage"
         case .test:
             return "Test"
+        case .playPlusProduction:
+            return "Play+ Production"
+        case .playPlusIntegration:
+            return "Play+ Integration"
+        case .playPlusDevelopment:
+            return "Play+ Development"
         }
     }
 
@@ -30,11 +39,11 @@ enum ServerSetting: Int, CaseIterable {
 
     private var baseUrl: URL {
         switch self {
-        case .production:
+        case .production, .playPlusProduction:
             return SRGIntegrationLayerProductionServiceURL()
-        case .stage:
+        case .stage, .playPlusIntegration:
             return SRGIntegrationLayerStagingServiceURL()
-        case .test:
+        case .test, .playPlusDevelopment:
             return SRGIntegrationLayerTestServiceURL()
         }
     }
@@ -47,6 +56,12 @@ enum ServerSetting: Int, CaseIterable {
             return .stage
         case .test:
             return .test
+        case .playPlusProduction:
+            return .playPlusProduction
+        case .playPlusIntegration:
+            return .playPlusIntegration
+        case .playPlusDevelopment:
+            return .playPlusDevelopment
         }
     }
 }
