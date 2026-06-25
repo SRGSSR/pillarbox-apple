@@ -83,7 +83,9 @@ extension ImageSource {
             return nil
         }
     }
+}
 
+extension ImageSource {
     func lazyImageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
         guard case let .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl) = kind else {
             return Just(self).eraseToAnyPublisher()
@@ -108,5 +110,9 @@ extension ImageSource {
         }
         .prepend(self)
         .eraseToAnyPublisher()
+    }
+
+    func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
+        Empty().eraseToAnyPublisher()
     }
 }
