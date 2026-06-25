@@ -17,6 +17,15 @@ public enum Server: Codable {
     /// Test.
     case test
 
+    /// Play+ production.
+    case playPlusProduction
+
+    /// Play+ integration.
+    case playPlusIntegration
+
+    /// Play+ development.
+    case playPlusDevelopment
+
 #if os(iOS)
     private static let vector = "appplay"
 #else
@@ -31,6 +40,12 @@ public enum Server: Codable {
             return "stage"
         case .test:
             return "test"
+        case .playPlusProduction:
+            return "playPlusProduction"
+        case .playPlusIntegration:
+            return "playPlusIntegration"
+        case .playPlusDevelopment:
+            return "playPlusDevelopment"
         }
     }
 
@@ -42,6 +57,12 @@ public enum Server: Codable {
             URL(string: "https://il-stage.srgssr.ch")!
         case .test:
             URL(string: "https://il-test.srgssr.ch")!
+        case .playPlusProduction:
+            URL(string: "https://api.playplus.ch")!
+        case .playPlusIntegration:
+            URL(string: "https://api.int.playplus.ch")!
+        case .playPlusDevelopment:
+            URL(string: "https://api.dev.playplus.ch")!
         }
     }
 
