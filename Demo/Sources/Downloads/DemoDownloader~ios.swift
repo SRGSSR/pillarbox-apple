@@ -50,8 +50,8 @@ final class DemoDownloader: ObservableObject {
         }
     }
 
-    func addUrlDownload(url: URL, title: String, subtitle: String? = nil, isMonoscopic: Bool) {
-        urlDownloader.addDownload(for: .init(url: url, title: title, subtitle: subtitle, isMonoscopic: isMonoscopic))
+    func addUrlDownload(url: URL, metadata: PlayerMetadata) {
+        urlDownloader.addDownload(for: .init(url: url, metadata: metadata))
     }
 
     @available(iOS 17, *)

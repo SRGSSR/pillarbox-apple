@@ -6,30 +6,27 @@
 
 #if DEBUG
 
+import PillarboxPlayer
 import SwiftUI
 
 struct URLDownloadAction: View {
     let url: URL
-    let title: String
-    let subtitle: String?
-    let isMonoscopic: Bool
+    let metadata: PlayerMetadata
 
     @EnvironmentObject private var downloader: DemoDownloader
 
     var body: some View {
         Button {
-            downloader.addUrlDownload(url: url, title: title, subtitle: subtitle, isMonoscopic: isMonoscopic)
+            downloader.addUrlDownload(url: url, metadata: metadata)
         } label: {
             Image(systemName: "arrow.down.circle")
         }
         .tint(.green)
     }
 
-    init(url: URL, title: String, subtitle: String? = nil, isMonoscopic: Bool = false) {
+    init(url: URL, metadata: PlayerMetadata = .empty) {
         self.url = url
-        self.title = title
-        self.subtitle = subtitle
-        self.isMonoscopic = isMonoscopic
+        self.metadata = metadata
     }
 }
 

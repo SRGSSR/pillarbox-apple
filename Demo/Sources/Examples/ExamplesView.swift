@@ -224,9 +224,9 @@ struct ExamplesView: View {
     private func swipeActions(for media: Media) -> some View {
         switch media.type {
         case let .url(url):
-            URLDownloadAction(url: url, title: media.title, subtitle: media.subtitle)
+            URLDownloadAction(url: url, metadata: .init(title: media.title, subtitle: media.subtitle))
         case let .monoscopicUrl(url):
-            URLDownloadAction(url: url, title: media.title, subtitle: media.subtitle, isMonoscopic: true)
+            URLDownloadAction(url: url, metadata: .init(title: media.title, subtitle: media.subtitle, viewport: .monoscopic))
         case let .urn(urn, serverSetting: serverSetting):
             if #available(iOS 17, *) {
                 URNDownloadAction(urn: urn, serverSetting: serverSetting)
