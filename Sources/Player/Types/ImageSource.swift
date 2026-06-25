@@ -120,7 +120,6 @@ extension ImageSource {
                 return .image(image)
             }
             .catch { _ in Empty() }
-            .prepend(self)
             .eraseToAnyPublisher()
     }
 }

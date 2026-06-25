@@ -164,18 +164,17 @@ private extension Download {
                 .eraseToAnyPublisher()
         }
         else {
-            return assetLoaderType.metadataPublisher(for: input)
-                .first()
-                .map { metadata in
-                    let playerMetadata = assetLoaderType.playerMetadata(from: input, metadata: metadata)
+            return S.downloadMetadataPublisher(for: input)
+                .map { downloadMetadata in
+                    let playerMetadata = downloadMetadata.assetMetadata.playerMetadata
                     let task = session.createTask(
                         id: id,
-                        asset: .simple(url: URL(string: "changeme")!),
+                        asset: assetLoaderType.asset(from: input, metadata: downloadMetadata.metadata),
                         title: playerMetadata.title
                     )
                     return Publishers.CombineLatest(
                         session.downloadSessionTaskPropertiesPublisher(for: task),
-                        Just(AssetMetadata(playerMetadata: playerMetadata, customData: S.customData(from: metadata)))
+                        Just(downloadMetadata.assetMetadata)
                     )
                 }
                 .switchToLatest()

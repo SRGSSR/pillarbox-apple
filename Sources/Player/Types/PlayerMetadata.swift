@@ -160,7 +160,7 @@ extension PlayerMetadata {
     }
 }
 
-private extension PlayerMetadata {
+extension PlayerMetadata {
     func withImageSource(_ imageSource: ImageSource) -> Self {
         .init(
             identifier: identifier,

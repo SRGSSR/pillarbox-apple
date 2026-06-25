@@ -53,6 +53,30 @@ extension AssetDownloadStore {
     }
 }
 
+@available(tvOS, unavailable)
+extension AssetDownloadStore {
+    static func downloadMetadataPublisher(for input: Loader.Input) -> AnyPublisher<DownloadMetadata<Loader.Metadata, CustomData>, any Error> {
+        Loader.metadataPublisher(for: input)
+            .first()
+            .map { metadata in
+                let playerMetadata = Loader.playerMetadata(from: input, metadata: metadata)
+                return Publishers.CombineLatest3(
+                    Just(metadata),
+                    Just(playerMetadata),
+                    playerMetadata.imageSource.imageSourcePublisher()
+                )
+            }
+            .switchToLatest()
+            .map { metadata, playerMetadata, imageSource in
+                DownloadMetadata(
+                    metadata: metadata,
+                    assetMetadata: .init(playerMetadata: playerMetadata.withImageSource(imageSource), customData: customData(from: metadata))
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+}
+
 #endif
 
 // swiftlint:enable missing_docs
