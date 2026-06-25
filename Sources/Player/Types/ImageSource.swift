@@ -85,18 +85,9 @@ extension ImageSource {
     }
 
     func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
-        switch kind {
-        case let .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl):
-            return imageSourcePublisher(forStandardResolutionUrl: standardResolutionUrl, lowResolutionUrl: lowResolutionUrl)
-        default:
+        guard case let .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl) = kind else {
             return Just(self).eraseToAnyPublisher()
         }
-    }
-
-    private func imageSourcePublisher(
-        forStandardResolutionUrl standardResolutionUrl: URL,
-        lowResolutionUrl: URL
-    ) -> AnyPublisher<ImageSource, Never> {
         var request = URLRequest(url: standardResolutionUrl)
         request.allowsConstrainedNetworkAccess = false
         return Publishers.Publish(onOutputFrom: trigger.signal(activatedBy: TriggerId.load)) {
