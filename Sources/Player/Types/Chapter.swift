@@ -79,7 +79,7 @@ public struct Chapter: Codable, Equatable {
 
 extension Chapter {
     func chapterPublisher() -> AnyPublisher<Chapter, Never> {
-        imageSource.imageSourcePublisher()
+        imageSource.lazyImageSourcePublisher()
             .map { self.with(imageSource: $0) }
             .eraseToAnyPublisher()
     }

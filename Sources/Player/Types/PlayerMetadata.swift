@@ -133,7 +133,7 @@ public struct PlayerMetadata: Codable, Equatable {
 extension PlayerMetadata {
     func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
         Publishers.CombineLatest(
-            imageSource.imageSourcePublisher(),
+            imageSource.lazyImageSourcePublisher(),
             chaptersPublisher()
         )
         .map { self.with(imageSource: $0, chapters: $1) }

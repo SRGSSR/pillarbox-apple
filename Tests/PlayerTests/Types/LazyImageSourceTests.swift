@@ -10,11 +10,11 @@ import Nimble
 import PillarboxCircumspect
 import UIKit
 
-final class ImageSourceTests: TestCase {
+final class LazyImageSourceTests: TestCase {
     func testNone() {
         expectAtLeastEqualPublished(
             values: [.none],
-            from: ImageSource.none.imageSourcePublisher()
+            from: ImageSource.none.lazyImageSourcePublisher()
         )
     }
 
@@ -22,7 +22,7 @@ final class ImageSourceTests: TestCase {
         let image = try unwrap(UIImage(systemName: "circle"))
         expectAtLeastEqualPublished(
             values: [.image(image)],
-            from: ImageSource.image(image).imageSourcePublisher()
+            from: ImageSource.image(image).lazyImageSourcePublisher()
         )
     }
 
@@ -31,7 +31,7 @@ final class ImageSourceTests: TestCase {
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastEqualPublished(
             values: [.url(standardResolution: url)],
-            from: source.imageSourcePublisher()
+            from: source.lazyImageSourcePublisher()
         )
     }
 
@@ -41,7 +41,7 @@ final class ImageSourceTests: TestCase {
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastEqualPublished(
             values: [.url(standardResolution: url), .image(image)],
-            from: source.imageSourcePublisher()
+            from: source.lazyImageSourcePublisher()
         ) {
             source.fetchImage()
         }
@@ -52,7 +52,7 @@ final class ImageSourceTests: TestCase {
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastEqualPublished(
             values: [.url(standardResolution: url), .none],
-            from: source.imageSourcePublisher()
+            from: source.lazyImageSourcePublisher()
         ) {
             source.fetchImage()
         }
@@ -63,7 +63,7 @@ final class ImageSourceTests: TestCase {
         let source = ImageSource.url(standardResolution: url)
         expectEqualPublished(
             values: [.url(standardResolution: url)],
-            from: source.imageSourcePublisher(),
+            from: source.lazyImageSourcePublisher(),
             during: .milliseconds(100)
         ) {
             source.fetchImage()
