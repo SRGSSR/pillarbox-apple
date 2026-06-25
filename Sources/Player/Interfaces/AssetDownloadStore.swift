@@ -8,6 +8,7 @@
 
 #if DEBUG
 
+import Combine
 import Foundation
 
 @_spi(DownloaderPrivate)
@@ -17,6 +18,7 @@ public protocol AssetDownloadStore: AnyObject {
     associatedtype CustomData
 
     static func id(from input: Loader.Input) -> String
+    static func assetPublisher(from input: Loader.Input, metadata: Loader.Metadata) -> AnyPublisher<Asset, Never>
     static func customData(from metadata: Loader.Metadata) -> CustomData
     static func asset(fileUrl: URL, customData: CustomData) -> Asset
 
@@ -33,6 +35,13 @@ public protocol AssetDownloadStore: AnyObject {
 public extension AssetDownloadStore {
     static func asset(fileUrl: URL, customData: CustomData) -> Asset {
         .simple(url: fileUrl)
+    }
+}
+
+@available(tvOS, unavailable)
+public extension AssetDownloadStore {
+    static func assetPublisher(from input: Loader.Input, metadata: Loader.Metadata) -> AnyPublisher<Asset, Never> {
+        Just(Loader.asset(from: input, metadata: metadata)).eraseToAnyPublisher()
     }
 }
 

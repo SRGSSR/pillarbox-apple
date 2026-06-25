@@ -170,7 +170,7 @@ private extension Download {
                     let playerMetadata = assetLoaderType.playerMetadata(from: input, metadata: metadata)
                     let task = session.createTask(
                         id: id,
-                        asset: assetLoaderType.downloadableAsset(from: input, metadata: metadata),
+                        asset: .simple(url: URL(string: "changeme")!),
                         title: playerMetadata.title
                     )
                     return Publishers.CombineLatest(
