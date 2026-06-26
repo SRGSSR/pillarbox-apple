@@ -50,6 +50,17 @@ final class DemoDownloader: ObservableObject {
         }
     }
 
+    func canDownload(media: Media) -> Bool {
+        switch media.type {
+        case .url, .monoscopicUrl:
+            true
+        case .urn:
+            _urnDownloader != nil
+        default:
+            false
+        }
+    }
+
     func addDownload(media: Media) {
         switch media.type {
         case let .url(url), let .monoscopicUrl(url):

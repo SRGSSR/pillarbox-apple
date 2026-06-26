@@ -12,11 +12,13 @@ struct DownloadAction: View {
     @EnvironmentObject private var downloader: DemoDownloader
 
     var body: some View {
-        Button {
-            downloader.addDownload(media: media)
-        } label: {
-            Image(systemName: "arrow.down.circle")
+        if downloader.canDownload(media: media) {
+            Button {
+                downloader.addDownload(media: media)
+            } label: {
+                Image(systemName: "arrow.down.circle")
+            }
+            .tint(.green)
         }
-        .tint(.green)
     }
 }
