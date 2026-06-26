@@ -46,23 +46,18 @@ public struct ImageSource: Codable, Equatable {
     }
 
     /// Image.
-    public static func image(_ image: UIImage) -> Self {
-        Self(kind: kind(from: image))
+    public static func image(_ data: Data) -> Self {
+        Self(kind: .image(data))
     }
 
     // swiftlint:disable:next missing_docs
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.kind == rhs.kind
     }
-
-    private static func kind(from image: UIImage) -> Kind {
-        guard let data = image.pngData() else { return .none }
-        return .image(data)
-    }
 }
 
 public extension ImageSource {
-    /// The image URL if any.
+    /// The image URL, if any.
     var url: URL? {
         switch kind {
         case let .url(standardResolution: standardResolutionUrl, lowResolution: _):
@@ -72,11 +67,11 @@ public extension ImageSource {
         }
     }
 
-    /// The image if any.
-    var image: UIImage? {
+    /// The image data, if any.
+    var data: Data? {
         switch kind {
         case let .image(data):
-            return UIImage(data: data)
+            return data
         default:
             return nil
         }
@@ -85,10 +80,10 @@ public extension ImageSource {
 
 extension ImageSource {
     @discardableResult
-    func fetchImage() -> UIImage? {
+    func fetchData() -> Data? {
         switch kind {
         case let .image(data):
-            return UIImage(data: data)
+            return data
         case .url:
             trigger.activate(for: TriggerId.load)
             return nil
@@ -113,10 +108,7 @@ extension ImageSource {
                     }
                     return kSession.dataTaskPublisher(for: lowResolutionUrl)
                 }
-                .map { data, _ in
-                    guard let image = UIImage(data: data) else { return .none }
-                    return .image(image)
-                }
+                .map { .image($0.data) }
                 .catch { _ in Empty() }
         }
         .prepend(self)
@@ -128,10 +120,7 @@ extension ImageSource {
             return Just(self).eraseToAnyPublisher()
         }
         return kSession.dataTaskPublisher(for: standardResolutionUrl)
-            .map { data, _ in
-                guard let image = UIImage(data: data) else { return .none }
-                return .image(image)
-            }
+            .map { .image($0.data) }
             .replaceError(with: self)
             .eraseToAnyPublisher()
     }

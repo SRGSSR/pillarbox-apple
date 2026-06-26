@@ -22,9 +22,7 @@ final class DownloadMetadataTests: TestCase {
     }
 
     func testImageSource() throws {
-        let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
-        let image = try unwrap(UIImage(contentsOfFile: url.path()))
-        let playerMetadata = PlayerMetadata(imageSource: .image(image))
+        let playerMetadata = PlayerMetadata(imageSource: .image(Data()))
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url, metadata: playerMetadata)
         let publisher = AssetDownloadStoreMock.downloadMetadataPublisher(for: input)
             .map(\.assetMetadata.playerMetadata)
@@ -33,12 +31,11 @@ final class DownloadMetadataTests: TestCase {
 
     func testUrlSource() throws {
         let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
-        let image = try unwrap(UIImage(contentsOfFile: url.path()))
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url, metadata: PlayerMetadata(imageSource: .url(standardResolution: url)))
         let publisher = AssetDownloadStoreMock.downloadMetadataPublisher(for: input)
             .map(\.assetMetadata.playerMetadata)
         expectOnlyEqualPublished(values: [
-            PlayerMetadata(imageSource: .image(image))
+            PlayerMetadata(imageSource: .image(try Data(contentsOf: url)))
         ], from: publisher)
     }
 
@@ -54,9 +51,8 @@ final class DownloadMetadataTests: TestCase {
 
     func testIgnoreMetadataUpdate() throws {
         let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
-        let image = try unwrap(UIImage(contentsOfFile: url.path()))
         let playerMetadata1 = PlayerMetadata(imageSource: .none)
-        let playerMetadata2 = PlayerMetadata(imageSource: .image(image))
+        let playerMetadata2 = PlayerMetadata(imageSource: .image(try Data(contentsOf: url)))
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url, metadata: playerMetadata1, updatedWithMetadata: playerMetadata2)
         let publisher = AssetDownloadStoreMock.downloadMetadataPublisher(for: input)
             .map(\.assetMetadata.playerMetadata)

@@ -140,8 +140,8 @@ struct Media: Hashable {
 
 extension Media {
     private var imageSource: ImageSource {
-        if let image {
-            return .image(image)
+        if let image, let data = image.jpegData(compressionQuality: 1) {
+            return .image(data)
         }
         else if let imageUrl {
             return .url(standardResolution: imageUrl)

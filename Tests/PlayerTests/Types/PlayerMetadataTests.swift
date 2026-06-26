@@ -20,7 +20,7 @@ final class PlayerMetadataTests: TestCase {
         let metadata = PlayerMetadata(
             title: "title",
             subtitle: "subtitle",
-            imageSource: .image(try unwrap(.init(systemName: "circle")))
+            imageSource: .image(try unwrap(UIImage(systemName: "circle")?.pngData()))
         )
         let nowPlayingInfo = metadata.nowPlayingInfo
         expect(nowPlayingInfo[MPMediaItemPropertyTitle] as? String).to(equal("title"))
@@ -34,7 +34,7 @@ final class PlayerMetadataTests: TestCase {
             title: "title",
             subtitle: "subtitle",
             description: "description",
-            imageSource: .image(try unwrap(.init(systemName: "circle"))),
+            imageSource: .image(try unwrap(UIImage(systemName: "circle")?.pngData())),
             episodeInformation: .init(episode: 3, season: 2)
         )
         let externalMetadata = metadata.externalMetadata

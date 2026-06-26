@@ -44,14 +44,19 @@ public struct Chapter: Codable, Equatable {
             items: [
                 .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
                 .init(identifier: .commonIdentifierTitle, value: title),
-                .init(identifier: .commonIdentifierArtwork, value: artworkImage.pngData())
+                .init(identifier: .commonIdentifierArtwork, value: artworkData)
             ].compactMap(\.self),
             timeRange: timeRange
         )
     }
 
-    private var artworkImage: UIImage {
-        imageSource.fetchImage() ?? Self.placeholderImage
+    private var artworkData: Data? {
+        if let data = imageSource.fetchData() {
+            return data
+        }
+        else {
+            return Self.placeholderImage.pngData()
+        }
     }
 
     /// Creates a chapter.

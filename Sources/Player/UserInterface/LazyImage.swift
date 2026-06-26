@@ -16,12 +16,12 @@ public struct LazyImage<Content>: View where Content: View {
     // swiftlint:disable:next missing_docs
     public var body: some View {
         ZStack {
-            if let image = source.image {
+            if let data = source.data, let image = UIImage(data: data) {
                 content(Image(uiImage: image))
             }
         }
         .onAppear {
-            source.fetchImage()
+            source.fetchData()
         }
     }
 

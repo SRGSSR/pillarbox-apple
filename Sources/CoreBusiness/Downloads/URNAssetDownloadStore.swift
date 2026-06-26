@@ -53,8 +53,8 @@ private extension URNAssetDownloadStore {
         private let timeRanges: [TimeRange]
 
         private var imageSource: ImageSource {
-            if let imageData, let image = UIImage(data: imageData) {
-                return .image(image)
+            if let imageData {
+                return .image(imageData)
             }
             else if let imageUrl {
                 return .url(standardResolution: imageUrl)
@@ -79,7 +79,7 @@ private extension URNAssetDownloadStore {
             self.title = playerMetadata.title
             self.subtitle = playerMetadata.subtitle
             self.summary = playerMetadata.description
-            self.imageData = playerMetadata.imageSource.image?.jpegData(compressionQuality: 1)
+            self.imageData = playerMetadata.imageSource.data
             self.imageUrl = playerMetadata.imageSource.url
             self.viewport = playerMetadata.viewport
             self.episode = playerMetadata.episodeInformation?.episode

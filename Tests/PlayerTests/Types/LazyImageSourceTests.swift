@@ -18,11 +18,11 @@ final class LazyImageSourceTests: TestCase {
         )
     }
 
-    func testImage() throws {
-        let image = try unwrap(UIImage(systemName: "circle"))
+    func testImage() {
+        let imageData = Data()
         expectAtLeastEqualPublished(
-            values: [.image(image)],
-            from: ImageSource.image(image).lazyImageSourcePublisher()
+            values: [.image(imageData)],
+            from: ImageSource.image(imageData).lazyImageSourcePublisher()
         )
     }
 
@@ -37,24 +37,12 @@ final class LazyImageSourceTests: TestCase {
 
     func testLoadedImageForValidUrl() throws {
         let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
-        let image = try unwrap(UIImage(contentsOfFile: url.path()))
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastEqualPublished(
-            values: [.url(standardResolution: url), .image(image)],
+            values: [.url(standardResolution: url), .image(try Data(contentsOf: url))],
             from: source.lazyImageSourcePublisher()
         ) {
-            source.fetchImage()
-        }
-    }
-
-    func testInvalidImageFormat() throws {
-        let url = try unwrap(Bundle.module.url(forResource: "invalid", withExtension: "jpg"))
-        let source = ImageSource.url(standardResolution: url)
-        expectAtLeastEqualPublished(
-            values: [.url(standardResolution: url), .none],
-            from: source.lazyImageSourcePublisher()
-        ) {
-            source.fetchImage()
+            source.fetchData()
         }
     }
 
@@ -66,7 +54,7 @@ final class LazyImageSourceTests: TestCase {
             from: source.lazyImageSourcePublisher(),
             during: .milliseconds(100)
         ) {
-            source.fetchImage()
+            source.fetchData()
         }
     }
 }

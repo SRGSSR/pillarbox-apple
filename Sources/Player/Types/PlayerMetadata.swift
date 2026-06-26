@@ -75,8 +75,8 @@ public struct PlayerMetadata: Codable, Equatable {
         var nowPlayingInfo = NowPlaying.Info()
         nowPlayingInfo[MPMediaItemPropertyTitle] = title
         nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
-        if let image = imageSource.fetchImage() {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+        if let artworkData = imageSource.fetchData(), let artworkImage = UIImage(data: artworkData) {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in artworkImage }
         }
         return nowPlayingInfo
     }
@@ -87,7 +87,7 @@ public struct PlayerMetadata: Codable, Equatable {
 
     private var artworkData: Data? {
 #if os(tvOS)
-        imageSource.fetchImage()?.pngData()
+        imageSource.fetchData()
 #else
         nil
 #endif

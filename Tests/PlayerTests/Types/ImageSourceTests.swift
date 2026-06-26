@@ -18,38 +18,19 @@ final class ImageSourceTests: TestCase {
         )
     }
 
-    func testImage() throws {
-        let image = try unwrap(UIImage(systemName: "circle"))
+    func testImage() {
+        let imageData = Data()
         expectAtLeastEqualPublished(
-            values: [.image(image)],
-            from: ImageSource.image(image).imageSourcePublisher()
+            values: [.image(imageData)],
+            from: ImageSource.image(imageData).imageSourcePublisher()
         )
     }
 
-    func testNonLoadedImageForValidUrl() throws {
+    func testImageForValidUrl() throws {
         let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastEqualPublished(
-            values: [.url(standardResolution: url)],
-            from: source.imageSourcePublisher()
-        )
-    }
-
-    func testLoadedImageForValidUrl() throws {
-        let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
-        let image = try unwrap(UIImage(contentsOfFile: url.path()))
-        let source = ImageSource.url(standardResolution: url)
-        expectAtLeastEqualPublished(
-            values: [.url(standardResolution: url), .image(image)],
-            from: source.imageSourcePublisher()
-        )
-    }
-
-    func testInvalidImageFormat() throws {
-        let url = try unwrap(Bundle.module.url(forResource: "invalid", withExtension: "jpg"))
-        let source = ImageSource.url(standardResolution: url)
-        expectAtLeastEqualPublished(
-            values: [.url(standardResolution: url), .none],
+            values: [.image(try Data(contentsOf: url))],
             from: source.imageSourcePublisher()
         )
     }

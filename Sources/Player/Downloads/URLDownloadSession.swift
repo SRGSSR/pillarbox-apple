@@ -31,7 +31,7 @@ extension URLDownloadSession: DownloadSession {
 
     func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
         let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: metadata.title ?? id)
-        configuration.artworkData = metadata.imageSource.image?.jpegData(compressionQuality: 1)
+        configuration.artworkData = metadata.imageSource.data
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
         task.taskDescription = id
         task.resume()
