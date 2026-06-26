@@ -8,12 +8,10 @@ import AVFAudio
 import Combine
 import os
 import PillarboxAnalytics
+import PillarboxCoreBusiness
 import ShowTime
 import SRGDataProvider
 import UIKit
-
-@_spi(CoreBusinessPrivate)
-import PillarboxCoreBusiness
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
     private static let logger = Logger(category: "AppDelegate")
@@ -24,7 +22,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
         UserDefaults.registerDefaults()
         configureShowTime()
-        configureContentKeySession()
         configureDataProvider()
         configureAnalytics()
         return true
@@ -34,14 +31,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         UserDefaults.standard.publisher(for: \.presenterModeEnabled)
             .sink { isEnabled in
                 ShowTime.enabled = isEnabled ? .always : .never
-            }
-            .store(in: &cancellables)
-    }
-
-    private func configureContentKeySession() {
-        UserDefaults.standard.publisher(for: \.contentKeySessionEnabled)
-            .sink { isEnabled in
-                _setUsesContentKeySession(isEnabled)
             }
             .store(in: &cancellables)
     }

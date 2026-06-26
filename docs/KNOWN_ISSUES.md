@@ -31,9 +31,11 @@ Seeking near the end of a content might sometimes confuse the player (image stuc
 
 No workaround is available yet.
 
-## DRM playback is sometimes not possible anymore
+## DRM playback is sometimes not possible anymore (FB19383686)
 
 It might happen that attempting to play DRM streams always ends with an error. The reason is likely an issue with key session management.
+
+This issue affects OS versions 18 and 26 through 26.2.
 
 ### Workaround
 
