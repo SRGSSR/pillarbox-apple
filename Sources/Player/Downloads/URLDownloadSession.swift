@@ -24,9 +24,8 @@ final class URLDownloadSession: NSObject {
 
 @available(tvOS, unavailable)
 extension URLDownloadSession: DownloadSession {
-    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask, Never> {
+    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask?, Never> {
         taskPublisher(withDescription: id)
-            .compactMap(\.self)
             .eraseToAnyPublisher()
     }
 

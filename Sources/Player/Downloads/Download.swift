@@ -157,9 +157,14 @@ private extension Download {
         if !properties.shouldCreateTask, let metadata = properties.source.metadata {
             return session.sessionTaskPublisher(id: id)
                 .setFailureType(to: Error.self)
-                .map { session.downloadSessionTaskPropertiesPublisher(for: $0) }
+                .map { task in
+                    Publishers.CombineLatest(
+                        session.downloadSourceTaskPublisher(for: task, using: properties),
+                        metadata.assetMetadataPublisher()
+                    )
+                }
                 .switchToLatest()
-                .map { .init(kind: .task($0), metadata: metadata) }
+                .map { .init(kind: $0, metadata: $1) }
                 .prepend(.init(kind: .estimate(properties.progress), metadata: metadata))
                 .eraseToAnyPublisher()
         }

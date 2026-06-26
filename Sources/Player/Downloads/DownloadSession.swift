@@ -13,7 +13,7 @@ import Combine
 protocol DownloadSession: AnyObject {
     var delegate: DownloadSessionDelegate? { get set }
 
-    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask, Never>
+    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask?, Never>
     func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask
 }
 
@@ -28,6 +28,16 @@ extension DownloadSession {
         )
         .map(DownloadSessionTaskProperties.init)
         .eraseToAnyPublisher()
+    }
+
+    func downloadSourceTaskPublisher<CustomData>(
+        for task: URLSessionTask?,
+        using properties: DownloadProperties<CustomData>
+    ) -> AnyPublisher<DownloadSourceKind, Never> {
+        guard let task else { return Just(.estimate(properties.progress)).eraseToAnyPublisher() }
+        return downloadSessionTaskPropertiesPublisher(for: task)
+            .map { .task($0) }
+            .eraseToAnyPublisher()
     }
 }
 

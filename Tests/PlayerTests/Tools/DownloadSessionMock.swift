@@ -35,7 +35,7 @@ final class DownloadSessionMock: NSObject {
 
 @available(tvOS, unavailable)
 extension DownloadSessionMock: DownloadSession {
-    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask, Never> {
+    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask?, Never> {
         Empty().eraseToAnyPublisher()
     }
 
