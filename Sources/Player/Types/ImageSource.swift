@@ -5,8 +5,8 @@
 //
 
 import Combine
+import Foundation
 import PillarboxCore
-import UIKit
 
 private enum TriggerId {
     case load

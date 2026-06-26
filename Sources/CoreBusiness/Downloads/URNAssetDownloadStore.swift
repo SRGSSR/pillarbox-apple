@@ -11,7 +11,6 @@ import SwiftData
 
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
-import UIKit
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)

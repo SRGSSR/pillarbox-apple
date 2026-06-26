@@ -8,10 +8,9 @@
 
 #if DEBUG
 
-import AVFoundation
 import Combine
+import Foundation
 import PillarboxCore
-import UIKit
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)

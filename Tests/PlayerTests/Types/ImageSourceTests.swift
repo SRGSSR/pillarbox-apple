@@ -6,9 +6,9 @@
 
 @testable import PillarboxPlayer
 
+import Foundation
 import Nimble
 import PillarboxCircumspect
-import UIKit
 
 final class ImageSourceTests: TestCase {
     func testNone() {

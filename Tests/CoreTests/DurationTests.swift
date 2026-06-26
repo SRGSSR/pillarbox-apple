@@ -6,7 +6,6 @@
 
 @testable import PillarboxCore
 
-import CoreMedia
 import Nimble
 import XCTest
 

@@ -6,7 +6,6 @@
 
 import AVFoundation
 import ComScore
-import PillarboxCore
 import PillarboxPlayer
 
 /// A comScore tracker for streaming.

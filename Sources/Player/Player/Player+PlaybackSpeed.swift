@@ -6,7 +6,6 @@
 
 import Combine
 import CoreMedia
-import SwiftUI
 
 public extension Player {
     /// The currently allowed playback speed range.

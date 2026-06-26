@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import CoreMedia
+import Foundation
 
 struct Seek: Equatable {
     let position: Position

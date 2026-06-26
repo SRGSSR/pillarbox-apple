@@ -4,14 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-import Combine
+import Foundation
 import PillarboxAnalytics
 import PillarboxMonitoring
 import PillarboxPlayer
-
-@_spi(StandardConnectorPrivate)
-import PillarboxStandardConnector
 
 public extension PlayerItem {
     /// Creates a player item from a URN.

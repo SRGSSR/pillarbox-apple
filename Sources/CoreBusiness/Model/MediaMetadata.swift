@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import Foundation
 import PillarboxPlayer
-import UIKit
 
 /// Metadata associated with content loaded from a URN.
 public struct MediaMetadata {

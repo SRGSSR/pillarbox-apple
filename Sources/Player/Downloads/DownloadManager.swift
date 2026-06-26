@@ -6,9 +6,8 @@
 
 #if DEBUG
 
-import AVFoundation
 import Combine
-import UIKit
+import Foundation
 
 @available(tvOS, unavailable)
 final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {

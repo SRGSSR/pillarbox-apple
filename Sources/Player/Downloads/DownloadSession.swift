@@ -6,8 +6,8 @@
 
 #if DEBUG
 
-import AVFoundation
 import Combine
+import Foundation
 
 @available(tvOS, unavailable)
 protocol DownloadSession: AnyObject {

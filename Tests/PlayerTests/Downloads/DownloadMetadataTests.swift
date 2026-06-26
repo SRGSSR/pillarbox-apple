@@ -7,9 +7,9 @@
 @_spi(DownloaderPrivate)
 @testable import PillarboxPlayer
 
+import Foundation
 import Nimble
 import PillarboxStreams
-import XCTest
 
 @available(tvOS, unavailable)
 final class DownloadMetadataTests: TestCase {

@@ -7,9 +7,6 @@
 @testable import PillarboxAnalytics
 
 import Nimble
-import PillarboxCircumspect
-import TCServerSide
-import XCTest
 
 final class CommandersActSourceTests: CommandersActTestCase {
     func testLabels() {

@@ -8,7 +8,6 @@
 
 import CoreMedia
 import PillarboxCircumspect
-import UIKit
 
 extension Resource: Similar {
     // swiftlint:disable:next missing_docs
