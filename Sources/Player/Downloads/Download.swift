@@ -173,7 +173,7 @@ private extension Download {
                     )
                     return Publishers.CombineLatest(
                         session.downloadSessionTaskPropertiesPublisher(for: task),
-                        Just(downloadMetadata.assetMetadata)
+                        downloadMetadata.assetMetadata.assetMetadataPublisher()
                     )
                 }
                 .switchToLatest()
