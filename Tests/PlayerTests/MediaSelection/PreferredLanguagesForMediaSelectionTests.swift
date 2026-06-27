@@ -8,7 +8,6 @@
 
 import AVFoundation
 import Nimble
-import PillarboxCircumspect
 import PillarboxStreams
 
 final class PreferredLanguagesForMediaSelectionTests: TestCase {

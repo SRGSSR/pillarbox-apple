@@ -6,9 +6,7 @@
 
 @testable import PillarboxPlayer
 
-import Combine
 import Foundation
-import PillarboxStreams
 
 extension PlayerItem {
     private static func mock(

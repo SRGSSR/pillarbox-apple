@@ -8,10 +8,9 @@
 
 #if DEBUG
 
-import AVFoundation
 import Combine
+import Foundation
 import PillarboxCore
-import UIKit
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
@@ -157,25 +156,28 @@ private extension Download {
         if !properties.shouldCreateTask, let metadata = properties.source.metadata {
             return session.sessionTaskPublisher(id: id)
                 .setFailureType(to: Error.self)
-                .map { session.downloadSessionTaskPropertiesPublisher(for: $0) }
+                .map { task in
+                    Publishers.CombineLatest(
+                        session.downloadSourceTaskPublisher(for: task, properties: properties),
+                        metadata.assetMetadataPublisher()
+                    )
+                }
                 .switchToLatest()
-                .map { .init(kind: .task($0), metadata: metadata) }
+                .map { .init(kind: $0, metadata: $1) }
                 .prepend(.init(kind: .estimate(properties.progress), metadata: metadata))
                 .eraseToAnyPublisher()
         }
         else {
-            return assetLoaderType.metadataPublisher(for: input)
-                .first()
-                .map { metadata in
-                    let playerMetadata = assetLoaderType.playerMetadata(from: input, metadata: metadata)
+            return S.downloadMetadataPublisher(for: input)
+                .map { downloadMetadata in
                     let task = session.createTask(
                         id: id,
-                        asset: assetLoaderType.downloadableAsset(from: input, metadata: metadata),
-                        title: playerMetadata.title
+                        asset: downloadMetadata.asset,
+                        metadata: downloadMetadata.assetMetadata.playerMetadata,
                     )
                     return Publishers.CombineLatest(
                         session.downloadSessionTaskPropertiesPublisher(for: task),
-                        Just(AssetMetadata(playerMetadata: playerMetadata, customData: S.customData(from: metadata)))
+                        downloadMetadata.assetMetadata.assetMetadataPublisher()
                     )
                 }
                 .switchToLatest()

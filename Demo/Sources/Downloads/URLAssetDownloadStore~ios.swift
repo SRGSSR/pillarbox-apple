@@ -24,35 +24,22 @@ final class URLAssetDownloadStore {
     private struct FileEntry: Codable {
         let id: String
         let url: URL
-        let title: String
-        let subtitle: String?
-        let isMonoscopic: Bool
+        let metadata: PlayerMetadata
         let bookmarkData: Data?
         let progress: Double
         let errorDescription: String?
 
-        private var metadata: AssetMetadata<Void> {
-            .init(
-                playerMetadata: .init(identifier: id, title: title, viewport: isMonoscopic ? .monoscopic : .standard),
-                customData: ()
-            )
-        }
-
         private init(
             id: String,
             url: URL,
-            title: String,
-            subtitle: String?,
-            isMonoscopic: Bool,
+            metadata: PlayerMetadata,
             bookmarkData: Data?,
             progress: Double,
             errorDescription: String?
         ) {
             self.id = id
             self.url = url
-            self.title = title
-            self.subtitle = subtitle
-            self.isMonoscopic = isMonoscopic
+            self.metadata = metadata
             self.bookmarkData = bookmarkData
             self.progress = progress
             self.errorDescription = errorDescription
@@ -62,9 +49,7 @@ final class URLAssetDownloadStore {
             self.init(
                 id: id,
                 url: input.url,
-                title: input.title,
-                subtitle: input.subtitle,
-                isMonoscopic: input.isMonoscopic,
+                metadata: input.metadata,
                 bookmarkData: nil,
                 progress: 0,
                 errorDescription: nil
@@ -75,9 +60,7 @@ final class URLAssetDownloadStore {
             self.init(
                 id: id,
                 url: record.input.url,
-                title: record.input.title,
-                subtitle: record.input.subtitle,
-                isMonoscopic: record.input.isMonoscopic,
+                metadata: record.metadata?.playerMetadata ?? record.input.metadata,
                 bookmarkData: record.bookmarkData,
                 progress: record.progress,
                 errorDescription: record.error?.localizedDescription
@@ -86,8 +69,8 @@ final class URLAssetDownloadStore {
 
         func toDownloadRecord() -> DownloadRecord<URLAssetLoader.Input, Void> {
             .init(
-                input: URLAssetLoader.Input(url: url, title: title, subtitle: subtitle, isMonoscopic: isMonoscopic),
-                metadata: metadata,
+                input: URLAssetLoader.Input(url: url, metadata: metadata),
+                metadata: .init(playerMetadata: metadata, customData: ()),
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: DownloadError(errorDescription: errorDescription)

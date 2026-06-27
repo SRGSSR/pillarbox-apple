@@ -44,14 +44,19 @@ public struct Chapter: Codable, Equatable {
             items: [
                 .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
                 .init(identifier: .commonIdentifierTitle, value: title),
-                .init(identifier: .commonIdentifierArtwork, value: artworkImage.pngData())
+                .init(identifier: .commonIdentifierArtwork, value: artworkData)
             ].compactMap(\.self),
             timeRange: timeRange
         )
     }
 
-    private var artworkImage: UIImage {
-        imageSource.image ?? Self.placeholderImage
+    private var artworkData: Data? {
+        if let data = imageSource.fetchData() {
+            return data
+        }
+        else {
+            return Self.placeholderImage.pngData()
+        }
     }
 
     /// Creates a chapter.
@@ -78,13 +83,19 @@ public struct Chapter: Codable, Equatable {
 }
 
 extension Chapter {
-    func chapterPublisher() -> AnyPublisher<Chapter, Never> {
-        imageSource.imageSourcePublisher()
-            .map { self.with(imageSource: $0) }
+    func lazyChapterPublisher() -> AnyPublisher<Chapter, Never> {
+        imageSource.lazyImageSourcePublisher()
+            .map(withImageSource)
             .eraseToAnyPublisher()
     }
 
-    private func with(imageSource: ImageSource) -> Self {
+    func chapterPublisher() -> AnyPublisher<Chapter, Never> {
+        imageSource.imageSourcePublisher()
+            .map(withImageSource)
+            .eraseToAnyPublisher()
+    }
+
+    private func withImageSource(_ imageSource: ImageSource) -> Self {
         .init(identifier: identifier, title: title, imageSource: imageSource, timeRange: timeRange)
     }
 }

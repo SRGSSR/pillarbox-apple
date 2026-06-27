@@ -6,7 +6,7 @@
 
 @testable import PillarboxPlayer
 
-import AVFoundation
+import Foundation
 import Nimble
 
 final class MetricsStateTests: TestCase {

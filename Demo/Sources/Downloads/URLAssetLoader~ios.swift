@@ -15,15 +15,11 @@ import PillarboxPlayer
 struct URLAssetLoader: AssetLoader {
     struct Input {
         let url: URL
-        let title: String
-        let subtitle: String?
-        let isMonoscopic: Bool
+        let metadata: PlayerMetadata
 
-        init(url: URL, title: String, subtitle: String? = nil, isMonoscopic: Bool = false) {
+        init(url: URL, metadata: PlayerMetadata = .empty) {
             self.url = url
-            self.title = title
-            self.subtitle = subtitle
-            self.isMonoscopic = isMonoscopic
+            self.metadata = metadata
         }
     }
 
@@ -40,11 +36,7 @@ struct URLAssetLoader: AssetLoader {
     }
 
     static func playerMetadata(from input: Input, metadata: Void?) -> PlayerMetadata {
-        .init(
-            title: input.title,
-            subtitle: input.subtitle,
-            viewport: input.isMonoscopic ? .monoscopic : .standard
-        )
+        input.metadata
     }
 }
 

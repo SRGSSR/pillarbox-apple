@@ -10,11 +10,11 @@ import Foundation
 import Nimble
 import PillarboxCircumspect
 
-final class ImageSourceTests: TestCase {
+final class LazyImageSourceTests: TestCase {
     func testNone() {
         expectAtLeastEqualPublished(
             values: [.none],
-            from: ImageSource.none.imageSourcePublisher()
+            from: ImageSource.none.lazyImageSourcePublisher()
         )
     }
 
@@ -22,17 +22,28 @@ final class ImageSourceTests: TestCase {
         let imageData = Data()
         expectAtLeastEqualPublished(
             values: [.image(imageData)],
-            from: ImageSource.image(imageData).imageSourcePublisher()
+            from: ImageSource.image(imageData).lazyImageSourcePublisher()
         )
     }
 
-    func testImageForValidUrl() throws {
+    func testNonLoadedImageForValidUrl() throws {
         let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
         let source = ImageSource.url(standardResolution: url)
         expectAtLeastEqualPublished(
-            values: [.image(try Data(contentsOf: url))],
-            from: source.imageSourcePublisher()
+            values: [.url(standardResolution: url)],
+            from: source.lazyImageSourcePublisher()
         )
+    }
+
+    func testLoadedImageForValidUrl() throws {
+        let url = try unwrap(Bundle.module.url(forResource: "pixel", withExtension: "jpg"))
+        let source = ImageSource.url(standardResolution: url)
+        expectAtLeastEqualPublished(
+            values: [.url(standardResolution: url), .image(try Data(contentsOf: url))],
+            from: source.lazyImageSourcePublisher()
+        ) {
+            source.fetchData()
+        }
     }
 
     func testFailingUrl() throws {
@@ -40,8 +51,10 @@ final class ImageSourceTests: TestCase {
         let source = ImageSource.url(standardResolution: url)
         expectEqualPublished(
             values: [.url(standardResolution: url)],
-            from: source.imageSourcePublisher(),
+            from: source.lazyImageSourcePublisher(),
             during: .milliseconds(100)
-        )
+        ) {
+            source.fetchData()
+        }
     }
 }

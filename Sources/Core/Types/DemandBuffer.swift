@@ -6,7 +6,6 @@
 
 import Combine
 import DequeModule
-import Foundation
 import os
 
 private final class UnprotectedDemandBuffer<T> {

@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
+
 // swiftlint:disable missing_docs
 
 public struct AssetMetadata<CustomData> {
@@ -17,6 +19,15 @@ public struct AssetMetadata<CustomData> {
 
     func withoutCustomData() -> AssetMetadata<Void> {
         .init(playerMetadata: playerMetadata, customData: ())
+    }
+
+    func assetMetadataPublisher() -> AnyPublisher<AssetMetadata<CustomData>, Never> {
+        Publishers.CombineLatest(
+            playerMetadata.playerMetadataPublisher(),
+            Just(customData)
+        )
+        .map { AssetMetadata(playerMetadata: $0, customData: $1) }
+        .eraseToAnyPublisher()
     }
 }
 

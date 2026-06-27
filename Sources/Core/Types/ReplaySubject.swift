@@ -5,7 +5,6 @@
 //
 
 import Combine
-import Foundation
 
 /// A subject that stores a number of recent values into a buffer.
 ///

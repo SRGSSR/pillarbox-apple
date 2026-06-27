@@ -88,28 +88,26 @@ private struct ContentCell: View {
 #if os(iOS)
             .swipeActions { CopyActions(text: topic.urn) }
 #endif
-        case let .media(media):
-            let title = MediaDescription.title(for: media)
+        case let .media(srgMedia):
+            let title = MediaDescription.title(for: srgMedia)
+            let media = Media(title: title, type: .urn(srgMedia.urn, serverSetting: serverSetting))
             Cell(
                 size: .init(width: 570, height: 350),
-                title: constant(iOS: title, tvOS: media.show?.title),
-                subtitle: constant(iOS: MediaDescription.subtitle(for: media), tvOS: media.title),
-                imageUrl: SRGDataProvider.current!.url(for: media.image, size: .large),
-                type: MediaDescription.systemImage(for: media),
-                duration: MediaDescription.duration(for: media),
-                date: MediaDescription.date(for: media),
-                style: MediaDescription.style(for: media)
+                title: constant(iOS: title, tvOS: srgMedia.show?.title),
+                subtitle: constant(iOS: MediaDescription.subtitle(for: srgMedia), tvOS: srgMedia.title),
+                imageUrl: SRGDataProvider.current!.url(for: srgMedia.image, size: .large),
+                type: MediaDescription.systemImage(for: srgMedia),
+                duration: MediaDescription.duration(for: srgMedia),
+                date: MediaDescription.date(for: srgMedia),
+                style: MediaDescription.style(for: srgMedia)
             ) {
-                let media = Media(title: title, type: .urn(media.urn, serverSetting: serverSetting))
                 router.presented = .player(media: media)
             }
 #if os(iOS)
             .swipeActions {
-                CopyActions(text: media.urn)
+                CopyActions(text: srgMedia.urn)
 #if DEBUG
-                if #available(iOS 17, *) {
-                    URNDownloadAction(urn: media.urn, serverSetting: serverSetting)
-                }
+                DownloadAction(media: media)
 #endif
             }
 #endif

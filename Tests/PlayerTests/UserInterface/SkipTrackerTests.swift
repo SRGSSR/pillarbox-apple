@@ -7,7 +7,6 @@
 @testable import PillarboxPlayer
 
 import Nimble
-import ObjectiveC
 import PillarboxCircumspect
 import PillarboxStreams
 import XCTest

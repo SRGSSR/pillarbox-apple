@@ -43,11 +43,25 @@ private extension URNAssetDownloadStore {
         private let title: String?
         private let subtitle: String?
         private let summary: String?
+        private let imageUrl: URL?
+        private let imageData: Data?
         private let viewport: Viewport
         private let episode: Int?
         private let season: Int?
         private let chapters: [Chapter]
         private let timeRanges: [TimeRange]
+
+        private var imageSource: ImageSource {
+            if let imageData {
+                return .image(imageData)
+            }
+            else if let imageUrl {
+                return .url(standardResolution: imageUrl)
+            }
+            else {
+                return .none
+            }
+        }
 
         private var episodeInformation: EpisodeInformation? {
             guard let episode else { return nil }
@@ -64,6 +78,8 @@ private extension URNAssetDownloadStore {
             self.title = playerMetadata.title
             self.subtitle = playerMetadata.subtitle
             self.summary = playerMetadata.description
+            self.imageData = playerMetadata.imageSource.data
+            self.imageUrl = playerMetadata.imageSource.url
             self.viewport = playerMetadata.viewport
             self.episode = playerMetadata.episodeInformation?.episode
             self.season = playerMetadata.episodeInformation?.season
@@ -77,6 +93,7 @@ private extension URNAssetDownloadStore {
                 title: title,
                 subtitle: subtitle,
                 description: summary,
+                imageSource: imageSource,
                 viewport: viewport,
                 episodeInformation: episodeInformation,
                 chapters: chapters,
