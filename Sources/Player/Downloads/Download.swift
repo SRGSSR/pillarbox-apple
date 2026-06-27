@@ -158,7 +158,7 @@ private extension Download {
                 .setFailureType(to: Error.self)
                 .map { task in
                     Publishers.CombineLatest(
-                        session.downloadSourceTaskPublisher(for: task, using: properties),
+                        session.downloadSourceTaskPublisher(for: task, properties: properties),
                         metadata.assetMetadataPublisher()
                     )
                 }
