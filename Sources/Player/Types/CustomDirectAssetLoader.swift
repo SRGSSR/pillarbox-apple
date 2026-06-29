@@ -5,7 +5,6 @@
 //
 
 import Combine
-import Foundation
 
 enum CustomDirectAssetLoader<CustomData>: AssetLoader {
     struct Input {

@@ -50,7 +50,7 @@ public final class PlayerItem: Hashable {
                 .map { metadata, interval in
                     Publishers.CombineLatest3(
                         Just(assetLoaderType.asset(from: input, metadata: metadata)),
-                        assetLoaderType.playerMetadata(from: input, metadata: metadata).playerMetadataPublisher(),
+                        assetLoaderType.playerMetadata(from: input, metadata: metadata).lazyPlayerMetadataPublisher(),
                         Just(interval)
                     )
                 }

@@ -5,7 +5,6 @@
 //
 
 import Combine
-import Foundation
 
 /// A publisher that delivers output from an asynchronous work unit.
 public struct AsyncPublisher<Output, Failure>: Publisher where Failure: Error {

@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-import SwiftUI
 import UIKit
 
 /// A type describing the content of info view tabs.

@@ -46,29 +46,34 @@ struct SearchView: View {
 
     @ViewBuilder
     private func loadedView(_ medias: [SRGMedia]) -> some View {
-        CustomList(data: medias) { media in
-            if let media {
+        // swiftlint:disable:next closure_body_length
+        CustomList(data: medias) { srgMedia in
+            if let srgMedia {
+                let media = Media(title: srgMedia.title, type: .urn(srgMedia.urn))
                 Cell(
                     size: .init(width: 520, height: 300),
-                    title: constant(iOS: MediaDescription.title(for: media), tvOS: media.show?.title),
-                    subtitle: constant(iOS: MediaDescription.subtitle(for: media), tvOS: media.title),
-                    imageUrl: SRGDataProvider.current!.url(for: media.image, size: .large),
-                    type: MediaDescription.systemImage(for: media),
-                    duration: MediaDescription.duration(for: media),
-                    date: MediaDescription.date(for: media),
-                    style: MediaDescription.style(for: media)
+                    title: constant(iOS: MediaDescription.title(for: srgMedia), tvOS: srgMedia.show?.title),
+                    subtitle: constant(iOS: MediaDescription.subtitle(for: srgMedia), tvOS: srgMedia.title),
+                    imageUrl: SRGDataProvider.current!.url(for: srgMedia.image, size: .large),
+                    type: MediaDescription.systemImage(for: srgMedia),
+                    duration: MediaDescription.duration(for: srgMedia),
+                    date: MediaDescription.date(for: srgMedia),
+                    style: MediaDescription.style(for: srgMedia)
                 ) {
-                    let media = Media(title: media.title, type: .urn(media.urn))
                     router.presented = .player(media: media)
                 }
                 .onAppear {
-                    if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
+                    if let index = medias.firstIndex(of: srgMedia), medias.count - index < kPageSize {
                         model.loadMore()
                     }
                 }
 #if os(iOS)
-                .swipeActions { swipeActions(for: media) }
-
+                .swipeActions {
+                    CopyActions(text: srgMedia.urn)
+#if DEBUG
+                    DownloadAction(media: media)
+#endif
+                }
                 .refreshable { await model.refresh() }
 #else
                 .ignoresSafeArea(.all, edges: .horizontal)
@@ -87,18 +92,6 @@ struct SearchView: View {
             }
         }
     }
-
-#if os(iOS)
-    @ViewBuilder
-    private func swipeActions(for media: SRGMedia) -> some View {
-        CopyActions(text: media.urn)
-#if DEBUG
-        if #available(iOS 17, *) {
-            URNDownloadAction(urn: media.urn, serverSetting: serverSetting)
-        }
-#endif
-    }
-#endif
 
     private func unavailableModelView(title: String, icon: String) -> some View {
         UnavailableModelView(model: model) {

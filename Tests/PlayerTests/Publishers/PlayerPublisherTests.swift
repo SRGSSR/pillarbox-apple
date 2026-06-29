@@ -6,8 +6,8 @@
 
 @testable import PillarboxPlayer
 
-import AVFoundation
 import Combine
+import CoreMedia
 import PillarboxCircumspect
 import PillarboxCore
 import PillarboxStreams

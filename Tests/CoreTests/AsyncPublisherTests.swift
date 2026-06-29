@@ -6,7 +6,6 @@
 
 @testable import PillarboxCore
 
-import Combine
 import PillarboxCircumspect
 import XCTest
 

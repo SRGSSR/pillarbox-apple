@@ -5,8 +5,8 @@
 //
 
 import Combine
+import Foundation
 import PillarboxCore
-import UIKit
 
 private enum TriggerId {
     case load
@@ -46,26 +46,44 @@ public struct ImageSource: Codable, Equatable {
     }
 
     /// Image.
-    public static func image(_ image: UIImage) -> Self {
-        Self(kind: kind(from: image))
+    public static func image(_ data: Data) -> Self {
+        Self(kind: .image(data))
     }
 
     // swiftlint:disable:next missing_docs
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.kind == rhs.kind
     }
+}
 
-    private static func kind(from image: UIImage) -> Kind {
-        guard let data = image.pngData() else { return .none }
-        return .image(data)
+public extension ImageSource {
+    /// The image URL, if any.
+    var url: URL? {
+        switch kind {
+        case let .url(standardResolution: standardResolutionUrl, lowResolution: _):
+            return standardResolutionUrl
+        default:
+            return nil
+        }
+    }
+
+    /// The image data, if any.
+    var data: Data? {
+        switch kind {
+        case let .image(data):
+            return data
+        default:
+            return nil
+        }
     }
 }
 
 extension ImageSource {
-    var image: UIImage? {
+    @discardableResult
+    func fetchData() -> Data? {
         switch kind {
         case let .image(data):
-            return UIImage(data: data)
+            return data
         case .url:
             trigger.activate(for: TriggerId.load)
             return nil
@@ -73,37 +91,37 @@ extension ImageSource {
             return nil
         }
     }
+}
 
-    func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
-        switch kind {
-        case let .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl):
-            return imageSourcePublisher(forStandardResolutionUrl: standardResolutionUrl, lowResolutionUrl: lowResolutionUrl)
-        default:
+extension ImageSource {
+    func lazyImageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
+        guard case let .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl) = kind else {
             return Just(self).eraseToAnyPublisher()
         }
-    }
-
-    private func imageSourcePublisher(
-        forStandardResolutionUrl standardResolutionUrl: URL,
-        lowResolutionUrl: URL
-    ) -> AnyPublisher<ImageSource, Never> {
         var request = URLRequest(url: standardResolutionUrl)
         request.allowsConstrainedNetworkAccess = false
-        return kSession.dataTaskPublisher(for: request)
-            .wait(untilOutputFrom: trigger.signal(activatedBy: TriggerId.load))
-            .tryCatch { error in
-                guard error.networkUnavailableReason == .constrained else {
-                    throw error
+        return Publishers.Publish(onOutputFrom: trigger.signal(activatedBy: TriggerId.load)) {
+            kSession.dataTaskPublisher(for: request)
+                .tryCatch { error in
+                    guard error.networkUnavailableReason == .constrained else {
+                        throw error
+                    }
+                    return kSession.dataTaskPublisher(for: lowResolutionUrl)
                 }
-                return kSession.dataTaskPublisher(for: lowResolutionUrl)
-            }
-            .map { data, _ in
-                guard let image = UIImage(data: data) else { return .none }
-                return .image(image)
-            }
-            .replaceError(with: .none)
-            .prepend(self)
-            .removeDuplicates()
+                .map { .image($0.data) }
+                .catch { _ in Empty() }
+        }
+        .prepend(self)
+        .eraseToAnyPublisher()
+    }
+
+    func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
+        guard case let .url(standardResolution: standardResolutionUrl, lowResolution: _) = kind else {
+            return Just(self).eraseToAnyPublisher()
+        }
+        return kSession.dataTaskPublisher(for: standardResolutionUrl)
+            .map { .image($0.data) }
+            .replaceError(with: self)
             .eraseToAnyPublisher()
     }
 }

@@ -6,15 +6,15 @@
 
 #if DEBUG
 
-import AVFoundation
 import Combine
+import Foundation
 
 @available(tvOS, unavailable)
 protocol DownloadSession: AnyObject {
     var delegate: DownloadSessionDelegate? { get set }
 
-    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask, Never>
-    func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask
+    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask?, Never>
+    func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask
 }
 
 @available(tvOS, unavailable)
@@ -28,6 +28,16 @@ extension DownloadSession {
         )
         .map(DownloadSessionTaskProperties.init)
         .eraseToAnyPublisher()
+    }
+
+    func downloadSourceTaskPublisher<CustomData>(
+        for task: URLSessionTask?,
+        properties: DownloadProperties<CustomData>
+    ) -> AnyPublisher<DownloadSourceKind, Never> {
+        guard let task else { return Just(.estimate(properties.progress)).eraseToAnyPublisher() }
+        return downloadSessionTaskPropertiesPublisher(for: task)
+            .map { .task($0) }
+            .eraseToAnyPublisher()
     }
 }
 

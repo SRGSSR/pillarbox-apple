@@ -24,14 +24,14 @@ final class URLDownloadSession: NSObject {
 
 @available(tvOS, unavailable)
 extension URLDownloadSession: DownloadSession {
-    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask, Never> {
+    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask?, Never> {
         taskPublisher(withDescription: id)
-            .compactMap(\.self)
             .eraseToAnyPublisher()
     }
 
-    func createTask(id: String, asset: Asset, title: String?) -> URLSessionTask {
-        let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: title ?? id)
+    func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
+        let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: metadata.title ?? id)
+        configuration.artworkData = metadata.imageSource.data
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
         task.taskDescription = id
         task.resume()

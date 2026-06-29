@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// Source keys.
 public enum SourceKey: String {
     /// The source key for apps in production.

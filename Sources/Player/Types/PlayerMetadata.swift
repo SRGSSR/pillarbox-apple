@@ -75,8 +75,8 @@ public struct PlayerMetadata: Codable, Equatable {
         var nowPlayingInfo = NowPlaying.Info()
         nowPlayingInfo[MPMediaItemPropertyTitle] = title
         nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
-        if let image = imageSource.image {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+        if let artworkData = imageSource.fetchData(), let artworkImage = UIImage(data: artworkData) {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in artworkImage }
         }
         return nowPlayingInfo
     }
@@ -87,7 +87,7 @@ public struct PlayerMetadata: Codable, Equatable {
 
     private var artworkData: Data? {
 #if os(tvOS)
-        imageSource.image?.pngData()
+        imageSource.fetchData()
 #else
         nil
 #endif
@@ -131,20 +131,51 @@ public struct PlayerMetadata: Codable, Equatable {
 }
 
 extension PlayerMetadata {
+    func lazyPlayerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
+        Publishers.CombineLatest(
+            imageSource.lazyImageSourcePublisher(),
+            lazyChaptersPublisher()
+        )
+        .map { withImageSource($0).withChapters($1) }
+        .eraseToAnyPublisher()
+    }
+
+    private func lazyChaptersPublisher() -> AnyPublisher<[Chapter], Never> {
+        Publishers.AccumulateLatestMany(chapters.map { $0.lazyChapterPublisher() })
+    }
+}
+
+extension PlayerMetadata {
     func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
         Publishers.CombineLatest(
             imageSource.imageSourcePublisher(),
             chaptersPublisher()
         )
-        .map { self.with(imageSource: $0, chapters: $1) }
+        .map { withImageSource($0).withChapters($1) }
         .eraseToAnyPublisher()
     }
 
     private func chaptersPublisher() -> AnyPublisher<[Chapter], Never> {
         Publishers.AccumulateLatestMany(chapters.map { $0.chapterPublisher() })
     }
+}
 
-    private func with(imageSource: ImageSource, chapters: [Chapter]) -> Self {
+extension PlayerMetadata {
+    func withImageSource(_ imageSource: ImageSource) -> Self {
+        .init(
+            identifier: identifier,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            imageSource: imageSource,
+            viewport: viewport,
+            episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges
+        )
+    }
+
+    func withChapters(_ chapters: [Chapter]) -> Self {
         .init(
             identifier: identifier,
             title: title,

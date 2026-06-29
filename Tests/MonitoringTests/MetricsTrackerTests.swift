@@ -6,11 +6,11 @@
 
 @testable import PillarboxMonitoring
 
+import Foundation
 import Nimble
 import PillarboxCircumspect
 import PillarboxPlayer
 import PillarboxStreams
-import XCTest
 
 final class MetricsTrackerTests: MonitoringTestCase {
     func testEntirePlayback() {

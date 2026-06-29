@@ -50,13 +50,28 @@ final class DemoDownloader: ObservableObject {
         }
     }
 
-    func addUrlDownload(url: URL, title: String, subtitle: String? = nil, isMonoscopic: Bool) {
-        urlDownloader.addDownload(for: .init(url: url, title: title, subtitle: subtitle, isMonoscopic: isMonoscopic))
+    func canDownload(media: Media) -> Bool {
+        switch media.type {
+        case .url, .monoscopicUrl:
+            true
+        case .urn:
+            _urnDownloader != nil
+        default:
+            false
+        }
     }
 
-    @available(iOS 17, *)
-    func addUrnDownload(urn: String, serverSetting: ServerSetting) {
-        urnDownloader.addDownload(urn: urn, server: serverSetting.server)
+    func addDownload(media: Media) {
+        switch media.type {
+        case let .url(url), let .monoscopicUrl(url):
+            urlDownloader.addDownload(for: .init(url: url, metadata: media.metadata()))
+        case let .urn(urn, serverSetting):
+            if #available(iOS 17, *) {
+                urnDownloader.addDownload(urn: urn, server: serverSetting.server)
+            }
+        default:
+            break
+        }
     }
 
     func playerItem(for download: Download) -> PlayerItem? {

@@ -5,7 +5,6 @@
 //
 
 import PillarboxPlayer
-import UIKit
 
 private enum SectionDSLChecks {
     @MenuContentBuilder
