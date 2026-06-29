@@ -33,7 +33,11 @@ final class DemoDownloader: ObservableObject {
         _urnDownloader as! URNDownloader
     }
 
-    @Published private(set) var downloads: [Download] = []
+    @Published private var _downloads: [Download] = []
+
+    var downloads: [Download] {
+        _downloads.sorted { $0.creationDate > $1.creationDate }
+    }
 
     init() {
         if #available(iOS 17, *) {
@@ -42,11 +46,11 @@ final class DemoDownloader: ObservableObject {
                 urnDownloader.$downloads
             )
             .map { $0 + $1 }
-            .assign(to: &$downloads)
+            .assign(to: &$_downloads)
         }
         else {
             urlDownloader.$downloads
-                .assign(to: &$downloads)
+                .assign(to: &$_downloads)
         }
     }
 

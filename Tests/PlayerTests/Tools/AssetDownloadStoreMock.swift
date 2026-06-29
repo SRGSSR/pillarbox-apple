@@ -5,7 +5,7 @@
 //
 
 @_spi(DownloaderPrivate)
-import PillarboxPlayer
+@testable import PillarboxPlayer
 
 import Foundation
 import OrderedCollections
@@ -16,7 +16,7 @@ final class AssetDownloadStoreMock {
 
     init(preloadedInputs: [AssetLoaderMock.Input] = []) {
         records = preloadedInputs.reduce(into: [:]) { records, input in
-            records.updateValue(Self.record(from: input), forKey: Self.id(from: input))
+            records.updateValue(.init(input: input, creationDate: .now), forKey: Self.id(from: input))
         }
     }
 }
@@ -31,24 +31,14 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
 
     static func customData(from metadata: PlayerMetadata) {}
 
-    static func record(from input: AssetLoaderMock.Input) -> DownloadRecord<AssetLoaderMock.Input, Void> {
-        .init(
-            input: input,
-            metadata: .init(playerMetadata: input.metadata, customData: ()),
-            bookmarkData: nil,
-            progress: 0,
-            error: nil
-        )
-    }
-
     func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, Void>] {
         assert(Thread.isMainThread)
         return Array(records.values)
     }
 
-    func addDownloadRecord(using input: AssetLoaderMock.Input, forId id: String) {
+    func addDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, Void>, forId id: String) {
         assert(Thread.isMainThread)
-        records[id] = Self.record(from: input)
+        records[id] = record
     }
 
     func removeDownloadRecord(forId id: String) {
