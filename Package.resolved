@@ -1,13 +1,13 @@
 {
-  "originHash" : "b00e9f6f2dcc79d30330aef09d0e11c39c8ef2821f8b8173fd048bba7e990a7a",
+  "originHash" : "b49ca76806b797b94e0c794deb46c10af344fb8e17cb6ab90da36ee3d8f861a2",
   "pins" : [
     {
       "identity" : "comscore-swift-package-manager",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
       "state" : {
-        "revision" : "f123be6aae5864c4eb7def5e9f1be9710fe1d782",
-        "version" : "6.16.0"
+        "revision" : "966992952a84510ac3a086d745f1681302b5cb26",
+        "version" : "6.17.0"
       }
     },
     {

@@ -39,7 +39,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/comScore/Comscore-Swift-Package-Manager.git", .upToNextMinor(from: "6.16.0")),
+        .package(url: "https://github.com/comScore/Comscore-Swift-Package-Manager.git", .upToNextMajor(from: "6.17.0")),
         .package(url: "https://github.com/CommandersAct/iOSV5-spm.git", .upToNextMajor(from: "5.5.0")),
         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/krzysztofzablocki/Difference.git", exact: "1.0.1"),
