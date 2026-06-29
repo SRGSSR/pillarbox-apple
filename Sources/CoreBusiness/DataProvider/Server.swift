@@ -17,6 +17,15 @@ public enum Server: Codable {
     /// Test.
     case test
 
+    /// Play+ production.
+    case playPlusProduction
+
+    /// Play+ integration.
+    case playPlusIntegration
+
+    /// Play+ development.
+    case playPlusDevelopment
+
 #if os(iOS)
     private static let vector = "appplay"
 #else
@@ -31,16 +40,39 @@ public enum Server: Codable {
             return "stage"
         case .test:
             return "test"
+        case .playPlusProduction:
+            return "playPlusProduction"
+        case .playPlusIntegration:
+            return "playPlusIntegration"
+        case .playPlusDevelopment:
+            return "playPlusDevelopment"
         }
     }
 
-    var baseUrl: URL {
+    private var baseUrl: URL {
         switch self {
         case .production:
             URL(string: "https://il.srgssr.ch")!
         case .stage:
             URL(string: "https://il-stage.srgssr.ch")!
         case .test:
+            URL(string: "https://il-test.srgssr.ch")!
+        case .playPlusProduction:
+            URL(string: "https://api.playplus.ch")!
+        case .playPlusIntegration:
+            URL(string: "https://api.int.playplus.ch")!
+        case .playPlusDevelopment:
+            URL(string: "https://api.dev.playplus.ch")!
+        }
+    }
+
+    private var resizedImageBaseUrl: URL {
+        switch self {
+        case .production, .playPlusProduction:
+            URL(string: "https://il.srgssr.ch")!
+        case .stage, .playPlusIntegration:
+            URL(string: "https://il-stage.srgssr.ch")!
+        case .test, .playPlusDevelopment:
             URL(string: "https://il-test.srgssr.ch")!
         }
     }
@@ -59,7 +91,7 @@ public enum Server: Codable {
 
     func resizedImageUrl(_ url: URL, width: ImageWidth) -> URL {
         guard var components = URLComponents(
-            url: baseUrl.appending(path: "images/"),
+            url: resizedImageBaseUrl.appending(path: "images/"),
             resolvingAgainstBaseURL: false
         ) else {
             return url
