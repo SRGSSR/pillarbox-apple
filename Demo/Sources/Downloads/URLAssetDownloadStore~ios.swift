@@ -28,6 +28,7 @@ final class URLAssetDownloadStore {
         let bookmarkData: Data?
         let progress: Double
         let errorDescription: String?
+        let creationDate: Date
 
         private init(
             id: String,
@@ -35,7 +36,8 @@ final class URLAssetDownloadStore {
             metadata: PlayerMetadata,
             bookmarkData: Data?,
             progress: Double,
-            errorDescription: String?
+            errorDescription: String?,
+            creationDate: Date
         ) {
             self.id = id
             self.url = url
@@ -43,17 +45,7 @@ final class URLAssetDownloadStore {
             self.bookmarkData = bookmarkData
             self.progress = progress
             self.errorDescription = errorDescription
-        }
-
-        init(id: String, input: URLAssetLoader.Input) {
-            self.init(
-                id: id,
-                url: input.url,
-                metadata: input.metadata,
-                bookmarkData: nil,
-                progress: 0,
-                errorDescription: nil
-            )
+            self.creationDate = creationDate
         }
 
         init(id: String, record: DownloadRecord<URLAssetLoader.Input, Void>) {
@@ -63,7 +55,8 @@ final class URLAssetDownloadStore {
                 metadata: record.metadata?.playerMetadata ?? record.input.metadata,
                 bookmarkData: record.bookmarkData,
                 progress: record.progress,
-                errorDescription: record.error?.localizedDescription
+                errorDescription: record.error?.localizedDescription,
+                creationDate: record.creationDate
             )
         }
 
@@ -73,7 +66,8 @@ final class URLAssetDownloadStore {
                 metadata: .init(playerMetadata: metadata, customData: ()),
                 bookmarkData: bookmarkData,
                 progress: progress,
-                error: DownloadError(errorDescription: errorDescription)
+                error: DownloadError(errorDescription: errorDescription),
+                creationDate: creationDate
             )
         }
     }
@@ -106,8 +100,8 @@ extension URLAssetDownloadStore: AssetDownloadStore {
         fileEntries.map { $0.toDownloadRecord() }
     }
 
-    func addDownloadRecord(using input: URLAssetLoader.Input, forId id: String) {
-        fileEntries.append(FileEntry(id: id, input: input))
+    func addDownloadRecord(_ record: DownloadRecord<URLAssetLoader.Input, Void>, forId id: String) {
+        fileEntries.append(FileEntry(id: id, record: record))
         save()
     }
 

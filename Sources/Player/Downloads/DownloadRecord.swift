@@ -18,13 +18,19 @@ public struct DownloadRecord<Input, CustomData> {
     public let bookmarkData: Data?
     public let progress: Double
     public let error: Error?
+    public let creationDate: Date
 
-    public init(input: Input, metadata: AssetMetadata<CustomData>?, bookmarkData: Data?, progress: Double, error: Error?) {
+    init(input: Input, creationDate: Date) {
+        self.init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
+    }
+
+    public init(input: Input, metadata: AssetMetadata<CustomData>?, bookmarkData: Data?, progress: Double, error: Error?, creationDate: Date) {
         self.input = input
         self.metadata = metadata
         self.bookmarkData = bookmarkData
         self.progress = progress
         self.error = error
+        self.creationDate = creationDate
     }
 }
 

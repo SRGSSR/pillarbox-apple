@@ -29,6 +29,8 @@ public final class Download: ObservableObject {
     private let addRecord: () -> Void
     private let removeRecord: () -> Void
 
+    public let creationDate: Date
+
     public var progress: Double {
         properties.progress
     }
@@ -54,12 +56,14 @@ public final class Download: ObservableObject {
         id: String,
         assetLoaderType: L.Type,
         input: L.Input,
+        creationDate: Date,
         session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         self.id = id
+        self.creationDate = creationDate
         self.addRecord = {
-            store.addDownloadRecord(using: input, forId: id)
+            store.addDownloadRecord(.init(input: input, creationDate: .now), forId: id)
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
@@ -74,8 +78,9 @@ public final class Download: ObservableObject {
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         let id = type(of: store).id(from: input)
-        store.addDownloadRecord(using: input, forId: id)
-        self.init(id: id, assetLoaderType: assetLoaderType, input: input, session: session, store: store)
+        let creationDate = Date.now
+        store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
+        self.init(id: id, assetLoaderType: assetLoaderType, input: input, creationDate: creationDate, session: session, store: store)
     }
 
     convenience init<L, S>(
@@ -88,6 +93,7 @@ public final class Download: ObservableObject {
             id: type(of: store).id(from: record.input),
             assetLoaderType: assetLoaderType,
             input: record.input,
+            creationDate: record.creationDate,
             session: session,
             store: store
         )
@@ -199,13 +205,14 @@ extension Download {
         downloadPropertiesPublisher(assetLoaderType: assetLoaderType, id: id, input: input, session: session, store: store)
             .receiveOnMainThread()
             .handleEvents(
-                receiveOutput: { [id] properties in
+                receiveOutput: { [id, creationDate] properties in
                     let record = DownloadRecord(
                         input: input,
                         metadata: properties.source.metadata,
                         bookmarkData: properties.bookmarkData(),
                         progress: properties.progress,
-                        error: properties.error
+                        error: properties.error,
+                        creationDate: creationDate
                     )
                     store.updateDownloadRecord(record, forId: id)
                 },

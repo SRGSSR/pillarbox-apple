@@ -26,7 +26,7 @@ public protocol AssetDownloadStore: AnyObject {
 
     func downloadRecords() -> [DownloadRecord<Loader.Input, CustomData>]
 
-    func addDownloadRecord(using input: Loader.Input, forId id: String)
+    func addDownloadRecord(_ record: DownloadRecord<Loader.Input, CustomData>, forId id: String)
     func removeDownloadRecord(forId id: String)
 
     func downloadRecord(forId id: String) -> DownloadRecord<Loader.Input, CustomData>?

@@ -127,21 +127,16 @@ private extension URNAssetDownloadStore {
         private var bookmarkData: Data?
         private var progress: Double
         private var errorDescription: String?
+        private var creationDate: Date
 
-        init(
-            id: String,
-            input: URNAssetLoader.Input,
-            metadata: EntryAssetMetadata? = nil,
-            bookmarkData: Data? = nil,
-            progress: Double,
-            errorDescription: String? = nil
-        ) {
+        init(id: String, record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
             self.id = id
-            self.input = input
-            self.metadata = metadata
-            self.bookmarkData = bookmarkData
-            self.progress = progress
-            self.errorDescription = errorDescription
+            self.input = record.input
+            self.metadata = .init(assetMetadata: record.metadata)
+            self.bookmarkData = record.bookmarkData
+            self.progress = record.progress
+            self.errorDescription = record.error?.localizedDescription
+            self.creationDate = record.creationDate
         }
 
         static func predicate(for id: String) -> Predicate<Entry> {
@@ -156,7 +151,8 @@ private extension URNAssetDownloadStore {
                 metadata: metadata?.assetMetadata(),
                 bookmarkData: bookmarkData,
                 progress: progress,
-                error: DownloadError(errorDescription: errorDescription)
+                error: DownloadError(errorDescription: errorDescription),
+                creationDate: creationDate
             )
         }
 
@@ -166,6 +162,7 @@ private extension URNAssetDownloadStore {
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
             self.errorDescription = record.error?.localizedDescription
+            self.creationDate = record.creationDate
         }
     }
 }
@@ -189,8 +186,8 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         return entries.map { $0.toRecord() }
     }
 
-    func addDownloadRecord(using input: URNAssetLoader.Input, forId id: String) {
-        context.insert(Entry(id: id, input: input, progress: 0))
+    func addDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, URNMetadata>, forId id: String) {
+        context.insert(Entry(id: id, record: record))
     }
 
     func removeDownloadRecord(forId id: String) {
