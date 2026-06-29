@@ -21,7 +21,7 @@ struct SettingsMenu: View {
     var body: some View {
         SwiftUI.Menu {
             player.standardSettingsMenu()
-            QualityMenu(player: player)
+            QualityMenu()
             if isOverCurrentContext {
                 player.zoomMenu(gravity: $gravity)
             }

@@ -11,7 +11,6 @@ struct SingleView: View {
     @ObservedObject var player: Player
 
     @State private var isBusy = false
-    private var isMonoscopic = false
     private var supportsPictureInPicture = false
 
     var body: some View {

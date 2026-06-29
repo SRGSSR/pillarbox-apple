@@ -9,7 +9,6 @@ import SwiftUI
 
 private struct _PlaylistView: View {
     @ObservedObject var model: PlaylistViewModel
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         List(model.entries, id: \.self) { entry in

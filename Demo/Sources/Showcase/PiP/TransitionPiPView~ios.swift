@@ -12,7 +12,6 @@ private struct PresentedView: View {
     @ObservedObject var player: Player
 
     @State private var supportsPictureInPicture = true
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack {

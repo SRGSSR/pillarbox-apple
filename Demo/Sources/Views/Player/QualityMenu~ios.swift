@@ -8,8 +8,6 @@ import PillarboxPlayer
 import SwiftUI
 
 struct QualityMenu: View {
-    let player: Player
-
     @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
     private var qualitySetting: QualitySetting = .high
 

@@ -12,9 +12,6 @@ struct SearchView: View {
     @StateObject private var model = SearchViewModel()
     @EnvironmentObject private var router: Router
 
-    @AppStorage(UserDefaults.DemoSettingKey.serverSetting.rawValue)
-    private var serverSetting: ServerSetting = .production
-
     var body: some View {
         ZStack {
             switch model.state {
