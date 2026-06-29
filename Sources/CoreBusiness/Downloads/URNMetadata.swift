@@ -11,6 +11,7 @@
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public struct URNMetadata: Codable {
+    let analyticsData: [String: String]
     let analyticsMetadata: [String: String]
 }
 

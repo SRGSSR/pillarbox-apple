@@ -49,6 +49,7 @@ public final class URNDownloader: ObservableObject {
         trackerAdapters: [TrackerAdapter<AssetMetadata<URNMetadata>>] = []
     ) -> PlayerItem? {
         downloader.playerItem(for: download, trackerAdapters: [
+            ComScoreTracker.adapter(mapper: \.customData.analyticsData),
             CommandersActTracker.adapter(configuration: commandersActSource, mapper: \.customData.analyticsMetadata)
         ] + trackerAdapters)
     }
