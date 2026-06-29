@@ -36,7 +36,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
                     // Gesture cancellation can only be detected via gesture value observation,
                     // see https://developer.apple.com/documentation/swiftui/adding-interactivity-with-gestures#Update-transient-UI-state
                     if value == nil {
-                        onEnded(in: geometry)
+                        onEnded()
                     }
                 }
         }
@@ -77,7 +77,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
             }
             .onEnded { value in
                 onChanged(with: value, in: geometry)
-                onEnded(in: geometry)
+                onEnded()
             }
     }
 
@@ -92,7 +92,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         self.value = Self.value(for: initialProgress + delta, in: bounds)
     }
 
-    private func onEnded(in geometry: GeometryProxy) {
+    private func onEnded() {
         guard isInteracting else { return }
         initialProgress = 0
         isInteracting = false

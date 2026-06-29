@@ -49,15 +49,6 @@ final class MultiViewModel: ObservableObject {
         isSwapped ? player1 : player2
     }
 
-    private var activePlayer: Player {
-        switch activePosition {
-        case .top:
-            return topPlayer
-        case .bottom:
-            return bottomPlayer
-        }
-    }
-
     private var inactivePlayer: Player {
         switch activePosition {
         case .top:
