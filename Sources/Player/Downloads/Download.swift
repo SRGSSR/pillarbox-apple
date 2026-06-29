@@ -63,7 +63,7 @@ public final class Download: ObservableObject {
         self.id = id
         self.creationDate = creationDate
         self.addRecord = {
-            store.addDownloadRecord(.init(input: input, creationDate: .now), forId: id)
+            store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
