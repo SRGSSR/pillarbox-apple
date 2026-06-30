@@ -169,6 +169,16 @@ final class DownloadTests: TestCase {
         expect(FileManager.default.fileExists(atPath: location1.path())).toEventually(beFalse())
     }
 
+    func testMetadataKeptAfterRestart() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(assetLoaderType: AssetLoaderMock.self, store: store, session: session)
+        let metadata = PlayerMetadata(title: "title")
+        let download = manager.addDownload(for: .playable(url: Stream.download.url, metadata: metadata, after: 0.1))
+        expect(download.metadata).toEventually(equal(metadata))
+        download.restart()
+        expect(download.metadata.title).toNever(beNil(), until: .milliseconds(100))
+    }
+
     func testRestoreRunningWithMissingFile() throws {
         let store = AssetDownloadStoreMock()
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url)
