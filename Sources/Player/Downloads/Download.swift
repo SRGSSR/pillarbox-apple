@@ -28,6 +28,7 @@ public final class Download: ObservableObject {
 
     private let addRecord: () -> Void
     private let removeRecord: () -> Void
+    private let resetRecord: () -> Void
 
     public let creationDate: Date
 
@@ -67,6 +68,10 @@ public final class Download: ObservableObject {
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
+        }
+        self.resetRecord = {
+            let record = store.downloadRecord(forId: id)
+            store.updateDownloadRecord(.init(input: input, metadata: record?.metadata, creationDate: creationDate), forId: id)
         }
         configurePropertiesPublisher(assetLoaderType: assetLoaderType, input: input, session: session, store: store)
     }
@@ -133,8 +138,9 @@ public extension Download {
     }
 
     func restart() {
-        remove()
-        addRecord()
+        removeFile()
+        cancelOperations()
+        resetRecord()
         trigger.activate(for: TriggerId.reload)
     }
 
@@ -188,7 +194,7 @@ private extension Download {
                 }
                 .switchToLatest()
                 .map { .init(kind: .task($0), metadata: $1) }
-                .prepend(.init(kind: .estimate(0), metadata: nil))
+                .prepend(properties.source)
                 .eraseToAnyPublisher()
         }
     }
@@ -258,7 +264,10 @@ extension Download {
             )
             .map { DownloadProperties(source: $0, fileUrl: $1, error: $2) }
             .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
-            .catch { Just(DownloadProperties(source: .init(kind: .estimate(0), metadata: nil), fileUrl: nil, error: $0)) }
+            .catch { error in
+                let properties = store.downloadProperties(forId: id)
+                return Just(DownloadProperties(source: properties.source, fileUrl: nil, error: error))
+            }
             .prepend(properties)
         }
     }

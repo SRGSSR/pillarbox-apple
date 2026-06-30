@@ -24,6 +24,10 @@ public struct DownloadRecord<Input, CustomData> {
         self.init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
     }
 
+    init(input: Input, metadata: AssetMetadata<CustomData>?, creationDate: Date) {
+        self.init(input: input, metadata: metadata, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
+    }
+
     public init(input: Input, metadata: AssetMetadata<CustomData>?, bookmarkData: Data?, progress: Double, error: Error?, creationDate: Date) {
         self.input = input
         self.metadata = metadata
