@@ -6,33 +6,10 @@
 
 #if DEBUG
 
-import Foundation
-
 @available(tvOS, unavailable)
-struct DownloadSource<CustomData> {
-    let kind: DownloadSourceKind
-    let metadata: AssetMetadata<CustomData>?
-
-    private var task: URLSessionTask? {
-        switch kind {
-        case .estimate:
-            return nil
-        case let .task(properties):
-            return properties.task
-        }
-    }
-
-    func resume() {
-        task?.resume()
-    }
-
-    func suspend() {
-        task?.suspend()
-    }
-
-    func cancel() {
-        task?.cancel()
-    }
+enum DownloadSource {
+    case estimate(Double)
+    case task(DownloadSessionTaskProperties)
 }
 
 #endif
