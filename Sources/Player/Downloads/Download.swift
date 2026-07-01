@@ -26,11 +26,7 @@ public final class Download: ObservableObject {
     private let locationSubject = PassthroughSubject<URL?, Never>()
     private let errorSubject = PassthroughSubject<Error?, Never>()
 
-    private let addRecord: () -> Void
     private let removeRecord: () -> Void
-    private let resetRecord: () -> Void
-
-    public let creationDate: Date
 
     public var progress: Double {
         properties.progress
@@ -57,21 +53,12 @@ public final class Download: ObservableObject {
         id: String,
         assetLoaderType: L.Type,
         input: L.Input,
-        creationDate: Date,
         session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         self.id = id
-        self.creationDate = creationDate
-        self.addRecord = {
-            store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
-        }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
-        }
-        self.resetRecord = {
-            let record = store.downloadRecord(forId: id)
-            store.updateDownloadRecord(.init(input: input, metadata: record?.metadata, creationDate: creationDate), forId: id)
         }
         configurePropertiesPublisher(assetLoaderType: assetLoaderType, input: input, session: session, store: store)
     }
@@ -83,9 +70,8 @@ public final class Download: ObservableObject {
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         let id = type(of: store).id(from: input)
-        let creationDate = Date.now
-        store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
-        self.init(id: id, assetLoaderType: assetLoaderType, input: input, creationDate: creationDate, session: session, store: store)
+        store.addDownloadRecord(.init(input: input), forId: id)
+        self.init(id: id, assetLoaderType: assetLoaderType, input: input, session: session, store: store)
     }
 
     convenience init<L, S>(
@@ -98,7 +84,6 @@ public final class Download: ObservableObject {
             id: type(of: store).id(from: record.input),
             assetLoaderType: assetLoaderType,
             input: record.input,
-            creationDate: record.creationDate,
             session: session,
             store: store
         )
@@ -140,7 +125,6 @@ public extension Download {
     func restart() {
         removeFile()
         cancelOperations()
-        resetRecord()
         trigger.activate(for: TriggerId.reload)
     }
 
@@ -166,41 +150,7 @@ extension Download {
         session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        downloadPropertiesPublisher(assetLoaderType: assetLoaderType, id: id, input: input, session: session, store: store)
-            .receiveOnMainThread()
-            .handleEvents(
-                receiveOutput: { [id, creationDate] properties in
-                    let record = DownloadRecord(
-                        input: input,
-                        metadata: properties.metadata,
-                        bookmarkData: properties.bookmarkData(),
-                        progress: properties.progress,
-                        error: properties.error,
-                        creationDate: creationDate
-                    )
-                    store.updateDownloadRecord(record, forId: id)
-                },
-                receiveCompletion: nil
-            )
-            .map { properties in
-                DownloadProperties(
-                    source: properties.source,
-                    metadata: properties.metadata?.withoutCustomData(),
-                    fileUrl: properties.fileUrl,
-                    error: properties.error
-                )
-            }
-            .assign(to: &$properties)
-    }
-
-    private func downloadPropertiesPublisher<L, S>(
-        assetLoaderType: L.Type,
-        id: String,
-        input: L.Input,
-        session: DownloadSession,
-        store: S
-    ) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        Empty().eraseToAnyPublisher()
+        // TODO:
     }
 }
 

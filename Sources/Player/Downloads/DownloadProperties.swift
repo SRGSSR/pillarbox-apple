@@ -73,7 +73,7 @@ struct DownloadProperties<CustomData> {
         )
     }
 
-    init(source: DownloadSource, metadata: AssetMetadata<CustomData>?, fileUrl: URL?, error: Error?) {
+    private init(source: DownloadSource, metadata: AssetMetadata<CustomData>?, fileUrl: URL?, error: Error?) {
         self.source = source
         self.metadata = metadata
         self.fileUrl = fileUrl
