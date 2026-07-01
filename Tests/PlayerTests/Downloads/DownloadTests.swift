@@ -179,6 +179,15 @@ final class DownloadTests: TestCase {
         expect(download.metadata.title).toNever(beNil(), until: .milliseconds(100))
     }
 
+    func testRestartWhileRunning() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(assetLoaderType: AssetLoaderMock.self, store: store, session: session)
+        let download = manager.addDownload(for: .playable(url: Stream.download.url))
+        expect(download.state).toEventually(equal(.running))
+        download.restart()
+        expect(download.error).toAlways(beNil())
+    }
+
     func testRestoreRunningWithMissingFile() throws {
         let store = AssetDownloadStoreMock()
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url)
