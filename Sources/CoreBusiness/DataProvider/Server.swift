@@ -52,7 +52,9 @@ public enum Server: Codable {
         }
         components.queryItems = [
             URLQueryItem(name: "onlyChapters", value: "true"),
-            URLQueryItem(name: "vector", value: Self.vector)
+            URLQueryItem(name: "vector", value: Self.vector),
+            URLQueryItem(name: "streamPlayerCapabilities", value: "application/x-mpegURL,audio/mpeg"),
+            URLQueryItem(name: "drmPlayerCapabilities", value: "com.apple.fps")
         ]
         return .init(url: components.url ?? url)
     }
