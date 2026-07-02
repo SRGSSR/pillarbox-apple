@@ -66,7 +66,7 @@ public enum Server: Codable {
         }
     }
 
-    func mediaCompositionRequest(forUrn urn: String) -> URLRequest {
+    func mediaCompositionRequest(forUrn urn: String, httpHeaders: [String: String]) -> URLRequest {
         let url = baseUrl.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return .init(url: url)
@@ -75,7 +75,9 @@ public enum Server: Codable {
             URLQueryItem(name: "onlyChapters", value: "true"),
             URLQueryItem(name: "vector", value: Self.vector)
         ]
-        return .init(url: components.url ?? url)
+        var request = URLRequest(url: components.url ?? url)
+        request.allHTTPHeaderFields = httpHeaders
+        return request
     }
 
     func resizedImageUrl(_ url: URL, width: ImageWidth) -> URL {

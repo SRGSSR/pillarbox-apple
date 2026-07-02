@@ -15,14 +15,14 @@ import XCTest
 final class DataProviderTests: XCTestCase {
     func testExistingMediaMetadata() {
         expectSuccess(
-            from: DataProvider().mediaCompositionPublisher(forUrn: "urn:rts:video:6820736")
+            from: DataProvider().mediaCompositionPublisher(forUrn: "urn:rts:video:6820736", httpHeaders: [:])
         )
     }
 
     func testNonExistingMediaMetadata() {
         expectFailure(
             HttpError(statusCode: 404),
-            from: DataProvider().mediaCompositionPublisher(forUrn: "urn:rts:video:unknown")
+            from: DataProvider().mediaCompositionPublisher(forUrn: "urn:rts:video:unknown", httpHeaders: [:])
         )
     }
 }
