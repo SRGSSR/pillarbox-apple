@@ -66,17 +66,6 @@ public enum Server: Codable {
         }
     }
 
-    private var resizedImageBaseUrl: URL {
-        switch self {
-        case .production, .playPlusProduction:
-            URL(string: "https://il.srgssr.ch")!
-        case .stage, .playPlusIntegration:
-            URL(string: "https://il-stage.srgssr.ch")!
-        case .test, .playPlusDevelopment:
-            URL(string: "https://il-test.srgssr.ch")!
-        }
-    }
-
     func mediaCompositionRequest(forUrn urn: String) -> URLRequest {
         let url = baseUrl.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
@@ -90,22 +79,26 @@ public enum Server: Codable {
     }
 
     func resizedImageUrl(_ url: URL, width: ImageWidth) -> URL {
-        guard var components = URLComponents(
-            url: resizedImageBaseUrl.appending(path: "images/"),
-            resolvingAgainstBaseURL: false
-        ) else {
-            return url
-        }
-        components.queryItems = [
-            URLQueryItem(name: "imageUrl", value: url.absoluteString),
-            URLQueryItem(name: "format", value: "jpg"),
-            URLQueryItem(name: "width", value: String(width.rawValue))
-        ]
-        if let scaledUrl = components.url {
-            return scaledUrl
-        }
-        else {
-            return url
+        switch self {
+        case .production, .stage, .test:
+            guard var components = URLComponents(url: baseUrl.appending(path: "images/"), resolvingAgainstBaseURL: false) else {
+                return url
+            }
+            components.queryItems = [
+                URLQueryItem(name: "imageUrl", value: url.absoluteString),
+                URLQueryItem(name: "format", value: "jpg"),
+                URLQueryItem(name: "width", value: String(width.rawValue))
+            ]
+            return components.url ?? url
+        case .playPlusProduction, .playPlusIntegration, .playPlusDevelopment:
+            guard var components = URLComponents(url: URL(string: "https://img.playplus.ch")!, resolvingAgainstBaseURL: false) else {
+                return url
+            }
+            components.queryItems = [
+                URLQueryItem(name: "src", value: url.absoluteString),
+                URLQueryItem(name: "imwidth", value: String(width.rawValue))
+            ]
+            return components.url ?? url
         }
     }
 }
