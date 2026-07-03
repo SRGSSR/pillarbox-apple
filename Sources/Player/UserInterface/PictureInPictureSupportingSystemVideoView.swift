@@ -35,7 +35,10 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
             playerViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.toMenuElements())
             playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.toActions())
             playerViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.toActions(dismissing: playerViewController))
-            playerViewController.customInfoViewControllers = infoViewTabsContent.viewControllers(reusing: playerViewController.customInfoViewControllers, for: player)
+            playerViewController.customInfoViewControllers = infoViewTabsContent.viewControllers(
+                reusing: playerViewController.customInfoViewControllers,
+                for: player
+            )
 #endif
         }
     }

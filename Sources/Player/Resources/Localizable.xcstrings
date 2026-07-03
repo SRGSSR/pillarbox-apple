@@ -351,6 +351,9 @@
         }
       }
     },
+    "Watching" : {
+
+    },
     "Zoom" : {
       "comment" : "Playback setting menu title",
       "localizations" : {
