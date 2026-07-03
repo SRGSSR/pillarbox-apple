@@ -27,6 +27,34 @@ public struct Tab<Content> where Content: View {
     }
 }
 
+public extension Tab {
+    /// Creates a tab.
+    ///
+    /// - Parameters:
+    ///   - title: The tab title.
+    ///   - identifier: A unique tab identifier. If omitted `title` is used instead.
+    ///   - content: The tab content
+    ///
+    /// For optimal behavior you should ensure that each tab is assigned a unique stable identifier.
+    @_disfavoredOverload
+    init<S>(_ title: S, identifier: String? = nil, @ViewBuilder _ content: () -> Content) where S: StringProtocol {
+        self.init(String(title), identifier: identifier, content)
+    }
+
+    /// Creates a tab.
+    ///
+    /// - Parameters:
+    ///   - title: The tab title.
+    ///   - identifier: A unique tab identifier. If omitted `title` is used instead.
+    ///   - content: The tab content
+    ///
+    /// For optimal behavior you should ensure that each tab is assigned a unique stable identifier.
+    @_disfavoredOverload
+    init(_ title: LocalizedStringResource, identifier: String? = nil, @ViewBuilder _ content: () -> Content) {
+        self.init(String(localized: title), identifier: identifier, content)
+    }
+}
+
 // MARK: Info view tabs embedding
 
 extension Tab: InfoViewTabsElement {
