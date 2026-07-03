@@ -85,6 +85,7 @@ private extension View {
     @ViewBuilder
     func backgroundExtension(spacing: CGFloat) -> some View {
         if #available(tvOS 26, *) {
+            // Trick, see https://nilcoalescing.com/blog/BackgroundExtensionEffectInSwiftUI/
             backgroundExtensionEffect()
                 .safeAreaInset(edge: .bottom, spacing: spacing) {
                     Color.clear
