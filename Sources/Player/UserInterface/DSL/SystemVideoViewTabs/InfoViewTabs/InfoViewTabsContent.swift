@@ -28,7 +28,10 @@ public struct InfoViewTabsContent {
             return []
         }
         return [
-            Tab(title: "Chapters", identifier: "pillarbox-tvos26-chapters") {
+            Tab(
+                String(localized: "Chapters", bundle: .module, comment: "Chapters info panel tab title"),
+                identifier: "pillarbox-tvos26-chapters"
+            ) {
                 ChapterList(player: player)
             }
         ].map { $0.viewController(reusing: viewControllers) }

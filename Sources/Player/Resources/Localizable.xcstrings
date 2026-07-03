@@ -106,6 +106,17 @@
         }
       }
     },
+    "Chapters" : {
+      "comment" : "Chapters info panel tab title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters"
+          }
+        }
+      }
+    },
     "E%lld" : {
       "comment" : "Short episode information",
       "localizations" : {
@@ -352,7 +363,15 @@
       }
     },
     "Watching" : {
-
+      "comment" : "Marker text for the current chapter",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watching"
+          }
+        }
+      }
     },
     "Zoom" : {
       "comment" : "Playback setting menu title",

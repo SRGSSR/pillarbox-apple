@@ -62,7 +62,7 @@ struct ChapterCell: View {
     @ViewBuilder
     private func subtitle() -> some View {
         if isHighlighted {
-            Text("Watching")
+            Text("Watching", bundle: .module, comment: "Marker text for the current chapter")
                 .textCase(.uppercase)
                 .font(.system(size: 18))
                 .fontWeight(.medium)
