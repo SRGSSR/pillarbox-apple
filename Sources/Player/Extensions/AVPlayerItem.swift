@@ -180,9 +180,11 @@ extension AVPlayerItem {
         interstitialTimeRanges = content.metadata.blockedTimeRanges.map { timeRange in
             .init(timeRange: timeRange)
         }
-        navigationMarkerGroups = [
-            AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: content.metadata.timedNavigationMarkers)
-        ]
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion != 26 {
+            navigationMarkerGroups = [
+                AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: content.metadata.timedNavigationMarkers)
+            ]
+        }
 #endif
         return self
     }
