@@ -215,7 +215,7 @@ public extension SystemVideoView {
     /// @Image(source: info-view-tabs, alt: "A screenshot of info view tabs")
     func infoViewTabs(@InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
         var view = self
-        view.infoViewTabsContent = .init(elements: content().elements)
+        view.infoViewTabsContent = content()
         return view
     }
 }
