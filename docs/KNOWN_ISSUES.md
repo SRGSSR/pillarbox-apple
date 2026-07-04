@@ -159,14 +159,6 @@ Due to an `AVQueuePlayer` issue, toggling `isMuted` can cause the player to rema
 
 No workaround is available yet. Audio is restored when transitioning between items, when the player is paused and resumed, or when a seek operation occurs.
 
-## Memory leaks when using `SystemVideoView` on tvOS 26 (FB21160665)
-
-The standard player user interface leaks memory when playing content that contains chapters on tvOS 26.
-
-### Workaround
-
-No workaround is available yet.
-
 ## Playback incorrectly jumps to the live edge when resuming a DVR video livestream after an interruption (e.g. alarm) (FB21701670)
 
 When playing a video livestream that offers a DVR window, the player incorrectly resumes at the live edge after an interruption instead of resuming from the previous playback position.
