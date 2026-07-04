@@ -7,7 +7,6 @@
 import SwiftUI
 
 // TODO: Remove once tvOS 26 is not supported anymore.
-@available(iOS, unavailable)
 struct ChapterCell: View {
     private static let aspectRatio: CGFloat = 16 / 9
 
@@ -29,7 +28,9 @@ struct ChapterCell: View {
             .background(Color(white: 0.1))
         }
         .frame(width: Self.width, height: Self.height)
+#if os(tvOS)
         .buttonStyle(.card)
+#endif
     }
 
     @ViewBuilder
@@ -84,7 +85,7 @@ struct ChapterCell: View {
 private extension View {
     @ViewBuilder
     func backgroundExtension(spacing: CGFloat) -> some View {
-        if #available(tvOS 26, *) {
+        if #available(iOS 26, tvOS 26, *) {
             // Trick, see https://nilcoalescing.com/blog/BackgroundExtensionEffectInSwiftUI/
             backgroundExtensionEffect()
                 .safeAreaInset(edge: .bottom, spacing: spacing) {

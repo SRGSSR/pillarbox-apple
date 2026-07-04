@@ -7,7 +7,6 @@
 import SwiftUI
 
 // TODO: Remove once tvOS 26 is not supported anymore.
-@available(iOS, unavailable)
 struct ChapterList: View {
     @ObservedObject var player: Player
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
@@ -30,14 +29,14 @@ struct ChapterList: View {
                 }
             }
         }
-        .scrollClipDisabled_tvOS26()
+        .scrollClipDisabled26()
         .bind(progressTracker, to: player)
     }
 }
 
 private extension View {
-    func scrollClipDisabled_tvOS26() -> some View {
-        if #available(tvOS 26, *) {
+    func scrollClipDisabled26() -> some View {
+        if #available(iOS 26, tvOS 26, *) {
             return scrollClipDisabled()
         }
         else {
