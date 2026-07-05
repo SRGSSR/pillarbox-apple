@@ -19,6 +19,10 @@ struct ChapterCell: View {
     let isHighlighted: Bool
     let action: () -> Void
 
+    private var accessibilityTraits: AccessibilityTraits {
+        isHighlighted ? [.isSelected] : []
+    }
+
     var body: some View {
         SwiftUI.Button(action: action) {
             ZStack {
@@ -31,6 +35,7 @@ struct ChapterCell: View {
 #if os(tvOS)
         .buttonStyle(.card)
 #endif
+        .accessibilityAddTraits(accessibilityTraits)
     }
 
     @ViewBuilder
