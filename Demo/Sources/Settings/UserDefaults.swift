@@ -66,7 +66,7 @@ extension UserDefaults {
     }
 
     private static func registerDefaultDemoSettings() {
-        UserDefaults.standard.register(defaults: [
+        standard.register(defaults: [
             DemoSettingKey.presenterModeEnabled.rawValue: false,
             DemoSettingKey.smartNavigationEnabled.rawValue: true,
             DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.optimal.rawValue,

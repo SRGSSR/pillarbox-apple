@@ -26,7 +26,7 @@ public struct AssetMetadata<CustomData> {
             playerMetadata.playerMetadataPublisher(),
             Just(customData)
         )
-        .map { AssetMetadata(playerMetadata: $0, customData: $1) }
+        .map { .init(playerMetadata: $0, customData: $1) }
         .eraseToAnyPublisher()
     }
 }
