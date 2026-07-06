@@ -119,13 +119,13 @@ extension AVPlayerItem {
     }
 
     private func endTimeNotificationPublisher() -> AnyPublisher<Bool, Never> {
-        NotificationCenter.default.weakPublisher(for: AVPlayerItem.didPlayToEndTimeNotification, object: self)
+        NotificationCenter.default.weakPublisher(for: Self.didPlayToEndTimeNotification, object: self)
             .map { _ in true }
             .eraseToAnyPublisher()
     }
 
     private func timeJumpedNotificationPublisher() -> AnyPublisher<Bool, Never> {
-        NotificationCenter.default.weakPublisher(for: AVPlayerItem.timeJumpedNotification, object: self)
+        NotificationCenter.default.weakPublisher(for: Self.timeJumpedNotification, object: self)
             .map { _ in false }
             .eraseToAnyPublisher()
     }
@@ -134,7 +134,7 @@ extension AVPlayerItem {
 extension AVPlayerItem {
     func isStalledPublisher() -> AnyPublisher<Bool, Never> {
         Publishers.Merge(
-            NotificationCenter.default.weakPublisher(for: AVPlayerItem.playbackStalledNotification, object: self)
+            NotificationCenter.default.weakPublisher(for: Self.playbackStalledNotification, object: self)
                 .map { _ in true },
             publisher(for: \.isPlaybackLikelyToKeepUp)
                 .compactMap { $0 ? false : nil }
@@ -165,7 +165,7 @@ extension AVPlayerItem {
     }
 
     private func playbackErrorPublisher() -> AnyPublisher<Error, Never> {
-        NotificationCenter.default.weakPublisher(for: AVPlayerItem.failedToPlayToEndTimeNotification, object: self)
+        NotificationCenter.default.weakPublisher(for: Self.failedToPlayToEndTimeNotification, object: self)
             .compactMap { $0.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error }
             .eraseToAnyPublisher()
     }
@@ -210,7 +210,7 @@ extension AVPlayerItem {
     }
 
     func warningMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
+        NotificationCenter.default.weakPublisher(for: Self.newErrorLogEntryNotification, object: self)
             .compactMap { notification -> Error? in
                 guard let lastErrorEvent = (notification.object as? AVPlayerItem)?.errorLog()?.events.last else { return nil }
                 return NSError(
