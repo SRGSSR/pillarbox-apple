@@ -20,10 +20,24 @@ public struct Tab<Content> where Content: View {
     ///   - content: The tab content
     ///
     /// For optimal behavior you should ensure that each tab is assigned a unique stable identifier.
-    public init(title: String, identifier: String? = nil, @ViewBuilder _ content: () -> Content) {
-        self.title = title
-        self.identifier = identifier ?? title
+    @_disfavoredOverload
+    public init<S>(_ title: S, identifier: String? = nil, @ViewBuilder _ content: () -> Content) where S: StringProtocol {
+        self.title = String(title)
+        self.identifier = identifier ?? String(title)
         self.content = content()
+    }
+
+    /// Creates a tab.
+    ///
+    /// - Parameters:
+    ///   - title: The tab title.
+    ///   - identifier: A unique tab identifier. If omitted `title` is used instead.
+    ///   - content: The tab content
+    ///
+    /// For optimal behavior you should ensure that each tab is assigned a unique stable identifier.
+    @_disfavoredOverload
+    public init(_ title: LocalizedStringResource, identifier: String? = nil, @ViewBuilder _ content: () -> Content) {
+        self.init(String(localized: title), identifier: identifier, content)
     }
 }
 

@@ -106,6 +106,41 @@
         }
       }
     },
+    "Chapters" : {
+      "comment" : "Chapters info panel tab title",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitres"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capitoli"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitels"
+          }
+        }
+      }
+    },
     "E%lld" : {
       "comment" : "Short episode information",
       "localizations" : {
@@ -347,6 +382,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suttitels"
+          }
+        }
+      }
+    },
+    "Watching" : {
+      "comment" : "Marker text for the current chapter",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird angeschaut"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watching"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cours"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In riproduzione"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
           }
         }
       }

@@ -141,11 +141,7 @@ private struct ChapterCell: View {
         }
         .animation(.defaultLinear, value: chapter.imageSource)
         .overlay {
-            LinearGradient(
-                gradient: Gradient(colors: [.black.opacity(0.7), .clear]),
-                startPoint: .bottom,
-                endPoint: .top
-            )
+            LinearGradient(colors: [.black.opacity(0.7), .clear], startPoint: .bottom, endPoint: .top)
         }
         .overlay(alignment: .topTrailing) {
             durationLabel()

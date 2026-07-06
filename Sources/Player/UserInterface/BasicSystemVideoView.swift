@@ -34,7 +34,7 @@ struct BasicSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where V
         uiViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.toMenuElements())
         uiViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.toActions())
         uiViewController.updateInfoViewActionsIfNeeded(with: infoViewActionsContent.toActions(dismissing: uiViewController))
-        uiViewController.customInfoViewControllers = infoViewTabsContent.viewControllers(reusing: uiViewController.customInfoViewControllers)
+        uiViewController.customInfoViewControllers = infoViewTabsContent.viewControllers(reusing: uiViewController.customInfoViewControllers, for: player)
 #endif
     }
 }

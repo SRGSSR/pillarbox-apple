@@ -209,13 +209,13 @@ public extension SystemVideoView {
     ///    }
     /// ```
     ///
-    /// Apply the ``SwiftUICore/View/infoViewTabPanel()`` modifier to use a background
-    /// that mimics the standard tvOS Info view appearance.
+    /// Apply the ``SwiftUICore/View/infoViewTabPanel()`` modifier to use a background that mimics the standard tvOS
+    /// Info view appearance.
     ///
     /// @Image(source: info-view-tabs, alt: "A screenshot of info view tabs")
     func infoViewTabs(@InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {
         var view = self
-        view.infoViewTabsContent = .init(elements: content().elements)
+        view.infoViewTabsContent = content()
         return view
     }
 }

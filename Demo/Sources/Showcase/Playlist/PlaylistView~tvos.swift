@@ -52,7 +52,7 @@ struct PlaylistView: View {
     @InfoViewTabsContentBuilder
     func infoViewTabsContent() -> InfoViewTabsContent {
         if model.entries.count > 1 {
-            Tab(title: "Playlist") {
+            Tab("Playlist") {
                 _PlaylistView(model: model)
                     .frame(height: 400)
             }
