@@ -13,6 +13,7 @@ enum URNAssetLoader: AssetLoader {
     struct Input: Codable {
         let urn: String
         let server: Server
+        let httpHeaders: [String: String]
 
         var id: String {
             "\(urn)-\(server.id)"
@@ -21,7 +22,7 @@ enum URNAssetLoader: AssetLoader {
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
         let dataProvider = DataProvider(server: input.server)
-        return dataProvider.mediaCompositionPublisher(forUrn: input.urn)
+        return dataProvider.mediaCompositionPublisher(forUrn: input.urn, httpHeaders: input.httpHeaders)
             .tryMap { response in
                 try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
             }

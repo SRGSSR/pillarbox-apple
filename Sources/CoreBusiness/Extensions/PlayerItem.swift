@@ -15,6 +15,7 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
+    ///   - httpHeaders: HTTP headers to set when requesting the content.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - commandersActSource: The source of events sent to Commanders Act.
     ///
@@ -23,12 +24,13 @@ public extension PlayerItem {
     static func urn(
         _ urn: String,
         server: Server = .production,
+        httpHeaders: [String: String] = [:],
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         commandersActSource: CommandersActSource? = nil
     ) -> Self {
         self.init(
             assetLoaderType: URNAssetLoader.self,
-            input: .init(urn: urn, server: server),
+            input: .init(urn: urn, server: server, httpHeaders: httpHeaders),
             trackerAdapters: [
                 ComScoreTracker.adapter { $0.analyticsData },
                 CommandersActTracker.adapter(configuration: commandersActSource) { $0.analyticsMetadata },
