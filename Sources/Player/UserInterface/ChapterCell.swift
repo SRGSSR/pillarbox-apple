@@ -47,13 +47,9 @@ struct ChapterCell: View {
                 .backgroundExtension(spacing: Self.heightExtension)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay(
-            LinearGradient(
-                colors: [.black, .clear],
-                startPoint: .bottom,
-                endPoint: .center
-            )
-        )
+        .overlay {
+            LinearGradient(colors: [.black, .clear], startPoint: .bottom, endPoint: .center)
+        }
     }
 
     private func description() -> some View {

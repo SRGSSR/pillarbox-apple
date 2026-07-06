@@ -85,11 +85,7 @@ struct MediaCardView: View {
                 }
             }
             .overlay {
-                LinearGradient(
-                    colors: [.black, .clear],
-                    startPoint: .bottom,
-                    endPoint: .top
-                )
+                LinearGradient(colors: [.black, .clear], startPoint: .bottom, endPoint: .top)
             }
             .frame(width: size.width, height: size.height, alignment: .center)
 
