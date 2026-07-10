@@ -178,18 +178,29 @@ private extension Download {
     ) -> AnyPublisher<DownloadPhase<DownloadProgress, S.CustomData>, Error> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         storeType.taskPublisher(id: id, input: input, reusableAssetMetadata: properties.reusableAssetMetadata, session: session)
             .map { task in
-                if let sessionTask = task.result {
-                    taskPropertiesPublisher(for: sessionTask)
-                        .map { DownloadPhase(result: DownloadProgress.actual($0), assetMetadata: task.assetMetadata) }
-                        .eraseToAnyPublisher()
-                }
-                else {
-                    Just(DownloadPhase(result: DownloadProgress.estimate(properties.fractionCompleted), assetMetadata: task.assetMetadata))
-                        .eraseToAnyPublisher()
-                }
+                Publishers.CombineLatest(
+                    progressPublisher(task: task, properties: properties),
+                    task.assetMetadata.assetMetadataPublisher()
+                )
+                .map { DownloadPhase(result: $0.result, assetMetadata: $1) }
             }
             .switchToLatest()
             .eraseToAnyPublisher()
+    }
+
+    static func progressPublisher<CustomData>(
+        task: DownloadPhase<URLSessionTask?, CustomData>,
+        properties: DownloadProperties<CustomData>
+    ) -> AnyPublisher<DownloadPhase<DownloadProgress, CustomData>, Never> {
+        if let sessionTask = task.result {
+            return taskPropertiesPublisher(for: sessionTask)
+                .map { DownloadPhase(result: .actual($0), assetMetadata: task.assetMetadata) }
+                .eraseToAnyPublisher()
+        }
+        else {
+            return Just(DownloadPhase(result: .estimate(properties.fractionCompleted), assetMetadata: task.assetMetadata))
+                .eraseToAnyPublisher()
+        }
     }
 
     func propertiesPublisher<L, S>(
