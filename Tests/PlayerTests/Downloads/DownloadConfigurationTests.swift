@@ -12,7 +12,7 @@ import Nimble
 import PillarboxStreams
 
 @available(tvOS, unavailable)
-final class AssetDownloadTests: TestCase {
+final class DownloadConfigurationTests: TestCase {
     func testNoSource() throws {
         let playerMetadata = PlayerMetadata(imageSource: .none)
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url, metadata: playerMetadata)
