@@ -181,7 +181,11 @@ private extension Download {
             task.progress.publisher(for: \.fractionCompleted)
                 .map { $0.clamped(to: 0...1) }
         )
-        .map(DownloadSessionTaskProperties.init)
+        .map { task, state, progress in
+            // If progress information is indeterminate (e.g. download happened too fast), still ensure that progress is
+            // correct when completed.
+            .init(task: task, state: state, progress: state == .completed ? 1 : progress)
+        }
         .eraseToAnyPublisher()
     }
 }
