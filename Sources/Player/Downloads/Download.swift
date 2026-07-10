@@ -105,7 +105,6 @@ public final class Download: ObservableObject {
 
     func fail(with error: Error) {
         errorSubject.send(error)
-        properties.cancel() // TODO: Do we really need this?
     }
 
     func remove() {
