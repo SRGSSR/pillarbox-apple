@@ -135,7 +135,7 @@ public extension Download {
     func restart() {
         remove()
         addRecord()
-        trigger.activate(for: TriggerId.reload)
+        trigger.activate(for: TriggerId.restart)
     }
 
     private func cancelOperations() {
@@ -147,7 +147,7 @@ public extension Download {
 @available(tvOS, unavailable)
 private extension Download {
     enum TriggerId: Hashable {
-        case reload
+        case restart
         case cancel
     }
 
@@ -229,7 +229,7 @@ extension Download {
         session: DownloadSession,
         store: S
     ) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger, locationSubject, errorSubject] in
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [trigger, locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Publishers.CombineLatest3(
                 Self.downloadProgressPublisher(
