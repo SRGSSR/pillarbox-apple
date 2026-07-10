@@ -57,7 +57,7 @@ extension AssetDownloadStore {
 
 @available(tvOS, unavailable)
 extension AssetDownloadStore {
-    static func downloadMetadataPublisher(for input: Loader.Input) -> AnyPublisher<DownloadMetadata<CustomData>, any Error> {
+    static func downloadConfigurationPublisher(for input: Loader.Input) -> AnyPublisher<DownloadConfiguration<CustomData>, any Error> {
         Loader.metadataPublisher(for: input)
             .first()
             .map { metadata in
@@ -70,7 +70,7 @@ extension AssetDownloadStore {
             }
             .switchToLatest()
             .map { metadata, playerMetadata, imageSource in
-                DownloadMetadata(
+                DownloadConfiguration(
                     asset: Loader.asset(from: input, metadata: metadata),
                     assetMetadata: .init(playerMetadata: playerMetadata.withImageSource(imageSource), customData: customData(from: metadata))
                 )

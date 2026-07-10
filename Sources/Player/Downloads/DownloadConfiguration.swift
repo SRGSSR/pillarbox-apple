@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-struct DownloadMetadata<CustomData> {
+struct DownloadConfiguration<CustomData> {
     let asset: Asset
     let assetMetadata: AssetMetadata<CustomData>
 }

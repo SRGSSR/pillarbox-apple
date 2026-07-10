@@ -174,7 +174,7 @@ private extension Download {
                 .eraseToAnyPublisher()
         }
         else {
-            return S.downloadMetadataPublisher(for: input)
+            return S.downloadConfigurationPublisher(for: input)
                 .map { downloadMetadata in
                     let task = session.createTask(
                         id: id,
