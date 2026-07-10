@@ -6,11 +6,9 @@
 
 #if DEBUG
 
-import Foundation
-
 @available(tvOS, unavailable)
-struct DownloadSource<CustomData> {
-    let progress: DownloadProgress
+struct DownloadPhase<Result, CustomData> {
+    let result: Result
     let assetMetadata: AssetMetadata<CustomData>
 }
 

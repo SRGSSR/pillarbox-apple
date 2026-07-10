@@ -48,7 +48,7 @@ extension AssetDownloadStore {
 
 @available(tvOS, unavailable)
 extension AssetDownloadStore {
-    static func downloadConfigurationPublisher(for input: Loader.Input) -> AnyPublisher<DownloadConfiguration<CustomData>, any Error> {
+    static func assetPublisher(for input: Loader.Input) -> AnyPublisher<DownloadPhase<Asset, CustomData>, any Error> {
         Loader.metadataPublisher(for: input)
             .first()
             .map { metadata in
@@ -61,31 +61,31 @@ extension AssetDownloadStore {
             }
             .switchToLatest()
             .map { metadata, playerMetadata, imageSource in
-                DownloadConfiguration(
-                    asset: Loader.asset(from: input, metadata: metadata),
+                DownloadPhase(
+                    result: Loader.asset(from: input, metadata: metadata),
                     assetMetadata: .init(playerMetadata: playerMetadata.withImageSource(imageSource), customData: customData(from: metadata))
                 )
             }
             .eraseToAnyPublisher()
     }
 
-    static func downloadTaskPublisher(
+    static func taskPublisher(
         id: String,
         input: Loader.Input,
         reusableAssetMetadata: AssetMetadata<CustomData>?,
         session: DownloadSession
-    ) -> AnyPublisher<DownloadTask<CustomData>, any Error> {
+    ) -> AnyPublisher<DownloadPhase<URLSessionTask?, CustomData>, any Error> {
         if let reusableAssetMetadata {
             return session.sessionTaskPublisher(id: id)
                 .setFailureType(to: Error.self)
-                .map { DownloadTask(task: $0, assetMetadata: reusableAssetMetadata) }
+                .map { DownloadPhase(result: $0, assetMetadata: reusableAssetMetadata) }
                 .eraseToAnyPublisher()
         }
         else {
-            return downloadConfigurationPublisher(for: input)
-                .map { configuration in
-                    let task = session.createTask(id: id, asset: configuration.asset, metadata: configuration.assetMetadata.playerMetadata)
-                    return DownloadTask(task: task, assetMetadata: configuration.assetMetadata)
+            return assetPublisher(for: input)
+                .map { asset in
+                    let task = session.createTask(id: id, asset: asset.result, metadata: asset.assetMetadata.playerMetadata)
+                    return DownloadPhase(result: task, assetMetadata: asset.assetMetadata)
                 }
                 .eraseToAnyPublisher()
         }
