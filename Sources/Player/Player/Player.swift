@@ -111,7 +111,7 @@ public final class Player: ObservableObject, Equatable {
             elementsQueueUpdatePublisher(),
             itemStateQueueUpdatePublisher()
         )
-        .scan(.empty) { queue, update -> Queue in
+        .scan(.empty) { queue, update in
             queue.updated(with: update)
         }
         .share(replay: 1)
