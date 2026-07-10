@@ -17,28 +17,4 @@ protocol DownloadSession: AnyObject {
     func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask
 }
 
-@available(tvOS, unavailable)
-extension DownloadSession {
-    func downloadSessionTaskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
-        Publishers.CombineLatest3(
-            Just(task),
-            task.publisher(for: \.state),
-            task.progress.publisher(for: \.fractionCompleted)
-                .map { $0.clamped(to: 0...1) }
-        )
-        .map(DownloadSessionTaskProperties.init)
-        .eraseToAnyPublisher()
-    }
-
-    func downloadSourceTaskPublisher<CustomData>(
-        for task: URLSessionTask?,
-        properties: DownloadProperties<CustomData>
-    ) -> AnyPublisher<DownloadSource, Never> {
-        guard let task else { return Just(.estimate(properties.progress)).eraseToAnyPublisher() }
-        return downloadSessionTaskPropertiesPublisher(for: task)
-            .map { .task($0) }
-            .eraseToAnyPublisher()
-    }
-}
-
 #endif

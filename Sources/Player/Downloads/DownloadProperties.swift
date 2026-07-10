@@ -10,23 +10,23 @@ import Foundation
 
 @available(tvOS, unavailable)
 struct DownloadProperties<CustomData> {
-    let source: DownloadSource
+    let downloadProgress: DownloadProgress
     let assetMetadata: AssetMetadata<CustomData>?
     let fileUrl: URL?
     let error: Error?
 
-    var shouldCreateTask: Bool {
-        fileUrl == nil && error == nil
+    var reusableAssetMetadata: AssetMetadata<CustomData>? {
+        fileUrl != nil || error != nil ? assetMetadata : nil
     }
 
     var state: DownloadState {
         if let error {
             return URLError.isCancellationError(error) ? .cancelled : .completed
         }
-        switch source {
+        switch downloadProgress {
         case let .estimate(progress):
             return progress == 1 ? .completed : .preparing
-        case let .task(properties):
+        case let .actual(properties):
             switch properties.state {
             case .running:
                 return .running
@@ -47,34 +47,34 @@ struct DownloadProperties<CustomData> {
         if error != nil {
             return 0
         }
-        switch source {
+        switch downloadProgress {
         case let .estimate(progress):
             return progress
-        case let .task(properties):
+        case let .actual(properties):
             return properties.progress
         }
     }
 
     private var task: URLSessionTask? {
-        switch source {
+        switch downloadProgress {
         case .estimate:
             return nil
-        case let .task(properties):
+        case let .actual(properties):
             return properties.task
         }
     }
 
     init() {
         self.init(
-            source: .estimate(0),
+            downloadProgress: .estimate(0),
             assetMetadata: nil,
             fileUrl: nil,
             error: nil
         )
     }
 
-    init(source: DownloadSource, assetMetadata: AssetMetadata<CustomData>?, fileUrl: URL?, error: Error?) {
-        self.source = source
+    init(downloadProgress: DownloadProgress, assetMetadata: AssetMetadata<CustomData>?, fileUrl: URL?, error: Error?) {
+        self.downloadProgress = downloadProgress
         self.assetMetadata = assetMetadata
         self.fileUrl = fileUrl
         self.error = error
@@ -83,14 +83,14 @@ struct DownloadProperties<CustomData> {
     init<Input>(from record: DownloadRecord<Input, CustomData>) {
         do {
             self.init(
-                source: .estimate(record.progress),
+                downloadProgress: .estimate(record.progress),
                 assetMetadata: record.metadata,
                 fileUrl: try URL(resolvingBookmarkData: record.bookmarkData),
                 error: record.error
             )
         } catch {
             self.init(
-                source: .estimate(0),
+                downloadProgress: .estimate(0),
                 assetMetadata: record.metadata,
                 fileUrl: nil,
                 error: error

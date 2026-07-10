@@ -9,9 +9,9 @@
 import Foundation
 
 @available(tvOS, unavailable)
-struct DownloadSource<CustomData> {
-    let progress: DownloadProgress
-    let assetMetadata: AssetMetadata<CustomData>
+enum DownloadProgress {
+    case estimate(Double)
+    case actual(DownloadSessionTaskProperties)
 }
 
 #endif

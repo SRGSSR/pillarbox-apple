@@ -158,40 +158,32 @@ private extension Download {
         input: L.Input,
         session: DownloadSession,
         properties: DownloadProperties<S.CustomData>
-    ) -> AnyPublisher<DownloadSource, Error> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        Empty().eraseToAnyPublisher()
-//        if !properties.shouldCreateTask, let metadata = properties.metadata {
-//            return session.sessionTaskPublisher(id: id)
-//                .setFailureType(to: Error.self)
-//                .map { task in
-//                    Publishers.CombineLatest(
-//                        session.downloadSourceTaskPublisher(for: task, properties: properties),
-//                        metadata.assetMetadataPublisher()
-//                    )
-//                }
-//                .switchToLatest()
-//                .map { .init(kind: $0, metadata: $1) }
-//                .prepend(.init(kind: .estimate(properties.progress), metadata: metadata))
-//                .eraseToAnyPublisher()
-//        }
-//        else {
-//            return S.downloadConfigurationPublisher(for: input)
-//                .map { downloadMetadata in
-//                    let task = session.createTask(
-//                        id: id,
-//                        asset: downloadMetadata.asset,
-//                        metadata: downloadMetadata.assetMetadata.playerMetadata,
-//                    )
-//                    return Publishers.CombineLatest(
-//                        session.downloadSessionTaskPropertiesPublisher(for: task),
-//                        downloadMetadata.assetMetadata.assetMetadataPublisher()
-//                    )
-//                }
-//                .switchToLatest()
-//                .map { .init(kind: .task($0), metadata: $1) }
-//                .prepend(.init(kind: .estimate(0), metadata: nil))
-//                .eraseToAnyPublisher()
-//        }
+    ) -> AnyPublisher<DownloadSource<S.CustomData>, Error> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
+        storeType.downloadTaskPublisher(id: id, input: input, reusableAssetMetadata: properties.reusableAssetMetadata, session: session)
+            .map { downloadTask in
+                if let task = downloadTask.task {
+                    downloadSessionTaskPropertiesPublisher(for: task)
+                        .map { DownloadSource(progress: .actual($0), assetMetadata: downloadTask.assetMetadata) }
+                        .eraseToAnyPublisher()
+                }
+                else {
+                    Just(DownloadSource(progress: .estimate(properties.progress), assetMetadata: downloadTask.assetMetadata))
+                        .eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    private static func downloadSessionTaskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
+        Publishers.CombineLatest3(
+            Just(task),
+            task.publisher(for: \.state),
+            task.progress.publisher(for: \.fractionCompleted)
+                .map { $0.clamped(to: 0...1) }
+        )
+        .map(DownloadSessionTaskProperties.init)
+        .eraseToAnyPublisher()
     }
 }
 
@@ -221,7 +213,7 @@ extension Download {
             )
             .map { properties in
                 DownloadProperties(
-                    source: properties.source,
+                    downloadProgress: properties.downloadProgress,
                     assetMetadata: properties.assetMetadata?.withoutCustomData(),
                     fileUrl: properties.fileUrl,
                     error: properties.error
@@ -255,9 +247,9 @@ extension Download {
                     .setFailureType(to: Error.self)
                     .prepend(properties.error)
             )
-            .map { DownloadProperties(source: $0, assetMetadata: nil, fileUrl: $1, error: $2) } // FIXME: assetMetadata should not be nil
+            .map { DownloadProperties(downloadProgress: $0.progress, assetMetadata: $0.assetMetadata, fileUrl: $1, error: $2) }
             .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
-            .catch { Just(DownloadProperties(source: .estimate(0), assetMetadata: nil, fileUrl: nil, error: $0)) }
+            .catch { Just(DownloadProperties(downloadProgress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: $0)) }
             .prepend(properties)
         }
     }

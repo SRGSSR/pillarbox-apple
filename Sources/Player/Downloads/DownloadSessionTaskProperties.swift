@@ -20,7 +20,7 @@ struct DownloadSessionTaskProperties {
 
         // If progress information is not received (e.g. download happened too fast), still ensure that progress is
         // correct.
-        self.progress = (state == .completed) ? 1 : progress
+        self.progress = (state == .completed) ? 1 : progress // TODO: Check if really needed
     }
 }
 
