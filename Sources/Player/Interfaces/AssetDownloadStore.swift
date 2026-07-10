@@ -68,6 +68,28 @@ extension AssetDownloadStore {
             }
             .eraseToAnyPublisher()
     }
+
+    static func downloadTaskPublisher(
+        input: Loader.Input,
+        reusableAssetMetadata: AssetMetadata<CustomData>?,
+        session: DownloadSession
+    ) -> AnyPublisher<DownloadTask<CustomData>, any Error> {
+        let id = id(from: input)
+        if let reusableAssetMetadata {
+            return session.sessionTaskPublisher(id: id)
+                .setFailureType(to: Error.self)
+                .map { DownloadTask(task: $0, assetMetadata: reusableAssetMetadata) }
+                .eraseToAnyPublisher()
+        }
+        else {
+            return downloadConfigurationPublisher(for: input)
+                .map { configuration in
+                    let task = session.createTask(id: id, asset: configuration.asset, metadata: configuration.assetMetadata.playerMetadata)
+                    return DownloadTask(task: task, assetMetadata: configuration.assetMetadata)
+                }
+                .eraseToAnyPublisher()
+        }
+    }
 }
 
 #endif
