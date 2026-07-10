@@ -43,8 +43,8 @@ struct DownloadsView: View {
                     }
                 }
                 .swipeActions {
+                    button(systemImage: "trash", color: .red) { downloader.removeDownload(download) }
                     button(systemImage: "arrow.counterclockwise", action: download.restart)
-                    button(systemImage: "trash") { downloader.removeDownload(download) }
                 }
             }
         }
@@ -71,11 +71,12 @@ struct DownloadsView: View {
         }
     }
 
-    private func button(systemImage: String, action: @escaping () -> Void) -> some View {
+    private func button(systemImage: String, color: Color? = nil, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: systemImage)
                 .resizable()
         }
+        .tint(color)
     }
 }
 
