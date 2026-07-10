@@ -70,11 +70,11 @@ extension AssetDownloadStore {
     }
 
     static func downloadTaskPublisher(
+        id: String,
         input: Loader.Input,
         reusableAssetMetadata: AssetMetadata<CustomData>?,
         session: DownloadSession
     ) -> AnyPublisher<DownloadTask<CustomData>, any Error> {
-        let id = id(from: input)
         if let reusableAssetMetadata {
             return session.sessionTaskPublisher(id: id)
                 .setFailureType(to: Error.self)

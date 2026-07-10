@@ -18,15 +18,15 @@ final class DownloadTaskTests: TestCase {
     func testWithoutReusableMetadata() throws {
         let metadata = PlayerMetadata(title: "title")
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url, metadata: metadata)
-        let id = AssetDownloadStoreMock.id(from: input)
         let publisher = AssetDownloadStoreMock.downloadTaskPublisher(
+            id: "id",
             input: input,
             reusableAssetMetadata: nil,
             session: session
         )
         let downloadTask = try waitForSingleOutput(from: publisher)
         let task = try unwrap(downloadTask.task)
-        expect(task.taskDescription).to(equal(id))
+        expect(task.taskDescription).to(equal("id"))
         expect(downloadTask.assetMetadata.playerMetadata).to(equal(metadata))
     }
 
@@ -34,6 +34,7 @@ final class DownloadTaskTests: TestCase {
         let metadata = PlayerMetadata(title: "title")
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url)
         let publisher = AssetDownloadStoreMock.downloadTaskPublisher(
+            id: "id",
             input: input,
             reusableAssetMetadata: .init(playerMetadata: metadata, customData: ()),
             session: session
