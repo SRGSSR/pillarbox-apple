@@ -6,8 +6,6 @@
 
 #if DEBUG
 
-import Foundation
-
 @available(tvOS, unavailable)
 enum DownloadProgress {
     case estimate(Double)
