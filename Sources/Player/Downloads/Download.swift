@@ -77,7 +77,7 @@ public final class Download: ObservableObject {
         session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        let id = type(of: store).id(from: input)
+        let id = S.id(from: input)
         let creationDate = Date.now
         store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
         self.init(id: id, assetLoaderType: assetLoaderType, input: input, creationDate: creationDate, session: session, store: store)
@@ -90,7 +90,7 @@ public final class Download: ObservableObject {
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         self.init(
-            id: type(of: store).id(from: record.input),
+            id: S.id(from: record.input),
             assetLoaderType: assetLoaderType,
             input: record.input,
             creationDate: record.creationDate,
