@@ -32,7 +32,7 @@ public final class Download: ObservableObject {
     public let creationDate: Date
 
     public var progress: Double {
-        properties.progress
+        properties.fractionCompleted
     }
 
     public var state: DownloadState {
@@ -166,7 +166,7 @@ private extension Download {
                         .eraseToAnyPublisher()
                 }
                 else {
-                    Just(DownloadPhase(result: DownloadProgress.estimate(properties.progress), assetMetadata: task.assetMetadata))
+                    Just(DownloadPhase(result: DownloadProgress.estimate(properties.fractionCompleted), assetMetadata: task.assetMetadata))
                         .eraseToAnyPublisher()
                 }
             }
@@ -206,7 +206,7 @@ extension Download {
                         input: input,
                         metadata: properties.assetMetadata,
                         bookmarkData: properties.bookmarkData(),
-                        progress: properties.progress,
+                        progress: properties.fractionCompleted,
                         error: properties.error,
                         creationDate: creationDate
                     )
@@ -216,7 +216,7 @@ extension Download {
             )
             .map { properties in
                 DownloadProperties(
-                    downloadProgress: properties.downloadProgress,
+                    progress: properties.progress,
                     assetMetadata: properties.assetMetadata?.withoutCustomData(),
                     fileUrl: properties.fileUrl,
                     error: properties.error
@@ -250,9 +250,9 @@ extension Download {
                     .setFailureType(to: Error.self)
                     .prepend(properties.error)
             )
-            .map { DownloadProperties(downloadProgress: $0.result, assetMetadata: $0.assetMetadata, fileUrl: $1, error: $2) }
+            .map { DownloadProperties(progress: $0.result, assetMetadata: $0.assetMetadata, fileUrl: $1, error: $2) }
             .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
-            .catch { Just(DownloadProperties(downloadProgress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: $0)) }
+            .catch { Just(DownloadProperties(progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: $0)) }
             .prepend(properties)
         }
     }
