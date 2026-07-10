@@ -108,6 +108,12 @@ public final class Download: ObservableObject {
         properties.source.cancel()
     }
 
+    func remove() {
+        removeFile()
+        cancelOperations()
+        removeRecord()
+    }
+
     private func removeFile() {
         guard let fileUrl else { return }
         Task {
@@ -124,12 +130,6 @@ public extension Download {
 
     func suspend() {
         properties.source.suspend()
-    }
-
-    func remove() {
-        removeFile()
-        cancelOperations()
-        removeRecord()
     }
 
     func restart() {
