@@ -33,7 +33,7 @@ extension DownloadSession {
     func downloadSourceTaskPublisher<CustomData>(
         for task: URLSessionTask?,
         properties: DownloadProperties<CustomData>
-    ) -> AnyPublisher<DownloadSourceKind, Never> {
+    ) -> AnyPublisher<DownloadSource, Never> {
         guard let task else { return Just(.estimate(properties.progress)).eraseToAnyPublisher() }
         return downloadSessionTaskPropertiesPublisher(for: task)
             .map { .task($0) }
