@@ -44,8 +44,7 @@ public final class Download: ObservableObject {
     }
 
     public var error: Error? {
-        guard let error = properties.error else { return nil }
-        return URLError.isCancellationError(error) ? nil : error
+        properties.error
     }
 
     var fileUrl: URL? {

@@ -20,8 +20,8 @@ struct DownloadProperties<CustomData> {
     }
 
     var state: DownloadState {
-        if let error {
-            return URLError.isCancellationError(error) ? .cancelled : .completed
+        if error != nil {
+            return .completed
         }
         switch progress {
         case let .estimate(progress):
