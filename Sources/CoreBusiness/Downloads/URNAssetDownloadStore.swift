@@ -117,6 +117,26 @@ private extension URNAssetDownloadStore {
         }
     }
 
+    struct EntryError: Codable {
+        private let domain: String
+        private let code: Int
+        private let localizedDescription: String
+
+        init?(error: Error?) {
+            guard let error else { return nil }
+            let nsError = error as NSError
+            self.domain = nsError.domain
+            self.code = nsError.code
+            self.localizedDescription = nsError.localizedDescription
+        }
+
+        func error() -> Error {
+            NSError(domain: domain, code: code, userInfo: [
+                NSLocalizedDescriptionKey: localizedDescription
+            ])
+        }
+    }
+
     @Model
     final class Entry {
         @Attribute(.unique)
@@ -126,7 +146,7 @@ private extension URNAssetDownloadStore {
         private var metadata: EntryAssetMetadata?
         private var bookmarkData: Data?
         private var progress: Double
-        private var errorDescription: String?
+        private var error: EntryError?
         private var creationDate: Date
 
         init(id: String, record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
@@ -135,7 +155,7 @@ private extension URNAssetDownloadStore {
             self.metadata = .init(assetMetadata: record.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
-            self.errorDescription = record.error?.localizedDescription
+            self.error = .init(error: record.error)
             self.creationDate = record.creationDate
         }
 
@@ -151,7 +171,7 @@ private extension URNAssetDownloadStore {
                 metadata: metadata?.assetMetadata(),
                 bookmarkData: bookmarkData,
                 progress: progress,
-                error: DownloadError(errorDescription: errorDescription),
+                error: error?.error(),
                 creationDate: creationDate
             )
         }
@@ -161,7 +181,7 @@ private extension URNAssetDownloadStore {
             self.metadata = .init(assetMetadata: record.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
-            self.errorDescription = record.error?.localizedDescription
+            self.error = .init(error: record.error)
             self.creationDate = record.creationDate
         }
     }
