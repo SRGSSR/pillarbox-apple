@@ -15,7 +15,6 @@ public enum DownloadState: Equatable {
     case running
     case suspended
     case completed
-    case cancelled
 }
 
 #endif

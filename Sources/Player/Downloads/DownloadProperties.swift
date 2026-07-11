@@ -32,9 +32,7 @@ struct DownloadProperties<CustomData> {
                 return .running
             case .suspended:
                 return .suspended
-            case .canceling:
-                return .cancelled
-            case .completed:
+            case .canceling, .completed:
                 return .completed
             @unknown default:
                 assertionFailure("Unhandled case")
