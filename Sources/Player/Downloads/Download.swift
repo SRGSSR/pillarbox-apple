@@ -23,9 +23,6 @@ public final class Download: ObservableObject {
 
     private let trigger = Trigger()
 
-    private let locationSubject = PassthroughSubject<URL?, Never>()
-    private let errorSubject = PassthroughSubject<Error?, Never>()
-
     private let addRecord: () -> Void
     private let removeRecord: () -> Void
 
@@ -99,11 +96,11 @@ public final class Download: ObservableObject {
     }
 
     func attach(to location: URL) {
-        locationSubject.send(location)
+
     }
 
     func fail(with error: Error) {
-        errorSubject.send(error)
+        
     }
 
     func remove() {
@@ -209,25 +206,17 @@ private extension Download {
         session: DownloadSession,
         store: S
     ) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [trigger, locationSubject, errorSubject] in
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [trigger] in
             let properties = store.downloadProperties(forId: id)
-            return Publishers.CombineLatest3(
-                Self.progressPublisher(
-                    assetLoaderType: assetLoaderType,
-                    storeType: S.self,
-                    id: id,
-                    input: input,
-                    session: session,
-                    properties: properties
-                ),
-                locationSubject
-                    .setFailureType(to: Error.self)
-                    .prepend(properties.fileUrl),
-                errorSubject
-                    .setFailureType(to: Error.self)
-                    .prepend(properties.error)
+            return Self.progressPublisher(
+                assetLoaderType: assetLoaderType,
+                storeType: S.self,
+                id: id,
+                input: input,
+                session: session,
+                properties: properties
             )
-            .map { DownloadProperties(progress: $0.result, assetMetadata: $0.assetMetadata, fileUrl: $1, error: $2) }
+            .map { DownloadProperties(progress: $0.result, assetMetadata: $0.assetMetadata, fileUrl: nil, error: nil) }
             .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
             .catch { Just(DownloadProperties(progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: $0)) }
             .prepend(properties)
