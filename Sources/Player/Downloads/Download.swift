@@ -175,7 +175,7 @@ private extension Download {
         session: DownloadSession,
         properties: DownloadProperties<S.CustomData>
     ) -> AnyPublisher<DownloadPhase<DownloadProgress, S.CustomData>, Error> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        storeType.taskPublisher(id: id, input: input, reusableAssetMetadata: properties.reusableAssetMetadata, session: session)
+        S.taskPublisher(id: id, input: input, reusableAssetMetadata: properties.reusableAssetMetadata, session: session)
             .map { task in
                 Publishers.CombineLatest(
                     progressPublisher(task: task, properties: properties),
@@ -214,7 +214,7 @@ private extension Download {
             return Publishers.CombineLatest3(
                 Self.progressPublisher(
                     assetLoaderType: assetLoaderType,
-                    storeType: type(of: store),
+                    storeType: S.self,
                     id: id,
                     input: input,
                     session: session,
