@@ -19,8 +19,6 @@ public protocol AssetDownloadStore: AnyObject {
 
     static func id(from input: Loader.Input) -> String
 
-    static func assetPublisher(from input: Loader.Input, metadata: Loader.Metadata) -> AnyPublisher<Asset, Never>
-
     static func customData(from metadata: Loader.Metadata) -> CustomData
     static func asset(fileUrl: URL, customData: CustomData) -> Asset
 
@@ -41,13 +39,6 @@ public extension AssetDownloadStore {
 }
 
 @available(tvOS, unavailable)
-public extension AssetDownloadStore {
-    static func assetPublisher(from input: Loader.Input, metadata: Loader.Metadata) -> AnyPublisher<Asset, Never> {
-        Just(Loader.asset(from: input, metadata: metadata)).eraseToAnyPublisher()
-    }
-}
-
-@available(tvOS, unavailable)
 extension AssetDownloadStore {
     func downloadProperties(forId id: String) -> DownloadProperties<CustomData> {
         guard let record = downloadRecord(forId: id) else { return .init() }
@@ -57,7 +48,7 @@ extension AssetDownloadStore {
 
 @available(tvOS, unavailable)
 extension AssetDownloadStore {
-    static func downloadMetadataPublisher(for input: Loader.Input) -> AnyPublisher<DownloadMetadata<CustomData>, any Error> {
+    static func assetPublisher(for input: Loader.Input) -> AnyPublisher<DownloadPhase<Asset, CustomData>, any Error> {
         Loader.metadataPublisher(for: input)
             .first()
             .map { metadata in
@@ -70,12 +61,34 @@ extension AssetDownloadStore {
             }
             .switchToLatest()
             .map { metadata, playerMetadata, imageSource in
-                DownloadMetadata(
-                    asset: Loader.asset(from: input, metadata: metadata),
+                DownloadPhase(
+                    result: Loader.asset(from: input, metadata: metadata),
                     assetMetadata: .init(playerMetadata: playerMetadata.withImageSource(imageSource), customData: customData(from: metadata))
                 )
             }
             .eraseToAnyPublisher()
+    }
+
+    static func taskPublisher(
+        id: String,
+        input: Loader.Input,
+        reusableAssetMetadata: AssetMetadata<CustomData>?,
+        session: DownloadSession
+    ) -> AnyPublisher<DownloadPhase<URLSessionTask?, CustomData>, any Error> {
+        if let reusableAssetMetadata {
+            return session.sessionTaskPublisher(id: id)
+                .setFailureType(to: Error.self)
+                .map { DownloadPhase(result: $0, assetMetadata: reusableAssetMetadata) }
+                .eraseToAnyPublisher()
+        }
+        else {
+            return assetPublisher(for: input)
+                .map { asset in
+                    let task = session.createTask(id: id, asset: asset.result, metadata: asset.assetMetadata.playerMetadata)
+                    return DownloadPhase(result: task, assetMetadata: asset.assetMetadata)
+                }
+                .eraseToAnyPublisher()
+        }
     }
 }
 

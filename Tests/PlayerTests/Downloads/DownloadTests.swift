@@ -100,9 +100,9 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.preparing))
 
         download.remove()
-        expect(download.state).to(equal(.cancelled))
+        expect(download.state).to(equal(.completed))
         expect(download.progress).to(equal(0))
-        expect(download.error).to(beNil())
+        expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
@@ -114,9 +114,9 @@ final class DownloadTests: TestCase {
         expect(download.state).to(equal(.running))
 
         download.remove()
-        expect(download.state).to(equal(.cancelled))
+        expect(download.state).to(equal(.completed))
         expect(download.progress).to(equal(0))
-        expect(download.error).to(beNil())
+        expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
@@ -128,9 +128,9 @@ final class DownloadTests: TestCase {
         let fileUrl = try pollUnwrap(download.fileUrl)
 
         download.remove()
-        expect(download.state).to(equal(.cancelled))
+        expect(download.state).to(equal(.completed))
         expect(download.progress).to(equal(0))
-        expect(download.error).to(beNil())
+        expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
         expect(FileManager.default.fileExists(atPath: fileUrl.path())).toEventually(beFalse())
@@ -144,9 +144,9 @@ final class DownloadTests: TestCase {
         expect(download.fileUrl).notTo(beNil())
 
         download.remove()
-        expect(download.state).toEventually(equal(.cancelled))
+        expect(download.state).toEventually(equal(.completed))
         expect(download.progress).to(equal(0))
-        expect(download.error).to(beNil())
+        expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
@@ -235,14 +235,6 @@ final class DownloadTests: TestCase {
         let error2 = try unwrap(download2.error)
         expect(error2.localizedDescription).to(equal(error1.localizedDescription))
         expect(download1.fileUrl).to(beNil())
-    }
-
-    func testNoUserFacingCancellationErrors() {
-        let manager = DownloadManager(assetLoaderType: AssetLoaderMock.self, store: AssetDownloadStoreMock(), session: session)
-        let download = manager.addDownload(for: .playable(url: Stream.download.url))
-        download.remove()
-        expect(download.state).to(equal(.cancelled))
-        expect(download.error).to(beNil())
     }
 
     func testDeallocationWithManager() throws {

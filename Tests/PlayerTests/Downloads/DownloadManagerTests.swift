@@ -95,7 +95,7 @@ final class DownloadManagerTests: TestCase {
         let download = manager.addDownload(for: .playable(url: Stream.download.url))
         manager.removeDownload(download)
         expect(manager.downloads).to(beEmpty())
-        expect(download.state).to(equal(.cancelled))
+        expect(download.state).to(equal(.completed))
         expect(store.downloadRecords()).to(beEmpty())
     }
 
@@ -118,8 +118,8 @@ final class DownloadManagerTests: TestCase {
         manager.removeAllDownloads()
         expect(manager.downloads).to(beEmpty())
         expect(store.downloadRecords()).to(beEmpty())
-        expect(download1.state).to(equal(.cancelled))
-        expect(download2.state).to(equal(.cancelled))
+        expect(download1.state).to(equal(.completed))
+        expect(download2.state).to(equal(.completed))
     }
 
     func testDeallocation() {

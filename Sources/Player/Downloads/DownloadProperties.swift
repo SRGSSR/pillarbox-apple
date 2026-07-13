@@ -10,30 +10,29 @@ import Foundation
 
 @available(tvOS, unavailable)
 struct DownloadProperties<CustomData> {
-    let source: DownloadSource<CustomData>
+    let progress: DownloadProgress
+    let assetMetadata: AssetMetadata<CustomData>?
     let fileUrl: URL?
     let error: Error?
 
-    var shouldCreateTask: Bool {
-        fileUrl == nil && error == nil
+    var reusableAssetMetadata: AssetMetadata<CustomData>? {
+        fileUrl != nil || error != nil ? assetMetadata : nil
     }
 
     var state: DownloadState {
-        if let error {
-            return URLError.isCancellationError(error) ? .cancelled : .completed
+        if error != nil {
+            return .completed
         }
-        switch source.kind {
+        switch progress {
         case let .estimate(progress):
             return progress == 1 ? .completed : .preparing
-        case let .task(properties):
+        case let .actual(properties):
             switch properties.state {
             case .running:
                 return .running
             case .suspended:
                 return .suspended
-            case .canceling:
-                return .cancelled
-            case .completed:
+            case .canceling, .completed:
                 return .completed
             @unknown default:
                 assertionFailure("Unhandled case")
@@ -42,28 +41,34 @@ struct DownloadProperties<CustomData> {
         }
     }
 
-    var progress: Double {
+    var fractionCompleted: Double {
         if error != nil {
             return 0
         }
-        switch source.kind {
+        switch progress {
         case let .estimate(progress):
             return progress
-        case let .task(properties):
+        case let .actual(properties):
             return properties.progress
         }
     }
 
-    init() {
-        self.init(
-            source: .init(kind: .estimate(0), metadata: nil),
-            fileUrl: nil,
-            error: nil
-        )
+    private var task: URLSessionTask? {
+        switch progress {
+        case .estimate:
+            return nil
+        case let .actual(properties):
+            return properties.task
+        }
     }
 
-    init(source: DownloadSource<CustomData>, fileUrl: URL?, error: Error?) {
-        self.source = source
+    init() {
+        self.init(progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: nil)
+    }
+
+    init(progress: DownloadProgress, assetMetadata: AssetMetadata<CustomData>?, fileUrl: URL?, error: Error?) {
+        self.progress = progress
+        self.assetMetadata = assetMetadata
         self.fileUrl = fileUrl
         self.error = error
     }
@@ -71,13 +76,15 @@ struct DownloadProperties<CustomData> {
     init<Input>(from record: DownloadRecord<Input, CustomData>) {
         do {
             self.init(
-                source: .init(kind: .estimate(record.progress), metadata: record.metadata),
+                progress: .estimate(record.progress),
+                assetMetadata: record.metadata,
                 fileUrl: try URL(resolvingBookmarkData: record.bookmarkData),
                 error: record.error
             )
         } catch {
             self.init(
-                source: .init(kind: .estimate(0), metadata: record.metadata),
+                progress: .estimate(0),
+                assetMetadata: record.metadata,
                 fileUrl: nil,
                 error: error
             )
@@ -86,6 +93,18 @@ struct DownloadProperties<CustomData> {
 
     func bookmarkData() -> Data? {
         try? fileUrl?.bookmarkData()
+    }
+
+    func resume() {
+        task?.resume()
+    }
+
+    func suspend() {
+        task?.suspend()
+    }
+
+    func cancel() {
+        task?.cancel()
     }
 }
 

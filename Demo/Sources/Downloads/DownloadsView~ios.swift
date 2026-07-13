@@ -42,10 +42,9 @@ struct DownloadsView: View {
                         router.presented = .player(media: .init(title: download.metadata.title ?? "Untitled", type: .item(item)))
                     }
                 }
-            }
-            .onDelete { indexes in
-                for index in indexes.reversed() {
-                    downloader.removeDownload(downloader.downloads[index])
+                .swipeActions {
+                    button(systemImage: "arrow.counterclockwise", action: download.restart)
+                    button(systemImage: "trash", color: .red) { downloader.removeDownload(download) }
                 }
             }
         }
@@ -70,6 +69,14 @@ struct DownloadsView: View {
                 Image(systemName: "trash")
             }
         }
+    }
+
+    private func button(systemImage: String, color: Color? = nil, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .resizable()
+        }
+        .tint(color)
     }
 }
 

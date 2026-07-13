@@ -7,9 +7,9 @@
 #if DEBUG
 
 @available(tvOS, unavailable)
-enum DownloadSourceKind {
+enum DownloadProgress {
     case estimate(Double)
-    case task(DownloadSessionTaskProperties)
+    case actual(DownloadSessionTaskProperties)
 }
 
 #endif

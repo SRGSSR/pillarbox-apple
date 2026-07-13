@@ -32,7 +32,7 @@ public final class Download: ObservableObject {
     public let creationDate: Date
 
     public var progress: Double {
-        properties.progress
+        properties.fractionCompleted
     }
 
     public var state: DownloadState {
@@ -40,12 +40,11 @@ public final class Download: ObservableObject {
     }
 
     public var metadata: PlayerMetadata {
-        properties.source.metadata?.playerMetadata ?? .empty
+        properties.assetMetadata?.playerMetadata ?? .empty
     }
 
     public var error: Error? {
-        guard let error = properties.error else { return nil }
-        return URLError.isCancellationError(error) ? nil : error
+        properties.error
     }
 
     var fileUrl: URL? {
@@ -77,7 +76,7 @@ public final class Download: ObservableObject {
         session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        let id = type(of: store).id(from: input)
+        let id = S.id(from: input)
         let creationDate = Date.now
         store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
         self.init(id: id, assetLoaderType: assetLoaderType, input: input, creationDate: creationDate, session: session, store: store)
@@ -90,7 +89,7 @@ public final class Download: ObservableObject {
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         self.init(
-            id: type(of: store).id(from: record.input),
+            id: S.id(from: record.input),
             assetLoaderType: assetLoaderType,
             input: record.input,
             creationDate: record.creationDate,
@@ -105,7 +104,12 @@ public final class Download: ObservableObject {
 
     func fail(with error: Error) {
         errorSubject.send(error)
-        properties.source.cancel()
+    }
+
+    func remove() {
+        removeFile()
+        cancelOperations()
+        removeRecord()
     }
 
     private func removeFile() {
@@ -119,27 +123,21 @@ public final class Download: ObservableObject {
 @available(tvOS, unavailable)
 public extension Download {
     func resume() {
-        properties.source.resume()
+        properties.resume()
     }
 
     func suspend() {
-        properties.source.suspend()
-    }
-
-    func remove() {
-        removeFile()
-        cancelOperations()
-        removeRecord()
+        properties.suspend()
     }
 
     func restart() {
         remove()
         addRecord()
-        trigger.activate(for: TriggerId.reload)
+        trigger.activate(for: TriggerId.restart)
     }
 
     private func cancelOperations() {
-        properties.source.cancel()
+        properties.cancel()
         trigger.activate(for: TriggerId.cancel)
     }
 }
@@ -147,103 +145,76 @@ public extension Download {
 @available(tvOS, unavailable)
 private extension Download {
     enum TriggerId: Hashable {
-        case reload
+        case restart
         case cancel
     }
+}
 
-    static func downloadSourcePublisher<L, S>(
+@available(tvOS, unavailable)
+private extension Download {
+    static func taskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
+        Publishers.CombineLatest3(
+            Just(task),
+            task.publisher(for: \.state),
+            task.progress.publisher(for: \.fractionCompleted)
+                .map { $0.clamped(to: 0...1) }
+        )
+        .map { task, state, progress in
+            // If progress information is indeterminate (e.g. download happened too fast), still ensure that progress is
+            // correct when completed.
+            .init(task: task, state: state, progress: state == .completed ? 1 : progress)
+        }
+        .eraseToAnyPublisher()
+    }
+
+    static func progressPublisher<L, S>(
         assetLoaderType: L.Type,
         storeType: S.Type,
         id: String,
         input: L.Input,
         session: DownloadSession,
         properties: DownloadProperties<S.CustomData>
-    ) -> AnyPublisher<DownloadSource<S.CustomData>, Error> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        if !properties.shouldCreateTask, let metadata = properties.source.metadata {
-            return session.sessionTaskPublisher(id: id)
-                .setFailureType(to: Error.self)
-                .map { task in
-                    Publishers.CombineLatest(
-                        session.downloadSourceTaskPublisher(for: task, properties: properties),
-                        metadata.assetMetadataPublisher()
-                    )
-                }
-                .switchToLatest()
-                .map { .init(kind: $0, metadata: $1) }
-                .prepend(.init(kind: .estimate(properties.progress), metadata: metadata))
+    ) -> AnyPublisher<DownloadPhase<DownloadProgress, S.CustomData>, Error> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
+        S.taskPublisher(id: id, input: input, reusableAssetMetadata: properties.reusableAssetMetadata, session: session)
+            .map { task in
+                Publishers.CombineLatest(
+                    progressPublisher(task: task, properties: properties),
+                    task.assetMetadata.assetMetadataPublisher()
+                )
+                .map { DownloadPhase(result: $0.result, assetMetadata: $1) }
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    static func progressPublisher<CustomData>(
+        task: DownloadPhase<URLSessionTask?, CustomData>,
+        properties: DownloadProperties<CustomData>
+    ) -> AnyPublisher<DownloadPhase<DownloadProgress, CustomData>, Never> {
+        if let sessionTask = task.result {
+            return taskPropertiesPublisher(for: sessionTask)
+                .map { DownloadPhase(result: .actual($0), assetMetadata: task.assetMetadata) }
                 .eraseToAnyPublisher()
         }
         else {
-            return S.downloadMetadataPublisher(for: input)
-                .map { downloadMetadata in
-                    let task = session.createTask(
-                        id: id,
-                        asset: downloadMetadata.asset,
-                        metadata: downloadMetadata.assetMetadata.playerMetadata,
-                    )
-                    return Publishers.CombineLatest(
-                        session.downloadSessionTaskPropertiesPublisher(for: task),
-                        downloadMetadata.assetMetadata.assetMetadataPublisher()
-                    )
-                }
-                .switchToLatest()
-                .map { .init(kind: .task($0), metadata: $1) }
-                .prepend(.init(kind: .estimate(0), metadata: nil))
+            return Just(DownloadPhase(result: .estimate(properties.fractionCompleted), assetMetadata: task.assetMetadata))
                 .eraseToAnyPublisher()
         }
     }
-}
 
-@available(tvOS, unavailable)
-extension Download {
-    private func configurePropertiesPublisher<L, S>(
-        assetLoaderType: L.Type,
-        input: L.Input,
-        session: DownloadSession,
-        store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        downloadPropertiesPublisher(assetLoaderType: assetLoaderType, id: id, input: input, session: session, store: store)
-            .receiveOnMainThread()
-            .handleEvents(
-                receiveOutput: { [id, creationDate] properties in
-                    let record = DownloadRecord(
-                        input: input,
-                        metadata: properties.source.metadata,
-                        bookmarkData: properties.bookmarkData(),
-                        progress: properties.progress,
-                        error: properties.error,
-                        creationDate: creationDate
-                    )
-                    store.updateDownloadRecord(record, forId: id)
-                },
-                receiveCompletion: nil
-            )
-            .map { properties in
-                DownloadProperties(
-                    source: .init(
-                        kind: properties.source.kind,
-                        metadata: properties.source.metadata?.withoutCustomData()
-                    ),
-                    fileUrl: properties.fileUrl,
-                    error: properties.error
-                )
-            }
-            .assign(to: &$properties)
-    }
-
-    private func downloadPropertiesPublisher<L, S>(
+    func propertiesPublisher<L, S>(
         assetLoaderType: L.Type,
         id: String,
         input: L.Input,
         session: DownloadSession,
         store: S
     ) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger, locationSubject, errorSubject] in
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [trigger, locationSubject, errorSubject] in
             let properties = store.downloadProperties(forId: id)
             return Publishers.CombineLatest3(
-                Self.downloadSourcePublisher(
+                Self.progressPublisher(
                     assetLoaderType: assetLoaderType,
-                    storeType: type(of: store),
+                    storeType: S.self,
                     id: id,
                     input: input,
                     session: session,
@@ -256,11 +227,44 @@ extension Download {
                     .setFailureType(to: Error.self)
                     .prepend(properties.error)
             )
-            .map { DownloadProperties(source: $0, fileUrl: $1, error: $2) }
+            .map { DownloadProperties(progress: $0.result, assetMetadata: $0.assetMetadata, fileUrl: $1, error: $2) }
             .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
-            .catch { Just(DownloadProperties(source: .init(kind: .estimate(0), metadata: nil), fileUrl: nil, error: $0)) }
+            .catch { Just(DownloadProperties(progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: $0)) }
             .prepend(properties)
         }
+    }
+
+    func configurePropertiesPublisher<L, S>(
+        assetLoaderType: L.Type,
+        input: L.Input,
+        session: DownloadSession,
+        store: S
+    ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
+        propertiesPublisher(assetLoaderType: assetLoaderType, id: id, input: input, session: session, store: store)
+            .receiveOnMainThread()
+            .handleEvents(
+                receiveOutput: { [id, creationDate] properties in
+                    let record = DownloadRecord(
+                        input: input,
+                        metadata: properties.assetMetadata,
+                        bookmarkData: properties.bookmarkData(),
+                        progress: properties.fractionCompleted,
+                        error: properties.error,
+                        creationDate: creationDate
+                    )
+                    store.updateDownloadRecord(record, forId: id)
+                },
+                receiveCompletion: nil
+            )
+            .map { properties in
+                DownloadProperties(
+                    progress: properties.progress,
+                    assetMetadata: properties.assetMetadata?.withoutCustomData(),
+                    fileUrl: properties.fileUrl,
+                    error: properties.error
+                )
+            }
+            .assign(to: &$properties)
     }
 }
 
