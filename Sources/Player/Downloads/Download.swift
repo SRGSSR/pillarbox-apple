@@ -95,14 +95,6 @@ public final class Download: ObservableObject {
         )
     }
 
-    func attach(to location: URL) {
-
-    }
-
-    func fail(with error: Error) {
-        
-    }
-
     func remove() {
         removeFile()
         cancelOperations()
@@ -159,7 +151,7 @@ private extension Download {
         .map { task, state, progress in
             // If progress information is indeterminate (e.g. download happened too fast), still ensure that progress is
             // correct when completed.
-            .init(task: task, state: state, progress: state == .completed ? 1 : progress)
+            DownloadSessionTaskProperties(task: task, state: state, progress: state == .completed ? 1 : progress)
         }
         .eraseToAnyPublisher()
     }

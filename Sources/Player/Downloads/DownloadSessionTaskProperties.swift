@@ -6,6 +6,7 @@
 
 #if DEBUG
 
+import Combine
 import Foundation
 
 @available(tvOS, unavailable)

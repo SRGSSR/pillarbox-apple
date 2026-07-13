@@ -78,19 +78,19 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
 
 @available(tvOS, unavailable)
 extension DownloadManager: DownloadSessionDelegate {
-    func downloadSessionWillDownloadToLocation(_ location: URL, forId id: String) {
+    func downloadSessionWillDownloadToLocation(_ location: URL, task: URLSessionTask, forId id: String) {
         locations[id] = location
-        download(matchingId: id)?.attach(to: location)
+        task.attachLocation(location)
     }
 
-    func downloadSessionDidCompleteWithError(_ error: (any Error)?, forId id: String) {
+    func downloadSessionDidCompleteWithError(_ error: (any Error)?, task: URLSessionTask, forId id: String) {
         if let error {
             if let location = locations[id] {
                 Task {
                     try? FileManager.default.removeItem(at: location)
                 }
             }
-            download(matchingId: id)?.fail(with: error)
+            task.attachError(error)
         }
         locations[id] = nil
     }
