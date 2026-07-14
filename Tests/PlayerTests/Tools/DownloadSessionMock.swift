@@ -62,21 +62,21 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let delegate, let id = task.taskDescription else { return }
-        delegate.downloadSessionDidCompleteWithError(error ?? Self.error(from: task), task: task, forId: id)
+        delegate.downloadSessionTask(task, didCompleteWithError: error ?? Self.error(from: task), forId: id)
     }
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let delegate, let id = downloadTask.taskDescription else { return }
         if let error = Self.error(from: downloadTask) {
-            delegate.downloadSessionDidCompleteWithError(error, task: downloadTask, forId: id)
+            delegate.downloadSessionTask(downloadTask, didCompleteWithError: error, forId: id)
         }
         else {
             let destination = directoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension(Self.fileExtension(from: downloadTask))
             do {
                 try FileManager.default.moveItem(at: location, to: destination)
-                delegate.downloadSessionWillDownloadToLocation(destination, task: downloadTask, forId: id)
+                delegate.downloadSessionTask(downloadTask, willDownloadToLocation: destination, forId: id)
             } catch {
-                delegate.downloadSessionDidCompleteWithError(error, task: downloadTask, forId: id)
+                delegate.downloadSessionTask(downloadTask, didCompleteWithError: error, forId: id)
             }
         }
     }

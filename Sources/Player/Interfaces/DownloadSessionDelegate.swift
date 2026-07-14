@@ -8,6 +8,6 @@ import Foundation
 
 @available(tvOS, unavailable)
 protocol DownloadSessionDelegate: AnyObject {
-    func downloadSessionWillDownloadToLocation(_ location: URL, task: URLSessionTask, forId id: String)
-    func downloadSessionDidCompleteWithError(_ error: (any Error)?, task: URLSessionTask, forId id: String)
+    func downloadSessionTask(_ task: URLSessionTask, willDownloadToLocation location: URL, forId id: String)
+    func downloadSessionTask(_ task: URLSessionTask, didCompleteWithError error: (any Error)?, forId id: String)
 }

@@ -54,13 +54,13 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
 #if os(iOS)
     func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
         guard let delegate, let id = assetDownloadTask.taskDescription else { return }
-        delegate.downloadSessionWillDownloadToLocation(location, task: assetDownloadTask, forId: id)
+        delegate.downloadSessionTask(assetDownloadTask, willDownloadToLocation: location, forId: id)
     }
 #endif
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let delegate, let id = task.taskDescription else { return }
-        delegate.downloadSessionDidCompleteWithError(error, task: task, forId: id)
+        delegate.downloadSessionTask(task, didCompleteWithError: error, forId: id)
     }
 }
 
