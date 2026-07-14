@@ -6,7 +6,6 @@
 
 #if DEBUG
 
-import Combine
 import Foundation
 
 @available(tvOS, unavailable)
@@ -14,6 +13,8 @@ struct DownloadSessionTaskProperties {
     let task: URLSessionTask
     let state: URLSessionTask.State
     let progress: Double
+    let location: URL?
+    let error: Error?
 }
 
 #endif

@@ -142,17 +142,20 @@ private extension Download {
 @available(tvOS, unavailable)
 private extension Download {
     static func taskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
-        Publishers.CombineLatest3(
+        Publishers.CombineLatest5(
             Just(task),
             task.publisher(for: \.state),
             task.progress.publisher(for: \.fractionCompleted)
-                .map { $0.clamped(to: 0...1) }
+                .map { $0.clamped(to: 0...1) },
+            task.locationPublisher,
+            task.errorPublisher
         )
-        .map { task, state, progress in
+        .map { task, state, progress, location, error in
             // If progress information is indeterminate (e.g. download happened too fast), still ensure that progress is
             // correct when completed.
-            DownloadSessionTaskProperties(task: task, state: state, progress: state == .completed ? 1 : progress)
+            DownloadSessionTaskProperties(task: task, state: state, progress: state == .completed ? 1 : progress, location: location, error: error)
         }
+        .print("-->")
         .eraseToAnyPublisher()
     }
 

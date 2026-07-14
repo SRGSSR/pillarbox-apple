@@ -10,6 +10,8 @@
 enum DownloadProgress {
     case estimate(Double)
     case actual(DownloadSessionTaskProperties)
+
+    // Add URL and error here
 }
 
 #endif
