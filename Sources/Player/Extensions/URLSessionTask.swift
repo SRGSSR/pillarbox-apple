@@ -41,11 +41,11 @@ extension URLSessionTask {
         }
     }
 
-    func attachLocation(_ location: URL) {
+    func attach(to location: URL) {
         locationSubject.send(location)
     }
 
-    func attachError(_ error: Error) {
+    func fail(with error: Error) {
         errorSubject.send(error)
     }
 }

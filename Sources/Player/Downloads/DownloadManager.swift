@@ -80,7 +80,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
 extension DownloadManager: DownloadSessionDelegate {
     func downloadSessionTask(_ task: URLSessionTask, willDownloadToLocation location: URL, forId id: String) {
         locations[id] = location
-        task.attachLocation(location)
+        task.attach(to: location)
     }
 
     func downloadSessionTask(_ task: URLSessionTask, didCompleteWithError error: (any Error)?, forId id: String) {
@@ -90,7 +90,7 @@ extension DownloadManager: DownloadSessionDelegate {
                     try? FileManager.default.removeItem(at: location)
                 }
             }
-            task.attachError(error)
+            task.fail(with: error)
         }
         locations[id] = nil
     }
