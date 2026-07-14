@@ -156,34 +156,6 @@ private extension Download {
         .eraseToAnyPublisher()
     }
 
-    static func propertiesPublisher<CustomData>(
-        task: DownloadTask<CustomData>,
-        properties: DownloadProperties<CustomData>
-    ) -> AnyPublisher<DownloadProperties<CustomData>, Never> {
-        if let wrappedTask = task.wrappedValue {
-            return Publishers.CombineLatest4(
-                taskPropertiesPublisher(for: wrappedTask),
-                task.assetMetadata.assetMetadataPublisher(),
-                wrappedTask.locationPublisher,
-                wrappedTask.errorPublisher
-            )
-            .map { DownloadProperties(progress: .actual($0), assetMetadata: $1, fileUrl: $2, error: $3) }
-            .eraseToAnyPublisher()
-        }
-        else {
-            return task.assetMetadata.assetMetadataPublisher()
-                .map { assetMetadata in
-                    DownloadProperties(
-                        progress: .estimate(properties.fractionCompleted),
-                        assetMetadata: assetMetadata,
-                        fileUrl: properties.fileUrl,
-                        error: properties.error
-                    )
-                }
-                .eraseToAnyPublisher()
-        }
-    }
-
     func propertiesPublisher<L, S>(
         assetLoaderType: L.Type,
         input: L.Input,
@@ -191,15 +163,36 @@ private extension Download {
         store: S
     ) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, trigger] in
-            let properties = store.downloadProperties(forId: id)
-            return S.taskPublisher(id: id, input: input, reusableAssetMetadata: properties.reusableAssetMetadata, session: session)
+            let storedProperties = store.downloadProperties(forId: id)
+            return S.taskPublisher(id: id, input: input, reusableAssetMetadata: storedProperties.reusableAssetMetadata, session: session)
                 .map { task in
-                    Self.propertiesPublisher(task: task, properties: properties)
+                    if let wrappedTask = task.wrappedValue {
+                        return Publishers.CombineLatest4(
+                            Self.taskPropertiesPublisher(for: wrappedTask),
+                            task.assetMetadata.assetMetadataPublisher(),
+                            wrappedTask.locationPublisher,
+                            wrappedTask.errorPublisher
+                        )
+                        .map { DownloadProperties(progress: .actual($0), assetMetadata: $1, fileUrl: $2, error: $3) }
+                        .eraseToAnyPublisher()
+                    }
+                    else {
+                        return task.assetMetadata.assetMetadataPublisher()
+                            .map { assetMetadata in
+                                DownloadProperties(
+                                    progress: .estimate(storedProperties.fractionCompleted),
+                                    assetMetadata: assetMetadata,
+                                    fileUrl: storedProperties.fileUrl,
+                                    error: storedProperties.error
+                                )
+                            }
+                            .eraseToAnyPublisher()
+                    }
                 }
                 .switchToLatest()
                 .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
                 .catch { Just(DownloadProperties(progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: $0)) }
-                .prepend(properties)
+                .prepend(storedProperties)
         }
     }
 
