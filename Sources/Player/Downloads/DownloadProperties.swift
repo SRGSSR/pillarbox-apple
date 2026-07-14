@@ -12,8 +12,6 @@ import Foundation
 struct DownloadProperties<CustomData> {
     let progress: DownloadProgress
     let assetMetadata: AssetMetadata<CustomData>?
-    let fileUrl: URL?
-    let error: Error?
 
     var reusableAssetMetadata: AssetMetadata<CustomData>? {
         fileUrl != nil || error != nil ? assetMetadata : nil
@@ -24,7 +22,7 @@ struct DownloadProperties<CustomData> {
             return .completed
         }
         switch progress {
-        case let .estimate(progress):
+        case let .estimate(progress, _, _):
             return progress == 1 ? .completed : .preparing
         case let .actual(properties):
             switch properties.state {
@@ -41,52 +39,44 @@ struct DownloadProperties<CustomData> {
         }
     }
 
+    var fileUrl: URL? {
+        progress.location
+    }
+
+    var error: Error? {
+        progress.error
+    }
+
     var fractionCompleted: Double {
         if error != nil {
             return 0
         }
-        switch progress {
-        case let .estimate(progress):
-            return progress
-        case let .actual(properties):
-            return properties.progress
-        }
+        return progress.fractionCompleted
     }
 
     private var task: URLSessionTask? {
-        switch progress {
-        case .estimate:
-            return nil
-        case let .actual(properties):
-            return properties.task
-        }
+        progress.task
     }
 
     init() {
-        self.init(progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: nil)
+        self.init(progress: .estimate(0, location: nil, error: nil), assetMetadata: nil)
     }
 
-    init(progress: DownloadProgress, assetMetadata: AssetMetadata<CustomData>?, fileUrl: URL?, error: Error?) {
+    init(progress: DownloadProgress, assetMetadata: AssetMetadata<CustomData>?) {
         self.progress = progress
         self.assetMetadata = assetMetadata
-        self.fileUrl = fileUrl
-        self.error = error
     }
 
     init<Input>(from record: DownloadRecord<Input, CustomData>) {
         do {
             self.init(
-                progress: .estimate(record.progress),
-                assetMetadata: record.metadata,
-                fileUrl: try URL(resolvingBookmarkData: record.bookmarkData),
-                error: record.error
+                progress: .estimate(record.progress, location: try URL(resolvingBookmarkData: record.bookmarkData), error: record.error),
+                assetMetadata: record.metadata
             )
         } catch {
             self.init(
-                progress: .estimate(0),
-                assetMetadata: record.metadata,
-                fileUrl: nil,
-                error: error
+                progress: .estimate(0, location: nil, error: error),
+                assetMetadata: record.metadata
             )
         }
     }

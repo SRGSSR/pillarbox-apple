@@ -141,7 +141,7 @@ private extension Download {
 
 @available(tvOS, unavailable)
 private extension Download {
-    static func taskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
+    static func taskPropertiesPublisher(for task: URLSessionTask, location: URL?, error: Error?) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
         Publishers.CombineLatest5(
             Just(task),
             task.publisher(for: \.state),
@@ -155,7 +155,6 @@ private extension Download {
             // correct when completed.
             DownloadSessionTaskProperties(task: task, state: state, progress: state == .completed ? 1 : progress, location: location, error: error)
         }
-        .print("-->")
         .eraseToAnyPublisher()
     }
 
@@ -184,12 +183,12 @@ private extension Download {
         properties: DownloadProperties<CustomData>
     ) -> AnyPublisher<DownloadPhase<DownloadProgress, CustomData>, Never> {
         if let sessionTask = task.result {
-            return taskPropertiesPublisher(for: sessionTask)
+            return taskPropertiesPublisher(for: sessionTask, location: properties.fileUrl, error: properties.error)
                 .map { DownloadPhase(result: .actual($0), assetMetadata: task.assetMetadata) }
                 .eraseToAnyPublisher()
         }
         else {
-            return Just(DownloadPhase(result: .estimate(properties.fractionCompleted), assetMetadata: task.assetMetadata))
+            return Just(DownloadPhase(result: .estimate(properties.fractionCompleted, location: properties.fileUrl, error: properties.error), assetMetadata: task.assetMetadata))
                 .eraseToAnyPublisher()
         }
     }
@@ -211,9 +210,9 @@ private extension Download {
                 session: session,
                 properties: properties
             )
-            .map { DownloadProperties(progress: $0.result, assetMetadata: $0.assetMetadata, fileUrl: nil, error: nil) }
+            .map { DownloadProperties(progress: $0.result, assetMetadata: $0.assetMetadata) }
             .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
-            .catch { Just(DownloadProperties(progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: $0)) }
+            .catch { Just(DownloadProperties(progress: .estimate(0, location: nil, error: $0), assetMetadata: nil)) }
             .prepend(properties)
         }
     }
@@ -241,12 +240,7 @@ private extension Download {
                 receiveCompletion: nil
             )
             .map { properties in
-                DownloadProperties(
-                    progress: properties.progress,
-                    assetMetadata: properties.assetMetadata?.withoutCustomData(),
-                    fileUrl: properties.fileUrl,
-                    error: properties.error
-                )
+                DownloadProperties(progress: properties.progress, assetMetadata: properties.assetMetadata?.withoutCustomData())
             }
             .assign(to: &$properties)
     }

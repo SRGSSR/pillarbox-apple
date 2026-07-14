@@ -32,7 +32,6 @@ extension URLSessionTask {
             return subject
         }
         else {
-            // TODO: Should be able to grab value from storage
             let subject = CurrentValueSubject<URL?, Never>(nil)
             objc_setAssociatedObject(self, &kLocationSubjectKey, subject, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return subject
@@ -44,7 +43,6 @@ extension URLSessionTask {
             return subject
         }
         else {
-            // TODO: Should be able to grab value from storage
             let subject = CurrentValueSubject<Error?, Never>(nil)
             objc_setAssociatedObject(self, &kErrorSubjectKey, subject, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return subject
