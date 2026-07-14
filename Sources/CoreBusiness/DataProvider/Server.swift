@@ -33,11 +33,11 @@ public enum Server: Codable {
 #endif
 
     private static let supportedMimeTypes = [
-        "audio/mp4; codecs=\"mp4a.40.2\"",
+        "application/x-mpegURL",
+        "video/mpeg",
         "video/mp4",
         "audio/mpeg",
-        "video/mpeg",
-        "application/x-mpegURL"
+        "audio/mp4; codecs=\"mp4a.40.2\""
     ]
 
     var id: String {
