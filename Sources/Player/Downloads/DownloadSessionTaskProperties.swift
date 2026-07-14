@@ -13,8 +13,6 @@ struct DownloadSessionTaskProperties {
     let task: URLSessionTask
     let state: URLSessionTask.State
     let progress: Double
-    let location: URL?
-    let error: Error?
 }
 
 #endif
