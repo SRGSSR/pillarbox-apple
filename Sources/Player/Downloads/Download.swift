@@ -188,8 +188,13 @@ private extension Download {
                 .eraseToAnyPublisher()
         }
         else {
-            return Just(DownloadPhase(result: .estimate(properties.fractionCompleted, location: properties.fileUrl, error: properties.error), assetMetadata: task.assetMetadata))
-                .eraseToAnyPublisher()
+            return Just(
+                DownloadPhase(
+                    result: .estimate(properties.fractionCompleted, location: properties.fileUrl, error: properties.error),
+                    assetMetadata: task.assetMetadata
+                )
+            )
+            .eraseToAnyPublisher()
         }
     }
 

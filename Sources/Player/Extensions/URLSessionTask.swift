@@ -11,14 +11,6 @@ private var kLocationSubjectKey: Void?
 private var kErrorSubjectKey: Void?
 
 extension URLSessionTask {
-    func attachLocation(_ location: URL) {
-        locationSubject.send(location)
-    }
-
-    func attachError(_ error: Error) {
-        errorSubject.send(error)
-    }
-
     var locationPublisher: AnyPublisher<URL?, Never> {
         locationSubject.eraseToAnyPublisher()
     }
@@ -47,5 +39,13 @@ extension URLSessionTask {
             objc_setAssociatedObject(self, &kErrorSubjectKey, subject, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return subject
         }
+    }
+
+    func attachLocation(_ location: URL) {
+        locationSubject.send(location)
+    }
+
+    func attachError(_ error: Error) {
+        errorSubject.send(error)
     }
 }
