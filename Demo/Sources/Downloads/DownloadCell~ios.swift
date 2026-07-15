@@ -28,6 +28,9 @@ struct DownloadCell: View {
         HStack {
             infoView()
             statusButton()
+            button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
+                .frame(width: 32, height: 32)
+                .tint(.orange)
         }
     }
 
