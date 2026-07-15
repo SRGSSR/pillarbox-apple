@@ -191,7 +191,7 @@ private extension Download {
                 }
                 .switchToLatest()
                 .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
-                .catch { Just(DownloadProperties(progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: $0)) }
+                .catch { Just(DownloadProperties(progress: .estimate(0), assetMetadata: storedProperties.assetMetadata, fileUrl: storedProperties.fileUrl, error: $0)) }
                 .prepend(storedProperties)
         }
     }
