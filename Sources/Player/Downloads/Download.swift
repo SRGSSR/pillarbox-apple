@@ -25,6 +25,7 @@ public final class Download: ObservableObject {
 
     private let addRecord: () -> Void
     private let removeRecord: () -> Void
+    private let cancelTasks: () -> Void
 
     public let creationDate: Date
 
@@ -63,6 +64,9 @@ public final class Download: ObservableObject {
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
+        }
+        self.cancelTasks = {
+            session.cancelTasks(forId: id)
         }
         configurePropertiesPublisher(assetLoaderType: assetLoaderType, input: input, session: session, store: store)
     }
@@ -126,7 +130,7 @@ public extension Download {
     }
 
     private func cancelOperations() {
-        properties.cancel()
+        cancelTasks()
         trigger.activate(for: TriggerId.cancel)
     }
 }

@@ -24,12 +24,7 @@ final class URLDownloadSession: NSObject {
 
 @available(tvOS, unavailable)
 extension URLDownloadSession: DownloadSession {
-    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask?, Never> {
-        taskPublisher(withDescription: id)
-            .eraseToAnyPublisher()
-    }
-
-    func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
+    func createTask(forId id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
         let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: metadata.title ?? id)
         configuration.artworkData = metadata.imageSource.data
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
@@ -38,10 +33,22 @@ extension URLDownloadSession: DownloadSession {
         return task
     }
 
-    private func taskPublisher(withDescription description: String) -> AnyPublisher<URLSessionTask?, Never> {
+    func sessionTaskPublisher(forId id: String) -> AnyPublisher<URLSessionTask?, Never> {
+        taskPublisher(forId: id).eraseToAnyPublisher()
+    }
+
+    func cancelTasks(forId id: String) {
+        session.getAllTasks { tasks in
+            tasks.filter { $0.taskDescription == id }.forEach { task in
+                task.cancel()
+            }
+        }
+    }
+
+    private func taskPublisher(forId id: String) -> AnyPublisher<URLSessionTask?, Never> {
         Future { [session] promise in
             session.getAllTasks { tasks in
-                let task = tasks.first { $0.taskDescription == description }
+                let task = tasks.first { $0.taskDescription == id }
                 promise(.success(task))
             }
         }

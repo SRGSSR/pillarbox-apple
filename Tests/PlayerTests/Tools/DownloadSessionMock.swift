@@ -35,16 +35,18 @@ final class DownloadSessionMock: NSObject {
 
 @available(tvOS, unavailable)
 extension DownloadSessionMock: DownloadSession {
-    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask?, Never> {
-        Just(nil).eraseToAnyPublisher()
-    }
-
-    func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
+    func createTask(forId id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
         let task = session.downloadTask(with: asset.urlAsset().url)
         task.taskDescription = id
         task.resume()
         return task
     }
+
+    func sessionTaskPublisher(forId id: String) -> AnyPublisher<URLSessionTask?, Never> {
+        Just(nil).eraseToAnyPublisher()
+    }
+
+    func cancelTasks(forId  id: String) {}
 }
 
 @available(tvOS, unavailable)

@@ -102,10 +102,6 @@ struct DownloadProperties<CustomData> {
     func suspend() {
         task?.suspend()
     }
-
-    func cancel() {
-        task?.cancel()
-    }
 }
 
 #endif
