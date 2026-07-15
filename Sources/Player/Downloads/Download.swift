@@ -162,6 +162,7 @@ private extension Download {
         session: DownloadSession,
         store: S
     ) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
+        // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, trigger] in
             let storedProperties = store.downloadProperties(forId: id)
             return S.taskPublisher(id: id, input: input, reusableAssetMetadata: storedProperties.reusableAssetMetadata, session: session)
@@ -170,8 +171,12 @@ private extension Download {
                         return Publishers.CombineLatest4(
                             Self.taskPropertiesPublisher(for: wrappedTask),
                             task.assetMetadata.assetMetadataPublisher(),
-                            wrappedTask.locationPublisher,
+                            wrappedTask.locationPublisher
+                                .map(\.self)
+                                .prepend(storedProperties.fileUrl),
                             wrappedTask.errorPublisher
+                                .map(\.self)
+                                .prepend(storedProperties.error)
                         )
                         .map { DownloadProperties(progress: .actual($0), assetMetadata: $1, fileUrl: $2, error: $3) }
                         .eraseToAnyPublisher()

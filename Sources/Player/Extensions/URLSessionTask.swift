@@ -11,12 +11,16 @@ private var kLocationSubjectKey: Void?
 private var kErrorSubjectKey: Void?
 
 extension URLSessionTask {
-    var locationPublisher: AnyPublisher<URL?, Never> {
-        locationSubject.eraseToAnyPublisher()
+    var locationPublisher: AnyPublisher<URL, Never> {
+        locationSubject
+            .compactMap(\.self)
+            .eraseToAnyPublisher()
     }
 
-    var errorPublisher: AnyPublisher<Error?, Never> {
-        errorSubject.eraseToAnyPublisher()
+    var errorPublisher: AnyPublisher<Error, Never> {
+        errorSubject
+            .compactMap(\.self)
+            .eraseToAnyPublisher()
     }
 
     private var locationSubject: CurrentValueSubject<URL?, Never> {
