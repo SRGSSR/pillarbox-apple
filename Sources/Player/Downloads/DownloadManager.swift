@@ -87,6 +87,7 @@ extension DownloadManager: DownloadSessionDelegate {
         if let error {
             if let location = locations[task.taskIdentifier] {
                 Task {
+                    try? await Task.sleep(for: .milliseconds(500))
                     try? FileManager.default.removeItem(at: location)
                 }
             }
