@@ -33,6 +33,10 @@ public final class Download: ObservableObject {
         properties.fractionCompleted
     }
 
+    public func bookmarkData() -> Data? {
+        properties.bookmarkData()
+    }
+
     public var state: DownloadState {
         properties.state
     }

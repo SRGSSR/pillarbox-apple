@@ -28,6 +28,9 @@ struct DownloadCell: View {
         HStack {
             infoView()
             statusButton()
+            button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
+                .frame(width: 32, height: 32)
+                .tint(.orange)
         }
     }
 
@@ -38,6 +41,7 @@ struct DownloadCell: View {
             errorMessage()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .border(download.bookmarkData() != nil ? Color.green : Color.red, width: 2)
         .contentShape(.rect)
         .accessibilityAddTraits(.isButton)
         .onTapGesture(perform: action)
