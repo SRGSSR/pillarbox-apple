@@ -100,7 +100,7 @@ extension DownloadManager: DownloadSessionDelegate {
             }
             catch {
                 // The location is not always immediately removable when the task completes. Insert a second attempt after
-                // a while if this is the case.
+                // a while if this failed the first time.
                 try? await Task.sleep(for: .seconds(2))
                 try? FileManager.default.removeItem(at: location)
             }

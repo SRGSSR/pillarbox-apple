@@ -76,7 +76,7 @@ extension AssetDownloadStore {
         session: DownloadSession
     ) -> AnyPublisher<DownloadTask<CustomData>, any Error> {
         if let reusableAssetMetadata {
-            return session.sessionTaskPublisher(forId: id)
+            return session.taskPublisher(matchingId: id)
                 .setFailureType(to: Error.self)
                 .map { DownloadTask($0, assetMetadata: reusableAssetMetadata) }
                 .eraseToAnyPublisher()
@@ -84,9 +84,10 @@ extension AssetDownloadStore {
         else {
             return assetPublisher(for: input)
                 .map { asset in
-                    let task = session.createTask(forId: id, asset: asset.wrappedValue, metadata: asset.assetMetadata.playerMetadata)
-                    return DownloadTask(task, assetMetadata: asset.assetMetadata)
+                    session.taskPublisher(forId: id, asset: asset.wrappedValue, metadata: asset.assetMetadata.playerMetadata)
+                        .map { DownloadTask($0, assetMetadata: asset.assetMetadata) }
                 }
+                .switchToLatest()
                 .eraseToAnyPublisher()
         }
     }

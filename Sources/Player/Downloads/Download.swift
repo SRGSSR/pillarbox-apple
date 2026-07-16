@@ -33,10 +33,6 @@ public final class Download: ObservableObject {
         properties.fractionCompleted
     }
 
-    public func bookmarkData() -> Data? {
-        properties.bookmarkData()
-    }
-
     public var state: DownloadState {
         properties.state
     }
@@ -70,7 +66,7 @@ public final class Download: ObservableObject {
             store.removeDownloadRecord(forId: id)
         }
         self.cancelTasks = {
-            session.cancelTasks(forId: id)
+            session.cancelTasks(matchingId: id)
         }
         configurePropertiesPublisher(assetLoaderType: assetLoaderType, input: input, session: session, store: store)
     }
@@ -101,6 +97,11 @@ public final class Download: ObservableObject {
             session: session,
             store: store
         )
+    }
+
+    // TODO: Remove
+    public func bookmarkData() -> Data? {
+        properties.bookmarkData()
     }
 
     func remove() {

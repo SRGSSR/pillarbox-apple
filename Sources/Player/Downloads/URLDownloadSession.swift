@@ -24,7 +24,39 @@ final class URLDownloadSession: NSObject {
 
 @available(tvOS, unavailable)
 extension URLDownloadSession: DownloadSession {
-    func createTask(forId id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
+    func taskPublisher(forId id: String, asset: Asset, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
+        Future { promise in
+            // Cancel existing tasks first. This avoids:
+            //   - Dangling tasks that would still download duplicates of the same content in the background.
+            //   - Immediate `willDownloadTo` delegate method call during task creation, which can lead to subtle ordering issues.
+            self.tasks(matchingDescription: id) { tasks in
+                tasks.forEach { task in
+                    task.cancel()
+                }
+                promise(.success(self.createTask(forId: id, asset: asset, metadata: metadata)))
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    func taskPublisher(matchingId id: String) -> AnyPublisher<URLSessionTask?, Never> {
+        Future { promise in
+            self.tasks(matchingDescription: id) { tasks in
+                promise(.success(tasks.first))
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    func cancelTasks(matchingId id: String) {
+        tasks(matchingDescription: id) { tasks in
+            tasks.forEach { task in
+                task.cancel()
+            }
+        }
+    }
+
+    private func createTask(forId id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
         let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: metadata.title ?? id)
         configuration.artworkData = metadata.imageSource.data
         let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
@@ -33,26 +65,10 @@ extension URLDownloadSession: DownloadSession {
         return task
     }
 
-    func sessionTaskPublisher(forId id: String) -> AnyPublisher<URLSessionTask?, Never> {
-        taskPublisher(forId: id).eraseToAnyPublisher()
-    }
-
-    func cancelTasks(forId id: String) {
+    private func tasks(matchingDescription description: String, completionHandler: @escaping @Sendable ([URLSessionTask]) -> Void) {
         session.getAllTasks { tasks in
-            tasks.filter { $0.taskDescription == id }.forEach { task in
-                task.cancel()
-            }
+            completionHandler(tasks.filter { $0.taskDescription == description })
         }
-    }
-
-    private func taskPublisher(forId id: String) -> AnyPublisher<URLSessionTask?, Never> {
-        Future { [session] promise in
-            session.getAllTasks { tasks in
-                let task = tasks.first { $0.taskDescription == id }
-                promise(.success(task))
-            }
-        }
-        .eraseToAnyPublisher()
     }
 }
 
