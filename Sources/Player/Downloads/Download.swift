@@ -99,11 +99,6 @@ public final class Download: ObservableObject {
         )
     }
 
-    // TODO: Remove
-    public func bookmarkData() -> Data? {
-        properties.bookmarkData()
-    }
-
     func remove() {
         removeFile()
         cancelOperations()
