@@ -86,16 +86,25 @@ extension DownloadManager: DownloadSessionDelegate {
     func downloadSessionTask(_ task: URLSessionTask, didCompleteWithError error: (any Error)?, forId id: String) {
         if let error {
             if let location = locations[task.taskIdentifier] {
-                Task {
-                    // Sometimes completion is called but the location cannot be removed yet. This can be mitigated by waiting
-                    // a bit.
-                    try? await Task.sleep(for: .milliseconds(500))
-                    try? FileManager.default.removeItem(at: location)
-                }
+                removeFile(at: location)
             }
             task.fail(with: error)
         }
         locations[task.taskIdentifier] = nil
+    }
+
+    private func removeFile(at location: URL) {
+        Task {
+            do {
+                try FileManager.default.removeItem(at: location)
+            }
+            catch {
+                // The location is not always immediately removable when the task completes. Insert a second attempt after
+                // a while if this is the case.
+                try? await Task.sleep(for: .seconds(2))
+                try? FileManager.default.removeItem(at: location)
+            }
+        }
     }
 }
 
