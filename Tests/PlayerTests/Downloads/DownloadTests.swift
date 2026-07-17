@@ -166,6 +166,7 @@ final class DownloadTests: TestCase {
         let location2 = try unwrap(download.fileUrl)
         expect(location1).notTo(equal(location2))
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
+        expect(FileManager.default.fileExists(atPath: location1.path())).toEventually(beFalse())
     }
 
     func testRestartImmediately() throws {
@@ -199,7 +200,7 @@ final class DownloadTests: TestCase {
         let download = manager.addDownload(for: .playable(url: Stream.download.url, metadata: .init(title: "Title"), after: 0.1))
         expect(download.metadata.title).toEventually(equal("Title"))
         download.restart(keepsMetadata: true)
-        expect(download.metadata.title).toEventually(beNil())
+        expect(download.metadata.title).toNever(beNil(), until: .milliseconds(100))
     }
 
     func testRestoreRunningWithMissingFile() throws {
