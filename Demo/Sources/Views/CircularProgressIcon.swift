@@ -32,38 +32,35 @@ private struct CircularProgressStyle: ProgressViewStyle {
  ```
  }
  */
-struct CircularProgressButton: View {
+struct CircularProgressIcon: View {
     let progress: Double
     let icon: String
     let color: Color
-    let side: Double
-    let action: () -> Void
+    let side: CGFloat
 
     var body: some View {
-        Button(action: action) {
-            ProgressView(value: progress)
-                .progressViewStyle(CircularProgressStyle(color: color, width: side * 0.1))
-                .overlay {
-                    Image(systemName: icon)
-                        .font(.system(size: side / 2))
-                        .tint(color)
-                }
-        }
-        .frame(width: side, height: side)
+        ProgressView(value: progress)
+            .progressViewStyle(CircularProgressStyle(color: color, width: side * 0.1))
+            .overlay {
+                Image(systemName: icon)
+                    .font(.system(size: side / 2))
+                    .foregroundStyle(color)
+                    .bold()
+            }
+            .frame(width: side, height: side)
     }
 
-    init(progress: Double, icon: String, color: Color = .accentColor, side: Double, action: @escaping () -> Void) {
+    init(progress: Double, icon: String, color: Color = .accentColor, side: CGFloat) {
         self.progress = progress
         self.icon = icon
         self.color = color
         self.side = side
-        self.action = action
     }
 }
 
 #Preview {
     VStack(spacing: 50) {
-        CircularProgressButton(progress: 0.7, icon: "play.fill", side: 100) {}
-        CircularProgressButton(progress: 0.3, icon: "pause.fill", color: .green, side: 100) {}
+        CircularProgressIcon(progress: 0.7, icon: "play.fill", side: 100)
+        CircularProgressIcon(progress: 0.3, icon: "pause.fill", color: .green, side: 100)
     }
 }
