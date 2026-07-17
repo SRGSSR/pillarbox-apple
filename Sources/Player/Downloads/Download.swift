@@ -22,10 +22,10 @@ public final class Download: ObservableObject {
     @Published private var properties: DownloadPlayerProperties = .init()
 
     private let trigger = Trigger()
+    private let session: any DownloadSession
 
     private let addRecord: () -> Void
     private let removeRecord: () -> Void
-    private let cancelTasks: () -> Void
 
     public let creationDate: Date
 
@@ -59,16 +59,14 @@ public final class Download: ObservableObject {
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         self.id = id
         self.creationDate = creationDate
+        self.session = session
         self.addRecord = {
             store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
         }
-        self.cancelTasks = {
-            session.cancelTasks(matchingId: id)
-        }
-        configurePropertiesPublisher(assetLoaderType: assetLoaderType, input: input, session: session, store: store)
+        configurePropertiesPublisher(assetLoaderType: assetLoaderType, input: input, store: store)
     }
 
     convenience init<L, S>(
@@ -130,7 +128,7 @@ public extension Download {
     }
 
     private func cancelOperations() {
-        cancelTasks()
+        session.cancelTasks(matchingId: id)
         trigger.activate(for: TriggerId.cancel)
     }
 }
@@ -163,11 +161,10 @@ private extension Download {
     func propertiesPublisher<L, S>(
         assetLoaderType: L.Type,
         input: L.Input,
-        session: DownloadSession,
         store: S
     ) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
         // swiftlint:disable:next closure_body_length
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, trigger] in
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, trigger, session] in
             let storedProperties = store.downloadProperties(forId: id)
             return S.taskPublisher(id: id, input: input, reusableAssetMetadata: storedProperties.reusableAssetMetadata, session: session)
                 .map { task in
@@ -215,10 +212,9 @@ private extension Download {
     func configurePropertiesPublisher<L, S>(
         assetLoaderType: L.Type,
         input: L.Input,
-        session: DownloadSession,
         store: S
     ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
-        propertiesPublisher(assetLoaderType: assetLoaderType, input: input, session: session, store: store)
+        propertiesPublisher(assetLoaderType: assetLoaderType, input: input, store: store)
             .receiveOnMainThread()
             .handleEvents(
                 receiveOutput: { [id, creationDate] properties in
