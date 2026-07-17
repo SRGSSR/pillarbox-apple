@@ -38,13 +38,13 @@ struct DownloadsView: View {
         List {
             ForEach(downloader.downloads, id: \.self) { download in
                 DownloadCell(download: download) {
-                    if let item = downloader.playerItem(for: download) {
-                        router.presented = .player(media: .init(title: download.metadata.title ?? "Untitled", type: .item(item)))
+                    if let media = media(from: download) {
+                        router.presented = .player(media: media)
                     }
                 }
                 .swipeActions {
-                    button(systemImage: "arrow.counterclockwise", action: download.restart)
                     button(systemImage: "trash", color: .red) { downloader.removeDownload(download) }
+                    button(systemImage: "arrow.counterclockwise", action: download.restart)
                 }
             }
         }
@@ -68,7 +68,20 @@ struct DownloadsView: View {
             } label: {
                 Image(systemName: "trash")
             }
+            Button(action: openPlaylist) {
+                Image(systemName: "rectangle.stack.badge.play")
+            }
+            .accessibilityLabel("Open as playlist")
         }
+    }
+
+    private func media(from download: Download) -> Media? {
+        guard let item = downloader.playerItem(for: download) else { return nil }
+        return .init(title: download.metadata.title ?? "Untitled", subtitle: download.metadata.subtitle, type: .item(item))
+    }
+
+    private func openPlaylist() {
+        router.presented = .playlist(medias: downloader.downloads.compactMap(media(from:)))
     }
 
     private func button(systemImage: String, color: Color? = nil, action: @escaping () -> Void) -> some View {

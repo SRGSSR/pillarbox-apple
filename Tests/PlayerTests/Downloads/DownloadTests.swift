@@ -166,6 +166,7 @@ final class DownloadTests: TestCase {
         let location2 = try unwrap(download.fileUrl)
         expect(location1).notTo(equal(location2))
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
+        expect(FileManager.default.fileExists(atPath: location1.path())).toEventually(beFalse())
     }
 
     func testRestartImmediately() throws {
@@ -181,6 +182,15 @@ final class DownloadTests: TestCase {
         let location2 = try unwrap(download.fileUrl)
         expect(location2).notTo(beNil())
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
+    }
+
+    func testRestartKeepsMetadataIfAvailable() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(assetLoaderType: AssetLoaderMock.self, store: store, session: session)
+        let download = manager.addDownload(for: .playable(url: Stream.download.url, metadata: .init(title: "Title"), after: 0.1))
+        expect(download.metadata.title).toEventually(equal("Title"))
+        download.restart()
+        expect(download.metadata.title).toNever(beNil(), until: .milliseconds(100))
     }
 
     func testRestoreRunningWithMissingFile() throws {

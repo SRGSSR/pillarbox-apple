@@ -24,7 +24,7 @@ public final class Download: ObservableObject {
     private let trigger = Trigger()
     private let session: any DownloadSession
 
-    private let addRecord: () -> Void
+    private let resetRecord: () -> Void
     private let removeRecord: () -> Void
 
     public let creationDate: Date
@@ -60,8 +60,9 @@ public final class Download: ObservableObject {
         self.id = id
         self.creationDate = creationDate
         self.session = session
-        self.addRecord = {
-            store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
+        self.resetRecord = {
+            guard let record = store.downloadRecord(forId: id) else { return }
+            store.updateDownloadRecord(record.reset(), forId: id)
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
@@ -122,8 +123,9 @@ public extension Download {
     }
 
     func restart() {
-        remove()
-        addRecord()
+        removeFile()
+        cancelOperations()
+        resetRecord()
         trigger.activate(for: TriggerId.restart)
     }
 
@@ -197,14 +199,7 @@ private extension Download {
                 }
                 .switchToLatest()
                 .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
-                .catch { error in
-                    Just(DownloadProperties(
-                        progress: .estimate(0),
-                        assetMetadata: storedProperties.assetMetadata,
-                        fileUrl: storedProperties.fileUrl,
-                        error: error
-                    ))
-                }
+                .catch { Just(store.downloadProperties(forId: id).withError($0)) }
                 .prepend(storedProperties)
         }
     }

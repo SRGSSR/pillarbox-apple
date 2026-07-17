@@ -32,6 +32,10 @@ public struct DownloadRecord<Input, CustomData> {
         self.error = error
         self.creationDate = creationDate
     }
+
+    func reset() -> Self {
+        .init(input: input, metadata: metadata, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
+    }
 }
 
 #endif
