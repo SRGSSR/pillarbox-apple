@@ -102,6 +102,10 @@ struct DownloadProperties<CustomData> {
     func suspend() {
         task?.suspend()
     }
+
+    func withError(_ error: Error) -> Self {
+        .init(progress: progress, assetMetadata: assetMetadata, fileUrl: fileUrl, error: error)
+    }
 }
 
 #endif

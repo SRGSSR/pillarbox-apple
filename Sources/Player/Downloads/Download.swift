@@ -203,14 +203,7 @@ private extension Download {
                 }
                 .switchToLatest()
                 .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
-                .catch { error in
-                    Just(DownloadProperties(
-                        progress: .estimate(0),
-                        assetMetadata: storedProperties.assetMetadata,
-                        fileUrl: storedProperties.fileUrl,
-                        error: error
-                    ))
-                }
+                .catch { Just(store.downloadProperties(forId: id).withError($0)) }
                 .prepend(storedProperties)
         }
     }
