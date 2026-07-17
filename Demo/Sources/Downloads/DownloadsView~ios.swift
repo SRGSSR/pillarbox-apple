@@ -43,8 +43,8 @@ struct DownloadsView: View {
                     }
                 }
                 .swipeActions {
-                    button(systemImage: "arrow.counterclockwise", action: download.restart)
                     button(systemImage: "trash", color: .red) { downloader.removeDownload(download) }
+                    button(systemImage: "arrow.counterclockwise", action: download.restart)
                 }
             }
         }
