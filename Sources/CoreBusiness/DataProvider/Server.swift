@@ -32,14 +32,6 @@ public enum Server: Codable {
     private static let vector = "tvplay"
 #endif
 
-    private static let supportedMimeTypes = [
-        "application/x-mpegURL",
-        "video/mpeg",
-        "video/mp4",
-        "audio/mpeg",
-        "audio/mp4; codecs=\"mp4a.40.2\""
-    ]
-
     var id: String {
         switch self {
         case .production:
@@ -81,9 +73,7 @@ public enum Server: Codable {
         }
         components.queryItems = [
             URLQueryItem(name: "onlyChapters", value: "true"),
-            URLQueryItem(name: "vector", value: Self.vector),
-            URLQueryItem(name: "streamPlayerCapabilities", value: Self.supportedMimeTypes.joined(separator: ",")),
-            URLQueryItem(name: "drmPlayerCapabilities", value: "com.apple.fps")
+            URLQueryItem(name: "vector", value: Self.vector)
         ]
         var request = URLRequest(url: components.url ?? url)
         request.allHTTPHeaderFields = httpHeaders
