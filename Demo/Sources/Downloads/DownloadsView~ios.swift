@@ -77,7 +77,7 @@ struct DownloadsView: View {
 
     private func media(from download: Download) -> Media? {
         guard let item = downloader.playerItem(for: download) else { return nil }
-        return .init(title: download.metadata.title ?? "Untitled", type: .item(item))
+        return .init(title: download.metadata.title ?? "Untitled", subtitle: download.metadata.subtitle, type: .item(item))
     }
 
     private func openPlaylist() {
