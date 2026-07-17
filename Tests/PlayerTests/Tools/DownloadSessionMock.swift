@@ -35,11 +35,17 @@ final class DownloadSessionMock: NSObject {
 
 @available(tvOS, unavailable)
 extension DownloadSessionMock: DownloadSession {
-    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask?, Never> {
+    func taskPublisher(forId id: String, asset: Asset, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
+        Just(createTask(forId: id, asset: asset, metadata: metadata)).eraseToAnyPublisher()
+    }
+
+    func taskPublisher(matchingId id: String) -> AnyPublisher<URLSessionTask?, Never> {
         Just(nil).eraseToAnyPublisher()
     }
 
-    func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
+    func cancelTasks(matchingId id: String) {}
+
+    private func createTask(forId id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
         let task = session.downloadTask(with: asset.urlAsset().url)
         task.taskDescription = id
         task.resume()
@@ -62,21 +68,21 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let delegate, let id = task.taskDescription else { return }
-        delegate.downloadSessionDidCompleteWithError(error ?? Self.error(from: task), forId: id)
+        delegate.downloadSessionTask(task, didCompleteWithError: error ?? Self.error(from: task), forId: id)
     }
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let delegate, let id = downloadTask.taskDescription else { return }
         if let error = Self.error(from: downloadTask) {
-            delegate.downloadSessionDidCompleteWithError(error, forId: id)
+            delegate.downloadSessionTask(downloadTask, didCompleteWithError: error, forId: id)
         }
         else {
             let destination = directoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension(Self.fileExtension(from: downloadTask))
             do {
                 try FileManager.default.moveItem(at: location, to: destination)
-                delegate.downloadSessionWillDownloadToLocation(destination, forId: id)
+                delegate.downloadSessionTask(downloadTask, willDownloadToLocation: destination, forId: id)
             } catch {
-                delegate.downloadSessionDidCompleteWithError(error, forId: id)
+                delegate.downloadSessionTask(downloadTask, didCompleteWithError: error, forId: id)
             }
         }
     }

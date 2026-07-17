@@ -13,8 +13,10 @@ import Foundation
 protocol DownloadSession: AnyObject {
     var delegate: DownloadSessionDelegate? { get set }
 
-    func sessionTaskPublisher(id: String) -> AnyPublisher<URLSessionTask?, Never>
-    func createTask(id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask
+    func taskPublisher(forId id: String, asset: Asset, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never>
+    func taskPublisher(matchingId id: String) -> AnyPublisher<URLSessionTask?, Never>
+
+    func cancelTasks(matchingId id: String)
 }
 
 #endif

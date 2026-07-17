@@ -16,10 +16,6 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
 
     @Published private(set) var downloads: [Download]
 
-    // Store locations separately. If a location was created but not associated with a download, we still need to be able
-    // to properly clean associated downloaded data.
-    private var locations: [String: URL] = [:]
-
     init(assetLoaderType: L.Type, store: S, session: some DownloadSession) {
         self.store = store
         self.session = session
@@ -78,21 +74,13 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
 
 @available(tvOS, unavailable)
 extension DownloadManager: DownloadSessionDelegate {
-    func downloadSessionWillDownloadToLocation(_ location: URL, forId id: String) {
-        locations[id] = location
-        download(matchingId: id)?.attach(to: location)
+    func downloadSessionTask(_ task: URLSessionTask, willDownloadToLocation location: URL, forId id: String) {
+        task.attach(to: location)
     }
 
-    func downloadSessionDidCompleteWithError(_ error: (any Error)?, forId id: String) {
-        if let error {
-            if let location = locations[id] {
-                Task {
-                    try? FileManager.default.removeItem(at: location)
-                }
-            }
-            download(matchingId: id)?.fail(with: error)
-        }
-        locations[id] = nil
+    func downloadSessionTask(_ task: URLSessionTask, didCompleteWithError error: (any Error)?, forId id: String) {
+        guard let error else { return }
+        task.fail(with: error)
     }
 }
 

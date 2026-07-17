@@ -190,3 +190,11 @@ Some increments reported in `Metrics` may contain negative values immediately fo
 ### Workaround
 
 No workaround is available yet.
+
+## Download files might remain after cleanup
+
+If a file download is pending but has not yet started when the app is terminated, its location can no longer be retrieved. As a result, the downloaded file can no longer be located for cleanup.
+
+### Workaround
+
+These orphaned download files are typically very small (at most a few kilobytes). They can be removed manually through the device’s storage settings or will eventually be reclaimed automatically by the system.

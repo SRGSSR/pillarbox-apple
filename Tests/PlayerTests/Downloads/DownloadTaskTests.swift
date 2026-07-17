@@ -25,7 +25,7 @@ final class DownloadTaskTests: TestCase {
             session: session
         )
         let task = try waitForSingleOutput(from: publisher)
-        let sessionTask = try unwrap(task.result)
+        let sessionTask = try unwrap(task.wrappedValue)
         expect(sessionTask.taskDescription).to(equal("id"))
         expect(task.assetMetadata.playerMetadata).to(equal(metadata))
     }
@@ -40,7 +40,7 @@ final class DownloadTaskTests: TestCase {
             session: session
         )
         let task = try waitForSingleOutput(from: publisher)
-        expect(task.result).to(beNil())
+        expect(task.wrappedValue).to(beNil())
         expect(task.assetMetadata.playerMetadata).to(equal(metadata))
     }
 }

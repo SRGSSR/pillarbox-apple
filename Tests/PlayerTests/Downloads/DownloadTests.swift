@@ -151,7 +151,7 @@ final class DownloadTests: TestCase {
         expect(store.downloadRecord(forId: download.id)).to(beNil())
     }
 
-    func testRestart() throws {
+    func testRestartWhileCompleted() throws {
         let store = AssetDownloadStoreMock()
         let manager = DownloadManager(assetLoaderType: AssetLoaderMock.self, store: store, session: session)
         let download = manager.addDownload(for: .playable(url: Stream.download.url))
@@ -165,6 +165,21 @@ final class DownloadTests: TestCase {
         expect(download.progress).to(equal(1))
         let location2 = try unwrap(download.fileUrl)
         expect(location1).notTo(equal(location2))
+        expect(store.downloadRecord(forId: download.id)).notTo(beNil())
+    }
+
+    func testRestartImmediately() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(assetLoaderType: AssetLoaderMock.self, store: store, session: session)
+        let download = manager.addDownload(for: .playable(url: Stream.download.url))
+        expect(download.state).to(equal(.running))
+        download.restart()
+        expect(download.state).toEventually(equal(.running))
+        expect(download.progress).to(equal(0))
+        expect(download.state).toEventually(equal(.completed))
+        expect(download.progress).to(equal(1))
+        let location2 = try unwrap(download.fileUrl)
+        expect(location2).notTo(beNil())
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
     }
 
