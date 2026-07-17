@@ -24,11 +24,29 @@ struct DownloadCell: View {
         download.metadata.subtitle
     }
 
+    private var imageSource: ImageSource {
+        download.metadata.imageSource
+    }
+
     var body: some View {
         HStack {
+            artworkView()
             infoView()
             statusButton()
         }
+    }
+
+    private func artworkView() -> some View {
+        Rectangle()
+            .foregroundStyle(.quaternary)
+            .aspectRatio(16 / 9, contentMode: .fit)
+            .frame(height: 32)
+            .overlay {
+                LazyImage(source: imageSource) { image in
+                    image
+                        .resizable()
+                }
+            }
     }
 
     private func infoView() -> some View {
