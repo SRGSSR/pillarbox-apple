@@ -183,6 +183,25 @@ final class DownloadTests: TestCase {
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
     }
 
+    func testRestartDiscardingMetadata() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(assetLoaderType: AssetLoaderMock.self, store: store, session: session)
+        let download = manager.addDownload(for: .playable(url: Stream.download.url, metadata: .init(title: "Title"), after: 0.1))
+        expect(download.metadata.title).toEventually(equal("Title"))
+        download.restart()
+        expect(download.metadata.title).to(beNil())
+        expect(download.metadata.title).toEventually(equal("Title"))
+    }
+
+    func testRestartKeepingMetadata() throws {
+        let store = AssetDownloadStoreMock()
+        let manager = DownloadManager(assetLoaderType: AssetLoaderMock.self, store: store, session: session)
+        let download = manager.addDownload(for: .playable(url: Stream.download.url, metadata: .init(title: "Title"), after: 0.1))
+        expect(download.metadata.title).toEventually(equal("Title"))
+        download.restart(keepsMetadata: true)
+        expect(download.metadata.title).toEventually(beNil())
+    }
+
     func testRestoreRunningWithMissingFile() throws {
         let store = AssetDownloadStoreMock()
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url)
