@@ -14,6 +14,10 @@ final class URLDownloadSession: NSObject {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var session: AVAssetDownloadURLSession!
 
+    // Store locations separately. If a location was created but not associated with a download, we still need to be able
+    // to properly clean associated downloaded data.
+    private var locations: [Int: URL] = [:]
+
     weak var delegate: (any DownloadSessionDelegate)?
 
     init(configuration: URLSessionConfiguration) {
@@ -76,14 +80,33 @@ extension URLDownloadSession: DownloadSession {
 extension URLDownloadSession: AVAssetDownloadDelegate {
 #if os(iOS)
     func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, willDownloadTo location: URL) {
-        guard let delegate, let id = assetDownloadTask.taskDescription else { return }
-        delegate.downloadSessionTask(assetDownloadTask, willDownloadToLocation: location, forId: id)
+        guard let id = assetDownloadTask.taskDescription else { return }
+        locations[assetDownloadTask.taskIdentifier] = location
+        delegate?.downloadSessionTask(assetDownloadTask, willDownloadToLocation: location, forId: id)
     }
 #endif
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
-        guard let delegate, let id = task.taskDescription else { return }
-        delegate.downloadSessionTask(task, didCompleteWithError: error, forId: id)
+        guard let id = task.taskDescription else { return }
+        if error != nil, let location = locations[task.taskIdentifier] {
+            removeFile(at: location)
+        }
+        locations[task.taskIdentifier] = nil
+        delegate?.downloadSessionTask(task, didCompleteWithError: error, forId: id)
+    }
+
+    private func removeFile(at location: URL) {
+        Task {
+            do {
+                try FileManager.default.removeItem(at: location)
+            }
+            catch {
+                // The location is not always immediately removable when the task completes. Insert a second attempt after
+                // a while if this failed the first time.
+                try? await Task.sleep(for: .seconds(2))
+                try? FileManager.default.removeItem(at: location)
+            }
+        }
     }
 }
 
