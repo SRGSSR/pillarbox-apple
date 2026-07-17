@@ -90,10 +90,8 @@ struct DownloadCell: View {
     @ViewBuilder
     private func completedButton() -> some View {
         if download.error != nil {
-            button(systemImage: "arrow.counterclockwise.circle") {
-                download.restart(keepsMetadata: true)
-            }
-            .tint(.red)
+            button(systemImage: "arrow.counterclockwise.circle", action: download.restart)
+                .tint(.red)
         }
         else {
             Image(systemName: "checkmark")

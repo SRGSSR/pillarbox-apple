@@ -24,7 +24,7 @@ public final class Download: ObservableObject {
     private let trigger = Trigger()
     private let session: any DownloadSession
 
-    private let resetRecord: (Bool) -> Void
+    private let resetRecord: () -> Void
     private let removeRecord: () -> Void
 
     public let creationDate: Date
@@ -60,9 +60,9 @@ public final class Download: ObservableObject {
         self.id = id
         self.creationDate = creationDate
         self.session = session
-        self.resetRecord = { keepsMetadata in
+        self.resetRecord = {
             guard let record = store.downloadRecord(forId: id) else { return }
-            store.updateDownloadRecord(record.reset(keepsMetadata: keepsMetadata), forId: id)
+            store.updateDownloadRecord(record.reset(), forId: id)
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
@@ -123,13 +123,9 @@ public extension Download {
     }
 
     func restart() {
-        restart(keepsMetadata: false)
-    }
-
-    func restart(keepsMetadata: Bool) {
         removeFile()
         cancelOperations()
-        resetRecord(keepsMetadata)
+        resetRecord()
         trigger.activate(for: TriggerId.restart)
     }
 
