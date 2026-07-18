@@ -35,17 +35,15 @@ struct DownloadsView: View {
     }
 
     private func mainView() -> some View {
-        List {
-            ForEach(downloader.downloads, id: \.self) { download in
-                DownloadCell(download: download) {
-                    if let media = media(from: download) {
-                        router.presented = .player(media: media)
-                    }
+        List(downloader.downloads, id: \.self) { download in
+            DownloadCell(download: download) {
+                if let media = media(from: download) {
+                    router.presented = .player(media: media)
                 }
-                .swipeActions {
-                    button(systemImage: "trash", color: .red) { downloader.removeDownload(download) }
-                    button(systemImage: "arrow.counterclockwise", action: download.restart)
-                }
+            }
+            .swipeActions {
+                button(systemImage: "trash", color: .red) { downloader.removeDownload(download) }
+                button(systemImage: "arrow.counterclockwise", action: download.restart)
             }
         }
     }
