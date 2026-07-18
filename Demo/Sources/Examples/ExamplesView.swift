@@ -65,13 +65,13 @@ private struct MediaEntryView: View {
         switch kind {
         case .url:
             guard let url else { return URLMedia.unknown }
-            return .init(title: "URL", type: .url(url))
+            return .init(title: "URL", subtitle: url.absoluteString, type: .url(url))
         case .tokenProtected:
             guard let url else { return URLMedia.unknown }
-            return .init(title: "Token-protected", type: .tokenProtectedUrl(url))
+            return .init(title: "Token-protected", subtitle: url.absoluteString, type: .tokenProtectedUrl(url))
         case .encrypted:
             guard let url, let certificateUrl else { return URLMedia.unknown }
-            return .init(title: "Encrypted", type: .encryptedUrl(url, certificateUrl: certificateUrl))
+            return .init(title: "Encrypted", subtitle: url.absoluteString, type: .encryptedUrl(url, certificateUrl: certificateUrl))
         case .productionUrn:
             return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .production))
         case .stageUrn:
@@ -148,9 +148,11 @@ private struct MediaEntryView: View {
         HStack {
             Button(action: play) {
                 Text("Play")
+                    .frame(maxWidth: .infinity)
             }
             Button(action: download) {
                 Text("Download")
+                    .frame(maxWidth: .infinity)
             }
         }
         .foregroundColor(Color.accentColor)
