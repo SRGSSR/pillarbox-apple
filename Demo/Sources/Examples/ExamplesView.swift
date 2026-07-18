@@ -57,7 +57,9 @@ private struct MediaEntryView: View {
     @State private var kind: Kind = .url
     @State private var text = ""
     @State private var certificateUrlString = ""
+
     @EnvironmentObject private var router: Router
+    @EnvironmentObject private var downloader: DemoDownloader
 
     private var media: Media {
         switch kind {
@@ -119,10 +121,7 @@ private struct MediaEntryView: View {
                 TextFieldView("Certificate URL", text: $certificateUrlString)
             }
             if isValid {
-                Button(action: play) {
-                    Text("Play")
-                }
-                .foregroundColor(Color.accentColor)
+                actionButtons()
             }
         }
         .transaction { $0.animation = nil }
@@ -145,8 +144,24 @@ private struct MediaEntryView: View {
 #endif
     }
 
+    private func actionButtons() -> some View {
+        HStack {
+            Button(action: play) {
+                Text("Play")
+            }
+            Button(action: download) {
+                Text("Download")
+            }
+        }
+        .foregroundColor(Color.accentColor)
+    }
+
     private func play() {
         router.presented = .player(media: media)
+    }
+
+    private func download() {
+        downloader.addDownload(media: media)
     }
 }
 
