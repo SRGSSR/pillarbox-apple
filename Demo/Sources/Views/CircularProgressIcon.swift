@@ -40,7 +40,7 @@ struct CircularProgressIcon: View {
 
     var body: some View {
         ProgressView(value: progress)
-            .progressViewStyle(CircularProgressStyle(color: color, width: side * 0.1))
+            .progressViewStyle(.circular(color: color, width: side * 0.1))
             .overlay {
                 Image(systemName: icon)
                     .font(.system(size: side / 2))
@@ -62,5 +62,11 @@ struct CircularProgressIcon: View {
     VStack(spacing: 50) {
         CircularProgressIcon(progress: 0.7, icon: "play.fill", side: 100)
         CircularProgressIcon(progress: 0.3, icon: "pause.fill", color: .green, side: 100)
+    }
+}
+
+private extension ProgressViewStyle where Self == CircularProgressStyle {
+    static func circular(color: Color, width: CGFloat) -> CircularProgressStyle {
+        .init(color: color, width: width)
     }
 }
