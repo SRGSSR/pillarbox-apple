@@ -59,17 +59,21 @@ private struct MediaEntryView: View {
     @State private var certificateUrlString = ""
     @EnvironmentObject private var router: Router
 
+#if DEBUG && os(iOS)
+    @EnvironmentObject private var downloader: DemoDownloader
+#endif
+
     private var media: Media {
         switch kind {
         case .url:
             guard let url else { return URLMedia.unknown }
-            return .init(title: "URL", type: .url(url))
+            return .init(title: "URL", subtitle: url.absoluteString, type: .url(url))
         case .tokenProtected:
             guard let url else { return URLMedia.unknown }
-            return .init(title: "Token-protected", type: .tokenProtectedUrl(url))
+            return .init(title: "Token-protected", subtitle: url.absoluteString, type: .tokenProtectedUrl(url))
         case .encrypted:
             guard let url, let certificateUrl else { return URLMedia.unknown }
-            return .init(title: "Encrypted", type: .encryptedUrl(url, certificateUrl: certificateUrl))
+            return .init(title: "Encrypted", subtitle: url.absoluteString, type: .encryptedUrl(url, certificateUrl: certificateUrl))
         case .productionUrn:
             return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .production))
         case .stageUrn:
@@ -119,10 +123,7 @@ private struct MediaEntryView: View {
                 TextFieldView("Certificate URL", text: $certificateUrlString)
             }
             if isValid {
-                Button(action: play) {
-                    Text("Play")
-                }
-                .foregroundColor(Color.accentColor)
+                actionButtons()
             }
         }
         .transaction { $0.animation = nil }
@@ -145,9 +146,31 @@ private struct MediaEntryView: View {
 #endif
     }
 
+    private func actionButtons() -> some View {
+        HStack {
+            Button(action: play) {
+                Text("Play")
+                    .frame(maxWidth: .infinity)
+            }
+#if DEBUG && os(iOS)
+            Button(action: download) {
+                Text("Download")
+                    .frame(maxWidth: .infinity)
+            }
+#endif
+        }
+        .foregroundColor(Color.accentColor)
+    }
+
     private func play() {
         router.presented = .player(media: media)
     }
+
+#if DEBUG && os(iOS)
+    private func download() {
+        downloader.addDownload(media: media)
+    }
+#endif
 }
 
 struct ExamplesView: View {
