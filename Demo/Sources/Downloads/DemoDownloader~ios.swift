@@ -18,7 +18,6 @@ import PillarboxPlayer
 @available(tvOS, unavailable)
 final class DemoDownloader: ObservableObject {
     private let urlDownloader = Downloader(
-        assetLoaderType: URLAssetLoader.self,
         configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
         store: URLAssetDownloadStore(fileName: "url_downloads.json")
     )

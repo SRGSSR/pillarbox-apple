@@ -23,11 +23,7 @@ public final class URNDownloader: ObservableObject {
     @Published public private(set) var downloads: [Download] = []
 
     public init(name: String? = nil, configuration: URLSessionConfiguration) throws {
-        let downloader = Downloader(
-            assetLoaderType: URNAssetLoader.self,
-            configuration: configuration,
-            store: try URNAssetDownloadStore(name: name)
-        )
+        let downloader = Downloader(configuration: configuration, store: try URNAssetDownloadStore(name: name))
         self.downloader = downloader
 
         downloader.$downloads
