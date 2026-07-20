@@ -10,17 +10,17 @@ import Combine
 import Foundation
 
 @available(tvOS, unavailable)
-final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
+final class DownloadManager<S>: DownloadManagement<S> where S: AssetDownloadStore {
     private let store: S
     private let session: any DownloadSession
 
     @Published private(set) var downloads: [Download]
 
-    init(assetLoaderType: L.Type, store: S, session: some DownloadSession) {
+    init(store: S, session: some DownloadSession) {
         self.store = store
         self.session = session
         self.downloads = store.downloadRecords().map { record in
-            Download(assetLoaderType: assetLoaderType, record: record, session: session, store: store)
+            Download(record: record, session: session, store: store)
         }
         session.delegate = self
     }
@@ -31,7 +31,7 @@ final class DownloadManager<L, S>: DownloadManagement<S> where L: AssetLoader, S
             return download
         }
         else {
-            let download = Download(assetLoaderType: L.self, input: input, session: session, store: store)
+            let download = Download(input: input, session: session, store: store)
             downloads.append(download)
             return download
         }
