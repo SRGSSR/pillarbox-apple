@@ -201,6 +201,10 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         .init(analyticsData: metadata.analyticsData, analyticsMetadata: metadata.analyticsMetadata)
     }
 
+    static func playerMetadata(from input: URNAssetLoader.Input, metadata: MediaMetadata?) -> PlayerMetadata {
+        metadata?.playerMetadata(relative: false) ?? .empty
+    }
+
     func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {
         guard let entries = try? context.fetch(FetchDescriptor<Entry>()) else { return [] }
         return entries.map { $0.toRecord() }

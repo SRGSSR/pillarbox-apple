@@ -14,6 +14,14 @@ public struct MediaMetadata {
         dateFormatter.timeZone = TimeZone(identifier: "Europe/Zurich")
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .none
+        return dateFormatter
+    }()
+
+    private static let relativeDateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "Europe/Zurich")
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
         dateFormatter.doesRelativeDateFormatting = true
         return dateFormatter
     }()
@@ -102,11 +110,16 @@ extension MediaMetadata {
         }
     }
 
-    var subtitle: String? {
+    func subtitle(relative: Bool) -> String? {
         guard mainChapter.contentType != .livestream else { return nil }
         if let show = mediaComposition.show {
             if Self.areRedundant(chapter: mainChapter, show: show) {
-                return Self.dateFormatter.string(from: mainChapter.date)
+                if relative {
+                    return Self.relativeDateFormatter.string(from: mainChapter.date)
+                }
+                else {
+                    return Self.dateFormatter.string(from: mainChapter.date)
+                }
             }
             else {
                 return mainChapter.title
@@ -167,11 +180,11 @@ extension MediaMetadata {
         }
     }
 
-    func playerMetadata() -> PlayerMetadata {
+    func playerMetadata(relative: Bool) -> PlayerMetadata {
         .init(
             identifier: mediaComposition.chapterUrn,
             title: title,
-            subtitle: subtitle,
+            subtitle: subtitle(relative: relative),
             description: description,
             imageSource: .url(
                 standardResolution: standardResolutionImageUrl(for: mainChapter),
