@@ -49,13 +49,13 @@ public final class Download: ObservableObject {
         properties.fileUrl
     }
 
-    private init<L, S>(
+    private init<S>(
         id: String,
         input: S.Loader.Input,
         creationDate: Date,
         session: DownloadSession,
         store: S
-    ) where L: AssetLoader, S: AssetDownloadStore, L == S.Loader {
+    ) where S: AssetDownloadStore {
         self.id = id
         self.creationDate = creationDate
         self.session = session
