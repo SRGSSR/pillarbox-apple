@@ -49,13 +49,7 @@ public final class Download: ObservableObject {
         properties.fileUrl
     }
 
-    private init<S>(
-        id: String,
-        input: S.Loader.Input,
-        creationDate: Date,
-        session: DownloadSession,
-        store: S
-    ) where S: AssetDownloadStore {
+    private init<S>(id: String, input: S.Loader.Input, creationDate: Date, session: DownloadSession, store: S) where S: AssetDownloadStore {
         self.id = id
         self.creationDate = creationDate
         self.session = session
@@ -69,29 +63,15 @@ public final class Download: ObservableObject {
         configurePropertiesPublisher(input: input, store: store)
     }
 
-    convenience init<S>(
-        input: S.Loader.Input,
-        session: DownloadSession,
-        store: S
-    ) where S: AssetDownloadStore {
+    convenience init<S>(input: S.Loader.Input, session: DownloadSession, store: S) where S: AssetDownloadStore {
         let id = S.id(from: input)
         let creationDate = Date.now
         store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
         self.init(id: id, input: input, creationDate: creationDate, session: session, store: store)
     }
 
-    convenience init<S>(
-        record: DownloadRecord<S.Loader.Input, S.CustomData>,
-        session: DownloadSession,
-        store: S
-    ) where S: AssetDownloadStore {
-        self.init(
-            id: S.id(from: record.input),
-            input: record.input,
-            creationDate: record.creationDate,
-            session: session,
-            store: store
-        )
+    convenience init<S>(record: DownloadRecord<S.Loader.Input, S.CustomData>, session: DownloadSession, store: S) where S: AssetDownloadStore {
+        self.init(id: S.id(from: record.input), input: record.input, creationDate: record.creationDate, session: session, store: store)
     }
 
     func remove() {
@@ -156,10 +136,7 @@ private extension Download {
         .eraseToAnyPublisher()
     }
 
-    func propertiesPublisher<S>(
-        input: S.Loader.Input,
-        store: S
-    ) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where S: AssetDownloadStore {
+    func propertiesPublisher<S>(input: S.Loader.Input, store: S) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where S: AssetDownloadStore {
         // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, trigger, session] in
             let storedProperties = store.downloadProperties(forId: id)
@@ -199,10 +176,7 @@ private extension Download {
         }
     }
 
-    func configurePropertiesPublisher<S>(
-        input: S.Loader.Input,
-        store: S
-    ) where S: AssetDownloadStore {
+    func configurePropertiesPublisher<S>(input: S.Loader.Input, store: S) where S: AssetDownloadStore {
         propertiesPublisher(input: input, store: store)
             .receiveOnMainThread()
             .handleEvents(
