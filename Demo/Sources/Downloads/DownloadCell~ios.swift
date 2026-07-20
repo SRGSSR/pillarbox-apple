@@ -41,7 +41,11 @@ struct DownloadCell: View {
             .aspectRatio(16 / 9, contentMode: .fit)
             .frame(height: 32)
             .overlay {
-                LazyImage(source: imageSource) { $0.resizable() }
+                LazyImage(source: imageSource) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
             }
     }
 
