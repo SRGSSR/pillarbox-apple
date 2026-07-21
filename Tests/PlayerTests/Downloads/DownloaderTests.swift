@@ -12,8 +12,8 @@ import PillarboxStreams
 import XCTest
 
 @available(tvOS, unavailable)
-final class DownloadManagerTests: TestCase {
-    private let session = DownloadSessionMock(name: "DownloadManagerTests")
+final class DownloaderTests: TestCase {
+    private let session = DownloadSessionMock(name: "DownloaderTests")
 
     func testEmpty() {
         let store = AssetDownloadStoreMock()
@@ -126,10 +126,10 @@ final class DownloadManagerTests: TestCase {
         var downloader: Downloader? = .init(store: AssetDownloadStoreMock(), session: session)
         downloader?.addDownload(for: .playable(url: Stream.download.url))
 
-        weak let weakManager = downloader
+        weak let weakDownloader = downloader
         autoreleasepool {
             downloader = nil
         }
-        expect(weakManager).to(beNil())
+        expect(weakDownloader).to(beNil())
     }
 }
