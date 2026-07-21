@@ -13,7 +13,7 @@ struct DemoApp: App {
     @StateObject private var router = Router()
 
 #if DEBUG && os(iOS)
-    @StateObject private var downloader = DemoDownloader()
+    @State private var downloader = DemoDownloader()
 #endif
 
     @SceneBuilder var body: some Scene {
