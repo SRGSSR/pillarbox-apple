@@ -4,50 +4,93 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 #if DEBUG
+
+// swiftlint:disable missing_docs
 
 import Combine
 import Foundation
 
-@available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
+@available(tvOS, unavailable)
 public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
-    private let manager: any DownloadManagement<S>
+    private let store: S
+    private let session: any DownloadSession
 
-    @Published public private(set) var downloads: [Download] = []
+    @Published public private(set) var downloads: [Download]
 
-    public init(configuration: URLSessionConfiguration, store: S) {
-        let manager = DownloadManager(store: store, session: URLDownloadSession(configuration: configuration))
-        self.manager = manager
+    init(store: S, session: some DownloadSession) {
+        self.store = store
+        self.session = session
+        self.downloads = store.downloadRecords().map { record in
+            Download(record: record, session: session, store: store)
+        }
+        session.delegate = self
+    }
 
-        manager.$downloads
-            .assign(to: &$downloads)
+    public convenience init(configuration: URLSessionConfiguration, store: S) {
+        self.init(store: store, session: URLDownloadSession(configuration: configuration))
     }
 
     @discardableResult
     public func addDownload(for input: S.Loader.Input) -> Download {
-        manager.addDownload(for: input)
+        if let download = download(matching: input) {
+            return download
+        }
+        else {
+            let download = Download(input: input, session: session, store: store)
+            downloads.append(download)
+            return download
+        }
     }
 
     public func download(matching input: S.Loader.Input) -> Download? {
-        manager.download(matching: input)
+        download(matchingId: type(of: store).id(from: input))
     }
 
     public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<AssetMetadata<S.CustomData>>] = []) -> PlayerItem? {
-        manager.playerItem(for: download, trackerAdapters: trackerAdapters)
+        guard downloads.contains(download), let record = store.downloadRecord(forId: download.id),
+              let metadata = record.metadata, let fileUrl = download.fileUrl else {
+            return nil
+        }
+        let asset = S.asset(fileUrl: fileUrl, customData: metadata.customData)
+        return .init(
+            assetLoaderType: CustomDirectAssetLoader.self,
+            input: .init(asset: asset, metadata: metadata),
+            trackerAdapters: trackerAdapters
+        )
     }
 
     public func removeDownload(_ download: Download) {
-        manager.removeDownload(download)
+        guard downloads.contains(download) else { return }
+        download.remove()
+        downloads.removeAll { $0.id == download.id }
     }
 
     public func removeAllDownloads() {
-        manager.removeAllDownloads()
+        downloads.forEach { download in
+            download.remove()
+        }
+        downloads.removeAll()
+    }
+
+    private func download(matchingId id: String) -> Download? {
+        downloads.first { $0.id == id }
     }
 }
 
-#endif
+@available(tvOS, unavailable)
+extension Downloader: DownloadSessionDelegate {
+    func downloadSessionTask(_ task: URLSessionTask, willDownloadToLocation location: URL, forId id: String) {
+        task.attach(to: location)
+    }
+
+    func downloadSessionTask(_ task: URLSessionTask, didCompleteWithError error: (any Error)?, forId id: String) {
+        guard let error else { return }
+        task.fail(with: error)
+    }
+}
 
 // swiftlint:enable missing_docs
+
+#endif
