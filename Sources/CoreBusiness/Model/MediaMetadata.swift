@@ -94,6 +94,10 @@ public struct MediaMetadata {
         self.dataProvider = dataProvider
     }
 
+    private static func dateFormatter(relative: Bool) -> DateFormatter {
+        relative ? relativeDateFormatter : dateFormatter
+    }
+
     private static func areRedundant(chapter: MediaComposition.Chapter, show: MediaComposition.Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
     }
@@ -114,12 +118,7 @@ extension MediaMetadata {
         guard mainChapter.contentType != .livestream else { return nil }
         if let show = mediaComposition.show {
             if Self.areRedundant(chapter: mainChapter, show: show) {
-                if relative {
-                    return Self.relativeDateFormatter.string(from: mainChapter.date)
-                }
-                else {
-                    return Self.dateFormatter.string(from: mainChapter.date)
-                }
+                return Self.dateFormatter(relative: relative).string(from: mainChapter.date)
             }
             else {
                 return mainChapter.title
