@@ -160,7 +160,7 @@ extension MediaMetadata {
         )
     }
 
-    private func subtitle(dateFormat: DateFormat) -> String? {
+    func subtitle(dateFormat: DateFormat) -> String? {
         guard mainChapter.contentType != .livestream else { return nil }
         if let show = mediaComposition.show {
             if Self.areRedundant(chapter: mainChapter, show: show) {
