@@ -9,15 +9,6 @@ import PillarboxPlayer
 
 /// Metadata associated with content loaded from a URN.
 public struct MediaMetadata {
-    private static let dateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: "Europe/Zurich")
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        dateFormatter.doesRelativeDateFormatting = true
-        return dateFormatter
-    }()
-
     /// The playback context.
     public let mediaComposition: MediaComposition
 
@@ -102,21 +93,6 @@ extension MediaMetadata {
         }
     }
 
-    var subtitle: String? {
-        guard mainChapter.contentType != .livestream else { return nil }
-        if let show = mediaComposition.show {
-            if Self.areRedundant(chapter: mainChapter, show: show) {
-                return Self.dateFormatter.string(from: mainChapter.date)
-            }
-            else {
-                return mainChapter.title
-            }
-        }
-        else {
-            return nil
-        }
-    }
-
     var description: String? {
         mainChapter.description
     }
@@ -167,11 +143,11 @@ extension MediaMetadata {
         }
     }
 
-    func playerMetadata() -> PlayerMetadata {
+    func playerMetadata(dateFormat: DateFormat) -> PlayerMetadata {
         .init(
             identifier: mediaComposition.chapterUrn,
             title: title,
-            subtitle: subtitle,
+            subtitle: subtitle(dateFormat: dateFormat),
             description: description,
             imageSource: .url(
                 standardResolution: standardResolutionImageUrl(for: mainChapter),
@@ -182,6 +158,21 @@ extension MediaMetadata {
             chapters: chapters,
             timeRanges: timeRanges
         )
+    }
+
+    func subtitle(dateFormat: DateFormat) -> String? {
+        guard mainChapter.contentType != .livestream else { return nil }
+        if let show = mediaComposition.show {
+            if Self.areRedundant(chapter: mainChapter, show: show) {
+                return DateFormatter(format: dateFormat).string(from: mainChapter.date)
+            }
+            else {
+                return mainChapter.title
+            }
+        }
+        else {
+            return nil
+        }
     }
 
     private func standardResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {

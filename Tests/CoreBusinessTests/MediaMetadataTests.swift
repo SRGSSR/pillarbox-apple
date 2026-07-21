@@ -23,7 +23,7 @@ final class MediaMetadataTests: XCTestCase {
     func testStandardMetadata() throws {
         let metadata = try Self.metadata(.onDemand)
         expect(metadata.title).to(equal("Yadebat"))
-        expect(metadata.subtitle).to(equal("On réunit des ex après leur rupture"))
+        expect(metadata.subtitle(dateFormat: .standard)).to(equal("On réunit des ex après leur rupture"))
         expect(metadata.description).to(equal("""
         Dans ce nouvel épisode de YADEBAT, Mélissa réunit 3 couples qui se sont séparés récemment. \
         Elles les a questionné en face à face pour connaître leurs différents ressentis et réactions.
@@ -34,7 +34,7 @@ final class MediaMetadataTests: XCTestCase {
     func testRedundantMetadata() throws {
         let metadata = try Self.metadata(.redundant)
         expect(metadata.title).to(equal("19h30"))
-        expect(metadata.subtitle).to(contain("February"))
+        expect(metadata.subtitle(dateFormat: .standard)).to(contain("February"))
         expect(metadata.description).to(beNil())
         expect(metadata.episodeInformation).to(beNil())
     }
@@ -42,7 +42,7 @@ final class MediaMetadataTests: XCTestCase {
     func testLiveMetadata() throws {
         let metadata = try Self.metadata(.live)
         expect(metadata.title).to(equal("La 1ère en direct"))
-        expect(metadata.subtitle).to(beNil())
+        expect(metadata.subtitle(dateFormat: .standard)).to(beNil())
         expect(metadata.description).to(beNil())
         expect(metadata.episodeInformation).to(beNil())
     }

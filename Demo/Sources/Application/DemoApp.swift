@@ -13,7 +13,7 @@ struct DemoApp: App {
     @StateObject private var router = Router()
 
 #if DEBUG && os(iOS)
-    @StateObject private var downloader = DemoDownloader()
+    @State private var downloader = DemoDownloader()
 #endif
 
     @SceneBuilder var body: some Scene {
@@ -31,6 +31,7 @@ struct DemoApp: App {
             .modal(item: $router.presented) { presented in
                 presented.view()
             }
+            // TODO: Starting with iOS 17 this can be moved on the window group.
             .environmentObject(router)
 #if DEBUG && os(iOS)
             .environmentObject(downloader)

@@ -51,7 +51,7 @@ enum URNAssetLoader: AssetLoader {
     }
 
     static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
-        metadata?.playerMetadata() ?? .empty
+        metadata?.playerMetadata(dateFormat: .relative) ?? .empty
     }
 
     private static func assetConfiguration(for resource: MediaComposition.Resource) -> PlaybackConfiguration {

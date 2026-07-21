@@ -21,6 +21,7 @@ public protocol AssetDownloadStore: AnyObject {
 
     static func customData(from metadata: Loader.Metadata) -> CustomData
     static func asset(fileUrl: URL, customData: CustomData) -> Asset
+    static func playerMetadata(from input: Loader.Input, metadata: Loader.Metadata?) -> PlayerMetadata
 
     func downloadRecords() -> [DownloadRecord<Loader.Input, CustomData>]
 
@@ -35,6 +36,10 @@ public protocol AssetDownloadStore: AnyObject {
 public extension AssetDownloadStore {
     static func asset(fileUrl: URL, customData: CustomData) -> Asset {
         .simple(url: fileUrl)
+    }
+
+    static func playerMetadata(from input: Loader.Input, metadata: Loader.Metadata?) -> PlayerMetadata {
+        Loader.playerMetadata(from: input, metadata: metadata)
     }
 }
 
@@ -52,7 +57,7 @@ extension AssetDownloadStore {
         Loader.metadataPublisher(for: input)
             .first()
             .map { metadata in
-                let playerMetadata = Loader.playerMetadata(from: input, metadata: metadata)
+                let playerMetadata = playerMetadata(from: input, metadata: metadata)
                 return Publishers.CombineLatest3(
                     Just(metadata),
                     Just(playerMetadata),
