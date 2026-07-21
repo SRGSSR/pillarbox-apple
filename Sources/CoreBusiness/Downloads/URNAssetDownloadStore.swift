@@ -202,7 +202,7 @@ extension URNAssetDownloadStore: AssetDownloadStore {
     }
 
     static func playerMetadata(from input: URNAssetLoader.Input, metadata: MediaMetadata?) -> PlayerMetadata {
-        metadata?.playerMetadata(relative: false) ?? .empty
+        metadata?.playerMetadata(dateFormat: .standard) ?? .empty
     }
 
     func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {

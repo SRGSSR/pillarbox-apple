@@ -9,23 +9,6 @@ import PillarboxPlayer
 
 /// Metadata associated with content loaded from a URN.
 public struct MediaMetadata {
-    private static let dateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: "Europe/Zurich")
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        return dateFormatter
-    }()
-
-    private static let relativeDateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: "Europe/Zurich")
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        dateFormatter.doesRelativeDateFormatting = true
-        return dateFormatter
-    }()
-
     /// The playback context.
     public let mediaComposition: MediaComposition
 
@@ -94,10 +77,6 @@ public struct MediaMetadata {
         self.dataProvider = dataProvider
     }
 
-    private static func dateFormatter(relative: Bool) -> DateFormatter {
-        relative ? relativeDateFormatter : dateFormatter
-    }
-
     private static func areRedundant(chapter: MediaComposition.Chapter, show: MediaComposition.Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
     }
@@ -111,21 +90,6 @@ extension MediaMetadata {
         }
         else {
             return mainChapter.title
-        }
-    }
-
-    func subtitle(relative: Bool) -> String? {
-        guard mainChapter.contentType != .livestream else { return nil }
-        if let show = mediaComposition.show {
-            if Self.areRedundant(chapter: mainChapter, show: show) {
-                return Self.dateFormatter(relative: relative).string(from: mainChapter.date)
-            }
-            else {
-                return mainChapter.title
-            }
-        }
-        else {
-            return nil
         }
     }
 
@@ -179,11 +143,11 @@ extension MediaMetadata {
         }
     }
 
-    func playerMetadata(relative: Bool) -> PlayerMetadata {
+    func playerMetadata(dateFormat: DateFormat) -> PlayerMetadata {
         .init(
             identifier: mediaComposition.chapterUrn,
             title: title,
-            subtitle: subtitle(relative: relative),
+            subtitle: subtitle(dateFormat: dateFormat),
             description: description,
             imageSource: .url(
                 standardResolution: standardResolutionImageUrl(for: mainChapter),
@@ -194,6 +158,21 @@ extension MediaMetadata {
             chapters: chapters,
             timeRanges: timeRanges
         )
+    }
+
+    private func subtitle(dateFormat: DateFormat) -> String? {
+        guard mainChapter.contentType != .livestream else { return nil }
+        if let show = mediaComposition.show {
+            if Self.areRedundant(chapter: mainChapter, show: show) {
+                return DateFormatter(format: dateFormat).string(from: mainChapter.date)
+            }
+            else {
+                return mainChapter.title
+            }
+        }
+        else {
+            return nil
+        }
     }
 
     private func standardResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
