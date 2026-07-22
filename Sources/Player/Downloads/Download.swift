@@ -206,9 +206,13 @@ private extension Download {
 }
 
 @available(tvOS, unavailable)
-extension Download: Equatable {
+extension Download: Hashable {
     public static func == (lhs: Download, rhs: Download) -> Bool {
         lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
     }
 }
 
