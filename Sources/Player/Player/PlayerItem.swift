@@ -20,10 +20,11 @@ private enum TriggerId: Hashable {
 /// - Simple assets which can be played from a simple URL.
 /// - Custom assets which require custom resource loading.
 /// - Encrypted assets which require a FairPlay content key session.
-public final class PlayerItem: Hashable {
+public final class PlayerItem: Identifiable {
     private static let trigger = Trigger()
 
-    let id = UUID()
+    /// A unique identifier.
+    public let id = UUID()
 
     private let trackerAdapters: [any PlayerItemTracking]
     private let queue = DispatchQueue(label: "ch.srgssr.player-item")
@@ -73,11 +74,6 @@ public final class PlayerItem: Hashable {
         .assign(to: &$content)
     }
 
-    // swiftlint:disable:next missing_docs
-    public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
-        lhs.id == rhs.id
-    }
-
     static func load(for id: UUID) {
         trigger.activate(for: TriggerId.load(id))
     }
@@ -87,13 +83,20 @@ public final class PlayerItem: Hashable {
         trigger.activate(for: TriggerId.load(id))
     }
 
-    // swiftlint:disable:next missing_docs
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         playerItem?.id == id
+    }
+}
+
+extension PlayerItem: Hashable {
+    // swiftlint:disable:next missing_docs
+    public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
+        lhs === rhs
+    }
+
+    // swiftlint:disable:next missing_docs
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
     }
 }
 
