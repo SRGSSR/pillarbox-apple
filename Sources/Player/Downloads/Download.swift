@@ -14,10 +14,10 @@ import PillarboxCore
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Download: ObservableObject {
+public final class Download: ObservableObject, Identifiable {
     private typealias DownloadPlayerProperties = DownloadProperties<Void>
 
-    let id: String
+    public let id: String
 
     @Published private var properties: DownloadPlayerProperties = .init()
 
@@ -202,17 +202,6 @@ private extension Download {
                 )
             }
             .assign(to: &$properties)
-    }
-}
-
-@available(tvOS, unavailable)
-extension Download: Hashable {
-    public static func == (lhs: Download, rhs: Download) -> Bool {
-        lhs.id == rhs.id
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
     }
 }
 
