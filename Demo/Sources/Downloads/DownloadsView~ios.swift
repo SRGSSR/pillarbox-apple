@@ -27,7 +27,7 @@ struct DownloadsView: View {
                 emptyView()
             }
         }
-        .animation(.defaultLinear, value: downloader.downloads.map(\.id))
+        .animation(.defaultLinear, value: downloader.downloads)
         .toolbar {
             removeAllButton()
         }

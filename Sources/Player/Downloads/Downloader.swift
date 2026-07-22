@@ -49,7 +49,7 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     }
 
     public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<AssetMetadata<S.CustomData>>] = []) -> PlayerItem? {
-        guard downloads.contains(where: { $0 === download }), let record = store.downloadRecord(forId: download.id),
+        guard downloads.contains(download), let record = store.downloadRecord(forId: download.id),
               let metadata = record.metadata, let fileUrl = download.fileUrl else {
             return nil
         }
@@ -62,7 +62,7 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     }
 
     public func removeDownload(_ download: Download) {
-        guard downloads.contains(where: { $0 === download }) else { return }
+        guard downloads.contains(download) else { return }
         download.remove()
         downloads.removeAll { $0.id == download.id }
     }

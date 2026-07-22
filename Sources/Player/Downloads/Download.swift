@@ -205,6 +205,13 @@ private extension Download {
     }
 }
 
+@available(tvOS, unavailable)
+extension Download: Equatable {
+    public static func == (lhs: Download, rhs: Download) -> Bool {
+        lhs === rhs
+    }
+}
+
 #endif
 
 // swiftlint:enable missing_docs
