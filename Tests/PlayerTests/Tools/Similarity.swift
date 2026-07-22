@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-@_spi(DownloaderPrivate)
 @testable import PillarboxPlayer
 
 import CoreMedia
@@ -41,13 +40,6 @@ extension MetricEvent: Similar {
         default:
             return false
         }
-    }
-}
-
-extension Download: Similar {
-    // swiftlint:disable:next missing_docs
-    public static func ~~ (lhs: PillarboxPlayer.Download, rhs: PillarboxPlayer.Download) -> Bool {
-        lhs.id == rhs.id
     }
 }
 

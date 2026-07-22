@@ -8,7 +8,6 @@
 @testable import PillarboxPlayer
 
 import Nimble
-import PillarboxCircumspect
 import PillarboxStreams
 import XCTest
 
@@ -36,7 +35,7 @@ final class DownloaderTests: TestCase {
         let store = AssetDownloadStoreMock()
         let downloader = Downloader(store: store, session: session)
         let download = downloader.addDownload(for: .playable(url: Stream.download.url))
-        expect(downloader.downloads).to(beSimilarTo([download]))
+        expect(downloader.downloads).to(equal([download]))
         expect(store.downloadRecords()).to(haveCount(1))
     }
 
@@ -45,8 +44,8 @@ final class DownloaderTests: TestCase {
         let downloader = Downloader(store: store, session: session)
         let download1 = downloader.addDownload(for: .playable(url: Stream.download.url))
         let download2 = downloader.addDownload(for: .playable(url: Stream.mediumOnDemand.url))
-        expect(download1).notTo(beSimilarTo(download2))
-        expect(downloader.downloads).to(beSimilarTo([download1, download2]))
+        expect(download1).notTo(equal(download2))
+        expect(downloader.downloads).to(equal([download1, download2]))
         expect(store.downloadRecords()).to(haveCount(2))
     }
 
@@ -55,8 +54,8 @@ final class DownloaderTests: TestCase {
         let downloader = Downloader(store: store, session: session)
         let download1 = downloader.addDownload(for: .playable(url: Stream.download.url))
         let download2 = downloader.addDownload(for: .playable(url: Stream.download.url))
-        expect(download1).to(beSimilarTo(download2))
-        expect(downloader.downloads).to(beSimilarTo([download1]))
+        expect(download1).to(equal(download2))
+        expect(downloader.downloads).to(equal([download1]))
         expect(store.downloadRecords()).to(haveCount(1))
     }
 
@@ -64,7 +63,7 @@ final class DownloaderTests: TestCase {
         let downloader = Downloader(store: AssetDownloadStoreMock(), session: session)
         let input = AssetLoaderMock.Input.playable(url: Stream.download.url)
         let download = downloader.addDownload(for: input)
-        expect(downloader.download(matching: input)).to(beSimilarTo(download))
+        expect(downloader.download(matching: input)).to(equal(download))
     }
 
     func testDownloadWithNonMatchingInput() {
