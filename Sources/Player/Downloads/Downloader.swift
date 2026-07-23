@@ -10,6 +10,7 @@
 
 import Combine
 import Foundation
+import UIKit
 
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
@@ -22,14 +23,25 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     init(store: S, session: some DownloadSession) {
         self.store = store
         self.session = session
-        self.downloads = store.downloadRecords().map { record in
-            Download(record: record, session: session, store: store)
-        }
+        self.downloads = Self.downloads(store: store, session: session)
         session.delegate = self
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didBecomeActive(_:)),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
     }
 
     public convenience init(configuration: URLSessionConfiguration, store: S) {
         self.init(store: store, session: URLDownloadSession(configuration: configuration))
+    }
+
+    private static func downloads(store: S, session: DownloadSession) -> [Download] {
+        store.downloadRecords().map { record in
+            Download(record: record, session: session, store: store)
+        }
     }
 
     @discardableResult
@@ -76,6 +88,11 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
 
     private func download(matchingId id: String) -> Download? {
         downloads.first { $0.id == id }
+    }
+
+    @objc
+    private func didBecomeActive(_ notification: Notification) {
+        downloads = Self.downloads(store: store, session: session)
     }
 }
 
