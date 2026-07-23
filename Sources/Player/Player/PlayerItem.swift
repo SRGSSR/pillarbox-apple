@@ -88,6 +88,8 @@ public final class PlayerItem: Identifiable {
     }
 }
 
+// TODO: Use the ID instead of reference equality when the feedback (https://github.com/SRGSSR/apple-bug-reports/blob/main/FB23923342/Report.md)
+// is resolved by Apple.
 extension PlayerItem: Hashable {
     // swiftlint:disable:next missing_docs
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {

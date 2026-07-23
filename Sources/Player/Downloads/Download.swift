@@ -205,6 +205,8 @@ private extension Download {
     }
 }
 
+// TODO: Use the ID instead of reference equality when the feedback (https://github.com/SRGSSR/apple-bug-reports/blob/main/FB23923342/Report.md)
+// is resolved by Apple.
 @available(tvOS, unavailable)
 extension Download: Hashable {
     public static func == (lhs: Download, rhs: Download) -> Bool {
