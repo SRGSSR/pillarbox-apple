@@ -86,6 +86,9 @@ final class DownloaderTests: TestCase {
         expect(download1.state).toEventually(equal(.completed))
 
         let downloader2 = Downloader(store: AssetDownloadStoreMock(), session: session)
+        let download2 = downloader2.addDownload(for: .playable(url: Stream.download.url))
+        expect(download2.state).toEventually(equal(.completed))
+
         expect(downloader2.playerItem(for: download1, trackerAdapters: [])).to(beNil())
     }
 

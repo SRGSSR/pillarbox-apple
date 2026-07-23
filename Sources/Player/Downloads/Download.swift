@@ -14,10 +14,10 @@ import PillarboxCore
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class Download: ObservableObject {
+public final class Download: ObservableObject, Identifiable {
     private typealias DownloadPlayerProperties = DownloadProperties<Void>
 
-    let id: String
+    public let id: String
 
     @Published private var properties: DownloadPlayerProperties = .init()
 
@@ -205,14 +205,16 @@ private extension Download {
     }
 }
 
+// TODO: Use the ID instead of reference equality when the feedback (https://github.com/SRGSSR/apple-bug-reports/blob/main/FB23923342/Report.md)
+// is resolved by Apple.
 @available(tvOS, unavailable)
 extension Download: Hashable {
     public static func == (lhs: Download, rhs: Download) -> Bool {
-        lhs.id == rhs.id
+        lhs === rhs
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(ObjectIdentifier(self))
     }
 }
 

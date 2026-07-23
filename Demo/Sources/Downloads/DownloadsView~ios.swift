@@ -35,7 +35,7 @@ struct DownloadsView: View {
     }
 
     private func mainView() -> some View {
-        List(downloader.downloads, id: \.self) { download in
+        List(downloader.downloads) { download in
             DownloadCell(download: download) {
                 if let media = media(from: download) {
                     router.presented = .player(media: media)
