@@ -396,7 +396,7 @@ private extension MainView {
                 ScrubbingSpeedCapsule(speed: scrubbingSpeed)
             }
         }
-        .animation(.default, values: isInteracting, scrubbingSpeed)
+        .animation(.defaultLinear, values: isInteracting, scrubbingSpeed)
         .offset(y: -40)
     }
 
