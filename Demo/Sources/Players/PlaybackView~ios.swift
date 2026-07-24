@@ -11,6 +11,21 @@ import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
+private struct ScrubbingSpeedCapsule: View {
+    let speed: Double
+
+    var body: some View {
+        Text("Scrubbing at \(speed, specifier: "%g×")")
+            .font(.footnote)
+            .bold()
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .foregroundStyle(.black)
+            .background(.white.opacity(0.7))
+            .clipShape(.capsule)
+    }
+}
+
 struct PlaybackView: View {
     @ObservedObject private var player: Player
     @Binding private var layout: PlaybackViewLayout
@@ -68,6 +83,7 @@ private struct MainView: View {
     @State private var isPresentingMetrics = false
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
+    @State private var scrubbingSpeed: Double = 1
 
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
@@ -347,11 +363,12 @@ private extension MainView {
             }
 
             HStack(spacing: 20) {
-                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
+                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting, scrubbingSpeed: $scrubbingSpeed)
                 if !isFullScreen {
                     bottomButtons()
                 }
             }
+            .overlay(content: scrubbingSpeedCapsule)
         }
         .contentShape(.rect)
         .opacity(isUserInterfaceHidden ? 0 : 1)
@@ -369,6 +386,16 @@ private extension MainView {
             FullScreenButton(layout: $layout)
         }
         .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
+    }
+
+    private func scrubbingSpeedCapsule() -> some View {
+        ZStack {
+            if isInteracting {
+                ScrubbingSpeedCapsule(speed: scrubbingSpeed)
+            }
+        }
+        .animation(.default, value: isInteracting)
+        .offset(y: -40)
     }
 
     func metadata() -> some View {

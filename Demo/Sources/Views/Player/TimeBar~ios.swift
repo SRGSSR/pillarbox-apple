@@ -12,6 +12,7 @@ struct TimeBar: View {
     @ObservedObject var player: Player
     @ObservedObject var visibilityTracker: VisibilityTracker
     @Binding var isInteracting: Bool
+    @Binding var scrubbingSpeed: Double
 
     @StateObject private var progressTracker = ProgressTracker(
         interval: CMTime(value: 1, timescale: 10),
@@ -19,7 +20,7 @@ struct TimeBar: View {
     )
 
     var body: some View {
-        TimeSlider(player: player, progressTracker: progressTracker, visibilityTracker: visibilityTracker)
+        TimeSlider(player: player, progressTracker: progressTracker, visibilityTracker: visibilityTracker, scrubbingSpeed: $scrubbingSpeed)
             .onChange(of: progressTracker.isInteracting) { isInteracting = $0 }
             .bind(progressTracker, to: player)
     }
