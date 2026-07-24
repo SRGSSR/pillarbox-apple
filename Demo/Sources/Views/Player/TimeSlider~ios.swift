@@ -8,6 +8,21 @@ import CoreMedia
 import PillarboxPlayer
 import SwiftUI
 
+private struct ScrubbingSpeedCapsule: View {
+    let speed: Double
+
+    var body: some View {
+        Text("Scrubbing at \(speed, specifier: "%g×")")
+            .font(.footnote)
+            .bold()
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .foregroundStyle(.black)
+            .background(.white.opacity(0.7))
+            .clipShape(.capsule)
+    }
+}
+
 struct TimeSlider: View {
     private static let shortFormatter = {
         let formatter = DateComponentsFormatter()
@@ -77,6 +92,7 @@ struct TimeSlider: View {
         }
         .accessibilityAddTraits(.updatesFrequently)
         ._debugBodyCounter(color: .blue)
+        .overlay(content: scrubbingSpeedCapsule)
         .onReceive(player: player, assign: \.streamType, to: $streamType)
         .onReceive(player: player, assign: \.buffer, to: $buffer)
     }
@@ -152,6 +168,16 @@ struct TimeSlider: View {
                     .offset(x: width * CGFloat(timeRange.start.seconds / duration))
             }
         }
+    }
+
+    private func scrubbingSpeedCapsule() -> some View {
+        ZStack {
+            if progressTracker.isInteracting {
+                ScrubbingSpeedCapsule(speed: scrubbingSpeed)
+            }
+        }
+        .animation(.default, value: progressTracker.isInteracting)
+        .offset(y: -40)
     }
 
     private func sliderBuffer(width: CGFloat) -> some View {
