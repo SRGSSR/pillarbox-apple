@@ -132,12 +132,14 @@ public final class ProgressTracker: ObservableObject {
                 guard let player else {
                     return Just(nil).eraseToAnyPublisher()
                 }
-                return Publishers.CombineLatest(
-                    Self.currentTimePublisher(for: player, interval: interval, isInteractingPublisher: $isInteracting),
-                    player.propertiesPublisher.slice(at: \.seekableTimeRange)
+                return Publishers.CombineLatest3(
+                    player.queuePlayer.smoothCurrentTimePublisher(interval: interval, queue: .main),
+                    player.propertiesPublisher.slice(at: \.seekableTimeRange),
+                    $isInteracting
                 )
-                .map { time, seekableTimeRange in
-                    Self.progress(for: time, in: seekableTimeRange)
+                .compactMap { time, seekableTimeRange, isInteracting in
+                    guard !isInteracting else { return nil }
+                    return Self.progress(for: time, in: seekableTimeRange)
                 }
                 .prepend(Self.progress(for: player.time(), in: player.seekableTimeRange))
                 .eraseToAnyPublisher()
@@ -146,21 +148,6 @@ public final class ProgressTracker: ObservableObject {
             .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$_progress)
-    }
-
-    private static func currentTimePublisher(
-        for player: Player,
-        interval: CMTime,
-        isInteractingPublisher: Published<Bool>.Publisher
-    ) -> AnyPublisher<CMTime, Never> {
-        Publishers.CombineLatest(
-            player.queuePlayer.smoothCurrentTimePublisher(interval: interval, queue: .main),
-            isInteractingPublisher
-        )
-        .compactMap { time, isInteracting in
-            !isInteracting ? time : nil
-        }
-        .eraseToAnyPublisher()
     }
 
     static func progress(for time: CMTime, in timeRange: CMTimeRange) -> Float? {
