@@ -109,7 +109,9 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
 
     private func scrubbingSpeed(for gestureValue: DragGesture.Value?) -> Double {
         guard let gestureValue else { return 1 }
-        return updatingScrubbingSpeedBody(abs(gestureValue.translation.height))
+        let speed = updatingScrubbingSpeedBody(abs(gestureValue.translation.height))
+        assert(speed > 0)
+        return speed
     }
 }
 
@@ -129,6 +131,10 @@ extension HSlider {
     }
 
     /// Allows scrubbing speed adjustments based on distance to the slider.
+    ///
+    /// - Parameters:
+    ///   - scrubbingSpeed: A binding to the current speed.
+    ///   - body: A closure that returns the (positive) speed which should be applied at a given vertical distance of the slider.
     func updatingScrubbingSpeed(_ scrubbingSpeed: Binding<Double>, body: @escaping (_ yDistance: CGFloat) -> Double) -> Self {
         var slider = self
         slider._scrubbingSpeed = scrubbingSpeed
