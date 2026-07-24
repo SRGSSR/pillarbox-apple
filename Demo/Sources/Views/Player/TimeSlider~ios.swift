@@ -35,6 +35,7 @@ struct TimeSlider: View {
     @ObservedObject var visibilityTracker: VisibilityTracker
     @State private var streamType: StreamType = .unknown
     @State private var buffer: Float = 0
+    @State private var scrubbingSpeed: Double = 1
 
     private var formattedElapsedTime: String? {
         if streamType == .onDemand {
@@ -119,6 +120,18 @@ struct TimeSlider: View {
             progressTracker.isInteracting = isEditing
         }
         .onDragging(visibilityTracker.reset)
+        .updatingScrubbingSpeed($scrubbingSpeed) { yDistance in
+            switch yDistance {
+            case 0..<50:
+                return 1
+            case 50..<100:
+                return 0.75
+            case 100..<150:
+                return 0.5
+            default:
+                return 0.25
+            }
+        }
     }
 
     private func sliderBackground() -> some View {

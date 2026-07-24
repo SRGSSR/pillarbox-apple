@@ -9,12 +9,14 @@ import SwiftUI
 /// A horizontal control for selecting a value from a bounded linear range of values.
 struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
     @Binding private var value: Value
+    @Binding private var scrubbingSpeed: Double
 
     private let bounds: ClosedRange<Value>
     private let content: (CGFloat, CGFloat) -> Content
 
-    fileprivate var onEditingChanged: (Bool) -> Void = { _ in }
+    fileprivate var onEditingChanged: (_ isEditing: Bool) -> Void = { _ in }
     fileprivate var onDragging: () -> Void = {}
+    fileprivate var updatingScrubbingSpeedBody: (_ yDistance: CGFloat) -> Double = { _ in 1 }
 
     @State private var isInteracting = false
 
@@ -56,21 +58,9 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
     ) {
         self._value = value
+        self._scrubbingSpeed = .constant(1)
         self.bounds = bounds
         self.content = content
-    }
-
-    private static func speed(for translation: CGSize) -> Double {
-        switch abs(translation.height) {
-        case 0..<50:
-            return 1
-        case 50..<100:
-            return 0.75
-        case 100..<150:
-            return 0.5
-        default:
-            return 0.25
-        }
     }
 
     private static func value(for progress: Double, in bounds: ClosedRange<Value>) -> Value {
@@ -103,8 +93,10 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
             onEditingChanged(true)
         }
         let xTranslation = gestureValue.translation.width - (previousGestureValue?.translation.width ?? 0)
-        let progress = Self.progress(for: value, in: bounds) + xTranslation / geometry.size.width * Self.speed(for: gestureValue.translation)
+        let scrubbingSpeed = scrubbingSpeed(for: gestureValue)
+        let progress = Self.progress(for: value, in: bounds) + xTranslation / geometry.size.width * scrubbingSpeed
         self.value = Self.value(for: progress, in: bounds)
+        self.scrubbingSpeed = scrubbingSpeed
     }
 
     private func onEnded() {
@@ -113,11 +105,16 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         previousGestureValue = nil
         onEditingChanged(false)
     }
+
+    private func scrubbingSpeed(for gestureValue: DragGesture.Value?) -> Double {
+        guard let gestureValue else { return 1 }
+        return updatingScrubbingSpeedBody(abs(gestureValue.translation.height))
+    }
 }
 
 extension HSlider {
     /// Adds an action to perform when editing begins or ends.
-    func onEditingChanged(_ action: @escaping (Bool) -> Void) -> Self {
+    func onEditingChanged(_ action: @escaping (_ isEditing: Bool) -> Void) -> Self {
         var slider = self
         slider.onEditingChanged = action
         return slider
@@ -127,6 +124,14 @@ extension HSlider {
     func onDragging(_ action: @escaping () -> Void) -> Self {
         var slider = self
         slider.onDragging = action
+        return slider
+    }
+
+    /// Allows scrubbing speed adjustments based on distance to the slider.
+    func updatingScrubbingSpeed(_ scrubbingSpeed: Binding<Double>, body: @escaping (_ yDistance: CGFloat) -> Double) -> Self {
+        var slider = self
+        slider._scrubbingSpeed = scrubbingSpeed
+        slider.updatingScrubbingSpeedBody = body
         return slider
     }
 }
