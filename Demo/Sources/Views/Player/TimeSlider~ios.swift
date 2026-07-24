@@ -38,6 +38,9 @@ struct TimeSlider: View {
     @State private var streamType: StreamType = .unknown
     @State private var buffer: Float = 0
 
+    @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
+    private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
+
     private var formattedElapsedTime: String? {
         if streamType == .onDemand {
             return Self.formattedTime((progressTracker.time - progressTracker.timeRange.start), duration: progressTracker.timeRange.duration)
@@ -121,18 +124,7 @@ struct TimeSlider: View {
             progressTracker.isInteracting = isEditing
         }
         .onDragging(visibilityTracker.reset)
-        .updatingScrubbingSpeed($scrubbingSpeed) { yDistance in
-            switch yDistance {
-            case 0..<50:
-                return 1
-            case 50..<100:
-                return 0.5
-            case 100..<150:
-                return 0.25
-            default:
-                return 0.1
-            }
-        }
+        .updatingScrubbingSpeed($scrubbingSpeed) { scrubbingSpeed(atYDistance: $0) }
         .changeSensoryFeedback17(trigger: scrubbingSpeed)
     }
 
@@ -175,6 +167,20 @@ struct TimeSlider: View {
                 .monospacedDigit()
                 .foregroundColor(.white)
                 .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
+        }
+    }
+
+    private func scrubbingSpeed(atYDistance yDistance: CGFloat) -> Double {
+        guard seekBehaviorSetting == .optimal else { return 1 }
+        switch yDistance {
+        case 0..<50:
+            return 1
+        case 50..<100:
+            return 0.5
+        case 100..<150:
+            return 0.25
+        default:
+            return 0.1
         }
     }
 }

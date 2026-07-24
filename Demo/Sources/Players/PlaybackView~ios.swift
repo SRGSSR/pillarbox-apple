@@ -388,13 +388,14 @@ private extension MainView {
         .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
     }
 
+    @ViewBuilder
     private func scrubbingSpeedCapsule() -> some View {
         ZStack {
-            if isInteracting {
+            if isInteracting, scrubbingSpeed != 1 {
                 ScrubbingSpeedCapsule(speed: scrubbingSpeed)
             }
         }
-        .animation(.default, value: isInteracting)
+        .animation(.default, values: isInteracting, scrubbingSpeed)
         .offset(y: -40)
     }
 
