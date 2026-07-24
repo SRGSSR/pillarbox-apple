@@ -9,6 +9,7 @@ import SwiftUI
 /// A horizontal control for selecting a value from a bounded linear range of values.
 struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
     @Binding private var value: Value
+
     private let bounds: ClosedRange<Value>
     private let content: (CGFloat, CGFloat) -> Content
 
@@ -19,6 +20,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     @State private var initialProgress: Value = 0
 
     @GestureState private var gestureValue: DragGesture.Value?
+    @State private var previousGestureValue: DragGesture.Value?
 
     private var progress: Value {
         guard !bounds.isEmpty else { return 0 }
@@ -70,6 +72,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
         DragGesture(minimumDistance: 0)
             .updating($gestureValue) { value, state, _ in
+                previousGestureValue = state
                 state = value
             }
             .onChanged { value in
@@ -94,8 +97,9 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
 
     private func onEnded() {
         guard isInteracting else { return }
-        initialProgress = 0
         isInteracting = false
+        initialProgress = 0
+        previousGestureValue = nil
         onEditingChanged(false)
     }
 }
