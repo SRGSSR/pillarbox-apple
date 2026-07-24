@@ -60,6 +60,19 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         self.content = content
     }
 
+    private static func speed(for translation: CGSize) -> Double {
+        switch abs(translation.height) {
+        case 0..<50:
+            return 1
+        case 50..<100:
+            return 0.75
+        case 100..<150:
+            return 0.5
+        default:
+            return 0.25
+        }
+    }
+
     private static func value(for progress: Double, in bounds: ClosedRange<Value>) -> Value {
         (Value(progress) * (bounds.upperBound - bounds.lowerBound) + bounds.lowerBound).clamped(to: bounds)
     }
@@ -89,9 +102,8 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
             isInteracting = true
             onEditingChanged(true)
         }
-        let speed: CGFloat = 1
         let xTranslation = gestureValue.translation.width - (previousGestureValue?.translation.width ?? 0)
-        let progress = Self.progress(for: value, in: bounds) + xTranslation / geometry.size.width * speed
+        let progress = Self.progress(for: value, in: bounds) + xTranslation / geometry.size.width * Self.speed(for: gestureValue.translation)
         self.value = Self.value(for: progress, in: bounds)
     }
 
