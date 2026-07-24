@@ -6,6 +6,15 @@
 
 import SwiftUI
 
+private struct DragGestureState: Equatable {
+    let current: DragGesture.Value
+    let previous: DragGesture.Value?
+
+    var xTranslation: CGFloat {
+        current.translation.width - (previous?.translation.width ?? 0)
+    }
+}
+
 /// A horizontal control for selecting a value from a bounded linear range of values.
 struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
     @Binding private var value: Value
@@ -19,9 +28,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     fileprivate var updatingScrubbingSpeedBody: (_ yDistance: CGFloat) -> Double = { _ in 1 }
 
     @State private var isInteracting = false
-
-    @GestureState private var gestureValue: DragGesture.Value?
-    @State private var previousGestureValue: DragGesture.Value?
+    @GestureState private var gestureState: DragGestureState?
 
     private var progress: Double {
         guard !bounds.isEmpty else { return 0 }
@@ -35,10 +42,10 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .contentShape(.rect)
                 .gesture(dragGesture(in: geometry))
-                .onChange(of: gestureValue) { value in
+                .onChange(of: gestureState) { state in
                     // Gesture cancellation can only be detected via gesture value observation,
                     // see https://developer.apple.com/documentation/swiftui/adding-interactivity-with-gestures#Update-transient-UI-state
-                    if value == nil {
+                    if state == nil {
                         onEnded()
                     }
                 }
@@ -73,9 +80,8 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
 
     private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
         DragGesture(minimumDistance: 0)
-            .updating($gestureValue) { value, state, _ in
-                previousGestureValue = state
-                state = value
+            .updating($gestureState) { value, state, _ in
+                state = .init(current: value, previous: state?.current)
             }
             .onChanged { value in
                 onChanged(with: value, in: geometry)
@@ -87,14 +93,14 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     }
 
     private func onChanged(with gestureValue: DragGesture.Value, in geometry: GeometryProxy) {
+        guard let gestureState else { return }
         onDragging()
         if !isInteracting {
             isInteracting = true
             onEditingChanged(true)
         }
-        let xTranslation = gestureValue.translation.width - (previousGestureValue?.translation.width ?? 0)
         let scrubbingSpeed = scrubbingSpeed(for: gestureValue)
-        let progress = Self.progress(for: value, in: bounds) + xTranslation / geometry.size.width * scrubbingSpeed
+        let progress = Self.progress(for: value, in: bounds) + gestureState.xTranslation / geometry.size.width * scrubbingSpeed
         self.value = Self.value(for: progress, in: bounds)
         self.scrubbingSpeed = scrubbingSpeed
     }
@@ -102,7 +108,6 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     private func onEnded() {
         guard isInteracting else { return }
         isInteracting = false
-        previousGestureValue = nil
         scrubbingSpeed = 1
         onEditingChanged(false)
     }
