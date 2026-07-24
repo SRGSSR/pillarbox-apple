@@ -103,6 +103,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         guard isInteracting else { return }
         isInteracting = false
         previousGestureValue = nil
+        scrubbingSpeed = 1
         onEditingChanged(false)
     }
 
