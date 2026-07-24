@@ -17,12 +17,11 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     fileprivate var onDragging: () -> Void = {}
 
     @State private var isInteracting = false
-    @State private var initialProgress: Value = 0
 
     @GestureState private var gestureValue: DragGesture.Value?
     @State private var previousGestureValue: DragGesture.Value?
 
-    private var progress: Value {
+    private var progress: Double {
         guard !bounds.isEmpty else { return 0 }
         return Self.progress(for: value, in: bounds)
     }
@@ -61,12 +60,12 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         self.content = content
     }
 
-    private static func value(for progress: Value, in bounds: ClosedRange<Value>) -> Value {
-        (progress * (bounds.upperBound - bounds.lowerBound) + bounds.lowerBound).clamped(to: bounds)
+    private static func value(for progress: Double, in bounds: ClosedRange<Value>) -> Value {
+        (Value(progress) * (bounds.upperBound - bounds.lowerBound) + bounds.lowerBound).clamped(to: bounds)
     }
 
-    private static func progress(for value: Value, in bounds: ClosedRange<Value>) -> Value {
-        ((value - bounds.lowerBound) / (bounds.upperBound - bounds.lowerBound)).clamped(to: 0...1)
+    private static func progress(for value: Value, in bounds: ClosedRange<Value>) -> Double {
+        .init((value - bounds.lowerBound) / (bounds.upperBound - bounds.lowerBound)).clamped(to: 0...1)
     }
 
     private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
@@ -84,21 +83,21 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
             }
     }
 
-    private func onChanged(with value: DragGesture.Value, in geometry: GeometryProxy) {
+    private func onChanged(with gestureValue: DragGesture.Value, in geometry: GeometryProxy) {
         onDragging()
         if !isInteracting {
             isInteracting = true
-            initialProgress = progress
             onEditingChanged(true)
         }
-        let delta = (geometry.size.width != 0) ? Value(value.translation.width / geometry.size.width) : 0
-        self.value = Self.value(for: initialProgress + delta, in: bounds)
+        let speed: CGFloat = 1
+        let xTranslation = gestureValue.translation.width - (previousGestureValue?.translation.width ?? 0)
+        let progress = Self.progress(for: value, in: bounds) + xTranslation / geometry.size.width * speed
+        self.value = Self.value(for: progress, in: bounds)
     }
 
     private func onEnded() {
         guard isInteracting else { return }
         isInteracting = false
-        initialProgress = 0
         previousGestureValue = nil
         onEditingChanged(false)
     }
