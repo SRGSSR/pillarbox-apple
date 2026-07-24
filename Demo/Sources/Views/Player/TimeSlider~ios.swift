@@ -132,6 +132,7 @@ struct TimeSlider: View {
                 return 0.25
             }
         }
+        .changeSensoryFeedback17(trigger: scrubbingSpeed)
     }
 
     private func sliderBackground() -> some View {
