@@ -21,8 +21,9 @@ private struct ScrubbingSpeedCapsule: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .foregroundStyle(.black)
-            .background(.white.opacity(0.7))
+            .background(.white)
             .clipShape(.capsule)
+            .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
     }
 }
 
