@@ -125,11 +125,11 @@ struct TimeSlider: View {
             case 0..<50:
                 return 1
             case 50..<100:
-                return 0.75
-            case 100..<150:
                 return 0.5
-            default:
+            case 100..<150:
                 return 0.25
+            default:
+                return 0.1
             }
         }
         .changeSensoryFeedback17(trigger: scrubbingSpeed)
