@@ -109,6 +109,10 @@ private struct MainView: View {
         !isInteracting && !skipTracker.isSkipping
     }
 
+    private var canAdjustScrubbingSpeed: Bool {
+        isInteracting && scrubbingSpeed != 1
+    }
+
     var body: some View {
         AdaptiveSheetContainer(isPresenting: $isPresentingMetrics) {
             ZStack {
@@ -392,11 +396,11 @@ private extension MainView {
     @ViewBuilder
     private func scrubbingSpeedCapsule() -> some View {
         ZStack {
-            if isInteracting, scrubbingSpeed != 1 {
+            if canAdjustScrubbingSpeed {
                 ScrubbingSpeedCapsule(speed: scrubbingSpeed)
             }
         }
-        .animation(.defaultLinear, values: isInteracting, scrubbingSpeed)
+        .animation(.defaultLinear, values: isInteracting, canAdjustScrubbingSpeed)
         .offset(y: -40)
     }
 
