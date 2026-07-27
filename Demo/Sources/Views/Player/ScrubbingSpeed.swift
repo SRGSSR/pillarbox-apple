@@ -15,8 +15,6 @@ struct StandardScrubbingSpeed: ScrubbingSpeed {
         1
     }
 
-    private init() {}
-
     static func speed(forDistance distance: CGFloat) -> Self {
         .default
     }
