@@ -109,7 +109,7 @@ private struct MainView: View {
         !isInteracting && !skipTracker.isSkipping
     }
 
-    private var canAdjustScrubbingSpeed: Bool {
+    private var shouldDisplayScrubbingSpeedCapsule: Bool {
         isInteracting && scrubbingSpeed != .default
     }
 
@@ -396,11 +396,11 @@ private extension MainView {
     @ViewBuilder
     private func scrubbingSpeedCapsule() -> some View {
         ZStack {
-            if canAdjustScrubbingSpeed {
+            if shouldDisplayScrubbingSpeedCapsule {
                 ScrubbingSpeedCapsule(speed: scrubbingSpeed)
             }
         }
-        .animation(.defaultLinear, values: isInteracting, canAdjustScrubbingSpeed)
+        .animation(.defaultLinear, values: isInteracting, shouldDisplayScrubbingSpeedCapsule)
         .offset(y: -40)
     }
 
