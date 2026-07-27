@@ -56,6 +56,7 @@ struct HSlider<Value, Content, Speed>: View where Value: BinaryFloatingPoint, Va
     /// - Parameters:
     ///   - value: The selected value within `bounds`.
     ///   - bounds: The range of the valid values. Defaults to `0...1`.
+    ///   - scrubbingSpeed: A binding to a scrubbing speed.
     ///   - content: A view that displays the progress (a value in `0...1`) corresponding to the current value within
     ///     `bounds`. The width of view to draw in is provided as parameter.
     init(
@@ -100,7 +101,7 @@ struct HSlider<Value, Content, Speed>: View where Value: BinaryFloatingPoint, Va
             onEditingChanged(true)
         }
         let scrubbingSpeed = scrubbingSpeed(for: gestureValue)
-        let progress = Self.progress(for: value, in: bounds) + scrubbingSpeed.value * gestureState.xTranslation / geometry.size.width
+        let progress = Self.progress(for: value, in: bounds) + max(scrubbingSpeed.value, .leastNonzeroMagnitude) * gestureState.xTranslation / geometry.size.width
         self.value = Self.value(for: progress, in: bounds)
         self.scrubbingSpeed = scrubbingSpeed
     }
