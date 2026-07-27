@@ -11,6 +11,22 @@ import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
+private struct ScrubbingCapsule: View {
+    let scrubbing: Scrubbing
+
+    var body: some View {
+        Text(scrubbing.name)
+            .font(.footnote)
+            .bold()
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .foregroundStyle(.black)
+            .background(.white)
+            .clipShape(.capsule)
+            .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
+    }
+}
+
 struct PlaybackView: View {
     @ObservedObject private var player: Player
     @Binding private var layout: PlaybackViewLayout
@@ -68,6 +84,7 @@ private struct MainView: View {
     @State private var isPresentingMetrics = false
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
+    @State private var scrubbing: Scrubbing = .default
 
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
@@ -90,6 +107,10 @@ private struct MainView: View {
 
     private var isToggleGestureEnabled: Bool {
         !isInteracting && !skipTracker.isSkipping
+    }
+
+    private var shouldDisplayScrubbingCapsule: Bool {
+        isInteracting && scrubbing != .default
     }
 
     var body: some View {
@@ -347,11 +368,12 @@ private extension MainView {
             }
 
             HStack(spacing: 20) {
-                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
+                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting, scrubbing: $scrubbing)
                 if !isFullScreen {
                     bottomButtons()
                 }
             }
+            .overlay(content: scrubbingCapsule)
         }
         .contentShape(.rect)
         .opacity(isUserInterfaceHidden ? 0 : 1)
@@ -369,6 +391,17 @@ private extension MainView {
             FullScreenButton(layout: $layout)
         }
         .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
+    }
+
+    @ViewBuilder
+    private func scrubbingCapsule() -> some View {
+        ZStack {
+            if shouldDisplayScrubbingCapsule {
+                ScrubbingCapsule(scrubbing: scrubbing)
+            }
+        }
+        .animation(.defaultLinear, values: isInteracting, shouldDisplayScrubbingCapsule)
+        .offset(y: -40)
     }
 
     func metadata() -> some View {

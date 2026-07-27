@@ -33,6 +33,8 @@ struct TimeSlider: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
     @ObservedObject var visibilityTracker: VisibilityTracker
+    @Binding var scrubbing: Scrubbing
+
     @State private var streamType: StreamType = .unknown
     @State private var buffer: Float = 0
 
@@ -102,7 +104,7 @@ struct TimeSlider: View {
     }
 
     private func slider() -> some View {
-        HSlider(value: $progressTracker.progress) { progress, width in
+        HSlider(value: $progressTracker.progress, scrubbingSpeed: $scrubbing) { progress, width in
             ZStack(alignment: .leading) {
                 sliderBackground()
                 sliderTimeRanges(width: width)
@@ -119,6 +121,7 @@ struct TimeSlider: View {
             progressTracker.isInteracting = isEditing
         }
         .onDragging(visibilityTracker.reset)
+        .changeSensoryFeedback17(trigger: scrubbing)
     }
 
     private func sliderBackground() -> some View {

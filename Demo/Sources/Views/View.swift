@@ -6,14 +6,11 @@
 
 import SwiftUI
 
-private struct SearchScopes16<V, S>: ViewModifier where V: Hashable, S: View {
-    let binding: Binding<V>
-    @ViewBuilder let scopes: () -> S
-
+private struct PulseSymbolEffect17: ViewModifier {
     func body(content: Content) -> some View {
-        if #available(iOS 16.0, tvOS 16.4, *) {
+        if #available(iOS 17.0, tvOS 17.0, *) {
             content
-                .searchScopes(binding, scopes: scopes)
+                .symbolEffect(.pulse)
         }
         else {
             content
@@ -21,11 +18,13 @@ private struct SearchScopes16<V, S>: ViewModifier where V: Hashable, S: View {
     }
 }
 
-private struct PulseSymbolEffect17: ViewModifier {
+private struct ScaleEffect17: ViewModifier {
+    let scale: CGFloat
+
     func body(content: Content) -> some View {
         if #available(iOS 17.0, tvOS 17.0, *) {
             content
-                .symbolEffect(.pulse)
+                .scaleEffect(scale)
         }
         else {
             content
@@ -53,13 +52,28 @@ private struct ScrollClipDisabled17: ViewModifier {
     }
 }
 
-private struct ScaleEffect17: ViewModifier {
-    let scale: CGFloat
+private struct SearchScopes16<V, S>: ViewModifier where V: Hashable, S: View {
+    let binding: Binding<V>
+    @ViewBuilder let scopes: () -> S
+
+    func body(content: Content) -> some View {
+        if #available(iOS 16.0, tvOS 16.4, *) {
+            content
+                .searchScopes(binding, scopes: scopes)
+        }
+        else {
+            content
+        }
+    }
+}
+
+private struct ChangeSensoryFeedback17<T>: ViewModifier where T: Equatable {
+    let trigger: T
 
     func body(content: Content) -> some View {
         if #available(iOS 17.0, tvOS 17.0, *) {
             content
-                .scaleEffect(scale)
+                .sensoryFeedback(.increase, trigger: trigger)
         }
         else {
             content
@@ -81,16 +95,20 @@ extension View {
         modifier(PulseSymbolEffect17())
     }
 
-    func scrollClipDisabled17(_ disabled: Bool = true) -> some View {
-        modifier(ScrollClipDisabled17(disabled))
-    }
-
     func scaleEffect17(_ scale: CGFloat) -> some View {
         modifier(ScaleEffect17(scale: scale))
     }
 
+    func scrollClipDisabled17(_ disabled: Bool = true) -> some View {
+        modifier(ScrollClipDisabled17(disabled))
+    }
+
     func searchScopes16_4<V, S>(_ binding: Binding<V>, @ViewBuilder scopes: @escaping () -> S) -> some View where V: Hashable, S: View {
         modifier(SearchScopes16(binding: binding, scopes: scopes))
+    }
+
+    func changeSensoryFeedback17<T>(trigger: T) -> some View where T: Equatable {
+        modifier(ChangeSensoryFeedback17(trigger: trigger))
     }
 }
 

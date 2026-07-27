@@ -136,6 +136,21 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
+    func testInteractingProgressStabilityWithDvrStream() {
+        let progressTracker = ProgressTracker(
+            interval: CMTime(value: 1, timescale: 4),
+            seekBehavior: .optimal
+        )
+        let item = PlayerItem.simple(url: Stream.dvr.url)
+        let player = Player(item: item)
+        progressTracker.player = player
+        expect(progressTracker.range).toEventually(equal(0...1))
+
+        progressTracker.isInteracting = true
+        progressTracker.progress = 0.5
+        expect(progressTracker.progress).toNever(beCloseTo(1, within: 0.1), until: .seconds(2))
+    }
+
     func testProgressForTimeInTimeRange() {
         let timeRange = CMTimeRange(start: .zero, end: .init(value: 10, timescale: 1))
         expect(ProgressTracker.progress(for: .init(value: 5, timescale: 1), in: timeRange)).to(equal(0.5))
