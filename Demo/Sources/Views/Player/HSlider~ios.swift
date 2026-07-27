@@ -16,7 +16,7 @@ private struct DragGestureState: Equatable {
 }
 
 /// A horizontal control for selecting a value from a bounded linear range of values.
-struct HSlider<Value, Content, Speed>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View, Speed: HSliderScrubbingSpeed {
+struct HSlider<Value, Content, Speed>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View, Speed: ScrubbingSpeed {
     @Binding private var value: Value
     @Binding private var scrubbingSpeed: Speed
 

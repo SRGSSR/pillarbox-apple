@@ -11,11 +11,11 @@ import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 
-private struct ScrubbingSpeedCapsule: View {
-    let speed: ScrubbingSpeed
+private struct ScrubbingCapsule: View {
+    let scrubbing: Scrubbing
 
     var body: some View {
-        Text(speed.name)
+        Text(scrubbing.name)
             .font(.footnote)
             .bold()
             .padding(.horizontal, 10)
@@ -84,7 +84,7 @@ private struct MainView: View {
     @State private var isPresentingMetrics = false
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
-    @State private var scrubbingSpeed: ScrubbingSpeed = .default
+    @State private var scrubbing: Scrubbing = .default
 
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
@@ -109,8 +109,8 @@ private struct MainView: View {
         !isInteracting && !skipTracker.isSkipping
     }
 
-    private var shouldDisplayScrubbingSpeedCapsule: Bool {
-        isInteracting && scrubbingSpeed != .default
+    private var shouldDisplayScrubbingCapsule: Bool {
+        isInteracting && scrubbing != .default
     }
 
     var body: some View {
@@ -368,12 +368,12 @@ private extension MainView {
             }
 
             HStack(spacing: 20) {
-                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting, scrubbingSpeed: $scrubbingSpeed)
+                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting, scrubbing: $scrubbing)
                 if !isFullScreen {
                     bottomButtons()
                 }
             }
-            .overlay(content: scrubbingSpeedCapsule)
+            .overlay(content: scrubbingCapsule)
         }
         .contentShape(.rect)
         .opacity(isUserInterfaceHidden ? 0 : 1)
@@ -394,13 +394,13 @@ private extension MainView {
     }
 
     @ViewBuilder
-    private func scrubbingSpeedCapsule() -> some View {
+    private func scrubbingCapsule() -> some View {
         ZStack {
-            if shouldDisplayScrubbingSpeedCapsule {
-                ScrubbingSpeedCapsule(speed: scrubbingSpeed)
+            if shouldDisplayScrubbingCapsule {
+                ScrubbingCapsule(scrubbing: scrubbing)
             }
         }
-        .animation(.defaultLinear, values: isInteracting, shouldDisplayScrubbingSpeedCapsule)
+        .animation(.defaultLinear, values: isInteracting, shouldDisplayScrubbingCapsule)
         .offset(y: -40)
     }
 
