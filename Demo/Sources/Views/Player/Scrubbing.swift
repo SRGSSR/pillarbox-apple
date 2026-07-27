@@ -7,18 +7,18 @@
 import Foundation
 
 enum Scrubbing: ScrubbingSpeed, Equatable {
-    case hiSpeed
+    case highSpeed
     case halfSpeed
     case quarterSpeed
     case fine
 
     static var `default`: Self {
-        .hiSpeed
+        .highSpeed
     }
 
     var value: Double {
         switch self {
-        case .hiSpeed:
+        case .highSpeed:
             return 1
         case .halfSpeed:
             return 0.5
@@ -31,7 +31,7 @@ enum Scrubbing: ScrubbingSpeed, Equatable {
 
     var name: LocalizedStringResource {
         switch self {
-        case .hiSpeed:
+        case .highSpeed:
             return "High-Speed Scrubbing"
         case .halfSpeed:
             return "Half-Speed Scrubbing"
@@ -45,7 +45,7 @@ enum Scrubbing: ScrubbingSpeed, Equatable {
     static func speed(forDistance distance: CGFloat) -> Self {
         switch distance {
         case 0..<50:
-            return .hiSpeed
+            return .highSpeed
         case 50..<100:
             return .halfSpeed
         case 100..<150:
