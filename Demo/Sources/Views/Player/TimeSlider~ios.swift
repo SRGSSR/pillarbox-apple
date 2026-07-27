@@ -38,9 +38,6 @@ struct TimeSlider: View {
     @State private var streamType: StreamType = .unknown
     @State private var buffer: Float = 0
 
-    @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
-    private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
-
     private var formattedElapsedTime: String? {
         if streamType == .onDemand {
             return Self.formattedTime((progressTracker.time - progressTracker.timeRange.start), duration: progressTracker.timeRange.duration)
@@ -171,7 +168,6 @@ struct TimeSlider: View {
     }
 
     private func scrubbingSpeed(atYDistance yDistance: CGFloat) -> Double {
-        guard seekBehaviorSetting == .optimal else { return 1 }
         switch yDistance {
         case 0..<50:
             return 1
