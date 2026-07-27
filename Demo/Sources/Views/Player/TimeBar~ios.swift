@@ -12,7 +12,7 @@ struct TimeBar: View {
     @ObservedObject var player: Player
     @ObservedObject var visibilityTracker: VisibilityTracker
     @Binding var isInteracting: Bool
-    @Binding var scrubbingSpeed: Double
+    @Binding var scrubbingSpeed: ScrubbingSpeed
 
     @StateObject private var progressTracker = ProgressTracker(
         interval: CMTime(value: 1, timescale: 10),

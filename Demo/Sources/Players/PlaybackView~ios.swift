@@ -12,10 +12,10 @@ import PillarboxPlayer
 import SwiftUI
 
 private struct ScrubbingSpeedCapsule: View {
-    let speed: Double
+    let speed: ScrubbingSpeed
 
     var body: some View {
-        Text("Scrubbing at \(speed, specifier: "%g×")")
+        Text(speed.name)
             .font(.footnote)
             .bold()
             .padding(.horizontal, 10)
@@ -84,7 +84,7 @@ private struct MainView: View {
     @State private var isPresentingMetrics = false
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
-    @State private var scrubbingSpeed: Double = 1
+    @State private var scrubbingSpeed: ScrubbingSpeed = .default
 
     @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .optimal
@@ -110,7 +110,7 @@ private struct MainView: View {
     }
 
     private var canAdjustScrubbingSpeed: Bool {
-        isInteracting && scrubbingSpeed != 1
+        isInteracting && scrubbingSpeed != .default
     }
 
     var body: some View {

@@ -192,6 +192,9 @@
     "Examples" : {
 
     },
+    "Fine Scrubbing" : {
+
+    },
     "Font size" : {
 
     },
@@ -210,7 +213,13 @@
     "Green" : {
 
     },
+    "Half-Speed Scrubbing" : {
+
+    },
     "Hide" : {
+
+    },
+    "High-Speed Scrubbing" : {
 
     },
     "Improves playlist navigation so that it feels more natural." : {
@@ -387,6 +396,9 @@
     "Quality" : {
 
     },
+    "Quarter-Speed Scrubbing" : {
+
+    },
     "Red" : {
 
     },
@@ -394,9 +406,6 @@
 
     },
     "Route picker" : {
-
-    },
-    "Scrubbing at %g×" : {
 
     },
     "Search" : {

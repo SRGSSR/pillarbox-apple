@@ -16,16 +16,15 @@ private struct DragGestureState: Equatable {
 }
 
 /// A horizontal control for selecting a value from a bounded linear range of values.
-struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View {
+struct HSlider<Value, Content, Speed>: View where Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint, Content: View, Speed: HSliderScrubbingSpeed {
     @Binding private var value: Value
-    @Binding private var scrubbingSpeed: Double
+    @Binding private var scrubbingSpeed: Speed
 
     private let bounds: ClosedRange<Value>
     private let content: (CGFloat, CGFloat) -> Content
 
     fileprivate var onEditingChanged: (_ isEditing: Bool) -> Void = { _ in }
     fileprivate var onDragging: () -> Void = {}
-    fileprivate var updatingScrubbingSpeedBody: (_ yDistance: CGFloat) -> Double = { _ in 1 }
 
     @State private var isInteracting = false
     @GestureState private var gestureState: DragGestureState?
@@ -62,10 +61,11 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
+        scrubbingSpeed: Binding<Speed>,
         @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
     ) {
         self._value = value
-        self._scrubbingSpeed = .constant(1)
+        self._scrubbingSpeed = scrubbingSpeed
         self.bounds = bounds
         self.content = content
     }
@@ -100,7 +100,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
             onEditingChanged(true)
         }
         let scrubbingSpeed = scrubbingSpeed(for: gestureValue)
-        let progress = Self.progress(for: value, in: bounds) + gestureState.xTranslation / geometry.size.width * scrubbingSpeed
+        let progress = Self.progress(for: value, in: bounds) + scrubbingSpeed.value * gestureState.xTranslation / geometry.size.width
         self.value = Self.value(for: progress, in: bounds)
         self.scrubbingSpeed = scrubbingSpeed
     }
@@ -108,15 +108,23 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
     private func onEnded() {
         guard isInteracting else { return }
         isInteracting = false
-        scrubbingSpeed = 1
+        scrubbingSpeed = .default
         onEditingChanged(false)
     }
 
-    private func scrubbingSpeed(for gestureValue: DragGesture.Value?) -> Double {
-        guard let gestureValue else { return 1 }
-        let speed = updatingScrubbingSpeedBody(abs(gestureValue.translation.height))
-        assert(speed > 0)
-        return max(speed, .leastNonzeroMagnitude)
+    private func scrubbingSpeed(for gestureValue: DragGesture.Value?) -> Speed {
+        guard let gestureValue else { return Speed.default }
+        return Speed.speed(forDistance: abs(gestureValue.translation.height))
+    }
+}
+
+extension HSlider where Speed == StandardScrubbingSpeed {
+    init(
+        value: Binding<Value>,
+        in bounds: ClosedRange<Value> = 0...1,
+        @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
+    ) {
+        self.init(value: value, in: bounds, scrubbingSpeed: .constant(.default), content: content)
     }
 }
 
@@ -132,18 +140,6 @@ extension HSlider {
     func onDragging(_ action: @escaping () -> Void) -> Self {
         var slider = self
         slider.onDragging = action
-        return slider
-    }
-
-    /// Allows scrubbing speed adjustments based on distance to the slider.
-    ///
-    /// - Parameters:
-    ///   - scrubbingSpeed: A binding to the current speed.
-    ///   - body: A closure that returns the (positive) speed which should be applied at a given vertical distance of the slider.
-    func updatingScrubbingSpeed(_ scrubbingSpeed: Binding<Double>, body: @escaping (_ yDistance: CGFloat) -> Double) -> Self {
-        var slider = self
-        slider._scrubbingSpeed = scrubbingSpeed
-        slider.updatingScrubbingSpeedBody = body
         return slider
     }
 }
