@@ -116,7 +116,7 @@ struct HSlider<Value, Content>: View where Value: BinaryFloatingPoint, Value.Str
         guard let gestureValue else { return 1 }
         let speed = updatingScrubbingSpeedBody(abs(gestureValue.translation.height))
         assert(speed > 0)
-        return speed
+        return max(speed, .leastNonzeroMagnitude)
     }
 }
 
