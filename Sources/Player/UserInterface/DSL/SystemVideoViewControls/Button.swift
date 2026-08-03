@@ -108,7 +108,7 @@ public struct ButtonInInfoViewActions: InfoViewActionsBody {
 
     // swiftlint:disable:next missing_docs
     public func toAction(dismissing viewController: UIViewController) -> UIAction {
-        UIAction(title: title, image: image) { [weak viewController] _ in
+        UIAction.identifiedAction(title: title, image: image) { [weak viewController] _ in
             action()
             viewController?.dismiss(animated: true)
         }
@@ -213,7 +213,7 @@ public struct ButtonInMenu: MenuBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIAction(title: title, subtitle: subtitle, image: image) { _ in action() }
+        UIAction.identifiedAction(title: title, subtitle: subtitle, image: image) { _ in action() }
     }
 }
 
@@ -341,7 +341,7 @@ public struct ButtonInSection: SectionBody {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement() -> UIMenuElement? {
-        UIAction(title: title, subtitle: subtitle, image: image) { _ in action() }
+        UIAction.identifiedAction(title: title, subtitle: subtitle, image: image) { _ in action() }
     }
 }
 

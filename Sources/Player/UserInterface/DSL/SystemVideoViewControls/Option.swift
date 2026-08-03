@@ -72,7 +72,7 @@ public struct OptionInInlinePicker<Value>: InlinePickerBody where Value: Equatab
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement {
-        UIAction(title: title, subtitle: subtitle, image: image, state: state(selection: selection)) { action in
+        UIAction.identifiedAction(title: title, subtitle: subtitle, image: image, state: state(selection: selection)) { action in
             selection.wrappedValue = value
             action.state = state(selection: selection)
             handler(value)
@@ -195,7 +195,7 @@ public struct OptionInPicker<Value>: PickerBody where Value: Equatable {
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement? {
-        UIAction(title: title, subtitle: subtitle, image: image, state: state(selection: selection)) { action in
+        UIAction.identifiedAction(title: title, subtitle: subtitle, image: image, state: state(selection: selection)) { action in
             selection.wrappedValue = value
             action.state = state(selection: selection)
             handler(value)
@@ -298,7 +298,7 @@ public struct OptionInPickerSection<Value>: PickerSectionBody where Value: Equat
 
     // swiftlint:disable:next missing_docs
     public func toMenuElement(updating selection: Binding<Value>) -> UIMenuElement? {
-        UIAction(title: title, subtitle: subtitle, image: image, state: state(selection: selection)) { action in
+        UIAction.identifiedAction(title: title, subtitle: subtitle, image: image, state: state(selection: selection)) { action in
             selection.wrappedValue = value
             action.state = state(selection: selection)
             handler(value)
