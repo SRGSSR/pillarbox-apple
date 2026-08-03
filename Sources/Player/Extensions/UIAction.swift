@@ -7,12 +7,25 @@
 import UIKit
 
 extension UIAction {
-    static func identifiedAction(title: String, image: UIImage? = nil, state: UIMenuElement.State = .off, handler: @escaping UIActionHandler) -> UIAction {
+    static func identifiedAction(
+        title: String,
+        subtitle: String? = nil,
+        image: UIImage? = nil,
+        state: UIMenuElement.State = .off,
+        handler: @escaping UIActionHandler
+    ) -> UIAction {
         if let image {
-            return UIAction(title: title, image: image, identifier: .init(rawValue: "\(title)-\(image.hash)"), state: state, handler: handler)
+            return UIAction(
+                title: title,
+                subtitle: subtitle,
+                image: image,
+                identifier: .init(rawValue: "\(title)-\(image.hash)"),
+                state: state,
+                handler: handler
+            )
         }
         else {
-            return UIAction(title: title, image: image, identifier: .init(rawValue: title), state: state, handler: handler)
+            return UIAction(title: title, subtitle: subtitle, image: image, identifier: .init(rawValue: title), state: state, handler: handler)
         }
     }
 }
