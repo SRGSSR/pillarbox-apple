@@ -60,6 +60,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(["phone", "tablet", "tvbox", "phone"]).to(contain([labels.navigation_device]))
                 expect(labels.app_library_version).to(equal(Analytics.version))
                 expect(labels.navigation_app_site_name).to(equal("site"))
+                expect(labels.platform_id).to(equal("platform"))
                 expect(labels.navigation_property_type).to(equal("app"))
                 expect(labels.content_bu_owner).to(equal("SRG"))
                 expect(labels.consent_services).to(equal("service1,service2,service3"))

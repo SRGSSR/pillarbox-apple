@@ -18,6 +18,7 @@ private final class UnprotectedCommandersActService {
         if let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey.rawValue) {
             serverSide.addPermanentData("app_library_version", withValue: Analytics.version)
             serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
+            serverSide.addPermanentData("platform_id", withValue: configuration.platformIdentifier)
             serverSide.addPermanentData("navigation_device", withValue: Self.device)
             serverSide.enableRunningInBackground()
             serverSide.waitForUserAgent()

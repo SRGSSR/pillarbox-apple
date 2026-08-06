@@ -24,6 +24,7 @@ public class Analytics {
         let vendor: Vendor
         let sourceKey: SourceKey
         let appSiteName: String
+        let platformIdentifier: String
 
         /// Creates an analytics configuration.
         ///
@@ -33,10 +34,12 @@ public class Analytics {
         ///   - vendor: The vendor which the application belongs to.
         ///   - sourceKey: The source key.
         ///   - appSiteName: The app/site name.
-        public init(vendor: Vendor, sourceKey: SourceKey, appSiteName: String) {
+        ///   - platformIdentifier: The [platform identifier](https://srgssr-ch.atlassian.net/wiki/spaces/RN/pages/2655846518/Reference+tables#Platform_id).
+        public init(vendor: Vendor, sourceKey: SourceKey, appSiteName: String, platformIdentifier: String) {
             self.vendor = vendor
             self.sourceKey = sourceKey
             self.appSiteName = appSiteName
+            self.platformIdentifier = platformIdentifier
         }
     }
 
