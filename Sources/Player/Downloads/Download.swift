@@ -45,6 +45,10 @@ public final class Download: ObservableObject, Identifiable {
         properties.error
     }
 
+    public var totalSize: Int64 {
+        fileSize()
+    }
+
     var fileUrl: URL? {
         properties.fileUrl
     }
@@ -215,6 +219,18 @@ extension Download: Hashable {
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
+    }
+}
+
+private extension Download {
+    func fileSize() -> Int64 {
+        guard let fileUrl, let enumerator = FileManager.default.enumerator(at: fileUrl, includingPropertiesForKeys: [.fileSizeKey]) else { return 0 }
+        let totalSize = enumerator.allObjects
+            .compactMap { try? ($0 as? URL)?.resourceValues(forKeys: [.fileSizeKey]) }
+            .reduce(into: (try? fileUrl.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0) { totalSize, resourceValues in
+                totalSize += resourceValues.totalFileSize ?? 0
+            }
+        return Int64(totalSize)
     }
 }
 
