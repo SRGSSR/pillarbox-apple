@@ -32,7 +32,7 @@ final class CommandersActEventTests: CommandersActTestCase {
             ]
         )
 
-        expect(event.merging(globals: globals).labels).to(equal([
+        expect(event.merging(globals: globals).allLabels()).to(equal([
             "consent_services": "service1,service2,service3",
             "profile_id": "profile",
             "globals-label": "globals",

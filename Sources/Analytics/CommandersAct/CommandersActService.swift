@@ -31,7 +31,7 @@ private final class UnprotectedCommandersActService {
 
     func trackPageView(_ pageView: CommandersActPageView) {
         guard let serverSide, let event = TCPageViewEvent(type: pageView.type) else { return }
-        pageView.labels.forEach { key, value in
+        pageView.allLabels().forEach { key, value in
             event.addAdditionalProperty(key, withStringValue: value)
         }
         event.pageName = pageView.name
@@ -47,7 +47,7 @@ private final class UnprotectedCommandersActService {
 
     func sendEvent(_ event: CommandersActEvent) {
         guard let serverSide, let customEvent = TCCustomEvent(name: event.name) else { return }
-        event.labels.forEach { key, value in
+        event.allLabels().forEach { key, value in
             customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
         }
         AnalyticsListener.capture(customEvent)
