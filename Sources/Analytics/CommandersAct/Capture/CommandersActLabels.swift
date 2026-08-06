@@ -36,6 +36,9 @@ public struct CommandersActLabels: Decodable {
     /// The value of `navigation_device`.
     public let navigation_device: String?
 
+    /// The value of `vector_id`.
+    public let vector_id: String?
+
     /// The value of `consent_services`.
     public let consent_services: String?
 
@@ -214,10 +217,11 @@ private extension CommandersActLabels {
         case media_player_display
         case media_player_version
         case media_subtitle_selection
-        case user
         case page_id
         case page_version
         case section_id
         case section_version
+        case user
+        case vector_id
     }
 }

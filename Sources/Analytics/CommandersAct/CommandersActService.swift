@@ -20,6 +20,7 @@ private final class UnprotectedCommandersActService {
             serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
             serverSide.addPermanentData("platform_id", withValue: configuration.platformIdentifier)
             serverSide.addPermanentData("navigation_device", withValue: Self.device)
+            serverSide.addPermanentData("vector_id", withValue: Self.vectorIdentifier)
             serverSide.enableRunningInBackground()
             serverSide.waitForUserAgent()
             self.serverSide = serverSide
@@ -90,6 +91,16 @@ private extension UnprotectedCommandersActService {
             return "tvbox"
         default:
             return "phone"
+        }
+    }()
+
+    static let vectorIdentifier = {
+        guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop.macos" }
+        switch UIDevice.current.userInterfaceIdiom {
+        case .tv:
+            return "tv.tvos"
+        default:
+            return "mobile.ios"
         }
     }()
 }

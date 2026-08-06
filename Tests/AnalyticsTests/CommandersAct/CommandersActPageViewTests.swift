@@ -58,6 +58,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.navigation_level_8).to(equal("level_8"))
                 expect(labels.navigation_level_9).to(beNil())
                 expect(["phone", "tablet", "tvbox", "phone"]).to(contain([labels.navigation_device]))
+                expect(["mobile.ios", "tv.tvos", "desktop.macos"]).to(contain([labels.vector_id]))
                 expect(labels.app_library_version).to(equal(Analytics.version))
                 expect(labels.navigation_app_site_name).to(equal("site"))
                 expect(labels.platform_id).to(equal("platform"))
