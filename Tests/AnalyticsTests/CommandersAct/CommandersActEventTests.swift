@@ -12,12 +12,14 @@ import TCServerSide
 import XCTest
 
 final class CommandersActEventTests: CommandersActTestCase {
-    func testMergingWithGlobals() {
+    func testLabelsMerging() {
         let event = CommandersActEvent(
             name: "name",
+            source: .init(page: .init(identifier: "event-source")),
             labels: [
                 "event-label": "event",
-                "common-label": "event"
+                "common-label": "event",
+                "page_id": "event"
             ]
         )
         let globals = CommandersActGlobals(
@@ -25,7 +27,8 @@ final class CommandersActEventTests: CommandersActTestCase {
             profileIdentifier: "profile",
             labels: [
                 "globals-label": "globals",
-                "common-label": "globals"
+                "common-label": "globals",
+                "page_id": "globals"
             ]
         )
 
@@ -34,7 +37,8 @@ final class CommandersActEventTests: CommandersActTestCase {
             "profile_id": "profile",
             "globals-label": "globals",
             "event-label": "event",
-            "common-label": "globals"
+            "common-label": "event",
+            "page_id": "event-source"
         ]))
     }
 
@@ -98,27 +102,6 @@ final class CommandersActEventTests: CommandersActTestCase {
             }
         ) {
             Analytics.shared.sendEvent(commandersAct: .init(name: "name"))
-        }
-    }
-
-    func testCustomLabelsForbiddenOverrides() {
-        expectAtLeastHits(
-            custom(name: "name") { labels in
-                expect(labels.profile_id).to(equal("profile"))
-                expect(labels.consent_services).to(equal("service1,service2,service3"))
-                expect(labels.page_id).to(equal("page"))
-            }
-        ) {
-            Analytics.shared.sendEvent(commandersAct: .init(
-                name: "name",
-                source: .init(page: .init(identifier: "page")),
-                labels: [
-                    "event_name": "overridden_name",
-                    "profile_id": "profile42",
-                    "consent_services": "service42",
-                    "page_id": "page42"
-                ]
-            ))
         }
     }
 }

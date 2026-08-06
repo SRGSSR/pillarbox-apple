@@ -32,9 +32,9 @@ public struct CommandersActEvent {
 
     func merging(globals: CommandersActGlobals?) -> Self {
         guard let globals else { return self }
-        let labels = labels
+        let labels = globals.labels
+            .merging(labels) { _, new in new }
             .merging(source?.labels ?? [:]) { _, new in new }
-            .merging(globals.labels) { _, new in new }
         return .init(name: name, labels: labels)
     }
 }
