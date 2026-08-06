@@ -10,6 +10,7 @@ import SwiftUI
 struct ChapterList: View {
     @ObservedObject var player: Player
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
+    @Environment(\.dismiss) private var dismiss
 
     private var chapters: [Chapter] {
         player.metadata.chapters
@@ -25,6 +26,7 @@ struct ChapterList: View {
                 ForEach(chapters, id: \.timeRange) { chapter in
                     ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter) {
                         player.seek(to: chapter)
+                        dismiss()
                     }
                 }
             }
