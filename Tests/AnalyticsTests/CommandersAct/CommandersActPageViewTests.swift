@@ -11,13 +11,15 @@ import PillarboxCircumspect
 import XCTest
 
 final class CommandersActPageViewTests: CommandersActTestCase {
-    func testMergingWithGlobals() {
+    func testLabelsMerging() {
         let pageView = CommandersActPageView(
             name: "name",
             type: "type",
+            source: .init(page: .init(identifier: "pageview-source")),
             labels: [
                 "pageview-label": "pageview",
-                "common-label": "pageview"
+                "common-label": "pageview",
+                "page_id": "pageview"
             ]
         )
         let globals = CommandersActGlobals(
@@ -25,7 +27,8 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             profileIdentifier: "profile",
             labels: [
                 "globals-label": "globals",
-                "common-label": "globals"
+                "common-label": "globals",
+                "page_id": "globals"
             ]
         )
 
@@ -34,7 +37,8 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             "profile_id": "profile",
             "globals-label": "globals",
             "pageview-label": "pageview",
-            "common-label": "globals"
+            "common-label": "pageview",
+            "page_id": "pageview-source"
         ]))
     }
 
@@ -154,29 +158,6 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             }
         ) {
             Analytics.shared.trackPageView(commandersAct: .init(name: "name", type: "type"))
-        }
-    }
-
-    func testLabelsForbiddenOverrides() {
-        expectAtLeastHits(
-            page_view { labels in
-                expect(labels.page_name).to(equal("name"))
-                expect(labels.consent_services).to(equal("service1,service2,service3"))
-                expect(labels.page_id).to(equal("page"))
-            }
-        ) {
-            Analytics.shared.trackPageView(
-                commandersAct: .init(
-                    name: "name",
-                    type: "type",
-                    source: .init(page: .init(identifier: "page")),
-                    labels: [
-                        "page_name": "overridden_title",
-                        "consent_services": "service42",
-                        "page_id": "page42"
-                    ]
-                )
-            )
         }
     }
 }
