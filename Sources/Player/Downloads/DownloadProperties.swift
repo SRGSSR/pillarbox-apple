@@ -49,7 +49,25 @@ struct DownloadProperties<CustomData> {
         case let .estimate(progress):
             return progress
         case let .actual(properties):
-            return properties.progress
+            return properties.fractionCompleted
+        }
+    }
+
+    var completedUnitCount: Int64 {
+        switch progress {
+        case .estimate:
+            return 0
+        case let .actual(properties):
+            return properties.completedUnitCount
+        }
+    }
+
+    var totalUnitCount: Int64? {
+        switch progress {
+        case .estimate:
+            return 0
+        case let .actual(properties):
+            return properties.totalUnitCount
         }
     }
 
