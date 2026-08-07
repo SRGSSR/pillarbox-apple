@@ -28,7 +28,7 @@ To track a page view, it must be associated with ``CommandersActPageView`` detai
 
 For inspiration, explore how [Play SRG products](https://srgssr-ch.atlassian.net/wiki/x/FwWhLw) utilize page views.
 
-> Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://srgssr-ch.atlassian.net/wiki/x/zIZwLw) for available keys or contact the GD ADI team for further guidance on mapping and implementation.
+> Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://srgssr-ch.atlassian.net/wiki/x/zIZwLw) for available keys or contact our digital analysts for further guidance on mapping and implementation.
 
 ### Automatically track page views in SwiftUI
 
@@ -49,8 +49,8 @@ struct HomeView: View {
 private extension HomeView {
     var commandersAct: CommandersActPageView {
         .init(
-            name: "home", 
-            type: "landing_page", 
+            name: "home",
+            type: "landing_page",
             levels: ["main"]
         )
     }
@@ -71,8 +71,8 @@ final class HomeViewController: UIViewController {
 extension HomeViewController: PageViewTracking {
     var commandersActPageView: CommandersActPageView {
         .init(
-            name: "home", 
-            type: "landing_page", 
+            name: "home",
+            type: "landing_page",
             levels: ["main"]
         )
     }

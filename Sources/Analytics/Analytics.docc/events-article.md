@@ -33,4 +33,4 @@ Analytics.shared.sendEvent(commandersAct: .init(
 
 For inspiration, explore how [Play SRG products](https://srgssr-ch.atlassian.net/wiki/x/AAmhLw) utilize events.
 
-> Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://srgssr-ch.atlassian.net/wiki/x/zIZwLw) for available keys or contact the GD ADI team for further guidance on mapping and implementation.
+> Tip: Commanders Act fields must be properly mapped server-side. Check our [internal wiki](https://srgssr-ch.atlassian.net/wiki/x/zIZwLw) for available keys or contact our digital analysts for further guidance on mapping and implementation.
