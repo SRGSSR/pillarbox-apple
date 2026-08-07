@@ -33,6 +33,22 @@ public final class Download: ObservableObject, Identifiable {
         properties.fractionCompleted
     }
 
+    public var totalSize: Int64? {
+        nil
+    }
+
+    public var completedSize: Int64 {
+        0
+    }
+
+    public var estimatedTimeRemaining: TimeInterval? {
+        nil
+    }
+
+    public var throughput: Int? {
+        nil
+    }
+
     public var state: DownloadState {
         properties.state
     }
