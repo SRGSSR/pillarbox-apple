@@ -12,12 +12,11 @@ Before any measurements can occur, you must initialize a tracker with a configur
 
 ### Obtain configuration information for your app
 
-To properly set up tracking, gather the following details:
+To configure tracking correctly, contact our digital analytics team to obtain the values for your product:
 
-- **Product Name:** This must be consistent across all platforms where your product is available.
-- **App/Site Name:** This may vary between platforms.
-
-Contact our digital analysts to obtain values relevant to your product.
+- Product name
+- Site name
+- Platform identifier
 
 ### Configure your application manifest
 
@@ -28,21 +27,7 @@ The app’s name and version are retrieved from the [app manifest](https://devel
 
 ### Start tracking
 
-To enable measurements, you need to start the ``Analytics`` singleton. First, create a configuration using parameters specific to your app:
-
-```swift
-let configuration = Analytics.Configuration(
-    vendor: .SRF,
-    sourceKey: .production,
-    appSiteName: "app-site-name"
-)
-```
-
-Provide the **vendor** publishing the app, the appropriate **source key**, and the **site name** for your app.
-
-> Note: Use `.production` for production apps. For development, set it to `.development` to avoid contaminating production data.
-
-Next, initialize the tracker singleton in your `application(_:didFinishLaunchingWithOptions:)` method, located in your [application delegate](https://developer.apple.com/documentation/uikit/uiapplicationdelegate):
+To enable measurements, create a configuration with your business unit and the parameters received for your app. Then start the tracker singleton from your [application delegate](https://developer.apple.com/documentation/uikit/uiapplicationdelegate) `application(_:didFinishLaunchingWithOptions:)` method:
 
 ```swift
 final class AppDelegate: NSObject, UIApplicationDelegate {
@@ -53,7 +38,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         let configuration = Analytics.Configuration(
             vendor: .SRF,
             sourceKey: .production,
-            appSiteName: "app-site-name"
+            appSiteName: "app-site-name",
+            platformIdentifier: "app-platform-identifier"
         )
         try? Analytics.shared.start(with: configuration)
 
@@ -61,5 +47,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     }
 }
 ```
+
+The source key determines the destination to which measurements are sent. Use `.production` for production builds and `.development` for development builds.
 
 > Tip: For SwiftUI apps, use an [UIApplicationDelegateAdaptor](https://developer.apple.com/documentation/swiftui/uiapplicationdelegateadaptor) to register an application delegate.
