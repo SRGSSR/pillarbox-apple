@@ -33,12 +33,12 @@ public final class Download: ObservableObject, Identifiable {
         properties.fractionCompleted
     }
 
-    public var totalSize: Int64? {
-        nil
+    public var completedSize: Int64 {
+        properties.completedUnitCount
     }
 
-    public var completedSize: Int64 {
-        0
+    public var totalSize: Int64? {
+        properties.totalUnitCount
     }
 
     public var estimatedTimeRemaining: TimeInterval? {
@@ -138,16 +138,24 @@ private extension Download {
 @available(tvOS, unavailable)
 private extension Download {
     static func taskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
-        Publishers.CombineLatest3(
+        Publishers.CombineLatest5(
             Just(task),
             task.publisher(for: \.state),
+            task.progress.publisher(for: \.completedUnitCount),
+            task.progress.publisher(for: \.totalUnitCount),
             task.progress.publisher(for: \.fractionCompleted)
                 .map { $0.clamped(to: 0...1) }
         )
-        .map { task, state, progress in
-            // If progress information is indeterminate (e.g. download happened too fast), still ensure that progress is
-            // correct when completed.
-            DownloadSessionTaskProperties(task: task, state: state, progress: state == .completed ? 1 : progress)
+        .map { task, state, completedUnitCount, totalUnitCount, fractionCompleted in
+            // If progress information is indeterminate (e.g. download happened too fast), still ensure that fraction completed is
+            // correct.
+            DownloadSessionTaskProperties(
+                task: task,
+                state: state,
+                completedUnitCount: completedUnitCount,
+                totalUnitCount: totalUnitCount,
+                fractionCompleted: state == .completed ? 1 : fractionCompleted
+            )
         }
         .eraseToAnyPublisher()
     }
