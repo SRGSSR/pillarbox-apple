@@ -18,7 +18,9 @@ private final class UnprotectedCommandersActService {
         if let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey.rawValue) {
             serverSide.addPermanentData("app_library_version", withValue: Analytics.version)
             serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
+            serverSide.addPermanentData("platform_id", withValue: configuration.platformIdentifier)
             serverSide.addPermanentData("navigation_device", withValue: Self.device)
+            serverSide.addPermanentData("vector_id", withValue: Self.vectorIdentifier)
             serverSide.enableRunningInBackground()
             serverSide.waitForUserAgent()
             self.serverSide = serverSide
@@ -31,7 +33,7 @@ private final class UnprotectedCommandersActService {
 
     func trackPageView(_ pageView: CommandersActPageView) {
         guard let serverSide, let event = TCPageViewEvent(type: pageView.type) else { return }
-        pageView.labels.forEach { key, value in
+        pageView.allLabels().forEach { key, value in
             event.addAdditionalProperty(key, withStringValue: value)
         }
         event.pageName = pageView.name
@@ -47,7 +49,7 @@ private final class UnprotectedCommandersActService {
 
     func sendEvent(_ event: CommandersActEvent) {
         guard let serverSide, let customEvent = TCCustomEvent(name: event.name) else { return }
-        event.labels.forEach { key, value in
+        event.allLabels().forEach { key, value in
             customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
         }
         AnalyticsListener.capture(customEvent)
@@ -89,6 +91,16 @@ private extension UnprotectedCommandersActService {
             return "tvbox"
         default:
             return "phone"
+        }
+    }()
+
+    static let vectorIdentifier = {
+        guard !ProcessInfo.processInfo.isRunningOnMac else { return "desktop.macos" }
+        switch UIDevice.current.userInterfaceIdiom {
+        case .tv:
+            return "tv.tvos"
+        default:
+            return "mobile.ios"
         }
     }()
 }

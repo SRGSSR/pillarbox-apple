@@ -39,6 +39,26 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         }
     }
 
+    func testLabelsMerging() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in
+                    ["cs_ucfr": "tracker"]
+                }
+            ]
+        ))
+        expectAtLeastHits(
+            play { labels in
+                expect(labels.ns_st_mp).to(equal("Pillarbox"))
+                expect(labels.ns_st_mv).to(equal(PackageInfo.version))
+                expect(labels.cs_ucfr).to(equal("tracker"))
+            }
+        ) {
+            player.play()
+        }
+    }
+
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
