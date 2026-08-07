@@ -17,7 +17,7 @@ To properly set up tracking, gather the following details:
 - **Product Name:** This must be consistent across all platforms where your product is available.
 - **App/Site Name:** This may vary between platforms.
 
-The GD ADI team provides these values. For more details, consult our [internal wiki](https://srgssr-ch.atlassian.net/l/cp/q056Gi7R).
+Contact our digital analysts to obtain values relevant to your product.
 
 ### Configure your application manifest
 
