@@ -14,14 +14,14 @@ public struct DownloadSize {
     public let completed: Int64
     public let total: Int64
 
-    init(completed: Int64, total: Int64) {
-        self.completed = completed
+    init?(completed: Int64, total: Int64) {
+        guard total > 0 else { return nil }
+        self.completed = completed.clamped(to: 0...total)
         self.total = total
     }
 
-    init(total: Int64) {
-        self.completed = total
-        self.total = total
+    init?(total: Int64) {
+        self.init(completed: total, total: total)
     }
 }
 
