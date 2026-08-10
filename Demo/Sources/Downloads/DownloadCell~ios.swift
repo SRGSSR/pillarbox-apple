@@ -33,10 +33,7 @@ struct DownloadCell: View {
             infoView()
             VStack(alignment: .trailing) {
                 DownloadButton(download: download, side: 32)
-                if let size = download.size {
-                    Text(size.localizedDescription)
-                        .font(.footnote)
-                }
+                sizeLabel()
             }
         }
     }
@@ -77,6 +74,18 @@ struct DownloadCell: View {
                     .foregroundColor(.secondary)
             }
         }
+    }
+
+    private func sizeLabel() -> some View {
+        ZStack {
+            if let size = download.size {
+                Text(size.localizedDescription)
+            }
+            else {
+                Text("Calculating…")
+            }
+        }
+        .font(.footnote)
     }
 }
 
