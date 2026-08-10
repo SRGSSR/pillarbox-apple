@@ -126,13 +126,12 @@ private extension Download {
 @available(tvOS, unavailable)
 private extension Download {
     static func taskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
-        Publishers.CombineLatest4(
-            Just(task),
+        Publishers.CombineLatest3(
             task.publisher(for: \.state),
             task.progress.publisher(for: \.completedUnitCount),
             task.progress.publisher(for: \.totalUnitCount)
         )
-        .map { task, state, completedUnitCount, totalUnitCount in
+        .map { state, completedUnitCount, totalUnitCount in
             DownloadSessionTaskProperties(
                 task: task,
                 state: state,
