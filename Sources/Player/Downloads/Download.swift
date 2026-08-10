@@ -37,7 +37,7 @@ public final class Download: ObservableObject, Identifiable {
         properties.completedUnitCount
     }
 
-    public var totalSize: Int64? {
+    public var totalSize: Int64 {
         properties.totalUnitCount
     }
 
