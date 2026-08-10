@@ -106,6 +106,7 @@ final class DownloadTests: TestCase {
 
         download.remove()
         expect(download.state).to(equal(.completed))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
         expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
@@ -120,6 +121,7 @@ final class DownloadTests: TestCase {
 
         download.remove()
         expect(download.state).to(equal(.completed))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
         expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
@@ -134,6 +136,7 @@ final class DownloadTests: TestCase {
 
         download.remove()
         expect(download.state).to(equal(.completed))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
         expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
@@ -150,6 +153,7 @@ final class DownloadTests: TestCase {
 
         download.remove()
         expect(download.state).toEventually(equal(.completed))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
         expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
