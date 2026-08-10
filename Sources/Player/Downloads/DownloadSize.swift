@@ -14,6 +14,10 @@ public struct DownloadSize {
     public let completed: Int64
     public let total: Int64
 
+    var fractionCompleted: Double {
+        Double(completed) / Double(total)
+    }
+
     init?(completed: Int64, total: Int64) {
         guard total > 0 else { return nil }
         self.completed = completed.clamped(to: 0...total)
