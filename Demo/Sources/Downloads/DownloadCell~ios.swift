@@ -37,10 +37,12 @@ struct DownloadCell: View {
     var body: some View {
         HStack {
             infoView()
-            VStack {
+            VStack(alignment: .trailing) {
                 DownloadButton(download: download, side: 32)
-                Text("\(Self.formattedByteCount(download.completedSize)) of \(Self.formattedByteCount(download.totalSize))")
-                    .font(.footnote)
+                if let size = download.size {
+                    Text("\(Self.formattedByteCount(size.completed)) of \(Self.formattedByteCount(size.total))")
+                        .font(.footnote)
+                }
             }
         }
     }
