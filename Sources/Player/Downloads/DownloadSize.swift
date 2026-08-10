@@ -13,11 +13,30 @@ import Foundation
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public struct DownloadSize {
+    private static let fileSizeFormatter: ByteCountFormatter = {
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = .file
+        return formatter
+    }()
+
     public let completed: Int64
     public let total: Int64
 
     var fractionCompleted: Double {
         Double(completed) / Double(total)
+    }
+
+    public var localizedDescription: String {
+        if completed != total {
+            return String(
+                localized: "\(Self.formattedByteCount(completed)) of \(Self.formattedByteCount(total))",
+                bundle: .module,
+                comment: "Formatted size description (completed/total)"
+            )
+        }
+        else {
+            return "\(Self.formattedByteCount(completed))"
+        }
     }
 
     init?(completed: Int64, total: Int64) {
@@ -50,6 +69,10 @@ public struct DownloadSize {
 
     private static func fileSize(for url: URL) -> Int? {
         try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize
+    }
+
+    private static func formattedByteCount(_ byteCount: Int64) -> String {
+        fileSizeFormatter.string(fromByteCount: byteCount)
     }
 }
 

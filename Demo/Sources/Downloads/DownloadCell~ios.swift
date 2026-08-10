@@ -12,12 +12,6 @@ import PillarboxPlayer
 import SwiftUI
 
 struct DownloadCell: View {
-    private static let fileSizeFormatter: ByteCountFormatter = {
-        let formatter = ByteCountFormatter()
-        formatter.countStyle = .file
-        return formatter
-    }()
-
     @ObservedObject var download: Download
 
     private(set) var action: () -> Void
@@ -40,15 +34,11 @@ struct DownloadCell: View {
             VStack(alignment: .trailing) {
                 DownloadButton(download: download, side: 32)
                 if let size = download.size {
-                    Text("\(Self.formattedByteCount(size.completed)) of \(Self.formattedByteCount(size.total))")
+                    Text(size.localizedDescription)
                         .font(.footnote)
                 }
             }
         }
-    }
-
-    private static func formattedByteCount(_ byteCount: Int64) -> String {
-        fileSizeFormatter.string(fromByteCount: byteCount)
     }
 
     private func artworkView() -> some View {
