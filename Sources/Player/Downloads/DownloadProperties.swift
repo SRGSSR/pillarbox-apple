@@ -56,7 +56,8 @@ struct DownloadProperties<CustomData> {
     var size: DownloadSize? {
         switch progress {
         case .estimate:
-            return nil
+            guard let fileUrl else { return nil }
+            return .init(url: fileUrl)
         case let .actual(properties):
             return properties.size
         }

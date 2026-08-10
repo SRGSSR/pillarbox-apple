@@ -12,7 +12,7 @@ import Foundation
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public struct DownloadSize {
+public struct DownloadSize: Equatable {
     private static let fileSizeFormatter: ByteCountFormatter = {
         let formatter = ByteCountFormatter()
         formatter.countStyle = .file

@@ -233,6 +233,7 @@ final class DownloadTests: TestCase {
         let download2 = try unwrap(downloader2.download(matching: input))
         expect(download2.state).to(equal(.completed))
         expect(download2.fileUrl).to(equal(location1))
+        expect(download2.size).notTo(beNil())
     }
 
     func testRestoreFailedWithMissingMetadata() throws {
@@ -248,6 +249,7 @@ final class DownloadTests: TestCase {
         let downloader2 = Downloader(store: store, session: session)
         let download2 = try unwrap(downloader2.download(matching: input))
         expect(download2.state).to(equal(.completed))
+        expect(download2.size).to(beNil())
         let error2 = try unwrap(download2.error)
         expect(error2.localizedDescription).to(equal(error1.localizedDescription))
         expect(download1.fileUrl).to(beNil())
@@ -266,6 +268,7 @@ final class DownloadTests: TestCase {
         let downloader2 = Downloader(store: store, session: session)
         let download2 = try unwrap(downloader2.download(matching: input))
         expect(download2.state).to(equal(.completed))
+        expect(download2.size).to(beNil())
         let error2 = try unwrap(download2.error)
         expect(error2.localizedDescription).to(equal(error1.localizedDescription))
         expect(download1.fileUrl).to(beNil())
