@@ -17,11 +17,12 @@ private struct MetadataError: Error {}
 final class DownloadTests: TestCase {
     private let session = DownloadSessionMock(name: "DownloadTests")
 
-    func testRunningWithImmediatePreparation() {
+    func testRunningWithImmediatePreparation() throws {
         let downloader = Downloader(store: AssetDownloadStoreMock(), session: session)
         let download = downloader.addDownload(for: .playable(url: Stream.download.url))
         expect(download.state).to(equal(.running))
-        expect(download.completedSize).to(equal(0))
+        let size = try unwrap(download.size)
+        expect(size.completed).to(equal(0))
         expect(download.progress).to(equal(0))
     }
 
@@ -29,7 +30,7 @@ final class DownloadTests: TestCase {
         let downloader = Downloader(store: AssetDownloadStoreMock(), session: session)
         let download = downloader.addDownload(for: .playable(url: Stream.download.url, after: 0.1))
         expect(download.state).to(equal(.preparing))
-        expect(download.completedSize).to(equal(0))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
     }
 
@@ -38,7 +39,8 @@ final class DownloadTests: TestCase {
         let downloader = Downloader(store: store, session: session)
         let download = downloader.addDownload(for: .playable(url: Stream.download.url, after: 0.1))
         expect(download.state).toEventually(equal(.completed))
-        expect(download.completedSize).to(equal(download.totalSize))
+        let size = try unwrap(download.size)
+        expect(size.completed).to(equal(size.total))
         expect(download.progress).to(equal(1))
         expect(download.error).to(beNil())
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())

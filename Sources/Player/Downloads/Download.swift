@@ -33,20 +33,8 @@ public final class Download: ObservableObject, Identifiable {
         properties.fractionCompleted
     }
 
-    public var completedSize: Int64 {
-        properties.completedUnitCount
-    }
-
-    public var totalSize: Int64 {
-        properties.totalUnitCount
-    }
-
-    public var estimatedTimeRemaining: TimeInterval? {
-        nil
-    }
-
-    public var throughput: Int? {
-        nil
+    public var size: DownloadSize? {
+        properties.size
     }
 
     public var state: DownloadState {
@@ -152,12 +140,16 @@ private extension Download {
             DownloadSessionTaskProperties(
                 task: task,
                 state: state,
-                completedUnitCount: completedUnitCount,
-                totalUnitCount: totalUnitCount,
+                size: downloadSize(completedUnitCount: completedUnitCount, totalUnitCount: totalUnitCount),
                 fractionCompleted: state == .completed ? 1 : fractionCompleted
             )
         }
         .eraseToAnyPublisher()
+    }
+
+    private static func downloadSize(completedUnitCount: Int64, totalUnitCount: Int64) -> DownloadSize? {
+        guard totalUnitCount >= 0 else { return nil }
+        return .init(completed: completedUnitCount, total: totalUnitCount)
     }
 
     func propertiesPublisher<S>(input: S.Loader.Input, store: S) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where S: AssetDownloadStore {

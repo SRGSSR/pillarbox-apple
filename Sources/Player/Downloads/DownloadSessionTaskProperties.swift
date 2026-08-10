@@ -12,8 +12,7 @@ import Foundation
 struct DownloadSessionTaskProperties {
     let task: URLSessionTask
     let state: URLSessionTask.State
-    let completedUnitCount: Int64
-    let totalUnitCount: Int64
+    let size: DownloadSize?
     let fractionCompleted: Double
 }
 

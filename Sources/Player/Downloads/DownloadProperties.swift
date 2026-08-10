@@ -53,21 +53,12 @@ struct DownloadProperties<CustomData> {
         }
     }
 
-    var completedUnitCount: Int64 {
+    var size: DownloadSize? {
         switch progress {
         case .estimate:
-            return 0
+            return nil
         case let .actual(properties):
-            return properties.completedUnitCount
-        }
-    }
-
-    var totalUnitCount: Int64 {
-        switch progress {
-        case .estimate:
-            return 0
-        case let .actual(properties):
-            return properties.totalUnitCount
+            return properties.size
         }
     }
 
