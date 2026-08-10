@@ -62,7 +62,7 @@ struct DownloadProperties<CustomData> {
         }
     }
 
-    var totalUnitCount: Int64? {
+    var totalUnitCount: Int64 {
         switch progress {
         case .estimate:
             return 0
