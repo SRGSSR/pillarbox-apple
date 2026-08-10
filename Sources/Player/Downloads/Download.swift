@@ -140,16 +140,11 @@ private extension Download {
             DownloadSessionTaskProperties(
                 task: task,
                 state: state,
-                size: downloadSize(completedUnitCount: completedUnitCount, totalUnitCount: totalUnitCount),
+                size: .init(completed: completedUnitCount, total: totalUnitCount),
                 fractionCompleted: state == .completed ? 1 : fractionCompleted
             )
         }
         .eraseToAnyPublisher()
-    }
-
-    private static func downloadSize(completedUnitCount: Int64, totalUnitCount: Int64) -> DownloadSize? {
-        guard totalUnitCount >= 0 else { return nil }
-        return .init(completed: completedUnitCount, total: totalUnitCount)
     }
 
     func propertiesPublisher<S>(input: S.Loader.Input, store: S) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where S: AssetDownloadStore {
