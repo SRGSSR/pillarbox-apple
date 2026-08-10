@@ -12,6 +12,12 @@ import PillarboxPlayer
 import SwiftUI
 
 struct DownloadCell: View {
+    private static let fileSizeFormatter: ByteCountFormatter = {
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = .file
+        return formatter
+    }()
+
     @ObservedObject var download: Download
 
     private(set) var action: () -> Void
@@ -34,6 +40,9 @@ struct DownloadCell: View {
             VStack(alignment: .trailing) {
                 DownloadButton(download: download, side: 32)
                 sizeLabel()
+                if let throughput = download.speed {
+                    Text("\(Self.fileSizeFormatter.string(fromByteCount: Int64(throughput)))/s")
+                }
             }
         }
     }

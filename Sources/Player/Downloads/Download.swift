@@ -37,6 +37,10 @@ public final class Download: ObservableObject, Identifiable {
         properties.size
     }
 
+    public var speed: Int? {
+        properties.speed
+    }
+
     public var state: DownloadState {
         properties.state
     }
@@ -123,19 +127,51 @@ private extension Download {
     }
 }
 
+struct TaskCompletion {
+    let unitCount: Int64
+    let throughput: Int?
+    let date = Date()
+
+    init(unitCount: Int64, throughput: Int?) {
+        self.unitCount = unitCount
+        self.throughput = throughput
+    }
+
+    init(progress: Progress) {
+        self.unitCount = progress.completedUnitCount
+        self.throughput = nil
+    }
+
+    func throughput(toUnitCount unitCount: Int64) -> Int? {
+        Int(Double(unitCount - self.unitCount) / Date().timeIntervalSince(date))
+    }
+}
+
 @available(tvOS, unavailable)
 private extension Download {
+    private static func taskCompletion(for task: URLSessionTask) -> AnyPublisher<TaskCompletion, Never> {
+        task.progress.publisher(for: \.completedUnitCount)
+            .scan(.init(progress: task.progress)) { completion, unitCount in
+                TaskCompletion(
+                    unitCount: unitCount,
+                    throughput: completion.throughput(toUnitCount: unitCount)
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+
     static func taskPropertiesPublisher(for task: URLSessionTask) -> AnyPublisher<DownloadSessionTaskProperties, Never> {
         Publishers.CombineLatest3(
             task.publisher(for: \.state),
-            task.progress.publisher(for: \.completedUnitCount),
+            Self.taskCompletion(for: task),
             task.progress.publisher(for: \.totalUnitCount)
         )
-        .map { state, completedUnitCount, totalUnitCount in
+        .map { state, completion, totalUnitCount in
             DownloadSessionTaskProperties(
                 task: task,
                 state: state,
-                size: .init(completed: completedUnitCount, total: totalUnitCount)
+                size: .init(completed: completion.unitCount, total: totalUnitCount),
+                speed: completion.throughput
             )
         }
         .eraseToAnyPublisher()

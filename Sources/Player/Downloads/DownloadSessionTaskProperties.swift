@@ -13,6 +13,7 @@ struct DownloadSessionTaskProperties {
     let task: URLSessionTask
     let state: URLSessionTask.State
     let size: DownloadSize?
+    let speed: Int?
 
     var fractionCompleted: Double {
         if let size {

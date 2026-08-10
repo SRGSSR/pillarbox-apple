@@ -65,6 +65,15 @@ struct DownloadProperties<CustomData> {
         }
     }
 
+    var speed: Int? {
+        switch progress {
+        case .estimate:
+            return nil
+        case let .actual(properties):
+            return properties.speed
+        }
+    }
+
     private var task: URLSessionTask? {
         switch progress {
         case .estimate:
