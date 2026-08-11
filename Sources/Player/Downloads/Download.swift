@@ -131,11 +131,11 @@ private extension Download {
             task.progress.publisher(for: \.completedUnitCount),
             task.progress.publisher(for: \.totalUnitCount)
         )
-        .map { state, completedUnitCount, totalUnitCount in
+        .map { state, completed, total in
             DownloadSessionTaskProperties(
                 task: task,
                 state: state,
-                size: .init(completed: completedUnitCount, total: totalUnitCount)
+                size: .init(completed: completed, total: total)
             )
         }
         .eraseToAnyPublisher()

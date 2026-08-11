@@ -29,7 +29,7 @@ final class DownloadSizeTests: TestCase {
         expect(size.total).to(equal(100))
     }
 
-    func testCompletedNeverLagerThanTotal() throws {
+    func testCompletedNeverLargerThanTotal() throws {
         let size = try unwrap(DownloadSize(completed: 150, total: 100))
         expect(size.completed).to(equal(100))
         expect(size.total).to(equal(100))
