@@ -31,10 +31,7 @@ struct DownloadCell: View {
     var body: some View {
         HStack {
             infoView()
-            VStack(alignment: .trailing) {
-                DownloadButton(download: download, side: 32)
-                sizeLabel()
-            }
+            DownloadButton(download: download, side: 32)
         }
     }
 
@@ -69,23 +66,14 @@ struct DownloadCell: View {
                 .lineLimit(1)
             if let subtitle {
                 Text(subtitle)
-                    .lineLimit(2)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
+                    .lineLimit(2)
             }
+            Text(download.size?.localizedDescription ?? "")
+                .font(.footnote)
+                .foregroundColor(.secondary)
         }
-    }
-
-    private func sizeLabel() -> some View {
-        ZStack {
-            if let size = download.size {
-                Text(size.localizedDescription)
-            }
-            else {
-                Text("Calculating…")
-            }
-        }
-        .font(.footnote)
     }
 }
 
