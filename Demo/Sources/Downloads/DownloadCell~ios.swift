@@ -71,8 +71,9 @@ struct DownloadCell: View {
                     .lineLimit(2)
             }
             Text(download.size?.localizedDescription ?? "")
-                .font(.footnote)
+                .font(.caption)
                 .foregroundColor(.secondary)
+                .opacity(0.7)
         }
     }
 }
