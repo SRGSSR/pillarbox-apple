@@ -22,6 +22,7 @@ public final class Download: ObservableObject, Identifiable {
     @Published private var properties: DownloadPlayerProperties = .init()
 
     private let trigger = Trigger()
+    private let configuration: DownloadConfiguration
     private let session: any DownloadSession
 
     private let resetRecord: () -> Void
@@ -49,8 +50,16 @@ public final class Download: ObservableObject, Identifiable {
         properties.fileUrl
     }
 
-    private init<S>(id: String, input: S.Loader.Input, creationDate: Date, session: DownloadSession, store: S) where S: AssetDownloadStore {
+    private init<S>(
+        id: String,
+        input: S.Loader.Input,
+        configuration: DownloadConfiguration,
+        creationDate: Date,
+        session: DownloadSession,
+        store: S
+    ) where S: AssetDownloadStore {
         self.id = id
+        self.configuration = configuration
         self.creationDate = creationDate
         self.session = session
         self.resetRecord = {
@@ -63,15 +72,22 @@ public final class Download: ObservableObject, Identifiable {
         configurePropertiesPublisher(input: input, store: store)
     }
 
-    convenience init<S>(input: S.Loader.Input, session: DownloadSession, store: S) where S: AssetDownloadStore {
+    convenience init<S>(input: S.Loader.Input, configuration: DownloadConfiguration, session: DownloadSession, store: S) where S: AssetDownloadStore {
         let id = S.id(from: input)
         let creationDate = Date.now
-        store.addDownloadRecord(.init(input: input, creationDate: creationDate), forId: id)
-        self.init(id: id, input: input, creationDate: creationDate, session: session, store: store)
+        store.addDownloadRecord(.init(input: input, configuration: configuration, creationDate: creationDate), forId: id)
+        self.init(id: id, input: input, configuration: configuration, creationDate: creationDate, session: session, store: store)
     }
 
     convenience init<S>(record: DownloadRecord<S.Loader.Input, S.CustomData>, session: DownloadSession, store: S) where S: AssetDownloadStore {
-        self.init(id: S.id(from: record.input), input: record.input, creationDate: record.creationDate, session: session, store: store)
+        self.init(
+            id: S.id(from: record.input),
+            input: record.input,
+            configuration: record.configuration,
+            creationDate: record.creationDate,
+            session: session,
+            store: store
+        )
     }
 
     func remove() {
@@ -180,9 +196,10 @@ private extension Download {
         propertiesPublisher(input: input, store: store)
             .receiveOnMainThread()
             .handleEvents(
-                receiveOutput: { [id, creationDate] properties in
+                receiveOutput: { [id, configuration, creationDate] properties in
                     let record = DownloadRecord(
                         input: input,
+                        configuration: configuration,
                         metadata: properties.assetMetadata,
                         bookmarkData: properties.bookmarkData(),
                         progress: properties.fractionCompleted,

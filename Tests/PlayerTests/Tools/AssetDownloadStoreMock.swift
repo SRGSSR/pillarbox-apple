@@ -16,7 +16,7 @@ final class AssetDownloadStoreMock {
 
     init(preloadedInputs: [AssetLoaderMock.Input] = []) {
         records = preloadedInputs.reduce(into: [:]) { records, input in
-            records.updateValue(.init(input: input, creationDate: .now), forKey: Self.id(from: input))
+            records.updateValue(.init(input: input, configuration: .default, creationDate: .now), forKey: Self.id(from: input))
         }
     }
 }

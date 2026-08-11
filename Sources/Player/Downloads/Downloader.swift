@@ -33,12 +33,12 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     }
 
     @discardableResult
-    public func addDownload(for input: S.Loader.Input) -> Download {
+    public func addDownload(for input: S.Loader.Input, configuration: DownloadConfiguration = .default) -> Download {
         if let download = download(matching: input) {
             return download
         }
         else {
-            let download = Download(input: input, session: session, store: store)
+            let download = Download(input: input, configuration: configuration, session: session, store: store)
             downloads.append(download)
             return download
         }
