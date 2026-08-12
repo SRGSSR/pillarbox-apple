@@ -64,14 +64,17 @@ extension URLDownloadSession: DownloadSession {
         }
     }
 
-    private func createTask(forId id: String, asset: Asset, configuration: DownloadConfiguration, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
+    private func createTask(
+        forId id: String,
+        asset: Asset,
+        configuration: DownloadConfiguration,
+        metadata: PlayerMetadata
+    ) -> AnyPublisher<URLSessionTask, Never> {
         let urlAsset = asset.urlAsset()
         return urlAsset.mediaSelectionGroupsPublisher()
             .map { [session] groups in
                 let downloadConfiguration = AVAssetDownloadConfiguration(asset: urlAsset, title: metadata.title ?? id)
-                downloadConfiguration.primaryContentConfiguration.variantQualifiers = [
-                    AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate <= \(configuration.preferredPeakBitRate)"))
-                ]
+                configuration.apply(to: downloadConfiguration, withMediaSelectionGroups: groups)
                 downloadConfiguration.artworkData = metadata.imageSource.data
                 let task = session!.makeAssetDownloadTask(downloadConfiguration: downloadConfiguration)
                 task.taskDescription = id

@@ -26,6 +26,12 @@ public struct DownloadConfiguration: Codable {
     mutating func setMediaSelectionPreference(_ preference: DownloadMediaSelectionPreference, for characteristic: AVMediaCharacteristic) {
         mediaSelectionPreferences[characteristic.rawValue] = preference
     }
+
+    func apply(to configuration: AVAssetDownloadConfiguration, withMediaSelectionGroups groups: [AVMediaCharacteristic: AVMediaSelectionGroup]) {
+        configuration.primaryContentConfiguration.variantQualifiers = [
+            AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate <= \(preferredPeakBitRate)"))
+        ]
+    }
 }
 
 #endif
