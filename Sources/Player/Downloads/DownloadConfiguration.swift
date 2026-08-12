@@ -8,6 +8,8 @@
 
 #if DEBUG
 
+import AVFoundation
+
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public struct DownloadConfiguration: Codable {
@@ -15,8 +17,14 @@ public struct DownloadConfiguration: Codable {
 
     public var preferredPeakBitRate: Double
 
+    private var mediaSelectionPreferences: [String: DownloadMediaSelectionPreference] = [:]
+
     public init(preferredPeakBitRate: Double = 0) {
         self.preferredPeakBitRate = preferredPeakBitRate
+    }
+
+    mutating func setMediaSelectionPreference(_ preference: DownloadMediaSelectionPreference, for characteristic: AVMediaCharacteristic) {
+        mediaSelectionPreferences[characteristic.rawValue] = preference
     }
 }
 
