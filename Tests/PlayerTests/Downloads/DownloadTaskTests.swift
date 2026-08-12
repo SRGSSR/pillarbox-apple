@@ -21,6 +21,7 @@ final class DownloadTaskTests: TestCase {
         let publisher = AssetDownloadStoreMock.taskPublisher(
             id: "id",
             input: input,
+            configuration: .default,
             reusableAssetMetadata: nil,
             session: session
         )
@@ -36,6 +37,7 @@ final class DownloadTaskTests: TestCase {
         let publisher = AssetDownloadStoreMock.taskPublisher(
             id: "id",
             input: input,
+            configuration: .default,
             reusableAssetMetadata: .init(playerMetadata: metadata, customData: ()),
             session: session
         )

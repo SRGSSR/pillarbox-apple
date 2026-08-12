@@ -13,9 +13,13 @@
 public struct DownloadConfiguration: Codable {
     /// TODO: Remove. Just here to avoid having an empty object which otherwise is not persisted as empty object
     ///       by Swift Data, leading to crashes (since `DownloadConfiguration` is not nullable).
-    public static let `default` = Self(dummy: "dummy")
+    public static let `default` = Self()
 
-    public var dummy: String?
+    public var preferredPeakBitRate: Double
+
+    public init(preferredPeakBitRate: Double = 0) {
+        self.preferredPeakBitRate = preferredPeakBitRate
+    }
 }
 
 #endif

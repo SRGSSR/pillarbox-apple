@@ -154,41 +154,47 @@ private extension Download {
 
     func propertiesPublisher<S>(input: S.Loader.Input, store: S) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where S: AssetDownloadStore {
         // swiftlint:disable:next closure_body_length
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, trigger, session] in
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, configuration, trigger, session] in
             let storedProperties = store.downloadProperties(forId: id)
-            return S.taskPublisher(id: id, input: input, reusableAssetMetadata: storedProperties.reusableAssetMetadata, session: session)
-                .map { task in
-                    if let wrappedTask = task.wrappedValue {
-                        return Publishers.CombineLatest4(
-                            Self.taskPropertiesPublisher(for: wrappedTask),
-                            task.assetMetadata.assetMetadataPublisher(),
-                            wrappedTask.locationPublisher
-                                .map(\.self)
-                                .prepend(storedProperties.fileUrl),
-                            wrappedTask.errorPublisher
-                                .map(\.self)
-                                .prepend(storedProperties.error)
-                        )
-                        .map { DownloadProperties(progress: .actual($0), assetMetadata: $1, fileUrl: $2, error: $3) }
-                        .eraseToAnyPublisher()
-                    }
-                    else {
-                        return task.assetMetadata.assetMetadataPublisher()
-                            .map { assetMetadata in
-                                DownloadProperties(
-                                    progress: .estimate(storedProperties.fractionCompleted),
-                                    assetMetadata: assetMetadata,
-                                    fileUrl: storedProperties.fileUrl,
-                                    error: storedProperties.error
-                                )
-                            }
-                            .eraseToAnyPublisher()
-                    }
+            return S.taskPublisher(
+                id: id,
+                input: input,
+                configuration: configuration,
+                reusableAssetMetadata: storedProperties.reusableAssetMetadata,
+                session: session
+            )
+            .map { task in
+                if let wrappedTask = task.wrappedValue {
+                    return Publishers.CombineLatest4(
+                        Self.taskPropertiesPublisher(for: wrappedTask),
+                        task.assetMetadata.assetMetadataPublisher(),
+                        wrappedTask.locationPublisher
+                            .map(\.self)
+                            .prepend(storedProperties.fileUrl),
+                        wrappedTask.errorPublisher
+                            .map(\.self)
+                            .prepend(storedProperties.error)
+                    )
+                    .map { DownloadProperties(progress: .actual($0), assetMetadata: $1, fileUrl: $2, error: $3) }
+                    .eraseToAnyPublisher()
                 }
-                .switchToLatest()
-                .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
-                .catch { Just(store.downloadProperties(forId: id).withError($0)) }
-                .prepend(storedProperties)
+                else {
+                    return task.assetMetadata.assetMetadataPublisher()
+                        .map { assetMetadata in
+                            DownloadProperties(
+                                progress: .estimate(storedProperties.fractionCompleted),
+                                assetMetadata: assetMetadata,
+                                fileUrl: storedProperties.fileUrl,
+                                error: storedProperties.error
+                            )
+                        }
+                        .eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
+            .fail(onOutputFrom: trigger.signal(activatedBy: TriggerId.cancel), with: URLError(.cancelled))
+            .catch { Just(store.downloadProperties(forId: id).withError($0)) }
+            .prepend(storedProperties)
         }
     }
 

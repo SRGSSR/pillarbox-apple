@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+@_spi(DownloaderPrivate)
 @testable import PillarboxPlayer
 
 import Combine
@@ -35,7 +36,7 @@ final class DownloadSessionMock: NSObject {
 
 @available(tvOS, unavailable)
 extension DownloadSessionMock: DownloadSession {
-    func taskPublisher(forId id: String, asset: Asset, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
+    func taskPublisher(forId id: String, asset: Asset, configuration: DownloadConfiguration, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
         Just(createTask(forId: id, asset: asset, metadata: metadata)).eraseToAnyPublisher()
     }
 

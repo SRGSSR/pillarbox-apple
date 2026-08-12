@@ -28,7 +28,7 @@ final class URLDownloadSession: NSObject {
 
 @available(tvOS, unavailable)
 extension URLDownloadSession: DownloadSession {
-    func taskPublisher(forId id: String, asset: Asset, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
+    func taskPublisher(forId id: String, asset: Asset, configuration: DownloadConfiguration, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
         Future { promise in
             // Cancel existing tasks first. This avoids:
             //   - Dangling tasks that would still download duplicates of the same content in the background.
@@ -37,7 +37,7 @@ extension URLDownloadSession: DownloadSession {
                 tasks.forEach { task in
                     task.cancel()
                 }
-                promise(.success(self.createTask(forId: id, asset: asset, metadata: metadata)))
+                promise(.success(self.createTask(forId: id, asset: asset, configuration: configuration, metadata: metadata)))
             }
         }
         .eraseToAnyPublisher()
@@ -60,10 +60,13 @@ extension URLDownloadSession: DownloadSession {
         }
     }
 
-    private func createTask(forId id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
-        let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: metadata.title ?? id)
-        configuration.artworkData = metadata.imageSource.data
-        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
+    private func createTask(forId id: String, asset: Asset, configuration: DownloadConfiguration, metadata: PlayerMetadata) -> URLSessionTask {
+        let downloadConfiguration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: metadata.title ?? id)
+        downloadConfiguration.primaryContentConfiguration.variantQualifiers = [
+            AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate < \(configuration.preferredPeakBitRate)"))
+        ]
+        downloadConfiguration.artworkData = metadata.imageSource.data
+        let task = session.makeAssetDownloadTask(downloadConfiguration: downloadConfiguration)
         task.taskDescription = id
         task.resume()
         return task
