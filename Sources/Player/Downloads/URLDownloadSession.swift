@@ -63,7 +63,7 @@ extension URLDownloadSession: DownloadSession {
     private func createTask(forId id: String, asset: Asset, configuration: DownloadConfiguration, metadata: PlayerMetadata) -> URLSessionTask {
         let downloadConfiguration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: metadata.title ?? id)
         downloadConfiguration.primaryContentConfiguration.variantQualifiers = [
-            AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate < \(configuration.preferredPeakBitRate)"))
+            AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate <= \(configuration.preferredPeakBitRate)"))
         ]
         downloadConfiguration.artworkData = metadata.imageSource.data
         let task = session.makeAssetDownloadTask(downloadConfiguration: downloadConfiguration)
