@@ -254,6 +254,8 @@ extension SettingsView {
         } header: {
              Text("Downloads")
                 .headerStyle()
+        } footer: {
+            Text("Settings apply to future downloads only.")
         }
     }
 
