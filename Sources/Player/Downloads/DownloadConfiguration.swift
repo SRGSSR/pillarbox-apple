@@ -11,8 +11,6 @@
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public struct DownloadConfiguration: Codable {
-    /// TODO: Remove. Just here to avoid having an empty object which otherwise is not persisted as empty object
-    ///       by Swift Data, leading to crashes (since `DownloadConfiguration` is not nullable).
     public static let `default` = Self()
 
     public var preferredPeakBitRate: Double
