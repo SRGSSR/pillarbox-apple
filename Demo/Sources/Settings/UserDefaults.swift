@@ -22,6 +22,7 @@ extension UserDefaults {
         case forwardSkipInterval
         case serverSetting
         case qualitySetting
+        case downloadQualitySetting
     }
 
     @objc dynamic var presenterModeEnabled: Bool {
@@ -65,6 +66,10 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: DemoSettingKey.qualitySetting.rawValue)) ?? .high
     }
 
+    @objc dynamic var downloadQualitySetting: QualitySetting {
+        .init(rawValue: integer(forKey: DemoSettingKey.downloadQualitySetting.rawValue)) ?? .high
+    }
+
     private static func registerDefaultDemoSettings() {
         standard.register(defaults: [
             DemoSettingKey.presenterModeEnabled.rawValue: false,
@@ -74,7 +79,8 @@ extension UserDefaults {
             DemoSettingKey.backwardSkipInterval.rawValue: 10,
             DemoSettingKey.forwardSkipInterval.rawValue: 10,
             DemoSettingKey.serverSetting.rawValue: ServerSetting.production.rawValue,
-            DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue
+            DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue,
+            DemoSettingKey.downloadQualitySetting.rawValue: QualitySetting.high.rawValue
         ])
     }
 

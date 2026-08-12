@@ -38,6 +38,11 @@ final class DemoDownloader: ObservableObject {
         _downloads.sorted { $0.creationDate > $1.creationDate }
     }
 
+    private var configuration: DownloadConfiguration {
+        let downloadQualitySetting = UserDefaults.standard.downloadQualitySetting
+        return .init(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
+    }
+
     init() {
         if #available(iOS 17, *) {
             Publishers.CombineLatest(
@@ -67,10 +72,10 @@ final class DemoDownloader: ObservableObject {
     func addDownload(media: Media) {
         switch media.type {
         case let .url(url), let .monoscopicUrl(url):
-            urlDownloader.addDownload(for: .init(url: url, metadata: media.metadata()))
+            urlDownloader.addDownload(for: .init(url: url, metadata: media.metadata()), configuration: configuration)
         case let .urn(urn, serverSetting):
             if #available(iOS 17, *) {
-                urnDownloader.addDownload(urn: urn, server: serverSetting.server)
+                urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: configuration)
             }
         default:
             break
