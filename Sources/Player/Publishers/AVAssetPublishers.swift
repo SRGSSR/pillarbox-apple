@@ -29,6 +29,25 @@ extension AVAsset {
             .eraseToAnyPublisher()
     }
 
+    func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext?, Never> {
+        Publishers.CombineLatest(
+            preferredMediaSelectionPublisher(),
+            mediaSelectionGroupsPublisher()
+        )
+        .map { mediaSelection, groups in
+            guard let mediaSelection else { return nil }
+            return MediaSelectionContext(mediaSelection: mediaSelection, groups: groups)
+        }
+        .eraseToAnyPublisher()
+    }
+
+    private func preferredMediaSelectionPublisher() -> AnyPublisher<AVMediaSelection?, Never> {
+        propertyPublisher(.preferredMediaSelection)
+            .map(\.self)
+            .replaceError(with: nil)
+            .eraseToAnyPublisher()
+    }
+
     private func mediaSelectionGroupPublisher(for characteristic: AVMediaCharacteristic) -> AnyPublisher<AVMediaSelectionGroup?, Error> {
         AsyncPublisher {
             try await self.loadMediaSelectionGroup(for: characteristic)
