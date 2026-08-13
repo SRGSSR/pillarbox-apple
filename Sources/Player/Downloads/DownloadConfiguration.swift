@@ -31,6 +31,13 @@ public struct DownloadConfiguration: Codable {
         configuration.primaryContentConfiguration.variantQualifiers = [
             AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate <= \(preferredPeakBitRate)"))
         ]
+
+        // TODO: Test implementation. Must be rewritten.
+        if let mediaSelectionContext {
+            let audibleSelections = mediaSelectionContext.mediaSelections(withLanguages: ["en", "fr-FR", "de", "es", "it"], for: .audible)
+            let legibleSelections = mediaSelectionContext.mediaSelections(withLanguages: ["fr-FR", "de"], for: .legible)
+            configuration.primaryContentConfiguration.mediaSelections = audibleSelections + legibleSelections
+        }
     }
 }
 
