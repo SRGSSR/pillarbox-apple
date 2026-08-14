@@ -7,26 +7,20 @@
 import AVFoundation
 
 struct MediaSelectionConfigurator {
-    private let mediaSelection: AVMediaSelection
-    private let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
+    private let selection: AVMediaSelection
+    private let provider: MediaSelectionProvider
 
-    init(mediaSelection: AVMediaSelection, groups: [AVMediaCharacteristic: AVMediaSelectionGroup]) {
-        self.mediaSelection = mediaSelection
-        self.groups = groups
+    init(selection: AVMediaSelection, provider: MediaSelectionProvider) {
+        self.selection = selection
+        self.provider = provider
     }
 
     func mediaSelections(withLanguages languages: [String], for characteristic: AVMediaCharacteristic) -> [AVMediaSelection] {
         languages.compactMap { mediaSelection(withLanguage: $0, for: characteristic) }
     }
 
-    // TODO: Rough implementation. Must be rewritten.
     private func mediaSelection(withLanguage language: String, for characteristic: AVMediaCharacteristic) -> AVMediaSelection {
-        guard let group = groups[characteristic],
-              let selection = mediaSelection.mutableCopy() as? AVMutableMediaSelection else {
-            return mediaSelection
-        }
-        let option = group.options.first { $0.languageCode == language }
-        selection.select(option, in: group)
-        return selection
+        // TODO:
+        selection
     }
 }

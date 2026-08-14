@@ -7,14 +7,14 @@
 import AVFoundation
 
 struct MediaSelectionProperties: Equatable {
-    static let empty = Self(groups: [:], selection: nil, settingsChangeDate: .now)
+    static let empty = Self(provider: .empty, selection: nil, settingsChangeDate: .now)
 
-    private let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
+    private let provider: MediaSelectionProvider
     let selection: AVMediaSelection?
     private let settingsChangeDate: Date
 
-    init(groups: [AVMediaCharacteristic: AVMediaSelectionGroup], selection: AVMediaSelection?, settingsChangeDate: Date) {
-        self.groups = groups
+    init(provider: MediaSelectionProvider, selection: AVMediaSelection?, settingsChangeDate: Date) {
+        self.provider = provider
         self.selection = selection
         self.settingsChangeDate = settingsChangeDate
     }
@@ -22,20 +22,20 @@ struct MediaSelectionProperties: Equatable {
 
 extension MediaSelectionProperties {
     var characteristics: Set<AVMediaCharacteristic> {
-        Set(groups.keys)
+        provider.characteristics
     }
 
     func group(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionGroup? {
-        groups[characteristic]
+        provider.group(for: characteristic)
     }
 
     func selectedOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
-        guard let selection, let group = groups[characteristic] else { return nil }
+        guard let selection, let group = provider.group(for: characteristic) else { return nil }
         return selection.selectedMediaOption(in: group)
     }
 
     func reset(for characteristic: AVMediaCharacteristic, in item: AVPlayerItem) {
-        guard let group = groups[characteristic] else { return }
+        guard let group = provider.group(for: characteristic) else { return }
         item.selectMediaOptionAutomatically(in: group)
     }
 }

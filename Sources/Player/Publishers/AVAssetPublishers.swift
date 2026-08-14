@@ -9,8 +9,7 @@ import Combine
 import PillarboxCore
 
 extension AVAsset {
-    /// A publisher emitting media selection groups as a single value and completing.
-    func mediaSelectionGroupsPublisher() -> AnyPublisher<[AVMediaCharacteristic: AVMediaSelectionGroup], Never> {
+    func mediaSelectionProviderPublisher() -> AnyPublisher<MediaSelectionProvider, Never> {
         propertyPublisher(.availableMediaCharacteristicsWithMediaSelectionOptions)
             .replaceError(with: [])
             .weakCapture(self)
@@ -26,17 +25,18 @@ extension AVAsset {
             .switchToLatest()
             // swiftlint:disable:next reduce_into
             .reduce([:]) { $0.merging($1) { _, new in new } }
+            .map(MediaSelectionProvider.init)
             .eraseToAnyPublisher()
     }
 
     func mediaSelectionConfiguratorPublisher() -> AnyPublisher<MediaSelectionConfigurator?, Never> {
         Publishers.CombineLatest(
             preferredMediaSelectionPublisher(),
-            mediaSelectionGroupsPublisher()
+            mediaSelectionProviderPublisher()
         )
-        .map { mediaSelection, groups in
-            guard let mediaSelection else { return nil }
-            return MediaSelectionConfigurator(mediaSelection: mediaSelection, groups: groups)
+        .map { selection, provider in
+            guard let selection else { return nil }
+            return MediaSelectionConfigurator(selection: selection, provider: provider)
         }
         .eraseToAnyPublisher()
     }
