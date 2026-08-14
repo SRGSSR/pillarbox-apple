@@ -7,7 +7,7 @@
 import AVFoundation
 
 struct MediaSelectionProvider: Equatable {
-    static let empty = Self(groups: [:])
+    static let empty = Self(groups: [:], cache: nil)
 
     private let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
 
@@ -15,7 +15,7 @@ struct MediaSelectionProvider: Equatable {
         Set(groups.keys)
     }
 
-    init(groups: [AVMediaCharacteristic: AVMediaSelectionGroup]) {
+    init(groups: [AVMediaCharacteristic: AVMediaSelectionGroup], cache: AVAssetCache?) {
         self.groups = groups
     }
 

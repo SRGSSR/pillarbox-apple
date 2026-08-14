@@ -9,6 +9,10 @@ import Combine
 import PillarboxCore
 
 extension AVAsset {
+    private var cache: AVAssetCache? {
+        (self as? AVURLAsset)?.assetCache
+    }
+
     func mediaSelectionProviderPublisher() -> AnyPublisher<MediaSelectionProvider, Never> {
         propertyPublisher(.availableMediaCharacteristicsWithMediaSelectionOptions)
             .replaceError(with: [])
@@ -25,7 +29,9 @@ extension AVAsset {
             .switchToLatest()
             // swiftlint:disable:next reduce_into
             .reduce([:]) { $0.merging($1) { _, new in new } }
-            .map(MediaSelectionProvider.init)
+            .map { [weak self] groups in
+                .init(groups: groups, cache: self?.cache)
+            }
             .eraseToAnyPublisher()
     }
 
