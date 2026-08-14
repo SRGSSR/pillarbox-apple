@@ -25,17 +25,23 @@ extension MediaSelectionProperties {
         provider.characteristics
     }
 
-    func group(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionGroup? {
-        provider.group(for: characteristic)
+    func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
+        guard let provider = provider.mediaSelectorProvider(for: characteristic) else { return nil }
+        switch characteristic {
+        case .audible:
+            return AudibleMediaSelector(provider: provider)
+        case .legible:
+            return LegibleMediaSelector(provider: provider)
+        default:
+            return nil
+        }
     }
 
     func selectedOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
-        guard let selection, let group = provider.group(for: characteristic) else { return nil }
-        return selection.selectedMediaOption(in: group)
+        provider.mediaSelectorProvider(for: characteristic)?.selectedMediaOption(in: selection)
     }
 
     func reset(for characteristic: AVMediaCharacteristic, in item: AVPlayerItem) {
-        guard let group = provider.group(for: characteristic) else { return }
-        item.selectMediaOptionAutomatically(in: group)
+        provider.mediaSelectorProvider(for: characteristic)?.selectMediaOptionAutomatically(for: item)
     }
 }

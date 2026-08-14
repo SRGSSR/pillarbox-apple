@@ -9,11 +9,11 @@ import MediaAccessibility
 
 /// The default selector for legible options.
 struct LegibleMediaSelector: MediaSelector {
-    let group: AVMediaSelectionGroup
+    let provider: MediaSelectorProvider
 
     func mediaSelectionOptions() -> [MediaSelectionOption] {
         var options: [MediaSelectionOption] = [.automatic, .off]
-        let preferredCaptioningOptions = preferredCaptioningOptions(from: group.options)
+        let preferredCaptioningOptions = preferredCaptioningOptions(from: provider.options)
         options.append(
             contentsOf: AVMediaSelectionGroup.sortedMediaSelectionOptions(from: preferredCaptioningOptions)
                 .map { .on($0) }
@@ -28,7 +28,7 @@ struct LegibleMediaSelector: MediaSelector {
         guard let preferredLanguages = selectionCriteria?.preferredLanguages, !preferredLanguages.isEmpty else {
             return persistedMediaOption(in: selection)
         }
-        if let option = selection?.selectedMediaOption(in: group) {
+        if let option = provider.selectedMediaOption(in: selection) {
             return .on(option)
         }
         else {
@@ -39,7 +39,7 @@ struct LegibleMediaSelector: MediaSelector {
     private func persistedMediaOption(in selection: AVMediaSelection?) -> MediaSelectionOption {
         switch MACaptionAppearanceGetDisplayType(.user) {
         case .alwaysOn:
-            if let option = selection?.selectedMediaOption(in: group) {
+            if let option = provider.selectedMediaOption(in: selection) {
                 return .on(option)
             }
             else {
@@ -60,16 +60,16 @@ struct LegibleMediaSelector: MediaSelector {
         switch mediaOption {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)
-            item.selectMediaOptionAutomatically(in: group)
+            provider.selectMediaOptionAutomatically(for: item)
         case .off:
             MACaptionAppearanceSetDisplayType(.user, .forcedOnly)
-            item.selectMediaOptionAutomatically(in: group)
+            provider.selectMediaOptionAutomatically(for: item)
         case let .on(option):
             MACaptionAppearanceSetDisplayType(.user, .alwaysOn)
             if let languageCode = option.languageCode {
                 MACaptionAppearanceAddSelectedLanguage(.user, languageCode as CFString)
             }
-            item.select(option, in: group)
+            provider.select(option, for: item)
         }
         return nil
     }

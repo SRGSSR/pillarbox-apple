@@ -9,7 +9,7 @@ import AVFoundation
 /// A protocol for media selection logic.
 protocol MediaSelector {
     /// Creates the selector.
-    init(group: AVMediaSelectionGroup)
+    init(provider: MediaSelectorProvider)
 
     /// The available options.
     func mediaSelectionOptions() -> [MediaSelectionOption]

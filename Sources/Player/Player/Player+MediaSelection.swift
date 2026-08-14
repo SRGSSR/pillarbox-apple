@@ -147,15 +147,7 @@ public extension Player {
     }
 
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
-        guard let group = properties.mediaSelectionProperties.group(for: characteristic) else { return nil }
-        switch characteristic {
-        case .audible:
-            return AudibleMediaSelector(group: group)
-        case .legible:
-            return LegibleMediaSelector(group: group)
-        default:
-            return nil
-        }
+        properties.mediaSelectionProperties.mediaSelector(for: characteristic)
     }
 }
 

@@ -15,8 +15,8 @@ final class AVAssetMediaSelectionProviderPublisherTests: TestCase {
     func testFetch() throws {
         let asset = AVURLAsset(url: Stream.onDemandWithOptions.url)
         let provider = try waitForSingleOutput(from: asset.mediaSelectionProviderPublisher())
-        expect(provider.group(for: .audible)).notTo(beNil())
-        expect(provider.group(for: .legible)).notTo(beNil())
+        expect(provider.mediaSelectorProvider(for: .audible)).notTo(beNil())
+        expect(provider.mediaSelectorProvider(for: .legible)).notTo(beNil())
     }
 
     func testFetchWithoutSelectionAvailable() throws {
