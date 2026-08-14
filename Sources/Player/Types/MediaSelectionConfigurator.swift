@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-struct MediaSelectionContext {
+struct MediaSelectionConfigurator {
     private let mediaSelection: AVMediaSelection
     private let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
 

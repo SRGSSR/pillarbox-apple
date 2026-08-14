@@ -27,15 +27,15 @@ public struct DownloadConfiguration: Codable {
         auxiliaryMediaSelectionPreferences[characteristic.rawValue] = preference
     }
 
-    func apply(to configuration: AVAssetDownloadConfiguration, with mediaSelectionContext: MediaSelectionContext?) {
+    func apply(to configuration: AVAssetDownloadConfiguration, with configurator: MediaSelectionConfigurator?) {
         configuration.primaryContentConfiguration.variantQualifiers = [
             AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate <= \(preferredPeakBitRate)"))
         ]
 
         // TODO: Test implementation. Must be rewritten.
-        if let mediaSelectionContext {
-            let audibleSelections = mediaSelectionContext.mediaSelections(withLanguages: ["en", "fr-FR", "de", "es", "it"], for: .audible)
-            let legibleSelections = mediaSelectionContext.mediaSelections(withLanguages: ["fr-FR", "de"], for: .legible)
+        if let configurator {
+            let audibleSelections = configurator.mediaSelections(withLanguages: ["en", "fr-FR", "de", "es", "it"], for: .audible)
+            let legibleSelections = configurator.mediaSelections(withLanguages: ["fr-FR", "de"], for: .legible)
             configuration.primaryContentConfiguration.mediaSelections = audibleSelections + legibleSelections
         }
     }

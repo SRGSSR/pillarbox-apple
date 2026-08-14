@@ -71,10 +71,10 @@ extension URLDownloadSession: DownloadSession {
         metadata: PlayerMetadata
     ) -> AnyPublisher<URLSessionTask, Never> {
         let urlAsset = asset.urlAsset()
-        return urlAsset.mediaSelectionContextPublisher()
-            .map { [session] mediaSelectionContext in
+        return urlAsset.mediaSelectionConfiguratorPublisher()
+            .map { [session] configurator in
                 let downloadConfiguration = AVAssetDownloadConfiguration(asset: urlAsset, title: metadata.title ?? id)
-                configuration.apply(to: downloadConfiguration, with: mediaSelectionContext)
+                configuration.apply(to: downloadConfiguration, with: configurator)
                 downloadConfiguration.artworkData = metadata.imageSource.data
                 let task = session!.makeAssetDownloadTask(downloadConfiguration: downloadConfiguration)
                 task.taskDescription = id

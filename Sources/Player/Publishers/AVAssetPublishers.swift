@@ -29,14 +29,14 @@ extension AVAsset {
             .eraseToAnyPublisher()
     }
 
-    func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext?, Never> {
+    func mediaSelectionConfiguratorPublisher() -> AnyPublisher<MediaSelectionConfigurator?, Never> {
         Publishers.CombineLatest(
             preferredMediaSelectionPublisher(),
             mediaSelectionGroupsPublisher()
         )
         .map { mediaSelection, groups in
             guard let mediaSelection else { return nil }
-            return MediaSelectionContext(mediaSelection: mediaSelection, groups: groups)
+            return MediaSelectionConfigurator(mediaSelection: mediaSelection, groups: groups)
         }
         .eraseToAnyPublisher()
     }
