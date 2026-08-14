@@ -32,6 +32,12 @@ struct MediaSelectorProvider {
         item.select(option, in: group)
     }
 
+    func selecting(_ option: AVMediaSelectionOption?, in selection: AVMediaSelection) -> AVMediaSelection {
+        guard let updatedSelection = selection.mutableCopy() as? AVMutableMediaSelection else { return selection }
+        updatedSelection.select(option, in: group)
+        return updatedSelection
+    }
+
     func selectMediaOptionAutomatically(for item: AVPlayerItem) {
         item.selectMediaOptionAutomatically(in: group)
     }
