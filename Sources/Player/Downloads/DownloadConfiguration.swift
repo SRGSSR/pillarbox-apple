@@ -35,7 +35,7 @@ public struct DownloadConfiguration: Codable {
         }
     }
 
-    mutating func setMediaSelectionPreference(_ preference: DownloadMediaSelectionPreference, for characteristic: AVMediaCharacteristic) {
+    public mutating func setMediaSelectionPreference(_ preference: DownloadMediaSelectionPreference, for characteristic: AVMediaCharacteristic) {
         mediaSelectionPreferences[characteristic.rawValue] = preference
     }
 
