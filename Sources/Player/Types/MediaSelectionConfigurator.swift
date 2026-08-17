@@ -21,7 +21,10 @@ struct MediaSelectionConfigurator {
 
     private func mediaSelection(withLanguage language: String, for characteristic: AVMediaCharacteristic) -> AVMediaSelection {
         guard let provider = provider.mediaSelectorProvider(for: characteristic) else { return selection }
-        let option = provider.options.first { $0.languageCode == language }
+        let option = provider.options.first { option in
+            guard let languageCode = option.languageCode else { return false }
+            return languageCode == language || languageCode.hasPrefix(language)
+        }
         return provider.selecting(option, in: selection)
     }
 }

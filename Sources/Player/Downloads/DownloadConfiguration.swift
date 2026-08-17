@@ -34,7 +34,7 @@ public struct DownloadConfiguration: Codable {
 
         // TODO: Test implementation. Must be rewritten.
         if let configurator {
-            let audibleSelections = configurator.mediaSelections(withLanguages: ["de", "es-ES", "it"], for: .audible)
+            let audibleSelections = configurator.mediaSelections(withLanguages: ["de", "es", "it"], for: .audible)
             let legibleSelections = configurator.mediaSelections(withLanguages: ["de", "ja"], for: .legible)
             configuration.primaryContentConfiguration.mediaSelections = audibleSelections + legibleSelections
         }
