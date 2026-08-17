@@ -17,14 +17,14 @@ public struct DownloadConfiguration: Codable {
 
     public var preferredPeakBitRate: Double
 
-    private var auxiliaryMediaSelectionPreferences: [String: DownloadMediaSelectionPreference] = [:]
+    private var mediaSelectionPreferences: [String: DownloadMediaSelectionPreference] = [:]
 
     public init(preferredPeakBitRate: Double = 0) {
         self.preferredPeakBitRate = preferredPeakBitRate
     }
 
-    mutating func setAuxiliaryMediaSelectionPreference(_ preference: DownloadMediaSelectionPreference, for characteristic: AVMediaCharacteristic) {
-        auxiliaryMediaSelectionPreferences[characteristic.rawValue] = preference
+    mutating func setMediaSelectionPreference(_ preference: DownloadMediaSelectionPreference, for characteristic: AVMediaCharacteristic) {
+        mediaSelectionPreferences[characteristic.rawValue] = preference
     }
 
     func apply(to configuration: AVAssetDownloadConfiguration, with configurator: MediaSelectionConfigurator?) {
