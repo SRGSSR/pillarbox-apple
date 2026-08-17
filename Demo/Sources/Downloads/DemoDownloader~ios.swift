@@ -38,19 +38,19 @@ final class DemoDownloader: ObservableObject {
         _downloads.sorted { $0.creationDate > $1.creationDate }
     }
 
+    // TODO: Languages from settings
     private var configuration: DownloadConfiguration {
         let downloadQualitySetting = UserDefaults.standard.downloadQualitySetting
-        return .init(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
+        var configuration = DownloadConfiguration(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
+        configuration.setMediaSelectionPreference(.on(languages: "de", "ja", "es", "fr-FR"), for: .audible)
+        return configuration
     }
 
     init() {
         if #available(iOS 17, *) {
-            Publishers.CombineLatest(
-                urlDownloader.$downloads,
-                urnDownloader.$downloads
-            )
-            .map { $0 + $1 }
-            .assign(to: &$_downloads)
+            Publishers.CombineLatest(urlDownloader.$downloads, urnDownloader.$downloads)
+                .map { $0 + $1 }
+                .assign(to: &$_downloads)
         }
         else {
             urlDownloader.$downloads
