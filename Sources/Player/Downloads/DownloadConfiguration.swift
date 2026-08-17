@@ -23,6 +23,18 @@ public struct DownloadConfiguration: Codable {
         self.preferredPeakBitRate = preferredPeakBitRate
     }
 
+    private func mediaSelections(with configurator: MediaSelectionConfigurator?) -> [AVMediaSelection] {
+        guard let configurator else { return [] }
+        return mediaSelectionPreferences.flatMap { characteristic, preference -> [AVMediaSelection]  in
+            switch preference.kind {
+            case .automatic:
+                return []
+            case let .on(languages: languages):
+                return configurator.mediaSelections(withLanguages: languages, for: AVMediaCharacteristic(characteristic))
+            }
+        }
+    }
+
     mutating func setMediaSelectionPreference(_ preference: DownloadMediaSelectionPreference, for characteristic: AVMediaCharacteristic) {
         mediaSelectionPreferences[characteristic.rawValue] = preference
     }
@@ -31,13 +43,7 @@ public struct DownloadConfiguration: Codable {
         configuration.primaryContentConfiguration.variantQualifiers = [
             AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate <= \(preferredPeakBitRate)"))
         ]
-
-        // TODO: Test implementation. Must be rewritten.
-        if let configurator {
-            let audibleSelections = configurator.mediaSelections(withLanguages: ["de", "es", "it"], for: .audible)
-            let legibleSelections = configurator.mediaSelections(withLanguages: ["de", "ja"], for: .legible)
-            configuration.primaryContentConfiguration.mediaSelections = audibleSelections + legibleSelections
-        }
+        configuration.primaryContentConfiguration.mediaSelections = mediaSelections(with: configurator)
     }
 }
 
