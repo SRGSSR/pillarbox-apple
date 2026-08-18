@@ -38,14 +38,6 @@ final class DemoDownloader: ObservableObject {
         _downloads.sorted { $0.creationDate > $1.creationDate }
     }
 
-    // TODO: Languages from settings
-    private var configuration: DownloadConfiguration {
-        let downloadQualitySetting = UserDefaults.standard.downloadQualitySetting
-        var configuration = DownloadConfiguration(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
-        configuration.setMediaSelectionPreference(.on(languages: "de", "ja", "es", "fr-FR"), for: .audible)
-        return configuration
-    }
-
     init() {
         if #available(iOS 17, *) {
             Publishers.CombineLatest(urlDownloader.$downloads, urnDownloader.$downloads)
@@ -72,10 +64,10 @@ final class DemoDownloader: ObservableObject {
     func addDownload(media: Media) {
         switch media.type {
         case let .url(url), let .monoscopicUrl(url):
-            urlDownloader.addDownload(for: .init(url: url, metadata: media.metadata()), configuration: configuration)
+            urlDownloader.addDownload(for: .init(url: url, metadata: media.metadata()), configuration: UserDefaults.standard.downloadConfiguration)
         case let .urn(urn, serverSetting):
             if #available(iOS 17, *) {
-                urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: configuration)
+                urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: UserDefaults.standard.downloadConfiguration)
             }
         default:
             break

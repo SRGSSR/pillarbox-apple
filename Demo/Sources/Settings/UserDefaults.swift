@@ -6,6 +6,8 @@
 
 import Combine
 import Foundation
+
+@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 // Extensions allowing the use of KVO to detect user default changes by key.
@@ -40,6 +42,13 @@ extension UserDefaults {
         case .deferred:
             return .deferred
         }
+    }
+
+    // TODO: Languages
+    var downloadConfiguration: DownloadConfiguration {
+        var configuration = DownloadConfiguration(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
+        configuration.setMediaSelectionPreference(.on(languages: "de", "ja", "es", "fr-FR"), for: .audible)
+        return configuration
     }
 
     @objc dynamic var seekBehaviorSetting: SeekBehaviorSetting {
