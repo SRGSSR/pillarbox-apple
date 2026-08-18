@@ -16,11 +16,16 @@ public struct DownloadConfiguration: Equatable, Codable {
     public static let `default` = Self()
 
     public var preferredPeakBitRate: Double
+    public var preferredMaximumResolution: CGSize
 
     private var mediaSelectionPreferences: [String: DownloadMediaSelectionPreference] = [:]
 
-    public init(preferredPeakBitRate: Double = 0) {
+    public init(
+        preferredPeakBitRate: Double = 0,
+        preferredMaximumResolution: CGSize = .zero
+    ) {
         self.preferredPeakBitRate = preferredPeakBitRate
+        self.preferredMaximumResolution = preferredMaximumResolution
     }
 
     private func mediaSelections(with configurator: MediaSelectionConfigurator?) -> [AVMediaSelection] {
@@ -41,7 +46,13 @@ public struct DownloadConfiguration: Equatable, Codable {
 
     func apply(to configuration: AVAssetDownloadConfiguration, with configurator: MediaSelectionConfigurator?) {
         configuration.primaryContentConfiguration.variantQualifiers = [
-            AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate <= \(preferredPeakBitRate)"))
+            AVAssetVariantQualifier(predicate: NSPredicate(format: "peakBitRate <= \(preferredPeakBitRate)")),
+            AVAssetVariantQualifier(
+                predicate: AVAssetVariantQualifier.predicate(forPresentationHeight: preferredMaximumResolution.height, operatorType: .lessThanOrEqualTo)
+            ),
+            AVAssetVariantQualifier(
+                predicate: AVAssetVariantQualifier.predicate(forPresentationWidth: preferredMaximumResolution.width, operatorType: .lessThanOrEqualTo)
+            )
         ]
         configuration.primaryContentConfiguration.mediaSelections = mediaSelections(with: configurator)
     }
