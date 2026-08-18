@@ -46,12 +46,14 @@ extension UserDefaults {
         }
     }
 
+#if os(iOS) && DEBUG
     var downloadConfiguration: DownloadConfiguration {
         var configuration = DownloadConfiguration(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
         configuration.setMediaSelectionPreference(downloadAudibleMediaSelectionSetting.mediaSelectionPreference, for: .audible)
         configuration.setMediaSelectionPreference(downloadLegibleMediaSelectionSetting.mediaSelectionPreference, for: .legible)
         return configuration
     }
+#endif
 
     @objc dynamic var seekBehaviorSetting: SeekBehaviorSetting {
         .init(rawValue: integer(forKey: DemoSettingKey.seekBehaviorSetting.rawValue)) ?? .optimal
