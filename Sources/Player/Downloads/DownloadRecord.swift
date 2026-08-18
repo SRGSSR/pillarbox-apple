@@ -43,8 +43,16 @@ public struct DownloadRecord<Input, CustomData> {
         self.creationDate = creationDate
     }
 
-    func reset() -> Self {
-        .init(input: input, configuration: configuration, metadata: metadata, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
+    func reset(configuration restartConfiguration: DownloadConfiguration?) -> Self {
+        .init(
+            input: input,
+            configuration: restartConfiguration ?? configuration,
+            metadata: metadata,
+            bookmarkData: nil,
+            progress: 0,
+            error: nil,
+            creationDate: creationDate
+        )
     }
 }
 

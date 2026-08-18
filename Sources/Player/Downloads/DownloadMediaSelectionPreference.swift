@@ -5,8 +5,8 @@
 //
 
 /// A preference for media selection (audible, legible, etc.) associated with a download.
-public struct DownloadMediaSelectionPreference: Codable {
-    enum Kind: Codable {
+public struct DownloadMediaSelectionPreference: Equatable, Codable {
+    enum Kind: Equatable, Codable {
         case automatic
         case on(languages: [String])
     }

@@ -12,7 +12,7 @@ import AVFoundation
 
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public struct DownloadConfiguration: Codable {
+public struct DownloadConfiguration: Equatable, Codable {
     public static let `default` = Self()
 
     public var preferredPeakBitRate: Double

@@ -24,7 +24,7 @@ public final class Download: ObservableObject, Identifiable {
     private let trigger = Trigger()
     private let session: any DownloadSession
 
-    private let resetRecord: () -> Void
+    private let resetRecord: (DownloadConfiguration?) -> Void
     private let removeRecord: () -> Void
 
     public let creationDate: Date
@@ -64,9 +64,9 @@ public final class Download: ObservableObject, Identifiable {
         self.id = id
         self.creationDate = creationDate
         self.session = session
-        self.resetRecord = {
+        self.resetRecord = { configuration in
             guard let record = store.downloadRecord(forId: id) else { return }
-            store.updateDownloadRecord(record.reset(), forId: id)
+            store.updateDownloadRecord(record.reset(configuration: configuration), forId: id)
         }
         self.removeRecord = {
             store.removeDownloadRecord(forId: id)
@@ -117,9 +117,17 @@ public extension Download {
     }
 
     func restart() {
+        _restart(configuration: nil)
+    }
+
+    func restart(configuration: DownloadConfiguration) {
+        _restart(configuration: configuration)
+    }
+
+    private func _restart(configuration: DownloadConfiguration?) {
         removeFile()
         cancelOperations()
-        resetRecord()
+        resetRecord(configuration)
         trigger.activate(for: TriggerId.restart)
     }
 
@@ -205,10 +213,10 @@ private extension Download {
         propertiesPublisher(input: input, store: store)
             .receiveOnMainThread()
             .handleEvents(
-                receiveOutput: { [id, configuration, creationDate] properties in
+                receiveOutput: { [id, creationDate] properties in
                     let record = DownloadRecord(
                         input: input,
-                        configuration: configuration,
+                        configuration: properties.configuration,
                         metadata: properties.assetMetadata,
                         bookmarkData: properties.bookmarkData(),
                         progress: properties.fractionCompleted,
