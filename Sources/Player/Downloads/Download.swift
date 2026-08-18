@@ -22,13 +22,16 @@ public final class Download: ObservableObject, Identifiable {
     @Published private var properties: DownloadPlayerProperties = .init()
 
     private let trigger = Trigger()
-    private let configuration: DownloadConfiguration
     private let session: any DownloadSession
 
     private let resetRecord: () -> Void
     private let removeRecord: () -> Void
 
     public let creationDate: Date
+
+    public var configuration: DownloadConfiguration {
+        properties.configuration
+    }
 
     public var progress: Double {
         properties.fractionCompleted
@@ -59,7 +62,6 @@ public final class Download: ObservableObject, Identifiable {
         store: S
     ) where S: AssetDownloadStore {
         self.id = id
-        self.configuration = configuration
         self.creationDate = creationDate
         self.session = session
         self.resetRecord = {
@@ -154,12 +156,12 @@ private extension Download {
 
     func propertiesPublisher<S>(input: S.Loader.Input, store: S) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where S: AssetDownloadStore {
         // swiftlint:disable:next closure_body_length
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, configuration, trigger, session] in
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, trigger, session] in
             let storedProperties = store.downloadProperties(forId: id)
             return S.taskPublisher(
                 id: id,
                 input: input,
-                configuration: configuration,
+                configuration: storedProperties.configuration,
                 reusableAssetMetadata: storedProperties.reusableAssetMetadata,
                 session: session
             )
@@ -175,13 +177,14 @@ private extension Download {
                             .map(\.self)
                             .prepend(storedProperties.error)
                     )
-                    .map { DownloadProperties(progress: .actual($0), assetMetadata: $1, fileUrl: $2, error: $3) }
+                    .map { DownloadProperties(configuration: storedProperties.configuration, progress: .actual($0), assetMetadata: $1, fileUrl: $2, error: $3) }
                     .eraseToAnyPublisher()
                 }
                 else {
                     return task.assetMetadata.assetMetadataPublisher()
                         .map { assetMetadata in
                             DownloadProperties(
+                                configuration: storedProperties.configuration,
                                 progress: .estimate(storedProperties.fractionCompleted),
                                 assetMetadata: assetMetadata,
                                 fileUrl: storedProperties.fileUrl,
@@ -218,6 +221,7 @@ private extension Download {
             )
             .map { properties in
                 DownloadProperties(
+                    configuration: properties.configuration,
                     progress: properties.progress,
                     assetMetadata: properties.assetMetadata?.withoutCustomData(),
                     fileUrl: properties.fileUrl,
