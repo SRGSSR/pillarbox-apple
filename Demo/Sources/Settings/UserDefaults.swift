@@ -47,7 +47,7 @@ extension UserDefaults {
     // TODO: Languages
     var downloadConfiguration: DownloadConfiguration {
         var configuration = DownloadConfiguration(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
-        configuration.setMediaSelectionPreference(.on(languages: "de", "ja", "es", "fr-FR"), for: .audible)
+        configuration.setMediaSelectionPreference(.languages("de", "ja", "es", "fr-FR"), for: .audible)
         return configuration
     }
 

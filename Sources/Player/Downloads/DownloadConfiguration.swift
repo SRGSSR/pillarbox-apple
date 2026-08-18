@@ -29,7 +29,7 @@ public struct DownloadConfiguration: Equatable, Codable {
             switch preference.kind {
             case .automatic:
                 return []
-            case let .on(languages: languages):
+            case let .languages(languages):
                 return configurator.mediaSelections(withLanguages: languages, for: AVMediaCharacteristic(characteristic))
             }
         }
