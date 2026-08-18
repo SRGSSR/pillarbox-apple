@@ -25,6 +25,8 @@ extension UserDefaults {
         case serverSetting
         case qualitySetting
         case downloadQualitySetting
+        case downloadAudibleMediaSelectionSetting
+        case downloadLegibleMediaSelectionSetting
     }
 
     @objc dynamic var presenterModeEnabled: Bool {
@@ -44,10 +46,10 @@ extension UserDefaults {
         }
     }
 
-    // TODO: Languages
     var downloadConfiguration: DownloadConfiguration {
         var configuration = DownloadConfiguration(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
-        configuration.setMediaSelectionPreference(.languages("de", "ja", "es", "fr-FR"), for: .audible)
+        configuration.setMediaSelectionPreference(downloadAudibleMediaSelectionSetting.mediaSelectionPreference, for: .audible)
+        configuration.setMediaSelectionPreference(downloadLegibleMediaSelectionSetting.mediaSelectionPreference, for: .legible)
         return configuration
     }
 
@@ -79,6 +81,14 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: DemoSettingKey.downloadQualitySetting.rawValue)) ?? .high
     }
 
+    @objc dynamic var downloadAudibleMediaSelectionSetting: DownloadMediaSelectionSetting {
+        .init(rawValue: integer(forKey: DemoSettingKey.downloadAudibleMediaSelectionSetting.rawValue)) ?? .automatic
+    }
+
+    @objc dynamic var downloadLegibleMediaSelectionSetting: DownloadMediaSelectionSetting {
+        .init(rawValue: integer(forKey: DemoSettingKey.downloadLegibleMediaSelectionSetting.rawValue)) ?? .automatic
+    }
+
     private static func registerDefaultDemoSettings() {
         standard.register(defaults: [
             DemoSettingKey.presenterModeEnabled.rawValue: false,
@@ -89,7 +99,9 @@ extension UserDefaults {
             DemoSettingKey.forwardSkipInterval.rawValue: 10,
             DemoSettingKey.serverSetting.rawValue: ServerSetting.production.rawValue,
             DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue,
-            DemoSettingKey.downloadQualitySetting.rawValue: QualitySetting.high.rawValue
+            DemoSettingKey.downloadQualitySetting.rawValue: QualitySetting.high.rawValue,
+            DemoSettingKey.downloadAudibleMediaSelectionSetting.rawValue: DownloadMediaSelectionSetting.automatic.rawValue,
+            DemoSettingKey.downloadLegibleMediaSelectionSetting.rawValue: DownloadMediaSelectionSetting.automatic.rawValue
         ])
     }
 

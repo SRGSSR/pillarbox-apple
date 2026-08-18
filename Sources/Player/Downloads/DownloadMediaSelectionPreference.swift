@@ -18,11 +18,6 @@ public struct DownloadMediaSelectionPreference: Equatable, Codable {
         .init(kind: .automatic)
     }
 
-    /// Preferred languages defined by the user.
-    public static var preferredLanguages: Self {
-        .init(kind: .languages(Bundle.main.preferredLocalizations))
-    }
-
     let kind: Kind
 
     private init(kind: Kind) {

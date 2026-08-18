@@ -78,6 +78,12 @@ struct SettingsView: View {
 #if DEBUG && os(iOS)
     @AppStorage(UserDefaults.DemoSettingKey.downloadQualitySetting.rawValue)
     private var downloadQualitySetting: QualitySetting = .high
+
+    @AppStorage(UserDefaults.DemoSettingKey.downloadAudibleMediaSelectionSetting.rawValue)
+    private var downloadAudibleMediaSelectionSetting: DownloadMediaSelectionSetting = .automatic
+
+    @AppStorage(UserDefaults.DemoSettingKey.downloadLegibleMediaSelectionSetting.rawValue)
+    private var downloadLegibleMediaSelectionSetting: DownloadMediaSelectionSetting = .automatic
 #endif
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.enabled.rawValue, store: .playbackHud)
@@ -251,6 +257,8 @@ extension SettingsView {
     private func downloadsSection() -> some View {
         Section {
             downloadQualityPicker()
+            downloadAudibleMediaSelectionPicker()
+            downloadLegibleMediaSelectionPicker()
         } header: {
              Text("Downloads")
                 .headerStyle()
@@ -262,6 +270,22 @@ extension SettingsView {
     private func downloadQualityPicker() -> some View {
         Picker("Quality", selection: $downloadQualitySetting) {
             ForEach(QualitySetting.allCases, id: \.self) { setting in
+                Text(setting.name).tag(setting)
+            }
+        }
+    }
+
+    private func downloadAudibleMediaSelectionPicker() -> some View {
+        Picker("Audio", selection: $downloadAudibleMediaSelectionSetting) {
+            ForEach(DownloadMediaSelectionSetting.allCases, id: \.self) { setting in
+                Text(setting.name).tag(setting)
+            }
+        }
+    }
+
+    private func downloadLegibleMediaSelectionPicker() -> some View {
+        Picker("Subtitles", selection: $downloadLegibleMediaSelectionSetting) {
+            ForEach(DownloadMediaSelectionSetting.allCases, id: \.self) { setting in
                 Text(setting.name).tag(setting)
             }
         }
