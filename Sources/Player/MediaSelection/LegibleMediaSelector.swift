@@ -9,7 +9,11 @@ import MediaAccessibility
 
 /// The default selector for legible options.
 struct LegibleMediaSelector: MediaSelector {
-    let provider: MediaSelectorProvider
+    private let provider: MediaSelectorProvider
+
+    init(provider: MediaSelectorProvider) {
+        self.provider = provider
+    }
 
     func mediaSelectionOptions() -> [MediaSelectionOption] {
         var options: [MediaSelectionOption] = [.automatic, .off]

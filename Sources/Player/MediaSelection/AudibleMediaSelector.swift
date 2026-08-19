@@ -8,7 +8,11 @@ import AVFoundation
 
 /// The default selector for audible options.
 struct AudibleMediaSelector: MediaSelector {
-    let provider: MediaSelectorProvider
+    private let provider: MediaSelectorProvider
+
+    init(provider: MediaSelectorProvider) {
+        self.provider = provider
+    }
 
     func mediaSelectionOptions() -> [MediaSelectionOption] {
         let options = AVMediaSelectionGroup.sortedMediaSelectionOptions(from: provider.options)

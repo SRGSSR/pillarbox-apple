@@ -35,19 +35,7 @@ extension AVAsset {
             .eraseToAnyPublisher()
     }
 
-    func mediaSelectionConfiguratorPublisher() -> AnyPublisher<MediaSelectionConfigurator?, Never> {
-        Publishers.CombineLatest(
-            preferredMediaSelectionPublisher(),
-            mediaSelectionProviderPublisher()
-        )
-        .map { selection, provider in
-            guard let selection else { return nil }
-            return MediaSelectionConfigurator(selection: selection, provider: provider)
-        }
-        .eraseToAnyPublisher()
-    }
-
-    private func preferredMediaSelectionPublisher() -> AnyPublisher<AVMediaSelection?, Never> {
+    func preferredMediaSelectionPublisher() -> AnyPublisher<AVMediaSelection?, Never> {
         propertyPublisher(.preferredMediaSelection)
             .map(\.self)
             .replaceError(with: nil)

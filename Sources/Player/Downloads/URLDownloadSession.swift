@@ -71,17 +71,20 @@ extension URLDownloadSession: DownloadSession {
         metadata: PlayerMetadata
     ) -> AnyPublisher<URLSessionTask, Never> {
         let urlAsset = asset.urlAsset()
-        return urlAsset.mediaSelectionConfiguratorPublisher()
-            .map { [session] configurator in
-                let downloadConfiguration = AVAssetDownloadConfiguration(asset: urlAsset, title: metadata.title ?? id)
-                configuration.apply(to: downloadConfiguration, with: configurator)
-                downloadConfiguration.artworkData = metadata.imageSource.data
-                let task = session!.makeAssetDownloadTask(downloadConfiguration: downloadConfiguration)
-                task.taskDescription = id
-                task.resume()
-                return task
-            }
-            .eraseToAnyPublisher()
+        return Publishers.CombineLatest(
+            urlAsset.preferredMediaSelectionPublisher(),
+            urlAsset.mediaSelectionProviderPublisher()
+        )
+        .map { [session] selection, provider in
+            let downloadConfiguration = AVAssetDownloadConfiguration(asset: urlAsset, title: metadata.title ?? id)
+            configuration.apply(selection: selection, provider: provider, to: downloadConfiguration)
+            downloadConfiguration.artworkData = metadata.imageSource.data
+            let task = session!.makeAssetDownloadTask(downloadConfiguration: downloadConfiguration)
+            task.taskDescription = id
+            task.resume()
+            return task
+        }
+        .eraseToAnyPublisher()
     }
 
     private func tasks(matchingDescription description: String, completionHandler: @escaping @Sendable ([URLSessionTask]) -> Void) {

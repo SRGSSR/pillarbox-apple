@@ -28,15 +28,27 @@ public struct DownloadConfiguration: Equatable, Codable {
         self.preferredMaximumResolution = preferredMaximumResolution
     }
 
-    private func mediaSelections(with configurator: MediaSelectionConfigurator?) -> [AVMediaSelection] {
-        guard let configurator else { return [] }
-        return mediaSelectionPreferences.flatMap { characteristic, preference -> [AVMediaSelection]  in
+    private func mediaSelections(from selection: AVMediaSelection?, using provider: MediaSelectionProvider) -> [AVMediaSelection] {
+        guard let selection else { return [] }
+        return mediaSelectionPreferences.flatMap { characteristic, preference -> [AVMediaSelection] in
             switch preference.kind {
             case .automatic:
                 return []
             case let .languages(languages):
-                return configurator.mediaSelections(withLanguages: languages, for: AVMediaCharacteristic(characteristic))
+                guard let configurator = mediaSelectionConfigurator(for: .init(characteristic), using: provider) else { return [] }
+                return configurator.mediaSelections(from: selection, withLanguages: languages)
             }
+        }
+    }
+
+    private func mediaSelectionConfigurator(for characteristic: AVMediaCharacteristic, using provider: MediaSelectionProvider) -> MediaSelectionConfigurator? {
+        switch characteristic {
+        case .audible:
+            return AudibleMediaSelectionConfigurator(provider: provider)
+        case .legible:
+            return LegibleMediaSelectionConfigurator(provider: provider)
+        default:
+            return nil
         }
     }
 
@@ -44,7 +56,7 @@ public struct DownloadConfiguration: Equatable, Codable {
         mediaSelectionPreferences[characteristic.rawValue] = preference
     }
 
-    func apply(to configuration: AVAssetDownloadConfiguration, with configurator: MediaSelectionConfigurator?) {
+    func apply(selection: AVMediaSelection?, provider: MediaSelectionProvider, to configuration: AVAssetDownloadConfiguration) {
         configuration.primaryContentConfiguration.variantQualifiers = [
             AVAssetVariantQualifier(
                 predicate: NSCompoundPredicate(
@@ -56,7 +68,7 @@ public struct DownloadConfiguration: Equatable, Codable {
                 )
             )
         ]
-        configuration.primaryContentConfiguration.mediaSelections = mediaSelections(with: configurator)
+        configuration.primaryContentConfiguration.mediaSelections = mediaSelections(from: selection, using: provider)
     }
 }
 
