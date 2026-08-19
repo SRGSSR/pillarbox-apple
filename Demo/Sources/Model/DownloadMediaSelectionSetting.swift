@@ -17,7 +17,7 @@ enum DownloadMediaSelectionSetting: Int, CaseIterable {
         case .automatic:
             return "Automatic"
         case .swiss:
-            return "Swiss languages"
+            return "🇨🇭 languages"
         }
     }
 
@@ -26,7 +26,7 @@ enum DownloadMediaSelectionSetting: Int, CaseIterable {
         case .automatic:
             return .automatic
         case .swiss:
-            return .languages("de", "fr-FR", "it", "rm")
+            return .languages("de", "fr", "it", "rm")
         }
     }
 }
