@@ -87,10 +87,7 @@ struct LegibleMediaSelector: MediaSelector {
         guard let preferredCharacteristics = MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic] else {
             return options
         }
-        let unforcedOptions = AVMediaSelectionGroup.mediaSelectionOptions(
-            from: options,
-            withoutMediaCharacteristics: [.containsOnlyForcedSubtitles]
-        )
+        let unforcedOptions = AVMediaSelectionGroup.mediaSelectionOptions(from: options, withoutMediaCharacteristics: [.containsOnlyForcedSubtitles])
         if !preferredCharacteristics.isEmpty {
             return AVMediaSelectionGroup.preferredMediaSelectionOptions(from: unforcedOptions, withMediaCharacteristics: preferredCharacteristics)
         }

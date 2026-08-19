@@ -14,15 +14,25 @@ struct AudibleMediaSelectionConfigurator: MediaSelectionConfigurator {
     }
 
     func mediaSelections(from selection: AVMediaSelection, withLanguages languages: [String]) -> [AVMediaSelection] {
-        languages.compactMap { mediaSelection(from: selection, withLanguage: $0) }
+        languages.compactMap { language in
+            forcedLegibleMediaSelection(from: audibleMediaSelection(from: selection, withLanguage: language), withLanguage: language)
+        }
     }
 
-    private func mediaSelection(from selection: AVMediaSelection, withLanguage language: String) -> AVMediaSelection {
+    private func audibleMediaSelection(from selection: AVMediaSelection, withLanguage language: String) -> AVMediaSelection {
         guard let provider = provider.mediaSelectorProvider(for: .audible) else { return selection }
-        let option = provider.options.first { option in
-            guard let languageCode = option.languageCode else { return false }
-            return languageCode == language || languageCode.hasPrefix(language)
-        }
-        return provider.selecting(option, in: selection)
+        let options = AVMediaSelectionGroup.mediaSelectionOptions(from: provider.options, filteredAndSortedAccordingToPreferredLanguages: [language])
+        return provider.selecting(options.first, in: selection)
+    }
+
+    private func forcedLegibleMediaSelection(from selection: AVMediaSelection, withLanguage language: String) -> AVMediaSelection? {
+        guard let provider = provider.mediaSelectorProvider(for: .legible) else { return selection }
+        let options = AVMediaSelectionGroup.mediaSelectionOptions(
+            from: AVMediaSelectionGroup.mediaSelectionOptions(
+                from: provider.options, withMediaCharacteristics: [.containsOnlyForcedSubtitles]
+            ),
+            filteredAndSortedAccordingToPreferredLanguages: [language]
+        )
+        return provider.selecting(options.first, in: selection)
     }
 }
