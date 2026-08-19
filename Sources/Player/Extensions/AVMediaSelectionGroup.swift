@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import MediaAccessibility
 
 extension AVMediaSelectionGroup {
     /// Returns media selection options where options with the provided characteristics are preferred.
@@ -43,6 +44,27 @@ extension AVMediaSelectionGroup {
         .merging(withoutOptions) { _, new in new }
         .values
         .flatMap(\.self)
+    }
+
+    /// Returns the preferred captioning options from a list of options.
+    ///
+    /// The "Closed Captions + SDH" Accessibility setting is taken into account to return either a list containing
+    /// non-CC / non-SDH options preferably (setting Off), or CC / SDH-options preferably (setting On).
+    static func preferredCaptioningOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {
+        // swiftlint:disable:next line_length
+        guard let preferredCharacteristics = MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic] else {
+            return options
+        }
+        let unforcedOptions = mediaSelectionOptions(from: options, withoutMediaCharacteristics: [.containsOnlyForcedSubtitles])
+        if !preferredCharacteristics.isEmpty {
+            return preferredMediaSelectionOptions(from: unforcedOptions, withMediaCharacteristics: preferredCharacteristics)
+        }
+        else {
+            return preferredMediaSelectionOptions(from: unforcedOptions, withoutMediaCharacteristics: [
+                .describesMusicAndSoundForAccessibility,
+                .transcribesSpokenDialogForAccessibility
+            ])
+        }
     }
 
     static func sortedMediaSelectionOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {

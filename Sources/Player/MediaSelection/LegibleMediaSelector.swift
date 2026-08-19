@@ -17,7 +17,7 @@ struct LegibleMediaSelector: MediaSelector {
 
     func mediaSelectionOptions() -> [MediaSelectionOption] {
         var options: [MediaSelectionOption] = [.automatic, .off]
-        let preferredCaptioningOptions = preferredCaptioningOptions(from: provider.options)
+        let preferredCaptioningOptions = AVMediaSelectionGroup.preferredCaptioningOptions(from: provider.options)
         options.append(
             contentsOf: AVMediaSelectionGroup.sortedMediaSelectionOptions(from: preferredCaptioningOptions)
                 .map { .on($0) }
@@ -76,26 +76,5 @@ struct LegibleMediaSelector: MediaSelector {
             provider.select(option, for: item)
         }
         return nil
-    }
-
-    /// Returns the preferred captioning options from a list of options.
-    ///
-    /// The "Closed Captions + SDH" Accessibility setting is taken into account to return either a list containing
-    /// non-CC / non-SDH options preferably (setting Off), or CC / SDH-options preferably (setting On).
-    private func preferredCaptioningOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {
-        // swiftlint:disable:next line_length
-        guard let preferredCharacteristics = MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic] else {
-            return options
-        }
-        let unforcedOptions = AVMediaSelectionGroup.mediaSelectionOptions(from: options, withoutMediaCharacteristics: [.containsOnlyForcedSubtitles])
-        if !preferredCharacteristics.isEmpty {
-            return AVMediaSelectionGroup.preferredMediaSelectionOptions(from: unforcedOptions, withMediaCharacteristics: preferredCharacteristics)
-        }
-        else {
-            return AVMediaSelectionGroup.preferredMediaSelectionOptions(from: unforcedOptions, withoutMediaCharacteristics: [
-                .describesMusicAndSoundForAccessibility,
-                .transcribesSpokenDialogForAccessibility
-            ])
-        }
     }
 }
