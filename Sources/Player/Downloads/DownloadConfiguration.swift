@@ -71,6 +71,7 @@ public struct DownloadConfiguration: Equatable, Codable {
             )
         ]
         configuration.primaryContentConfiguration.mediaSelections = mediaSelections(from: selection, using: provider)
+        configuration.auxiliaryContentConfigurations = []
     }
 }
 
