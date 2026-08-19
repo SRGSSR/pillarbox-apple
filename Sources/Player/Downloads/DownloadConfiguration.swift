@@ -16,7 +16,8 @@ public struct DownloadConfiguration: Equatable, Codable {
     public static let `default` = Self()
 
     public var preferredPeakBitRate: Double
-    public var preferredMaximumResolution: CGSize
+    public var preferredMaximumResolutionWidth: CGFloat
+    public var preferredMaximumResolutionHeight: CGFloat
 
     private var mediaSelectionPreferences: [String: DownloadMediaSelectionPreference] = [:]
 
@@ -25,7 +26,8 @@ public struct DownloadConfiguration: Equatable, Codable {
         preferredMaximumResolution: CGSize = .zero
     ) {
         self.preferredPeakBitRate = preferredPeakBitRate
-        self.preferredMaximumResolution = preferredMaximumResolution
+        self.preferredMaximumResolutionWidth = preferredMaximumResolution.width
+        self.preferredMaximumResolutionHeight = preferredMaximumResolution.height
     }
 
     private func mediaSelections(from selection: AVMediaSelection?, using provider: MediaSelectionProvider) -> [AVMediaSelection] {
@@ -62,8 +64,8 @@ public struct DownloadConfiguration: Equatable, Codable {
                 predicate: NSCompoundPredicate(
                     orPredicateWithSubpredicates: [
                         NSPredicate(format: "peakBitRate < \(preferredPeakBitRate)"),
-                        AVAssetVariantQualifier.predicate(forPresentationHeight: preferredMaximumResolution.height, operatorType: .lessThanOrEqualTo),
-                        AVAssetVariantQualifier.predicate(forPresentationWidth: preferredMaximumResolution.width, operatorType: .lessThanOrEqualTo)
+                        AVAssetVariantQualifier.predicate(forPresentationHeight: preferredMaximumResolutionHeight, operatorType: .lessThanOrEqualTo),
+                        AVAssetVariantQualifier.predicate(forPresentationWidth: preferredMaximumResolutionWidth, operatorType: .lessThanOrEqualTo)
                     ]
                 )
             )
