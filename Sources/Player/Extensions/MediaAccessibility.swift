@@ -7,13 +7,12 @@
 import AVFoundation
 import MediaAccessibility
 
-// swiftlint:disable:next discouraged_optional_collection
-func MAPreferredMediaCharacteristics(for characteristic: AVMediaCharacteristic) -> [AVMediaCharacteristic]? {
+func MAPreferredMediaCharacteristics(for characteristic: AVMediaCharacteristic) -> [AVMediaCharacteristic] {
     switch characteristic {
     case .audible:
-        return MAAudibleMediaCopyPreferredCharacteristics().takeRetainedValue() as? [AVMediaCharacteristic]
+        return MAAudibleMediaCopyPreferredCharacteristics().takeRetainedValue() as? [AVMediaCharacteristic] ?? []
     case .legible:
-        return MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic]
+        return MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic] ?? []
     default:
         return []
     }
