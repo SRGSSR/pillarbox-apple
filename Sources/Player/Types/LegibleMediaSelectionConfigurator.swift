@@ -13,6 +13,12 @@ struct LegibleMediaSelectionConfigurator: MediaSelectionConfigurator {
         self.provider = provider
     }
 
+    func allMediaSelections(from selection: AVMediaSelection) -> [AVMediaSelection] {
+        guard let provider = provider.mediaSelectorProvider(for: .legible) else { return [selection] }
+        return AVMediaSelectionGroup.preferredCaptioningOptions(from: provider.options)
+            .map { provider.selecting($0, in: selection) }
+    }
+
     func mediaSelections(from selection: AVMediaSelection, withLanguages languages: [String]) -> [AVMediaSelection] {
         languages.map { mediaSelection(from: selection, withLanguage: $0) }
     }

@@ -30,15 +30,17 @@ public struct DownloadConfiguration: Equatable, Codable {
         self.preferredMaximumResolutionHeight = preferredMaximumResolution.height
     }
 
-    private func mediaSelections(from selection: AVMediaSelection?, using provider: MediaSelectionProvider) -> [AVMediaSelection] {
-        guard let selection else { return [] }
-        return mediaSelectionPreferences.flatMap { characteristic, preference -> [AVMediaSelection] in
+    private func mediaSelections(from selection: AVMediaSelection, using provider: MediaSelectionProvider) -> [AVMediaSelection] {
+        mediaSelectionPreferences.flatMap { characteristic, preference -> [AVMediaSelection] in
             switch preference.kind {
             case .automatic:
                 return []
             case let .languages(languages):
                 guard let configurator = mediaSelectionConfigurator(for: .init(characteristic), using: provider) else { return [] }
                 return configurator.mediaSelections(from: selection, withLanguages: languages)
+            case .all:
+                guard let configurator = mediaSelectionConfigurator(for: .init(characteristic), using: provider) else { return [] }
+                return configurator.allMediaSelections(from: selection)
             }
         }
     }
@@ -70,7 +72,9 @@ public struct DownloadConfiguration: Equatable, Codable {
                 )
             )
         ]
-        configuration.primaryContentConfiguration.mediaSelections = mediaSelections(from: selection, using: provider)
+        if let selection {
+            configuration.primaryContentConfiguration.mediaSelections = mediaSelections(from: selection, using: provider)
+        }
         configuration.auxiliaryContentConfigurations = []
     }
 }

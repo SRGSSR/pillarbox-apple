@@ -11,13 +11,16 @@ import PillarboxPlayer
 enum DownloadMediaSelectionSetting: Int, CaseIterable {
     case automatic
     case swiss
+    case all
 
     var name: String {
         switch self {
         case .automatic:
             return "Automatic"
         case .swiss:
-            return "🇨🇭 languages"
+            return "Swiss languages"
+        case .all:
+            return "All"
         }
     }
 
@@ -27,6 +30,8 @@ enum DownloadMediaSelectionSetting: Int, CaseIterable {
             return .automatic
         case .swiss:
             return .languages("de", "fr", "it", "rm")
+        case .all:
+            return .all
         }
     }
 }
