@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// A preference for media selection (audible, legible, etc.) associated with a download.
+/// A preference for media selection (audible, legible) associated with a download.
 public struct DownloadMediaSelectionPreference: Equatable, Codable {
     enum Kind: Equatable, Codable {
         case automatic
@@ -21,7 +21,7 @@ public struct DownloadMediaSelectionPreference: Equatable, Codable {
 
     /// All available languages.
     ///
-    /// Accessibility settings are applied automatically to download the variant that best matches user preferences.
+    /// Accessibility settings are applied automatically to download variants which best match user preferences.
     public static var all: Self {
         .init(kind: .all)
     }
@@ -38,7 +38,7 @@ public struct DownloadMediaSelectionPreference: Equatable, Codable {
     ///   preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T
     ///   language codes.
     ///
-    /// Accessibility settings are applied automatically to download the variant that best matches user preferences.
+    /// Accessibility settings are applied automatically to download variants which best match user preferences.
     public static func languages(_ languages: String...) -> Self {
         .init(kind: .languages(languages))
     }

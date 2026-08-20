@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A preference for media selection (audible, legible, etc.).
+/// A preference for media selection (audible, legible).
 public struct MediaSelectionPreference {
     enum Kind {
         case automatic
