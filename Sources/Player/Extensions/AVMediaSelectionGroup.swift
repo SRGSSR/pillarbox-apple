@@ -46,13 +46,28 @@ extension AVMediaSelectionGroup {
         .flatMap(\.self)
     }
 
+    /// Returns the preferred audio options from a list of options.
+    ///
+    /// The "Audio Descriptions" Accessibility setting is taken into account to return either a list containing
+    /// non-AD options preferably (setting Off), or AD options preferably (setting On).
+    static func preferredAudioOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {
+        guard let preferredCharacteristics = MAPreferredMediaCharacteristics(for: .audible) else {
+            return options
+        }
+        if !preferredCharacteristics.isEmpty {
+            return preferredMediaSelectionOptions(from: options, withMediaCharacteristics: preferredCharacteristics)
+        }
+        else {
+            return preferredMediaSelectionOptions(from: options, withoutMediaCharacteristics: [.describesVideoForAccessibility])
+        }
+    }
+
     /// Returns the preferred captioning options from a list of options.
     ///
     /// The "Closed Captions + SDH" Accessibility setting is taken into account to return either a list containing
-    /// non-CC / non-SDH options preferably (setting Off), or CC / SDH-options preferably (setting On).
+    /// non-CC / non-SDH options preferably (setting Off), or CC / SDH options preferably (setting On).
     static func preferredCaptioningOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {
-        // swiftlint:disable:next line_length
-        guard let preferredCharacteristics = MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic] else {
+        guard let preferredCharacteristics = MAPreferredMediaCharacteristics(for: .legible) else {
             return options
         }
         let unforcedOptions = mediaSelectionOptions(from: options, withoutMediaCharacteristics: [.containsOnlyForcedSubtitles])
