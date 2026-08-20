@@ -77,7 +77,7 @@ extension URLDownloadSession: DownloadSession {
         )
         .map { [session] selection, provider in
             let downloadConfiguration = AVAssetDownloadConfiguration(asset: urlAsset, title: metadata.title ?? id)
-            configuration.apply(selection: selection, provider: provider, to: downloadConfiguration)
+            configuration.apply(selection: selection, to: downloadConfiguration, using: provider)
             downloadConfiguration.artworkData = metadata.imageSource.data
             let task = session!.makeAssetDownloadTask(downloadConfiguration: downloadConfiguration)
             task.taskDescription = id

@@ -60,7 +60,7 @@ public struct DownloadConfiguration: Equatable, Codable {
         mediaSelectionPreferences[characteristic.rawValue] = preference
     }
 
-    func apply(selection: AVMediaSelection?, provider: MediaSelectionProvider, to configuration: AVAssetDownloadConfiguration) {
+    func apply(selection: AVMediaSelection?, to configuration: AVAssetDownloadConfiguration, using provider: MediaSelectionProvider) {
         configuration.primaryContentConfiguration.variantQualifiers = [
             AVAssetVariantQualifier(
                 predicate: NSCompoundPredicate(
