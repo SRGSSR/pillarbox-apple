@@ -198,3 +198,11 @@ When playing a downloaded stream offline (e.g. Airplane mode with no WiFi access
 ### Workaround
 
 Use `DownloadMediaSelectionPreference.all` to download all languages. `DownloadMediaSelectionPreference.automatic` generally works as well, provided users do not change their device language after downloading the content.
+
+## The system video view might present options unavailable for offline playback (FB24446455)
+
+When playing downloaded content, `SystemVideoView` might present options that are not available for offline playback. Selecting one of these options can trigger unexpected network activity or cause playback to stall while attempting to load content that is unavailable offline.
+
+### Workaround
+
+No workaround is available yet.
