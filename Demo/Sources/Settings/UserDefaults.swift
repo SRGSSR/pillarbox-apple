@@ -24,9 +24,11 @@ extension UserDefaults {
         case forwardSkipInterval
         case serverSetting
         case qualitySetting
+#if os(iOS) && DEBUG
         case downloadQualitySetting
         case downloadAudibleMediaSelectionSetting
         case downloadLegibleMediaSelectionSetting
+#endif
     }
 
     @objc dynamic var presenterModeEnabled: Bool {
@@ -79,6 +81,7 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: DemoSettingKey.qualitySetting.rawValue)) ?? .high
     }
 
+#if os(iOS) && DEBUG
     @objc dynamic var downloadQualitySetting: QualitySetting {
         .init(rawValue: integer(forKey: DemoSettingKey.downloadQualitySetting.rawValue)) ?? .high
     }
@@ -90,6 +93,7 @@ extension UserDefaults {
     @objc dynamic var downloadLegibleMediaSelectionSetting: DownloadMediaSelectionSetting {
         .init(rawValue: integer(forKey: DemoSettingKey.downloadLegibleMediaSelectionSetting.rawValue)) ?? .automatic
     }
+#endif
 
     private static func registerDefaultDemoSettings() {
         standard.register(defaults: [
@@ -100,10 +104,7 @@ extension UserDefaults {
             DemoSettingKey.backwardSkipInterval.rawValue: 10,
             DemoSettingKey.forwardSkipInterval.rawValue: 10,
             DemoSettingKey.serverSetting.rawValue: ServerSetting.production.rawValue,
-            DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue,
-            DemoSettingKey.downloadQualitySetting.rawValue: QualitySetting.high.rawValue,
-            DemoSettingKey.downloadAudibleMediaSelectionSetting.rawValue: DownloadMediaSelectionSetting.automatic.rawValue,
-            DemoSettingKey.downloadLegibleMediaSelectionSetting.rawValue: DownloadMediaSelectionSetting.automatic.rawValue
+            DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue
         ])
     }
 
