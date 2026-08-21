@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-/// An option for media selection (audible, legible,).
+/// An option for media selection (audible, legible).
 public enum MediaSelectionOption: Hashable {
     /// Automatic selection based on system language and accessibility settings.
     case automatic

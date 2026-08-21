@@ -32,11 +32,10 @@ public struct DownloadMediaSelectionPreference: Equatable, Codable {
         self.kind = kind
     }
 
-    /// Enabled.
+    /// Explicit language list.
     ///
-    /// - Parameter languages: A list of strings containing language identifiers, in order of desirability, that are
-    ///   preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T
-    ///   language codes.
+    /// - Parameter languages: A list of strings containing language identifiers that should be downloaded if
+    ///   available. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T language codes.
     ///
     /// Accessibility settings are applied automatically to download variants which best match user preferences.
     public static func languages(_ languages: String...) -> Self {
