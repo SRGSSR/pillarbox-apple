@@ -82,7 +82,7 @@ private struct _PlaybackView: View {
         Button(action: player.togglePlayPause) {
             Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 .frame(width: 50)
                 .tint(.white)
                 .shadow(radius: 5)
@@ -95,7 +95,7 @@ private struct _PlaybackView: View {
             LazyImage(source: player.metadata.imageSource) { image in
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .scaledToFit()
             }
         }
         .animation(.easeIn(duration: 0.2), value: player.metadata.imageSource)
