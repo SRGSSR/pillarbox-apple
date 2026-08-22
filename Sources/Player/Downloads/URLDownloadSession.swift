@@ -18,7 +18,7 @@ final class URLDownloadSession: NSObject {
     // to properly clean associated downloaded data.
     private var locations: [Int: URL] = [:]
 
-    weak var delegate: (any DownloadSessionDelegate)?
+    weak var delegate: any DownloadSessionDelegate?
 
     init(configuration: URLSessionConfiguration) {
         super.init()
@@ -104,7 +104,7 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
     }
 #endif
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: any Error?) {
         guard let id = task.taskDescription else { return }
         if error != nil, let location = locations[task.taskIdentifier] {
             removeFile(at: location)
