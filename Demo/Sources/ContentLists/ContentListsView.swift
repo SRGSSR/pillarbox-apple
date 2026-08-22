@@ -27,7 +27,7 @@ struct ContentListsView: View {
 #endif
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func content() -> some View {
         section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF])
         section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF])
@@ -40,7 +40,7 @@ struct ContentListsView: View {
         latestAudiosSection(image: "music.note.list")
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func section(for list: ContentList, image: String? = nil, vendors: [SRGVendor]) -> some View {
         let configurations = vendors.map { vendor in
             ContentList.Configuration(list: list, vendor: vendor)

@@ -64,7 +64,7 @@ private struct _PlaybackView: View {
         .background(.black)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func audioVideoView() -> some View {
         switch model.mode {
         case .audio:

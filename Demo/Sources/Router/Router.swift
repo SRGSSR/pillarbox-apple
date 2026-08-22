@@ -12,7 +12,7 @@ import SwiftUI
 struct RoutedNavigationStack<Root>: View where Root: View {
     let keyPath: ReferenceWritableKeyPath<Router, [RouterDestination]>
 
-    @ViewBuilder let root: () -> Root
+    @ContentBuilder let root: () -> Root
     @EnvironmentObject private var router: Router
 
     var body: some View {

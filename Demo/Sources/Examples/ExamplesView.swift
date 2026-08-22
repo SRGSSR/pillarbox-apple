@@ -192,7 +192,7 @@ struct ExamplesView: View {
 #endif
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func content() -> some View {
         MediaEntryView()
         srgSections()
@@ -200,7 +200,7 @@ struct ExamplesView: View {
         miscellaneousSections()
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func srgSections() -> some View {
         section(title: "Various streams (URLs)", medias: model.urlMedias)
         section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
@@ -209,7 +209,7 @@ struct ExamplesView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func thirdPartySections() -> some View {
         section(title: "Apple streams", medias: model.appleMedias)
         section(title: "Third-party streams", medias: model.thirdPartyMedias)
@@ -218,7 +218,7 @@ struct ExamplesView: View {
         section(title: "Mux streams", medias: model.muxMedias)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func miscellaneousSections() -> some View {
         section(title: "Time ranges", medias: model.timeRangesMedias)
         section(title: "Aspect ratios", medias: model.aspectRatioMedias)

@@ -75,7 +75,7 @@ public extension View {
         ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func debugBodyCounterOverlay(color: UIColor) -> some View {
         if isDebuggingEnabled || shouldPlayInXcodePreviews {
             BodyCounterView(color: color)
