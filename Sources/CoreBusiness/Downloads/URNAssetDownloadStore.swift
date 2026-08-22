@@ -4,13 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
+#if DownloadPreview
 
 import Foundation
-import SwiftData
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
+import SwiftData
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
@@ -187,7 +185,6 @@ private extension URNAssetDownloadStore {
     }
 }
 
-@_spi(DownloaderPrivate)
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 extension URNAssetDownloadStore: AssetDownloadStore {

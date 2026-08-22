@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
+#if DownloadPreview
 
 import Foundation
 

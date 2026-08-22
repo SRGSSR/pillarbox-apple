@@ -177,6 +177,12 @@
     "Double tap to toggle controls" : {
 
     },
+    "Download" : {
+
+    },
+    "Downloads" : {
+
+    },
     "Embeddings" : {
 
     },
@@ -310,6 +316,9 @@
 
     },
     "No content" : {
+
+    },
+    "No downloads." : {
 
     },
     "No items" : {

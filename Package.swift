@@ -38,6 +38,7 @@ let package = Package(
             targets: ["PillarboxStandardConnector"]
         )
     ],
+    traits: ["DownloadPreview"],
     dependencies: [
         .package(url: "https://github.com/comScore/Comscore-Swift-Package-Manager.git", .upToNextMajor(from: "6.17.0")),
         .package(url: "https://github.com/CommandersAct/iOSV5-spm.git", .upToNextMajor(from: "5.5.0")),

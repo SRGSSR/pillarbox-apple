@@ -12,7 +12,7 @@ struct DemoApp: App {
 
     @StateObject private var router = Router()
 
-#if DEBUG && os(iOS)
+#if DownloadDemoPreview && os(iOS)
     @State private var downloader = DemoDownloader()
 #endif
 
@@ -23,7 +23,7 @@ struct DemoApp: App {
                 showcaseTab()
                 contentListsTab()
                 searchTab()
-#if DEBUG && os(iOS)
+#if DownloadDemoPreview && os(iOS)
                 downloadsTab()
 #endif
                 settingsTab()
@@ -33,7 +33,7 @@ struct DemoApp: App {
             }
             // TODO: Starting with iOS 17 this can be moved on the window group.
             .environmentObject(router)
-#if DEBUG && os(iOS)
+#if DownloadDemoPreview && os(iOS)
             .environmentObject(downloader)
 #endif
         }
@@ -75,7 +75,7 @@ struct DemoApp: App {
         }
     }
 
-#if DEBUG && os(iOS)
+#if DownloadDemoPreview && os(iOS)
     private func downloadsTab() -> some View {
         RoutedNavigationStack(keyPath: \.downloadsPath) {
             DownloadsView()

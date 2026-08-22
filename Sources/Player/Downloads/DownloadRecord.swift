@@ -6,11 +6,10 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
+#if DownloadPreview
 
 import Foundation
 
-@_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public struct DownloadRecord<Input, CustomData> {
     public let input: Input

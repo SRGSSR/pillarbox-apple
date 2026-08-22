@@ -4,11 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
+#if DownloadDemoPreview
 
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
-
 import SwiftUI
 
 private struct DownloadIcon: View {

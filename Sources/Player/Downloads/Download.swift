@@ -6,14 +6,13 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
+#if DownloadPreview
 
 import Combine
 import Foundation
 import PillarboxCore
 
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public final class Download: ObservableObject, Identifiable {
     private typealias DownloadPlayerProperties = DownloadProperties<Void>
 

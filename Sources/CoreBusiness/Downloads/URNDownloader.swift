@@ -6,17 +6,14 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
+#if DownloadPreview
 
 import Foundation
 import PillarboxAnalytics
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public final class URNDownloader: ObservableObject {
     private let downloader: Downloader<URNAssetDownloadStore>
 

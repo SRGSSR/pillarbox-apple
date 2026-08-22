@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DownloadPreview
+
 @available(tvOS, unavailable)
 struct DownloadAsset<CustomData> {
     let wrappedValue: Asset
@@ -14,3 +16,5 @@ struct DownloadAsset<CustomData> {
         self.assetMetadata = assetMetadata
     }
 }
+
+#endif

@@ -4,14 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
+#if DownloadPreview
 
 // swiftlint:disable missing_docs
 
 import Combine
 import Foundation
 
-@_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     private let store: S

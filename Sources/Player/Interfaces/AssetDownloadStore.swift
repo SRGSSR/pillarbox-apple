@@ -6,12 +6,11 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
+#if DownloadPreview
 
 import Combine
 import Foundation
 
-@_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public protocol AssetDownloadStore: AnyObject {
     associatedtype Loader: AssetLoader

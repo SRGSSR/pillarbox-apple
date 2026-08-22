@@ -6,9 +6,8 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
+#if DownloadPreview
 
-@_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public enum DownloadState: Equatable {
     case preparing

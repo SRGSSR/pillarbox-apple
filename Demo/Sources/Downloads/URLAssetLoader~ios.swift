@@ -4,12 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
+#if DownloadDemoPreview
 
 import Combine
 import Foundation
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 struct URLAssetLoader: AssetLoader {

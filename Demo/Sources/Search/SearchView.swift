@@ -67,7 +67,7 @@ struct SearchView: View {
 #if os(iOS)
                 .swipeActions {
                     CopyActions(text: srgMedia.urn)
-#if DEBUG
+#if DownloadDemoPreview
                     DownloadAction(media: media)
 #endif
                 }
