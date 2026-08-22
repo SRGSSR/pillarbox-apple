@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DownloadPreview
+
 @testable import PillarboxPlayer
 
 import Combine
@@ -87,3 +89,5 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
         }
     }
 }
+
+#endif

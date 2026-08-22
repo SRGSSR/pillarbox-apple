@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DownloadPreview
+
 @testable import PillarboxPlayer
 
 import Foundation
@@ -55,3 +57,5 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
         records[id] = record
     }
 }
+
+#endif

@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DownloadPreview
+
 @testable import PillarboxPlayer
 
 import Foundation
@@ -281,3 +283,5 @@ final class DownloadTests: TestCase {
         expect(weakDownload).to(beNil())
     }
 }
+
+#endif

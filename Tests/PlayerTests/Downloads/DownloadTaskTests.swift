@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DownloadPreview
+
 @testable import PillarboxPlayer
 
 import Foundation
@@ -43,3 +45,5 @@ final class DownloadTaskTests: TestCase {
         expect(task.assetMetadata.playerMetadata).to(equal(metadata))
     }
 }
+
+#endif

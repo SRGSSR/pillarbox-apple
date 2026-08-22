@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+#if DownloadPreview
+
 @testable import PillarboxPlayer
 
 import Nimble
@@ -135,3 +137,5 @@ final class DownloaderTests: TestCase {
         expect(weakDownloader).to(beNil())
     }
 }
+
+#endif
