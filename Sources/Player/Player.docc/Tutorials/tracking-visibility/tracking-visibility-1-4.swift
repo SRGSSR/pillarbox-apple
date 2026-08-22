@@ -31,7 +31,7 @@ struct ContentView: View {
         Button(action: player.togglePlayPause) {
             Image(systemName: player.shouldPlay ? "pause.circle" : "play.circle")
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 .frame(height: 60)
                 .tint(.white)
         }
