@@ -148,7 +148,7 @@ private struct ChapterCell: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func titleView() -> some View {
         if let title = chapter.title {
             Text(title)
@@ -161,7 +161,7 @@ private struct ChapterCell: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func durationLabel() -> some View {
         if let formattedDuration {
             Text(formattedDuration)

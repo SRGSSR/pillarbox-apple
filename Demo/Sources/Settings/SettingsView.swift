@@ -148,7 +148,7 @@ extension SettingsView {
 #endif
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func content() -> some View {
         applicationSection()
         playerSection()
@@ -223,7 +223,7 @@ extension SettingsView {
     }
 
 #if os(iOS)
-    @ViewBuilder
+    @ContentBuilder
     private func routePicker() -> some View {
         if !ProcessInfo.processInfo.isRunningOnMac {
             Picker("Route picker", selection: $routePickerSetting) {

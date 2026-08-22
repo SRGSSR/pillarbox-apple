@@ -38,7 +38,7 @@ struct SettingsMenu: View {
         .hoverEffect()
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func metricsMenu() -> some View {
         if !isPresentingMetrics {
             Button(action: showMetrics) {

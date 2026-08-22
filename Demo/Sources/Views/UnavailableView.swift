@@ -22,7 +22,7 @@ private struct ContentUnavailableViewOS16<Label, Description>: View where Label:
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    init(@ViewBuilder label: @escaping () -> Label, @ViewBuilder description: @escaping () -> Description) {
+    init(@ContentBuilder label: @escaping () -> Label, @ContentBuilder description: @escaping () -> Description) {
         self.label = label
         self.description = description
     }
@@ -68,8 +68,8 @@ struct UnavailableView<Label, Description>: View where Label: View, Description:
     }
 
     init(
-        @ViewBuilder label: @escaping () -> Label,
-        @ViewBuilder description: @escaping () -> Description = { EmptyView() }
+        @ContentBuilder label: @escaping () -> Label,
+        @ContentBuilder description: @escaping () -> Description = { EmptyView() }
     ) {
         self.label = label
         self.description = description

@@ -38,7 +38,7 @@ struct MultiPiPView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func playbackView(player: Player, supportsPictureInPicture: Bool) -> some View {
         if isSystemPlayer {
             SystemVideoView(player: player)

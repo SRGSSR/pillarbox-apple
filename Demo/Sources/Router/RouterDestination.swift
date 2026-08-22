@@ -98,7 +98,7 @@ enum RouterDestination: Identifiable, Hashable {
         .systemPlayer(media: media, supportsPictureInPicture: true)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     func view() -> some View {
         // swiftlint:disable:previous cyclomatic_complexity
         switch self {
