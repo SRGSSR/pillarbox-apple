@@ -42,7 +42,7 @@ struct DownloadCell: View {
                 LazyImage(source: imageSource) { image in
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .scaledToFit()
                 }
             }
     }

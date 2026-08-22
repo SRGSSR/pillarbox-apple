@@ -193,7 +193,7 @@ private struct MainView: View {
         LazyImage(source: imageSource) { image in
             image
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
         }
         .animation(.easeIn(duration: 0.2), value: imageSource)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -236,7 +236,7 @@ private struct MainView: View {
     private func image(name: String) -> some View {
         Image(systemName: name)
             .resizable()
-            .aspectRatio(contentMode: .fit)
+            .scaledToFit()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
             .contentShape(Rectangle())
@@ -340,7 +340,7 @@ private extension MainView {
         if routePickerSetting == .button {
             RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
                 .tint(.white)
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 .frame(width: 20)
         }
     }
