@@ -19,7 +19,7 @@ struct SettingsMenu: View {
     @Binding var gravity: AVLayerVideoGravity
 
     var body: some View {
-        SwiftUI::Menu {
+        Menu {
             player.standardSettingsMenu()
             QualityMenu()
             if isOverCurrentContext {

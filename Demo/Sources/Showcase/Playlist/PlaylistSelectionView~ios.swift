@@ -69,7 +69,7 @@ struct PlaylistSelectionView: View {
     }
 
     private func picker() -> some View {
-        SwiftUI::Picker(selection: $selectedInsertionOption) {
+        Picker(selection: $selectedInsertionOption) {
             ForEach(InsertionOption.allCases, id: \.self) { option in
                 Text(option.name)
                     .tag(option)
