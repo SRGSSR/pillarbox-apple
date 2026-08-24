@@ -381,7 +381,7 @@ extension SettingsView {
             InfoCell(title: "Application", value: "\(Self.version), build \(Self.buildVersion)")
             InfoCell(title: "Library", value: Player.version)
             if let identifier = Self.applicationIdentifier {
-                SwiftUI.Button("TestFlight builds") {
+                SwiftUI::Button("TestFlight builds") {
                     openTestFlight(forApplicationIdentifier: identifier)
                 }
             }
@@ -430,8 +430,8 @@ extension SettingsView {
                     Button("Documentation") { UIApplication.shared.open(.documentation) }
                         .tint(.purple)
                 }
-            SwiftUI.Button("Swift Package Index") { UIApplication.shared.open(.swiftPackageIndex) }
-            SwiftUI.Button("Castor (Google Cast SDK)") { UIApplication.shared.open(.castor) }
+            SwiftUI::Button("Swift Package Index") { UIApplication.shared.open(.swiftPackageIndex) }
+            SwiftUI::Button("Castor (Google Cast SDK)") { UIApplication.shared.open(.castor) }
         }
     }
 #endif

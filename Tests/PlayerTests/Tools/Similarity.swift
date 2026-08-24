@@ -11,7 +11,7 @@ import PillarboxCircumspect
 
 extension Resource: Similar {
     // swiftlint:disable:next missing_docs
-    public static func ~~ (lhs: PillarboxPlayer.Resource, rhs: PillarboxPlayer.Resource) -> Bool {
+    public static func ~~ (lhs: Resource, rhs: Resource) -> Bool {
         switch (lhs, rhs) {
         case let (.simple(url: lhsUrl), .simple(url: rhsUrl)),
             let (.custom(url: lhsUrl, delegate: _), .custom(url: rhsUrl, delegate: _)),

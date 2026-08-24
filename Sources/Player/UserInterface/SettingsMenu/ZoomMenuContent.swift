@@ -18,8 +18,8 @@ struct ZoomMenuContent: View {
 
     var body: some View {
         if player.mediaType == .video {
-            SwiftUI.Menu {
-                SwiftUI.Picker(selection: selection) {
+            SwiftUI::Menu {
+                SwiftUI::Picker(selection: selection) {
                     ForEach(Self.gravities, id: \.self) { gravity in
                         Self.description(for: gravity).tag(gravity)
                     }
