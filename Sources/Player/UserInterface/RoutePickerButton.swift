@@ -45,7 +45,7 @@ private struct _RoutePickerButton<Content>: View where Content: View {
     @Control private var control
 
     var body: some View {
-        SwiftUI.Button(action: sendAction) {
+        SwiftUI::Button(action: sendAction) {
             content()
                 .background {
                     _RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices, control: control)

@@ -24,7 +24,7 @@ struct ChapterCell: View {
     }
 
     var body: some View {
-        SwiftUI.Button(action: action) {
+        SwiftUI::Button(action: action) {
             ZStack {
                 artwork()
                 description()
