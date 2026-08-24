@@ -29,7 +29,7 @@ struct TwinsView: View {
             }
             .background(.black)
 
-            SwiftUI::Picker(selection: $mode) {
+            Picker(selection: $mode) {
                 Text("Both").tag(Mode.both)
                 Text("Top").tag(Mode.top)
                 Text("Bottom").tag(Mode.bottom)
