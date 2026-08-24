@@ -7,107 +7,64 @@
 enum MediaList {
     static let videoUrls = [
         Media(
-            title: "Le R. - Légumes trop chers",
-            subtitle: "Playlist item 1",
+            title: "Mario vs Sonic",
+            subtitle: "Tataki 1",
             type: .url(
-                "https://rts-vod-amd.akamaized.net/ww/13444390/f1b478f7-2ae9-3166-94b9-c5d5fe9610df/master.m3u8"
+                "https://rts-vod-amd.akamaized.net/ww/13950405/fa79f98c-9e72-32c4-812e-aa5ba94cd568/master.m3u8"
             )
         ),
         Media(
-            title: "Le R. - Production de légumes bio",
-            subtitle: "Playlist item 2",
+            title: "Pourquoi Beyoncé fait de la country",
+            subtitle: "Tataki 2",
             type: .url(
-                "https://rts-vod-amd.akamaized.net/ww/13444333/feb1d08d-e62c-31ff-bac9-64c0a7081612/master.m3u8"
+                "https://rts-vod-amd.akamaized.net/ww/14815579/fec583e8-5d42-3994-8f76-70c550a2ae8e/master.m3u8"
             )
         ),
         Media(
-            title: "Le R. - Endométriose",
-            subtitle: "Playlist item 3",
+            title: "L'île North Sentinel",
+            subtitle: "Tataki 3",
             type: .url(
-                "https://rts-vod-amd.akamaized.net/ww/13444466/2787e520-412f-35fb-83d7-8dbb31b5c684/master.m3u8"
+                "https://rts-vod-amd.akamaized.net/ww/13795051/86f7f1f6-9857-3aa7-8de6-c23247a307f0/master.m3u8"
             )
         ),
         Media(
-            title: "Le R. - Prix Nobel de littérature 2022",
-            subtitle: "Playlist item 4",
+            title: "Mourir pour ressembler à une idole",
+            subtitle: "Tataki 4",
             type: .url(
-                "https://rts-vod-amd.akamaized.net/ww/13444447/c1d17174-ad2f-31c2-a084-846a9247fd35/master.m3u8"
+                "https://rts-vod-amd.akamaized.net/ww/14020134/f47b0e62-5fb9-3ce9-b587-3b3a0113ba11/master.m3u8"
             )
         ),
         Media(
-            title: "Le R. - Femme, vie, liberté",
-            subtitle: "Playlist item 5",
+            title: "Pourquoi les gens mangent des insectes ?",
+            subtitle: "Tataki 5",
             type: .url(
-                "https://rts-vod-amd.akamaized.net/ww/13444352/32145dc0-b5f8-3a14-ae11-5fc6e33aaaa4/master.m3u8"
+                "https://rts-vod-amd.akamaized.net/ww/12631996/15de3331-6b0c-3890-a59d-5b09453c58f8/master.m3u8"
             )
         ),
         Media(
-            title: "Le R. - Attaque en Thaïlande",
-            subtitle: "Playlist item 6",
+            title: "Le concert de Beyoncé à Dubai",
+            subtitle: "Tataki 6",
             type: .url(
-                "https://rts-vod-amd.akamaized.net/ww/13444409/23f808a4-b14a-3d3e-b2ed-fa1279f6cf01/master.m3u8"
+                "https://rts-vod-amd.akamaized.net/ww/13752646/c4c1d901-0690-3cb5-a1d2-626449f0f096/master.m3u8"
             )
         ),
         Media(
-            title: "Le R. - Douches et vestiaires non genrés",
-            subtitle: "Playlist item 7",
+            title: "La banane la plus chère du monde",
+            subtitle: "Tataki 7",
             type: .url(
-                "https://rts-vod-amd.akamaized.net/ww/13444371/3f26467f-cd97-35f4-916f-ba3927445920/master.m3u8"
+                "https://rts-vod-amd.akamaized.net/ww/15429800/9ecf5358-8e65-3cd4-8071-086089b99bb6/master.m3u8"
             )
         ),
         Media(
-            title: "Le R. - Prends soin de toi, des autres et à demain",
-            subtitle: "Playlist item 8",
+            title: "La trend Chill Guy",
+            subtitle: "Tataki 8",
             type: .url(
-                "https://rts-vod-amd.akamaized.net/ww/13444428/857d97ef-0b8e-306e-bf79-3b13e8c901e4/master.m3u8"
+                "https://rts-vod-amd.akamaized.net/ww/15429899/9913ec6b-6386-3805-9c3a-12f32048e046/master.m3u8"
             )
         )
     ]
 
     static let videoUrns = [
-        Media(
-            title: "Le R. - Légumes trop chers",
-            subtitle: "Playlist item 1",
-            type: .urn("urn:rts:video:13444390")
-        ),
-        Media(
-            title: "Le R. - Production de légumes bio",
-            subtitle: "Playlist item 2",
-            type: .urn("urn:rts:video:13444333")
-        ),
-        Media(
-            title: "Le R. - Endométriose",
-            subtitle: "Playlist item 3",
-            type: .urn("urn:rts:video:13444466")
-        ),
-        Media(
-            title: "Le R. - Prix Nobel de littérature 2022",
-            subtitle: "Playlist item 4",
-            type: .urn("urn:rts:video:13444447")
-        ),
-        Media(
-            title: "Le R. - Femme, vie, liberté",
-            subtitle: "Playlist item 5",
-            type: .urn("urn:rts:video:13444352")
-        ),
-        Media(
-            title: "Le R. - Attaque en Thailande",
-            subtitle: "Playlist item 6",
-            type: .urn("urn:rts:video:13444409")
-        ),
-        Media(
-            title: "Le R. - Douches et vestinaires non genrés",
-            subtitle: "Playlist item 7",
-            type: .urn("urn:rts:video:13444371")
-        ),
-        Media(
-            title: "Le R. - Prend soin de toi des autres et à demain",
-            subtitle: "Playlist item 8",
-            type: .urn("urn:rts:video:13444428")
-        )
-    ]
-
-    static let storyUrns = [
         Media(
             title: "Mario vs Sonic",
             subtitle: "Tataki 1",
@@ -137,6 +94,16 @@ enum MediaList {
             title: "Le concert de Beyoncé à Dubai",
             subtitle: "Tataki 6",
             type: .urn("urn:rts:video:13752646")
+        ),
+        Media(
+            title: "La banane la plus chère du monde",
+            subtitle: "Tataki 7",
+            type: .urn("urn:rts:video:15429800")
+        ),
+        Media(
+            title: "La trend Chill Guy",
+            subtitle: "Tataki 8",
+            type: .urn("urn:rts:video:15429899")
         )
     ]
 
