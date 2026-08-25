@@ -23,6 +23,9 @@ extension MetricsTracker.Configuration {
 extension MetricsTracker.Metadata {
     static let test = MetricsTracker.Metadata(
         metadataUrl: URL(string: "https://localhost/metadata.json"),
+        metadataHeaders: [
+            "X-Trace-Id": "12345"
+        ],
         assetUrl: URL(string: "https://localhost/asset.m3u8")
     )
 }
