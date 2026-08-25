@@ -35,7 +35,7 @@ public struct DownloadSize: Equatable {
             )
         }
         else {
-            return "\(Self.formattedByteCount(completed))"
+            return Self.formattedByteCount(completed)
         }
     }
 
