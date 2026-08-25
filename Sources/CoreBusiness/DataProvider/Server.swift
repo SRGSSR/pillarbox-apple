@@ -73,7 +73,8 @@ public enum Server: Codable {
         }
         components.queryItems = [
             URLQueryItem(name: "onlyChapters", value: "true"),
-            URLQueryItem(name: "vector", value: Self.vector)
+            URLQueryItem(name: "vector", value: Self.vector),
+            URLQueryItem(name: "playerPlatform", value: "apple")
         ]
         var request = URLRequest(url: components.url ?? url)
         request.allHTTPHeaderFields = httpHeaders
