@@ -35,7 +35,8 @@ No workaround is available yet.
 
 It might happen that attempting to play DRM streams always ends with an error. The reason is likely an issue with key session management.
 
-This issue affects OS versions 18 and 26 through 26.2.
+> [!IMPORTANT]
+> This issue has been fixed in iOS 26.3.
 
 ### Workaround
 
@@ -154,6 +155,9 @@ Avoid dynamically changing the value of `VideoView.supportsPictureInPicture(_:)`
 ## The player may remain silent after toggling `isMuted` (FB21089410)
 
 Due to an `AVQueuePlayer` issue, toggling `isMuted` can cause the player to remain permanently silent. This occurs when playback is near the end of an item and another item is expected to play next as part of a playlist, or when a repeat mode is enabled.
+
+> [!IMPORTANT]
+> This issue has been fixed in an iOS 26 minor release.
 
 ### Workaround
 
