@@ -54,7 +54,7 @@ struct DownloadProperties<CustomData> {
     }
 
     var size: DownloadSize? {
-        if let size = Self.downloadSize(from: progress) {
+        if let size = Self.downloadSize(from: progress), error == nil {
             return size
         }
         else if let fileUrl {
