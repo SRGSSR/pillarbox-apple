@@ -44,6 +44,19 @@ final class AVPlayerPeriodicTimePublisherTests: TestCase {
         }
     }
 
+    func testInitiallyPaused() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = AVPlayer(playerItem: item)
+        expectAtLeastPublished(
+            values: [.zero],
+            from: Publishers.PeriodicTimePublisher(
+                for: player,
+                interval: CMTimeMake(value: 1, timescale: 10)
+            ),
+            to: beClose(within: 0.1)
+        )
+    }
+
     func testDeallocation() {
         var player: AVPlayer? = .init()
         _ = Publishers.PeriodicTimePublisher(
