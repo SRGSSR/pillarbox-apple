@@ -24,7 +24,7 @@ public final class Download: ObservableObject, Identifiable {
     private let trigger = Trigger()
     private let session: any DownloadSession
 
-    private let resetRecord: (DownloadConfiguration?) -> Void
+    private let resetRecord: (DownloadConfiguration) -> Void
     private let removeRecord: () -> Void
 
     public let creationDate: Date
@@ -117,14 +117,10 @@ public extension Download {
     }
 
     func restart() {
-        _restart(configuration: nil)
+        restart(configuration: configuration)
     }
 
     func restart(configuration: DownloadConfiguration) {
-        _restart(configuration: configuration)
-    }
-
-    private func _restart(configuration: DownloadConfiguration?) {
         removeFile()
         cancelOperations()
         resetRecord(configuration)
