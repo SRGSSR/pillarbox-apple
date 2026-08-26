@@ -21,7 +21,7 @@ struct ContentView: View {
         Button(action: { player.skipBackward() }) {
             Image(systemName: "gobackward.10")
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 .frame(width: 30)
         }
     }
@@ -30,7 +30,7 @@ struct ContentView: View {
         Button(action: player.togglePlayPause) {
             Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 .frame(width: 50)
         }
     }
@@ -39,7 +39,7 @@ struct ContentView: View {
         Button(action: { player.skipForward() }) {
             Image(systemName: "goforward.10")
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 .frame(width: 30)
         }
     }

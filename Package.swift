@@ -189,7 +189,8 @@ let package = Package(
                 .target(name: "PillarboxStreams")
             ],
             resources: [
-                .process("Resources")
+                .process("Resources"),
+                .copy("FileResources")
             ]
         ),
         .testTarget(

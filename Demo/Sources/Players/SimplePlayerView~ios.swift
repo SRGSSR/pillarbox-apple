@@ -43,7 +43,7 @@ struct SimplePlayerView: View {
         Button(action: player.togglePlayPause) {
             Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 .frame(width: 50)
                 .tint(.white)
                 .shadow(radius: 5)

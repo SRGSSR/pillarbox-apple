@@ -136,7 +136,7 @@ private struct ChapterCell: View {
             LazyImage(source: chapter.imageSource) { image in
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .scaledToFit()
             }
         }
         .animation(.defaultLinear, value: chapter.imageSource)

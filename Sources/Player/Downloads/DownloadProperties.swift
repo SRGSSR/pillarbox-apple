@@ -49,7 +49,19 @@ struct DownloadProperties<CustomData> {
         case let .estimate(progress):
             return progress
         case let .actual(properties):
-            return properties.progress
+            return properties.fractionCompleted
+        }
+    }
+
+    var size: DownloadSize? {
+        if let size = Self.downloadSize(from: progress), error == nil {
+            return size
+        }
+        else if let fileUrl {
+            return .init(url: fileUrl)
+        }
+        else {
+            return nil
         }
     }
 
@@ -88,6 +100,15 @@ struct DownloadProperties<CustomData> {
                 fileUrl: nil,
                 error: error
             )
+        }
+    }
+
+    private static func downloadSize(from progress: DownloadProgress) -> DownloadSize? {
+        switch progress {
+        case .estimate:
+            return nil
+        case let .actual(properties):
+            return properties.size
         }
     }
 

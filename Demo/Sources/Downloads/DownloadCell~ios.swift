@@ -44,7 +44,7 @@ struct DownloadCell: View {
                 LazyImage(source: imageSource) { image in
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .scaledToFit()
                 }
             }
     }
@@ -66,10 +66,14 @@ struct DownloadCell: View {
                 .lineLimit(1)
             if let subtitle {
                 Text(subtitle)
-                    .lineLimit(2)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
+                    .lineLimit(2)
             }
+            Text(download.size?.localizedDescription ?? "")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .opacity(0.7)
         }
     }
 }
