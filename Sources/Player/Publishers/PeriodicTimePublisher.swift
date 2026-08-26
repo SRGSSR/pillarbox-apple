@@ -31,6 +31,7 @@ private struct _PeriodicTimePublisher: Publisher {
 extension Publishers {
     static func PeriodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         _PeriodicTimePublisher(player: player, interval: interval, queue: queue)
+            .prepend(player.currentTime())
             .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
             .eraseToAnyPublisher()
     }
