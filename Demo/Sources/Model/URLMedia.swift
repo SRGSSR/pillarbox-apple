@@ -19,7 +19,7 @@ enum URLMedia {
     static let onDemandVideoHLS = Media(
         title: "Sacha part à la rencontre d'univers atypiques",
         subtitle: "VOD - HLS",
-        imageUrl: "https://www.rts.ch/2024/06/13/11/34/14970435.image/16x9",
+        imageUrl: "https://img.rts.ch/articles/2024/image/2flaad-28737013.image",
         type: .url("https://rts-vod-amd.akamaized.net/ww/14970442/4dcba1d3-8cc8-3667-a7d2-b3b92c4243d9/master.m3u8")
     )
     static let shortOnDemandVideoHLS = Media(
