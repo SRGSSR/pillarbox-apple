@@ -6,12 +6,19 @@
 
 import Combine
 
-// swiftlint:disable missing_docs
-
+/// Describes metadata associated with an asset.
 public struct AssetMetadata<CustomData> {
+    /// Standard playback metadata.
     public let playerMetadata: PlayerMetadata
+
+    /// Custom data.
     public let customData: CustomData
 
+    /// Creates asset metadata.
+    ///
+    /// - Parameters:
+    ///   - playerMetadata: Standard playback metadata.
+    ///   - customData: Custom data.
     public init(playerMetadata: PlayerMetadata, customData: CustomData) {
         self.playerMetadata = playerMetadata
         self.customData = customData
@@ -32,5 +39,3 @@ public struct AssetMetadata<CustomData> {
 }
 
 extension AssetMetadata: Codable where CustomData: Codable {}
-
-// swiftlint:enable missing_docs

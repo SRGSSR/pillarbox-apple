@@ -4,19 +4,23 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 #if DEBUG
 
+/// A download state.
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public enum DownloadState: Equatable {
+    /// Preparing (metadata retrieval).
     case preparing
+
+    /// Running (downloading data).
     case running
+
+    /// Suspended.
     case suspended
+
+    /// Completed.
     case completed
 }
 
 #endif
-
-// swiftlint:enable missing_docs
