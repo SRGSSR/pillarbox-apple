@@ -40,12 +40,9 @@ final class DemoDownloader: ObservableObject {
 
     init() {
         if #available(iOS 17, *) {
-            Publishers.CombineLatest(
-                urlDownloader.$downloads,
-                urnDownloader.$downloads
-            )
-            .map { $0 + $1 }
-            .assign(to: &$_downloads)
+            Publishers.CombineLatest(urlDownloader.$downloads, urnDownloader.$downloads)
+                .map { $0 + $1 }
+                .assign(to: &$_downloads)
         }
         else {
             urlDownloader.$downloads
@@ -67,10 +64,10 @@ final class DemoDownloader: ObservableObject {
     func addDownload(media: Media) {
         switch media.type {
         case let .url(url), let .monoscopicUrl(url):
-            urlDownloader.addDownload(for: .init(url: url, metadata: media.metadata()))
+            urlDownloader.addDownload(for: .init(url: url, metadata: media.metadata()), configuration: UserDefaults.standard.downloadConfiguration)
         case let .urn(urn, serverSetting):
             if #available(iOS 17, *) {
-                urnDownloader.addDownload(urn: urn, server: serverSetting.server)
+                urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: UserDefaults.standard.downloadConfiguration)
             }
         default:
             break

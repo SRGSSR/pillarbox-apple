@@ -34,6 +34,7 @@ final class URLAssetDownloadStore {
 
     private struct Entry: Codable {
         let id: String
+        let configuration: DownloadConfiguration
         let url: URL
         let metadata: PlayerMetadata
         let bookmarkData: Data?
@@ -43,6 +44,7 @@ final class URLAssetDownloadStore {
 
         private init(
             id: String,
+            configuration: DownloadConfiguration,
             url: URL,
             metadata: PlayerMetadata,
             bookmarkData: Data?,
@@ -51,6 +53,7 @@ final class URLAssetDownloadStore {
             creationDate: Date
         ) {
             self.id = id
+            self.configuration = configuration
             self.url = url
             self.metadata = metadata
             self.bookmarkData = bookmarkData
@@ -62,6 +65,7 @@ final class URLAssetDownloadStore {
         init(id: String, record: DownloadRecord<URLAssetLoader.Input, Void>) {
             self.init(
                 id: id,
+                configuration: record.configuration,
                 url: record.input.url,
                 metadata: record.metadata?.playerMetadata ?? record.input.metadata,
                 bookmarkData: record.bookmarkData,
@@ -74,6 +78,7 @@ final class URLAssetDownloadStore {
         func toDownloadRecord() -> DownloadRecord<URLAssetLoader.Input, Void> {
             .init(
                 input: URLAssetLoader.Input(url: url, metadata: metadata),
+                configuration: configuration,
                 metadata: .init(playerMetadata: metadata, customData: ()),
                 bookmarkData: bookmarkData,
                 progress: progress,

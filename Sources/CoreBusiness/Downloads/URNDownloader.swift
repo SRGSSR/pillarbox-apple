@@ -31,8 +31,13 @@ public final class URNDownloader: ObservableObject {
     }
 
     @discardableResult
-    public func addDownload(urn: String, server: Server = .production, httpHeaders: [String: String] = [:]) -> Download {
-        downloader.addDownload(for: .init(urn: urn, server: server, httpHeaders: httpHeaders))
+    public func addDownload(
+        urn: String,
+        server: Server = .production,
+        httpHeaders: [String: String] = [:],
+        configuration: DownloadConfiguration = .default
+    ) -> Download {
+        downloader.addDownload(for: .init(urn: urn, server: server, httpHeaders: httpHeaders), configuration: configuration)
     }
 
     public func download(urn: String, server: Server) -> Download? {

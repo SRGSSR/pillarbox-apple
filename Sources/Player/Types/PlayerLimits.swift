@@ -15,18 +15,18 @@ public struct PlayerLimits {
     /// A limit of network bandwidth consumption, in bits per second, observed by the player on all networks.
     ///
     /// Disabled when set to zero.
-    public let preferredPeakBitRate: Double
+    public var preferredPeakBitRate: Double
 
     /// A limit of network bandwidth consumption, in bits per second, observed by the player when connecting over
     /// [expensive networks](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/3235752-allowsexpensivenetworkaccess).
     ///
     /// Disabled when set to zero.
-    public let preferredPeakBitRateForExpensiveNetworks: Double
+    public var preferredPeakBitRateForExpensiveNetworks: Double
 
     /// A limit of resolution observed by the player on all networks.
     ///
     /// Disabled when set to `.zero`.
-    public let preferredMaximumResolution: CGSize
+    public var preferredMaximumResolution: CGSize
 
     /// A limit of resolution observed by the player when connecting over
     /// [expensive networks](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/3235752-allowsexpensivenetworkaccess).
@@ -34,7 +34,7 @@ public struct PlayerLimits {
     /// Disabled when set to `.zero`.
     ///
     /// > Note: Limits are ignored when casting to an AirPlay receiver.
-    public let preferredMaximumResolutionForExpensiveNetworks: CGSize
+    public var preferredMaximumResolutionForExpensiveNetworks: CGSize
 
     /// Creates a set of limits.
     public init(

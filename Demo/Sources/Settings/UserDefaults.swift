@@ -6,6 +6,8 @@
 
 import Combine
 import Foundation
+
+@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 // Extensions allowing the use of KVO to detect user default changes by key.
@@ -22,6 +24,11 @@ extension UserDefaults {
         case forwardSkipInterval
         case serverSetting
         case qualitySetting
+#if os(iOS) && DEBUG
+        case downloadQualitySetting
+        case downloadAudibleMediaSelectionSetting
+        case downloadLegibleMediaSelectionSetting
+#endif
     }
 
     @objc dynamic var presenterModeEnabled: Bool {
@@ -40,6 +47,15 @@ extension UserDefaults {
             return .deferred
         }
     }
+
+#if os(iOS) && DEBUG
+    var downloadConfiguration: DownloadConfiguration {
+        var configuration = DownloadConfiguration(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
+        configuration.setMediaSelectionPreference(downloadAudibleMediaSelectionSetting.mediaSelectionPreference, for: .audible)
+        configuration.setMediaSelectionPreference(downloadLegibleMediaSelectionSetting.mediaSelectionPreference, for: .legible)
+        return configuration
+    }
+#endif
 
     @objc dynamic var seekBehaviorSetting: SeekBehaviorSetting {
         .init(rawValue: integer(forKey: DemoSettingKey.seekBehaviorSetting.rawValue)) ?? .optimal
@@ -64,6 +80,20 @@ extension UserDefaults {
     @objc dynamic var qualitySetting: QualitySetting {
         .init(rawValue: integer(forKey: DemoSettingKey.qualitySetting.rawValue)) ?? .high
     }
+
+#if os(iOS) && DEBUG
+    @objc dynamic var downloadQualitySetting: QualitySetting {
+        .init(rawValue: integer(forKey: DemoSettingKey.downloadQualitySetting.rawValue)) ?? .high
+    }
+
+    @objc dynamic var downloadAudibleMediaSelectionSetting: DownloadMediaSelectionSetting {
+        .init(rawValue: integer(forKey: DemoSettingKey.downloadAudibleMediaSelectionSetting.rawValue)) ?? .automatic
+    }
+
+    @objc dynamic var downloadLegibleMediaSelectionSetting: DownloadMediaSelectionSetting {
+        .init(rawValue: integer(forKey: DemoSettingKey.downloadLegibleMediaSelectionSetting.rawValue)) ?? .automatic
+    }
+#endif
 
     private static func registerDefaultDemoSettings() {
         standard.register(defaults: [

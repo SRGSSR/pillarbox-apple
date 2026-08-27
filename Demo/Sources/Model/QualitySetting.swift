@@ -24,13 +24,17 @@ enum QualitySetting: Int, CaseIterable {
     }
 
     var limits: PlayerLimits {
+        .init(preferredPeakBitRate: preferredPeakBitRate)
+    }
+
+    var preferredPeakBitRate: Double {
         switch self {
         case .low:
-            return .init(preferredPeakBitRate: 500_000)
+            return 500_000
         case .medium:
-            return .init(preferredPeakBitRate: 2_000_000)
+            return 2_000_000
         case .high:
-            return .none
+            return 0
         }
     }
 }

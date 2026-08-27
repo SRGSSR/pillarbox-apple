@@ -14,18 +14,28 @@ import Foundation
 @available(tvOS, unavailable)
 public struct DownloadRecord<Input, CustomData> {
     public let input: Input
+    public let configuration: DownloadConfiguration
     public let metadata: AssetMetadata<CustomData>?
     public let bookmarkData: Data?
     public let progress: Double
     public let error: Error?
     public let creationDate: Date
 
-    init(input: Input, creationDate: Date) {
-        self.init(input: input, metadata: nil, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
+    init(input: Input, configuration: DownloadConfiguration, creationDate: Date) {
+        self.init(input: input, configuration: configuration, metadata: nil, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
     }
 
-    public init(input: Input, metadata: AssetMetadata<CustomData>?, bookmarkData: Data?, progress: Double, error: Error?, creationDate: Date) {
+    public init(
+        input: Input,
+        configuration: DownloadConfiguration,
+        metadata: AssetMetadata<CustomData>?,
+        bookmarkData: Data?,
+        progress: Double,
+        error: Error?,
+        creationDate: Date
+    ) {
         self.input = input
+        self.configuration = configuration
         self.metadata = metadata
         self.bookmarkData = bookmarkData
         self.progress = progress
@@ -33,8 +43,8 @@ public struct DownloadRecord<Input, CustomData> {
         self.creationDate = creationDate
     }
 
-    func reset() -> Self {
-        .init(input: input, metadata: metadata, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
+    func reset(configuration: DownloadConfiguration) -> Self {
+        .init(input: input, configuration: configuration, metadata: metadata, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
     }
 }
 

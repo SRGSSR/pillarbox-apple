@@ -77,6 +77,7 @@ extension AssetDownloadStore {
     static func taskPublisher(
         id: String,
         input: Loader.Input,
+        configuration: DownloadConfiguration,
         reusableAssetMetadata: AssetMetadata<CustomData>?,
         session: DownloadSession
     ) -> AnyPublisher<DownloadTask<CustomData>, any Error> {
@@ -89,7 +90,7 @@ extension AssetDownloadStore {
         else {
             return assetPublisher(for: input)
                 .map { asset in
-                    session.taskPublisher(forId: id, asset: asset.wrappedValue, metadata: asset.assetMetadata.playerMetadata)
+                    session.taskPublisher(forId: id, asset: asset.wrappedValue, configuration: configuration, metadata: asset.assetMetadata.playerMetadata)
                         .map { DownloadTask($0, assetMetadata: asset.assetMetadata) }
                 }
                 .switchToLatest()

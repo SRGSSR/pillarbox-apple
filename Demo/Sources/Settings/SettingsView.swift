@@ -75,6 +75,17 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
     private var qualitySetting: QualitySetting = .high
 
+#if DEBUG && os(iOS)
+    @AppStorage(UserDefaults.DemoSettingKey.downloadQualitySetting.rawValue)
+    private var downloadQualitySetting: QualitySetting = .high
+
+    @AppStorage(UserDefaults.DemoSettingKey.downloadAudibleMediaSelectionSetting.rawValue)
+    private var downloadAudibleMediaSelectionSetting: DownloadMediaSelectionSetting = .automatic
+
+    @AppStorage(UserDefaults.DemoSettingKey.downloadLegibleMediaSelectionSetting.rawValue)
+    private var downloadLegibleMediaSelectionSetting: DownloadMediaSelectionSetting = .automatic
+#endif
+
     @AppStorage(UserDefaults.PlaybackHudSettingKey.enabled.rawValue, store: .playbackHud)
     private var playbackHudEnabled = false
 
@@ -143,6 +154,9 @@ extension SettingsView {
         playerSection()
 #if os(iOS)
         skipsSection()
+#if DEBUG
+        downloadsSection()
+#endif
 #endif
         debuggingSection()
         playbackHudSection()
@@ -170,11 +184,13 @@ extension SettingsView {
 
     private func playerSection() -> some View {
         Section {
+#if os(iOS)
             Toggle(isOn: $isSmartNavigationEnabled) {
                 Text("Smart navigation")
                 Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
             }
             seekBehaviorPicker()
+#endif
             qualityPicker()
 #if os(iOS)
             routePicker()
@@ -186,39 +202,14 @@ extension SettingsView {
     }
 
 #if os(iOS)
-    private func skipsSection() -> some View {
-        Section {
-            skipPicker("Backward by", selection: $backwardSkipInterval)
-            skipPicker("Forward by", selection: $forwardSkipInterval)
-        } header: {
-             Text("Skips")
-                .headerStyle()
-        }
-    }
-#endif
-
     private func seekBehaviorPicker() -> some View {
         Picker("Seek behavior", selection: $seekBehaviorSetting) {
             ForEach(SeekBehaviorSetting.allCases, id: \.self) { setting in
                 Text(setting.name).tag(setting)
             }
         }
-#if os(tvOS)
-        .pickerStyle(.navigationLink)
-#endif
     }
-
-    private func skipPicker(_ titleKey: LocalizedStringResource, selection: Binding<TimeInterval>) -> some View {
-        Picker(titleKey, selection: selection) {
-            ForEach([TimeInterval]([5, 7, 10, 15, 30, 45, 60, 75, 90]), id: \.self) { interval in
-                Text("\(Int(interval)) seconds")
-                    .tag(interval)
-            }
-        }
-#if os(tvOS)
-        .pickerStyle(.navigationLink)
 #endif
-    }
 
     private func qualityPicker() -> some View {
         Picker("Quality", selection: $qualitySetting) {
@@ -242,6 +233,64 @@ extension SettingsView {
             }
         }
     }
+
+    private func skipsSection() -> some View {
+        Section {
+            skipPicker("Backward by", selection: $backwardSkipInterval)
+            skipPicker("Forward by", selection: $forwardSkipInterval)
+        } header: {
+             Text("Skips")
+                .headerStyle()
+        }
+    }
+
+    private func skipPicker(_ titleKey: LocalizedStringResource, selection: Binding<TimeInterval>) -> some View {
+        Picker(titleKey, selection: selection) {
+            ForEach([TimeInterval]([5, 7, 10, 15, 30, 45, 60, 75, 90]), id: \.self) { interval in
+                Text("\(Int(interval)) seconds")
+                    .tag(interval)
+            }
+        }
+    }
+
+#if DEBUG
+    private func downloadsSection() -> some View {
+        Section {
+            downloadQualityPicker()
+            downloadAudibleMediaSelectionPicker()
+            downloadLegibleMediaSelectionPicker()
+        } header: {
+             Text("Downloads")
+                .headerStyle()
+        } footer: {
+            Text("Settings apply to future downloads only.")
+        }
+    }
+
+    private func downloadQualityPicker() -> some View {
+        Picker("Quality", selection: $downloadQualitySetting) {
+            ForEach(QualitySetting.allCases, id: \.self) { setting in
+                Text(setting.name).tag(setting)
+            }
+        }
+    }
+
+    private func downloadAudibleMediaSelectionPicker() -> some View {
+        Picker("Audio", selection: $downloadAudibleMediaSelectionSetting) {
+            ForEach(DownloadMediaSelectionSetting.allCases, id: \.self) { setting in
+                Text(setting.name).tag(setting)
+            }
+        }
+    }
+
+    private func downloadLegibleMediaSelectionPicker() -> some View {
+        Picker("Subtitles", selection: $downloadLegibleMediaSelectionSetting) {
+            ForEach(DownloadMediaSelectionSetting.allCases, id: \.self) { setting in
+                Text(setting.name).tag(setting)
+            }
+        }
+    }
+#endif
 #endif
 
     private func debuggingSection() -> some View {

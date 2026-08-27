@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import MediaAccessibility
 import SwiftUI
 
 public extension Player {
@@ -20,27 +19,6 @@ public extension Player {
             return .init(preferredLanguages: [], preferredMediaCharacteristics: [])
         default:
             return nil
-        }
-    }
-
-    private static func preferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
-        switch characteristic {
-        case .legible:
-            return MACaptionAppearanceCopySelectedLanguages(.user).takeUnretainedValue() as? [String] ?? []
-        default:
-            return []
-        }
-    }
-
-    // swiftlint:disable:next discouraged_optional_collection
-    private static func preferredMediaCharacteristics(for characteristic: AVMediaCharacteristic) -> [AVMediaCharacteristic]? {
-        switch characteristic {
-        case .audible:
-            return MAAudibleMediaCopyPreferredCharacteristics().takeRetainedValue() as? [AVMediaCharacteristic]
-        case .legible:
-            return MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic]
-        default:
-            return []
         }
     }
 
@@ -136,8 +114,8 @@ public extension Player {
             queuePlayer.setMediaSelectionCriteria(Self.emptyMediaSelectionCriteria(for: characteristic), forMediaCharacteristic: characteristic)
         case let .on(languages: languages):
             let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
-                preferredLanguages: Self.preferredLanguages(for: characteristic),
-                preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
+                preferredLanguages: MAPreferredLanguages(for: characteristic),
+                preferredMediaCharacteristics: MAPreferredMediaCharacteristics(for: characteristic)
             )
             queuePlayer.setMediaSelectionCriteria(
                 selectionCriteria.selectionCriteria(byAdding: languages),
@@ -147,15 +125,7 @@ public extension Player {
     }
 
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
-        guard let group = properties.mediaSelectionProperties.group(for: characteristic) else { return nil }
-        switch characteristic {
-        case .audible:
-            return AudibleMediaSelector(group: group)
-        case .legible:
-            return LegibleMediaSelector(group: group)
-        default:
-            return nil
-        }
+        properties.mediaSelectionProperties.mediaSelector(for: characteristic)
     }
 }
 

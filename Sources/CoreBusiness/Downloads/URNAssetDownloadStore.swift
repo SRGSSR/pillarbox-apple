@@ -143,6 +143,7 @@ private extension URNAssetDownloadStore {
         var id: String
 
         private var input: URNAssetLoader.Input
+        private var configuration: DownloadConfiguration
         private var metadata: EntryAssetMetadata?
         private var bookmarkData: Data?
         private var progress: Double
@@ -151,6 +152,7 @@ private extension URNAssetDownloadStore {
 
         init(id: String, record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
             self.id = id
+            self.configuration = record.configuration
             self.input = record.input
             self.metadata = .init(assetMetadata: record.metadata)
             self.bookmarkData = record.bookmarkData
@@ -168,6 +170,7 @@ private extension URNAssetDownloadStore {
         func toRecord() -> DownloadRecord<URNAssetLoader.Input, URNMetadata> {
             .init(
                 input: input,
+                configuration: configuration,
                 metadata: metadata?.assetMetadata(),
                 bookmarkData: bookmarkData,
                 progress: progress,
@@ -178,6 +181,7 @@ private extension URNAssetDownloadStore {
 
         func update(with record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
             self.input = record.input
+            self.configuration = record.configuration
             self.metadata = .init(assetMetadata: record.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress

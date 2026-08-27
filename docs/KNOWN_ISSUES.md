@@ -194,3 +194,19 @@ If a file download is pending but has not yet started when the app is terminated
 ### Workaround
 
 These orphaned download files are typically very small (at most a few kilobytes). They can be removed manually through the device’s storage settings or will eventually be reclaimed automatically by the system.
+
+## Offline playback fails due to media selection picking variants declared in the master playlist but not available offline (FB24445920)
+
+When playing a downloaded stream offline (e.g. Airplane mode with no WiFi access), the player may incorrectly attempt to load variants declared in the master playlist but not available offline. This makes playback fail with a network error ("The Internet connection appears to be offline") since the player incorrectly attempts to load a variant not available locally from the network instead.
+
+### Workaround
+
+Use `DownloadMediaSelectionPreference.all` to download all languages. `DownloadMediaSelectionPreference.automatic` generally works as well, provided users do not change their device language after downloading the content.
+
+## The system video view might present options unavailable for offline playback (FB24446455)
+
+When playing downloaded content, `SystemVideoView` might present options that are not available for offline playback. Selecting one of these options can trigger unexpected network activity or cause playback to stall while attempting to load content that is unavailable offline.
+
+### Workaround
+
+No workaround is available yet.
