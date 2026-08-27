@@ -135,10 +135,17 @@ public extension Download {
     }
 
     /// Restarts the download.
+    ///
+    /// The original configuration is reused.
     func restart() {
         restart(configuration: configuration)
     }
 
+    /// Restarts the download.
+    ///
+    /// - Parameter configuration: The configuration to use for the restarted download.
+    ///
+    /// The provided configuration replaces the original configuration.
     func restart(configuration: DownloadConfiguration) {
         removeFile()
         cancelOperations()
