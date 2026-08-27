@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Describes download size.
+/// Information about a download's size.
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public struct DownloadSize: Equatable {

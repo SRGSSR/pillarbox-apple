@@ -4,15 +4,18 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 import Combine
 import Foundation
 import PillarboxCore
 
+/// An observable object that represents a download.
+///
+/// A download is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject)
+/// that publishes changes to its state.
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject, Identifiable {
+    /// The download unique identifier.
     public let id: String
 
     @Published private var properties: DownloadProperties<EmptyCustomData> = .init()
@@ -23,28 +26,37 @@ public final class Download: ObservableObject, Identifiable {
     private let resetRecord: (DownloadConfiguration) -> Void
     private let removeRecord: () -> Void
 
+    /// The date when the download was created.
     public let creationDate: Date
 
+    /// The download's configuration.
     public var configuration: DownloadConfiguration {
         properties.configuration
     }
 
+    /// Information about the download's progress.
+    ///
+    /// Returns a value between 0 and 1.
     public var progress: Double {
         properties.fractionCompleted
     }
 
+    /// Information about the download's size.
     public var size: DownloadSize? {
         properties.size
     }
 
+    /// The download state.
     public var state: DownloadState {
         properties.state
     }
 
+    /// Standard playback metadata associated with the download.
     public var metadata: PlayerMetadata {
         properties.assetMetadata?.playerMetadata ?? .empty
     }
 
+    /// Error information associated with the download, if any.
     public var error: Error? {
         properties.error
     }
@@ -108,14 +120,17 @@ public final class Download: ObservableObject, Identifiable {
 
 @available(tvOS, unavailable)
 public extension Download {
+    /// Resumes the download.
     func resume() {
         properties.resume()
     }
 
+    /// Suspends the download.
     func suspend() {
         properties.suspend()
     }
 
+    /// Restarts the download.
     func restart() {
         restart(configuration: configuration)
     }
@@ -241,13 +256,13 @@ private extension Download {
 // is resolved by Apple.
 @available(tvOS, unavailable)
 extension Download: Hashable {
+    // swiftlint:disable:next missing_docs
     public static func == (lhs: Download, rhs: Download) -> Bool {
         lhs === rhs
     }
 
+    // swiftlint:disable:next missing_docs
     public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
 }
-
-// swiftlint:enable missing_docs
