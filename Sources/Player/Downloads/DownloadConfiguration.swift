@@ -4,23 +4,44 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 #if DEBUG
 
 import AVFoundation
 
+/// The configuration applied to a download.
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public struct DownloadConfiguration: Equatable, Codable {
+    /// The default configuration.
     public static let `default` = Self()
 
+    /// The maximum preferred bitrate.
+    ///
+    /// Disabled when set to zero.
     public var preferredPeakBitRate: Double
-    public var preferredMaximumResolutionWidth: CGFloat
-    public var preferredMaximumResolutionHeight: CGFloat
 
+    /// The preferred maximum video resolution.
+    ///
+    /// Disabled when set to `.zero`.
+    public var preferredMaximumResolution: CGSize {
+        get {
+            .init(width: preferredMaximumResolutionWidth, height: preferredMaximumResolutionHeight)
+        }
+        set {
+            preferredMaximumResolutionWidth = newValue.width
+            preferredMaximumResolutionHeight = newValue.height
+        }
+    }
+
+    private var preferredMaximumResolutionWidth: CGFloat
+    private var preferredMaximumResolutionHeight: CGFloat
     private var mediaSelectionPreferences: [String: DownloadMediaSelectionPreference] = [:]
 
+    /// Creates a configuration.
+    ///
+    /// - Parameters:
+    ///   - preferredPeakBitRate: The maximum preferred bitrate.
+    ///   - preferredMaximumResolution: The preferred maximum video resolution.
     public init(
         preferredPeakBitRate: Double = 0,
         preferredMaximumResolution: CGSize = .zero
@@ -56,6 +77,11 @@ public struct DownloadConfiguration: Equatable, Codable {
         }
     }
 
+    /// Sets the media selection preference for the given characteristic.
+    ///
+    /// - Parameters:
+    ///   - preference: The media selection preference.
+    ///   - characteristic: The characteristic.
     public mutating func setMediaSelectionPreference(_ preference: DownloadMediaSelectionPreference, for characteristic: AVMediaCharacteristic) {
         mediaSelectionPreferences[characteristic.rawValue] = preference
     }
@@ -77,5 +103,3 @@ public struct DownloadConfiguration: Equatable, Codable {
 }
 
 #endif
-
-// swiftlint:enable missing_docs
