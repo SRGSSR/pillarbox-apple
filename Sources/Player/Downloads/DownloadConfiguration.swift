@@ -61,16 +61,13 @@ public struct DownloadConfiguration: Equatable, Codable {
     }
 
     func apply(selection: AVMediaSelection?, to configuration: AVAssetDownloadConfiguration, using provider: MediaSelectionProvider) {
+        let resolutionPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            AVAssetVariantQualifier.predicate(forPresentationWidth: preferredMaximumResolutionWidth, operatorType: .lessThanOrEqualTo),
+            AVAssetVariantQualifier.predicate(forPresentationHeight: preferredMaximumResolutionHeight, operatorType: .lessThanOrEqualTo)
+        ])
+        let peakBitRatePredicate = NSPredicate(format: "peakBitRate <= \(preferredPeakBitRate)")
         configuration.primaryContentConfiguration.variantQualifiers = [
-            AVAssetVariantQualifier(
-                predicate: NSCompoundPredicate(
-                    orPredicateWithSubpredicates: [
-                        NSPredicate(format: "peakBitRate < \(preferredPeakBitRate)"),
-                        AVAssetVariantQualifier.predicate(forPresentationHeight: preferredMaximumResolutionHeight, operatorType: .lessThanOrEqualTo),
-                        AVAssetVariantQualifier.predicate(forPresentationWidth: preferredMaximumResolutionWidth, operatorType: .lessThanOrEqualTo)
-                    ]
-                )
-            )
+            AVAssetVariantQualifier(predicate: NSCompoundPredicate(orPredicateWithSubpredicates: [resolutionPredicate, peakBitRatePredicate]))
         ]
         if let selection {
             configuration.primaryContentConfiguration.mediaSelections = mediaSelections(from: selection, using: provider)
