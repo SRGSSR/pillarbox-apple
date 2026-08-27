@@ -129,7 +129,7 @@ struct DownloadProperties<CustomData> {
     }
 
     func withError(_ error: Error) -> Self {
-        .init(configuration: configuration, progress: progress, assetMetadata: assetMetadata, fileUrl: fileUrl, error: error)
+        .init(configuration: configuration, progress: progress, assetMetadata: assetMetadata, fileUrl: nil, error: error)
     }
 }
 
