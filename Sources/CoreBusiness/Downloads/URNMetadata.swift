@@ -4,13 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public struct URNMetadata: Codable {
     let analyticsData: [String: String]
     let analyticsMetadata: [String: String]
 }
-
-// swiftlint:enable missing_docs
