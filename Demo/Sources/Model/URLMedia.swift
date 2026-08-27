@@ -38,7 +38,7 @@ enum URLMedia {
         title: "Couleur 3 en vidéo (DVR)",
         subtitle: "Video livestream with DVR - HLS",
         imageUrl: "https://il.srgssr.ch/images/?imageUrl=https%3A%2F%2Fwww.rts.ch%2F2020%2F05%2F18%2F14%2F20%2F11333286.image%2F16x9&format=jpg&width=960",
-        type: .url("https://visualradio-rts-couleur3-d.akamaized.net/out/v1/6a1472634ad745f59a9e63ee8adbbc00/index.m3u8")
+        type: .url("https://visualradio-rts-couleur3-d.akamaized.net/out/v1/lsvs/visual-radio-rts-couleur-3/cmaf/hls-master.m3u8")
     )
     static let liveTimestampVideoHLS = Media(
         title: "Tageschau",
