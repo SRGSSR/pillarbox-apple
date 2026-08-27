@@ -17,7 +17,7 @@ enum URNMedia {
     )
     static let onDemandVerticalVideo = Media(
         title: "Vertical video",
-        imageUrl: "https://www.rts.ch/2022/10/06/17/32/13444380.image/4x5",
+        imageUrl: "https://img.rts.ch/medias/2023/image/w2e9c5-26920079.image/9x16",
         type: .urn("urn:rts:video:13950405")
     )
     static let onDemandVideo = Media(
