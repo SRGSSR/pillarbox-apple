@@ -44,7 +44,7 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
         self.init(store: store, session: URLDownloadSession(configuration: configuration))
     }
 
-    /// Creates a download for the given input.
+    /// Adds a download for the given input.
     ///
     /// - Parameter input: The input required to perform the download.
     /// - Returns: A download associated with the given input. If a download already exists for the input, the existing
@@ -63,13 +63,13 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
 
     /// Returns the download matching the given input.
     ///
-    /// - Parameter input: The input that identifies the download.
+    /// - Parameter input: The input identifying the download.
     /// - Returns: The matching download, if one exists.
     public func download(matching input: S.Loader.Input) -> Download? {
         download(matchingId: type(of: store).id(from: input))
     }
 
-    /// Creates a playable ``PlayerItem`` from the given download.
+    /// Creates a ``PlayerItem`` from the given download.
     ///
     /// - Parameters:
     ///   - download: The download from which to create the player item.
