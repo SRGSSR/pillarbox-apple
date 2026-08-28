@@ -7,100 +7,177 @@
 #if DEBUG
 
 import Foundation
+import SwiftData
 
+@available(iOS 17.0, *)
 @available(tvOS, unavailable)
 final class URLAssetDownloadStore {
-    private struct EntryError: Codable {
+    let context: ModelContext
+
+    init(name: String? = nil) throws {
+        let schema = Schema([Entry.self])
+        let modelConfiguration = ModelConfiguration(name, schema: schema, isStoredInMemoryOnly: false)
+        self.context = .init(try ModelContainer(for: schema, configurations: [modelConfiguration]))
+    }
+}
+
+@available(iOS 17.0, *)
+@available(tvOS, unavailable)
+private extension URLAssetDownloadStore {
+    struct EntryPlayerMetadata: Codable {
+        private let identifier: String?
+        private let title: String?
+        private let subtitle: String?
+        private let summary: String?
+        private let imageUrl: URL?
+        private let imageData: Data?
+        private let viewport: Viewport
+        private let episode: Int?
+        private let season: Int?
+        private let chapters: [Chapter]
+        private let timeRanges: [TimeRange]
+
+        private var imageSource: ImageSource {
+            if let imageData {
+                return .image(imageData)
+            }
+            else if let imageUrl {
+                return .url(standardResolution: imageUrl)
+            }
+            else {
+                return .none
+            }
+        }
+
+        private var episodeInformation: EpisodeInformation? {
+            guard let episode else { return nil }
+            if let season {
+                return .init(episode: episode, season: season)
+            }
+            else {
+                return .init(episode: episode)
+            }
+        }
+
+        init(playerMetadata: PlayerMetadata) {
+            self.identifier = playerMetadata.identifier
+            self.title = playerMetadata.title
+            self.subtitle = playerMetadata.subtitle
+            self.summary = playerMetadata.description
+            self.imageData = playerMetadata.imageSource.data
+            self.imageUrl = playerMetadata.imageSource.url
+            self.viewport = playerMetadata.viewport
+            self.episode = playerMetadata.episodeInformation?.episode
+            self.season = playerMetadata.episodeInformation?.season
+            self.chapters = playerMetadata.chapters
+            self.timeRanges = playerMetadata.timeRanges
+        }
+
+        func playerMetadata() -> PlayerMetadata {
+            .init(
+                identifier: identifier,
+                title: title,
+                subtitle: subtitle,
+                description: summary,
+                imageSource: imageSource,
+                viewport: viewport,
+                episodeInformation: episodeInformation,
+                chapters: chapters,
+                timeRanges: timeRanges
+            )
+        }
+    }
+
+    struct EntryAssetMetadata: Codable {
+        private let entryPlayerMetadata: EntryPlayerMetadata
+
+        init(assetMetadata: AssetMetadata<Void>) {
+            self.entryPlayerMetadata = .init(playerMetadata: assetMetadata.playerMetadata)
+        }
+
+        func assetMetadata() -> AssetMetadata<Void> {
+            .init(playerMetadata: entryPlayerMetadata.playerMetadata(), customData: ())
+        }
+    }
+
+    struct EntryError: Codable {
         private let domain: String
         private let code: Int
-        private let description: String
+        private let localizedDescription: String
 
         init?(error: Error?) {
             guard let error else { return nil }
             let nsError = error as NSError
             self.domain = nsError.domain
             self.code = nsError.code
-            self.description = nsError.localizedDescription
+            self.localizedDescription = nsError.localizedDescription
         }
 
         func error() -> Error {
             NSError(domain: domain, code: code, userInfo: [
-                NSLocalizedDescriptionKey: description
+                NSLocalizedDescriptionKey: localizedDescription
             ])
         }
     }
 
-    private struct Entry: Codable {
-        let id: String
-        let configuration: DownloadConfiguration
-        let url: URL
-        let metadata: PlayerMetadata
-        let bookmarkData: Data?
-        let progress: Double
-        let error: EntryError?
-        let creationDate: Date
+    @Model
+    final class Entry {
+        @Attribute(.unique)
+        var id: String
 
-        private init(
-            id: String,
-            configuration: DownloadConfiguration,
-            url: URL,
-            metadata: PlayerMetadata,
-            bookmarkData: Data?,
-            progress: Double,
-            error: EntryError?,
-            creationDate: Date
-        ) {
-            self.id = id
-            self.configuration = configuration
-            self.url = url
-            self.metadata = metadata
-            self.bookmarkData = bookmarkData
-            self.progress = progress
-            self.error = error
-            self.creationDate = creationDate
-        }
+        private var url: URL
+        private var configuration: DownloadConfiguration
+        private var metadata: EntryAssetMetadata
+        private var bookmarkData: Data?
+        private var progress: Double
+        private var error: EntryError?
+        private var creationDate: Date
 
         init(id: String, record: DownloadRecord<URLAssetLoader.Input, Void>) {
-            self.init(
-                id: id,
-                configuration: record.configuration,
-                url: record.input.url,
-                metadata: record.metadata?.playerMetadata ?? record.input.metadata,
-                bookmarkData: record.bookmarkData,
-                progress: record.progress,
-                error: .init(error: record.error),
-                creationDate: record.creationDate
-            )
+            self.id = id
+            self.url = record.input.url
+            self.configuration = record.configuration
+            self.metadata = .init(assetMetadata: .init(playerMetadata: record.input.metadata, customData: ()))
+            self.bookmarkData = record.bookmarkData
+            self.progress = record.progress
+            self.error = .init(error: record.error)
+            self.creationDate = record.creationDate
         }
 
-        func toDownloadRecord() -> DownloadRecord<URLAssetLoader.Input, Void> {
-            .init(
-                input: URLAssetLoader.Input(url: url, metadata: metadata),
+        static func predicate(for id: String) -> Predicate<Entry> {
+            #Predicate { entry in
+                entry.id == id
+            }
+        }
+
+        func toRecord() -> DownloadRecord<URLAssetLoader.Input, Void> {
+            let assetMetadata = metadata.assetMetadata()
+            return .init(
+                input: .init(url: url, metadata: assetMetadata.playerMetadata),
                 configuration: configuration,
-                metadata: .init(playerMetadata: metadata, customData: ()),
+                metadata: assetMetadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: error?.error(),
                 creationDate: creationDate
             )
         }
-    }
 
-    private let metadataFileUrl: URL
-    private var entries: [Entry]
-
-    init(name: String?) throws {
-        metadataFileUrl = URL.libraryDirectory.appending(component: name ?? "default")
-        if let jsonData = try? Data(contentsOf: metadataFileUrl),
-           let entries = try? JSONDecoder().decode([Entry].self, from: jsonData) {
-            self.entries = entries
-        }
-        else {
-            self.entries = []
+        func update(with record: DownloadRecord<URLAssetLoader.Input, Void>) {
+            self.url = record.input.url
+            self.configuration = record.configuration
+            self.metadata = .init(assetMetadata: .init(playerMetadata: record.input.metadata, customData: ()))
+            self.bookmarkData = record.bookmarkData
+            self.progress = record.progress
+            self.error = .init(error: record.error)
+            self.creationDate = record.creationDate
         }
     }
 }
 
+@_spi(DownloaderPrivate)
+@available(iOS 17.0, *)
+@available(tvOS, unavailable)
 extension URLAssetDownloadStore: AssetDownloadStore {
     typealias Loader = URLAssetLoader
 
@@ -111,32 +188,31 @@ extension URLAssetDownloadStore: AssetDownloadStore {
     static func customData(from metadata: Void) {}
 
     func downloadRecords() -> [DownloadRecord<URLAssetLoader.Input, Void>] {
-        entries.map { $0.toDownloadRecord() }
+        guard let entries = try? context.fetch(FetchDescriptor<Entry>()) else { return [] }
+        return entries.map { $0.toRecord() }
     }
 
     func addDownloadRecord(_ record: DownloadRecord<URLAssetLoader.Input, Void>, forId id: String) {
-        entries.append(Entry(id: id, record: record))
-        save()
+        context.insert(Entry(id: id, record: record))
     }
 
     func removeDownloadRecord(forId id: String) {
-        entries.removeAll { $0.id == id }
-        save()
+        try? context.delete(model: Entry.self, where: Entry.predicate(for: id))
     }
 
     func downloadRecord(forId id: String) -> DownloadRecord<URLAssetLoader.Input, Void>? {
-        entries.first { $0.id == id }?.toDownloadRecord()
+        entry(forId: id)?.toRecord()
     }
 
     func updateDownloadRecord(_ record: DownloadRecord<URLAssetLoader.Input, Void>, forId id: String) {
-        guard let index = entries.firstIndex(where: { $0.id == id }) else { return }
-        entries[index] = .init(id: id, record: record)
-        save()
+        guard let entry = entry(forId: id) else { return }
+        entry.update(with: record)
+        try? context.save()
     }
 
-    private func save() {
-        guard let jsonData = try? JSONEncoder().encode(entries) else { return }
-        try? jsonData.write(to: metadataFileUrl)
+    private func entry(forId id: String) -> Entry? {
+        let descriptor = FetchDescriptor(predicate: Entry.predicate(for: id))
+        return try? context.fetch(descriptor).first
     }
 }
 

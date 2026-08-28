@@ -141,8 +141,8 @@ private extension URNAssetDownloadStore {
 
         init(id: String, record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
             self.id = id
-            self.configuration = record.configuration
             self.input = record.input
+            self.configuration = record.configuration
             self.metadata = .init(assetMetadata: record.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
