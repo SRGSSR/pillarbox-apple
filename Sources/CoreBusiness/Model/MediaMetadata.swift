@@ -15,6 +15,9 @@ public struct MediaMetadata {
     /// The URL at which the playback context was retrieved.
     public let mediaCompositionUrl: URL?
 
+    /// Useful response headers received when fetching the media composition.
+    public let mediaCompositionHeaders: [String: String]
+
     /// The main chapter.
     public let mainChapter: MediaComposition.Chapter
 
@@ -72,6 +75,7 @@ public struct MediaMetadata {
         }
         self.mediaComposition = mediaComposition
         self.mediaCompositionUrl = mediaCompositionResponse.response.url
+        self.mediaCompositionHeaders = Self.mediaCompositionHeaders(from: mediaCompositionResponse.response)
         self.mainChapter = mainChapter
         self.resource = mainChapter.recommendedResource
         self.dataProvider = dataProvider
@@ -79,6 +83,13 @@ public struct MediaMetadata {
 
     private static func areRedundant(chapter: MediaComposition.Chapter, show: MediaComposition.Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
+    }
+
+    private static func mediaCompositionHeaders(from response: URLResponse) -> [String: String] {
+        guard let httpResponse = response as? HTTPURLResponse, let headers = httpResponse.allHeaderFields as? [String: String] else { return [:] }
+        return headers.filter { key, _ in
+            ["akamai-grn", "x-location-info", "x-proxy-detection-info", "x-tracing-id"].contains(key.lowercased())
+        }
     }
 }
 

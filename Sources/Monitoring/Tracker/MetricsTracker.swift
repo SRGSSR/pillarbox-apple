@@ -111,15 +111,18 @@ public extension MetricsTracker {
     /// Metadata associated with the tracker.
     struct Metadata {
         let metadataUrl: URL?
+        let metadataHeaders: [String: String]
         let assetUrl: URL?
 
         /// Creates metadata.
         ///
         /// - Parameters:
         ///   - metadataUrl: The URL where metadata has been fetched.
+        ///   - metadataHeaders: Useful response headers received when fetching metadata.
         ///   - assetUrl: The URL of the asset being played.
-        public init(metadataUrl: URL? = nil, assetUrl: URL? = nil) {
+        public init(metadataUrl: URL? = nil, metadataHeaders: [String: String] = [:], assetUrl: URL? = nil) {
             self.metadataUrl = metadataUrl
+            self.metadataHeaders = metadataHeaders
             self.assetUrl = assetUrl
         }
     }
@@ -154,7 +157,8 @@ private extension MetricsTracker {
             media: .init(
                 assetUrl: metadata?.assetUrl,
                 id: configuration.identifier,
-                metadataUrl: metadata?.metadataUrl
+                metadataUrl: metadata?.metadataUrl,
+                metadataHeaders: metadata?.metadataHeaders ?? [:]
             ),
             qoeTimings: .init(events: events),
             qosTimings: .init(events: events)

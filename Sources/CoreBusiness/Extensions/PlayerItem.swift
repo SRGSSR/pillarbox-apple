@@ -43,6 +43,7 @@ public extension PlayerItem {
                 ) { metadata in
                     MetricsTracker.Metadata(
                         metadataUrl: metadata.mediaCompositionUrl,
+                        metadataHeaders: metadata.mediaCompositionHeaders,
                         assetUrl: metadata.resource?.url
                     )
                 }
