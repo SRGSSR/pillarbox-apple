@@ -28,7 +28,7 @@ final class DemoDownloader: ObservableObject {
     }()
 
     @available(iOS 17, *)
-    private var urlDownloader: URLDownloader {
+    private var urlDownloader: URLDownloader<EmptyCustomData> {
         _urlDownloader as! URLDownloader
     }
 
@@ -65,7 +65,11 @@ final class DemoDownloader: ObservableObject {
         guard #available(iOS 17, *) else { return }
         switch media.type {
         case let .url(url), let .monoscopicUrl(url):
-            urlDownloader.addDownload(url: url, metadata: media.metadata(), configuration: UserDefaults.standard.downloadConfiguration)
+            urlDownloader.addDownload(
+                url: url,
+                metadata: .init(playerMetadata: media.metadata(), customData: .init()),
+                configuration: UserDefaults.standard.downloadConfiguration
+            )
         case let .urn(urn, serverSetting):
             urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: UserDefaults.standard.downloadConfiguration)
         default:

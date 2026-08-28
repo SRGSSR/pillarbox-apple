@@ -9,31 +9,24 @@
 import Combine
 import Foundation
 
-struct URLAssetLoader: AssetLoader {
+struct URLAssetLoader<CustomData: Codable>: AssetLoader {
     struct Input {
         let url: URL
-        let metadata: PlayerMetadata
-
-        init(url: URL, metadata: PlayerMetadata = .empty) {
-            self.url = url
-            self.metadata = metadata
-        }
+        let metadata: AssetMetadata<CustomData>
     }
 
-    static func metadataPublisher(for input: Input) -> AnyPublisher<Void, any Error> {
-        // Use a dummy network connection that might fail in Airplane Mode.
-        URLSession.shared.dataTaskPublisher(for: URL(string: "https://httpbin.org/status/200")!)
-            .map { _ in () }
-            .mapError(\.self)
+    static func metadataPublisher(for input: Input) -> AnyPublisher<AssetMetadata<CustomData>, any Error> {
+        Just(input.metadata)
+            .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
-    static func asset(from input: Input, metadata: Void) -> Asset {
+    static func asset(from input: Input, metadata: AssetMetadata<CustomData>) -> Asset {
         .simple(url: input.url)
     }
 
-    static func playerMetadata(from input: Input, metadata: Void?) -> PlayerMetadata {
-        input.metadata
+    static func playerMetadata(from input: Input, metadata: AssetMetadata<CustomData>?) -> PlayerMetadata {
+        input.metadata.playerMetadata
     }
 }
 
