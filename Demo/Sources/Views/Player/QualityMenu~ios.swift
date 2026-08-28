@@ -12,8 +12,8 @@ struct QualityMenu: View {
     private var qualitySetting: QualitySetting = .high
 
     var body: some View {
-        SwiftUI.Menu {
-            SwiftUI.Picker(selection: $qualitySetting) {
+        Menu {
+            Picker(selection: $qualitySetting) {
                 ForEach(QualitySetting.allCases, id: \.self) { quality in
                     Text(quality.name).tag(quality)
                 }

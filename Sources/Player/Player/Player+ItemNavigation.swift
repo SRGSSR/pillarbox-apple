@@ -133,6 +133,8 @@ extension Player {
             }
         }
         else {
+            // Cleaning once does not suffice anymore on OS 27 releases.
+            queuePlayer.removeAllItems()
             queuePlayer.removeAllItems()
         }
     }

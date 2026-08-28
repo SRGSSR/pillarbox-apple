@@ -14,7 +14,7 @@ struct PlaybackSpeedMenuContent: View {
     @ObservedObject var player: Player
 
     var body: some View {
-        SwiftUI.Picker(selection: selection) {
+        SwiftUI::Picker(selection: selection) {
             ForEach(playbackSpeeds, id: \.self) { speed in
                 Text("\(speed, specifier: "%g×")", bundle: .module, comment: "Speed multiplier").tag(speed)
             }

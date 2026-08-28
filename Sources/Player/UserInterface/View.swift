@@ -16,7 +16,7 @@ public extension View {
     ///
     /// > Warning: Be careful to associate often updated state to local view scopes to avoid unnecessary view body refreshes. Please
     /// refer to <doc:state-observation-article> for more information.
-    @ViewBuilder
+    @ContentBuilder
     func onReceive<T>(player: Player?, assign keyPath: KeyPath<PlayerProperties, T>, to binding: Binding<T>) -> some View where T: Equatable {
         if let player {
             onReceive(player.propertiesPublisher, assign: keyPath, to: binding)
@@ -32,7 +32,7 @@ public extension View {
     ///   - player: The player.
     ///   - keyPath: The key path to extract.
     ///   - action: A closure to run when the value changes.
-    @ViewBuilder
+    @ContentBuilder
     func onReceive<T>(player: Player?, at keyPath: KeyPath<PlayerProperties, T>, perform action: @escaping (T) -> Void) -> some View where T: Equatable {
         if let player {
             onReceive(player.propertiesPublisher, at: keyPath, perform: action)
@@ -61,7 +61,7 @@ public extension View {
 @available(iOS, unavailable)
 public extension View {
     /// Applies a background that mimics the standard tvOS Info view appearance.
-    @ViewBuilder
+    @ContentBuilder
     func infoViewTabPanel() -> some View {
         if #available(tvOS 26, *) {
             // Apply indirectly with a background modifier to avoid `List` selection appearance issues.

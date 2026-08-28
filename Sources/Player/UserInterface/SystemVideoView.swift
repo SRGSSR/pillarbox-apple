@@ -62,7 +62,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     ///    - videoOverlay: A closure returning an overlay view to be placed atop the player's content. This view is
     ///      fully interactive, but is placed below the system-provided playback controls and will only receive unhandled
     ///      events.
-    public init(player: Player, @ViewBuilder videoOverlay: () -> VideoOverlay) {
+    public init(player: Player, @ContentBuilder videoOverlay: () -> VideoOverlay) {
         self.player = player
         self.videoOverlay = videoOverlay()
     }

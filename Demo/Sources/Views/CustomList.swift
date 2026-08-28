@@ -8,7 +8,7 @@ import SwiftUI
 
 struct CustomList<Content, Data>: View where Content: View, Data: Hashable {
     let data: [Data]
-    @ViewBuilder let content: (Data?) -> Content
+    @ContentBuilder let content: (Data?) -> Content
 
     var body: some View {
 #if os(iOS)
@@ -37,7 +37,7 @@ struct CustomList<Content, Data>: View where Content: View, Data: Hashable {
 }
 
 extension CustomList where Data == Never {
-    init(@ViewBuilder content: @escaping () -> Content) {
+    init(@ContentBuilder content: @escaping () -> Content) {
         self.content = { _ in content() }
         data = []
     }

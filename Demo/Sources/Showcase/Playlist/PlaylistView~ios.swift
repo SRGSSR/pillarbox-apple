@@ -92,7 +92,7 @@ struct PlaylistView: View {
         .tracked(name: "playlist")
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func list() -> some View {
         ZStack {
             if !model.isEmpty {

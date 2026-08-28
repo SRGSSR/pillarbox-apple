@@ -85,7 +85,7 @@ extension Downloader: DownloadSessionDelegate {
         task.attach(to: location)
     }
 
-    func downloadSessionTask(_ task: URLSessionTask, didCompleteWithError error: (any Error)?, forId id: String) {
+    func downloadSessionTask(_ task: URLSessionTask, didCompleteWithError error: any Error?, forId id: String) {
         guard let error else { return }
         task.fail(with: error)
     }

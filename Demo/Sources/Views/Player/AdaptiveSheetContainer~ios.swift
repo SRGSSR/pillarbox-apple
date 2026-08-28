@@ -9,8 +9,8 @@ import SwiftUI
 struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View, Sheet: View {
     @Binding var isPresenting: Bool
 
-    @ViewBuilder let content: () -> Content
-    @ViewBuilder let sheet: () -> Sheet
+    @ContentBuilder let content: () -> Content
+    @ContentBuilder let sheet: () -> Sheet
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 

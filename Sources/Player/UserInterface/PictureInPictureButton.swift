@@ -23,7 +23,7 @@ public struct PictureInPictureButton<Content>: View where Content: View {
     public var body: some View {
         Group {
             if isPossible && PictureInPicture.shared.persistable != nil {
-                SwiftUI.Button(action: PictureInPicture.shared.custom.toggle) {
+                SwiftUI::Button(action: PictureInPicture.shared.custom.toggle) {
                     content(isActive)
                 }
                 .hoverEffect()
@@ -37,7 +37,7 @@ public struct PictureInPictureButton<Content>: View where Content: View {
     ///
     /// - Parameter content: The button body. Use the `isActive` Boolean to adjust your presentation according
     ///   to the current Picture in Picture state.
-    public init(@ViewBuilder content: @escaping (_ isActive: Bool) -> Content) {
+    public init(@ContentBuilder content: @escaping (_ isActive: Bool) -> Content) {
         self.content = content
     }
 }

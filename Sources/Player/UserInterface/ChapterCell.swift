@@ -24,7 +24,7 @@ struct ChapterCell: View {
     }
 
     var body: some View {
-        SwiftUI.Button(action: action) {
+        SwiftUI::Button(action: action) {
             ZStack {
                 artwork()
                 description()
@@ -38,7 +38,7 @@ struct ChapterCell: View {
         .accessibilityAddTraits(accessibilityTraits)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func artwork() -> some View {
         LazyImage(source: chapter.imageSource) { image in
             image
@@ -61,7 +61,7 @@ struct ChapterCell: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func subtitle() -> some View {
         if isHighlighted {
             Text("Watching", bundle: .module, comment: "Marker text for the current chapter")
@@ -72,7 +72,7 @@ struct ChapterCell: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func title() -> some View {
         if let title = chapter.title {
             Text(title)
@@ -84,7 +84,7 @@ struct ChapterCell: View {
 }
 
 private extension View {
-    @ViewBuilder
+    @ContentBuilder
     func backgroundExtension(spacing: CGFloat) -> some View {
         if #available(iOS 26, tvOS 26, *) {
             // Trick, see https://nilcoalescing.com/blog/BackgroundExtensionEffectInSwiftUI/

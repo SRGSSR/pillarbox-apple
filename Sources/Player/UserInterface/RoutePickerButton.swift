@@ -45,7 +45,7 @@ private struct _RoutePickerButton<Content>: View where Content: View {
     @Control private var control
 
     var body: some View {
-        SwiftUI.Button(action: sendAction) {
+        SwiftUI::Button(action: sendAction) {
             content()
                 .background {
                     _RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices, control: control)
@@ -83,7 +83,7 @@ public struct RoutePickerButton<Content>: View where Content: View {
     ///   - prioritizesVideoDevices: A Boolean setting whether or not the route picker should sort video capable output
     ///     devices to the top of the list.
     ///   - content: The content displayed by the button.
-    public init(prioritizesVideoDevices: Bool = false, @ViewBuilder content: @escaping () -> Content) {
+    public init(prioritizesVideoDevices: Bool = false, @ContentBuilder content: @escaping () -> Content) {
         self.prioritizesVideoDevices = prioritizesVideoDevices
         self.content = content
     }

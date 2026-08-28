@@ -27,7 +27,7 @@ struct ContentListsView: View {
 #endif
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func content() -> some View {
         section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF])
         section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF])
@@ -40,7 +40,7 @@ struct ContentListsView: View {
         latestAudiosSection(image: "music.note.list")
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func section(for list: ContentList, image: String? = nil, vendors: [SRGVendor]) -> some View {
         let configurations = vendors.map { vendor in
             ContentList.Configuration(list: list, vendor: vendor)
@@ -115,7 +115,7 @@ struct ContentListsView: View {
 #if os(iOS)
     private func serverSettingsMenu() -> some View {
         Menu {
-            SwiftUI.Picker(selection: $selectedServerSetting) {
+            Picker(selection: $selectedServerSetting) {
                 ForEach(ServerSetting.allCases, id: \.self) { service in
                     Text(service.title).tag(service)
                 }

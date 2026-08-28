@@ -335,7 +335,7 @@ private extension MainView {
         .contentShape(.rect)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     func routePickerView() -> some View {
         if routePickerSetting == .button {
             RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
@@ -393,7 +393,7 @@ private extension MainView {
         .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func scrubbingCapsule() -> some View {
         ZStack {
             if shouldDisplayScrubbingCapsule {

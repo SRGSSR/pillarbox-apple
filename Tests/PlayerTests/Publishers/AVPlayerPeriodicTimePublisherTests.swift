@@ -15,12 +15,13 @@ import PillarboxStreams
 final class AVPlayerPeriodicTimePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
-        expectNothingPublished(
+        expectAtLeastPublished(
+            values: [.invalid],
             from: Publishers.PeriodicTimePublisher(
                 for: player,
                 interval: CMTimeMake(value: 1, timescale: 10)
             ),
-            during: .milliseconds(500)
+            to: beClose(within: 0.1)
         )
     }
 
@@ -42,6 +43,19 @@ final class AVPlayerPeriodicTimePublisherTests: TestCase {
         ) {
             player.play()
         }
+    }
+
+    func testInitiallyPaused() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = AVPlayer(playerItem: item)
+        expectAtLeastPublished(
+            values: [.zero],
+            from: Publishers.PeriodicTimePublisher(
+                for: player,
+                interval: CMTimeMake(value: 1, timescale: 10)
+            ),
+            to: beClose(within: 0.1)
+        )
     }
 
     func testDeallocation() {

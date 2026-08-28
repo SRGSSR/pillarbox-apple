@@ -19,7 +19,7 @@ struct SettingsMenu: View {
     @Binding var gravity: AVLayerVideoGravity
 
     var body: some View {
-        SwiftUI.Menu {
+        Menu {
             player.standardSettingsMenu()
             QualityMenu()
             if isOverCurrentContext {
@@ -38,7 +38,7 @@ struct SettingsMenu: View {
         .hoverEffect()
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func metricsMenu() -> some View {
         if !isPresentingMetrics {
             Button(action: showMetrics) {
