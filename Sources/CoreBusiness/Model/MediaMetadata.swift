@@ -88,7 +88,7 @@ public struct MediaMetadata {
     private static func mediaCompositionHeaders(from response: URLResponse) -> [String: String] {
         guard let httpResponse = response as? HTTPURLResponse, let headers = httpResponse.allHeaderFields as? [String: String] else { return [:] }
         return headers.filter { key, _ in
-            ["Akamai-GRN", "x-location-info", "x-proxy-detection-info", "X-tracing-id"].contains(key)
+            ["akamai-grn", "x-location-info", "x-proxy-detection-info", "x-tracing-id"].contains(key.lowercased())
         }
     }
 }
