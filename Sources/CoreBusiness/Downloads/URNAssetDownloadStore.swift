@@ -18,7 +18,7 @@ final class URNAssetDownloadStore {
     let context: ModelContext
 
     init(name: String? = nil) throws {
-        let schema = Schema([Entry.self])
+        let schema = Schema([URNEntry.self])
         let modelConfiguration = ModelConfiguration(name, schema: schema, isStoredInMemoryOnly: false)
         self.context = .init(try ModelContainer(for: schema, configurations: [modelConfiguration]))
     }
@@ -127,7 +127,7 @@ private extension URNAssetDownloadStore {
     }
 
     @Model
-    final class Entry {
+    final class URNEntry {
         @Attribute(.unique)
         var id: String
 
@@ -150,7 +150,7 @@ private extension URNAssetDownloadStore {
             self.creationDate = record.creationDate
         }
 
-        static func predicate(for id: String) -> Predicate<Entry> {
+        static func predicate(for id: String) -> Predicate<URNEntry> {
             #Predicate { entry in
                 entry.id == id
             }
@@ -199,16 +199,16 @@ extension URNAssetDownloadStore: AssetDownloadStore {
     }
 
     func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {
-        guard let entries = try? context.fetch(FetchDescriptor<Entry>()) else { return [] }
+        guard let entries = try? context.fetch(FetchDescriptor<URNEntry>()) else { return [] }
         return entries.map { $0.toRecord() }
     }
 
     func addDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, URNMetadata>, forId id: String) {
-        context.insert(Entry(id: id, record: record))
+        context.insert(URNEntry(id: id, record: record))
     }
 
     func removeDownloadRecord(forId id: String) {
-        try? context.delete(model: Entry.self, where: Entry.predicate(for: id))
+        try? context.delete(model: URNEntry.self, where: URNEntry.predicate(for: id))
     }
 
     func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, URNMetadata>? {
@@ -221,8 +221,8 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         try? context.save()
     }
 
-    private func entry(forId id: String) -> Entry? {
-        let descriptor = FetchDescriptor(predicate: Entry.predicate(for: id))
+    private func entry(forId id: String) -> URNEntry? {
+        let descriptor = FetchDescriptor(predicate: URNEntry.predicate(for: id))
         return try? context.fetch(descriptor).first
     }
 }
