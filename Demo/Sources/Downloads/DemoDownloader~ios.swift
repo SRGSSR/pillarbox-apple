@@ -17,15 +17,20 @@ import PillarboxPlayer
 
 @available(tvOS, unavailable)
 final class DemoDownloader: ObservableObject {
-    private let urlDownloader = try! URLDownloader(
-        name: "url_downloads",
-        configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads")
-    )
+    private let _urlDownloader: Any? = {
+        guard #available(iOS 17, *) else { return nil }
+        return try! URLDownloader(name: "url_downloads", configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"))
+    }()
 
     private let _urnDownloader: Any? = {
         guard #available(iOS 17, *) else { return nil }
         return try! URNDownloader(name: "urn_downloads", configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"))
     }()
+
+    @available(iOS 17, *)
+    private var urlDownloader: URLDownloader {
+        _urlDownloader as! URLDownloader
+    }
 
     @available(iOS 17, *)
     private var urnDownloader: URNDownloader {
@@ -39,15 +44,10 @@ final class DemoDownloader: ObservableObject {
     }
 
     init() {
-        if #available(iOS 17, *) {
-            Publishers.CombineLatest(urlDownloader.$downloads, urnDownloader.$downloads)
-                .map { $0 + $1 }
-                .assign(to: &$_downloads)
-        }
-        else {
-            urlDownloader.$downloads
-                .assign(to: &$_downloads)
-        }
+        guard #available(iOS 17, *) else { return }
+        Publishers.CombineLatest(urlDownloader.$downloads, urnDownloader.$downloads)
+            .map { $0 + $1 }
+            .assign(to: &$_downloads)
     }
 
     func canDownload(media: Media) -> Bool {
@@ -62,23 +62,23 @@ final class DemoDownloader: ObservableObject {
     }
 
     func addDownload(media: Media) {
+        guard #available(iOS 17, *) else { return }
         switch media.type {
         case let .url(url), let .monoscopicUrl(url):
             urlDownloader.addDownload(url: url, metadata: media.metadata(), configuration: UserDefaults.standard.downloadConfiguration)
         case let .urn(urn, serverSetting):
-            if #available(iOS 17, *) {
-                urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: UserDefaults.standard.downloadConfiguration)
-            }
+            urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: UserDefaults.standard.downloadConfiguration)
         default:
             break
         }
     }
 
     func playerItem(for download: Download) -> PlayerItem? {
+        guard #available(iOS 17, *) else { return nil }
         if let item = urlDownloader.playerItem(for: download) {
             return item
         }
-        else if #available(iOS 17, *), let item = urnDownloader.playerItem(for: download) {
+        else if let item = urnDownloader.playerItem(for: download) {
             return item
         }
         else {
@@ -87,17 +87,15 @@ final class DemoDownloader: ObservableObject {
     }
 
     func removeDownload(_ download: Download) {
+        guard #available(iOS 17, *) else { return }
         urlDownloader.removeDownload(download)
-        if #available(iOS 17, *) {
-            urnDownloader.removeDownload(download)
-        }
+        urnDownloader.removeDownload(download)
     }
 
     func removeAllDownloads() {
+        guard #available(iOS 17, *) else { return }
         urlDownloader.removeAllDownloads()
-        if #available(iOS 17, *) {
-            urnDownloader.removeAllDownloads()
-        }
+        urnDownloader.removeAllDownloads()
     }
 }
 
