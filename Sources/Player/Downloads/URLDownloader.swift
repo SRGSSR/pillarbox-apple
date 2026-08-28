@@ -10,16 +10,20 @@
 
 import Foundation
 
+public struct EmptyCustomData: Codable {
+    public init() {}
+}
+
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class URLDownloader: ObservableObject {
-    private let downloader: Downloader<URLAssetDownloadStore>
+public final class URLDownloader<CustomData: Codable>: ObservableObject {
+    private let downloader: Downloader<URLAssetDownloadStore<CustomData>>
 
     @Published public private(set) var downloads: [Download] = []
 
-    public init(name: String? = nil, configuration: URLSessionConfiguration) throws {
-        let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore(name: name))
+    public init(name: String? = nil, customDataType: CustomData.Type = EmptyCustomData.self, configuration: URLSessionConfiguration) throws {
+        let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore<CustomData>(name: name))
         self.downloader = downloader
 
         downloader.$downloads
@@ -27,17 +31,17 @@ public final class URLDownloader: ObservableObject {
     }
 
     @discardableResult
-    public func addDownload(url: URL, metadata: PlayerMetadata, configuration: DownloadConfiguration = .default) -> Download {
+    public func addDownload(url: URL, metadata: AssetMetadata<CustomData>, configuration: DownloadConfiguration = .default) -> Download {
         downloader.addDownload(for: .init(url: url, metadata: metadata), configuration: configuration)
     }
 
-    public func download(url: URL, metadata: PlayerMetadata) -> Download? {
+    public func download(url: URL, metadata: AssetMetadata<CustomData>) -> Download? {
         downloader.download(matching: .init(url: url, metadata: metadata))
     }
 
     public func playerItem(
         for download: Download,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<Void>>] = []
+        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>] = []
     ) -> PlayerItem? {
         downloader.playerItem(for: download, trackerAdapters: trackerAdapters)
     }

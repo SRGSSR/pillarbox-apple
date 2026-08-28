@@ -11,7 +11,7 @@ import SwiftData
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-final class URLAssetDownloadStore {
+final class URLAssetDownloadStore<CustomData: Codable> {
     let context: ModelContext
 
     init(name: String? = nil) throws {
@@ -90,13 +90,15 @@ private extension URLAssetDownloadStore {
 
     struct EntryAssetMetadata: Codable {
         private let entryPlayerMetadata: EntryPlayerMetadata
+        private let customData: CustomData
 
-        init(assetMetadata: AssetMetadata<Void>) {
+        init(assetMetadata: AssetMetadata<CustomData>) {
             self.entryPlayerMetadata = .init(playerMetadata: assetMetadata.playerMetadata)
+            self.customData = assetMetadata.customData
         }
 
-        func assetMetadata() -> AssetMetadata<Void> {
-            .init(playerMetadata: entryPlayerMetadata.playerMetadata(), customData: ())
+        func assetMetadata() -> AssetMetadata<CustomData> {
+            .init(playerMetadata: entryPlayerMetadata.playerMetadata(), customData: customData)
         }
     }
 
@@ -133,11 +135,11 @@ private extension URLAssetDownloadStore {
         private var error: EntryError?
         private var creationDate: Date
 
-        init(id: String, record: DownloadRecord<URLAssetLoader.Input, Void>) {
+        init(id: String, record: DownloadRecord<URLAssetLoader<CustomData>.Input, CustomData>) {
             self.id = id
             self.url = record.input.url
             self.configuration = record.configuration
-            self.metadata = .init(assetMetadata: .init(playerMetadata: record.input.metadata, customData: ()))
+            self.metadata = .init(assetMetadata: record.input.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
             self.error = .init(error: record.error)
@@ -150,12 +152,11 @@ private extension URLAssetDownloadStore {
             }
         }
 
-        func toRecord() -> DownloadRecord<URLAssetLoader.Input, Void> {
-            let assetMetadata = metadata.assetMetadata()
-            return .init(
-                input: .init(url: url, metadata: assetMetadata.playerMetadata),
+        func toRecord() -> DownloadRecord<URLAssetLoader<CustomData>.Input, CustomData> {
+            .init(
+                input: .init(url: url, metadata: metadata.assetMetadata()),
                 configuration: configuration,
-                metadata: assetMetadata,
+                metadata: metadata.assetMetadata(),
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: error?.error(),
@@ -163,10 +164,10 @@ private extension URLAssetDownloadStore {
             )
         }
 
-        func update(with record: DownloadRecord<URLAssetLoader.Input, Void>) {
+        func update(with record: DownloadRecord<URLAssetLoader<CustomData>.Input, CustomData>) {
             self.url = record.input.url
             self.configuration = record.configuration
-            self.metadata = .init(assetMetadata: .init(playerMetadata: record.input.metadata, customData: ()))
+            self.metadata = .init(assetMetadata: record.input.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
             self.error = .init(error: record.error)
@@ -179,20 +180,22 @@ private extension URLAssetDownloadStore {
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 extension URLAssetDownloadStore: AssetDownloadStore {
-    typealias Loader = URLAssetLoader
+    typealias Loader = URLAssetLoader<CustomData>
 
-    static func id(from input: URLAssetLoader.Input) -> String {
+    static func id(from input: URLAssetLoader<CustomData>.Input) -> String {
         input.url.absoluteString
     }
 
-    static func customData(from metadata: Void) {}
+    static func customData(from metadata: AssetMetadata<CustomData>) -> CustomData {
+        metadata.customData
+    }
 
-    func downloadRecords() -> [DownloadRecord<URLAssetLoader.Input, Void>] {
+    func downloadRecords() -> [DownloadRecord<URLAssetLoader<CustomData>.Input, CustomData>] {
         guard let entries = try? context.fetch(FetchDescriptor<URLEntry>()) else { return [] }
         return entries.map { $0.toRecord() }
     }
 
-    func addDownloadRecord(_ record: DownloadRecord<URLAssetLoader.Input, Void>, forId id: String) {
+    func addDownloadRecord(_ record: DownloadRecord<URLAssetLoader<CustomData>.Input, CustomData>, forId id: String) {
         context.insert(URLEntry(id: id, record: record))
     }
 
@@ -200,11 +203,11 @@ extension URLAssetDownloadStore: AssetDownloadStore {
         try? context.delete(model: URLEntry.self, where: URLEntry.predicate(for: id))
     }
 
-    func downloadRecord(forId id: String) -> DownloadRecord<URLAssetLoader.Input, Void>? {
+    func downloadRecord(forId id: String) -> DownloadRecord<URLAssetLoader<CustomData>.Input, CustomData>? {
         entry(forId: id)?.toRecord()
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<URLAssetLoader.Input, Void>, forId id: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<URLAssetLoader<CustomData>.Input, CustomData>, forId id: String) {
         guard let entry = entry(forId: id) else { return }
         entry.update(with: record)
         try? context.save()
