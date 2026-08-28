@@ -8,9 +8,7 @@
 
 import Foundation
 
-@_spi(DownloaderPrivate)
-import PillarboxPlayer
-
+@available(tvOS, unavailable)
 final class URLAssetDownloadStore {
     private struct EntryError: Codable {
         private let domain: String
@@ -91,8 +89,8 @@ final class URLAssetDownloadStore {
     private let metadataFileUrl: URL
     private var entries: [Entry]
 
-    init(fileName: String) {
-        metadataFileUrl = URL.libraryDirectory.appending(component: fileName)
+    init(name: String?) throws {
+        metadataFileUrl = URL.libraryDirectory.appending(component: name ?? "default")
         if let jsonData = try? Data(contentsOf: metadataFileUrl),
            let entries = try? JSONDecoder().decode([Entry].self, from: jsonData) {
             self.entries = entries

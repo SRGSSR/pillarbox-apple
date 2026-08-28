@@ -17,14 +17,14 @@ import PillarboxPlayer
 
 @available(tvOS, unavailable)
 final class DemoDownloader: ObservableObject {
-    private let urlDownloader = Downloader(
-        configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
-        store: URLAssetDownloadStore(fileName: "url_downloads.json")
+    private let urlDownloader = try! URLDownloader(
+        name: "url_downloads",
+        configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads")
     )
 
     private let _urnDownloader: Any? = {
         guard #available(iOS 17, *) else { return nil }
-        return try! URNDownloader(configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"))
+        return try! URNDownloader(name: "urn_downloads", configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"))
     }()
 
     @available(iOS 17, *)
@@ -64,7 +64,7 @@ final class DemoDownloader: ObservableObject {
     func addDownload(media: Media) {
         switch media.type {
         case let .url(url), let .monoscopicUrl(url):
-            urlDownloader.addDownload(for: .init(url: url, metadata: media.metadata()), configuration: UserDefaults.standard.downloadConfiguration)
+            urlDownloader.addDownload(url: url, metadata: media.metadata(), configuration: UserDefaults.standard.downloadConfiguration)
         case let .urn(urn, serverSetting):
             if #available(iOS 17, *) {
                 urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: UserDefaults.standard.downloadConfiguration)

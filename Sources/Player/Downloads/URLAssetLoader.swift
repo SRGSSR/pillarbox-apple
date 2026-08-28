@@ -9,9 +9,6 @@
 import Combine
 import Foundation
 
-@_spi(DownloaderPrivate)
-import PillarboxPlayer
-
 struct URLAssetLoader: AssetLoader {
     struct Input {
         let url: URL
