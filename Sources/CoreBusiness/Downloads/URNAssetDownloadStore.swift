@@ -14,17 +14,6 @@ import PillarboxPlayer
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-private struct DownloadError: LocalizedError {
-    let errorDescription: String?
-
-    init?(errorDescription: String?) {
-        guard let errorDescription else { return nil }
-        self.errorDescription = errorDescription
-    }
-}
-
-@available(iOS 17.0, *)
-@available(tvOS, unavailable)
 final class URNAssetDownloadStore {
     let context: ModelContext
 
