@@ -64,7 +64,7 @@ struct Media: Hashable {
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.playerMetadata.title)
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -75,7 +75,7 @@ struct Media: Hashable {
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.playerMetadata.title)
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -87,7 +87,7 @@ struct Media: Hashable {
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.playerMetadata.title)
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -160,7 +160,7 @@ extension Media {
         }
     }
 
-    func metadata() -> AssetPlayerMetadata {
+    func metadata() -> PlayerMetadata {
         .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
     }
 }
