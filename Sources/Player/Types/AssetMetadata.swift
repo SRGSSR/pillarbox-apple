@@ -39,6 +39,7 @@ public struct AssetMetadata<CustomData> {
 
 extension AssetMetadata: Codable where CustomData: Codable {}
 
+// TODO: Hide
 public extension AssetPlayerMetadata {
     init(playerMetadata: PlayerMetadata) {
         self.playerMetadata = playerMetadata
@@ -47,46 +48,6 @@ public extension AssetPlayerMetadata {
 }
 
 public extension AssetPlayerMetadata {
-    /// Creates metadata.
-    ///
-    /// - Parameters:
-    ///   - identifier: An identifier for the content.
-    ///   - title: The content title.
-    ///   - subtitle: A subtitle for the content.
-    ///   - description: A description of the content.
-    ///   - imageSource: The source of the image associated with the content.
-    ///   - viewport: The content viewport.
-    ///   - episodeInformation: Episode information associated with the content.
-    ///   - chapters: Chapter associated with the content.
-    ///   - timeRanges: Time ranges associated with the content.
-    ///
-    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
-    init(
-        identifier: String? = nil,
-        title: String? = nil,
-        subtitle: String? = nil,
-        description: String? = nil,
-        imageSource: ImageSource = .none,
-        viewport: Viewport = .standard,
-        episodeInformation: EpisodeInformation? = nil,
-        chapters: [Chapter] = [],
-        timeRanges: [TimeRange] = []
-    ) {
-        self.init(
-            playerMetadata: .init(
-                identifier: identifier,
-                title: title,
-                subtitle: subtitle,
-                description: description,
-                imageSource: imageSource,
-                viewport: viewport,
-                episodeInformation: episodeInformation,
-                chapters: chapters,
-                timeRanges: timeRanges
-            )
-        )
-    }
-
     /// An identifier for the content.
     var identifier: String? {
         playerMetadata.identifier

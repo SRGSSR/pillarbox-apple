@@ -18,7 +18,7 @@ public final class URLDownloader<CustomData: Codable>: ObservableObject {
 
     @Published public private(set) var downloads: [Download] = []
 
-    public init(name: String? = nil, customDataType: CustomData.Type, configuration: URLSessionConfiguration) throws {
+    public init(name: String? = nil, customDataType: CustomData.Type = EmptyCustomData.self, configuration: URLSessionConfiguration) throws {
         let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore<CustomData>(name: name))
         self.downloader = downloader
 
@@ -48,6 +48,20 @@ public final class URLDownloader<CustomData: Codable>: ObservableObject {
 
     public func removeAllDownloads() {
         downloader.removeAllDownloads()
+    }
+}
+
+@available(iOS 17.0, *)
+@available(tvOS, unavailable)
+@_spi(DownloaderPrivate)
+public extension URLDownloader where CustomData == EmptyCustomData {
+    @discardableResult
+    func addDownload(url: URL, metadata: PlayerMetadata, configuration: DownloadConfiguration = .default) -> Download {
+        downloader.addDownload(for: .init(url: url, metadata: .init(playerMetadata: metadata)), configuration: configuration)
+    }
+
+    func download(url: URL, metadata: PlayerMetadata) -> Download? {
+        downloader.download(matching: .init(url: url, metadata: .init(playerMetadata: metadata)))
     }
 }
 
