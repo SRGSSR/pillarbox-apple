@@ -37,6 +37,15 @@ final class DemoDownloader: ObservableObject {
         _urnDownloader as! URNDownloader
     }
 
+    var canDownload: Bool {
+        if #available(iOS 17, *) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
     @Published private var _downloads: [Download] = []
 
     var downloads: [Download] {
@@ -48,17 +57,6 @@ final class DemoDownloader: ObservableObject {
         Publishers.CombineLatest(urlDownloader.$downloads, urnDownloader.$downloads)
             .map { $0 + $1 }
             .assign(to: &$_downloads)
-    }
-
-    func canDownload(media: Media) -> Bool {
-        switch media.type {
-        case .url, .monoscopicUrl:
-            true
-        case .urn:
-            _urnDownloader != nil
-        default:
-            false
-        }
     }
 
     func addDownload(media: Media) {

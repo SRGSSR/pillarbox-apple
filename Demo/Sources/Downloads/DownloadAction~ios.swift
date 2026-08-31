@@ -14,7 +14,7 @@ struct DownloadAction: View {
     @EnvironmentObject private var downloader: DemoDownloader
 
     var body: some View {
-        if downloader.canDownload(media: media) {
+        if downloader.canDownload {
             Button {
                 downloader.addDownload(media: media)
             } label: {
