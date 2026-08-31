@@ -103,7 +103,7 @@ struct Media: Hashable {
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.playerMetadata.title)
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ],
                 configuration: configuration
