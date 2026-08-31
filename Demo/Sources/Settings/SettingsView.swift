@@ -101,6 +101,8 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.PlaybackHudSettingKey.yOffset.rawValue, store: .playbackHud)
     private var playbackHudYOffset = UserDefaults.playbackHudDefaultHudYOffset
 
+    @EnvironmentObject private var downloader: DemoDownloader
+
     var body: some View {
         Form {
             content()
@@ -254,16 +256,19 @@ extension SettingsView {
     }
 
 #if DEBUG
+    @ViewBuilder
     private func downloadsSection() -> some View {
-        Section {
-            downloadQualityPicker()
-            downloadAudibleMediaSelectionPicker()
-            downloadLegibleMediaSelectionPicker()
-        } header: {
-             Text("Downloads")
-                .headerStyle()
-        } footer: {
-            Text("Settings apply to future downloads only.")
+        if downloader.canDownload {
+            Section {
+                downloadQualityPicker()
+                downloadAudibleMediaSelectionPicker()
+                downloadLegibleMediaSelectionPicker()
+            } header: {
+                Text("Downloads")
+                    .headerStyle()
+            } footer: {
+                Text("Settings apply to future downloads only.")
+            }
         }
     }
 

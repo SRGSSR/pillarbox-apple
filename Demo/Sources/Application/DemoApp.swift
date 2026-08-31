@@ -76,12 +76,15 @@ struct DemoApp: App {
     }
 
 #if DEBUG && os(iOS)
+    @ViewBuilder
     private func downloadsTab() -> some View {
-        RoutedNavigationStack(keyPath: \.downloadsPath) {
-            DownloadsView()
-        }
-        .tabItem {
-            Label("Downloads", systemImage: "arrow.down.circle.fill")
+        if downloader.canDownload {
+            RoutedNavigationStack(keyPath: \.downloadsPath) {
+                DownloadsView()
+            }
+            .tabItem {
+                Label("Downloads", systemImage: "arrow.down.circle.fill")
+            }
         }
     }
 #endif
