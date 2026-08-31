@@ -37,7 +37,7 @@ public struct AssetMetadata<CustomData> {
 
 extension AssetMetadata: Codable where CustomData: Codable {}
 
-extension AssetPlayerMetadata {
+public extension AssetPlayerMetadata {
     init(playerMetadata: PlayerMetadata) {
         self.playerMetadata = playerMetadata
         self.customData = .init()
