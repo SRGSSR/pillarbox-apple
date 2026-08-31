@@ -23,7 +23,11 @@ struct DemoCustomData: Codable {
 final class DemoDownloader: ObservableObject {
     private let _urlDownloader: Any? = {
         guard #available(iOS 17, *) else { return nil }
-        return try! URLDownloader(name: "url_downloads", customDataType: DemoCustomData.self, configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"))
+        return try! URLDownloader(
+            name: "url_downloads",
+            customDataType: DemoCustomData.self,
+            configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads")
+        )
     }()
 
     private let _urnDownloader: Any? = {
