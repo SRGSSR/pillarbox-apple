@@ -41,7 +41,7 @@ final class PlayerItemTrackerMock: PlayerItemTracker {
         configuration.statePublisher.send(.initialized)
     }
 
-    func updateMetadata(to metadata: PlayerMetadata) {}
+    func updateMetadata(to metadata: AssetPlayerMetadata) {}
 
     func updateProperties(to properties: TrackerProperties) {}
 
@@ -64,7 +64,7 @@ final class PlayerItemTrackerMock: PlayerItemTracker {
 }
 
 extension PlayerItemTrackerMock {
-    static func adapter(statePublisher: StatePublisher, behavior: TrackingBehavior = .optional) -> TrackerAdapter<PlayerMetadata> {
+    static func adapter(statePublisher: StatePublisher, behavior: TrackingBehavior = .optional) -> TrackerAdapter<AssetPlayerMetadata> {
         adapter(configuration: Configuration(statePublisher: statePublisher), behavior: behavior, mapper: \.self)
     }
 }

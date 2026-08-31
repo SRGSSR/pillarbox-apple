@@ -29,7 +29,7 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
         input.id
     }
 
-    static func customData(from metadata: PlayerMetadata) {}
+    static func customData(from metadata: AssetPlayerMetadata) {}
 
     func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, Void>] {
         assert(Thread.isMainThread)
