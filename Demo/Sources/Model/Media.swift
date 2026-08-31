@@ -160,7 +160,7 @@ extension Media {
         }
     }
 
-    func metadata() -> AssetMetadata<EmptyCustomData> {
-        .init(playerMetadata: .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges))
+    func metadata() -> AssetPlayerMetadata {
+        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
     }
 }
