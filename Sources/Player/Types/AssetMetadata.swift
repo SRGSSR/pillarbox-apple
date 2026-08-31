@@ -8,7 +8,9 @@ import Combine
 
 // swiftlint:disable missing_docs
 
-public struct EmptyCustomData: Codable {}
+public struct EmptyCustomData: Codable {
+    private var _reserved = ""
+}
 
 public typealias AssetPlayerMetadata = AssetMetadata<EmptyCustomData>
 
