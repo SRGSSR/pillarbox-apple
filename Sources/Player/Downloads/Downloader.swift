@@ -55,7 +55,7 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
         }
         let asset = S.asset(fileUrl: fileUrl, customData: metadata.customData)
         return .init(
-            assetLoaderType: CustomDirectAssetLoader.self,
+            assetLoaderType: DirectAssetLoader.self,
             input: .init(asset: asset, metadata: metadata),
             trackerAdapters: trackerAdapters
         )

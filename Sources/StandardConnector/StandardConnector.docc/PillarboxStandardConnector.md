@@ -66,7 +66,6 @@ This example shows how to use the standard connector with a backend endpoint and
 
 ### Content loading
 
-``EmptyCustomData``
 ``PillarboxPlayer/PlayerItem/standard(request:type:decoder:trackerAdapters:assetProvider:)``
 ``PlayerData``
 ``Source``

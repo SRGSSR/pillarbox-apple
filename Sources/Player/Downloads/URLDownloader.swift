@@ -10,10 +10,6 @@
 
 import Foundation
 
-public struct EmptyCustomData: Codable {
-    public init() {}
-}
-
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
@@ -22,7 +18,7 @@ public final class URLDownloader<CustomData: Codable>: ObservableObject {
 
     @Published public private(set) var downloads: [Download] = []
 
-    public init(name: String? = nil, customDataType: CustomData.Type = EmptyCustomData.self, configuration: URLSessionConfiguration) throws {
+    public init(name: String? = nil, customDataType: CustomData.Type, configuration: URLSessionConfiguration) throws {
         let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore<CustomData>(name: name))
         self.downloader = downloader
 
