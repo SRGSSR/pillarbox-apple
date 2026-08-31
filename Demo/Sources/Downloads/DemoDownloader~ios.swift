@@ -15,19 +15,11 @@ import PillarboxCoreBusiness
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
-struct DemoCustomData: Codable {
-    private var type = "simple"
-}
-
 @available(tvOS, unavailable)
 final class DemoDownloader: ObservableObject {
     private let _urlDownloader: Any? = {
         guard #available(iOS 17, *) else { return nil }
-        return try! URLDownloader(
-            name: "url_downloads",
-            customDataType: DemoCustomData.self,
-            configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads")
-        )
+        return try! URLDownloader(name: "url_downloads", customDataType: EmptyCustomData.self, configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"))
     }()
 
     private let _urnDownloader: Any? = {
@@ -36,7 +28,7 @@ final class DemoDownloader: ObservableObject {
     }()
 
     @available(iOS 17, *)
-    private var urlDownloader: URLDownloader<DemoCustomData> {
+    private var urlDownloader: URLDownloader<EmptyCustomData> {
         _urlDownloader as! URLDownloader
     }
 
