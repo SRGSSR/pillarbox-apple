@@ -64,7 +64,7 @@ struct Media: Hashable {
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
+                        DemoTracker.Metadata(title: metadata.playerMetadata.title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -75,7 +75,7 @@ struct Media: Hashable {
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
+                        DemoTracker.Metadata(title: metadata.playerMetadata.title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -87,7 +87,7 @@ struct Media: Hashable {
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
+                        DemoTracker.Metadata(title: metadata.playerMetadata.title)
                     }
                 ],
                 configuration: .init(position: at(startTime))
@@ -103,7 +103,7 @@ struct Media: Hashable {
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
+                        DemoTracker.Metadata(title: metadata.playerMetadata.title)
                     }
                 ],
                 configuration: configuration
@@ -160,7 +160,10 @@ extension Media {
         }
     }
 
-    func metadata() -> PlayerMetadata {
-        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
+    func metadata() -> AssetMetadata<DemoCustomData> {
+        .init(
+            playerMetadata: .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges),
+            customData: .init()
+        )
     }
 }

@@ -15,11 +15,15 @@ import PillarboxCoreBusiness
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
+struct DemoCustomData: Codable {
+    private var type = "simple"
+}
+
 @available(tvOS, unavailable)
 final class DemoDownloader: ObservableObject {
     private let _urlDownloader: Any? = {
         guard #available(iOS 17, *) else { return nil }
-        return try! URLDownloader(name: "url_downloads", configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"))
+        return try! URLDownloader(name: "url_downloads", customDataType: DemoCustomData.self, configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"))
     }()
 
     private let _urnDownloader: Any? = {
@@ -28,7 +32,7 @@ final class DemoDownloader: ObservableObject {
     }()
 
     @available(iOS 17, *)
-    private var urlDownloader: URLDownloader<EmptyCustomData> {
+    private var urlDownloader: URLDownloader<DemoCustomData> {
         _urlDownloader as! URLDownloader
     }
 
@@ -63,11 +67,7 @@ final class DemoDownloader: ObservableObject {
         guard #available(iOS 17, *) else { return }
         switch media.type {
         case let .url(url), let .monoscopicUrl(url):
-            urlDownloader.addDownload(
-                url: url,
-                metadata: .init(playerMetadata: media.metadata(), customData: .init()),
-                configuration: UserDefaults.standard.downloadConfiguration
-            )
+            urlDownloader.addDownload(url: url, metadata: media.metadata(), configuration: UserDefaults.standard.downloadConfiguration)
         case let .urn(urn, serverSetting):
             urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: UserDefaults.standard.downloadConfiguration)
         default:
