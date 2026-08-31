@@ -8,9 +8,9 @@ import Combine
 
 // swiftlint:disable missing_docs
 
-public struct EmptyCustomData: Codable {
-    init() {}
-}
+public struct EmptyCustomData: Codable {}
+
+public typealias AssetPlayerMetadata = AssetMetadata<EmptyCustomData>
 
 public struct AssetMetadata<CustomData> {
     public let playerMetadata: PlayerMetadata
@@ -37,14 +37,14 @@ public struct AssetMetadata<CustomData> {
 
 extension AssetMetadata: Codable where CustomData: Codable {}
 
-extension AssetMetadata where CustomData == EmptyCustomData {
+extension AssetPlayerMetadata {
     init(playerMetadata: PlayerMetadata) {
         self.playerMetadata = playerMetadata
         self.customData = .init()
     }
 }
 
-public extension AssetMetadata where CustomData == EmptyCustomData {
+public extension AssetPlayerMetadata {
     /// An identifier for the content.
     var identifier: String? {
         playerMetadata.identifier

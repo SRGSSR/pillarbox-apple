@@ -201,7 +201,7 @@ public extension PlayerItem {
     convenience init(
         asset: Asset,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<EmptyCustomData>>] = []
+        trackerAdapters: [TrackerAdapter<AssetPlayerMetadata>] = []
     ) {
         self.init(
             assetLoaderType: DirectAssetLoader.self,
@@ -221,7 +221,7 @@ public extension PlayerItem {
     static func simple(
         url: URL,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<EmptyCustomData>>] = [],
+        trackerAdapters: [TrackerAdapter<AssetPlayerMetadata>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
@@ -246,7 +246,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<EmptyCustomData>>] = [],
+        trackerAdapters: [TrackerAdapter<AssetPlayerMetadata>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
@@ -269,7 +269,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<EmptyCustomData>>] = [],
+        trackerAdapters: [TrackerAdapter<AssetPlayerMetadata>] = [],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
@@ -279,7 +279,6 @@ public extension PlayerItem {
         )
     }
 }
-
 
 extension PlayerItem {
     private func trackerAdapters(matchingBehavior behavior: TrackingBehavior) -> [PlayerItemTracking] {
