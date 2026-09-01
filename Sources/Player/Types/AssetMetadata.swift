@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Combine
-import CoreMedia
 import MediaPlayer
 
 /// Metadata associated with playback.
@@ -14,7 +13,7 @@ public struct AssetMetadata<CustomData> {
     /// An identifier for the content.
     public let identifier: String?
 
-    /// The content title
+    /// The content title.
     ///
     /// For example the name of the show which the content is associated with, if any, otherwise the name
     /// of the episode itself.
