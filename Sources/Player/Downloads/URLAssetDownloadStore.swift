@@ -97,8 +97,21 @@ private extension URLAssetDownloadStore {
             self.customData = assetMetadata.customData
         }
 
+        // TODO: Can remove EntryAssetMetadata and merge all into one?
         func assetMetadata() -> AssetMetadata<CustomData> {
-            .init(playerMetadata: entryPlayerMetadata.playerMetadata(), customData: customData)
+            let playerMetadata = entryPlayerMetadata.playerMetadata()
+            return .init(
+                identifier: playerMetadata.identifier,
+                title: playerMetadata.title,
+                subtitle: playerMetadata.subtitle,
+                description: playerMetadata.description,
+                imageSource: playerMetadata.imageSource,
+                viewport: playerMetadata.viewport,
+                episodeInformation: playerMetadata.episodeInformation,
+                chapters: playerMetadata.chapters,
+                timeRanges: playerMetadata.timeRanges,
+                customData: customData
+            )
         }
     }
 

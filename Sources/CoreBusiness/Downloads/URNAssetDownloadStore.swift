@@ -28,17 +28,17 @@ final class URNAssetDownloadStore {
 @available(tvOS, unavailable)
 private extension URNAssetDownloadStore {
     struct EntryPlayerMetadata: Codable {
-        private let identifier: String?
-        private let title: String?
-        private let subtitle: String?
-        private let summary: String?
-        private let imageUrl: URL?
-        private let imageData: Data?
-        private let viewport: Viewport
-        private let episode: Int?
-        private let season: Int?
-        private let chapters: [Chapter]
-        private let timeRanges: [TimeRange]
+        let identifier: String?
+        let title: String?
+        let subtitle: String?
+        let summary: String?
+        let imageUrl: URL?
+        let imageData: Data?
+        let viewport: Viewport
+        let episode: Int?
+        let season: Int?
+        let chapters: [Chapter]
+        let timeRanges: [TimeRange]
 
         private var imageSource: ImageSource {
             if let imageData {
@@ -62,20 +62,6 @@ private extension URNAssetDownloadStore {
             }
         }
 
-        init(playerMetadata: PlayerMetadata) {
-            self.identifier = playerMetadata.identifier
-            self.title = playerMetadata.title
-            self.subtitle = playerMetadata.subtitle
-            self.summary = playerMetadata.description
-            self.imageData = playerMetadata.imageSource.data
-            self.imageUrl = playerMetadata.imageSource.url
-            self.viewport = playerMetadata.viewport
-            self.episode = playerMetadata.episodeInformation?.episode
-            self.season = playerMetadata.episodeInformation?.season
-            self.chapters = playerMetadata.chapters
-            self.timeRanges = playerMetadata.timeRanges
-        }
-
         func playerMetadata() -> PlayerMetadata {
             .init(
                 identifier: identifier,
@@ -97,12 +83,36 @@ private extension URNAssetDownloadStore {
 
         init?(assetMetadata: AssetMetadata<URNMetadata>?) {
             guard let assetMetadata else { return nil }
-            self.entryPlayerMetadata = .init(playerMetadata: assetMetadata.playerMetadata)
+            self.entryPlayerMetadata = .init(
+                identifier: assetMetadata.identifier,
+                title: assetMetadata.title,
+                subtitle: assetMetadata.subtitle,
+                summary: assetMetadata.description,
+                imageUrl: assetMetadata.imageSource.url,
+                imageData: assetMetadata.imageSource.data,
+                viewport: assetMetadata.viewport,
+                episode: assetMetadata.episodeInformation?.episode,
+                season: assetMetadata.episodeInformation?.season,
+                chapters: assetMetadata.chapters,
+                timeRanges: assetMetadata.timeRanges
+            )
             self.customData = assetMetadata.customData
         }
 
         func assetMetadata() -> AssetMetadata<URNMetadata> {
-            .init(playerMetadata: entryPlayerMetadata.playerMetadata(), customData: customData)
+            let playerMetadata = entryPlayerMetadata.playerMetadata()
+            return .init(
+                identifier: playerMetadata.identifier,
+                title: playerMetadata.title,
+                subtitle: playerMetadata.subtitle,
+                description: playerMetadata.description,
+                imageSource: playerMetadata.imageSource,
+                viewport: playerMetadata.viewport,
+                episodeInformation: playerMetadata.episodeInformation,
+                chapters: playerMetadata.chapters,
+                timeRanges: playerMetadata.timeRanges,
+                customData: customData
+            )
         }
     }
 

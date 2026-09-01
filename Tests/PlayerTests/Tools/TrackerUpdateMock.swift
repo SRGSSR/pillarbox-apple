@@ -49,7 +49,7 @@ final class TrackerUpdateMock: PlayerItemTracker {
 }
 
 extension TrackerUpdateMock {
-    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<AssetPlayerMetadata> {
-        adapter(configuration: Configuration(statePublisher: statePublisher), mapper: \.playerMetadata)
+    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<PlayerMetadata> {
+        adapter(configuration: Configuration(statePublisher: statePublisher), mapper: \.self)
     }
 }

@@ -57,11 +57,11 @@ public final class URLDownloader<CustomData: Codable>: ObservableObject {
 public extension URLDownloader where CustomData == EmptyCustomData {
     @discardableResult
     func addDownload(url: URL, metadata: PlayerMetadata, configuration: DownloadConfiguration = .default) -> Download {
-        downloader.addDownload(for: .init(url: url, metadata: .init(playerMetadata: metadata)), configuration: configuration)
+        downloader.addDownload(for: .init(url: url, metadata: metadata), configuration: configuration)
     }
 
     func download(url: URL, metadata: PlayerMetadata) -> Download? {
-        downloader.download(matching: .init(url: url, metadata: .init(playerMetadata: metadata)))
+        downloader.download(matching: .init(url: url, metadata: metadata))
     }
 }
 

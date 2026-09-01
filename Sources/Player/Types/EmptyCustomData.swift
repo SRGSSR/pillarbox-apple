@@ -6,7 +6,7 @@
 
 // swiftlint:disable missing_docs
 
-public struct EmptyCustomData: Codable {
+public struct EmptyCustomData: Equatable, Codable {
     private var _reserved = ""
 }
 
