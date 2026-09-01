@@ -20,6 +20,10 @@ struct DownloadProperties<CustomData> {
         fileUrl != nil || error != nil ? assetMetadata : nil
     }
 
+    var playerMetadata: PlayerMetadata? {
+        assetMetadata?.playerMetadata
+    }
+
     var state: DownloadState {
         if error != nil {
             return .completed
@@ -130,6 +134,12 @@ struct DownloadProperties<CustomData> {
 
     func withError(_ error: Error) -> Self {
         .init(configuration: configuration, progress: progress, assetMetadata: assetMetadata, fileUrl: nil, error: error)
+    }
+}
+
+extension DownloadProperties where CustomData == EmptyCustomData {
+    init(configuration: DownloadConfiguration, progress: DownloadProgress, playerMetadata: PlayerMetadata?, fileUrl: URL?, error: Error?) {
+        self.init(configuration: configuration, progress: progress, assetMetadata: playerMetadata, fileUrl: fileUrl, error: error)
     }
 }
 

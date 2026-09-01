@@ -15,11 +15,9 @@ import PillarboxCore
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject, Identifiable {
-    private typealias DownloadPlayerProperties = DownloadProperties<EmptyCustomData>
-
     public let id: String
 
-    @Published private var properties: DownloadPlayerProperties = .init()
+    @Published private var properties: DownloadProperties<EmptyCustomData> = .init()
 
     private let trigger = Trigger()
     private let session: any DownloadSession
@@ -232,7 +230,7 @@ private extension Download {
                 DownloadProperties(
                     configuration: properties.configuration,
                     progress: properties.progress,
-                    assetMetadata: properties.assetMetadata?.playerMetadata,
+                    playerMetadata: properties.playerMetadata,
                     fileUrl: properties.fileUrl,
                     error: properties.error
                 )
