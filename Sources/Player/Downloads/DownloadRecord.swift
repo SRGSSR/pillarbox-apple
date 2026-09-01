@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 import Foundation
 
 @_spi(DownloaderPrivate)
@@ -47,7 +45,5 @@ public struct DownloadRecord<Input, CustomData> {
         .init(input: input, configuration: configuration, metadata: metadata, bookmarkData: nil, progress: 0, error: nil, creationDate: creationDate)
     }
 }
-
-#endif
 
 // swiftlint:enable missing_docs

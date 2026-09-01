@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 import Combine
 import Foundation
 
@@ -98,7 +96,5 @@ extension AssetDownloadStore {
         }
     }
 }
-
-#endif
 
 // swiftlint:enable missing_docs

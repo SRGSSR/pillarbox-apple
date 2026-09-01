@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 import Foundation
 import SwiftData
 
@@ -215,5 +213,3 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         return try? context.fetch(descriptor).first
     }
 }
-
-#endif

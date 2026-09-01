@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 import Foundation
 
 @available(tvOS, unavailable)
@@ -75,7 +73,5 @@ public struct DownloadSize: Equatable {
         fileSizeFormatter.string(fromByteCount: byteCount)
     }
 }
-
-#endif
 
 // swiftlint:enable missing_docs

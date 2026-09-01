@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 import Foundation
 import PillarboxAnalytics
 
@@ -63,7 +61,5 @@ public final class URNDownloader: ObservableObject {
         downloader.removeAllDownloads()
     }
 }
-
-#endif
 
 // swiftlint:enable missing_docs
