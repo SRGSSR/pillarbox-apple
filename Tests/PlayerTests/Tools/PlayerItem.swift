@@ -11,7 +11,7 @@ import Foundation
 extension PlayerItem {
     private static func mock(
         input: AssetLoaderMock.Input,
-        trackerAdapters: [TrackerAdapter<AssetPlayerMetadata>] = []
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
         self.init(assetLoaderType: AssetLoaderMock.self, input: input, trackerAdapters: trackerAdapters)
     }
@@ -20,7 +20,7 @@ extension PlayerItem {
         url: URL,
         metadata: PlayerMetadata = .empty,
         after delay: TimeInterval = 0,
-        trackerAdapters: [TrackerAdapter<AssetPlayerMetadata>] = []
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
         mock(input: .playable(url: url, metadata: metadata, after: delay), trackerAdapters: trackerAdapters)
     }
@@ -31,7 +31,7 @@ extension PlayerItem {
         after delay: TimeInterval = 0,
         updatedWithMetadata updatedMetadata: PlayerMetadata,
         interval: TimeInterval = 0,
-        trackerAdapters: [TrackerAdapter<AssetPlayerMetadata>] = []
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
         mock(
             input: .playable(url: url, metadata: metadata, after: delay, updatedWithMetadata: updatedMetadata, interval: interval),
@@ -42,7 +42,7 @@ extension PlayerItem {
     static func failing(
         with error: Error,
         after delay: TimeInterval = 0,
-        trackerAdapters: [TrackerAdapter<AssetPlayerMetadata>] = []
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
         mock(input: .failing(with: error, after: delay), trackerAdapters: trackerAdapters)
     }
@@ -50,7 +50,7 @@ extension PlayerItem {
     static func unavailable(
         with error: Error,
         after delay: TimeInterval = 0,
-        trackerAdapters: [TrackerAdapter<AssetPlayerMetadata>] = []
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
         mock(input: .unavailable(with: error, after: delay), trackerAdapters: trackerAdapters)
     }

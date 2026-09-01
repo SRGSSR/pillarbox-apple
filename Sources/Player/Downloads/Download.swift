@@ -15,7 +15,7 @@ import PillarboxCore
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject, Identifiable {
-    private typealias DownloadPlayerProperties = DownloadProperties<Void>
+    private typealias DownloadPlayerProperties = DownloadProperties<EmptyCustomData>
 
     public let id: String
 
@@ -232,7 +232,7 @@ private extension Download {
                 DownloadProperties(
                     configuration: properties.configuration,
                     progress: properties.progress,
-                    assetMetadata: properties.assetMetadata?.withoutCustomData(),
+                    assetMetadata: properties.assetMetadata?.playerMetadata,
                     fileUrl: properties.fileUrl,
                     error: properties.error
                 )

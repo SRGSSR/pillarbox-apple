@@ -68,7 +68,7 @@ extension AssetDownloadStore {
             .map { metadata, playerMetadata, imageSource in
                 DownloadAsset(
                     Loader.asset(from: input, metadata: metadata),
-                    assetMetadata: .init(playerMetadata: playerMetadata.withImageSource(imageSource), customData: customData(from: metadata))
+                    assetMetadata: playerMetadata.withImageSource(imageSource).withCustomData(customData(from: metadata))
                 )
             }
             .eraseToAnyPublisher()

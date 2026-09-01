@@ -54,21 +54,21 @@ enum AssetLoaderMock: AssetLoader {
         }
     }
 
-    static func metadataPublisher(for input: Input) -> AnyPublisher<AssetPlayerMetadata, any Error> {
+    static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerMetadata, any Error> {
         directMetadataPublisher(for: input)
             .delayIfNeeded(for: .seconds(input.delay), scheduler: DispatchQueue.main)
     }
 
-    static func directMetadataPublisher(for input: Input) -> AnyPublisher<AssetPlayerMetadata, any Error> {
+    static func directMetadataPublisher(for input: Input) -> AnyPublisher<PlayerMetadata, any Error> {
         switch input.mode {
         case .playable, .unavailable:
-            return Just(AssetPlayerMetadata(playerMetadata: input.metadata))
+            return Just(input.metadata)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         case let .updated(_, metadata: metadata, interval: delay):
-            return Just(AssetPlayerMetadata(playerMetadata: metadata))
+            return Just(metadata)
                 .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
-                .prepend(AssetPlayerMetadata(playerMetadata: input.metadata))
+                .prepend(input.metadata)
                 .delayIfNeeded(for: .seconds(input.delay), scheduler: DispatchQueue.main)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
@@ -78,7 +78,7 @@ enum AssetLoaderMock: AssetLoader {
         }
     }
 
-    static func asset(from input: Input, metadata: AssetPlayerMetadata) -> Asset {
+    static func asset(from input: Input, metadata: PlayerMetadata) -> Asset {
         switch input.mode {
         case let .playable(url), let .updated(url, metadata: _, interval: _):
             return .simple(url: url)
@@ -87,7 +87,7 @@ enum AssetLoaderMock: AssetLoader {
         }
     }
 
-    static func playerMetadata(from input: Input, metadata: AssetPlayerMetadata?) -> PlayerMetadata {
-        metadata?.playerMetadata ?? .empty
+    static func playerMetadata(from input: Input, metadata: PlayerMetadata?) -> PlayerMetadata {
+        metadata ?? .empty
     }
 }
