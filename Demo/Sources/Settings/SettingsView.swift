@@ -101,7 +101,9 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.PlaybackHudSettingKey.yOffset.rawValue, store: .playbackHud)
     private var playbackHudYOffset = UserDefaults.playbackHudDefaultHudYOffset
 
+#if DEBUG && os(iOS)
     @EnvironmentObject private var downloader: DemoDownloader
+#endif
 
     var body: some View {
         Form {
