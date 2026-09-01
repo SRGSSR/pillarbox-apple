@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 // swiftlint:disable missing_docs
 
 import Combine
@@ -92,5 +90,3 @@ extension Downloader: DownloadSessionDelegate {
 }
 
 // swiftlint:enable missing_docs
-
-#endif

@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 import Combine
 import Foundation
 import PillarboxCore
@@ -251,7 +249,5 @@ extension Download: Hashable {
         hasher.combine(ObjectIdentifier(self))
     }
 }
-
-#endif
 
 // swiftlint:enable missing_docs

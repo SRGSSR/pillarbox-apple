@@ -90,6 +90,9 @@
     "Asset" : {
 
     },
+    "Audio" : {
+
+    },
     "Audiovisual background policy" : {
 
     },
@@ -175,6 +178,12 @@
 
     },
     "Double tap to toggle controls" : {
+
+    },
+    "Download" : {
+
+    },
+    "Downloads" : {
 
     },
     "Embeddings" : {
@@ -312,6 +321,9 @@
     "No content" : {
 
     },
+    "No downloads." : {
+
+    },
     "No items" : {
 
     },
@@ -420,6 +432,9 @@
     "Settings" : {
 
     },
+    "Settings apply to future downloads only." : {
+
+    },
     "Showcase" : {
 
     },
@@ -463,6 +478,9 @@
 
     },
     "Stop" : {
+
+    },
+    "Subtitles" : {
 
     },
     "Swap" : {

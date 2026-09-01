@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 import Combine
 import Foundation
 
@@ -29,5 +27,3 @@ struct URLAssetLoader<CustomData>: AssetLoader where CustomData: Codable {
         input.metadata.playerMetadata
     }
 }
-
-#endif

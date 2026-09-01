@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 import Foundation
 
 @available(tvOS, unavailable)
@@ -142,5 +140,3 @@ extension DownloadProperties where CustomData == EmptyCustomData {
         self.init(configuration: configuration, progress: progress, assetMetadata: playerMetadata, fileUrl: fileUrl, error: error)
     }
 }
-
-#endif

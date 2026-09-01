@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 import Foundation
 
 @available(iOS 17.0, *)
@@ -64,7 +62,5 @@ public extension URLDownloader where CustomData == EmptyCustomData {
         downloader.download(matching: .init(url: url, metadata: metadata))
     }
 }
-
-#endif
 
 // swiftlint:enable missing_docs
