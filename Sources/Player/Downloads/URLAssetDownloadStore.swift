@@ -142,10 +142,11 @@ private extension URLAssetDownloadStore {
         }
 
         func toRecord() -> DownloadRecord<URLAssetLoader<CustomData>.Input, CustomData> {
-            .init(
-                input: .init(url: url, metadata: metadata.assetMetadata()),
+            let assetMetadata = metadata.assetMetadata()
+            return .init(
+                input: .init(url: url, metadata: assetMetadata),
                 configuration: configuration,
-                metadata: metadata.assetMetadata(),
+                metadata: assetMetadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: error?.error(),
