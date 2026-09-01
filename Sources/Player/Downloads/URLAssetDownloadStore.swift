@@ -24,7 +24,7 @@ final class URLAssetDownloadStore<CustomData: Codable> {
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 private extension URLAssetDownloadStore {
-    struct EntryPlayerMetadata: Codable {
+    struct EntryAssetMetadata: Codable {
         private let identifier: String?
         private let title: String?
         private let subtitle: String?
@@ -36,6 +36,7 @@ private extension URLAssetDownloadStore {
         private let season: Int?
         private let chapters: [Chapter]
         private let timeRanges: [TimeRange]
+        private let customData: CustomData
 
         private var imageSource: ImageSource {
             if let imageData {
@@ -59,21 +60,22 @@ private extension URLAssetDownloadStore {
             }
         }
 
-        init(playerMetadata: PlayerMetadata) {
-            self.identifier = playerMetadata.identifier
-            self.title = playerMetadata.title
-            self.subtitle = playerMetadata.subtitle
-            self.summary = playerMetadata.description
-            self.imageData = playerMetadata.imageSource.data
-            self.imageUrl = playerMetadata.imageSource.url
-            self.viewport = playerMetadata.viewport
-            self.episode = playerMetadata.episodeInformation?.episode
-            self.season = playerMetadata.episodeInformation?.season
-            self.chapters = playerMetadata.chapters
-            self.timeRanges = playerMetadata.timeRanges
+        init(assetMetadata: AssetMetadata<CustomData>) {
+            self.identifier = assetMetadata.identifier
+            self.title = assetMetadata.title
+            self.subtitle = assetMetadata.subtitle
+            self.summary = assetMetadata.description
+            self.imageData = assetMetadata.imageSource.data
+            self.imageUrl = assetMetadata.imageSource.url
+            self.viewport = assetMetadata.viewport
+            self.episode = assetMetadata.episodeInformation?.episode
+            self.season = assetMetadata.episodeInformation?.season
+            self.chapters = assetMetadata.chapters
+            self.timeRanges = assetMetadata.timeRanges
+            self.customData = assetMetadata.customData
         }
 
-        func playerMetadata() -> PlayerMetadata {
+        func assetMetadata() -> AssetMetadata<CustomData> {
             .init(
                 identifier: identifier,
                 title: title,
@@ -83,33 +85,7 @@ private extension URLAssetDownloadStore {
                 viewport: viewport,
                 episodeInformation: episodeInformation,
                 chapters: chapters,
-                timeRanges: timeRanges
-            )
-        }
-    }
-
-    struct EntryAssetMetadata: Codable {
-        private let entryPlayerMetadata: EntryPlayerMetadata
-        private let customData: CustomData
-
-        init(assetMetadata: AssetMetadata<CustomData>) {
-            self.entryPlayerMetadata = .init(playerMetadata: assetMetadata.playerMetadata)
-            self.customData = assetMetadata.customData
-        }
-
-        // TODO: Can remove EntryAssetMetadata and merge all into one?
-        func assetMetadata() -> AssetMetadata<CustomData> {
-            let playerMetadata = entryPlayerMetadata.playerMetadata()
-            return .init(
-                identifier: playerMetadata.identifier,
-                title: playerMetadata.title,
-                subtitle: playerMetadata.subtitle,
-                description: playerMetadata.description,
-                imageSource: playerMetadata.imageSource,
-                viewport: playerMetadata.viewport,
-                episodeInformation: playerMetadata.episodeInformation,
-                chapters: playerMetadata.chapters,
-                timeRanges: playerMetadata.timeRanges,
+                timeRanges: timeRanges,
                 customData: customData
             )
         }
