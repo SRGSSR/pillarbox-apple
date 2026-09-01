@@ -9,7 +9,7 @@
 import Combine
 import Foundation
 
-struct URLAssetLoader<CustomData: Codable>: AssetLoader {
+struct URLAssetLoader<CustomData>: AssetLoader where CustomData: Codable {
     struct Input {
         let url: URL
         let metadata: AssetMetadata<CustomData>
