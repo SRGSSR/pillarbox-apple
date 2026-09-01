@@ -27,18 +27,19 @@ final class URNAssetDownloadStore {
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 private extension URNAssetDownloadStore {
-    struct EntryPlayerMetadata: Codable {
-        let identifier: String?
-        let title: String?
-        let subtitle: String?
-        let summary: String?
-        let imageUrl: URL?
-        let imageData: Data?
-        let viewport: Viewport
-        let episode: Int?
-        let season: Int?
-        let chapters: [Chapter]
-        let timeRanges: [TimeRange]
+    struct EntryAssetMetadata: Codable {
+        private let identifier: String?
+        private let title: String?
+        private let subtitle: String?
+        private let summary: String?
+        private let imageUrl: URL?
+        private let imageData: Data?
+        private let viewport: Viewport
+        private let episode: Int?
+        private let season: Int?
+        private let chapters: [Chapter]
+        private let timeRanges: [TimeRange]
+        private let customData: URNMetadata
 
         private var imageSource: ImageSource {
             if let imageData {
@@ -62,7 +63,23 @@ private extension URNAssetDownloadStore {
             }
         }
 
-        func playerMetadata() -> PlayerMetadata {
+        init?(assetMetadata: AssetMetadata<URNMetadata>?) {
+            guard let assetMetadata else { return nil }
+            self.identifier = assetMetadata.identifier
+            self.title = assetMetadata.title
+            self.subtitle = assetMetadata.subtitle
+            self.summary = assetMetadata.description
+            self.imageUrl = assetMetadata.imageSource.url
+            self.imageData = assetMetadata.imageSource.data
+            self.viewport = assetMetadata.viewport
+            self.episode = assetMetadata.episodeInformation?.episode
+            self.season = assetMetadata.episodeInformation?.season
+            self.chapters = assetMetadata.chapters
+            self.timeRanges = assetMetadata.timeRanges
+            self.customData = assetMetadata.customData
+        }
+
+        func assetMetadata() -> AssetMetadata<URNMetadata> {
             .init(
                 identifier: identifier,
                 title: title,
@@ -72,45 +89,7 @@ private extension URNAssetDownloadStore {
                 viewport: viewport,
                 episodeInformation: episodeInformation,
                 chapters: chapters,
-                timeRanges: timeRanges
-            )
-        }
-    }
-
-    struct EntryAssetMetadata: Codable {
-        private let entryPlayerMetadata: EntryPlayerMetadata
-        private let customData: URNMetadata
-
-        init?(assetMetadata: AssetMetadata<URNMetadata>?) {
-            guard let assetMetadata else { return nil }
-            self.entryPlayerMetadata = .init(
-                identifier: assetMetadata.identifier,
-                title: assetMetadata.title,
-                subtitle: assetMetadata.subtitle,
-                summary: assetMetadata.description,
-                imageUrl: assetMetadata.imageSource.url,
-                imageData: assetMetadata.imageSource.data,
-                viewport: assetMetadata.viewport,
-                episode: assetMetadata.episodeInformation?.episode,
-                season: assetMetadata.episodeInformation?.season,
-                chapters: assetMetadata.chapters,
-                timeRanges: assetMetadata.timeRanges
-            )
-            self.customData = assetMetadata.customData
-        }
-
-        func assetMetadata() -> AssetMetadata<URNMetadata> {
-            let playerMetadata = entryPlayerMetadata.playerMetadata()
-            return .init(
-                identifier: playerMetadata.identifier,
-                title: playerMetadata.title,
-                subtitle: playerMetadata.subtitle,
-                description: playerMetadata.description,
-                imageSource: playerMetadata.imageSource,
-                viewport: playerMetadata.viewport,
-                episodeInformation: playerMetadata.episodeInformation,
-                chapters: playerMetadata.chapters,
-                timeRanges: playerMetadata.timeRanges,
+                timeRanges: timeRanges,
                 customData: customData
             )
         }
