@@ -11,7 +11,7 @@ import SwiftData
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-final class URLAssetDownloadStore<CustomData: Codable> {
+final class URLAssetDownloadStore<CustomData> where CustomData: Codable {
     let context: ModelContext
 
     init(name: String? = nil) throws {

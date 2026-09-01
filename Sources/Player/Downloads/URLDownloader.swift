@@ -13,7 +13,7 @@ import Foundation
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class URLDownloader<CustomData: Codable>: ObservableObject {
+public final class URLDownloader<CustomData>: ObservableObject where CustomData: Codable {
     private let downloader: Downloader<URLAssetDownloadStore<CustomData>>
 
     @Published public private(set) var downloads: [Download] = []
