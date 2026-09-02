@@ -11,4 +11,5 @@
 - [ ] APIs have been properly documented (if relevant).
 - [ ] The documentation has been updated (if relevant).
 - [ ] New unit tests have been written (if relevant).
+- [ ] Data model migration succeeds (if relevant).
 - [ ] The demo has been updated (if relevant).
