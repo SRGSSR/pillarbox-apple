@@ -81,7 +81,7 @@ public final class Download: ObservableObject, Identifiable {
         self.init(id: id, input: input, configuration: configuration, creationDate: creationDate, session: session, store: store)
     }
 
-    convenience init<S>(record: DownloadRecord<S.Loader.Input, S.CustomData>, session: DownloadSession, store: S) where S: AssetDownloadStore {
+    convenience init<S>(record: DownloadRecord<S.Loader.Input, S.Provider.CustomData>, session: DownloadSession, store: S) where S: AssetDownloadStore {
         self.init(
             id: S.id(from: record.input),
             input: record.input,
@@ -159,7 +159,7 @@ private extension Download {
         .eraseToAnyPublisher()
     }
 
-    func propertiesPublisher<S>(input: S.Loader.Input, store: S) -> AnyPublisher<DownloadProperties<S.CustomData>, Never> where S: AssetDownloadStore {
+    func propertiesPublisher<S>(input: S.Loader.Input, store: S) -> AnyPublisher<DownloadProperties<S.Provider.CustomData>, Never> where S: AssetDownloadStore {
         // swiftlint:disable:next closure_body_length
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.restart)) { [id, trigger, session] in
             let storedProperties = store.downloadProperties(forId: id)

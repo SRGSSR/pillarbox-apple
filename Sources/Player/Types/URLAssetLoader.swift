@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 
-enum DirectAssetLoader<Provider>: AssetLoader where Provider: AssetProvider {
+enum URLAssetLoader<Provider>: AssetLoader where Provider: AssetProvider {
     struct Input {
         let url: URL
         let configuration: PlaybackConfiguration

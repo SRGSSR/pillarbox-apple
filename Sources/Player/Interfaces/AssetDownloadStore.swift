@@ -13,29 +13,24 @@ import Foundation
 @available(tvOS, unavailable)
 public protocol AssetDownloadStore: AnyObject {
     associatedtype Loader: AssetLoader
-    associatedtype CustomData
+    associatedtype Provider: AssetProvider
 
     static func id(from input: Loader.Input) -> String
 
-    static func customData(from metadata: Loader.Metadata) -> CustomData
-    static func asset(fileUrl: URL, customData: CustomData) -> Asset
+    static func customData(from metadata: Loader.Metadata) -> Provider.CustomData
     static func playerMetadata(from input: Loader.Input, metadata: Loader.Metadata?) -> PlayerMetadata
 
-    func downloadRecords() -> [DownloadRecord<Loader.Input, CustomData>]
+    func downloadRecords() -> [DownloadRecord<Loader.Input, Provider.CustomData>]
 
-    func addDownloadRecord(_ record: DownloadRecord<Loader.Input, CustomData>, forId id: String)
+    func addDownloadRecord(_ record: DownloadRecord<Loader.Input, Provider.CustomData>, forId id: String)
     func removeDownloadRecord(forId id: String)
 
-    func downloadRecord(forId id: String) -> DownloadRecord<Loader.Input, CustomData>?
-    func updateDownloadRecord(_ record: DownloadRecord<Loader.Input, CustomData>, forId id: String)
+    func downloadRecord(forId id: String) -> DownloadRecord<Loader.Input, Provider.CustomData>?
+    func updateDownloadRecord(_ record: DownloadRecord<Loader.Input, Provider.CustomData>, forId id: String)
 }
 
 @available(tvOS, unavailable)
 public extension AssetDownloadStore {
-    static func asset(fileUrl: URL, customData: CustomData) -> Asset {
-        .simple(url: fileUrl)
-    }
-
     static func playerMetadata(from input: Loader.Input, metadata: Loader.Metadata?) -> PlayerMetadata {
         Loader.playerMetadata(from: input, metadata: metadata)
     }
@@ -43,7 +38,7 @@ public extension AssetDownloadStore {
 
 @available(tvOS, unavailable)
 extension AssetDownloadStore {
-    func downloadProperties(forId id: String) -> DownloadProperties<CustomData> {
+    func downloadProperties(forId id: String) -> DownloadProperties<Provider.CustomData> {
         guard let record = downloadRecord(forId: id) else { return .init() }
         return .init(from: record)
     }
@@ -51,7 +46,7 @@ extension AssetDownloadStore {
 
 @available(tvOS, unavailable)
 extension AssetDownloadStore {
-    static func assetPublisher(for input: Loader.Input) -> AnyPublisher<DownloadAsset<CustomData>, any Error> {
+    static func assetPublisher(for input: Loader.Input) -> AnyPublisher<DownloadAsset<Provider.CustomData>, any Error> {
         Loader.metadataPublisher(for: input)
             .first()
             .map { metadata in
@@ -76,9 +71,9 @@ extension AssetDownloadStore {
         id: String,
         input: Loader.Input,
         configuration: DownloadConfiguration,
-        reusableAssetMetadata: AssetMetadata<CustomData>?,
+        reusableAssetMetadata: AssetMetadata<Provider.CustomData>?,
         session: DownloadSession
-    ) -> AnyPublisher<DownloadTask<CustomData>, any Error> {
+    ) -> AnyPublisher<DownloadTask<Provider.CustomData>, any Error> {
         if let reusableAssetMetadata {
             return session.taskPublisher(matchingId: id)
                 .setFailureType(to: Error.self)

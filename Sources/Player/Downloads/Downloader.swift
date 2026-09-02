@@ -46,15 +46,15 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
         download(matchingId: type(of: store).id(from: input))
     }
 
-    public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<AssetMetadata<S.CustomData>>] = []) -> PlayerItem? {
+    public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<AssetMetadata<S.Provider.CustomData>>] = []) -> PlayerItem? {
         guard downloads.contains(download), let record = store.downloadRecord(forId: download.id),
               let metadata = record.metadata, let fileUrl = download.fileUrl else {
             return nil
         }
-        let asset = S.asset(fileUrl: fileUrl, customData: metadata.customData)
         return .init(
-            assetLoaderType: DirectAssetLoader.self,
-            input: .init(asset: asset, metadata: metadata),
+            assetLoaderType: URLAssetLoader<S.Provider>.self,
+            // TODO: Configuration
+            input: .init(url: fileUrl, configuration: .default, metadata: metadata),
             trackerAdapters: trackerAdapters
         )
     }

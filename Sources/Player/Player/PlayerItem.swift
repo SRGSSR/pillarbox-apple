@@ -82,7 +82,7 @@ public final class PlayerItem: Identifiable {
         configuration: PlaybackConfiguration
     ) where Provider: AssetProvider {
         self.init(
-            assetLoaderType: DirectAssetLoader<Provider>.self,
+            assetLoaderType: URLAssetLoader<Provider>.self,
             input: .init(url: url, configuration: configuration, metadata: metadata),
             trackerAdapters: trackerAdapters
         )
