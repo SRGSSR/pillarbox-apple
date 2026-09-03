@@ -77,7 +77,7 @@ public struct MediaMetadata {
         self.mediaCompositionUrl = mediaCompositionResponse.response.url
         self.mediaCompositionHeaders = Self.mediaCompositionHeaders(from: mediaCompositionResponse.response)
         self.mainChapter = mainChapter
-        self.resource = mainChapter.recommendedResource
+        self.resource = mainChapter.resources.first
         self.dataProvider = dataProvider
     }
 

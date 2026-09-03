@@ -118,14 +118,3 @@ public extension MediaComposition {
         private let _validTo: Date?
     }
 }
-
-public extension MediaComposition.Chapter {
-    /// The resource recommended for playback on Apple platforms.
-    var recommendedResource: MediaComposition.Resource? {
-        let resourceBuckets = Dictionary(grouping: resources) { $0.streamingMethod }
-        guard let preferredMethod = MediaComposition.StreamingMethod.supportedMethods.first(where: { method in
-            resourceBuckets[method] != nil
-        }) else { return nil }
-        return resourceBuckets[preferredMethod]?.first
-    }
-}
