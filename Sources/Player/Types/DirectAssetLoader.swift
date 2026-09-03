@@ -5,26 +5,24 @@
 //
 
 import Combine
-import Foundation
 
-enum DirectAssetLoader<Provider>: AssetLoader where Provider: AssetProvider {
+enum DirectAssetLoader<CustomData>: AssetLoader {
     struct Input {
-        let url: URL
-        let configuration: PlaybackConfiguration
-        let metadata: AssetMetadata<Provider.CustomData>
+        let asset: Asset
+        let metadata: AssetMetadata<CustomData>
     }
 
-    static func metadataPublisher(for input: Input) -> AnyPublisher<AssetMetadata<Provider.CustomData>, any Error> {
+    static func metadataPublisher(for input: Input) -> AnyPublisher<AssetMetadata<CustomData>, any Error> {
         Just(input.metadata)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
-    static func asset(from input: Input, metadata: AssetMetadata<Provider.CustomData>) -> Asset {
-        Provider.asset(url: input.url, configuration: input.configuration, customData: metadata.customData)
+    static func asset(from input: Input, metadata: AssetMetadata<CustomData>) -> Asset {
+        input.asset
     }
 
-    static func playerMetadata(from input: Input, metadata: AssetMetadata<Provider.CustomData>?) -> PlayerMetadata {
+    static func playerMetadata(from input: Input, metadata: AssetMetadata<CustomData>?) -> PlayerMetadata {
         input.metadata.playerMetadata
     }
 }

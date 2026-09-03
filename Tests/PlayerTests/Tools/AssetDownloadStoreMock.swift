@@ -12,7 +12,7 @@ import OrderedCollections
 
 @available(tvOS, unavailable)
 final class AssetDownloadStoreMock {
-    private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMock.Input, Void>>
+    private var records: OrderedDictionary<String, DownloadRecord<AssetLoaderMock.Input, EmptyCustomData>>
 
     init(preloadedInputs: [AssetLoaderMock.Input] = []) {
         records = preloadedInputs.reduce(into: [:]) { records, input in
@@ -29,14 +29,19 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
         input.id
     }
 
-    static func customData(from metadata: PlayerMetadata) {}
+    static func customData(from metadata: PlayerMetadata) -> EmptyCustomData { .init() }
 
-    func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, Void>] {
+    static func asset(fileUrl: URL, customData: EmptyCustomData) -> Asset {
+        // TODO: Configuration
+        .simple(url: fileUrl)
+    }
+
+    func downloadRecords() -> [DownloadRecord<AssetLoaderMock.Input, EmptyCustomData>] {
         assert(Thread.isMainThread)
         return Array(records.values)
     }
 
-    func addDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, Void>, forId id: String) {
+    func addDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, EmptyCustomData>, forId id: String) {
         assert(Thread.isMainThread)
         records[id] = record
     }
@@ -46,12 +51,12 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
         records.removeValue(forKey: id)
     }
 
-    func downloadRecord(forId id: String) -> DownloadRecord<AssetLoaderMock.Input, Void>? {
+    func downloadRecord(forId id: String) -> DownloadRecord<AssetLoaderMock.Input, EmptyCustomData>? {
         assert(Thread.isMainThread)
         return records[id]
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, Void>, forId id: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<AssetLoaderMock.Input, EmptyCustomData>, forId id: String) {
         assert(Thread.isMainThread)
         records[id] = record
     }

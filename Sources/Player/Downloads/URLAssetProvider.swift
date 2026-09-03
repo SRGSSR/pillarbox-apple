@@ -6,8 +6,11 @@
 
 import Foundation
 
-enum URLAssetProvider: AssetProvider {
-    static func asset(url: URL, configuration: PlaybackConfiguration, customData: EmptyCustomData) -> Asset {
-        .simple(url: url, configuration: configuration)
-    }
+/// A protocol defining how an asset is provided.
+public protocol URLAssetProvider {
+    /// Custom data associated with the content.
+    associatedtype CustomData: Codable
+
+    /// Creates an asset.
+    static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: CustomData) -> Asset
 }

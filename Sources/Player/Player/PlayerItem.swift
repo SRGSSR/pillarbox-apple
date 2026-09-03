@@ -37,7 +37,7 @@ public final class PlayerItem: Identifiable {
     ///   - assetLoaderType: The asset loader type.
     ///   - input: The input expected by the asset loader.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public init<A>(assetLoaderType: A.Type, input: A.Input, trackerAdapters: [TrackerAdapter<A.Metadata>] = []) where A: AssetLoader {
+    public init<Loader>(assetLoaderType: Loader.Type, input: Loader.Input, trackerAdapters: [TrackerAdapter<Loader.Metadata>] = []) where Loader: AssetLoader {
         self.trackerAdapters = trackerAdapters
         self.content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
@@ -74,20 +74,6 @@ public final class PlayerItem: Identifiable {
         .assign(to: &$content)
     }
 
-    convenience init<Provider>(
-        assetProviderType: Provider.Type,
-        url: URL,
-        metadata: AssetMetadata<Provider.CustomData>,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>],
-        configuration: PlaybackConfiguration
-    ) where Provider: AssetProvider {
-        self.init(
-            assetLoaderType: DirectAssetLoader<Provider>.self,
-            input: .init(url: url, configuration: configuration, metadata: metadata),
-            trackerAdapters: trackerAdapters
-        )
-    }
-
     static func load(for id: UUID) {
         trigger.activate(for: TriggerId.load(id))
     }
@@ -117,6 +103,24 @@ extension PlayerItem: Hashable {
 }
 
 public extension PlayerItem {
+    /// Creates a player item from an ``Asset`` and asset metadata.
+    ///
+    /// - Parameters:
+    ///   - asset: The asset to play.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    convenience init<CustomData>(
+        asset: Asset,
+        metadata: AssetMetadata<CustomData>,
+        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>]
+    ) {
+        self.init(
+            assetLoaderType: DirectAssetLoader.self,
+            input: .init(asset: asset, metadata: metadata),
+            trackerAdapters: trackerAdapters
+        )
+    }
+
     /// Creates an simple player item with asset metadata.
     ///
     /// - Parameters:
@@ -125,18 +129,16 @@ public extension PlayerItem {
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
-    static func simple(
+    static func simple<CustomData>(
         url: URL,
-        metadata: PlayerMetadata,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>],
+        metadata: AssetMetadata<CustomData>,
+        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>],
         configuration: PlaybackConfiguration = .default
     ) -> Self {
         self.init(
-            assetProviderType: URLAssetProvider.self,
-            url: url,
+            asset: .simple(url: url, configuration: configuration),
             metadata: metadata,
-            trackerAdapters: trackerAdapters,
-            configuration: configuration
+            trackerAdapters: trackerAdapters
         )
     }
 
@@ -151,19 +153,129 @@ public extension PlayerItem {
     /// - Returns: The item.
     ///
     /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
-    static func custom<Provider>(
-        assetProviderType: Provider.Type,
+    static func custom<CustomData>(
         url: URL,
-        metadata: AssetMetadata<Provider.CustomData>,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>],
-        configuration: PlaybackConfiguration
-    ) -> Self where Provider: AssetProvider {
+        delegate: AVAssetResourceLoaderDelegate,
+        metadata: AssetMetadata<CustomData>,
+        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>],
+        configuration: PlaybackConfiguration = .default
+    ) -> Self {
         self.init(
-            assetProviderType: assetProviderType,
-            url: url,
+            asset: .custom(url: url, delegate: delegate, configuration: configuration),
             metadata: metadata,
-            trackerAdapters: trackerAdapters,
-            configuration: configuration
+            trackerAdapters: trackerAdapters
+        )
+    }
+
+    /// Creates an encrypted player item with asset metadata.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The content key session delegate to use.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: The configuration to apply to the player item.
+    /// - Returns: The item.
+    static func encrypted<CustomData>(
+        url: URL,
+        delegate: AVContentKeySessionDelegate,
+        metadata: AssetMetadata<CustomData>,
+        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>],
+        configuration: PlaybackConfiguration = .default
+    ) -> Self {
+        self.init(
+            asset: .encrypted(url: url, delegate: delegate, configuration: configuration),
+            metadata: metadata,
+            trackerAdapters: trackerAdapters
+        )
+    }
+}
+
+public extension PlayerItem {
+    /// Creates a player item from an ``Asset`` and standard player metadata.
+    ///
+    /// - Parameters:
+    ///   - asset: The asset to play.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    convenience init(
+        asset: Asset,
+        metadata: PlayerMetadata = .empty,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
+    ) {
+        self.init(
+            assetLoaderType: DirectAssetLoader.self,
+            input: .init(asset: asset, metadata: metadata),
+            trackerAdapters: trackerAdapters
+        )
+    }
+
+    /// Creates an simple player item with standard player metadata.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: The configuration to apply to the player item.
+    /// - Returns: The item.
+    static func simple(
+        url: URL,
+        metadata: PlayerMetadata = .empty,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        configuration: PlaybackConfiguration = .default
+    ) -> Self {
+        self.init(
+            asset: .simple(url: url, configuration: configuration),
+            metadata: metadata,
+            trackerAdapters: trackerAdapters
+        )
+    }
+
+    /// Creates a custom player item with standard player metadata.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The custom resource loader to use.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: The configuration to apply to the player item.
+    /// - Returns: The item.
+    ///
+    /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
+    static func custom(
+        url: URL,
+        delegate: AVAssetResourceLoaderDelegate,
+        metadata: PlayerMetadata = .empty,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        configuration: PlaybackConfiguration = .default
+    ) -> Self {
+        self.init(
+            asset: .custom(url: url, delegate: delegate, configuration: configuration),
+            metadata: metadata,
+            trackerAdapters: trackerAdapters
+        )
+    }
+
+    /// Creates an encrypted player item with standard player metadata.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The content key session delegate to use.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: The configuration to apply to the player item.
+    /// - Returns: The item.
+    static func encrypted(
+        url: URL,
+        delegate: AVContentKeySessionDelegate,
+        metadata: PlayerMetadata = .empty,
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
+        configuration: PlaybackConfiguration = .default
+    ) -> Self {
+        self.init(
+            asset: .encrypted(url: url, delegate: delegate, configuration: configuration),
+            metadata: metadata,
+            trackerAdapters: trackerAdapters
         )
     }
 }

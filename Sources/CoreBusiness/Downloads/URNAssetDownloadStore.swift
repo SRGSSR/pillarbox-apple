@@ -177,12 +177,17 @@ extension URNAssetDownloadStore: AssetDownloadStore {
         input.id
     }
 
+    static func playerMetadata(from input: URNAssetLoader.Input, metadata: MediaMetadata?) -> PlayerMetadata {
+        metadata?.playerMetadata(dateFormat: .standard) ?? .empty
+    }
+
     static func customData(from metadata: MediaMetadata) -> URNMetadata {
         .init(analyticsData: metadata.analyticsData, analyticsMetadata: metadata.analyticsMetadata)
     }
 
-    static func playerMetadata(from input: URNAssetLoader.Input, metadata: MediaMetadata?) -> PlayerMetadata {
-        metadata?.playerMetadata(dateFormat: .standard) ?? .empty
+    static func asset(fileUrl: URL, customData: URNMetadata) -> Asset {
+        // TODO: Return the right asset
+        .simple(url: fileUrl)
     }
 
     func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {

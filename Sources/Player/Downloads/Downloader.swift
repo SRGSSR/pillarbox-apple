@@ -51,6 +51,7 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
               let metadata = record.metadata, let fileUrl = download.fileUrl else {
             return nil
         }
+        // TODO: Configuration
         let asset = S.asset(fileUrl: fileUrl, customData: metadata.customData)
         return .init(
             assetLoaderType: DirectAssetLoader.self,
