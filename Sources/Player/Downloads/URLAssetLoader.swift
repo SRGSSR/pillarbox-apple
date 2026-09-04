@@ -7,6 +7,8 @@
 import Combine
 import Foundation
 
+@available(iOS 17.0, *)
+@available(tvOS, unavailable)
 enum URLAssetLoader<Provider>: AssetLoader where Provider: URLOnlineAssetProvider {
     static func metadataPublisher(for input: URLInput<Provider.CustomData>) -> AnyPublisher<AssetMetadata<Provider.CustomData>, any Error> {
         Just(input.metadata)
@@ -18,7 +20,10 @@ enum URLAssetLoader<Provider>: AssetLoader where Provider: URLOnlineAssetProvide
         Provider.asset(from: input, metadata: metadata)
     }
 
-    static func downloadableAssetPublisher(from input: URLInput<Provider.CustomData>, metadata: AssetMetadata<Provider.CustomData>) -> AnyPublisher<Asset, Never> {
+    static func downloadableAssetPublisher(
+        from input: URLInput<Provider.CustomData>,
+        metadata: AssetMetadata<Provider.CustomData>
+    ) -> AnyPublisher<Asset, Never> {
         Provider.downloadableAssetPublisher(from: input, metadata: metadata)
     }
 

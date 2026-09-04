@@ -20,6 +20,7 @@ public protocol AssetLoader {
     /// Converts input and metadata to an asset.
     static func asset(from input: Input, metadata: Metadata) -> Asset
 
+    /// Converts input and metadata to a downloadable asset publisher.
     static func downloadableAssetPublisher(from input: Input, metadata: Metadata) -> AnyPublisher<Asset, Never>
 
     /// Converts input and metadata to player metadata.
@@ -27,6 +28,7 @@ public protocol AssetLoader {
 }
 
 public extension AssetLoader {
+    /// Default implementation. Immediately returns ``AssetLoader/asset(from:metadata:)``.
     static func downloadableAssetPublisher(from input: Input, metadata: Metadata) -> AnyPublisher<Asset, Never> {
         Just(asset(from: input, metadata: metadata)).eraseToAnyPublisher()
     }
