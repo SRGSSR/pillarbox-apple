@@ -52,16 +52,17 @@ extension AssetDownloadStore {
             .first()
             .map { metadata in
                 let playerMetadata = playerMetadata(from: input, metadata: metadata)
-                return Publishers.CombineLatest3(
+                return Publishers.CombineLatest4(
                     Just(metadata),
                     Just(playerMetadata),
+                    Loader.downloadableAssetPublisher(from: input, metadata: metadata),
                     playerMetadata.imageSource.imageSourcePublisher()
                 )
             }
             .switchToLatest()
-            .map { metadata, playerMetadata, imageSource in
+            .map { metadata, playerMetadata, asset, imageSource in
                 DownloadAsset(
-                    Loader.asset(from: input, metadata: metadata),
+                    asset,
                     assetMetadata: playerMetadata.withImageSource(imageSource).withCustomData(customData(from: metadata))
                 )
             }
