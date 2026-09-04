@@ -115,6 +115,14 @@ extension PlayerItem: Hashable {
 }
 
 public extension PlayerItem {
+    private convenience init<Provider>(
+        assetProviderType: Provider.Type,
+        input: URLInput<Provider.CustomData>,
+        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>]
+    ) where Provider: URLOnlineAssetProvider {
+        self.init(assetLoaderType: URLAssetLoader<Provider>.self, input: input, trackerAdapters: trackerAdapters)
+    }
+
     /// Creates an simple player item with asset metadata.
     ///
     /// - Parameters:
@@ -152,14 +160,6 @@ public extension PlayerItem {
     ) -> Self where Provider: URLOnlineAssetProvider {
         // TODO: Configuration?? Provided via URLInput?
         self.init(assetProviderType: assetProviderType, input: .init(url: url, metadata: metadata), trackerAdapters: trackerAdapters)
-    }
-
-    convenience init<Provider>(
-        assetProviderType: Provider.Type,
-        input: URLInput<Provider.CustomData>,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>]
-    ) where Provider: URLOnlineAssetProvider {
-        self.init(assetLoaderType: URLAssetLoader<Provider>.self, input: input, trackerAdapters: trackerAdapters)
     }
 }
 
