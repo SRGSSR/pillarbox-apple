@@ -65,10 +65,10 @@ final class DemoDownloader: ObservableObject {
 
     func addDownload(media: Media) {
         guard #available(iOS 17, *) else { return }
-        switch media.type {
-        case let .url(url), let .monoscopicUrl(url):
-            urlDownloader.addDownload(url: url, metadata: media.metadata(), configuration: UserDefaults.standard.downloadConfiguration)
-        case let .urn(urn, serverSetting):
+        switch media.kind {
+        case let .url(url, provider: provider):
+            urlDownloader.addDownload(url: url, metadata: media.metadata(provider: provider), configuration: UserDefaults.standard.downloadConfiguration)
+        case let .urn(urn, serverSetting: serverSetting):
             urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: UserDefaults.standard.downloadConfiguration)
         default:
             break

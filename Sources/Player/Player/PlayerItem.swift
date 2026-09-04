@@ -74,12 +74,16 @@ public final class PlayerItem: Identifiable {
         .assign(to: &$content)
     }
 
-    convenience init<Provider>(
-        assetProviderType: Provider.Type,
-        input: URLInput<Provider.CustomData>,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>]
-    ) where Provider: URLOnlineAssetProvider {
-        self.init(assetLoaderType: URLAssetLoader<Provider>.self, input: input, trackerAdapters: trackerAdapters)
+    convenience init<CustomData>(
+        asset: Asset,
+        metadata: AssetMetadata<CustomData>,
+        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>]
+    ) {
+        self.init(
+            assetLoaderType: DirectAssetLoader.self,
+            input: .init(asset: asset, metadata: metadata),
+            trackerAdapters: trackerAdapters
+        )
     }
 
     static func load(for id: UUID) {
@@ -148,6 +152,14 @@ public extension PlayerItem {
     ) -> Self where Provider: URLOnlineAssetProvider {
         // TODO: Configuration?? Provided via URLInput?
         self.init(assetProviderType: assetProviderType, input: .init(url: url, metadata: metadata), trackerAdapters: trackerAdapters)
+    }
+
+    convenience init<Provider>(
+        assetProviderType: Provider.Type,
+        input: URLInput<Provider.CustomData>,
+        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>]
+    ) where Provider: URLOnlineAssetProvider {
+        self.init(assetLoaderType: URLAssetLoader<Provider>.self, input: input, trackerAdapters: trackerAdapters)
     }
 }
 

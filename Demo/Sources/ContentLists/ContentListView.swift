@@ -41,7 +41,7 @@ private struct LoadedView: View {
             return Media(
                 title: media.title,
                 subtitle: MediaDescription.subtitle(for: media),
-                type: .urn(media.urn, serverSetting: serverSetting)
+                kind: .urn(media.urn, serverSetting: serverSetting)
             )
         }
     }
@@ -90,7 +90,7 @@ private struct ContentCell: View {
 #endif
         case let .media(srgMedia):
             let title = MediaDescription.title(for: srgMedia)
-            let media = Media(title: title, type: .urn(srgMedia.urn, serverSetting: serverSetting))
+            let media = Media(title: title, kind: .urn(srgMedia.urn, serverSetting: serverSetting))
             Cell(
                 size: .init(width: 570, height: 350),
                 title: constant(iOS: title, tvOS: srgMedia.show?.title),

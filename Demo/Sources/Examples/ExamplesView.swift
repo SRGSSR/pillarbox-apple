@@ -67,19 +67,19 @@ private struct MediaEntryView: View {
         switch kind {
         case .url:
             guard let url else { return URLMedia.unknown }
-            return .init(title: "URL", subtitle: url.absoluteString, type: .url(url))
+            return .init(title: "URL", subtitle: url.absoluteString, kind: .url(url))
         case .tokenProtected:
             guard let url else { return URLMedia.unknown }
-            return .init(title: "Token-protected", subtitle: url.absoluteString, type: .tokenProtectedUrl(url))
+            return .init(title: "Token-protected", subtitle: url.absoluteString, kind: .url(url, provider: .tokenProtected))
         case .encrypted:
             guard let url, let certificateUrl else { return URLMedia.unknown }
-            return .init(title: "Encrypted", subtitle: url.absoluteString, type: .encryptedUrl(url, certificateUrl: certificateUrl))
+            return .init(title: "Encrypted", subtitle: url.absoluteString, kind: .url(url, provider: .encrypted(certificateUrl: certificateUrl)))
         case .productionUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .production))
+            return .init(title: trimmedText, kind: .urn(trimmedText, serverSetting: .production))
         case .stageUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .stage))
+            return .init(title: trimmedText, kind: .urn(trimmedText, serverSetting: .stage))
         case .testUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .test))
+            return .init(title: trimmedText, kind: .urn(trimmedText, serverSetting: .test))
         }
     }
 
