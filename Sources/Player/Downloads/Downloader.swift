@@ -90,7 +90,4 @@ extension Downloader: DownloadSessionDelegate {
     }
 }
 
-@available(tvOS, unavailable)
-extension Downloader: DownloadManager {}
-
 // swiftlint:enable missing_docs

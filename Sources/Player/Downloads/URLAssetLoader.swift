@@ -7,23 +7,22 @@
 import Combine
 import Foundation
 
-enum URLAssetLoader<CustomData>: AssetLoader {
-    struct Input {
-        let url: URL
-        let metadata: AssetMetadata<CustomData>
-    }
-
-    static func metadataPublisher(for input: Input) -> AnyPublisher<AssetMetadata<CustomData>, any Error> {
+enum URLAssetLoader<Provider>: AssetLoader where Provider: URLOnlineAssetProvider {
+    static func metadataPublisher(for input: URLInput<Provider.CustomData>) -> AnyPublisher<AssetMetadata<Provider.CustomData>, any Error> {
         Just(input.metadata)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
-    static func asset(from input: Input, metadata: AssetMetadata<CustomData>) -> Asset {
-        .simple(url: input.url)
+    static func asset(from input: URLInput<Provider.CustomData>, metadata: AssetMetadata<Provider.CustomData>) -> Asset {
+        Provider.asset(from: input, metadata: metadata)
     }
 
-    static func playerMetadata(from input: Input, metadata: AssetMetadata<CustomData>?) -> PlayerMetadata {
+    static func downloadableAssetPublisher(from input: URLInput<Provider.CustomData>, metadata: AssetMetadata<Provider.CustomData>) -> AnyPublisher<Asset, Never> {
+        Provider.downloadableAssetPublisher(from: input, metadata: metadata)
+    }
+
+    static func playerMetadata(from input: URLInput<Provider.CustomData>, metadata: AssetMetadata<Provider.CustomData>?) -> PlayerMetadata {
         input.metadata.playerMetadata
     }
 }
