@@ -8,66 +8,67 @@
 
 import Foundation
 
+// TODO: Type erasure. Should have CustomData instead of Provider as generic parameter
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class URLDownloader<CustomData>: ObservableObject {
-    private let downloadManager: any DownloadManager<URLAssetLoader<CustomData>.Input, CustomData>
+public final class URLDownloader<Provider>: ObservableObject where Provider: URLOfflineAssetProvider {
+    private let downloader: Downloader<URLAssetDownloadStore<Provider>>
 
     @Published public private(set) var downloads: [Download] = []
 
-    public init<Provider>(
+    public init(
         name: String? = nil,
         providerType: Provider.Type,
         configuration: URLSessionConfiguration
-    ) throws where Provider: URLAssetProvider, Provider.CustomData == CustomData {
+    ) throws {
         let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore(name: name, providerType: providerType))
-        self.downloadManager = downloader
+        self.downloader = downloader
 
         downloader.$downloads
             .assign(to: &$downloads)
     }
 
     @discardableResult
-    public func addDownload(url: URL, metadata: AssetMetadata<CustomData>, configuration: DownloadConfiguration = .default) -> Download {
-        downloadManager.addDownload(for: .init(url: url, metadata: metadata), configuration: configuration)
+    public func addDownload(url: URL, metadata: AssetMetadata<Provider.CustomData>, configuration: DownloadConfiguration = .default) -> Download {
+        downloader.addDownload(for: .init(url: url, metadata: metadata), configuration: configuration)
     }
 
-    public func download(url: URL, metadata: AssetMetadata<CustomData>) -> Download? {
-        downloadManager.download(matching: .init(url: url, metadata: metadata))
+    public func download(url: URL, metadata: AssetMetadata<Provider.CustomData>) -> Download? {
+        downloader.download(matching: .init(url: url, metadata: metadata))
     }
 
     public func playerItem(
         for download: Download,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>] = []
+        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>] = []
     ) -> PlayerItem? {
-        downloadManager.playerItem(for: download, trackerAdapters: trackerAdapters)
+        downloader.playerItem(for: download, trackerAdapters: trackerAdapters)
     }
 
     public func removeDownload(_ download: Download) {
-        downloadManager.removeDownload(download)
+        downloader.removeDownload(download)
     }
 
     public func removeAllDownloads() {
-        downloadManager.removeAllDownloads()
+        downloader.removeAllDownloads()
     }
 }
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public extension URLDownloader where CustomData == EmptyCustomData {
+public extension URLDownloader where Provider == URLEmptyAssetProvider {
     convenience init(name: String? = nil, configuration: URLSessionConfiguration) throws {
         try self.init(name: name, providerType: URLEmptyAssetProvider.self, configuration: configuration)
     }
 
     @discardableResult
     func addDownload(url: URL, metadata: PlayerMetadata, configuration: DownloadConfiguration = .default) -> Download {
-        downloadManager.addDownload(for: .init(url: url, metadata: metadata), configuration: configuration)
+        downloader.addDownload(for: .init(url: url, metadata: metadata), configuration: configuration)
     }
 
     func download(url: URL, metadata: PlayerMetadata) -> Download? {
-        downloadManager.download(matching: .init(url: url, metadata: metadata))
+        downloader.download(matching: .init(url: url, metadata: metadata))
     }
 }
 

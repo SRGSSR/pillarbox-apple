@@ -28,7 +28,7 @@ final class DemoDownloader: ObservableObject {
     }()
 
     @available(iOS 17, *)
-    private var urlDownloader: URLDownloader<EmptyCustomData> {
+    private var urlDownloader: URLDownloader<URLEmptyAssetProvider> {
         _urlDownloader as! URLDownloader
     }
 
