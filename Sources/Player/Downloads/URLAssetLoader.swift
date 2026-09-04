@@ -7,8 +7,6 @@
 import Combine
 import Foundation
 
-@available(iOS 17.0, *)
-@available(tvOS, unavailable)
 enum URLAssetLoader<Provider>: AssetLoader where Provider: URLOnlineAssetProvider {
     static func metadataPublisher(for input: URLInput<Provider.CustomData>) -> AnyPublisher<AssetMetadata<Provider.CustomData>, any Error> {
         Just(input.metadata)
