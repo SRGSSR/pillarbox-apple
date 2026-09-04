@@ -11,7 +11,7 @@ extension Asset {
     static func tokenProtected(url: URL, configuration: PlaybackConfiguration) -> Self {
         let id = UUID()
         return .custom(
-            url: AkamaiURLCoding.encodeUrl(url, id: id),
+            url: Akamai.encodeUrl(url, id: id),
             delegate: AkamaiResourceLoaderDelegate(id: id),
             configuration: configuration
         )
