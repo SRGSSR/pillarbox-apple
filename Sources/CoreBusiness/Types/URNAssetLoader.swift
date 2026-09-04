@@ -5,6 +5,7 @@
 //
 
 import Combine
+import PillarboxCore
 
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
@@ -47,6 +48,25 @@ enum URNAssetLoader: AssetLoader {
             default:
                 return .simple(url: resource.url, configuration: configuration)
             }
+        }
+    }
+
+    static func downloadableAssetPublisher(from input: Input, metadata: MediaMetadata) -> AnyPublisher<Asset, Never> {
+        if let resource = metadata.resource {
+            let configuration = assetConfiguration(for: resource)
+            switch resource.tokenType {
+            case .akamai:
+                return AsyncPublisher {
+                    await metadata.tokenizeUrl(resource.url)
+                }
+                .map { .simple(url: $0, configuration: configuration) }
+                .eraseToAnyPublisher()
+            default:
+                return Just(.simple(url: resource.url, configuration: configuration)).eraseToAnyPublisher()
+            }
+        }
+        else {
+            return Just(.unavailable(with: SourceError())).eraseToAnyPublisher()
         }
     }
 

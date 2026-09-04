@@ -186,6 +186,10 @@ extension MediaMetadata {
         }
     }
 
+    func tokenizeUrl(_ url: URL) async -> URL {
+        await dataProvider.tokenizeUrl(url)
+    }
+
     private func standardResolutionImageUrl(for chapter: MediaComposition.Chapter) -> URL {
         dataProvider.resizedImageUrl(chapter.imageUrl, width: .width720)
     }
