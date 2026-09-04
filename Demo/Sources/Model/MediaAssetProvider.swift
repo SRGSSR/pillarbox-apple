@@ -6,13 +6,23 @@
 
 import Foundation
 
+@_spi(CoreBusinessPrivate)
+import PillarboxCoreBusiness
+
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 enum MediaAssetProvider: URLOnlineAssetProvider {
     static func asset(from input: URLInput<MediaProvider>, metadata: AssetMetadata<MediaProvider>) -> Asset {
-        // TODO: Return the correct asset
-        .simple(url: input.url)
+        // TODO: Configuration
+        switch metadata.customData {
+        case .simple:
+            return .simple(url: input.url)
+        case .tokenProtected:
+            return .tokenProtected(url: input.url, configuration: .default)
+        case let .encrypted(certificateUrl: certificateUrl):
+            return .encrypted(url: input.url, certificateUrl: certificateUrl, configuration: .default)
+        }
     }
 }
 
