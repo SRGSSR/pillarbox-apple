@@ -9,14 +9,16 @@
 import Combine
 import Foundation
 
-@available(iOS 17.0, *)
-@available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public enum URLEmptyAssetProvider: URLOfflineAssetProvider {
+public enum URLEmptyAssetProvider: URLOnlineAssetProvider {
     public static func asset(from input: URLInput<EmptyCustomData>, metadata: PlayerMetadata) -> Asset {
         .simple(url: input.url)
     }
+}
 
+@available(iOS 17.0, *)
+@available(tvOS, unavailable)
+extension URLEmptyAssetProvider: URLOfflineAssetProvider {
     public static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: EmptyCustomData) -> Asset {
         .simple(url: fileUrl, configuration: configuration)
     }

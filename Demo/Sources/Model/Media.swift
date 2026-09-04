@@ -70,7 +70,8 @@ struct Media: Hashable {
                 configuration: .init(position: at(startTime))
             )
         case let .tokenProtectedUrl(url):
-            return .tokenProtected(
+            // TODO: Fix
+            return .simple(
                 url: url,
                 metadata: metadata(),
                 trackerAdapters: [
@@ -80,10 +81,10 @@ struct Media: Hashable {
                 ],
                 configuration: .init(position: at(startTime))
             )
-        case let .encryptedUrl(url, certificateUrl: certificateUrl):
-            return .encrypted(
+        case let .encryptedUrl(url, certificateUrl: _):
+            // TODO: Fix
+            return .simple(
                 url: url,
-                certificateUrl: certificateUrl,
                 metadata: metadata(),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
