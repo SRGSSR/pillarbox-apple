@@ -55,11 +55,11 @@ struct Media: Hashable {
         self.timeRanges = timeRanges
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func item() -> PlayerItem {
         switch type {
-        case let .url(url), let .monoscopicUrl(url):
-            return .simple(
+        case let .url(url), let .monoscopicUrl(url), let .tokenProtectedUrl(url), let .encryptedUrl(url, certificateUrl: _), let .unbufferedUrl(url):
+            return .custom(
+                assetProviderType: MediaAssetProvider.self,
                 url: url,
                 metadata: metadata(),
                 trackerAdapters: [
@@ -68,46 +68,6 @@ struct Media: Hashable {
                     }
                 ],
                 configuration: .init(position: at(startTime))
-            )
-        case let .tokenProtectedUrl(url):
-            // TODO: Fix
-            return .simple(
-                url: url,
-                metadata: metadata(),
-                trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
-                    }
-                ],
-                configuration: .init(position: at(startTime))
-            )
-        case let .encryptedUrl(url, certificateUrl: _):
-            // TODO: Fix
-            return .simple(
-                url: url,
-                metadata: metadata(),
-                trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
-                    }
-                ],
-                configuration: .init(position: at(startTime))
-            )
-        case let .unbufferedUrl(url):
-            let configuration = PlaybackConfiguration(
-                position: at(startTime),
-                automaticallyPreservesTimeOffsetFromLive: true,
-                preferredForwardBufferDuration: 1
-            )
-            return .simple(
-                url: url,
-                metadata: metadata(),
-                trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
-                    }
-                ],
-                configuration: configuration
             )
         case let .urn(urn, serverSetting: serverSetting):
             return .urn(
@@ -161,7 +121,7 @@ extension Media {
         }
     }
 
-    func metadata() -> PlayerMetadata {
-        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
+    func metadata() -> AssetMetadata<MediaCustomData> {
+        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges, customData: .init())
     }
 }

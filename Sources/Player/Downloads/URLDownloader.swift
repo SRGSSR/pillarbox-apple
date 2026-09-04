@@ -19,10 +19,10 @@ public final class URLDownloader<Provider>: ObservableObject where Provider: URL
 
     public init(
         name: String? = nil,
-        providerType: Provider.Type,
+        assetProviderType: Provider.Type,
         configuration: URLSessionConfiguration
     ) throws {
-        let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore(name: name, providerType: providerType))
+        let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore(name: name, assetProviderType: assetProviderType))
         self.downloader = downloader
 
         downloader.$downloads
@@ -59,7 +59,7 @@ public final class URLDownloader<Provider>: ObservableObject where Provider: URL
 @_spi(DownloaderPrivate)
 public extension URLDownloader where Provider == URLEmptyAssetProvider {
     convenience init(name: String? = nil, configuration: URLSessionConfiguration) throws {
-        try self.init(name: name, providerType: URLEmptyAssetProvider.self, configuration: configuration)
+        try self.init(name: name, assetProviderType: URLEmptyAssetProvider.self, configuration: configuration)
     }
 
     @discardableResult

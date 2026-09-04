@@ -19,7 +19,11 @@ import PillarboxPlayer
 final class DemoDownloader: ObservableObject {
     private let _urlDownloader: Any? = {
         guard #available(iOS 17, *) else { return nil }
-        return try! URLDownloader(name: "url_downloads", configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"))
+        return try! URLDownloader(
+            name: "url_downloads",
+            assetProviderType: MediaAssetProvider.self,
+            configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads")
+        )
     }()
 
     private let _urnDownloader: Any? = {
@@ -28,7 +32,7 @@ final class DemoDownloader: ObservableObject {
     }()
 
     @available(iOS 17, *)
-    private var urlDownloader: URLDownloader<URLEmptyAssetProvider> {
+    private var urlDownloader: URLDownloader<MediaAssetProvider> {
         _urlDownloader as! URLDownloader
     }
 
