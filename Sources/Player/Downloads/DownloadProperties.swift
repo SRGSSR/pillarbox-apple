@@ -135,6 +135,7 @@ struct DownloadProperties<CustomData> {
     }
 }
 
+@available(tvOS, unavailable)
 extension DownloadProperties where CustomData == EmptyCustomData {
     init(configuration: DownloadConfiguration, progress: DownloadProgress, playerMetadata: PlayerMetadata?, fileUrl: URL?, error: Error?) {
         self.init(configuration: configuration, progress: progress, assetMetadata: playerMetadata, fileUrl: fileUrl, error: error)
