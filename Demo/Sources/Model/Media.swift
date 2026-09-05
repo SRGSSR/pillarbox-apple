@@ -16,12 +16,12 @@ import PillarboxCoreBusiness
 
 struct Media: Hashable {
     enum Kind: Hashable {
-        case url(URL, provider: MediaProvider)
+        case url(URL, protection: Protection)
         case urn(String, serverSetting: ServerSetting)
         case item(PlayerItem)
 
         static func url(_ url: URL) -> Self {
-            .url(url, provider: .simple)
+            .url(url, protection: .none)
         }
 
         static func urn(_ urn: String) -> Self {
@@ -57,11 +57,11 @@ struct Media: Hashable {
 
     func item() -> PlayerItem {
         switch kind {
-        case let .url(url, provider: provider):
+        case let .url(url, protection: protection):
             return .custom(
                 assetProviderType: MediaAssetProvider.self,
                 url: url,
-                metadata: metadata(provider: provider),
+                metadata: metadata(protection: protection),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -85,7 +85,7 @@ struct Media: Hashable {
 
     func playerItem() -> AVPlayerItem? {
         switch kind {
-        case let .url(url, provider: _):
+        case let .url(url, protection: _):
             return AVPlayerItem(url: url)
         default:
             return nil
@@ -106,7 +106,7 @@ extension Media {
         }
     }
 
-    func metadata(provider: MediaProvider) -> AssetMetadata<MediaProvider> {
-        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges, customData: provider)
+    func metadata(protection: Protection) -> AssetMetadata<Protection> {
+        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges, customData: protection)
     }
 }

@@ -32,7 +32,7 @@ final class DemoDownloader: ObservableObject {
     }()
 
     @available(iOS 17, *)
-    private var urlDownloader: URLDownloader<MediaProvider> {
+    private var urlDownloader: URLDownloader<Protection> {
         _urlDownloader as! URLDownloader
     }
 
@@ -66,8 +66,8 @@ final class DemoDownloader: ObservableObject {
     func addDownload(media: Media) {
         guard #available(iOS 17, *) else { return }
         switch media.kind {
-        case let .url(url, provider: provider):
-            urlDownloader.addDownload(url: url, metadata: media.metadata(provider: provider), configuration: UserDefaults.standard.downloadConfiguration)
+        case let .url(url, protection: protection):
+            urlDownloader.addDownload(url: url, metadata: media.metadata(protection: protection), configuration: UserDefaults.standard.downloadConfiguration)
         case let .urn(urn, serverSetting: serverSetting):
             urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: UserDefaults.standard.downloadConfiguration)
         default:

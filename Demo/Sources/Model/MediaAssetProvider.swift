@@ -13,14 +13,14 @@ import PillarboxCoreBusiness
 import PillarboxPlayer
 
 enum MediaAssetProvider: URLOnlineAssetProvider {
-    static func asset(from input: URLInput<MediaProvider>, metadata: AssetMetadata<MediaProvider>) -> Asset {
+    static func asset(from input: URLInput<Protection>, metadata: AssetMetadata<Protection>) -> Asset {
         // TODO: Configuration
         switch metadata.customData {
-        case .simple:
+        case .none:
             return .simple(url: input.url)
-        case .tokenProtected:
+        case .token:
             return .tokenProtected(url: input.url, configuration: .default)
-        case let .encrypted(certificateUrl: certificateUrl):
+        case let .fairPlay(certificateUrl: certificateUrl):
             return .encrypted(url: input.url, certificateUrl: certificateUrl, configuration: .default)
         }
     }
@@ -28,7 +28,7 @@ enum MediaAssetProvider: URLOnlineAssetProvider {
 
 @available(tvOS, unavailable)
 extension MediaAssetProvider: URLOfflineAssetProvider {
-    static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: MediaProvider) -> Asset {
+    static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: Protection) -> Asset {
         .simple(url: fileUrl, configuration: configuration)
     }
 }

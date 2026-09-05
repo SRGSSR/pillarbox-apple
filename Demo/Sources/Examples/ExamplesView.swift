@@ -70,10 +70,10 @@ private struct MediaEntryView: View {
             return .init(title: "URL", subtitle: url.absoluteString, kind: .url(url))
         case .tokenProtected:
             guard let url else { return URLMedia.unknown }
-            return .init(title: "Token-protected", subtitle: url.absoluteString, kind: .url(url, provider: .tokenProtected))
+            return .init(title: "Token-protected", subtitle: url.absoluteString, kind: .url(url, protection: .token))
         case .encrypted:
             guard let url, let certificateUrl else { return URLMedia.unknown }
-            return .init(title: "Encrypted", subtitle: url.absoluteString, kind: .url(url, provider: .encrypted(certificateUrl: certificateUrl)))
+            return .init(title: "Encrypted", subtitle: url.absoluteString, kind: .url(url, protection: .fairPlay(certificateUrl: certificateUrl)))
         case .productionUrn:
             return .init(title: trimmedText, kind: .urn(trimmedText, serverSetting: .production))
         case .stageUrn:

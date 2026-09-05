@@ -6,8 +6,8 @@
 
 import Foundation
 
-enum MediaProvider: Hashable, Codable {
-    case simple
-    case tokenProtected
-    case encrypted(certificateUrl: URL)
+enum Protection: Hashable, Codable {
+    case none
+    case token
+    case fairPlay(certificateUrl: URL)
 }
