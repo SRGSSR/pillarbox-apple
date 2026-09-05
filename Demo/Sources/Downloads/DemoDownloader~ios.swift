@@ -32,7 +32,7 @@ final class DemoDownloader: ObservableObject {
     }()
 
     @available(iOS 17, *)
-    private var urlDownloader: URLDownloader<MediaAssetProvider> {
+    private var urlDownloader: URLDownloader<MediaProvider> {
         _urlDownloader as! URLDownloader
     }
 

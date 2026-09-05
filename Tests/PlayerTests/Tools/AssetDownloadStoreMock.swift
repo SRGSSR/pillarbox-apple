@@ -29,7 +29,9 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
         input.id
     }
 
-    static func customData(from metadata: PlayerMetadata) -> EmptyCustomData { .init() }
+    static func customData(from metadata: PlayerMetadata) -> EmptyCustomData {
+        .init()
+    }
 
     static func asset(fileUrl: URL, customData: EmptyCustomData) -> Asset {
         // TODO: Configuration

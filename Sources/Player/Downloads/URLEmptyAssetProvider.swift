@@ -4,14 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 import Combine
 import Foundation
 
-@_spi(DownloaderPrivate)
-public enum URLEmptyAssetProvider: URLOnlineAssetProvider {
-    public static func asset(from input: URLInput<EmptyCustomData>, metadata: PlayerMetadata) -> Asset {
+enum URLEmptyAssetProvider: URLOnlineAssetProvider {
+    static func asset(from input: URLInput<EmptyCustomData>, metadata: PlayerMetadata) -> Asset {
         .simple(url: input.url)
     }
 }
@@ -19,9 +16,7 @@ public enum URLEmptyAssetProvider: URLOnlineAssetProvider {
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 extension URLEmptyAssetProvider: URLOfflineAssetProvider {
-    public static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: EmptyCustomData) -> Asset {
+    static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: EmptyCustomData) -> Asset {
         .simple(url: fileUrl, configuration: configuration)
     }
 }
-
-// swiftlint:enable missing_docs
