@@ -8,6 +8,7 @@ import Combine
 
 // swiftlint:disable missing_docs
 
+// TODO: `URLAssetLoaderProvider` would likely be a better name (no online/offline distinction in Pillarbox APIs)
 /// A protocol defining how an asset is provided.
 public protocol URLOnlineAssetProvider {
     /// Custom data associated with the content.
