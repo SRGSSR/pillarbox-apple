@@ -16,7 +16,7 @@ enum URLEmptyAssetProvider: URLAssetLoaderProvider {
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 extension URLEmptyAssetProvider: URLAssetDownloadStoreProvider {
-    static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: EmptyCustomData) -> Asset {
-        .simple(url: fileUrl, configuration: configuration)
+    static func asset(fileUrl: URL, customData: EmptyCustomData) -> Asset {
+        .simple(url: fileUrl)
     }
 }

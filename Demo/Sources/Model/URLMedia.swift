@@ -62,7 +62,10 @@ enum URLMedia {
         title: "Apple Basic 16:9",
         subtitle: "16x9 aspect ratio, H.264 @ 30Hz",
         imageUrl: kAppleImageUrl,
-        kind: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")
+        kind: .url(
+            "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
+            startTime: .init(value: 600, timescale: 1)
+        )
     )
     static let timeRangesVideo = Media(
         title: "Bip",

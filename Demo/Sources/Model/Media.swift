@@ -16,12 +16,12 @@ import PillarboxCoreBusiness
 
 struct Media: Hashable {
     enum Kind: Hashable {
-        case url(URL, protection: Protection)
+        case url(URL, customData: MediaCustomData)
         case urn(String, serverSetting: ServerSetting)
         case item(PlayerItem)
 
-        static func url(_ url: URL) -> Self {
-            .url(url, protection: .none)
+        static func url(_ url: URL, protection: Protection = .none, startTime: CMTime = .zero) -> Self {
+            .url(url, customData: .init(protection: protection, startTime: startTime))
         }
 
         static func urn(_ urn: String) -> Self {
@@ -57,11 +57,11 @@ struct Media: Hashable {
 
     func item() -> PlayerItem {
         switch kind {
-        case let .url(url, protection: protection):
+        case let .url(url, customData):
             return .custom(
                 assetProviderType: MediaAssetProvider.self,
                 url: url,
-                metadata: metadata(protection: protection),
+                metadata: metadata(customData: customData),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
@@ -85,7 +85,7 @@ struct Media: Hashable {
 
     func playerItem() -> AVPlayerItem? {
         switch kind {
-        case let .url(url, protection: _):
+        case let .url(url, _):
             return AVPlayerItem(url: url)
         default:
             return nil
@@ -106,7 +106,14 @@ extension Media {
         }
     }
 
-    func metadata(protection: Protection) -> AssetMetadata<Protection> {
-        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges, customData: protection)
+    func metadata(customData: MediaCustomData) -> AssetMetadata<MediaCustomData> {
+        .init(
+            title: title,
+            subtitle: subtitle,
+            imageSource: imageSource,
+            viewport: viewport,
+            timeRanges: timeRanges,
+            customData: customData
+        )
     }
 }

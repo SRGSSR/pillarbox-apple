@@ -142,7 +142,6 @@ private extension URLAssetDownloadStore {
         func toRecord() -> DownloadRecord<URLInput<CustomData>, Provider.CustomData> {
             let assetMetadata = metadata.assetMetadata()
             return .init(
-                // TODO: Configuration
                 input: .init(url: url, metadata: assetMetadata),
                 configuration: configuration,
                 metadata: assetMetadata,
@@ -180,8 +179,7 @@ extension URLAssetDownloadStore: AssetDownloadStore {
     }
 
     static func asset(fileUrl: URL, customData: Provider.CustomData) -> Asset {
-        // TODO: Configuration
-        Provider.asset(fileUrl: fileUrl, configuration: .default, customData: customData)
+        Provider.asset(fileUrl: fileUrl, customData: customData)
     }
 
     func downloadRecords() -> [DownloadRecord<URLInput<CustomData>, Provider.CustomData>] {

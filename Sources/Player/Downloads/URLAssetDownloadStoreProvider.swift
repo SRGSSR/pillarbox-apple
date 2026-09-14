@@ -13,7 +13,7 @@ import Foundation
 @_spi(DownloaderPrivate)
 public protocol URLAssetDownloadStoreProvider: URLAssetLoaderProvider where CustomData: Codable {
     /// Creates an asset.
-    static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: CustomData) -> Asset
+    static func asset(fileUrl: URL, customData: CustomData) -> Asset
 }
 
 // swiftlint:enable missing_docs

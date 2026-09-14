@@ -129,15 +129,12 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     static func simple(
         url: URL,
         metadata: PlayerMetadata = .empty,
-        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = [],
-        configuration: PlaybackConfiguration = .default
+        trackerAdapters: [TrackerAdapter<PlayerMetadata>] = []
     ) -> Self {
-        // TODO: Configuration?? Provided via URLInput?
         self.init(assetProviderType: URLEmptyAssetProvider.self, input: .init(url: url, metadata: metadata), trackerAdapters: trackerAdapters)
     }
 
@@ -147,7 +144,6 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     ///
     /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
@@ -155,10 +151,8 @@ public extension PlayerItem {
         assetProviderType: Provider.Type,
         url: URL,
         metadata: AssetMetadata<Provider.CustomData>,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>] = [],
-        configuration: PlaybackConfiguration = .default
+        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>] = []
     ) -> Self where Provider: URLAssetLoaderProvider {
-        // TODO: Configuration?? Provided via URLInput?
         self.init(assetProviderType: assetProviderType, input: .init(url: url, metadata: metadata), trackerAdapters: trackerAdapters)
     }
 }

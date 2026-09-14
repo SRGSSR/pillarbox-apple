@@ -34,7 +34,6 @@ extension AssetDownloadStoreMock: AssetDownloadStore {
     }
 
     static func asset(fileUrl: URL, customData: EmptyCustomData) -> Asset {
-        // TODO: Configuration
         .simple(url: fileUrl)
     }
 
