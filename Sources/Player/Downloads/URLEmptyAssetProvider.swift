@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 
-enum URLEmptyAssetProvider: URLOnlineAssetProvider {
+enum URLEmptyAssetProvider: URLAssetLoaderProvider {
     static func asset(from input: URLInput<EmptyCustomData>, metadata: PlayerMetadata) -> Asset {
         .simple(url: input.url)
     }
@@ -15,7 +15,7 @@ enum URLEmptyAssetProvider: URLOnlineAssetProvider {
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-extension URLEmptyAssetProvider: URLOfflineAssetProvider {
+extension URLEmptyAssetProvider: URLAssetDownloadStoreProvider {
     static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: EmptyCustomData) -> Asset {
         .simple(url: fileUrl, configuration: configuration)
     }

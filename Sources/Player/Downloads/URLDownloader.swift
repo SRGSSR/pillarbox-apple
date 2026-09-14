@@ -20,7 +20,7 @@ public final class URLDownloader<CustomData>: ObservableObject {
         name: String? = nil,
         assetProviderType: Provider.Type,
         configuration: URLSessionConfiguration
-    ) throws where Provider: URLOfflineAssetProvider, Provider.CustomData == CustomData {
+    ) throws where Provider: URLAssetDownloadStoreProvider, Provider.CustomData == CustomData {
         let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore(name: name, assetProviderType: assetProviderType))
         self.downloadManager = downloader
 

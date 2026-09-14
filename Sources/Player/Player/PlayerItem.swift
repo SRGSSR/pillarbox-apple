@@ -119,7 +119,7 @@ public extension PlayerItem {
         assetProviderType: Provider.Type,
         input: URLInput<Provider.CustomData>,
         trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>]
-    ) where Provider: URLOnlineAssetProvider {
+    ) where Provider: URLAssetLoaderProvider {
         self.init(assetLoaderType: URLAssetLoader<Provider>.self, input: input, trackerAdapters: trackerAdapters)
     }
 
@@ -157,7 +157,7 @@ public extension PlayerItem {
         metadata: AssetMetadata<Provider.CustomData>,
         trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>] = [],
         configuration: PlaybackConfiguration = .default
-    ) -> Self where Provider: URLOnlineAssetProvider {
+    ) -> Self where Provider: URLAssetLoaderProvider {
         // TODO: Configuration?? Provided via URLInput?
         self.init(assetProviderType: assetProviderType, input: .init(url: url, metadata: metadata), trackerAdapters: trackerAdapters)
     }

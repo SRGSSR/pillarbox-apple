@@ -9,7 +9,7 @@ import SwiftData
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-final class URLAssetDownloadStore<Provider> where Provider: URLOfflineAssetProvider {
+final class URLAssetDownloadStore<Provider> where Provider: URLAssetDownloadStoreProvider {
     let context: ModelContext
 
     init(name: String? = nil, assetProviderType: Provider.Type) throws {

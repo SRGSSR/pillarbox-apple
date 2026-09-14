@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 
-enum URLAssetLoader<Provider>: AssetLoader where Provider: URLOnlineAssetProvider {
+enum URLAssetLoader<Provider>: AssetLoader where Provider: URLAssetLoaderProvider {
     static func metadataPublisher(for input: URLInput<Provider.CustomData>) -> AnyPublisher<AssetMetadata<Provider.CustomData>, any Error> {
         Just(input.metadata)
             .setFailureType(to: Error.self)

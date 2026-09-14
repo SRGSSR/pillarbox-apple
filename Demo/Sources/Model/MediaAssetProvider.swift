@@ -12,7 +12,7 @@ import PillarboxCoreBusiness
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
-enum MediaAssetProvider: URLOnlineAssetProvider {
+enum MediaAssetProvider: URLAssetLoaderProvider {
     static func asset(from input: URLInput<Protection>, metadata: AssetMetadata<Protection>) -> Asset {
         // TODO: Configuration
         switch metadata.customData {
@@ -27,7 +27,7 @@ enum MediaAssetProvider: URLOnlineAssetProvider {
 }
 
 @available(tvOS, unavailable)
-extension MediaAssetProvider: URLOfflineAssetProvider {
+extension MediaAssetProvider: URLAssetDownloadStoreProvider {
     static func asset(fileUrl: URL, configuration: PlaybackConfiguration, customData: Protection) -> Asset {
         .simple(url: fileUrl, configuration: configuration)
     }
