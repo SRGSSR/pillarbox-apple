@@ -18,10 +18,10 @@ public final class URLDownloader<CustomData>: ObservableObject {
 
     public init<Provider>(
         name: String? = nil,
-        assetProviderType: Provider.Type,
+        storeProviderType: Provider.Type,
         configuration: URLSessionConfiguration
     ) throws where Provider: URLAssetDownloadStoreProvider, Provider.CustomData == CustomData {
-        let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore(name: name, assetProviderType: assetProviderType))
+        let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore(name: name, providerType: storeProviderType))
         self.downloadManager = downloader
 
         downloader.$downloads
@@ -58,7 +58,7 @@ public final class URLDownloader<CustomData>: ObservableObject {
 @_spi(DownloaderPrivate)
 public extension URLDownloader where CustomData == EmptyCustomData {
     convenience init(name: String? = nil, configuration: URLSessionConfiguration) throws {
-        try self.init(name: name, assetProviderType: URLEmptyAssetProvider.self, configuration: configuration)
+        try self.init(name: name, storeProviderType: URLEmptyAssetProvider.self, configuration: configuration)
     }
 
     @discardableResult

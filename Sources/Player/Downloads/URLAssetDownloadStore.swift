@@ -12,7 +12,7 @@ import SwiftData
 final class URLAssetDownloadStore<Provider> where Provider: URLAssetDownloadStoreProvider {
     let context: ModelContext
 
-    init(name: String? = nil, assetProviderType: Provider.Type) throws {
+    init(name: String? = nil, providerType: Provider.Type) throws {
         let schema = Schema([URLEntry.self])
         let modelConfiguration = ModelConfiguration(name, schema: schema, isStoredInMemoryOnly: false)
         self.context = .init(try ModelContainer(for: schema, configurations: [modelConfiguration]))

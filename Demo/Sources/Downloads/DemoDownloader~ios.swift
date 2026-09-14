@@ -21,7 +21,7 @@ final class DemoDownloader: ObservableObject {
         guard #available(iOS 17, *) else { return nil }
         return try! URLDownloader(
             name: "url_downloads",
-            assetProviderType: MediaAssetProvider.self,
+            storeProviderType: MediaAssetProvider.self,
             configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads")
         )
     }()
