@@ -210,3 +210,11 @@ When playing downloaded content, `SystemVideoView` might present options that ar
 ### Workaround
 
 No workaround is available yet.
+
+## Standard Pillarbox menus may prevent players from being immediately deallocated on iOS 27 (FB24486991)
+
+Objects whose properties are bound to items displayed in a `Menu` are not immediately deallocated on iOS 27. As a result, standard menus provided by Pillarbox may retain the associated player longer than expected. This can lead to playback unexpectedly continuing in background.
+
+### Workaround
+
+No workaround is currently available.
