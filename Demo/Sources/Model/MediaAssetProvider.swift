@@ -14,7 +14,12 @@ import PillarboxPlayer
 
 enum MediaAssetProvider: URLAssetLoaderProvider {
     private static func configuration(from customData: MediaCustomData) -> PlaybackConfiguration {
-        .init(position: at(customData.startTime))
+        var configuration = PlaybackConfiguration(position: at(customData.startTime))
+        if !customData.isBuffered {
+            configuration.automaticallyPreservesTimeOffsetFromLive = true
+            configuration.preferredForwardBufferDuration = 1
+        }
+        return configuration
     }
 
     static func asset(from input: URLInput<MediaCustomData>, metadata: AssetMetadata<MediaCustomData>) -> Asset {

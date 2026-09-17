@@ -20,8 +20,8 @@ struct Media: Hashable {
         case urn(String, serverSetting: ServerSetting)
         case item(PlayerItem)
 
-        static func url(_ url: URL, protection: Protection = .none, startTime: CMTime = .zero) -> Self {
-            .url(url, customData: .init(protection: protection, startTime: startTime))
+        static func url(_ url: URL, protection: Protection = .none, startTime: CMTime = .zero, isBuffered: Bool = true) -> Self {
+            .url(url, customData: .init(protection: protection, startTime: startTime, isBuffered: isBuffered))
         }
 
         static func urn(_ urn: String) -> Self {
@@ -57,7 +57,7 @@ struct Media: Hashable {
 
     func item() -> PlayerItem {
         switch kind {
-        case let .url(url, customData):
+        case let .url(url, customData: customData):
             return .custom(
                 assetProviderType: MediaAssetProvider.self,
                 url: url,
@@ -85,8 +85,13 @@ struct Media: Hashable {
 
     func playerItem() -> AVPlayerItem? {
         switch kind {
-        case let .url(url, _):
-            return AVPlayerItem(url: url)
+        case let .url(url, customData: customData):
+            let item = AVPlayerItem(url: url)
+            if !customData.isBuffered {
+                item.automaticallyPreservesTimeOffsetFromLive = true
+                item.preferredForwardBufferDuration = 1
+            }
+            return item
         default:
             return nil
         }
