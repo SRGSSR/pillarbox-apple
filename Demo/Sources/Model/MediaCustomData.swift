@@ -8,8 +8,9 @@ import CoreMedia
 
 struct MediaCustomData: Hashable, Codable {
     let protection: Protection
-    let _startTime: Int64
     let isBuffered: Bool
+
+    private let _startTime: Int64
 
     var startTime: CMTime {
         .init(value: _startTime, timescale: 1000)
