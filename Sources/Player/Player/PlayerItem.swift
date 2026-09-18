@@ -123,7 +123,7 @@ public extension PlayerItem {
         self.init(assetLoaderType: URLAssetLoader<Provider>.self, input: input, trackerAdapters: trackerAdapters)
     }
 
-    /// Creates an simple player item with asset metadata.
+    /// Creates a simple player item.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
@@ -146,8 +146,6 @@ public extension PlayerItem {
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     /// - Returns: The item.
-    ///
-    /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
     static func custom<Provider>(
         assetProviderType: Provider.Type,
         url: URL,
