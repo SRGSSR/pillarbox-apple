@@ -258,7 +258,7 @@ extension SettingsView {
     }
 
 #if DOWNLOADS
-    @ViewBuilder
+    @ContentBuilder
     private func downloadsSection() -> some View {
         if downloader.canDownload {
             Section {
