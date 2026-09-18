@@ -138,9 +138,10 @@ public extension PlayerItem {
         self.init(assetProviderType: URLEmptyAssetProvider.self, input: .init(url: url, metadata: metadata), trackerAdapters: trackerAdapters)
     }
 
-    /// Creates a custom player item with asset metadata.
+    /// Creates a custom URL-based player item.
     ///
     /// - Parameters:
+    ///   - assetProviderType: The asset provider type.
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
