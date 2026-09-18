@@ -106,7 +106,7 @@ struct SettingsView: View {
 #endif
 
     var body: some View {
-        Form {
+        CustomList {
             content()
         }
         .padding(.horizontal, constant(iOS: 0, tvOS: 40))
@@ -218,11 +218,11 @@ extension SettingsView {
     private func qualityPicker() -> some View {
         Picker("Quality", selection: $qualitySetting) {
             ForEach(QualitySetting.allCases, id: \.self) { setting in
-                Text(setting.name).tag(setting)
+                PickerLabel(title: "Quality", value: setting.name).tag(setting)
             }
         }
 #if os(tvOS)
-        .pickerStyle(.navigationLink)
+        .settingPickerStyle()
 #endif
     }
 
@@ -319,22 +319,22 @@ extension SettingsView {
             if playbackHudEnabled {
                 Picker("Font size", selection: $playbackHudFontSize) {
                     ForEach(PlaybackHudFontSize.allCases, id: \.self) { size in
-                        Text(size.name).tag(size)
+                        PickerLabel(title: "Font size", value: size.name).tag(size)
                     }
                 }
 #if os(tvOS)
-                .pickerStyle(.navigationLink)
+                .settingPickerStyle()
 #endif
 
                 Picker("Color", selection: $playbackHudColor) {
-                    Text("Yellow").tag(PlaybackHudColor.yellow)
-                    Text("Green").tag(PlaybackHudColor.green)
-                    Text("Red").tag(PlaybackHudColor.red)
-                    Text("Blue").tag(PlaybackHudColor.blue)
-                    Text("White").tag(PlaybackHudColor.white)
+                    PickerLabel(title: "Color", value: "Yellow").tag(PlaybackHudColor.yellow)
+                    PickerLabel(title: "Color", value: "Green").tag(PlaybackHudColor.green)
+                    PickerLabel(title: "Color", value: "Red").tag(PlaybackHudColor.red)
+                    PickerLabel(title: "Color", value: "Blue").tag(PlaybackHudColor.blue)
+                    PickerLabel(title: "Color", value: "White").tag(PlaybackHudColor.white)
                 }
 #if os(tvOS)
-                .pickerStyle(.navigationLink)
+                .settingPickerStyle()
 #endif
 
                 numberEditor("X offset", value: $playbackHudXOffset)

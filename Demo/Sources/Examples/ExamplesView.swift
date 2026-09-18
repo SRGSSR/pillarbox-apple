@@ -133,16 +133,16 @@ private struct MediaEntryView: View {
 
     private func kindPicker() -> some View {
         Picker("Kind", selection: $kind) {
-            Text("URL").tag(Kind.url)
-            Text("URL with SRG SSR token protection").tag(Kind.tokenProtected)
-            Text("URL with SRG SSR DRM encryption").tag(Kind.encrypted)
+            PickerLabel(title: "Kind", value: "URL").tag(Kind.url)
+            PickerLabel(title: "Kind", value: "URL with SRG SSR token protection").tag(Kind.tokenProtected)
+            PickerLabel(title: "Kind", value: "URL with SRG SSR DRM encryption").tag(Kind.encrypted)
             Divider()
-            Text("URN (Production)").tag(Kind.productionUrn)
-            Text("URN (Stage)").tag(Kind.stageUrn)
-            Text("URN (Test)").tag(Kind.testUrn)
+            PickerLabel(title: "Kind", value: "URN (Production)").tag(Kind.productionUrn)
+            PickerLabel(title: "Kind", value: "URN (Stage)").tag(Kind.stageUrn)
+            PickerLabel(title: "Kind", value: "URN (Test)").tag(Kind.testUrn)
         }
 #if os(tvOS)
-        .pickerStyle(.navigationLink)
+        .settingPickerStyle()
 #endif
     }
 
