@@ -6,13 +6,11 @@
 
 // swiftlint:disable missing_docs
 
-@_spi(DownloaderPrivate)
-@available(tvOS, unavailable)
-public enum DownloadState: Equatable {
-    case preparing
-    case running
-    case suspended
-    case completed
+import Foundation
+
+public struct URLInput<CustomData> {
+    public let url: URL
+    public let metadata: AssetMetadata<CustomData>
 }
 
 // swiftlint:enable missing_docs

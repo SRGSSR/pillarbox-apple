@@ -34,7 +34,7 @@ final class Router: ObservableObject {
     @Published var contentListsPath: [RouterDestination] = []
     @Published var searchPath: [RouterDestination] = []
 
-#if DEBUG
+#if DOWNLOADS
     @Published var downloadsPath: [RouterDestination] = []
 #endif
 

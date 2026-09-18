@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 import Combine
 import Foundation
 import PillarboxCore
@@ -15,11 +13,9 @@ import PillarboxCore
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject, Identifiable {
-    private typealias DownloadPlayerProperties = DownloadProperties<Void>
-
     public let id: String
 
-    @Published private var properties: DownloadPlayerProperties = .init()
+    @Published private var properties: DownloadProperties<EmptyCustomData> = .init()
 
     private let trigger = Trigger()
     private let session: any DownloadSession
@@ -232,7 +228,7 @@ private extension Download {
                 DownloadProperties(
                     configuration: properties.configuration,
                     progress: properties.progress,
-                    assetMetadata: properties.assetMetadata?.withoutCustomData(),
+                    playerMetadata: properties.playerMetadata,
                     fileUrl: properties.fileUrl,
                     error: properties.error
                 )
@@ -253,7 +249,5 @@ extension Download: Hashable {
         hasher.combine(ObjectIdentifier(self))
     }
 }
-
-#endif
 
 // swiftlint:enable missing_docs

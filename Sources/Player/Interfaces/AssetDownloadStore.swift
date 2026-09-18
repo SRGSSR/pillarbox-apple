@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 import Combine
 import Foundation
 
@@ -19,9 +17,9 @@ public protocol AssetDownloadStore: AnyObject {
 
     static func id(from input: Loader.Input) -> String
 
+    static func playerMetadata(from input: Loader.Input, metadata: Loader.Metadata?) -> PlayerMetadata
     static func customData(from metadata: Loader.Metadata) -> CustomData
     static func asset(fileUrl: URL, customData: CustomData) -> Asset
-    static func playerMetadata(from input: Loader.Input, metadata: Loader.Metadata?) -> PlayerMetadata
 
     func downloadRecords() -> [DownloadRecord<Loader.Input, CustomData>]
 
@@ -34,10 +32,6 @@ public protocol AssetDownloadStore: AnyObject {
 
 @available(tvOS, unavailable)
 public extension AssetDownloadStore {
-    static func asset(fileUrl: URL, customData: CustomData) -> Asset {
-        .simple(url: fileUrl)
-    }
-
     static func playerMetadata(from input: Loader.Input, metadata: Loader.Metadata?) -> PlayerMetadata {
         Loader.playerMetadata(from: input, metadata: metadata)
     }
@@ -58,17 +52,18 @@ extension AssetDownloadStore {
             .first()
             .map { metadata in
                 let playerMetadata = playerMetadata(from: input, metadata: metadata)
-                return Publishers.CombineLatest3(
+                return Publishers.CombineLatest4(
                     Just(metadata),
                     Just(playerMetadata),
+                    Loader.downloadableAssetPublisher(from: input, metadata: metadata),
                     playerMetadata.imageSource.imageSourcePublisher()
                 )
             }
             .switchToLatest()
-            .map { metadata, playerMetadata, imageSource in
+            .map { metadata, playerMetadata, asset, imageSource in
                 DownloadAsset(
-                    Loader.asset(from: input, metadata: metadata),
-                    assetMetadata: .init(playerMetadata: playerMetadata.withImageSource(imageSource), customData: customData(from: metadata))
+                    asset,
+                    assetMetadata: playerMetadata.withImageSource(imageSource).withCustomData(customData(from: metadata))
                 )
             }
             .eraseToAnyPublisher()
@@ -98,7 +93,5 @@ extension AssetDownloadStore {
         }
     }
 }
-
-#endif
 
 // swiftlint:enable missing_docs

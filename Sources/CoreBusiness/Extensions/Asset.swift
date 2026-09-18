@@ -4,14 +4,17 @@
 //  License information is available from the LICENSE file.
 //
 
+// swiftlint:disable missing_docs
+
 import Foundation
 import PillarboxPlayer
 
-extension Asset {
+@_spi(CoreBusinessPrivate)
+public extension Asset {
     static func tokenProtected(url: URL, configuration: PlaybackConfiguration) -> Self {
         let id = UUID()
         return .custom(
-            url: AkamaiURLCoding.encodeUrl(url, id: id),
+            url: Akamai.encodeUrl(url, id: id),
             delegate: AkamaiResourceLoaderDelegate(id: id),
             configuration: configuration
         )
@@ -25,3 +28,5 @@ extension Asset {
         )
     }
 }
+
+// swiftlint:enable missing_docs

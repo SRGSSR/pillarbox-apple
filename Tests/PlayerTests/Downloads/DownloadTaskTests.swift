@@ -38,7 +38,7 @@ final class DownloadTaskTests: TestCase {
             id: "id",
             input: input,
             configuration: .default,
-            reusableAssetMetadata: .init(playerMetadata: metadata, customData: ()),
+            reusableAssetMetadata: .init(title: "title"),
             session: session
         )
         let task = try waitForSingleOutput(from: publisher)

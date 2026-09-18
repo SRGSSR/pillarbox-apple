@@ -6,8 +6,6 @@
 
 // swiftlint:disable missing_docs
 
-#if DEBUG
-
 import AVFoundation
 
 @available(tvOS, unavailable)
@@ -75,7 +73,5 @@ public struct DownloadConfiguration: Equatable, Codable {
         configuration.auxiliaryContentConfigurations = []
     }
 }
-
-#endif
 
 // swiftlint:enable missing_docs

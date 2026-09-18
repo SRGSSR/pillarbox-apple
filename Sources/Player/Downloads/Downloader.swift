@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 // swiftlint:disable missing_docs
 
 import Combine
@@ -53,10 +51,9 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
               let metadata = record.metadata, let fileUrl = download.fileUrl else {
             return nil
         }
-        let asset = S.asset(fileUrl: fileUrl, customData: metadata.customData)
         return .init(
-            assetLoaderType: CustomDirectAssetLoader.self,
-            input: .init(asset: asset, metadata: metadata),
+            asset: S.asset(fileUrl: fileUrl, customData: metadata.customData),
+            metadata: metadata,
             trackerAdapters: trackerAdapters
         )
     }
@@ -91,6 +88,7 @@ extension Downloader: DownloadSessionDelegate {
     }
 }
 
-// swiftlint:enable missing_docs
+@available(tvOS, unavailable)
+extension Downloader: DownloadManager {}
 
-#endif
+// swiftlint:enable missing_docs

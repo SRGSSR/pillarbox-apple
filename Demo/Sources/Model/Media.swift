@@ -15,14 +15,14 @@ import UIKit
 import PillarboxCoreBusiness
 
 struct Media: Hashable {
-    enum `Type`: Hashable {
-        case url(URL)
-        case monoscopicUrl(URL)
-        case tokenProtectedUrl(URL)
-        case encryptedUrl(URL, certificateUrl: URL)
-        case unbufferedUrl(URL)
+    enum Kind: Hashable {
+        case url(URL, customData: MediaCustomData)
         case urn(String, serverSetting: ServerSetting)
         case item(PlayerItem)
+
+        static func url(_ url: URL, protection: Protection = .none, startTime: CMTime = .zero, isBuffered: Bool = true) -> Self {
+            .url(url, customData: .init(protection: protection, startTime: startTime, isBuffered: isBuffered))
+        }
 
         static func urn(_ urn: String) -> Self {
             .urn(urn, serverSetting: .production)
@@ -33,8 +33,8 @@ struct Media: Hashable {
     let subtitle: String?
     let imageUrl: URL?
     let image: UIImage?
-    let type: `Type`
-    let startTime: CMTime
+    let kind: Kind
+    let viewport: Viewport
     let timeRanges: [TimeRange]
 
     init(
@@ -42,71 +42,31 @@ struct Media: Hashable {
         subtitle: String? = nil,
         imageUrl: URL? = nil,
         image: UIImage? = nil,
-        type: `Type`,
-        startTime: CMTime = .zero,
+        kind: Kind,
+        viewport: Viewport = .standard,
         timeRanges: [TimeRange] = []
     ) {
         self.title = title
         self.subtitle = subtitle
         self.imageUrl = imageUrl
         self.image = image
-        self.type = type
-        self.startTime = startTime
+        self.kind = kind
+        self.viewport = viewport
         self.timeRanges = timeRanges
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func item() -> PlayerItem {
-        switch type {
-        case let .url(url), let .monoscopicUrl(url):
-            return .simple(
+        switch kind {
+        case let .url(url, customData: customData):
+            return .custom(
+                assetProviderType: MediaAssetProvider.self,
                 url: url,
-                metadata: metadata(),
+                metadata: metadata(customData: customData),
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
                     }
-                ],
-                configuration: .init(position: at(startTime))
-            )
-        case let .tokenProtectedUrl(url):
-            return .tokenProtected(
-                url: url,
-                metadata: metadata(),
-                trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
-                    }
-                ],
-                configuration: .init(position: at(startTime))
-            )
-        case let .encryptedUrl(url, certificateUrl: certificateUrl):
-            return .encrypted(
-                url: url,
-                certificateUrl: certificateUrl,
-                metadata: metadata(),
-                trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
-                    }
-                ],
-                configuration: .init(position: at(startTime))
-            )
-        case let .unbufferedUrl(url):
-            let configuration = PlaybackConfiguration(
-                position: at(startTime),
-                automaticallyPreservesTimeOffsetFromLive: true,
-                preferredForwardBufferDuration: 1
-            )
-            return .simple(
-                url: url,
-                metadata: metadata(),
-                trackerAdapters: [
-                    DemoTracker.adapter { metadata in
-                        DemoTracker.Metadata(title: metadata.title)
-                    }
-                ],
-                configuration: configuration
+                ]
             )
         case let .urn(urn, serverSetting: serverSetting):
             return .urn(
@@ -124,13 +84,13 @@ struct Media: Hashable {
     }
 
     func playerItem() -> AVPlayerItem? {
-        switch type {
-        case let .url(url), let .monoscopicUrl(url):
-            return AVPlayerItem(url: url)
-        case let .unbufferedUrl(url):
+        switch kind {
+        case let .url(url, customData: customData):
             let item = AVPlayerItem(url: url)
-            item.automaticallyPreservesTimeOffsetFromLive = true
-            item.preferredForwardBufferDuration = 1
+            if !customData.isBuffered {
+                item.automaticallyPreservesTimeOffsetFromLive = true
+                item.preferredForwardBufferDuration = 1
+            }
             return item
         default:
             return nil
@@ -151,16 +111,14 @@ extension Media {
         }
     }
 
-    private var viewport: Viewport {
-        switch type {
-        case .monoscopicUrl:
-            return .monoscopic
-        default:
-            return .standard
-        }
-    }
-
-    func metadata() -> PlayerMetadata {
-        .init(title: title, subtitle: subtitle, imageSource: imageSource, viewport: viewport, timeRanges: timeRanges)
+    func metadata(customData: MediaCustomData) -> AssetMetadata<MediaCustomData> {
+        .init(
+            title: title,
+            subtitle: subtitle,
+            imageSource: imageSource,
+            viewport: viewport,
+            timeRanges: timeRanges,
+            customData: customData
+        )
     }
 }

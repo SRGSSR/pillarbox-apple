@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 import Foundation
 
 @available(tvOS, unavailable)
@@ -18,6 +16,10 @@ struct DownloadProperties<CustomData> {
 
     var reusableAssetMetadata: AssetMetadata<CustomData>? {
         fileUrl != nil || error != nil ? assetMetadata : nil
+    }
+
+    var playerMetadata: PlayerMetadata? {
+        assetMetadata?.playerMetadata
     }
 
     var state: DownloadState {
@@ -133,4 +135,9 @@ struct DownloadProperties<CustomData> {
     }
 }
 
-#endif
+@available(tvOS, unavailable)
+extension DownloadProperties where CustomData == EmptyCustomData {
+    init(configuration: DownloadConfiguration, progress: DownloadProgress, playerMetadata: PlayerMetadata?, fileUrl: URL?, error: Error?) {
+        self.init(configuration: configuration, progress: progress, assetMetadata: playerMetadata, fileUrl: fileUrl, error: error)
+    }
+}

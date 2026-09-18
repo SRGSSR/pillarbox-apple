@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 import Foundation
 
 @available(tvOS, unavailable)
@@ -18,5 +16,3 @@ struct DownloadTask<CustomData> {
         self.assetMetadata = assetMetadata
     }
 }
-
-#endif

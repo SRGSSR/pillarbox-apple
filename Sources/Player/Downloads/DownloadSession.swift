@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 import Combine
 import Foundation
 
@@ -18,5 +16,3 @@ protocol DownloadSession: AnyObject {
 
     func cancelTasks(matchingId id: String)
 }
-
-#endif

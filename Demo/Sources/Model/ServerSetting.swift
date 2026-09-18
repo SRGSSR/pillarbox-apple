@@ -8,7 +8,7 @@ import PillarboxCoreBusiness
 import SRGDataProvider
 
 @objc
-enum ServerSetting: Int, CaseIterable {
+enum ServerSetting: Int, CaseIterable, Codable {
     case production
     case stage
     case test

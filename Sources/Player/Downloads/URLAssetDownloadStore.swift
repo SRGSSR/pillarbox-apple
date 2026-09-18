@@ -7,16 +7,13 @@
 import Foundation
 import SwiftData
 
-@_spi(DownloaderPrivate)
-import PillarboxPlayer
-
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-final class URNAssetDownloadStore {
+final class URLAssetDownloadStore<Provider> where Provider: URLAssetDownloadStoreProvider {
     let context: ModelContext
 
-    init(name: String? = nil) throws {
-        let schema = Schema([URNEntry.self])
+    init(name: String? = nil, providerType: Provider.Type) throws {
+        let schema = Schema([URLEntry.self])
         let modelConfiguration = ModelConfiguration(name, schema: schema, isStoredInMemoryOnly: false)
         self.context = .init(try ModelContainer(for: schema, configurations: [modelConfiguration]))
     }
@@ -24,7 +21,7 @@ final class URNAssetDownloadStore {
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-private extension URNAssetDownloadStore {
+private extension URLAssetDownloadStore {
     struct EntryAssetMetadata: Codable {
         private let identifier: String?
         private let title: String?
@@ -37,7 +34,7 @@ private extension URNAssetDownloadStore {
         private let season: Int?
         private let chapters: [Chapter]
         private let timeRanges: [TimeRange]
-        private let customData: URNMetadata
+        private let customData: Provider.CustomData
 
         private var imageSource: ImageSource {
             if let imageData {
@@ -61,14 +58,13 @@ private extension URNAssetDownloadStore {
             }
         }
 
-        init?(assetMetadata: AssetMetadata<URNMetadata>?) {
-            guard let assetMetadata else { return nil }
+        init(assetMetadata: AssetMetadata<Provider.CustomData>) {
             self.identifier = assetMetadata.identifier
             self.title = assetMetadata.title
             self.subtitle = assetMetadata.subtitle
             self.summary = assetMetadata.description
-            self.imageUrl = assetMetadata.imageSource.url
             self.imageData = assetMetadata.imageSource.data
+            self.imageUrl = assetMetadata.imageSource.url
             self.viewport = assetMetadata.viewport
             self.episode = assetMetadata.episodeInformation?.episode
             self.season = assetMetadata.episodeInformation?.season
@@ -77,7 +73,7 @@ private extension URNAssetDownloadStore {
             self.customData = assetMetadata.customData
         }
 
-        func assetMetadata() -> AssetMetadata<URNMetadata> {
+        func assetMetadata() -> AssetMetadata<Provider.CustomData> {
             .init(
                 identifier: identifier,
                 title: title,
@@ -114,40 +110,41 @@ private extension URNAssetDownloadStore {
     }
 
     @Model
-    final class URNEntry {
+    final class URLEntry {
         @Attribute(.unique)
         var id: String
 
-        private var input: URNAssetLoader.Input
+        private var url: URL
         private var configuration: DownloadConfiguration
-        private var metadata: EntryAssetMetadata?
+        private var metadata: EntryAssetMetadata
         private var bookmarkData: Data?
         private var progress: Double
         private var error: EntryError?
         private var creationDate: Date
 
-        init(id: String, record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
+        init(id: String, record: DownloadRecord<URLInput<CustomData>, Provider.CustomData>) {
             self.id = id
-            self.input = record.input
+            self.url = record.input.url
             self.configuration = record.configuration
-            self.metadata = .init(assetMetadata: record.metadata)
+            self.metadata = .init(assetMetadata: record.input.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
             self.error = .init(error: record.error)
             self.creationDate = record.creationDate
         }
 
-        static func predicate(for id: String) -> Predicate<URNEntry> {
+        static func predicate(for id: String) -> Predicate<URLEntry> {
             #Predicate { entry in
                 entry.id == id
             }
         }
 
-        func toRecord() -> DownloadRecord<URNAssetLoader.Input, URNMetadata> {
-            .init(
-                input: input,
+        func toRecord() -> DownloadRecord<URLInput<CustomData>, Provider.CustomData> {
+            let assetMetadata = metadata.assetMetadata()
+            return .init(
+                input: .init(url: url, metadata: assetMetadata),
                 configuration: configuration,
-                metadata: metadata?.assetMetadata(),
+                metadata: assetMetadata,
                 bookmarkData: bookmarkData,
                 progress: progress,
                 error: error?.error(),
@@ -155,10 +152,10 @@ private extension URNAssetDownloadStore {
             )
         }
 
-        func update(with record: DownloadRecord<URNAssetLoader.Input, URNMetadata>) {
-            self.input = record.input
+        func update(with record: DownloadRecord<URLInput<CustomData>, Provider.CustomData>) {
+            self.url = record.input.url
             self.configuration = record.configuration
-            self.metadata = .init(assetMetadata: record.metadata)
+            self.metadata = .init(assetMetadata: record.input.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
             self.error = .init(error: record.error)
@@ -167,54 +164,48 @@ private extension URNAssetDownloadStore {
     }
 }
 
-@_spi(DownloaderPrivate)
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-extension URNAssetDownloadStore: AssetDownloadStore {
-    typealias Loader = URNAssetLoader
+extension URLAssetDownloadStore: AssetDownloadStore {
+    typealias Loader = URLAssetLoader<Provider>
 
-    static func id(from input: URNAssetLoader.Input) -> String {
-        input.id
+    static func id(from input: URLInput<CustomData>) -> String {
+        input.url.absoluteString
     }
 
-    static func playerMetadata(from input: URNAssetLoader.Input, metadata: MediaMetadata?) -> PlayerMetadata {
-        metadata?.playerMetadata(dateFormat: .standard) ?? .empty
+    static func customData(from metadata: AssetMetadata<Provider.CustomData>) -> Provider.CustomData {
+        metadata.customData
     }
 
-    static func customData(from metadata: MediaMetadata) -> URNMetadata {
-        .init(analyticsData: metadata.analyticsData, analyticsMetadata: metadata.analyticsMetadata)
+    static func asset(fileUrl: URL, customData: Provider.CustomData) -> Asset {
+        Provider.asset(fileUrl: fileUrl, customData: customData)
     }
 
-    static func asset(fileUrl: URL, customData: URNMetadata) -> Asset {
-        // TODO: Return the right asset
-        .simple(url: fileUrl)
-    }
-
-    func downloadRecords() -> [DownloadRecord<URNAssetLoader.Input, URNMetadata>] {
-        guard let entries = try? context.fetch(FetchDescriptor<URNEntry>()) else { return [] }
+    func downloadRecords() -> [DownloadRecord<URLInput<CustomData>, Provider.CustomData>] {
+        guard let entries = try? context.fetch(FetchDescriptor<URLEntry>()) else { return [] }
         return entries.map { $0.toRecord() }
     }
 
-    func addDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, URNMetadata>, forId id: String) {
-        context.insert(URNEntry(id: id, record: record))
+    func addDownloadRecord(_ record: DownloadRecord<URLInput<CustomData>, Provider.CustomData>, forId id: String) {
+        context.insert(URLEntry(id: id, record: record))
     }
 
     func removeDownloadRecord(forId id: String) {
-        try? context.delete(model: URNEntry.self, where: URNEntry.predicate(for: id))
+        try? context.delete(model: URLEntry.self, where: URLEntry.predicate(for: id))
     }
 
-    func downloadRecord(forId id: String) -> DownloadRecord<URNAssetLoader.Input, URNMetadata>? {
+    func downloadRecord(forId id: String) -> DownloadRecord<URLInput<CustomData>, Provider.CustomData>? {
         entry(forId: id)?.toRecord()
     }
 
-    func updateDownloadRecord(_ record: DownloadRecord<URNAssetLoader.Input, URNMetadata>, forId id: String) {
+    func updateDownloadRecord(_ record: DownloadRecord<URLInput<CustomData>, Provider.CustomData>, forId id: String) {
         guard let entry = entry(forId: id) else { return }
         entry.update(with: record)
         try? context.save()
     }
 
-    private func entry(forId id: String) -> URNEntry? {
-        let descriptor = FetchDescriptor(predicate: URNEntry.predicate(for: id))
+    private func entry(forId id: String) -> URLEntry? {
+        let descriptor = FetchDescriptor(predicate: URLEntry.predicate(for: id))
         return try? context.fetch(descriptor).first
     }
 }
