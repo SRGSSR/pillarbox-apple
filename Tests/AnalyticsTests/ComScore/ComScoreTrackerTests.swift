@@ -211,18 +211,19 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     }
 
     func testOnDemandStartAtGivenPosition() {
-        let player = Player(item: .simple(
+        let item = PlayerItem.simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
-            ],
-            configuration: .init(position: at(.init(value: 100, timescale: 1)))
-        ))
+            ]
+        )
+        let player = Player(item: item)
         expectAtLeastHits(
             play { labels in
                 expect(labels.ns_st_po).to(beCloseTo(100, within: 5))
             }
         ) {
+            player.resume(at(.init(value: 100, timescale: 1)), in: item)
             player.play()
         }
     }
