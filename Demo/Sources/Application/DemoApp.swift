@@ -76,7 +76,7 @@ struct DemoApp: App {
     }
 
 #if DOWNLOADS && os(iOS)
-    @ViewBuilder
+    @ContentBuilder
     private func downloadsTab() -> some View {
         if downloader.canDownload {
             RoutedNavigationStack(keyPath: \.downloadsPath) {

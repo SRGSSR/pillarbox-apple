@@ -22,8 +22,7 @@ struct LiveRadioToggleView: View {
     private func modePicker() -> some View {
         Picker("Mode", selection: $model.mode) {
             ForEach(LiveRadioMode.allCases) { mode in
-                Text(mode.rawValue)
-                    .tag(mode)
+                Text(mode.localizedStringResource).tag(mode)
             }
         }
         .pickerStyle(.segmented)
@@ -64,7 +63,7 @@ private struct _PlaybackView: View {
         .background(.black)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func audioVideoView() -> some View {
         switch model.mode {
         case .audio:

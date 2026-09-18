@@ -60,7 +60,7 @@ struct DownloadsView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func removeAllButton() -> some View {
         if !downloader.downloads.isEmpty {
             Button {

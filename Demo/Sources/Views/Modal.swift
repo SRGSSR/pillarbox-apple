@@ -10,7 +10,7 @@ import SwiftUI
 
 private struct ModalModifier<Item, Presented>: ViewModifier where Item: Identifiable, Presented: View {
     let item: Binding<Item?>
-    @ViewBuilder let presented: (Item) -> Presented
+    @ContentBuilder let presented: (Item) -> Presented
 
     func body(content: Content) -> some View {
         content
@@ -45,7 +45,7 @@ private struct PresentedModifier: ViewModifier {
 #endif
 
 extension View {
-    func modal<Item, Content>(item: Binding<Item?>, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item: Identifiable, Content: View {
+    func modal<Item, Content>(item: Binding<Item?>, @ContentBuilder content: @escaping (Item) -> Content) -> some View where Item: Identifiable, Content: View {
 #if os(iOS)
         modifier(ModalModifier(item: item, presented: content))
 #else

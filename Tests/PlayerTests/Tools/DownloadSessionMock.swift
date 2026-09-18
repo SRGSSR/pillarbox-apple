@@ -19,7 +19,7 @@ final class DownloadSessionMock: NSObject {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var session: URLSession!
 
-    weak var delegate: (any DownloadSessionDelegate)?
+    weak var delegate: any DownloadSessionDelegate?
 
     init(name: String) {
         self.directoryUrl = FileManager.default.temporaryDirectory.appendingPathComponent("DownloadSessionMock").appendingPathComponent(name)
@@ -67,7 +67,7 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
         return url.pathExtension
     }
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: any Error?) {
         guard let delegate, let id = task.taskDescription else { return }
         delegate.downloadSessionTask(task, didCompleteWithError: error ?? Self.error(from: task), forId: id)
     }

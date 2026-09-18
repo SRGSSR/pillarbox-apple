@@ -54,7 +54,7 @@ private struct ScrollClipDisabled17: ViewModifier {
 
 private struct SearchScopes16<V, S>: ViewModifier where V: Hashable, S: View {
     let binding: Binding<V>
-    @ViewBuilder let scopes: () -> S
+    @ContentBuilder let scopes: () -> S
 
     func body(content: Content) -> some View {
         if #available(iOS 16.0, tvOS 16.4, *) {
@@ -103,7 +103,7 @@ extension View {
         modifier(ScrollClipDisabled17(disabled))
     }
 
-    func searchScopes16_4<V, S>(_ binding: Binding<V>, @ViewBuilder scopes: @escaping () -> S) -> some View where V: Hashable, S: View {
+    func searchScopes16_4<V, S>(_ binding: Binding<V>, @ContentBuilder scopes: @escaping () -> S) -> some View where V: Hashable, S: View {
         modifier(SearchScopes16(binding: binding, scopes: scopes))
     }
 
@@ -126,7 +126,7 @@ extension View {
 }
 
 extension View {
-    @ViewBuilder
+    @ContentBuilder
     func topBarStyle(_ apply: Bool = true) -> some View {
         if apply {
             padding(.horizontal)

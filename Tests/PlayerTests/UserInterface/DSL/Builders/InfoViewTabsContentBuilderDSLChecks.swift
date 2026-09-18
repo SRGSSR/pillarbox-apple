@@ -10,7 +10,7 @@ import SwiftUI
 private enum InfoViewTabsContentBuilderDSLChecks {
     private static func tab() -> InfoViewTabsElement {
         Tab("Title") {
-            SwiftUI.Button("") {}
+            SwiftUI::Button("") {}
         }
     }
 

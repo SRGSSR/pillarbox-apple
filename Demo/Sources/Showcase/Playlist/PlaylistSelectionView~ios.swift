@@ -69,10 +69,9 @@ struct PlaylistSelectionView: View {
     }
 
     private func picker() -> some View {
-        SwiftUI.Picker(selection: $selectedInsertionOption) {
+        Picker(selection: $selectedInsertionOption) {
             ForEach(InsertionOption.allCases, id: \.self) { option in
-                Text(option.name)
-                    .tag(option)
+                Text(option.localizedStringResource).tag(option)
             }
         } label: {
             EmptyView()
@@ -116,13 +115,13 @@ struct PlaylistSelectionView: View {
 }
 
 private extension PlaylistSelectionView {
-    enum InsertionOption: CaseIterable {
+    enum InsertionOption: CaseIterable, CustomLocalizedStringResourceConvertible {
         case prepend
         case insertBefore
         case insertAfter
         case append
 
-        var name: LocalizedStringResource {
+        var localizedStringResource: LocalizedStringResource {
             switch self {
             case .prepend:
                 "Prepend"

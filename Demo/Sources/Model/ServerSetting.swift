@@ -8,7 +8,7 @@ import PillarboxCoreBusiness
 import SRGDataProvider
 
 @objc
-enum ServerSetting: Int, CaseIterable, Codable {
+enum ServerSetting: Int, CaseIterable, Codable, CustomLocalizedStringResourceConvertible {
     case production
     case stage
     case test
@@ -16,7 +16,7 @@ enum ServerSetting: Int, CaseIterable, Codable {
     case playPlusIntegration
     case playPlusDevelopment
 
-    var title: String {
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .production:
             return "Production"
