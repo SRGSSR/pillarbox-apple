@@ -164,7 +164,6 @@ private extension URLAssetDownloadStore {
     }
 }
 
-@_spi(DownloaderPrivate)
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 extension URLAssetDownloadStore: AssetDownloadStore {
