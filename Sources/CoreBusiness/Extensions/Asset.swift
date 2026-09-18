@@ -4,13 +4,17 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 import Foundation
 import PillarboxPlayer
 
 @_spi(CoreBusinessPrivate)
 public extension Asset {
+    /// Returns an SRG SSR Akamai token-protected asset from a URL.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - configuration: The configuration to apply to the asset.
+    /// - Returns: The asset.
     static func tokenProtected(url: URL, configuration: PlaybackConfiguration) -> Self {
         let id = UUID()
         return .custom(
@@ -20,6 +24,13 @@ public extension Asset {
         )
     }
 
+    /// Returns an SRG SSR FairPlay-protected asset from a URL.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - certificateUrl: The URL where the FairPlay certificate must be downloaded.
+    ///   - configuration: The configuration to apply to the asset.
+    /// - Returns: The asset.
     static func encrypted(url: URL, certificateUrl: URL, configuration: PlaybackConfiguration) -> Self {
         .encrypted(
             url: url,
@@ -28,5 +39,3 @@ public extension Asset {
         )
     }
 }
-
-// swiftlint:enable missing_docs

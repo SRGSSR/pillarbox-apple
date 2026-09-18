@@ -44,6 +44,7 @@ public final class URNDownloader: ObservableObject {
     ///   - urn: The URN of the content to download.
     ///   - server: The server from which to download the content.
     ///   - httpHeaders: The HTTP headers to include when retrieving the content.
+    ///   - configuration: The download configuration.
     /// - Returns: A download associated with the given URN. If a download already exists for the URN, the existing
     ///   download is returned instead.
     @discardableResult

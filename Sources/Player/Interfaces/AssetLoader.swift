@@ -30,6 +30,12 @@ public protocol AssetLoader {
     static func asset(from input: Input, metadata: Metadata) -> Asset
 
     /// Converts input and metadata to a downloadable asset publisher.
+    ///
+    /// - Parameters:
+    ///   - input: The input that identifies the asset.
+    ///   - metadata: The metadata associated with the asset.
+    /// - Returns: An asset representing the content to be downloaded. The publisher can be used to perform any kind of
+    ///   required work (potentially asynchronous) to return an asset that can be downloaded.
     static func downloadableAssetPublisher(from input: Input, metadata: Metadata) -> AnyPublisher<Asset, Never>
 
     /// Converts the given input and metadata into player metadata.

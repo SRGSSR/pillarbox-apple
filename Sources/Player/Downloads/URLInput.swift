@@ -4,13 +4,17 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 import Foundation
 
+/// Input required to play or download URL-based content.
 public struct URLInput<CustomData> {
+    /// The URL of the content.
     public let url: URL
+
+    /// Metadata (including custom data) associated with the content.
+    ///
+    /// Custom data should include any useful information to:
+    ///   - Build the kind of asset to play or download (e.g. custom or encrypted asset).
+    ///   - Perform tracking.
     public let metadata: AssetMetadata<CustomData>
 }
-
-// swiftlint:enable missing_docs

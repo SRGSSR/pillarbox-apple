@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+/// A download state.
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public enum DownloadState: Equatable {
