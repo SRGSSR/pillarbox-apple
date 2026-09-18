@@ -6,26 +6,32 @@
 
 import SwiftUI
 
-// FIXME: Remove this view when Apple fixes `NavigationLinkPickerStyle` on tvOS 27.
-struct PickerLabel: View {
-    let title: String
-    let value: String
+struct PickerMenu<Content, Selection>: View where Content: View, Selection: Hashable & CustomLocalizedStringResourceConvertible {
+    private let titleKey: LocalizedStringKey
+    private let selection: Binding<Selection>
+    private let content: () -> Content
 
     var body: some View {
-        if #available(tvOS 27, *) {
-            HStack(spacing: 0) {
-                Text(value)
-                    .frame(width: 0, height: 0)
-                    .accessibilityHidden(true)
-                Text(title)
-                Spacer()
-                Text(value)
-                    .foregroundStyle(.secondary)
+#if os(tvOS)
+        if #available(tvOS 17, *) {
+            Menu {
+                Picker(titleKey, selection: selection, content: content)
+            } label: {
+                LabeledContent(titleKey, value: String(localized: selection.wrappedValue.localizedStringResource))
             }
-            .frame(maxWidth: .infinity)
         }
         else {
-            Text(value)
+            Picker(titleKey, selection: selection, content: content)
+                .pickerStyle(.navigationLink)
         }
+#else
+        Picker(titleKey, selection: selection, content: content)
+#endif
+    }
+
+    init(_ titleKey: LocalizedStringKey, selection: Binding<Selection>, @ContentBuilder content: @escaping () -> Content) {
+        self.titleKey = titleKey
+        self.selection = selection
+        self.content = content
     }
 }

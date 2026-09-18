@@ -137,15 +137,3 @@ extension View {
         }
     }
 }
-
-extension View {
-    @ContentBuilder
-    func settingPickerStyle() -> some View {
-        if #available(tvOS 27.0, *) {
-            pickerStyle(.menu)
-        }
-        else {
-            pickerStyle(.navigationLink)
-        }
-    }
-}

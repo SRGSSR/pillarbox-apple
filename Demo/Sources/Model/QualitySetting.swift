@@ -4,15 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
+import Foundation
 import PillarboxPlayer
 
 @objc
-enum QualitySetting: Int, CaseIterable {
+enum QualitySetting: Int, CaseIterable, CustomLocalizedStringResourceConvertible {
     case low
     case medium
     case high
 
-    var name: String {
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .low:
             return "Low"

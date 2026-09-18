@@ -17,7 +17,7 @@ struct ContentListsView: View {
         }
         .tracked(name: "lists")
 #if os(iOS)
-        .navigationTitle("Lists (\(selectedServerSetting.title))")
+        .navigationTitle("Lists (\(selectedServerSetting.localizedStringResource))")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarTitleMenu {
             serverSettingsMenu()
@@ -117,7 +117,7 @@ struct ContentListsView: View {
         Menu {
             Picker(selection: $selectedServerSetting) {
                 ForEach(ServerSetting.allCases, id: \.self) { service in
-                    Text(service.title).tag(service)
+                    Text(service.localizedStringResource).tag(service)
                 }
             } label: {
                 EmptyView()

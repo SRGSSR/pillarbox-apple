@@ -209,21 +209,18 @@ extension SettingsView {
     private func seekBehaviorPicker() -> some View {
         Picker("Seek behavior", selection: $seekBehaviorSetting) {
             ForEach(SeekBehaviorSetting.allCases, id: \.self) { setting in
-                Text(setting.name).tag(setting)
+                Text(setting.localizedStringResource).tag(setting)
             }
         }
     }
 #endif
 
     private func qualityPicker() -> some View {
-        Picker("Quality", selection: $qualitySetting) {
+        PickerMenu("Quality", selection: $qualitySetting) {
             ForEach(QualitySetting.allCases, id: \.self) { setting in
-                PickerLabel(title: "Quality", value: setting.name).tag(setting)
+                Text(setting.localizedStringResource).tag(setting)
             }
         }
-#if os(tvOS)
-        .settingPickerStyle()
-#endif
     }
 
 #if os(iOS)
@@ -232,7 +229,7 @@ extension SettingsView {
         if !ProcessInfo.processInfo.isRunningOnMac {
             Picker("Route picker", selection: $routePickerSetting) {
                 ForEach(RoutePickerSetting.allCases, id: \.self) { setting in
-                    Text(setting.name).tag(setting)
+                    Text(setting.localizedStringResource).tag(setting)
                 }
             }
         }
@@ -277,7 +274,7 @@ extension SettingsView {
     private func downloadQualityPicker() -> some View {
         Picker("Quality", selection: $downloadQualitySetting) {
             ForEach(QualitySetting.allCases, id: \.self) { setting in
-                Text(setting.name).tag(setting)
+                Text(setting.localizedStringResource).tag(setting)
             }
         }
     }
@@ -285,7 +282,7 @@ extension SettingsView {
     private func downloadAudibleMediaSelectionPicker() -> some View {
         Picker("Audio", selection: $downloadAudibleMediaSelectionSetting) {
             ForEach(DownloadMediaSelectionSetting.allCases, id: \.self) { setting in
-                Text(setting.name).tag(setting)
+                Text(setting.localizedStringResource).tag(setting)
             }
         }
     }
@@ -293,7 +290,7 @@ extension SettingsView {
     private func downloadLegibleMediaSelectionPicker() -> some View {
         Picker("Subtitles", selection: $downloadLegibleMediaSelectionSetting) {
             ForEach(DownloadMediaSelectionSetting.allCases, id: \.self) { setting in
-                Text(setting.name).tag(setting)
+                Text(setting.localizedStringResource).tag(setting)
             }
         }
     }
@@ -317,25 +314,17 @@ extension SettingsView {
         Section {
             Toggle("Enabled", isOn: $playbackHudEnabled)
             if playbackHudEnabled {
-                Picker("Font size", selection: $playbackHudFontSize) {
+                PickerMenu("Font size", selection: $playbackHudFontSize) {
                     ForEach(PlaybackHudFontSize.allCases, id: \.self) { size in
-                        PickerLabel(title: "Font size", value: size.name).tag(size)
+                        Text(size.localizedStringResource).tag(size)
                     }
                 }
-#if os(tvOS)
-                .settingPickerStyle()
-#endif
 
-                Picker("Color", selection: $playbackHudColor) {
-                    PickerLabel(title: "Color", value: "Yellow").tag(PlaybackHudColor.yellow)
-                    PickerLabel(title: "Color", value: "Green").tag(PlaybackHudColor.green)
-                    PickerLabel(title: "Color", value: "Red").tag(PlaybackHudColor.red)
-                    PickerLabel(title: "Color", value: "Blue").tag(PlaybackHudColor.blue)
-                    PickerLabel(title: "Color", value: "White").tag(PlaybackHudColor.white)
+                PickerMenu("Color", selection: $playbackHudColor) {
+                    ForEach(PlaybackHudColor.allCases, id: \.self) { color in
+                        Text(color.localizedStringResource).tag(color)
+                    }
                 }
-#if os(tvOS)
-                .settingPickerStyle()
-#endif
 
                 numberEditor("X offset", value: $playbackHudXOffset)
                 numberEditor("Y offset", value: $playbackHudYOffset)

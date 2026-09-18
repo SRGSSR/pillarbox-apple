@@ -45,13 +45,30 @@ private struct TextFieldView: View {
 }
 
 private struct MediaEntryView: View {
-    private enum Kind {
+    private enum Kind: CaseIterable, CustomLocalizedStringResourceConvertible {
         case url
         case tokenProtected
         case encrypted
         case productionUrn
         case stageUrn
         case testUrn
+
+        var localizedStringResource: LocalizedStringResource {
+            switch self {
+            case .url:
+                return "URL"
+            case .tokenProtected:
+                return "URL with SRG SSR token protection"
+            case .encrypted:
+                return "URL with SRG SSR DRM encryption"
+            case .productionUrn:
+                return "URN (Production)"
+            case .stageUrn:
+                return "URN (Stage)"
+            case .testUrn:
+                return "URN (Test)"
+            }
+        }
     }
 
     @State private var kind: Kind = .url
@@ -132,18 +149,11 @@ private struct MediaEntryView: View {
     }
 
     private func kindPicker() -> some View {
-        Picker("Kind", selection: $kind) {
-            PickerLabel(title: "Kind", value: "URL").tag(Kind.url)
-            PickerLabel(title: "Kind", value: "URL with SRG SSR token protection").tag(Kind.tokenProtected)
-            PickerLabel(title: "Kind", value: "URL with SRG SSR DRM encryption").tag(Kind.encrypted)
-            Divider()
-            PickerLabel(title: "Kind", value: "URN (Production)").tag(Kind.productionUrn)
-            PickerLabel(title: "Kind", value: "URN (Stage)").tag(Kind.stageUrn)
-            PickerLabel(title: "Kind", value: "URN (Test)").tag(Kind.testUrn)
+        PickerMenu("Kind", selection: $kind) {
+            ForEach(Kind.allCases, id: \.self) { kind in
+                Text(kind.localizedStringResource).tag(kind)
+            }
         }
-#if os(tvOS)
-        .settingPickerStyle()
-#endif
     }
 
     private func actionButtons() -> some View {

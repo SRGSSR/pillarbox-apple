@@ -4,11 +4,22 @@
 //  License information is available from the LICENSE file.
 //
 
-enum LiveRadioMode: String, Identifiable, CaseIterable {
-    case audio = "Audio"
-    case video = "Video"
+import Foundation
+
+enum LiveRadioMode: Identifiable, CaseIterable, CustomLocalizedStringResourceConvertible {
+    case audio
+    case video
 
     var id: Self { self }
+
+    var localizedStringResource: LocalizedStringResource {
+        switch self {
+        case .audio:
+            return "Audio"
+        case .video:
+            return "Video"
+        }
+    }
 
     var entries: [PlaylistEntry] {
         switch self {
