@@ -4,10 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
 import Foundation
 
+/// Information about a download's size.
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public struct DownloadSize: Equatable {
@@ -17,13 +16,17 @@ public struct DownloadSize: Equatable {
         return formatter
     }()
 
+    /// The completed size, in bytes.
     public let completed: Int64
+
+    /// The total size, in bytes.
     public let total: Int64
 
     var fractionCompleted: Double {
         Double(completed) / Double(total)
     }
 
+    /// A human-readable description of the download size.
     public var localizedDescription: String {
         if completed != total {
             return String(
@@ -73,5 +76,3 @@ public struct DownloadSize: Equatable {
         fileSizeFormatter.string(fromByteCount: byteCount)
     }
 }
-
-// swiftlint:enable missing_docs
