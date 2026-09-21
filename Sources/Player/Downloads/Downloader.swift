@@ -7,20 +7,14 @@
 import Combine
 import Foundation
 
-/// An observable object that manages media downloads.
-///
-/// A downloader is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject)
-/// used to download media content. Each downloader is associated with a single store. The store defines:
-///
-/// - How metadata is loaded, via its ``AssetDownloadStore/Loader`` associated type.
-/// - How metadata associated with downloads is persisted.
+/// An [observable object](https://developer.apple.com/documentation/combine/observableobject)) managing media downloads.
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     private let store: S
     private let session: any DownloadSession
 
-    /// Returns the existing downloads.
+    /// Returns existing downloads.
     @Published public private(set) var downloads: [Download]
 
     init(store: S, session: some DownloadSession) {
@@ -72,7 +66,7 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     /// - Parameters:
     ///   - download: The download from which to create the player item.
     ///   - trackerAdapters: The ``TrackerAdapter`` instances to use for tracking playback events.
-    /// - Returns: A player item, or `nil` if the download is not yet playable.
+    /// - Returns: A player item, or `nil` if the download is not playable yet.
     public func playerItem(for download: Download, trackerAdapters: [TrackerAdapter<AssetMetadata<S.CustomData>>] = []) -> PlayerItem? {
         guard downloads.contains(download), let record = store.downloadRecord(forId: download.id),
               let metadata = record.metadata, let fileUrl = download.fileUrl else {

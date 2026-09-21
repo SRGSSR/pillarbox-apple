@@ -11,7 +11,7 @@ public struct URLInput<CustomData> {
     /// The URL of the content.
     public let url: URL
 
-    /// Metadata (including custom data) associated with the content.
+    /// Metadata associated with the content, including custom data.
     ///
     /// Custom data should include any useful information to:
     ///   - Build the kind of asset to play or download (e.g. custom or encrypted asset).

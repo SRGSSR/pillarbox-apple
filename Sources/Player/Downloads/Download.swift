@@ -8,10 +8,7 @@ import Combine
 import Foundation
 import PillarboxCore
 
-/// An observable object that represents a download.
-///
-/// A download is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject)
-/// that publishes changes to its state.
+/// An [observable object]((https://developer.apple.com/documentation/combine/observableobject)) representing a download.
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject, Identifiable {
@@ -46,7 +43,7 @@ public final class Download: ObservableObject, Identifiable {
         properties.size
     }
 
-    /// The download state.
+    /// The download's state.
     public var state: DownloadState {
         properties.state
     }

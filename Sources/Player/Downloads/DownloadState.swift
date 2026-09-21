@@ -8,10 +8,10 @@
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public enum DownloadState: Equatable {
-    /// Preparing (metadata retrieval).
+    /// Preparing.
     case preparing
 
-    /// Running (downloading data).
+    /// Running.
     case running
 
     /// Suspended.

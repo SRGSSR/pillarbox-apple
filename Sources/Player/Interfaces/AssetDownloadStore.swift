@@ -34,7 +34,7 @@ public protocol AssetDownloadStore: AnyObject {
     /// - Returns: Player metadata describing the asset.
     ///
     /// If this method is not implemented, the ``AssetLoader/playerMetadata(from:metadata:)`` implementation is used
-    /// instead. Implement this method only when the metadata displayed for a download needs to differ from the metadata
+    /// instead. Implement this method only when the metadata associated with a download needs to differ from the metadata
     /// provided by the original asset loader.
     static func playerMetadata(from input: Loader.Input, metadata: Loader.Metadata?) -> PlayerMetadata
 

@@ -27,6 +27,8 @@ public protocol URLAssetLoaderProvider {
     ///   - metadata: The metadata associated with the asset.
     /// - Returns: An asset representing the content to be downloaded. The publisher can be used to perform any kind of
     ///   required work (potentially asynchronous) to return an asset that can be downloaded.
+    ///
+    /// If not implemented defaults to a publisher immediately returning ``URLAssetLoaderProvider/asset(from:metadata:)``.
     static func downloadableAssetPublisher(from input: URLInput<CustomData>, metadata: AssetMetadata<CustomData>) -> AnyPublisher<Asset, Never>
 }
 

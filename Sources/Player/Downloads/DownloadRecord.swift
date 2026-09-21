@@ -7,8 +7,6 @@
 import Foundation
 
 /// Contains data associated with a download record.
-///
-/// ``AssetDownloadStore`` implementations must persist all data associated with a record.
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public struct DownloadRecord<Input, CustomData> {

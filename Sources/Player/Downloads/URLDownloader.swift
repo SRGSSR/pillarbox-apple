@@ -6,17 +6,16 @@
 
 import Foundation
 
-/// An observable object that manages URL-based media downloads.
+/// An [observable object](https://developer.apple.com/documentation/combine/observableobject) that manages URL-based media downloads.
 ///
-/// A downloader is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject)
-/// used to download media content. This downloader persists download metadata in a SwiftData database.
+/// This downloader persists download metadata in a SwiftData database.
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class URLDownloader<CustomData>: ObservableObject {
     private let downloadManager: any DownloadManager<URLInput<CustomData>, CustomData>
 
-    /// Returns the existing downloads.
+    /// Returns existing downloads.
     @Published public private(set) var downloads: [Download] = []
 
     /// Creates a downloader for URL-based content with custom data.
@@ -66,7 +65,7 @@ public final class URLDownloader<CustomData>: ObservableObject {
     /// - Parameters:
     ///   - download: The download from which to create the player item.
     ///   - trackerAdapters: The ``TrackerAdapter`` instances to use for tracking playback events.
-    /// - Returns: A player item, or `nil` if the download is not yet playable.
+    /// - Returns: A player item, or `nil` if the download is not playable yet.
     public func playerItem(
         for download: Download,
         trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>] = []
