@@ -41,7 +41,7 @@ struct SearchView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func loadedView(_ medias: [SRGMedia]) -> some View {
         // swiftlint:disable:next closure_body_length
         CustomList(data: medias) { srgMedia in

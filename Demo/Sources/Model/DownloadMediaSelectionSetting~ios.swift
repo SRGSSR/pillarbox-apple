@@ -4,16 +4,18 @@
 //  License information is available from the LICENSE file.
 //
 
+import Foundation
+
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 @objc
-enum DownloadMediaSelectionSetting: Int, CaseIterable {
+enum DownloadMediaSelectionSetting: Int, CaseIterable, CustomLocalizedStringResourceConvertible {
     case automatic
     case swiss
     case all
 
-    var name: String {
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .automatic:
             return "Automatic"

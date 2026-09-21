@@ -12,10 +12,10 @@ struct QualityMenu: View {
     private var qualitySetting: QualitySetting = .high
 
     var body: some View {
-        SwiftUI.Menu {
-            SwiftUI.Picker(selection: $qualitySetting) {
+        Menu {
+            Picker(selection: $qualitySetting) {
                 ForEach(QualitySetting.allCases, id: \.self) { quality in
-                    Text(quality.name).tag(quality)
+                    Text(quality.localizedStringResource).tag(quality)
                 }
             } label: {
                 EmptyView()
@@ -23,7 +23,7 @@ struct QualityMenu: View {
             .pickerStyle(.inline)
         } label: {
             Label("Quality", systemImage: "person.and.background.dotted")
-            Text(qualitySetting.name)
+            Text(qualitySetting.localizedStringResource)
         }
     }
 }

@@ -38,7 +38,7 @@ struct RoutePickerMenuContent: View {
         prioritizesVideoDevices ? "airplay.video" : "airplay.audio"
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func icon() -> some View {
         if player.isExternalPlaybackActive {
             Image(systemName: imageName)

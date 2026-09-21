@@ -85,7 +85,7 @@ private struct MainView: View {
         }
         Picker("Quality", systemImage: "person.and.background.dotted", selection: $qualitySetting) {
             for quality in QualitySetting.allCases {
-                Option(quality.name, value: quality)
+                Option(quality.localizedStringResource, value: quality)
             }
         }
     }

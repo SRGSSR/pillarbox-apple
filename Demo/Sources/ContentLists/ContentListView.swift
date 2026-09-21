@@ -51,7 +51,7 @@ private struct LoadedView: View {
         router.presented = .playlist(medias: medias())
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func toolbar() -> some View {
         if !medias().isEmpty {
             Button(action: openPlaylist) {

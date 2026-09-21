@@ -45,13 +45,30 @@ private struct TextFieldView: View {
 }
 
 private struct MediaEntryView: View {
-    private enum Kind {
+    private enum Kind: CaseIterable, CustomLocalizedStringResourceConvertible {
         case url
         case tokenProtected
         case encrypted
         case productionUrn
         case stageUrn
         case testUrn
+
+        var localizedStringResource: LocalizedStringResource {
+            switch self {
+            case .url:
+                return "URL"
+            case .tokenProtected:
+                return "URL with SRG SSR token protection"
+            case .encrypted:
+                return "URL with SRG SSR DRM encryption"
+            case .productionUrn:
+                return "URN (Production)"
+            case .stageUrn:
+                return "URN (Stage)"
+            case .testUrn:
+                return "URN (Test)"
+            }
+        }
     }
 
     @State private var kind: Kind = .url
@@ -132,18 +149,11 @@ private struct MediaEntryView: View {
     }
 
     private func kindPicker() -> some View {
-        Picker("Kind", selection: $kind) {
-            Text("URL").tag(Kind.url)
-            Text("URL with SRG SSR token protection").tag(Kind.tokenProtected)
-            Text("URL with SRG SSR DRM encryption").tag(Kind.encrypted)
-            Divider()
-            Text("URN (Production)").tag(Kind.productionUrn)
-            Text("URN (Stage)").tag(Kind.stageUrn)
-            Text("URN (Test)").tag(Kind.testUrn)
+        PickerMenu("Kind", selection: $kind) {
+            ForEach(Kind.allCases, id: \.self) { kind in
+                Text(kind.localizedStringResource).tag(kind)
+            }
         }
-#if os(tvOS)
-        .pickerStyle(.navigationLink)
-#endif
     }
 
     private func actionButtons() -> some View {
@@ -192,7 +202,7 @@ struct ExamplesView: View {
 #endif
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func content() -> some View {
         MediaEntryView()
         srgSections()
@@ -200,7 +210,7 @@ struct ExamplesView: View {
         miscellaneousSections()
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func srgSections() -> some View {
         section(title: "Various streams (URLs)", medias: model.urlMedias)
         section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
@@ -209,7 +219,7 @@ struct ExamplesView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func thirdPartySections() -> some View {
         section(title: "Apple streams", medias: model.appleMedias)
         section(title: "Third-party streams", medias: model.thirdPartyMedias)
@@ -218,7 +228,7 @@ struct ExamplesView: View {
         section(title: "Mux streams", medias: model.muxMedias)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func miscellaneousSections() -> some View {
         section(title: "Time ranges", medias: model.timeRangesMedias)
         section(title: "Aspect ratios", medias: model.aspectRatioMedias)

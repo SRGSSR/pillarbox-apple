@@ -213,7 +213,7 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func trackingSection() -> some View {
         let sessionIdentifiers = sessionIdentifiers()
         if !sessionIdentifiers.isEmpty {
@@ -228,7 +228,7 @@ struct MetricsView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func informationSection() -> some View {
         if let currentMetrics = metrics.last {
             Section {

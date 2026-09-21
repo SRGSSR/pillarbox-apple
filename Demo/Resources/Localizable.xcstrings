@@ -72,6 +72,9 @@
     "Advance" : {
 
     },
+    "All" : {
+
+    },
     "Android" : {
 
     },
@@ -165,6 +168,9 @@
     "Debugging" : {
 
     },
+    "Default" : {
+
+    },
     "Deferred" : {
 
     },
@@ -228,6 +234,9 @@
     "Hide" : {
 
     },
+    "High" : {
+
+    },
     "High-Speed Scrubbing" : {
 
     },
@@ -258,6 +267,9 @@
     "Kind" : {
 
     },
+    "Large" : {
+
+    },
     "Layouts" : {
 
     },
@@ -273,6 +285,9 @@
     "LIVE" : {
 
     },
+    "Low" : {
+
+    },
     "Made with " : {
 
     },
@@ -286,6 +301,9 @@
 
     },
     "Media requests" : {
+
+    },
+    "Medium" : {
 
     },
     "Menu" : {
@@ -378,6 +396,15 @@
     "Play" : {
 
     },
+    "Play+ Development" : {
+
+    },
+    "Play+ Integration" : {
+
+    },
+    "Play+ Production" : {
+
+    },
     "Playback duration" : {
 
     },
@@ -400,6 +427,9 @@
 
     },
     "Previous" : {
+
+    },
+    "Production" : {
 
     },
     "Protected streams (URNs)" : {
@@ -453,6 +483,9 @@
     "Skips" : {
 
     },
+    "Small" : {
+
+    },
     "Smart navigation" : {
 
     },
@@ -460,6 +493,9 @@
 
     },
     "SRG SSR streams (URNs)" : {
+
+    },
+    "Stage" : {
 
     },
     "Stalls" : {
@@ -489,6 +525,9 @@
     "Swift Package Index" : {
 
     },
+    "Swiss languages" : {
+
+    },
     "System player (using AVPlayer)" : {
 
     },
@@ -496,6 +535,9 @@
 
     },
     "System Player and Picture in Picture (PiP) support" : {
+
+    },
+    "Test" : {
 
     },
     "TestFlight builds" : {
