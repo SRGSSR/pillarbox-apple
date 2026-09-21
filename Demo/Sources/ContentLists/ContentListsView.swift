@@ -8,8 +8,10 @@ import SRGDataProviderModel
 import SwiftUI
 
 struct ContentListsView: View {
+#if os(iOS)
     @AppStorage(UserDefaults.DemoSettingKey.serverSetting.rawValue)
-    private var selectedServerSetting: ServerSetting = .production
+    private var serverSetting: ServerSetting = .production
+#endif
 
     var body: some View {
         CustomList {
@@ -17,7 +19,7 @@ struct ContentListsView: View {
         }
         .tracked(name: "lists")
 #if os(iOS)
-        .navigationTitle("Lists (\(selectedServerSetting.localizedStringResource))")
+        .navigationTitle("Lists (\(serverSetting.localizedStringResource))")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarTitleMenu {
             serverSettingsMenu()
@@ -115,7 +117,7 @@ struct ContentListsView: View {
 #if os(iOS)
     private func serverSettingsMenu() -> some View {
         Menu {
-            Picker(selection: $selectedServerSetting) {
+            Picker(selection: $serverSetting) {
                 ForEach(ServerSetting.allCases, id: \.self) { service in
                     Text(service.localizedStringResource).tag(service)
                 }
