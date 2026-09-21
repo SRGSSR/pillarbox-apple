@@ -373,6 +373,7 @@ extension SettingsView {
                 SwiftUI::Button("TestFlight builds") {
                     openTestFlight(forApplicationIdentifier: identifier)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             InfoCell(title: "Device identifier", value: Self.deviceId)
 #if os(iOS)
