@@ -26,6 +26,8 @@ struct PickerMenu<Content, Selection>: View where Content: View, Selection: Hash
         }
 #else
         Picker(titleKey, selection: selection, content: content)
+            .pickerStyle(.menu)
+            .tint(.secondary)
 #endif
     }
 
