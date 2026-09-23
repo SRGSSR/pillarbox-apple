@@ -8,26 +8,20 @@ import Combine
 import Foundation
 import PillarboxPlayer
 
-enum StandardAssetLoader<CustomData>: AssetLoader where CustomData: Decodable {
-    struct Input {
-        let request: URLRequest
-        let decoder: JSONDecoder
-        let assetProvider: (PlayerData<CustomData>) -> Asset
-    }
-
-    static func metadataPublisher(for input: Input) -> AnyPublisher<PlayerData<CustomData>, any Error> {
-        URLSession.shared.dataTaskPublisher(for: input.request)
+enum StandardAssetLoader<Provider>: AssetLoader where Provider: StandardAssetLoaderProvider {
+    static func metadataPublisher(for input: Provider.Input) -> AnyPublisher<PlayerData<Provider.CustomData>, any Error> {
+        URLSession.shared.dataTaskPublisher(for: Provider.request(for: input))
             .mapHttpErrors()
             .map(\.data)
-            .decode(type: PlayerData<CustomData>.self, decoder: input.decoder)
+            .decode(type: PlayerData<Provider.CustomData>.self, decoder: Provider.decoder())
             .eraseToAnyPublisher()
     }
 
-    static func asset(from input: Input, metadata: PlayerData<CustomData>) -> Asset {
-        input.assetProvider(metadata)
+    static func asset(from input: Provider.Input, metadata: PlayerData<Provider.CustomData>) -> Asset {
+        Provider.asset(from: input, metadata: metadata)
     }
 
-    static func playerMetadata(from input: Input, metadata: PlayerData<CustomData>?) -> PlayerMetadata {
+    static func playerMetadata(from input: Provider.Input, metadata: PlayerData<Provider.CustomData>?) -> PlayerMetadata {
         metadata?.playerMetadata() ?? .empty
     }
 }

@@ -31,7 +31,7 @@ public protocol StandardAssetLoaderProvider {
     ///   - metadata: The metadata associated with the asset.
     /// - Returns: An asset representing the content to be played. The input and metadata can be used to build custom or
     ///   encrypted assets when required.
-    static func asset(from input: Input, metadata: AssetMetadata<CustomData>) -> Asset
+    static func asset(from input: Input, metadata: PlayerData<CustomData>) -> Asset
 
     /// Converts input and metadata to a downloadable asset publisher.
     ///
@@ -42,12 +42,12 @@ public protocol StandardAssetLoaderProvider {
     ///   required work (potentially asynchronous) to return an asset that can be downloaded.
     ///
     /// If not implemented defaults to a publisher immediately returning ``StandardAssetLoaderProvider/asset(from:metadata:)``.
-    static func downloadableAssetPublisher(from input: Input, metadata: AssetMetadata<CustomData>) -> AnyPublisher<Asset, Never>
+    static func downloadableAssetPublisher(from input: Input, metadata: PlayerData<CustomData>) -> AnyPublisher<Asset, Never>
 }
 
 public extension StandardAssetLoaderProvider {
     /// Default implementation. Immediately returns ``StandardAssetLoaderProvider/asset(from:metadata:)``.
-    static func downloadableAssetPublisher(from input: Input, metadata: AssetMetadata<CustomData>) -> AnyPublisher<Asset, Never> {
+    static func downloadableAssetPublisher(from input: Input, metadata: PlayerData<CustomData>) -> AnyPublisher<Asset, Never> {
         Just(asset(from: input, metadata: metadata)).eraseToAnyPublisher()
     }
 
