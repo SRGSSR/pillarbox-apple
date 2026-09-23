@@ -52,6 +52,8 @@ private struct MediaEntryView: View {
         case productionUrn
         case stageUrn
         case testUrn
+        case productionDemo
+        case developmentDemo
 
         var localizedStringResource: LocalizedStringResource {
             switch self {
@@ -67,6 +69,10 @@ private struct MediaEntryView: View {
                 return "URN (Stage)"
             case .testUrn:
                 return "URN (Test)"
+            case .productionDemo:
+                return "Demo (Production)"
+            case .developmentDemo:
+                return "Demo (Development)"
             }
         }
     }
@@ -97,6 +103,10 @@ private struct MediaEntryView: View {
             return .init(title: trimmedText, kind: .urn(trimmedText, serverSetting: .stage))
         case .testUrn:
             return .init(title: trimmedText, kind: .urn(trimmedText, serverSetting: .test))
+        case .productionDemo:
+            return .init(title: trimmedText, kind: .demo(trimmedText, isProduction: true))
+        case .developmentDemo:
+            return .init(title: trimmedText, kind: .demo(trimmedText, isProduction: false))
         }
     }
 
