@@ -177,6 +177,12 @@
     "Delete all" : {
 
     },
+    "Demo (Development)" : {
+
+    },
+    "Demo (Production)" : {
+
+    },
     "Displays touches for presentation purposes." : {
 
     },
@@ -391,12 +397,6 @@
 
     },
     "Picture in Picture Corner Cases" : {
-
-    },
-    "Pillarbox (Development)" : {
-
-    },
-    "Pillarbox (Production)" : {
 
     },
     "Play" : {
