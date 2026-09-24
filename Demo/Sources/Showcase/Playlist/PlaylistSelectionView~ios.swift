@@ -30,6 +30,7 @@ struct PlaylistSelectionView: View {
         URLMedia.appleDolbyAtmos,
         URLMedia.appleTvMorningShowSeason1Trailer,
         URLMedia.appleTvMorningShowSeason2Trailer,
+        URLMedia.appleTvTrailerBasicStreamAV1,
         URLMedia.uhdVideoHLS,
         URNMedia.gothard_360,
         URLMedia.apple_360,

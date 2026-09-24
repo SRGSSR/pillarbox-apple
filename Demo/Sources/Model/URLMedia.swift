@@ -140,6 +140,12 @@ enum URLMedia {
         // swiftlint:disable:next line_length
         kind: .url("https://play-edge.itunes.apple.com/WebObjects/MZPlayLocal.woa/hls/subscription/playlist.m3u8?cc=CH&svcId=tvs.vds.4021&a=1568297173&isExternal=true&brandId=tvs.sbd.4000&id=518034010&l=en-GB&aec=UHD")
     )
+    static let appleTvTrailerBasicStreamAV1 = Media(
+        title: "Apple TV Trailer Basic stream",
+        subtitle: "AV1 SDR tiers with subtitles and audio renditions",
+        imageUrl: kAppleImageUrl,
+        kind: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/av1-sample/av1-sample.m3u8")
+    )
     static let uhdVideoHLS = Media(
         title: "Brain Farm Skate Phantom Flex",
         subtitle: "4K video",
