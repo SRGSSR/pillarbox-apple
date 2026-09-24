@@ -56,7 +56,7 @@ public final class URLDownloader<CustomData>: ObservableObject {
     /// - Parameters:
     ///   - url: The URL of the content.
     ///   - metadata: The metadata associated with the content.
-    public func download(url: URL, metadata: AssetMetadata<CustomData>) -> Download? {
+    public func download(matching url: URL, metadata: AssetMetadata<CustomData>) -> Download? {
         downloadManager.download(matching: .init(url: url, metadata: metadata))
     }
 
