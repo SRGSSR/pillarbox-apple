@@ -116,6 +116,3 @@ extension Downloader: DownloadSessionDelegate {
         task.fail(with: error)
     }
 }
-
-@available(tvOS, unavailable)
-extension Downloader: DownloadManager {}

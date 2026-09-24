@@ -5,7 +5,7 @@
 //
 
 @available(tvOS, unavailable)
-protocol DownloadManager<Input, CustomData> {
+protocol URLDownloadManager<Input, CustomData> {
     associatedtype Input
     associatedtype CustomData
 
@@ -17,3 +17,6 @@ protocol DownloadManager<Input, CustomData> {
     func removeDownload(_ download: Download)
     func removeAllDownloads()
 }
+
+@available(tvOS, unavailable)
+extension Downloader: URLDownloadManager {}

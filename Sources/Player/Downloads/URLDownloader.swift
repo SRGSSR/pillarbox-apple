@@ -13,7 +13,7 @@ import Foundation
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class URLDownloader<CustomData>: ObservableObject {
-    private let downloadManager: any DownloadManager<URLInput<CustomData>, CustomData>
+    private let downloadManager: any URLDownloadManager<URLInput<CustomData>, CustomData>
 
     /// Returns existing downloads.
     @Published public private(set) var downloads: [Download] = []
