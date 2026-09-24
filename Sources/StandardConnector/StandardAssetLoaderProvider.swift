@@ -8,7 +8,7 @@ import Combine
 import Foundation
 import PillarboxPlayer
 
-/// A protocol that defines how Pillarbox-standard-based content is loaded.
+/// A protocol that defines how Pillarbox-standard content is loaded.
 public protocol StandardAssetLoaderProvider {
     /// The input expected to load an asset.
     associatedtype Input
