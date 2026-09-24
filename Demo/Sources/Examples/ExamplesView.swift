@@ -126,6 +126,8 @@ private struct MediaEntryView: View {
         switch kind {
         case .productionUrn, .stageUrn, .testUrn:
             return "URN"
+        case .productionDemo, .developmentDemo:
+            return "Identifier"
         default:
             return "URL"
         }
