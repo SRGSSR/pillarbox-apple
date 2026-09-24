@@ -210,4 +210,10 @@ public extension PlayerData {
         /// The certificate URL.
         public let certificateUrl: URL?
     }
+
+    /// Represents the media source for a playable asset.
+    struct Source: Decodable {
+        /// The media URL.
+        public let url: URL
+    }
 }
