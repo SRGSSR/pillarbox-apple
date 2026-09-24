@@ -6,10 +6,12 @@
 
 import Foundation
 import PillarboxPlayer
+
+@_spi(DownloaderPrivate)
 import PillarboxStandardConnector
 
 enum DemoAssetProvider: StandardAssetLoaderProvider {
-    struct Input {
+    struct Input: Codable {
         let identifier: String
         let isProduction: Bool
     }
@@ -28,5 +30,15 @@ enum DemoAssetProvider: StandardAssetLoaderProvider {
         else {
             .unavailable(with: SourceError())
         }
+    }
+}
+
+extension DemoAssetProvider: StandardAssetDownloadStoreProvider {
+    static func id(from input: Input) -> String {
+        input.identifier
+    }
+
+    static func asset(fileUrl: URL, customData: EmptyCustomData?) -> Asset {
+        .simple(url: fileUrl)
     }
 }
