@@ -97,18 +97,34 @@ final class DemoDownloader: ObservableObject {
 
     func playerItem(for download: Download) -> PlayerItem? {
         guard #available(iOS 17, *) else { return nil }
-        if let item = urlDownloader.playerItem(for: download) {
-            return item
-        }
-        else if let item = urnDownloader.playerItem(for: download) {
-            return item
-        }
-        else if let item = standardDownloader.playerItem(for: download) {
-            return item
-        }
-        else {
-            return nil
-        }
+        return urlPlayerItem(for: download) ?? urnPlayerItem(for: download) ?? standardPlayerItem(for: download)
+    }
+
+    @available(iOS 17, *)
+    private func urlPlayerItem(for download: Download) -> PlayerItem? {
+        urlDownloader.playerItem(for: download, trackerAdapters: [
+            DemoTracker.adapter { metadata in
+                DemoTracker.Metadata(title: metadata.title)
+            }
+        ])
+    }
+
+    @available(iOS 17, *)
+    private func urnPlayerItem(for download: Download) -> PlayerItem? {
+        urnDownloader.playerItem(for: download, trackerAdapters: [
+            DemoTracker.adapter { metadata in
+                DemoTracker.Metadata(title: metadata.title)
+            }
+        ])
+    }
+
+    @available(iOS 17, *)
+    private func standardPlayerItem(for download: Download) -> PlayerItem? {
+        standardDownloader.playerItem(for: download, trackerAdapters: [
+            DemoTracker.adapter { metadata in
+                DemoTracker.Metadata(title: metadata.title)
+            }
+        ])
     }
 
     func removeDownload(_ download: Download) {

@@ -22,6 +22,6 @@ enum StandardAssetLoader<Provider>: AssetLoader where Provider: StandardAssetLoa
     }
 
     static func playerMetadata(from input: Provider.Input, metadata: PlayerData<Provider.CustomData>?) -> PlayerMetadata {
-        metadata?.playerMetadata() ?? .empty
+        metadata?.playerMetadata ?? .empty
     }
 }

@@ -80,7 +80,15 @@ struct Media: Hashable {
                 ]
             )
         case let .demo(identifier, isProduction: isProduction):
-            return .standard(assetProviderType: DemoAssetProvider.self, input: .init(identifier: identifier, isProduction: isProduction))
+            return .standard(
+                assetProviderType: DemoAssetProvider.self,
+                input: .init(identifier: identifier, isProduction: isProduction),
+                trackerAdapters: [
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.title)
+                    }
+                ]
+            )
         case let .item(item):
             return item
         }
