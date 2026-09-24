@@ -14,7 +14,7 @@ public protocol StandardAssetLoaderProvider {
     associatedtype Input
 
     /// Custom data associated with the content.
-    associatedtype CustomData: Decodable
+    associatedtype CustomData: Decodable = EmptyCustomData
 
     /// The request to load the metadata
     ///
