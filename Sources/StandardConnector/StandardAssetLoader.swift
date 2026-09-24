@@ -13,7 +13,7 @@ enum StandardAssetLoader<Provider>: AssetLoader where Provider: StandardAssetLoa
         URLSession.shared.dataTaskPublisher(for: Provider.request(for: input))
             .mapHttpErrors()
             .map(\.data)
-            .decode(type: PlayerData<Provider.CustomData>.self, decoder: Provider.decoder())
+            .decode(type: PlayerData.self, decoder: Provider.decoder())
             .eraseToAnyPublisher()
     }
 
