@@ -44,7 +44,7 @@ final class DemoDownloader: ObservableObject {
     }()
 
     @available(iOS 17, *)
-    private var urlDownloader: URLDownloader<MediaCustomData> {
+    private var urlDownloader: URLDownloader<MediaAssetProvider> {
         _urlDownloader as! URLDownloader
     }
 
