@@ -12,8 +12,8 @@ import Foundation
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public final class URLDownloader<CustomData>: ObservableObject {
-    private let downloadManager: any DownloadManager<URLInput<CustomData>, CustomData>
+public final class URLDownloader<Provider>: ObservableObject where Provider: URLAssetDownloadStoreProvider {
+    private let downloadManager: Downloader<URLAssetDownloadStore<Provider>>
 
     /// Returns existing downloads.
     @Published public private(set) var downloads: [Download] = []
@@ -26,11 +26,11 @@ public final class URLDownloader<CustomData>: ObservableObject {
     ///   - storeProviderType: The store provider type.
     ///   - configuration: A configuration object that defines the behavior and policies of the URL session used to
     ///     perform file transfers.
-    public init<Provider>(
+    public init(
         name: String? = nil,
         storeProviderType: Provider.Type,
         configuration: URLSessionConfiguration
-    ) throws where Provider: URLAssetDownloadStoreProvider, Provider.CustomData == CustomData {
+    ) throws {
         let downloader = Downloader(configuration: configuration, store: try URLAssetDownloadStore(name: name, providerType: storeProviderType))
         self.downloadManager = downloader
 
@@ -47,7 +47,7 @@ public final class URLDownloader<CustomData>: ObservableObject {
     /// - Returns: A download associated with the given URL. If a download already exists for the URL, the existing
     ///   download is returned instead.
     @discardableResult
-    public func addDownload(url: URL, metadata: AssetMetadata<CustomData>, configuration: DownloadConfiguration = .default) -> Download {
+    public func addDownload(url: URL, metadata: AssetMetadata<Provider.CustomData>, configuration: DownloadConfiguration = .default) -> Download {
         downloadManager.addDownload(for: .init(url: url, metadata: metadata), configuration: configuration)
     }
 
@@ -56,7 +56,7 @@ public final class URLDownloader<CustomData>: ObservableObject {
     /// - Parameters:
     ///   - url: The URL of the content.
     ///   - metadata: The metadata associated with the content.
-    public func download(url: URL, metadata: AssetMetadata<CustomData>) -> Download? {
+    public func download(matching url: URL, metadata: AssetMetadata<Provider.CustomData>) -> Download? {
         downloadManager.download(matching: .init(url: url, metadata: metadata))
     }
 
@@ -68,7 +68,7 @@ public final class URLDownloader<CustomData>: ObservableObject {
     /// - Returns: A player item, or `nil` if the download is not playable yet.
     public func playerItem(
         for download: Download,
-        trackerAdapters: [TrackerAdapter<AssetMetadata<CustomData>>] = []
+        trackerAdapters: [TrackerAdapter<AssetMetadata<Provider.CustomData>>] = []
     ) -> PlayerItem? {
         downloadManager.playerItem(for: download, trackerAdapters: trackerAdapters)
     }
@@ -93,7 +93,7 @@ public final class URLDownloader<CustomData>: ObservableObject {
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
-public extension URLDownloader where CustomData == EmptyCustomData {
+public extension URLDownloader where Provider == URLEmptyAssetProvider {
     /// Creates a downloader for URL-based content without custom data.
     ///
     /// - Parameters:

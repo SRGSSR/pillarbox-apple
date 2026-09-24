@@ -61,7 +61,7 @@ public final class URNDownloader: ObservableObject {
     /// - Parameters:
     ///   - urn: The URN identifying the content.
     ///   - server: The server from which the content is downloaded.
-    public func download(urn: String, server: Server) -> Download? {
+    public func download(matchingUrn urn: String, server: Server) -> Download? {
         downloader.download(matching: .init(urn: urn, server: server, httpHeaders: [:]))
     }
 

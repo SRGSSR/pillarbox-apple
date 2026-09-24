@@ -177,6 +177,12 @@
     "Delete all" : {
 
     },
+    "Demo (Development)" : {
+
+    },
+    "Demo (Production)" : {
+
+    },
     "Displays touches for presentation purposes." : {
 
     },
@@ -347,6 +353,9 @@
     },
     "No metrics" : {
 
+    },
+    "No playable resources could be found." : {
+      "comment" : "Generic error message returned when no playable resources could be found"
     },
     "No results." : {
 

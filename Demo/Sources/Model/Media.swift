@@ -18,6 +18,7 @@ struct Media: Hashable {
     enum Kind: Hashable {
         case url(URL, customData: MediaCustomData)
         case urn(String, serverSetting: ServerSetting)
+        case demo(String, isProduction: Bool)
         case item(PlayerItem)
 
         static func url(_ url: URL, protection: Protection = .none, startTime: CMTime = .zero, isBuffered: Bool = true) -> Self {
@@ -75,6 +76,16 @@ struct Media: Hashable {
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.mainChapter.title)
+                    }
+                ]
+            )
+        case let .demo(identifier, isProduction: isProduction):
+            return .standard(
+                assetProviderType: DemoAssetProvider.self,
+                input: .init(identifier: identifier, isProduction: isProduction),
+                trackerAdapters: [
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.title)
                     }
                 ]
             )

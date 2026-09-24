@@ -36,7 +36,9 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.appleWWDCKeynote2023,
         URLMedia.appleDolbyAtmos,
         URLMedia.appleTvMorningShowSeason1Trailer,
-        URLMedia.appleTvMorningShowSeason2Trailer
+        URLMedia.appleTvMorningShowSeason2Trailer,
+        URLMedia.appleTvTrailerBasicStreamAV1,
+        URLMedia.appleTvTrailerInterstitial
     ]
 
     let thirdPartyMedias = [

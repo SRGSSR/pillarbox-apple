@@ -15,7 +15,6 @@ public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
     enum CodingKeys: String, CodingKey {
         case _chapters = "chapters"
         case _timeRanges = "timeRanges"
-        case _viewport = "viewport"
         case customData
         case description
         case drm
@@ -26,21 +25,47 @@ public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
         case source
         case subtitle
         case title
+        case viewport
     }
 
-    private let identifier: String?
-    private let title: String?
-    private let subtitle: String?
-    private let description: String?
-    private let posterUrl: URL?
-    private let seasonNumber: Int?
-    private let episodeNumber: Int?
-    private let _viewport: _Viewport?
+    /// An identifier for the content.
+    public let identifier: String?
 
-    // swiftlint:disable:next discouraged_optional_collection
-    private let _chapters: [_Chapter]?
-    // swiftlint:disable:next discouraged_optional_collection
-    private let _timeRanges: [_TimeRange]?
+    /// The content title.
+    ///
+    /// For example the name of the show which the content is associated with, if any, otherwise the name
+    /// of the episode itself.
+    public let title: String?
+
+    /// A subtitle for the content.
+    ///
+    /// For example the name of the episode when a show name has been provided as title.
+    public let subtitle: String?
+
+    /// A description of the content.
+    public let description: String?
+
+    /// The poster URL associated with the content.
+    public let posterUrl: URL?
+
+    /// Season number.
+    public let seasonNumber: Int?
+
+    /// Episode number.
+    public let episodeNumber: Int?
+
+    /// The content viewport.
+    public let viewport: Viewport?
+
+    /// Chapters associated with the content.
+    public var chapters: [Chapter] {
+        _chapters ?? []
+    }
+
+    /// Time ranges associated with the content.
+    public var timeRanges: [TimeRange] {
+        _timeRanges ?? []
+    }
 
     /// The source.
     public let source: Source?
@@ -48,8 +73,13 @@ public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
     /// The DRM.
     public let drm: DRM?
 
-    /// Custom data.
+    /// Custom data associated with the content.
     public let customData: CustomData?
+
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _chapters: [Chapter]?
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _timeRanges: [TimeRange]?
 }
 
 extension PlayerData {
@@ -58,10 +88,10 @@ extension PlayerData {
         return .init(episode: episodeNumber, season: seasonNumber)
     }
 
-    var chapters: [Chapter] {
+    var playerChapters: [PillarboxPlayer::Chapter] {
         guard let _chapters else { return [] }
         return _chapters.map { chapter in
-            Chapter(
+            PillarboxPlayer::Chapter(
                 identifier: chapter.identifier,
                 title: chapter.title,
                 imageSource: Self.imageSource(from: chapter.posterUrl),
@@ -73,45 +103,64 @@ extension PlayerData {
         }
     }
 
-    var timeRanges: [TimeRange] {
-        _timeRanges?.map(\.timeRange) ?? []
+    var playerTimeRanges: [PillarboxPlayer::TimeRange] {
+        _timeRanges?.map(\.playerTimeRange) ?? []
     }
 
-    private static func imageSource(from url: URL?) -> ImageSource {
-        guard let url else { return .none }
-        return .url(standardResolution: url)
-    }
-
-    func playerMetadata() -> PlayerMetadata {
+    var playerMetadata: PlayerMetadata {
         .init(
             identifier: identifier,
             title: title,
             subtitle: subtitle,
             description: description,
             imageSource: Self.imageSource(from: posterUrl),
-            viewport: viewport,
+            viewport: playerViewport,
             episodeInformation: episodeInformation,
-            chapters: chapters,
-            timeRanges: timeRanges
+            chapters: playerChapters,
+            timeRanges: playerTimeRanges
         )
+    }
+
+    private static func imageSource(from url: URL?) -> ImageSource {
+        guard let url else { return .none }
+        return .url(standardResolution: url)
     }
 }
 
-extension PlayerData {
-    private struct _Chapter: Decodable {
-        let identifier: String?
-        let title: String
-        let posterUrl: URL?
-        let startTime: Int
-        let endTime: Int
+public extension PlayerData {
+    /// A chapter representation.
+    struct Chapter: Decodable {
+        /// An identifier for the chapter.
+        public let identifier: String?
+
+        /// The chapter title.
+        public let title: String
+
+        /// The poster URL associated with the content.
+        public let posterUrl: URL?
+
+        /// The start time in milliseconds.
+        public let startTime: Int
+
+        /// The end time in milliseconds.
+        public let endTime: Int
     }
 
-    private struct _TimeRange: Decodable {
-        let startTime: Int
-        let endTime: Int
-        let type: String
+    /// Represents a time range.
+    struct TimeRange: Decodable {
+        /// The start time in milliseconds.
+        public let startTime: Int
 
-        private var kind: TimeRange.Kind {
+        /// The end time in milliseconds.
+        public let endTime: Int
+
+        /// The type.
+        ///
+        /// `BLOCKED`, `OPENING_CREDITS`, `CLOSING_CREDITS` are natively supported.
+        public let type: String
+
+        // swiftlint:disable:next prefer_self_in_static_references
+        private var kind: PillarboxPlayer::TimeRange.Kind {
             switch type {
             case "BLOCKED":
                 return .blocked
@@ -124,7 +173,8 @@ extension PlayerData {
             }
         }
 
-        var timeRange: TimeRange {
+        // swiftlint:disable:next prefer_self_in_static_references
+        var playerTimeRange: PillarboxPlayer::TimeRange {
             .init(
                 kind: kind,
                 start: .init(value: CMTimeValue(startTime), timescale: 1000),
@@ -135,13 +185,17 @@ extension PlayerData {
 }
 
 extension PlayerData {
-    private enum _Viewport: String, Decodable {
+    /// A video viewport.
+    public enum Viewport: String, Decodable {
+        /// Standard viewport.
         case standard = "STANDARD"
+
+        /// Monoscopic viewport.
         case monoscopic = "MONOSCOPIC"
     }
 
-    var viewport: Viewport {
-        switch _viewport {
+    var playerViewport: PillarboxPlayer::Viewport {
+        switch viewport {
         case .standard, .none:
             return .standard
         case .monoscopic:
@@ -155,5 +209,11 @@ public extension PlayerData {
     struct DRM: Decodable {
         /// The certificate URL.
         public let certificateUrl: URL?
+    }
+
+    /// Represents the media source for a playable asset.
+    struct Source: Decodable {
+        /// The media URL.
+        public let url: URL
     }
 }
