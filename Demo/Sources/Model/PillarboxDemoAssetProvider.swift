@@ -33,6 +33,7 @@ enum DemoAssetProvider: StandardAssetLoaderProvider {
     }
 }
 
+@available(tvOS, unavailable)
 extension DemoAssetProvider: StandardAssetDownloadStoreProvider {
     static func id(from input: Input) -> String {
         input.identifier
