@@ -16,7 +16,7 @@ enum DemoAssetProvider: StandardAssetLoaderProvider {
         let isProduction: Bool
     }
 
-    struct SourceError: Error {}
+    private struct SourceError: Error {}
 
     static func request(for input: Input) -> URLRequest {
         let hostname = input.isProduction ? "api.pillarbox.ch" : "dev.api.pillarbox.ch"
