@@ -6,24 +6,6 @@
 
 import Combine
 import PillarboxPlayer
-import SwiftUI
-
-/// Manages navigation using an associated router.
-struct RoutedNavigationStack<Root>: View where Root: View {
-    let keyPath: ReferenceWritableKeyPath<Router, [RouterDestination]>
-
-    @ContentBuilder let root: () -> Root
-    @EnvironmentObject private var router: Router
-
-    var body: some View {
-        NavigationStack(path: Binding(router, at: keyPath)) {
-            root()
-                .navigationDestination(for: RouterDestination.self) { destination in
-                    destination.view()
-                }
-        }
-    }
-}
 
 /// A router managing application presentation.
 ///
