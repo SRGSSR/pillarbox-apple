@@ -16,7 +16,14 @@ enum DemoAssetProvider: StandardAssetLoaderProvider {
         let isProduction: Bool
     }
 
-    private struct SourceError: Error {}
+    private struct SourceError: LocalizedError {
+        var errorDescription: String? {
+            String(
+                localized: "No playable resources could be found.",
+                comment: "Generic error message returned when no playable resources could be found"
+            )
+        }
+    }
 
     static func request(for input: Input) -> URLRequest {
         let hostname = input.isProduction ? "api.pillarbox.ch" : "dev.api.pillarbox.ch"
