@@ -146,6 +146,12 @@ enum URLMedia {
         imageUrl: kAppleImageUrl,
         kind: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/av1-sample/av1-sample.m3u8")
     )
+    static let appleTvTrailerInterstitial = Media(
+        title: "Apple TV Trailer Interstitial stream",
+        subtitle: "AVC and HEVC primary with Bip bop streams as Interstitials",
+        imageUrl: kAppleImageUrl,
+        kind: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/interstitial-sample/mvp_interstitial_sample.m3u8")
+    )
     static let uhdVideoHLS = Media(
         title: "Brain Farm Skate Phantom Flex",
         subtitle: "4K video",
