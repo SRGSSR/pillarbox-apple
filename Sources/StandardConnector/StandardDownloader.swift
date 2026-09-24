@@ -29,11 +29,7 @@ public final class StandardDownloader<Provider>: ObservableObject where Provider
     ///   - storeProviderType: The store provider type.
     ///   - configuration: A configuration object that defines the behavior and policies of the URL session used to
     ///     perform file transfers.
-    public init(
-        name: String? = nil,
-        storeProviderType: Provider.Type,
-        configuration: URLSessionConfiguration
-    ) throws {
+    public init(name: String? = nil, storeProviderType: Provider.Type, configuration: URLSessionConfiguration) throws {
         self.downloader = Downloader(configuration: configuration, store: try StandardAssetDownloadStore(name: name, providerType: storeProviderType))
 
         downloader.$downloads
