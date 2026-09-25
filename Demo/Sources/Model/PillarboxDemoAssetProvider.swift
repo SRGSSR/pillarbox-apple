@@ -34,16 +34,14 @@ enum DemoAssetProvider: StandardAssetLoaderProvider {
         return URLRequest(url: URL(string: "https://\(hostname)/v1/player/media/\(input.identifier)?platform=apple")!)
     }
 
-    static func asset(from input: Input, metadata: PlayerData<DemoCustomData>) -> Asset {
+    static func asset(from input: Input, metadata: PlayerData<EmptyCustomData>) -> Asset {
         guard let source = metadata.source else {
             return .unavailable(with: SourceError())
         }
         if let certificateUrl = metadata.drm?.certificateUrl {
             return .encrypted(url: source.url, certificateUrl: certificateUrl)
         }
-        else if let customData = metadata.customData, customData.isTokenProtected {
-            return .tokenProtected(url: source.url)
-        }
+        // TODO: Akamai token protection support
         else {
             return .simple(url: source.url)
         }
@@ -56,7 +54,7 @@ extension DemoAssetProvider: StandardAssetDownloadStoreProvider {
         input.identifier
     }
 
-    static func asset(fileUrl: URL, customData: DemoCustomData?) -> Asset {
+    static func asset(fileUrl: URL, customData: EmptyCustomData?) -> Asset {
         .simple(url: fileUrl)
     }
 }
