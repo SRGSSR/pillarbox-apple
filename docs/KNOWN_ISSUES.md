@@ -15,13 +15,21 @@ A bug in AVKit makes `SystemVideoView` leak resources after having interacted wi
 
 No workaround is available yet.
 
-## DRM-protected streams do not play in the simulator
+## DRM-protected contents do not play in the simulator
 
 DRM-protected streams do not play in the simulator. This is expected behavior as the required hardware features are not available in the simulator.
 
 ### Workaround
 
 Use a physical device.
+
+## DRM-protected content playback crashes when debugging on macOS
+
+When running an iPad app on macOS, attempting to play DRM-protected content while debugging causes the app to crash.
+
+### Workaround
+
+Disable _Debug executable_ in the associated scheme.
 
 ## Seeking to the end of an on-demand might confuse the player (FB12020197, FB12019343, FB11970329)
 
