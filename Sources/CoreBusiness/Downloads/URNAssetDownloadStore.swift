@@ -186,7 +186,7 @@ extension URNAssetDownloadStore: AssetDownloadStore {
     }
 
     static func asset(fileUrl: URL, customData: URNMetadata) -> Asset {
-        // TODO: Return the right asset
+        // TODO: Handle Akamai token protection and DRM encryption
         .simple(url: fileUrl)
     }
 

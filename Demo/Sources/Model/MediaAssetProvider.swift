@@ -38,6 +38,7 @@ enum MediaAssetProvider: URLAssetLoaderProvider {
 @available(tvOS, unavailable)
 extension MediaAssetProvider: URLAssetDownloadStoreProvider {
     static func asset(fileUrl: URL, customData: MediaCustomData) -> Asset {
+        // TODO: Handle Akamai token protection and DRM encryption
         .simple(url: fileUrl, configuration: Self.configuration(from: customData))
     }
 }

@@ -55,6 +55,7 @@ extension DemoAssetProvider: StandardAssetDownloadStoreProvider {
     }
 
     static func asset(fileUrl: URL, customData: EmptyCustomData?) -> Asset {
+        // TODO: Handle Akamai token protection and DRM encryption
         .simple(url: fileUrl)
     }
 }
