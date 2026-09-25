@@ -5,6 +5,10 @@
 //
 
 import Foundation
+
+@_spi(CoreBusinessPrivate)
+import PillarboxCoreBusiness
+
 import PillarboxPlayer
 
 @_spi(DownloaderPrivate)
@@ -31,11 +35,15 @@ enum DemoAssetProvider: StandardAssetLoaderProvider {
     }
 
     static func asset(from input: Input, metadata: PlayerData<EmptyCustomData>) -> Asset {
-        if let source = metadata.source {
-            .simple(url: source.url)
+        guard let source = metadata.source else {
+            return .unavailable(with: SourceError())
         }
+        if let certificateUrl = metadata.drm?.certificateUrl {
+            return .encrypted(url: source.url, certificateUrl: certificateUrl)
+        }
+        // TODO: Akamai token protection support
         else {
-            .unavailable(with: SourceError())
+            return .simple(url: source.url)
         }
     }
 }
@@ -47,6 +55,7 @@ extension DemoAssetProvider: StandardAssetDownloadStoreProvider {
     }
 
     static func asset(fileUrl: URL, customData: EmptyCustomData?) -> Asset {
+        // TODO: Handle Akamai token protection and DRM encryption
         .simple(url: fileUrl)
     }
 }

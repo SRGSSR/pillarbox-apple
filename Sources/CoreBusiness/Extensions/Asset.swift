@@ -15,7 +15,7 @@ public extension Asset {
     ///   - url: The URL to be played.
     ///   - configuration: The configuration to apply to the asset.
     /// - Returns: The asset.
-    static func tokenProtected(url: URL, configuration: PlaybackConfiguration) -> Self {
+    static func tokenProtected(url: URL, configuration: PlaybackConfiguration = .default) -> Self {
         let id = UUID()
         return .custom(
             url: Akamai.encodeUrl(url, id: id),
@@ -31,7 +31,7 @@ public extension Asset {
     ///   - certificateUrl: The URL where the FairPlay certificate must be downloaded.
     ///   - configuration: The configuration to apply to the asset.
     /// - Returns: The asset.
-    static func encrypted(url: URL, certificateUrl: URL, configuration: PlaybackConfiguration) -> Self {
+    static func encrypted(url: URL, certificateUrl: URL, configuration: PlaybackConfiguration = .default) -> Self {
         .encrypted(
             url: url,
             delegate: IrdetoContentKeySessionDelegate(certificateUrl: certificateUrl),
