@@ -29,15 +29,23 @@ public struct PlaybackConfiguration {
     /// disruption.
     public var preferredForwardBufferDuration: TimeInterval
 
+    /// The time at which forward playback ends.
+    ///
+    /// The default value is `.invalid`, which indicates that no end time for forward playback is specified. In this case,
+    /// the effective end time for forward playback is the item’s duration.
+    public var forwardPlaybackEndTime: CMTime
+
     /// Creates a playback configuration.
     public init(
         position: Position = at(.zero),
         automaticallyPreservesTimeOffsetFromLive: Bool = false,
-        preferredForwardBufferDuration: TimeInterval = 0
+        preferredForwardBufferDuration: TimeInterval = 0,
+        forwardPlaybackEndTime: CMTime = .invalid
     ) {
         self.position = position
         self.automaticallyPreservesTimeOffsetFromLive = automaticallyPreservesTimeOffsetFromLive
         self.preferredForwardBufferDuration = preferredForwardBufferDuration
+        self.forwardPlaybackEndTime = forwardPlaybackEndTime
     }
 
     private static func resumePosition(item: AVPlayerItem, resumeState: ResumeState?) -> Position? {
@@ -56,5 +64,6 @@ public struct PlaybackConfiguration {
         )
         item.automaticallyPreservesTimeOffsetFromLive = automaticallyPreservesTimeOffsetFromLive
         item.preferredForwardBufferDuration = preferredForwardBufferDuration
+        item.forwardPlaybackEndTime = forwardPlaybackEndTime
     }
 }
