@@ -5,6 +5,10 @@
 //
 
 import Foundation
+
+@_spi(CoreBusinessPrivate)
+import PillarboxCoreBusiness
+
 import PillarboxPlayer
 
 @_spi(DownloaderPrivate)
@@ -30,12 +34,18 @@ enum DemoAssetProvider: StandardAssetLoaderProvider {
         return URLRequest(url: URL(string: "https://\(hostname)/v1/player/media/\(input.identifier)?platform=apple")!)
     }
 
-    static func asset(from input: Input, metadata: PlayerData<EmptyCustomData>) -> Asset {
-        if let source = metadata.source {
-            .simple(url: source.url)
+    static func asset(from input: Input, metadata: PlayerData<DemoCustomData>) -> Asset {
+        guard let source = metadata.source else {
+            return .unavailable(with: SourceError())
+        }
+        if let certificateUrl = metadata.drm?.certificateUrl {
+            return .encrypted(url: source.url, certificateUrl: certificateUrl)
+        }
+        else if let customData = metadata.customData, customData.isTokenProtected {
+            return .tokenProtected(url: source.url)
         }
         else {
-            .unavailable(with: SourceError())
+            return .simple(url: source.url)
         }
     }
 }
@@ -46,7 +56,7 @@ extension DemoAssetProvider: StandardAssetDownloadStoreProvider {
         input.identifier
     }
 
-    static func asset(fileUrl: URL, customData: EmptyCustomData?) -> Asset {
+    static func asset(fileUrl: URL, customData: DemoCustomData?) -> Asset {
         .simple(url: fileUrl)
     }
 }
