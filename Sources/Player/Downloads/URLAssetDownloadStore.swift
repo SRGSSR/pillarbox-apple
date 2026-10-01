@@ -45,10 +45,12 @@ extension URLAssetDownloadStore: AssetDownloadStore {
 
     func addDownloadRecord(_ record: DownloadRecord<URLInput<CustomData>, Provider.CustomData>, forId id: String) {
         context.insert(URLEntry(id: id, record: record))
+        try? context.save()
     }
 
     func removeDownloadRecord(forId id: String) {
         try? context.delete(model: URLEntry.self, where: URLEntry.predicate(for: id))
+        try? context.save()
     }
 
     func downloadRecord(forId id: String) -> DownloadRecord<URLInput<CustomData>, Provider.CustomData>? {

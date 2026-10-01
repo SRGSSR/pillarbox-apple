@@ -77,10 +77,11 @@ enum URLSchemaV1<CustomData> where CustomData: Codable {
         }
     }
 
-    struct EntryError: Codable {
-        private let domain: String
-        private let code: Int
-        private let localizedDescription: String
+    @Model
+    final class URLEntryError {
+        private var domain: String
+        private var code: Int
+        private var localizedDescription: String
 
         init?(error: Error?) {
             guard let error else { return nil }
@@ -107,7 +108,10 @@ enum URLSchemaV1<CustomData> where CustomData: Codable {
         private var metadata: EntryAssetMetadata
         private var bookmarkData: Data?
         private var progress: Double
-        private var error: EntryError?
+
+        @Relationship(deleteRule: .cascade)
+        private var error: URLEntryError?
+
         private var creationDate: Date
 
         init(id: String, record: DownloadRecord<URLInput<CustomData>, CustomData>) {
