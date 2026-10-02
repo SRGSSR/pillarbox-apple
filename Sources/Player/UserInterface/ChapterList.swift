@@ -23,19 +23,31 @@ struct ChapterList: View {
     }
 
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack(spacing: 40) {
-                ForEach(chapters, id: \.timeRange) { chapter in
-                    ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter, isFocused: chapter.timeRange == focusedTimeRange) {
-                        player.seek(to: chapter)
-                        dismiss()
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal) {
+                HStack(spacing: 40) {
+                    ForEach(chapters, id: \.timeRange) { chapter in
+                        ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter, isFocused: chapter.timeRange == focusedTimeRange) {
+                            player.seek(to: chapter)
+                            dismiss()
+                        }
+                        .focused($focusedTimeRange, equals: chapter.timeRange)
+                        .id(chapter.timeRange)
                     }
-                    .focused($focusedTimeRange, equals: chapter.timeRange)
+                }
+            }
+            .scrollClipDisabled26()
+            .bind(progressTracker, to: player)
+            .onAppear {
+                focusedTimeRange = currentChapter?.timeRange
+                proxy.scrollTo(currentChapter?.timeRange)
+            }
+            .onChange(of: focusedTimeRange) { focusedTimeRange in
+                if focusedTimeRange == nil {
+                    self.focusedTimeRange = currentChapter?.timeRange
                 }
             }
         }
-        .scrollClipDisabled26()
-        .bind(progressTracker, to: player)
     }
 }
 
