@@ -4,7 +4,62 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import SwiftUI
+
+private struct MarqueeView: View {
+    let text: String
+    let width: CGFloat
+    let isActive: Bool
+
+    @State private var textWidth: CGFloat = 0
+    @State private var translationX: CGFloat = 0
+
+    var shouldScroll: Bool {
+        textWidth > width
+    }
+
+    let timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+        HStack(spacing: 1) {
+            Text(text)
+                .fixedSize()
+                .background {
+                    GeometryReader { geometry in
+                        Color.clear
+                            .onAppear {
+                                textWidth = geometry.size.width
+                            }
+                    }
+                }
+            if shouldScroll {
+                Text(text)
+                    .fixedSize()
+                Text(text)
+                    .fixedSize()
+            }
+        }
+        .offset(x: translationX)
+        .frame(width: width, alignment: .leading)
+        .clipped()
+        .onReceive(timer) { _ in
+            if isActive && shouldScroll {
+                translationX -= 1
+            }
+
+            if translationX <= -(textWidth) || !isActive {
+                translationX = 0
+            }
+        }
+    }
+
+    init(_ text: String, isActive: Bool, width: CGFloat) {
+        self.text = text
+        self.isActive = isActive
+        self.width = width
+    }
+}
 
 // TODO: Remove once tvOS 26 is not supported anymore.
 struct ChapterCell: View {
@@ -75,10 +130,9 @@ struct ChapterCell: View {
     @ContentBuilder
     private func title() -> some View {
         if let title = chapter.title {
-            Text(title)
+            MarqueeView(title, isActive: isHighlighted, width: Self.width)
                 .font(.system(size: 24))
                 .fontWeight(.medium)
-                .lineLimit(1)
         }
     }
 }
