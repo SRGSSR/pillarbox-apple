@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import CoreMedia
 import SwiftUI
 
 // TODO: Remove once tvOS 26 is not supported anymore.
@@ -11,6 +12,7 @@ struct ChapterList: View {
     @ObservedObject var player: Player
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
     @Environment(\.dismiss) private var dismiss
+    @FocusState private var focusedTimeRange: CMTimeRange?
 
     private var chapters: [Chapter] {
         player.metadata.chapters
@@ -24,10 +26,11 @@ struct ChapterList: View {
         ScrollView(.horizontal) {
             HStack(spacing: 40) {
                 ForEach(chapters, id: \.timeRange) { chapter in
-                    ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter) {
+                    ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter, isFocused: chapter.timeRange == focusedTimeRange) {
                         player.seek(to: chapter)
                         dismiss()
                     }
+                    .focused($focusedTimeRange, equals: chapter.timeRange)
                 }
             }
         }

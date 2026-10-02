@@ -72,6 +72,7 @@ struct ChapterCell: View {
 
     let chapter: Chapter
     let isHighlighted: Bool
+    let isFocused: Bool
     let action: () -> Void
 
     private var accessibilityTraits: AccessibilityTraits {
@@ -130,7 +131,7 @@ struct ChapterCell: View {
     @ContentBuilder
     private func title() -> some View {
         if let title = chapter.title {
-            MarqueeView(title, isActive: isHighlighted, width: Self.width)
+            MarqueeView(title, isActive: isFocused, width: Self.width)
                 .font(.system(size: 24))
                 .fontWeight(.medium)
         }
