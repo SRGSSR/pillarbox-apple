@@ -8,6 +8,7 @@ import Combine
 import SwiftUI
 
 private struct MarqueeView: View {
+    static let spacing: CGFloat = 40
     let text: String
     let width: CGFloat
     let isActive: Bool
@@ -15,14 +16,14 @@ private struct MarqueeView: View {
     @State private var textWidth: CGFloat = 0
     @State private var translationX: CGFloat = 0
 
-    var shouldScroll: Bool {
+    private var shouldScroll: Bool {
         textWidth > width
     }
 
-    let timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
+    @State private var timerPublisher = Self.timerPublisher()
 
     var body: some View {
-        HStack(spacing: 1) {
+        HStack(spacing: Self.spacing) {
             Text(text)
                 .fixedSize()
                 .background {
@@ -36,20 +37,19 @@ private struct MarqueeView: View {
             if shouldScroll {
                 Text(text)
                     .fixedSize()
-                Text(text)
-                    .fixedSize()
             }
         }
         .offset(x: translationX)
         .frame(width: width, alignment: .leading)
         .clipped()
-        .onReceive(timer) { _ in
+        .onReceive(timerPublisher) { _ in
             if isActive && shouldScroll {
                 translationX -= 1
             }
 
-            if translationX <= -(textWidth) || !isActive {
+            if translationX <= -(textWidth + Self.spacing) || !isActive {
                 translationX = 0
+                timerPublisher = Self.timerPublisher()
             }
         }
     }
@@ -58,6 +58,14 @@ private struct MarqueeView: View {
         self.text = text
         self.isActive = isActive
         self.width = width
+    }
+
+    private static func timerPublisher() -> AnyPublisher<Void, Never> {
+        Timer.publish(every: 0.03, on: .main, in: .common)
+            .autoconnect()
+            .delay(for: .seconds(3), scheduler: RunLoop.main)
+            .map { _ in () }
+            .eraseToAnyPublisher()
     }
 }
 
