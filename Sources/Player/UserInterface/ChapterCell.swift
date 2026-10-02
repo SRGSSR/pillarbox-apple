@@ -132,7 +132,7 @@ struct ChapterCell: View {
                 .textCase(.uppercase)
                 .font(.system(size: 18))
                 .fontWeight(.medium)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(isFocused ? .primary : .secondary)
         }
     }
 
