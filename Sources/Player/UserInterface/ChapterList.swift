@@ -43,6 +43,8 @@ struct ChapterList: View {
                 proxy.scrollTo(currentChapter?.timeRange)
             }
             .onChange(of: focusedTimeRange) { focusedTimeRange in
+                // When a cell loses focus (e.g. leaving the list) focusedTimeRange becomes nil.
+                // To avoid losing the last state we retain the current chapter time range.
                 if focusedTimeRange == nil {
                     self.focusedTimeRange = currentChapter?.timeRange
                 }
