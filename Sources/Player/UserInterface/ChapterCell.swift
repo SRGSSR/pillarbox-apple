@@ -9,7 +9,6 @@ import SwiftUI
 
 private struct MarqueeView: View {
     static let spacing: CGFloat = 40
-    static let horizontalPadding: CGFloat = 20
     let text: String
     let width: CGFloat
     let isActive: Bool
@@ -41,7 +40,7 @@ private struct MarqueeView: View {
             }
         }
         .offset(x: translationX)
-        .frame(width: width - Self.horizontalPadding, alignment: .leading)
+        .frame(width: width, alignment: .leading)
         .clipped()
         .onReceive(timerPublisher) { _ in
             if isActive && shouldScroll {
@@ -75,6 +74,7 @@ struct ChapterCell: View {
     private static let aspectRatio: CGFloat = 16 / 9
 
     private static let width: CGFloat = 320
+    private static let descriptionPadding: CGFloat = 10
     private static let heightExtension: CGFloat = 48
 
     private static var height = width / aspectRatio + heightExtension
@@ -122,7 +122,7 @@ struct ChapterCell: View {
             subtitle()
             title()
         }
-        .padding(10)
+        .padding(Self.descriptionPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
     }
 
@@ -140,7 +140,7 @@ struct ChapterCell: View {
     @ContentBuilder
     private func title() -> some View {
         if let title = chapter.title {
-            MarqueeView(title, isActive: isFocused, width: Self.width)
+            MarqueeView(title, isActive: isFocused, width: Self.width - (Self.descriptionPadding * 2))
                 .font(.system(size: 24))
                 .fontWeight(.medium)
         }
