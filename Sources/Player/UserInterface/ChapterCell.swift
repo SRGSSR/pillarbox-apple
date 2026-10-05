@@ -44,6 +44,9 @@ private struct MarqueeView: View {
                 if isActive && shouldScroll {
                     translationX -= 1
                 }
+                else {
+                    translationX = 0
+                }
 
                 if translationX <= -(textWidth + Self.spacing) || !isActive {
                     translationX = 0
