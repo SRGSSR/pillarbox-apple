@@ -9,6 +9,7 @@ import SwiftUI
 
 private struct MarqueeView: View {
     static let spacing: CGFloat = 40
+    static let horizontalPadding: CGFloat = 20
     let text: String
     let width: CGFloat
     let isActive: Bool
@@ -40,7 +41,7 @@ private struct MarqueeView: View {
             }
         }
         .offset(x: translationX)
-        .frame(width: width, alignment: .leading)
+        .frame(width: width - Self.horizontalPadding, alignment: .leading)
         .clipped()
         .onReceive(timerPublisher) { _ in
             if isActive && shouldScroll {
