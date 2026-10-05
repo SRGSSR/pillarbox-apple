@@ -10,54 +10,51 @@ import SwiftUI
 private struct MarqueeView: View {
     static let spacing: CGFloat = 40
     let text: String
-    let width: CGFloat
     let isActive: Bool
 
+    @State private var containerWidth: CGFloat = 0
     @State private var textWidth: CGFloat = 0
     @State private var translationX: CGFloat = 0
-
-    private var shouldScroll: Bool {
-        textWidth > width
-    }
-
     @State private var timerPublisher = Self.timerPublisher()
 
-    var body: some View {
-        HStack(spacing: Self.spacing) {
-            Text(text)
-                .fixedSize()
-                .background {
-                    GeometryReader { geometry in
-                        Color.clear
-                            .onAppear {
-                                textWidth = geometry.size.width
-                            }
-                    }
-                }
-            if shouldScroll {
-                Text(text)
-                    .fixedSize()
-            }
-        }
-        .offset(x: translationX)
-        .frame(width: width, alignment: .leading)
-        .clipped()
-        .onReceive(timerPublisher) { _ in
-            if isActive && shouldScroll {
-                translationX -= 1
-            }
-
-            if translationX <= -(textWidth + Self.spacing) || !isActive {
-                translationX = 0
-                timerPublisher = Self.timerPublisher()
-            }
-        }
+    private var shouldScroll: Bool {
+        textWidth > containerWidth
     }
 
-    init(_ text: String, isActive: Bool, width: CGFloat) {
+    var body: some View {
+        Text(text)
+            .lineLimit(1)
+            .hidden()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .onGeometryChange(for: CGFloat.self, of: \.size.width) { containerWidth = $0 }
+            .overlay(alignment: .leading) {
+                HStack(spacing: Self.spacing) {
+                    Text(text)
+                        .fixedSize()
+                        .onGeometryChange(for: CGFloat.self, of: \.size.width) { textWidth = $0 }
+                    if shouldScroll {
+                        Text(text)
+                            .fixedSize()
+                    }
+                }
+                .offset(x: translationX)
+            }
+            .clipped()
+            .onReceive(timerPublisher) { _ in
+                if isActive && shouldScroll {
+                    translationX -= 1
+                }
+
+                if translationX <= -(textWidth + Self.spacing) || !isActive {
+                    translationX = 0
+                    timerPublisher = Self.timerPublisher()
+                }
+            }
+    }
+
+    init(_ text: String, isActive: Bool) {
         self.text = text
         self.isActive = isActive
-        self.width = width
     }
 
     private static func timerPublisher() -> AnyPublisher<Void, Never> {
@@ -74,7 +71,6 @@ struct ChapterCell: View {
     private static let aspectRatio: CGFloat = 16 / 9
 
     private static let width: CGFloat = 320
-    private static let descriptionPadding: CGFloat = 10
     private static let heightExtension: CGFloat = 48
 
     private static var height = width / aspectRatio + heightExtension
@@ -122,7 +118,7 @@ struct ChapterCell: View {
             subtitle()
             title()
         }
-        .padding(Self.descriptionPadding)
+        .padding(10)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
     }
 
@@ -140,7 +136,7 @@ struct ChapterCell: View {
     @ContentBuilder
     private func title() -> some View {
         if let title = chapter.title {
-            MarqueeView(title, isActive: isFocused, width: Self.width - (Self.descriptionPadding * 2))
+            MarqueeView(title, isActive: isFocused)
                 .font(.system(size: 24))
                 .fontWeight(.medium)
         }
