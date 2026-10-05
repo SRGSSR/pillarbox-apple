@@ -8,9 +8,10 @@ import Combine
 import SwiftUI
 
 private struct MarqueeView: View {
-    static let spacing: CGFloat = 40
-    let text: String
-    let isActive: Bool
+    private static let spacing: CGFloat = 40
+
+    private let text: String
+    private let isActive: Bool
 
     @State private var containerWidth: CGFloat = 0
     @State private var textWidth: CGFloat = 0
