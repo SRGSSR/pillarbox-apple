@@ -150,6 +150,9 @@ enum URLSchemaV1<CustomData> where CustomData: Codable {
             self.metadata = .init(assetMetadata: record.input.metadata)
             self.bookmarkData = record.bookmarkData
             self.progress = record.progress
+            if let error {
+                modelContext?.delete(error)
+            }
             self.error = .init(error: record.error)
             self.creationDate = record.creationDate
         }
