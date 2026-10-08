@@ -4,17 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-// swiftlint:disable missing_docs
-
-#if DEBUG
-
+/// Metadata associated with URN-based content.
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public struct URNMetadata: Codable {
+    /// comScore analytics data.
     let analyticsData: [String: String]
+
+    /// Commanders Act analytics data.
     let analyticsMetadata: [String: String]
 }
-
-#endif
-
-// swiftlint:enable missing_docs

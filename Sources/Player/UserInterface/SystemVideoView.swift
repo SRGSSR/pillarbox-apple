@@ -62,7 +62,7 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     ///    - videoOverlay: A closure returning an overlay view to be placed atop the player's content. This view is
     ///      fully interactive, but is placed below the system-provided playback controls and will only receive unhandled
     ///      events.
-    public init(player: Player, @ViewBuilder videoOverlay: () -> VideoOverlay) {
+    public init(player: Player, @ContentBuilder videoOverlay: () -> VideoOverlay) {
         self.player = player
         self.videoOverlay = videoOverlay()
     }
@@ -211,6 +211,10 @@ public extension SystemVideoView {
     ///
     /// Apply the ``SwiftUICore/View/infoViewTabPanel()`` modifier to use a background that mimics the standard tvOS
     /// Info view appearance.
+    ///
+    /// > Important: The system does not always refresh Info views while they are displayed. As a result, if an action in a
+    ///   custom Info view tab changes the current item, you should dismiss the panel manually to force a refresh. In SwiftUI,
+    ///   you can do this by retrieving and calling the [dismiss action](https://developer.apple.com/documentation/swiftui/environmentvalues/dismiss).
     ///
     /// @Image(source: info-view-tabs, alt: "A screenshot of info view tabs")
     func infoViewTabs(@InfoViewTabsContentBuilder content: () -> InfoViewTabsContent) -> Self {

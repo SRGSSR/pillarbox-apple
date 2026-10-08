@@ -4,14 +4,15 @@
 //  License information is available from the LICENSE file.
 //
 
+import Foundation
 import SwiftUI
 
 @objc
-enum SeekBehaviorSetting: Int, CaseIterable {
+enum SeekBehaviorSetting: Int, CaseIterable, CustomLocalizedStringResourceConvertible {
     case optimal
     case deferred
 
-    var name: LocalizedStringResource {
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .optimal:
             return "Optimal"

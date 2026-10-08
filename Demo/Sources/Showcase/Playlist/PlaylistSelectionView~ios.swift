@@ -30,6 +30,8 @@ struct PlaylistSelectionView: View {
         URLMedia.appleDolbyAtmos,
         URLMedia.appleTvMorningShowSeason1Trailer,
         URLMedia.appleTvMorningShowSeason2Trailer,
+        URLMedia.appleTvTrailerBasicStreamAV1,
+        URLMedia.appleTvTrailerInterstitial,
         URLMedia.uhdVideoHLS,
         URNMedia.gothard_360,
         URLMedia.apple_360,
@@ -69,10 +71,9 @@ struct PlaylistSelectionView: View {
     }
 
     private func picker() -> some View {
-        SwiftUI.Picker(selection: $selectedInsertionOption) {
+        Picker(selection: $selectedInsertionOption) {
             ForEach(InsertionOption.allCases, id: \.self) { option in
-                Text(option.name)
-                    .tag(option)
+                Text(option.localizedStringResource).tag(option)
             }
         } label: {
             EmptyView()
@@ -116,13 +117,13 @@ struct PlaylistSelectionView: View {
 }
 
 private extension PlaylistSelectionView {
-    enum InsertionOption: CaseIterable {
+    enum InsertionOption: CaseIterable, CustomLocalizedStringResourceConvertible {
         case prepend
         case insertBefore
         case insertAfter
         case append
 
-        var name: LocalizedStringResource {
+        var localizedStringResource: LocalizedStringResource {
             switch self {
             case .prepend:
                 "Prepend"

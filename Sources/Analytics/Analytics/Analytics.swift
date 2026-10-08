@@ -17,26 +17,26 @@ import UIKit
 /// Before analytics can be gathered the singleton must be started with a configuration suitable for your application.
 public class Analytics {
     /// A configuration for analytics.
-    ///
-    /// Please contact our SRG SSR Digital Analytics team (ADI) to obtain configuration parameters suitable for your
-    /// application.
     public struct Configuration {
         let vendor: Vendor
         let sourceKey: SourceKey
         let appSiteName: String
+        let platformIdentifier: String
 
         /// Creates an analytics configuration.
         ///
-        /// Contact the ADI team to get configuration parameters for your app.
+        /// Contact our digital analytics team to obtain configuration parameters suitable for your application.
         ///
         /// - Parameters:
         ///   - vendor: The vendor which the application belongs to.
         ///   - sourceKey: The source key.
         ///   - appSiteName: The app/site name.
-        public init(vendor: Vendor, sourceKey: SourceKey, appSiteName: String) {
+        ///   - platformIdentifier: The [platform identifier](https://srgssr-ch.atlassian.net/wiki/spaces/RN/pages/2655846518/Reference+tables#Platform_id).
+        public init(vendor: Vendor, sourceKey: SourceKey, appSiteName: String, platformIdentifier: String) {
             self.vendor = vendor
             self.sourceKey = sourceKey
             self.appSiteName = appSiteName
+            self.platformIdentifier = platformIdentifier
         }
     }
 
@@ -96,7 +96,7 @@ public class Analytics {
     }
 
     /// Sends an event.
-    /// 
+    ///
     /// - Parameter commandersActEvent: The Commanders Act event data.
     public func sendEvent(commandersAct commandersActEvent: CommandersActEvent) {
         sendCommandersActEvent(commandersActEvent)

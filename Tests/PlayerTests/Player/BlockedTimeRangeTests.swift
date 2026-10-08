@@ -40,15 +40,17 @@ final class BlockedTimeRangeTests: TestCase {
     }
 
     func testBlockedTimeRangeTraversal() {
-        let configuration = PlaybackConfiguration(position: at(.init(value: 29, timescale: 1)))
-        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: .blockedTimeRange, configuration: configuration))
+        let item = PlayerItem.simple(url: Stream.onDemand.url, metadata: .blockedTimeRange)
+        let player = Player(item: item)
+        player.resume(at(.init(value: 29, timescale: 1)), in: item)
         player.play()
         expect(player.time()).toEventually(beGreaterThan(kBlockedTimeRange.end))
     }
 
     func testOnDemandStartInBlockedTimeRange() {
-        let configuration = PlaybackConfiguration(position: at(.init(value: 30, timescale: 1)))
-        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: .blockedTimeRange, configuration: configuration))
+        let item = PlayerItem.simple(url: Stream.onDemand.url, metadata: .blockedTimeRange)
+        let player = Player(item: item)
+        player.resume(at(.init(value: 30, timescale: 1)), in: item)
         expect(player.time()).toEventually(equal(kBlockedTimeRange.end))
     }
 }

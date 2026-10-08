@@ -7,11 +7,11 @@
 import Foundation
 
 @objc
-enum RoutePickerSetting: Int, CaseIterable {
+enum RoutePickerSetting: Int, CaseIterable, CustomLocalizedStringResourceConvertible {
     case button
     case menu
 
-    var name: LocalizedStringResource {
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .button:
             return "Button"

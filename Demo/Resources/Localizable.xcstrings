@@ -72,6 +72,9 @@
     "Advance" : {
 
     },
+    "All" : {
+
+    },
     "Android" : {
 
     },
@@ -88,6 +91,9 @@
 
     },
     "Asset" : {
+
+    },
+    "Audio" : {
 
     },
     "Audiovisual background policy" : {
@@ -162,10 +168,19 @@
     "Debugging" : {
 
     },
+    "Default" : {
+
+    },
     "Deferred" : {
 
     },
     "Delete all" : {
+
+    },
+    "Demo (Development)" : {
+
+    },
+    "Demo (Production)" : {
 
     },
     "Displays touches for presentation purposes." : {
@@ -175,6 +190,12 @@
 
     },
     "Double tap to toggle controls" : {
+
+    },
+    "Download" : {
+
+    },
+    "Downloads" : {
 
     },
     "Embeddings" : {
@@ -219,6 +240,9 @@
     "Hide" : {
 
     },
+    "High" : {
+
+    },
     "High-Speed Scrubbing" : {
 
     },
@@ -249,6 +273,9 @@
     "Kind" : {
 
     },
+    "Large" : {
+
+    },
     "Layouts" : {
 
     },
@@ -264,6 +291,9 @@
     "LIVE" : {
 
     },
+    "Low" : {
+
+    },
     "Made with " : {
 
     },
@@ -277,6 +307,9 @@
 
     },
     "Media requests" : {
+
+    },
+    "Medium" : {
 
     },
     "Menu" : {
@@ -312,11 +345,17 @@
     "No content" : {
 
     },
+    "No downloads." : {
+
+    },
     "No items" : {
 
     },
     "No metrics" : {
 
+    },
+    "No playable resources could be found." : {
+      "comment" : "Generic error message returned when no playable resources could be found"
     },
     "No results." : {
 
@@ -366,6 +405,15 @@
     "Play" : {
 
     },
+    "Play+ Development" : {
+
+    },
+    "Play+ Integration" : {
+
+    },
+    "Play+ Production" : {
+
+    },
     "Playback duration" : {
 
     },
@@ -388,6 +436,9 @@
 
     },
     "Previous" : {
+
+    },
+    "Production" : {
 
     },
     "Protected streams (URNs)" : {
@@ -420,6 +471,9 @@
     "Settings" : {
 
     },
+    "Settings apply to future downloads only." : {
+
+    },
     "Showcase" : {
 
     },
@@ -438,6 +492,9 @@
     "Skips" : {
 
     },
+    "Small" : {
+
+    },
     "Smart navigation" : {
 
     },
@@ -445,6 +502,9 @@
 
     },
     "SRG SSR streams (URNs)" : {
+
+    },
+    "Stage" : {
 
     },
     "Stalls" : {
@@ -465,10 +525,16 @@
     "Stop" : {
 
     },
+    "Subtitles" : {
+
+    },
     "Swap" : {
 
     },
     "Swift Package Index" : {
+
+    },
+    "Swiss languages" : {
 
     },
     "System player (using AVPlayer)" : {
@@ -478,6 +544,9 @@
 
     },
     "System Player and Picture in Picture (PiP) support" : {
+
+    },
+    "Test" : {
 
     },
     "TestFlight builds" : {

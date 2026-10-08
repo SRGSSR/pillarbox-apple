@@ -63,7 +63,7 @@ struct HSlider<Value, Content, Speed>: View where Value: BinaryFloatingPoint, Va
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         scrubbingSpeed: Binding<Speed>,
-        @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
+        @ContentBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
     ) {
         self._value = value
         self._scrubbingSpeed = scrubbingSpeed
@@ -131,7 +131,7 @@ extension HSlider where Speed == StandardScrubbingSpeed {
     init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
-        @ViewBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
+        @ContentBuilder content: @escaping (_ progress: CGFloat, _ width: CGFloat) -> Content
     ) {
         self.init(value: value, in: bounds, scrubbingSpeed: .constant(.default), content: content)
     }

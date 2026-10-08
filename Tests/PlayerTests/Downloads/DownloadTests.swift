@@ -15,12 +15,15 @@ private struct MetadataError: Error {}
 
 @available(tvOS, unavailable)
 final class DownloadTests: TestCase {
+    // swiftlint:disable:previous type_body_length
     private let session = DownloadSessionMock(name: "DownloadTests")
 
-    func testRunningWithImmediatePreparation() {
+    func testRunningWithImmediatePreparation() throws {
         let downloader = Downloader(store: AssetDownloadStoreMock(), session: session)
         let download = downloader.addDownload(for: .playable(url: Stream.download.url))
         expect(download.state).to(equal(.running))
+        let size = try unwrap(download.size)
+        expect(size.completed).to(equal(0))
         expect(download.progress).to(equal(0))
     }
 
@@ -28,6 +31,7 @@ final class DownloadTests: TestCase {
         let downloader = Downloader(store: AssetDownloadStoreMock(), session: session)
         let download = downloader.addDownload(for: .playable(url: Stream.download.url, after: 0.1))
         expect(download.state).to(equal(.preparing))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
     }
 
@@ -36,6 +40,8 @@ final class DownloadTests: TestCase {
         let downloader = Downloader(store: store, session: session)
         let download = downloader.addDownload(for: .playable(url: Stream.download.url, after: 0.1))
         expect(download.state).toEventually(equal(.completed))
+        let size = try unwrap(download.size)
+        expect(size.completed).to(equal(size.total))
         expect(download.progress).to(equal(1))
         expect(download.error).to(beNil())
         expect(store.downloadRecord(forId: download.id)).notTo(beNil())
@@ -101,6 +107,7 @@ final class DownloadTests: TestCase {
 
         download.remove()
         expect(download.state).to(equal(.completed))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
         expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
@@ -115,6 +122,7 @@ final class DownloadTests: TestCase {
 
         download.remove()
         expect(download.state).to(equal(.completed))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
         expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
@@ -129,6 +137,7 @@ final class DownloadTests: TestCase {
 
         download.remove()
         expect(download.state).to(equal(.completed))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
         expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
@@ -145,6 +154,7 @@ final class DownloadTests: TestCase {
 
         download.remove()
         expect(download.state).toEventually(equal(.completed))
+        expect(download.size).to(beNil())
         expect(download.progress).to(equal(0))
         expect(download.error).notTo(beNil())
         expect(download.fileUrl).to(beNil())
@@ -224,6 +234,7 @@ final class DownloadTests: TestCase {
         let download2 = try unwrap(downloader2.download(matching: input))
         expect(download2.state).to(equal(.completed))
         expect(download2.fileUrl).to(equal(location1))
+        expect(download2.size).notTo(beNil())
     }
 
     func testRestoreFailedWithMissingMetadata() throws {
@@ -239,6 +250,7 @@ final class DownloadTests: TestCase {
         let downloader2 = Downloader(store: store, session: session)
         let download2 = try unwrap(downloader2.download(matching: input))
         expect(download2.state).to(equal(.completed))
+        expect(download2.size).to(beNil())
         let error2 = try unwrap(download2.error)
         expect(error2.localizedDescription).to(equal(error1.localizedDescription))
         expect(download1.fileUrl).to(beNil())
@@ -257,9 +269,39 @@ final class DownloadTests: TestCase {
         let downloader2 = Downloader(store: store, session: session)
         let download2 = try unwrap(downloader2.download(matching: input))
         expect(download2.state).to(equal(.completed))
+        expect(download2.size).to(beNil())
         let error2 = try unwrap(download2.error)
         expect(error2.localizedDescription).to(equal(error1.localizedDescription))
         expect(download1.fileUrl).to(beNil())
+    }
+
+    func testDefaultConfiguration() {
+        let downloader = Downloader(store: AssetDownloadStoreMock(), session: session)
+        let download = downloader.addDownload(for: .playable(url: Stream.download.url))
+        expect(download.configuration).to(equal(.default))
+    }
+
+    func testCustomConfiguration() {
+        let configuration = DownloadConfiguration(preferredPeakBitRate: 1012)
+        let downloader = Downloader(store: AssetDownloadStoreMock(), session: session)
+        let download = downloader.addDownload(for: .playable(url: Stream.download.url), configuration: configuration)
+        expect(download.configuration).to(equal(configuration))
+    }
+
+    func testIdenticalConfigurationWhenRestarting() {
+        let configuration = DownloadConfiguration(preferredPeakBitRate: 1012)
+        let downloader = Downloader(store: AssetDownloadStoreMock(), session: session)
+        let download = downloader.addDownload(for: .playable(url: Stream.download.url), configuration: configuration)
+        download.restart()
+        expect(download.configuration).to(equal(configuration))
+    }
+
+    func testUpdatedConfigurationWhenRestarting() {
+        let configuration = DownloadConfiguration(preferredPeakBitRate: 1012)
+        let downloader = Downloader(store: AssetDownloadStoreMock(), session: session)
+        let download = downloader.addDownload(for: .playable(url: Stream.download.url))
+        download.restart(configuration: configuration)
+        expect(download.configuration).to(equal(configuration))
     }
 
     func testDeallocationWithManager() throws {

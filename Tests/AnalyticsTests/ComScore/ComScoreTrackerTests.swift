@@ -39,6 +39,26 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         }
     }
 
+    func testLabelsMerging() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in
+                    ["cs_ucfr": "tracker"]
+                }
+            ]
+        ))
+        expectAtLeastHits(
+            play { labels in
+                expect(labels.ns_st_mp).to(equal("Pillarbox"))
+                expect(labels.ns_st_mv).to(equal(PackageInfo.version))
+                expect(labels.cs_ucfr).to(equal("tracker"))
+            }
+        ) {
+            player.play()
+        }
+    }
+
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
@@ -191,18 +211,19 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     }
 
     func testOnDemandStartAtGivenPosition() {
-        let player = Player(item: .simple(
+        let item = PlayerItem.simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
-            ],
-            configuration: .init(position: at(.init(value: 100, timescale: 1)))
-        ))
+            ]
+        )
+        let player = Player(item: item)
         expectAtLeastHits(
             play { labels in
                 expect(labels.ns_st_po).to(beCloseTo(100, within: 5))
             }
         ) {
+            player.resume(at(.init(value: 100, timescale: 1)), in: item)
             player.play()
         }
     }

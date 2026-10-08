@@ -32,7 +32,7 @@ public struct LazyImage<Content>: View where Content: View {
     ///   - content: A view builder to further customize how the actual loaded image is displayed.
     public init(
         source: ImageSource,
-        @ViewBuilder content: @escaping (Image) -> Content
+        @ContentBuilder content: @escaping (Image) -> Content
     ) {
         self.source = source
         self.content = content

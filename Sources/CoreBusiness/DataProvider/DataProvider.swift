@@ -39,4 +39,8 @@ final class DataProvider {
     func resizedImageUrl(_ url: URL, width: ImageWidth) -> URL {
         server.resizedImageUrl(url, width: width)
     }
+
+    func tokenizeUrl(_ url: URL) async -> URL {
+        await Akamai.tokenizeUrl(url, using: session)
+    }
 }

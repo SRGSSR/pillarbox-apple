@@ -19,15 +19,15 @@ public struct PlaybackConfiguration {
     /// - Live edge for a livestream supporting DVR.
     ///
     /// Note that starting at the default position is always efficient, no matter which tolerances have been requested.
-    public let position: Position
+    public var position: Position
 
     /// A Boolean value that indicates whether the player preserves its time offset from the live time after a
     /// buffering operation.
-    public let automaticallyPreservesTimeOffsetFromLive: Bool
+    public var automaticallyPreservesTimeOffsetFromLive: Bool
 
     /// The duration the player should buffer media from the network ahead of the playhead to guard against playback
     /// disruption.
-    public let preferredForwardBufferDuration: TimeInterval
+    public var preferredForwardBufferDuration: TimeInterval
 
     /// Creates a playback configuration.
     public init(

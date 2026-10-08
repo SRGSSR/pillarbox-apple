@@ -8,8 +8,10 @@ import SRGDataProviderModel
 import SwiftUI
 
 struct ContentListsView: View {
+#if os(iOS)
     @AppStorage(UserDefaults.DemoSettingKey.serverSetting.rawValue)
-    private var selectedServerSetting: ServerSetting = .production
+    private var serverSetting: ServerSetting = .production
+#endif
 
     var body: some View {
         CustomList {
@@ -17,7 +19,7 @@ struct ContentListsView: View {
         }
         .tracked(name: "lists")
 #if os(iOS)
-        .navigationTitle("Lists (\(selectedServerSetting.title))")
+        .navigationTitle("Lists (\(serverSetting.localizedStringResource))")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarTitleMenu {
             serverSettingsMenu()
@@ -27,7 +29,7 @@ struct ContentListsView: View {
 #endif
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func content() -> some View {
         section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF])
         section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF])
@@ -40,7 +42,7 @@ struct ContentListsView: View {
         latestAudiosSection(image: "music.note.list")
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func section(for list: ContentList, image: String? = nil, vendors: [SRGVendor]) -> some View {
         let configurations = vendors.map { vendor in
             ContentList.Configuration(list: list, vendor: vendor)
@@ -115,9 +117,9 @@ struct ContentListsView: View {
 #if os(iOS)
     private func serverSettingsMenu() -> some View {
         Menu {
-            SwiftUI.Picker(selection: $selectedServerSetting) {
+            Picker(selection: $serverSetting) {
                 ForEach(ServerSetting.allCases, id: \.self) { service in
-                    Text(service.title).tag(service)
+                    Text(service.localizedStringResource).tag(service)
                 }
             } label: {
                 EmptyView()

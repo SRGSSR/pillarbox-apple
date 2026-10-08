@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 import AVFoundation
 import Combine
 
@@ -18,7 +16,7 @@ final class URLDownloadSession: NSObject {
     // to properly clean associated downloaded data.
     private var locations: [Int: URL] = [:]
 
-    weak var delegate: (any DownloadSessionDelegate)?
+    weak var delegate: any DownloadSessionDelegate?
 
     init(configuration: URLSessionConfiguration) {
         super.init()
@@ -28,18 +26,22 @@ final class URLDownloadSession: NSObject {
 
 @available(tvOS, unavailable)
 extension URLDownloadSession: DownloadSession {
-    func taskPublisher(forId id: String, asset: Asset, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
+    func taskPublisher(forId id: String, asset: Asset, configuration: DownloadConfiguration, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
+        // Cancel existing tasks first. This avoids:
+        //   - Dangling tasks that would still download duplicates of the same content in the background.
+        //   - Immediate `willDownloadTo` delegate method call during task creation, which can lead to subtle ordering issues.
         Future { promise in
-            // Cancel existing tasks first. This avoids:
-            //   - Dangling tasks that would still download duplicates of the same content in the background.
-            //   - Immediate `willDownloadTo` delegate method call during task creation, which can lead to subtle ordering issues.
             self.tasks(matchingDescription: id) { tasks in
                 tasks.forEach { task in
                     task.cancel()
                 }
-                promise(.success(self.createTask(forId: id, asset: asset, metadata: metadata)))
+                promise(.success(()))
             }
         }
+        .map {
+            self.createTask(forId: id, asset: asset, configuration: configuration, metadata: metadata)
+        }
+        .switchToLatest()
         .eraseToAnyPublisher()
     }
 
@@ -60,13 +62,27 @@ extension URLDownloadSession: DownloadSession {
         }
     }
 
-    private func createTask(forId id: String, asset: Asset, metadata: PlayerMetadata) -> URLSessionTask {
-        let configuration = AVAssetDownloadConfiguration(asset: asset.urlAsset(), title: metadata.title ?? id)
-        configuration.artworkData = metadata.imageSource.data
-        let task = session.makeAssetDownloadTask(downloadConfiguration: configuration)
-        task.taskDescription = id
-        task.resume()
-        return task
+    private func createTask(
+        forId id: String,
+        asset: Asset,
+        configuration: DownloadConfiguration,
+        metadata: PlayerMetadata
+    ) -> AnyPublisher<URLSessionTask, Never> {
+        let urlAsset = asset.urlAsset()
+        return Publishers.CombineLatest(
+            urlAsset.preferredMediaSelectionPublisher(),
+            urlAsset.mediaSelectionProviderPublisher()
+        )
+        .map { [session] selection, provider in
+            let downloadConfiguration = AVAssetDownloadConfiguration(asset: urlAsset, title: metadata.title ?? id)
+            configuration.apply(selection: selection, to: downloadConfiguration, using: provider)
+            downloadConfiguration.artworkData = metadata.imageSource.data
+            let task = session!.makeAssetDownloadTask(downloadConfiguration: downloadConfiguration)
+            task.taskDescription = id
+            task.resume()
+            return task
+        }
+        .eraseToAnyPublisher()
     }
 
     private func tasks(matchingDescription description: String, completionHandler: @escaping @Sendable ([URLSessionTask]) -> Void) {
@@ -86,7 +102,7 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
     }
 #endif
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: any Error?) {
         guard let id = task.taskDescription else { return }
         if error != nil, let location = locations[task.taskIdentifier] {
             removeFile(at: location)
@@ -109,5 +125,3 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
         }
     }
 }
-
-#endif

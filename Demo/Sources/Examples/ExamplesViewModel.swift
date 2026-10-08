@@ -36,7 +36,9 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.appleWWDCKeynote2023,
         URLMedia.appleDolbyAtmos,
         URLMedia.appleTvMorningShowSeason1Trailer,
-        URLMedia.appleTvMorningShowSeason2Trailer
+        URLMedia.appleTvMorningShowSeason2Trailer,
+        URLMedia.appleTvTrailerBasicStreamAV1,
+        URLMedia.appleTvTrailerInterstitial
     ]
 
     let thirdPartyMedias = [
@@ -156,7 +158,7 @@ final class ExamplesViewModel: ObservableObject {
                         title: title(of: media),
                         subtitle: "DRM-protected video",
                         imageUrl: SRGDataProvider.current!.url(for: media.show?.image, size: .large),
-                        type: .urn(media.urn)
+                        kind: .urn(media.urn)
                     )
                 }
             }
@@ -173,7 +175,7 @@ final class ExamplesViewModel: ObservableObject {
                         title: media.title,
                         subtitle: "Token-protected video",
                         imageUrl: SRGDataProvider.current!.url(for: media.image, size: .large),
-                        type: .urn(media.urn)
+                        kind: .urn(media.urn)
                     )
                 }
             }

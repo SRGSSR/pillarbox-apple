@@ -60,7 +60,7 @@ Your metadata might also describe notable time ranges, such as:
 - **Opening and Closing Credits:** Custom UIs might adjust their presentation (e.g., adding a skip button) during credits.
 - **Blocked Time Ranges:** Segments that should be unplayable. A ``Player`` automatically skips these during playback and prevents seeking into them.
 
-To associate time ranges with your metadata, build a ``TimeRange`` list and provide it to the ``PlayerMetadata`` via its ``PlayerMetadata/timeRanges`` parameter.
+To associate time ranges with your metadata, build a ``TimeRange`` list and provide it to the ``PlayerMetadata`` via its ``AssetMetadata/timeRanges`` parameter.
 
 > Tip: On tvOS, use `SystemVideoView/contextualActions(_:)` to link contextual actions during opening or closing credits.
 

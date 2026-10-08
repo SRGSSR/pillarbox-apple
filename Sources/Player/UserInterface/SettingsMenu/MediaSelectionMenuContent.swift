@@ -15,7 +15,7 @@ struct MediaSelectionMenuContent: View {
     @ObservedObject var player: Player
 
     var body: some View {
-        SwiftUI.Picker(selection: selection(for: characteristic)) {
+        SwiftUI::Picker(selection: selection(for: characteristic)) {
             ForEach(mediaOptions, id: \.self) { option in
                 Text(option.displayName).tag(option)
             }

@@ -7,8 +7,8 @@
 import SwiftUI
 
 struct CustomSection<Content, Header>: View where Content: View, Header: View {
-    @ViewBuilder let content: () -> Content
-    @ViewBuilder let header: () -> Header
+    @ContentBuilder let content: () -> Content
+    @ContentBuilder let header: () -> Header
 
     var body: some View {
 #if os(iOS)
@@ -33,7 +33,7 @@ struct CustomSection<Content, Header>: View where Content: View, Header: View {
 }
 
 extension CustomSection where Header == Text {
-    init(_ title: LocalizedStringResource, @ViewBuilder content: @escaping () -> Content) {
+    init(_ title: LocalizedStringResource, @ContentBuilder content: @escaping () -> Content) {
         self.init {
             content()
         } header: {

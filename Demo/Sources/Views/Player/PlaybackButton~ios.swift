@@ -40,7 +40,7 @@ struct PlaybackButton: View {
                 .resizable()
                 .tint(.white)
         }
-        .aspectRatio(contentMode: .fit)
+        .scaledToFit()
         .frame(minWidth: 120, maxHeight: 90)
         .accessibilityLabel(accessibilityLabel)
         .keyboardShortcut(.space, modifiers: [])

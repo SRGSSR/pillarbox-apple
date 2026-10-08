@@ -82,7 +82,7 @@ private extension ComScoreTracker {
     func setMetadata(_ metadata: [String: String]) {
         let builder = SCORStreamingContentMetadataBuilder()
         if let globals = Analytics.shared.comScoreGlobals {
-            builder.setCustomLabels(metadata.merging(globals.labels) { _, new in new })
+            builder.setCustomLabels(globals.labels.merging(metadata) { _, new in new })
         }
         else {
             builder.setCustomLabels(metadata)

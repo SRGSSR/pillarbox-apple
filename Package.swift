@@ -1,4 +1,4 @@
-// swift-tools-version: 6.3
+// swift-tools-version: 6.4
 import PackageDescription
 
 let package = Package(
@@ -189,7 +189,8 @@ let package = Package(
                 .target(name: "PillarboxStreams")
             ],
             resources: [
-                .process("Resources")
+                .process("Resources"),
+                .copy("FileResources")
             ]
         ),
         .testTarget(

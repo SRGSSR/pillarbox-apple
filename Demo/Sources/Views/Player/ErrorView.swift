@@ -82,7 +82,7 @@ struct ErrorView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func label() -> some View {
         switch error {
         case let error as NSError where error.domain == NSURLErrorDomain && error.code == URLError.notConnectedToInternet.rawValue:
@@ -98,7 +98,7 @@ struct ErrorView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func label(for error: BlockingError) -> some View {
         switch error.reason {
         case let .startDate(date) where date != nil:

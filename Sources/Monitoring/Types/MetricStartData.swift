@@ -34,6 +34,7 @@ extension MetricStartData {
         let assetUrl: URL?
         let id: String?
         let metadataUrl: URL?
+        let metadataHeaders: [String: String]
     }
 
     struct OperatingSystem: Encodable {

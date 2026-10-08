@@ -41,12 +41,12 @@ struct SearchView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func loadedView(_ medias: [SRGMedia]) -> some View {
         // swiftlint:disable:next closure_body_length
         CustomList(data: medias) { srgMedia in
             if let srgMedia {
-                let media = Media(title: srgMedia.title, type: .urn(srgMedia.urn))
+                let media = Media(title: srgMedia.title, kind: .urn(srgMedia.urn))
                 Cell(
                     size: .init(width: 520, height: 300),
                     title: constant(iOS: MediaDescription.title(for: srgMedia), tvOS: srgMedia.show?.title),
@@ -67,7 +67,7 @@ struct SearchView: View {
 #if os(iOS)
                 .swipeActions {
                     CopyActions(text: srgMedia.urn)
-#if DEBUG
+#if DOWNLOADS
                     DownloadAction(media: media)
 #endif
                 }

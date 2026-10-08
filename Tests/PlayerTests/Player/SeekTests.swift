@@ -99,14 +99,20 @@ final class SeekTests: TestCase {
     }
 
     func testOnDemandStartAtTime() {
-        let configuration = PlaybackConfiguration(position: at(.init(value: 10, timescale: 1)))
-        let player = Player(item: .simple(url: Stream.onDemand.url, configuration: configuration))
+        let player = Player(item: .custom(
+            assetProviderType: PositionAssetLoaderProvider.self,
+            url: Stream.onDemand.url,
+            metadata: .init(customData: at(.init(value: 10, timescale: 1)))
+        ))
         expect(player.time().seconds).toEventually(equal(10))
     }
 
     func testDvrStartAtTime() {
-        let configuration = PlaybackConfiguration(position: at(.init(value: 10, timescale: 1)))
-        let player = Player(item: .simple(url: Stream.dvr.url, configuration: configuration))
+        let player = Player(item: .custom(
+            assetProviderType: PositionAssetLoaderProvider.self,
+            url: Stream.dvr.url,
+            metadata: .init(customData: at(.init(value: 10, timescale: 1)))
+        ))
         expect(player.time().seconds).toEventually(equal(10))
     }
 }

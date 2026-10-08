@@ -4,12 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
-
 import Foundation
 
 @available(tvOS, unavailable)
 struct DownloadProperties<CustomData> {
+    let configuration: DownloadConfiguration
     let progress: DownloadProgress
     let assetMetadata: AssetMetadata<CustomData>?
     let fileUrl: URL?
@@ -17,6 +16,10 @@ struct DownloadProperties<CustomData> {
 
     var reusableAssetMetadata: AssetMetadata<CustomData>? {
         fileUrl != nil || error != nil ? assetMetadata : nil
+    }
+
+    var playerMetadata: PlayerMetadata? {
+        assetMetadata?.playerMetadata
     }
 
     var state: DownloadState {
@@ -49,7 +52,19 @@ struct DownloadProperties<CustomData> {
         case let .estimate(progress):
             return progress
         case let .actual(properties):
-            return properties.progress
+            return properties.fractionCompleted
+        }
+    }
+
+    var size: DownloadSize? {
+        if let size = Self.downloadSize(from: progress), error == nil {
+            return size
+        }
+        else if let fileUrl {
+            return .init(url: fileUrl)
+        }
+        else {
+            return nil
         }
     }
 
@@ -63,10 +78,11 @@ struct DownloadProperties<CustomData> {
     }
 
     init() {
-        self.init(progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: nil)
+        self.init(configuration: .default, progress: .estimate(0), assetMetadata: nil, fileUrl: nil, error: nil)
     }
 
-    init(progress: DownloadProgress, assetMetadata: AssetMetadata<CustomData>?, fileUrl: URL?, error: Error?) {
+    init(configuration: DownloadConfiguration, progress: DownloadProgress, assetMetadata: AssetMetadata<CustomData>?, fileUrl: URL?, error: Error?) {
+        self.configuration = configuration
         self.progress = progress
         self.assetMetadata = assetMetadata
         self.fileUrl = fileUrl
@@ -76,6 +92,7 @@ struct DownloadProperties<CustomData> {
     init<Input>(from record: DownloadRecord<Input, CustomData>) {
         do {
             self.init(
+                configuration: record.configuration,
                 progress: .estimate(record.progress),
                 assetMetadata: record.metadata,
                 fileUrl: try URL(resolvingBookmarkData: record.bookmarkData),
@@ -83,11 +100,21 @@ struct DownloadProperties<CustomData> {
             )
         } catch {
             self.init(
+                configuration: record.configuration,
                 progress: .estimate(0),
                 assetMetadata: record.metadata,
                 fileUrl: nil,
                 error: error
             )
+        }
+    }
+
+    private static func downloadSize(from progress: DownloadProgress) -> DownloadSize? {
+        switch progress {
+        case .estimate:
+            return nil
+        case let .actual(properties):
+            return properties.size
         }
     }
 
@@ -104,8 +131,13 @@ struct DownloadProperties<CustomData> {
     }
 
     func withError(_ error: Error) -> Self {
-        .init(progress: progress, assetMetadata: assetMetadata, fileUrl: fileUrl, error: error)
+        .init(configuration: configuration, progress: progress, assetMetadata: assetMetadata, fileUrl: nil, error: error)
     }
 }
 
-#endif
+@available(tvOS, unavailable)
+extension DownloadProperties where CustomData == EmptyCustomData {
+    init(configuration: DownloadConfiguration, progress: DownloadProgress, playerMetadata: PlayerMetadata?, fileUrl: URL?, error: Error?) {
+        self.init(configuration: configuration, progress: progress, assetMetadata: playerMetadata, fileUrl: fileUrl, error: error)
+    }
+}

@@ -8,8 +8,6 @@ Craft immersive audiovisual playback experiences.
 
 ## Overview
 
-> Warning: PillarboxPlayer APIs are designed for use exclusively on the main thread. Invoking these APIs from background threads is unsupported and may result in unpredictable behavior.
-
 The PillarboxPlayer framework offers a comprehensive suite of tools to seamlessly integrate advanced audiovisual media capabilities into your app:
 
 - Easily play content using a ``Player`` and display it in the standard AVKit user interface with ``SystemVideoView``, or create a fully custom user interface starting with a simple ``VideoView``.
@@ -20,7 +18,12 @@ The PillarboxPlayer framework offers a comprehensive suite of tools to seamlessl
 
 The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its declarative and reactive design principles to enable rapid iteration and refinement of your ideas.
 
-> Tip: Refer to the Human Interface Guidelines for best practices on integrating [audio](https://developer.apple.com/design/human-interface-guidelines/playing-audio) and [video](https://developer.apple.com/design/human-interface-guidelines/playing-video) experiences within your app.
+> Warning: PillarboxPlayer APIs are designed for use exclusively on the main thread. Invoking these APIs from background threads is unsupported and may result in unpredictable behavior.
+
+### General Advice
+
+- Refer to the Human Interface Guidelines for best practices on integrating [audio](https://developer.apple.com/design/human-interface-guidelines/playing-audio) and [video](https://developer.apple.com/design/human-interface-guidelines/playing-video) experiences within your app.
+- Supporting [multi-window](https://developer.apple.com/documentation/uikit/specifying-the-scenes-your-app-supports) experiences in video playback apps is generally a challenge (audio session management and Picture in Picture support). It is therefore generally recommended to set `UIApplicationSupportsMultipleScenes` to `NO`.
 
 ### Featured
 

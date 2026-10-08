@@ -193,6 +193,7 @@ final class MetricsTrackerTests: MonitoringTestCase {
                 expect(media.assetUrl).to(equal(URL(string: "https://localhost/asset.m3u8")))
                 expect(media.id).to(equal("identifier"))
                 expect(media.metadataUrl).to(equal(URL(string: "https://localhost/metadata.json")))
+                expect(media.metadataHeaders).to(equal(["X-Trace-Id": "12345"]))
 
                 let os = data.os
                 expect(os.name).notTo(beNil())

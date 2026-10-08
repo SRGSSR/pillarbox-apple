@@ -15,13 +15,21 @@ A bug in AVKit makes `SystemVideoView` leak resources after having interacted wi
 
 No workaround is available yet.
 
-## DRM-protected streams do not play in the simulator
+## DRM-protected contents do not play in the simulator
 
 DRM-protected streams do not play in the simulator. This is expected behavior as the required hardware features are not available in the simulator.
 
 ### Workaround
 
 Use a physical device.
+
+## DRM-protected content playback crashes when debugging on macOS
+
+When running an iPad app on macOS, attempting to play DRM-protected content while debugging causes the app to crash.
+
+### Workaround
+
+Disable _Debug executable_ in the associated scheme.
 
 ## Seeking to the end of an on-demand might confuse the player (FB12020197, FB12019343, FB11970329)
 
@@ -35,7 +43,8 @@ No workaround is available yet.
 
 It might happen that attempting to play DRM streams always ends with an error. The reason is likely an issue with key session management.
 
-This issue affects OS versions 18 and 26 through 26.2.
+> [!IMPORTANT]
+> This issue has been fixed in iOS 26.3.
 
 ### Workaround
 
@@ -155,6 +164,9 @@ Avoid dynamically changing the value of `VideoView.supportsPictureInPicture(_:)`
 
 Due to an `AVQueuePlayer` issue, toggling `isMuted` can cause the player to remain permanently silent. This occurs when playback is near the end of an item and another item is expected to play next as part of a playlist, or when a repeat mode is enabled.
 
+> [!IMPORTANT]
+> This issue has been fixed in an iOS 26 minor release.
+
 ### Workaround
 
 No workaround is available yet. Audio is restored when transitioning between items, when the player is paused and resumed, or when a seek operation occurs.
@@ -175,14 +187,6 @@ When using an official Lightning-to-HDMI Apple adapter (A1438) to connect a Ligh
 
 No workaround is available yet.
 
-## The `.pauses` audiovisual background playback policy is no longer correctly applied on iOS 26.4 (FB22488151)
-
-With the`.automatic` or `.pauses` audiovisual background playback policy enabled, video playback continues instead of being automatically paused by the system when the app moves to the background or the device is locked.
-
-### Workaround
-
-No workaround is available yet.
-
 ## Negative metrics after audio track switch (FB22519249)
 
 Some increments reported in `Metrics` may contain negative values immediately following an audio track switch.
@@ -198,3 +202,27 @@ If a file download is pending but has not yet started when the app is terminated
 ### Workaround
 
 These orphaned download files are typically very small (at most a few kilobytes). They can be removed manually through the device’s storage settings or will eventually be reclaimed automatically by the system.
+
+## Offline playback fails due to media selection picking variants declared in the master playlist but not available offline (FB24445920)
+
+When playing a downloaded stream offline (e.g. Airplane mode with no WiFi access), the player may incorrectly attempt to load variants declared in the master playlist but not available offline. This makes playback fail with a network error ("The Internet connection appears to be offline") since the player incorrectly attempts to load a variant not available locally from the network instead.
+
+### Workaround
+
+Use `DownloadMediaSelectionPreference.all` to download all languages. `DownloadMediaSelectionPreference.automatic` generally works as well, provided users do not change their device language after downloading the content.
+
+## The system video view might present options unavailable for offline playback (FB24446455)
+
+When playing downloaded content, `SystemVideoView` might present options that are not available for offline playback. Selecting one of these options can trigger unexpected network activity or cause playback to stall while attempting to load content that is unavailable offline.
+
+### Workaround
+
+No workaround is available yet.
+
+## Standard Pillarbox menus may prevent players from being immediately deallocated on iOS 27 (FB24486991)
+
+Objects whose properties are bound to items displayed in a `Menu` are not immediately deallocated on iOS 27. As a result, standard menus provided by Pillarbox may retain the associated player longer than expected. This can lead to playback unexpectedly continuing in background.
+
+### Workaround
+
+No workaround is currently available.

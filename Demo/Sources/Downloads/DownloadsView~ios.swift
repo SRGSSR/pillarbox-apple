@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
+#if DOWNLOADS
 
 @_spi(DownloaderPrivate)
 import PillarboxCoreBusiness
@@ -43,7 +43,9 @@ struct DownloadsView: View {
             }
             .swipeActions {
                 button(systemImage: "trash", color: .red) { downloader.removeDownload(download) }
-                button(systemImage: "arrow.counterclockwise", action: download.restart)
+                button(systemImage: "arrow.counterclockwise") {
+                    download.restart(configuration: UserDefaults.standard.downloadConfiguration)
+                }
             }
         }
     }
@@ -58,7 +60,7 @@ struct DownloadsView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func removeAllButton() -> some View {
         if !downloader.downloads.isEmpty {
             Button {
@@ -75,7 +77,7 @@ struct DownloadsView: View {
 
     private func media(from download: Download) -> Media? {
         guard let item = downloader.playerItem(for: download) else { return nil }
-        return .init(title: download.metadata.title ?? "Untitled", subtitle: download.metadata.subtitle, type: .item(item))
+        return .init(title: download.metadata.title ?? "Untitled", subtitle: download.metadata.subtitle, kind: .item(item))
     }
 
     private func openPlaylist() {

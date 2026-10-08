@@ -22,7 +22,7 @@ struct ShowcaseView: View {
 #endif
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func content() -> some View {
 #if os(iOS)
         layoutsSection()
@@ -452,7 +452,7 @@ struct ShowcaseView: View {
         .sourceCode(of: OptInView.self)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func webViewSection() -> some View {
         CustomSection("Web") {
             cell(

@@ -27,8 +27,5 @@ public extension MediaComposition {
 
         /// Unknown.
         case unknown = "UNKNOWN"
-
-        /// The supported streaming methods on Apple platforms.
-        public static let supportedMethods: [Self] = [.hls, .m3uPlaylist, .progressive]
     }
 }

@@ -79,7 +79,7 @@ struct MediaCardView: View {
                 case .success(let image):
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .scaledToFill()
                 default:
                     EmptyView()
                 }

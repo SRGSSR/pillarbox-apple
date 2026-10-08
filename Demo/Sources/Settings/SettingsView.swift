@@ -75,6 +75,17 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
     private var qualitySetting: QualitySetting = .high
 
+#if DOWNLOADS && os(iOS)
+    @AppStorage(UserDefaults.DemoSettingKey.downloadQualitySetting.rawValue)
+    private var downloadQualitySetting: QualitySetting = .high
+
+    @AppStorage(UserDefaults.DemoSettingKey.downloadAudibleMediaSelectionSetting.rawValue)
+    private var downloadAudibleMediaSelectionSetting: DownloadMediaSelectionSetting = .automatic
+
+    @AppStorage(UserDefaults.DemoSettingKey.downloadLegibleMediaSelectionSetting.rawValue)
+    private var downloadLegibleMediaSelectionSetting: DownloadMediaSelectionSetting = .automatic
+#endif
+
     @AppStorage(UserDefaults.PlaybackHudSettingKey.enabled.rawValue, store: .playbackHud)
     private var playbackHudEnabled = false
 
@@ -90,8 +101,12 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.PlaybackHudSettingKey.yOffset.rawValue, store: .playbackHud)
     private var playbackHudYOffset = UserDefaults.playbackHudDefaultHudYOffset
 
+#if DOWNLOADS && os(iOS)
+    @EnvironmentObject private var downloader: DemoDownloader
+#endif
+
     var body: some View {
-        Form {
+        CustomList {
             content()
         }
         .padding(.horizontal, constant(iOS: 0, tvOS: 40))
@@ -137,12 +152,15 @@ extension SettingsView {
 #endif
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func content() -> some View {
         applicationSection()
         playerSection()
 #if os(iOS)
         skipsSection()
+#if DOWNLOADS
+        downloadsSection()
+#endif
 #endif
         debuggingSection()
         playbackHudSection()
@@ -170,11 +188,13 @@ extension SettingsView {
 
     private func playerSection() -> some View {
         Section {
+#if os(iOS)
             Toggle(isOn: $isSmartNavigationEnabled) {
                 Text("Smart navigation")
                 Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
             }
             seekBehaviorPicker()
+#endif
             qualityPicker()
 #if os(iOS)
             routePicker()
@@ -186,6 +206,35 @@ extension SettingsView {
     }
 
 #if os(iOS)
+    private func seekBehaviorPicker() -> some View {
+        Picker("Seek behavior", selection: $seekBehaviorSetting) {
+            ForEach(SeekBehaviorSetting.allCases, id: \.self) { setting in
+                Text(setting.localizedStringResource).tag(setting)
+            }
+        }
+    }
+#endif
+
+    private func qualityPicker() -> some View {
+        PickerMenu("Quality", selection: $qualitySetting) {
+            ForEach(QualitySetting.allCases, id: \.self) { setting in
+                Text(setting.localizedStringResource).tag(setting)
+            }
+        }
+    }
+
+#if os(iOS)
+    @ContentBuilder
+    private func routePicker() -> some View {
+        if !ProcessInfo.processInfo.isRunningOnMac {
+            Picker("Route picker", selection: $routePickerSetting) {
+                ForEach(RoutePickerSetting.allCases, id: \.self) { setting in
+                    Text(setting.localizedStringResource).tag(setting)
+                }
+            }
+        }
+    }
+
     private func skipsSection() -> some View {
         Section {
             skipPicker("Backward by", selection: $backwardSkipInterval)
@@ -195,18 +244,6 @@ extension SettingsView {
                 .headerStyle()
         }
     }
-#endif
-
-    private func seekBehaviorPicker() -> some View {
-        Picker("Seek behavior", selection: $seekBehaviorSetting) {
-            ForEach(SeekBehaviorSetting.allCases, id: \.self) { setting in
-                Text(setting.name).tag(setting)
-            }
-        }
-#if os(tvOS)
-        .pickerStyle(.navigationLink)
-#endif
-    }
 
     private func skipPicker(_ titleKey: LocalizedStringResource, selection: Binding<TimeInterval>) -> some View {
         Picker(titleKey, selection: selection) {
@@ -215,33 +252,49 @@ extension SettingsView {
                     .tag(interval)
             }
         }
-#if os(tvOS)
-        .pickerStyle(.navigationLink)
-#endif
     }
 
-    private func qualityPicker() -> some View {
-        Picker("Quality", selection: $qualitySetting) {
+#if DOWNLOADS
+    @ContentBuilder
+    private func downloadsSection() -> some View {
+        if downloader.canDownload {
+            Section {
+                downloadQualityPicker()
+                downloadAudibleMediaSelectionPicker()
+                downloadLegibleMediaSelectionPicker()
+            } header: {
+                Text("Downloads")
+                    .headerStyle()
+            } footer: {
+                Text("Settings apply to future downloads only.")
+            }
+        }
+    }
+
+    private func downloadQualityPicker() -> some View {
+        Picker("Quality", selection: $downloadQualitySetting) {
             ForEach(QualitySetting.allCases, id: \.self) { setting in
-                Text(setting.name).tag(setting)
+                Text(setting.localizedStringResource).tag(setting)
             }
         }
-#if os(tvOS)
-        .pickerStyle(.navigationLink)
-#endif
     }
 
-#if os(iOS)
-    @ViewBuilder
-    private func routePicker() -> some View {
-        if !ProcessInfo.processInfo.isRunningOnMac {
-            Picker("Route picker", selection: $routePickerSetting) {
-                ForEach(RoutePickerSetting.allCases, id: \.self) { setting in
-                    Text(setting.name).tag(setting)
-                }
+    private func downloadAudibleMediaSelectionPicker() -> some View {
+        Picker("Audio", selection: $downloadAudibleMediaSelectionSetting) {
+            ForEach(DownloadMediaSelectionSetting.allCases, id: \.self) { setting in
+                Text(setting.localizedStringResource).tag(setting)
             }
         }
     }
+
+    private func downloadLegibleMediaSelectionPicker() -> some View {
+        Picker("Subtitles", selection: $downloadLegibleMediaSelectionSetting) {
+            ForEach(DownloadMediaSelectionSetting.allCases, id: \.self) { setting in
+                Text(setting.localizedStringResource).tag(setting)
+            }
+        }
+    }
+#endif
 #endif
 
     private func debuggingSection() -> some View {
@@ -261,25 +314,17 @@ extension SettingsView {
         Section {
             Toggle("Enabled", isOn: $playbackHudEnabled)
             if playbackHudEnabled {
-                Picker("Font size", selection: $playbackHudFontSize) {
+                PickerMenu("Font size", selection: $playbackHudFontSize) {
                     ForEach(PlaybackHudFontSize.allCases, id: \.self) { size in
-                        Text(size.name).tag(size)
+                        Text(size.localizedStringResource).tag(size)
                     }
                 }
-#if os(tvOS)
-                .pickerStyle(.navigationLink)
-#endif
 
-                Picker("Color", selection: $playbackHudColor) {
-                    Text("Yellow").tag(PlaybackHudColor.yellow)
-                    Text("Green").tag(PlaybackHudColor.green)
-                    Text("Red").tag(PlaybackHudColor.red)
-                    Text("Blue").tag(PlaybackHudColor.blue)
-                    Text("White").tag(PlaybackHudColor.white)
+                PickerMenu("Color", selection: $playbackHudColor) {
+                    ForEach(PlaybackHudColor.allCases, id: \.self) { color in
+                        Text(color.localizedStringResource).tag(color)
+                    }
                 }
-#if os(tvOS)
-                .pickerStyle(.navigationLink)
-#endif
 
                 numberEditor("X offset", value: $playbackHudXOffset)
                 numberEditor("Y offset", value: $playbackHudYOffset)
@@ -325,9 +370,10 @@ extension SettingsView {
             InfoCell(title: "Application", value: "\(Self.version), build \(Self.buildVersion)")
             InfoCell(title: "Library", value: Player.version)
             if let identifier = Self.applicationIdentifier {
-                SwiftUI.Button("TestFlight builds") {
+                SwiftUI::Button("TestFlight builds") {
                     openTestFlight(forApplicationIdentifier: identifier)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             InfoCell(title: "Device identifier", value: Self.deviceId)
 #if os(iOS)
@@ -374,8 +420,8 @@ extension SettingsView {
                     Button("Documentation") { UIApplication.shared.open(.documentation) }
                         .tint(.purple)
                 }
-            SwiftUI.Button("Swift Package Index") { UIApplication.shared.open(.swiftPackageIndex) }
-            SwiftUI.Button("Castor (Google Cast SDK)") { UIApplication.shared.open(.castor) }
+            SwiftUI::Button("Swift Package Index") { UIApplication.shared.open(.swiftPackageIndex) }
+            SwiftUI::Button("Castor (Google Cast SDK)") { UIApplication.shared.open(.castor) }
         }
     }
 #endif

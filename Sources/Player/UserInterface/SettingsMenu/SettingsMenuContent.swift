@@ -21,7 +21,7 @@ struct SettingsMenuContent: View {
     }
 
     private func playbackSpeedMenu() -> some View {
-        SwiftUI.Menu {
+        SwiftUI::Menu {
             player.playbackSpeedMenu(speeds: speeds) { speed in
                 action(.playbackSpeed(speed))
             }
@@ -36,7 +36,7 @@ struct SettingsMenuContent: View {
     }
 
     private func audibleMediaSelectionMenu() -> some View {
-        SwiftUI.Menu {
+        SwiftUI::Menu {
             mediaSelectionMenuContent(characteristic: .audible)
         } label: {
             Label {
@@ -49,7 +49,7 @@ struct SettingsMenuContent: View {
     }
 
     private func legibleMediaSelectionMenu() -> some View {
-        SwiftUI.Menu {
+        SwiftUI::Menu {
             mediaSelectionMenuContent(characteristic: .legible)
         } label: {
             Label {

@@ -6,8 +6,8 @@
 
 import Foundation
 
-/// Represents the media source for a playable asset.
-public struct Source: Decodable {
-    /// The media URL.
-    public let url: URL
+enum Protection: Hashable, Codable {
+    case none
+    case token
+    case fairPlay(certificateUrl: URL)
 }

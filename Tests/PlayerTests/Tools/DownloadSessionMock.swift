@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+@_spi(DownloaderPrivate)
 @testable import PillarboxPlayer
 
 import Combine
@@ -18,7 +19,7 @@ final class DownloadSessionMock: NSObject {
     // swiftlint:disable:next implicitly_unwrapped_optional
     private var session: URLSession!
 
-    weak var delegate: (any DownloadSessionDelegate)?
+    weak var delegate: any DownloadSessionDelegate?
 
     init(name: String) {
         self.directoryUrl = FileManager.default.temporaryDirectory.appendingPathComponent("DownloadSessionMock").appendingPathComponent(name)
@@ -35,7 +36,7 @@ final class DownloadSessionMock: NSObject {
 
 @available(tvOS, unavailable)
 extension DownloadSessionMock: DownloadSession {
-    func taskPublisher(forId id: String, asset: Asset, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
+    func taskPublisher(forId id: String, asset: Asset, configuration: DownloadConfiguration, metadata: PlayerMetadata) -> AnyPublisher<URLSessionTask, Never> {
         Just(createTask(forId: id, asset: asset, metadata: metadata)).eraseToAnyPublisher()
     }
 
@@ -66,7 +67,7 @@ extension DownloadSessionMock: URLSessionDownloadDelegate {
         return url.pathExtension
     }
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: any Error?) {
         guard let delegate, let id = task.taskDescription else { return }
         delegate.downloadSessionTask(task, didCompleteWithError: error ?? Self.error(from: task), forId: id)
     }

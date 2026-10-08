@@ -130,7 +130,7 @@ struct TimeSlider: View {
             .background(.ultraThinMaterial)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func sliderTimeRanges(width: CGFloat) -> some View {
         if progressTracker.timeRange.isValid {
             let duration = progressTracker.timeRange.duration.seconds
@@ -155,7 +155,7 @@ struct TimeSlider: View {
             .frame(width: progress * width)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func label(withText text: String?) -> some View {
         if let text {
             Text(text)

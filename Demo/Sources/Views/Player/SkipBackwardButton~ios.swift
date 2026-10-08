@@ -18,7 +18,7 @@ struct SkipBackwardButton: View {
                 .resizable()
                 .tint(.white)
         }
-        .aspectRatio(contentMode: .fit)
+        .scaledToFit()
         .frame(height: 45)
         .opacity(player.canSkipBackward() && !skipTracker.isSkipping ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipBackward())

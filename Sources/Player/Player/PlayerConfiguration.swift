@@ -14,27 +14,24 @@ public struct PlayerConfiguration {
     public static let `default` = Self()
 
     /// A Boolean value that indicates whether the player allows switching to external playback mode.
-    public let allowsExternalPlayback: Bool
+    public var allowsExternalPlayback: Bool
 
     /// A Boolean value that indicates whether the player allows switching to external playback when mirroring.
     ///
     /// This property has no effect when `allowsExternalPlayback` is `false`.
-    public let usesExternalPlaybackWhileMirroring: Bool
+    public var usesExternalPlaybackWhileMirroring: Bool
 
     /// A Boolean indicating whether video playback prevents display and device sleep.
-    public let preventsDisplaySleepDuringVideoPlayback: Bool
+    public var preventsDisplaySleepDuringVideoPlayback: Bool
 
     /// The navigation mode.
-    public let navigationMode: NavigationMode
+    public var navigationMode: NavigationMode
 
     /// The forward skip interval in seconds.
-    public let forwardSkipInterval: TimeInterval
+    public var forwardSkipInterval: TimeInterval
 
     /// The backward skip interval in seconds.
-    public let backwardSkipInterval: TimeInterval
-
-    /// The number of items to preload.
-    let preloadedItems = 2
+    public var backwardSkipInterval: TimeInterval
 
     /// A Boolean value indicating whether the player is permitted to play content on networks with Low Data Mode
     /// enabled.
@@ -42,7 +39,10 @@ public struct PlayerConfiguration {
     /// When this property is set to `false`, playback fails with a network availability error on constrained networks.
     /// This option is therefore mostly useful for players associated with non-essential content, such as animated
     /// background videos used purely for visual enhancement.
-    public let allowsConstrainedNetworkAccess: Bool
+    public var allowsConstrainedNetworkAccess: Bool
+
+    /// The number of items to preload.
+    let preloadedItems = 2
 
     /// Creates a player configuration.
     public init(

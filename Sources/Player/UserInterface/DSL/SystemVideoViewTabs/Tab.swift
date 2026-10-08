@@ -21,7 +21,7 @@ public struct Tab<Content> where Content: View {
     ///
     /// For optimal behavior you should ensure that each tab is assigned a unique stable identifier.
     @_disfavoredOverload
-    public init<S>(_ title: S, identifier: String? = nil, @ViewBuilder _ content: () -> Content) where S: StringProtocol {
+    public init<S>(_ title: S, identifier: String? = nil, @ContentBuilder _ content: () -> Content) where S: StringProtocol {
         self.title = String(title)
         self.identifier = identifier ?? String(title)
         self.content = content()
@@ -36,7 +36,7 @@ public struct Tab<Content> where Content: View {
     ///
     /// For optimal behavior you should ensure that each tab is assigned a unique stable identifier.
     @_disfavoredOverload
-    public init(_ title: LocalizedStringResource, identifier: String? = nil, @ViewBuilder _ content: () -> Content) {
+    public init(_ title: LocalizedStringResource, identifier: String? = nil, @ContentBuilder _ content: () -> Content) {
         self.init(String(localized: title), identifier: identifier, content)
     }
 }

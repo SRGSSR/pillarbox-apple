@@ -8,10 +8,14 @@ import AVFoundation
 
 /// The default selector for audible options.
 struct AudibleMediaSelector: MediaSelector {
-    let group: AVMediaSelectionGroup
+    private let provider: MediaSelectorProvider
+
+    init(provider: MediaSelectorProvider) {
+        self.provider = provider
+    }
 
     func mediaSelectionOptions() -> [MediaSelectionOption] {
-        let options = AVMediaSelectionGroup.sortedMediaSelectionOptions(from: group.options)
+        let options = AVMediaSelectionGroup.sortedMediaSelectionOptions(from: provider.options)
         return options.count > 1 ? options.map { .on($0) } : []
     }
 
@@ -19,7 +23,7 @@ struct AudibleMediaSelector: MediaSelector {
         in selection: AVMediaSelection?,
         with selectionCriteria: AVPlayerMediaSelectionCriteria?
     ) -> MediaSelectionOption {
-        if let option = selection?.selectedMediaOption(in: group) {
+        if let option = provider.selectedMediaOption(in: selection) {
             return .on(option)
         }
         else {
@@ -34,7 +38,7 @@ struct AudibleMediaSelector: MediaSelector {
     ) -> AVPlayerMediaSelectionCriteria? {
         switch mediaOption {
         case let .on(option):
-            item.select(option, in: group)
+            provider.select(option, for: item)
             return mediaSelectionCriteria(from: selectionCriteria, for: option)
         default:
             return nil
@@ -47,16 +51,10 @@ struct AudibleMediaSelector: MediaSelector {
     ) -> AVPlayerMediaSelectionCriteria? {
         guard let languageCode = option.languageCode else { return nil }
         if let selectionCriteria {
-            return selectionCriteria.selectionCriteria(
-                byAdding: [languageCode],
-                with: audibleCharacteristics(for: option)
-            )
+            return selectionCriteria.selectionCriteria(byAdding: [languageCode], with: audibleCharacteristics(for: option))
         }
         else {
-            return AVPlayerMediaSelectionCriteria(
-                preferredLanguages: [languageCode],
-                preferredMediaCharacteristics: audibleCharacteristics(for: option)
-            )
+            return AVPlayerMediaSelectionCriteria(preferredLanguages: [languageCode], preferredMediaCharacteristics: audibleCharacteristics(for: option))
         }
     }
 

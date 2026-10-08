@@ -15,7 +15,7 @@ struct ContentView: View {
 
     private func routePicker() -> some View {
         RoutePickerView()
-            .aspectRatio(contentMode: .fit)
+            .scaledToFit()
             .frame(width: 50)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
     }

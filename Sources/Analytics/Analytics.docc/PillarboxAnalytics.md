@@ -13,7 +13,7 @@ The PillarboxAnalytics framework provides a comprehensive toolkit for measuring 
 - **Internal Analytics:** Data is collected using the [Commanders Act](https://www.commandersact.com) analytics SDK.
 - **Mediapulse Analytics:** [Mediapulse](https://www.mediapulse.ch), responsible for monitoring media consumption in Switzerland, receives measurements via the [comScore](https://www.comscore.com/) analytics SDK.
 
-> Important: Proper implementation of analytics is essential. Non-compliance may result in rejection of your app or its measurements by the GD ADI team or Mediapulse.
+> Important: Proper implementation of analytics is essential. Non-compliance may result in rejection of your app or its measurements by our digital analysts or Mediapulse.
 
 ### Measure app usage
 
@@ -44,7 +44,7 @@ Xcode Organizer can generate a [consolidated privacy report](https://developer.a
 
 ### Validation
 
-Before submitting your app to production, validate it, especially after significant analytics updates. Contact the GD ADI team for assistance with the validation process.
+Before submitting your app to production, validate it, especially after significant analytics updates. Contact our digital analysts for assistance with the validation process.
 
 ## Topics
 

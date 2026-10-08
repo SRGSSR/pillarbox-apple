@@ -24,7 +24,7 @@ private struct SourceCodeButton: View {
 }
 
 extension View {
-    @ViewBuilder
+    @ContentBuilder
     func sourceCode<T>(of objectType: T.Type) -> some View where T: SourceCodeViewable {
         if let url = sourceCodeUrl(for: objectType) {
             swipeActions {

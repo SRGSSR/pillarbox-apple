@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-enum PlaybackHudFontSize: Int, CaseIterable {
+enum PlaybackHudFontSize: Int, CaseIterable, CustomLocalizedStringResourceConvertible {
     case small
     case `default`
     case large
@@ -16,7 +16,7 @@ enum PlaybackHudFontSize: Int, CaseIterable {
     private static let defaultValue = constant(iOS: 18, tvOS: 40)
     private static let largeValue = constant(iOS: 27, tvOS: 50)
 
-    var name: String {
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .small:
             return "Small"

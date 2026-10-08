@@ -2,10 +2,11 @@
 
 ## Topics
 
-### Creating a Player Item
+### Creating a Player Item with an Asset Loader
 
 - ``init(assetLoaderType:input:trackerAdapters:)``
-- ``init(asset:metadata:trackerAdapters:)``
-- ``simple(url:metadata:trackerAdapters:configuration:)``
-- ``custom(url:delegate:metadata:trackerAdapters:configuration:)``
-- ``encrypted(url:delegate:metadata:trackerAdapters:configuration:)``
+
+### Creating a URL-Based Player Item
+
+- ``simple(url:metadata:trackerAdapters:)``
+- ``custom(assetProviderType:url:metadata:trackerAdapters:)``

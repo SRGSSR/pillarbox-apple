@@ -52,12 +52,12 @@ extension AVPlayerItem {
 
     private func mediaSelectionPropertiesPublisher() -> AnyPublisher<MediaSelectionProperties, Never> {
         Publishers.CombineLatest3(
-            asset.mediaSelectionGroupsPublisher(),
+            asset.mediaSelectionProviderPublisher(),
             mediaSelectionPublisher(),
             mediaAccessibilityCaptionAppearanceSettingsChangeDatePublisher()
         )
-        .map { groups, selection, settingsChangeDate in
-            MediaSelectionProperties(groups: groups, selection: selection, settingsChangeDate: settingsChangeDate)
+        .map { provider, selection, settingsChangeDate in
+            MediaSelectionProperties(provider: provider, selection: selection, settingsChangeDate: settingsChangeDate)
         }
         .prepend(.empty)
         .removeDuplicates()

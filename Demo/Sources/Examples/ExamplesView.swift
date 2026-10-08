@@ -45,13 +45,36 @@ private struct TextFieldView: View {
 }
 
 private struct MediaEntryView: View {
-    private enum Kind {
+    private enum Kind: CaseIterable, CustomLocalizedStringResourceConvertible {
         case url
         case tokenProtected
         case encrypted
         case productionUrn
         case stageUrn
         case testUrn
+        case productionDemo
+        case developmentDemo
+
+        var localizedStringResource: LocalizedStringResource {
+            switch self {
+            case .url:
+                return "URL"
+            case .tokenProtected:
+                return "URL with SRG SSR token protection"
+            case .encrypted:
+                return "URL with SRG SSR DRM encryption"
+            case .productionUrn:
+                return "URN (Production)"
+            case .stageUrn:
+                return "URN (Stage)"
+            case .testUrn:
+                return "URN (Test)"
+            case .productionDemo:
+                return "Demo (Production)"
+            case .developmentDemo:
+                return "Demo (Development)"
+            }
+        }
     }
 
     @State private var kind: Kind = .url
@@ -59,7 +82,7 @@ private struct MediaEntryView: View {
     @State private var certificateUrlString = ""
     @EnvironmentObject private var router: Router
 
-#if DEBUG && os(iOS)
+#if DOWNLOADS && os(iOS)
     @EnvironmentObject private var downloader: DemoDownloader
 #endif
 
@@ -67,19 +90,23 @@ private struct MediaEntryView: View {
         switch kind {
         case .url:
             guard let url else { return URLMedia.unknown }
-            return .init(title: "URL", subtitle: url.absoluteString, type: .url(url))
+            return .init(title: "URL", subtitle: url.absoluteString, kind: .url(url))
         case .tokenProtected:
             guard let url else { return URLMedia.unknown }
-            return .init(title: "Token-protected", subtitle: url.absoluteString, type: .tokenProtectedUrl(url))
+            return .init(title: "Token-protected", subtitle: url.absoluteString, kind: .url(url, protection: .token))
         case .encrypted:
             guard let url, let certificateUrl else { return URLMedia.unknown }
-            return .init(title: "Encrypted", subtitle: url.absoluteString, type: .encryptedUrl(url, certificateUrl: certificateUrl))
+            return .init(title: "Encrypted", subtitle: url.absoluteString, kind: .url(url, protection: .fairPlay(certificateUrl: certificateUrl)))
         case .productionUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .production))
+            return .init(title: trimmedText, kind: .urn(trimmedText, serverSetting: .production))
         case .stageUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .stage))
+            return .init(title: trimmedText, kind: .urn(trimmedText, serverSetting: .stage))
         case .testUrn:
-            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .test))
+            return .init(title: trimmedText, kind: .urn(trimmedText, serverSetting: .test))
+        case .productionDemo:
+            return .init(title: trimmedText, kind: .demo(trimmedText, isProduction: true))
+        case .developmentDemo:
+            return .init(title: trimmedText, kind: .demo(trimmedText, isProduction: false))
         }
     }
 
@@ -99,6 +126,8 @@ private struct MediaEntryView: View {
         switch kind {
         case .productionUrn, .stageUrn, .testUrn:
             return "URN"
+        case .productionDemo, .developmentDemo:
+            return "Identifier"
         default:
             return "URL"
         }
@@ -132,18 +161,11 @@ private struct MediaEntryView: View {
     }
 
     private func kindPicker() -> some View {
-        Picker("Kind", selection: $kind) {
-            Text("URL").tag(Kind.url)
-            Text("URL with SRG SSR token protection").tag(Kind.tokenProtected)
-            Text("URL with SRG SSR DRM encryption").tag(Kind.encrypted)
-            Divider()
-            Text("URN (Production)").tag(Kind.productionUrn)
-            Text("URN (Stage)").tag(Kind.stageUrn)
-            Text("URN (Test)").tag(Kind.testUrn)
+        PickerMenu("Kind", selection: $kind) {
+            ForEach(Kind.allCases, id: \.self) { kind in
+                Text(kind.localizedStringResource).tag(kind)
+            }
         }
-#if os(tvOS)
-        .pickerStyle(.navigationLink)
-#endif
     }
 
     private func actionButtons() -> some View {
@@ -152,7 +174,7 @@ private struct MediaEntryView: View {
                 Text("Play")
                     .frame(maxWidth: .infinity)
             }
-#if DEBUG && os(iOS)
+#if DOWNLOADS && os(iOS)
             Button(action: download) {
                 Text("Download")
                     .frame(maxWidth: .infinity)
@@ -166,7 +188,7 @@ private struct MediaEntryView: View {
         router.presented = .player(media: media)
     }
 
-#if DEBUG && os(iOS)
+#if DOWNLOADS && os(iOS)
     private func download() {
         downloader.addDownload(media: media)
     }
@@ -192,7 +214,7 @@ struct ExamplesView: View {
 #endif
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func content() -> some View {
         MediaEntryView()
         srgSections()
@@ -200,7 +222,7 @@ struct ExamplesView: View {
         miscellaneousSections()
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func srgSections() -> some View {
         section(title: "Various streams (URLs)", medias: model.urlMedias)
         section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
@@ -209,7 +231,7 @@ struct ExamplesView: View {
         }
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func thirdPartySections() -> some View {
         section(title: "Apple streams", medias: model.appleMedias)
         section(title: "Third-party streams", medias: model.thirdPartyMedias)
@@ -218,7 +240,7 @@ struct ExamplesView: View {
         section(title: "Mux streams", medias: model.muxMedias)
     }
 
-    @ViewBuilder
+    @ContentBuilder
     private func miscellaneousSections() -> some View {
         section(title: "Time ranges", medias: model.timeRangesMedias)
         section(title: "Aspect ratios", medias: model.aspectRatioMedias)
@@ -235,7 +257,7 @@ struct ExamplesView: View {
                 Cell(title: media.title, subtitle: media.subtitle, imageUrl: media.imageUrl) {
                     router.presented = .player(media: media)
                 }
-#if DEBUG && os(iOS)
+#if DOWNLOADS && os(iOS)
                 .swipeActions {
                     DownloadAction(media: media)
                 }

@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DEBUG
+#if DOWNLOADS
 
 import Combine
 import Foundation
@@ -15,21 +15,56 @@ import PillarboxCoreBusiness
 @_spi(DownloaderPrivate)
 import PillarboxPlayer
 
+@_spi(DownloaderPrivate)
+import PillarboxStandardConnector
+
 @available(tvOS, unavailable)
 final class DemoDownloader: ObservableObject {
-    private let urlDownloader = Downloader(
-        configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads"),
-        store: URLAssetDownloadStore(fileName: "url_downloads.json")
-    )
+    private let _urlDownloader: Any? = {
+        guard #available(iOS 17, *) else { return nil }
+        return try! URLDownloader(
+            name: "url_downloads",
+            storeProviderType: MediaAssetProvider.self,
+            configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.url-downloads")
+        )
+    }()
 
     private let _urnDownloader: Any? = {
         guard #available(iOS 17, *) else { return nil }
-        return try! URNDownloader(configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"))
+        return try! URNDownloader(name: "urn_downloads", configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.urn-downloads"))
     }()
+
+    private let _standardDownloader: Any? = {
+        guard #available(iOS 17, *) else { return nil }
+        return try! StandardDownloader(
+            name: "standard_downloads",
+            storeProviderType: DemoAssetProvider.self,
+            configuration: .background(withIdentifier: "ch.srgssr.pillarbox-demo.standard-downloads")
+        )
+    }()
+
+    @available(iOS 17, *)
+    private var urlDownloader: URLDownloader<MediaAssetProvider> {
+        _urlDownloader as! URLDownloader
+    }
 
     @available(iOS 17, *)
     private var urnDownloader: URNDownloader {
         _urnDownloader as! URNDownloader
+    }
+
+    @available(iOS 17, *)
+    private var standardDownloader: StandardDownloader<DemoAssetProvider> {
+        _standardDownloader as! StandardDownloader
+    }
+
+    var canDownload: Bool {
+        if #available(iOS 17, *) {
+            return true
+        }
+        else {
+            return false
+        }
     }
 
     @Published private var _downloads: [Download] = []
@@ -39,68 +74,71 @@ final class DemoDownloader: ObservableObject {
     }
 
     init() {
-        if #available(iOS 17, *) {
-            Publishers.CombineLatest(
-                urlDownloader.$downloads,
-                urnDownloader.$downloads
-            )
-            .map { $0 + $1 }
+        guard #available(iOS 17, *) else { return }
+        Publishers.CombineLatest3(urlDownloader.$downloads, urnDownloader.$downloads, standardDownloader.$downloads)
+            .map { $0 + $1 + $2 }
             .assign(to: &$_downloads)
-        }
-        else {
-            urlDownloader.$downloads
-                .assign(to: &$_downloads)
-        }
-    }
-
-    func canDownload(media: Media) -> Bool {
-        switch media.type {
-        case .url, .monoscopicUrl:
-            true
-        case .urn:
-            _urnDownloader != nil
-        default:
-            false
-        }
     }
 
     func addDownload(media: Media) {
-        switch media.type {
-        case let .url(url), let .monoscopicUrl(url):
-            urlDownloader.addDownload(for: .init(url: url, metadata: media.metadata()))
-        case let .urn(urn, serverSetting):
-            if #available(iOS 17, *) {
-                urnDownloader.addDownload(urn: urn, server: serverSetting.server)
-            }
+        guard #available(iOS 17, *) else { return }
+        let configuration = UserDefaults.standard.downloadConfiguration
+        switch media.kind {
+        case let .url(url, customData: customData):
+            urlDownloader.addDownload(url: url, metadata: media.metadata(customData: customData), configuration: configuration)
+        case let .urn(urn, serverSetting: serverSetting):
+            urnDownloader.addDownload(urn: urn, server: serverSetting.server, configuration: configuration)
+        case let .demo(identifier, isProduction: isProduction):
+            standardDownloader.addDownload(for: .init(identifier: identifier, isProduction: isProduction), configuration: configuration)
         default:
             break
         }
     }
 
     func playerItem(for download: Download) -> PlayerItem? {
-        if let item = urlDownloader.playerItem(for: download) {
-            return item
-        }
-        else if #available(iOS 17, *), let item = urnDownloader.playerItem(for: download) {
-            return item
-        }
-        else {
-            return nil
-        }
+        guard #available(iOS 17, *) else { return nil }
+        return urlPlayerItem(for: download) ?? urnPlayerItem(for: download) ?? standardPlayerItem(for: download)
+    }
+
+    @available(iOS 17, *)
+    private func urlPlayerItem(for download: Download) -> PlayerItem? {
+        urlDownloader.playerItem(for: download, trackerAdapters: [
+            DemoTracker.adapter { metadata in
+                DemoTracker.Metadata(title: metadata.title)
+            }
+        ])
+    }
+
+    @available(iOS 17, *)
+    private func urnPlayerItem(for download: Download) -> PlayerItem? {
+        urnDownloader.playerItem(for: download, trackerAdapters: [
+            DemoTracker.adapter { metadata in
+                DemoTracker.Metadata(title: metadata.title)
+            }
+        ])
+    }
+
+    @available(iOS 17, *)
+    private func standardPlayerItem(for download: Download) -> PlayerItem? {
+        standardDownloader.playerItem(for: download, trackerAdapters: [
+            DemoTracker.adapter { metadata in
+                DemoTracker.Metadata(title: metadata.title)
+            }
+        ])
     }
 
     func removeDownload(_ download: Download) {
+        guard #available(iOS 17, *) else { return }
         urlDownloader.removeDownload(download)
-        if #available(iOS 17, *) {
-            urnDownloader.removeDownload(download)
-        }
+        urnDownloader.removeDownload(download)
+        standardDownloader.removeDownload(download)
     }
 
     func removeAllDownloads() {
+        guard #available(iOS 17, *) else { return }
         urlDownloader.removeAllDownloads()
-        if #available(iOS 17, *) {
-            urnDownloader.removeAllDownloads()
-        }
+        urnDownloader.removeAllDownloads()
+        standardDownloader.removeAllDownloads()
     }
 }
 

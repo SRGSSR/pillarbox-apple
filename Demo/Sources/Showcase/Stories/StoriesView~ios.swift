@@ -9,7 +9,7 @@ import PillarboxPlayer
 import SwiftUI
 
 struct StoriesView: View {
-    @StateObject private var model = StoriesViewModel(stories: Story.stories(from: MediaList.storyUrns))
+    @StateObject private var model = StoriesViewModel(stories: Story.stories(from: MediaList.videoUrns))
 
     var body: some View {
         TabView(selection: $model.currentStory) {
