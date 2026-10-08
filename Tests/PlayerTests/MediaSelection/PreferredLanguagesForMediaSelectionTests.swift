@@ -225,4 +225,17 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         player.setMediaSelectionPreference(.automatic, for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
     }
+
+    func testPreferredCharacteristicsReplaceExistingCharacteristics() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelectionPreference(.on(languages: "fr", characteristics: [.describesVideoForAccessibility]), for: .audible)
+        let criteria = player.queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: .audible)
+        expect(criteria?.preferredLanguages).to(equal(["fr"]))
+        expect(criteria?.preferredMediaCharacteristics).to(equal([.describesVideoForAccessibility]))
+
+        player.setMediaSelectionPreference(.on(languages: "en", characteristics: []), for: .audible)
+        let updatedCriteria = player.queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: .audible)
+        expect(updatedCriteria?.preferredLanguages).to(equal(["en", "fr"]))
+        expect(updatedCriteria?.preferredMediaCharacteristics).to(beEmpty())
+    }
 }
