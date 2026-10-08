@@ -26,9 +26,6 @@ public enum Server: Codable {
     /// Play+ development.
     case playPlusDevelopment
 
-    /// Play+ localhost.
-    case playPlusLocalhost
-
 #if os(iOS)
     private static let vector = "appplay"
 #else
@@ -49,8 +46,6 @@ public enum Server: Codable {
             return "playPlusIntegration"
         case .playPlusDevelopment:
             return "playPlusDevelopment"
-        case .playPlusLocalhost:
-            return "playPlusLocalhost"
         }
     }
 
@@ -68,8 +63,6 @@ public enum Server: Codable {
             URL(string: "https://api.int.playplus.ch")!
         case .playPlusDevelopment:
             URL(string: "https://api.dev.playplus.ch")!
-        case .playPlusLocalhost:
-            URL(string: "http://localhost:5070/")!
         }
     }
 
@@ -100,7 +93,7 @@ public enum Server: Codable {
                 URLQueryItem(name: "width", value: String(width.rawValue))
             ]
             return components.url ?? url
-        case .playPlusProduction, .playPlusIntegration, .playPlusDevelopment, .playPlusLocalhost:
+        case .playPlusProduction, .playPlusIntegration, .playPlusDevelopment:
             guard var components = URLComponents(url: URL(string: "https://img.playplus.ch")!, resolvingAgainstBaseURL: false) else {
                 return url
             }

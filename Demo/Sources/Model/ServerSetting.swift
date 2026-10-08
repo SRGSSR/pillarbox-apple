@@ -15,7 +15,6 @@ enum ServerSetting: Int, CaseIterable, Codable, CustomLocalizedStringResourceCon
     case playPlusProduction
     case playPlusIntegration
     case playPlusDevelopment
-    case playPlusLocalhost
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
@@ -31,8 +30,6 @@ enum ServerSetting: Int, CaseIterable, Codable, CustomLocalizedStringResourceCon
             return "Play+ Integration"
         case .playPlusDevelopment:
             return "Play+ Development"
-        case .playPlusLocalhost:
-            return "Play+ Localhost"
         }
     }
 
@@ -46,7 +43,7 @@ enum ServerSetting: Int, CaseIterable, Codable, CustomLocalizedStringResourceCon
             return SRGIntegrationLayerProductionServiceURL()
         case .stage, .playPlusIntegration:
             return SRGIntegrationLayerStagingServiceURL()
-        case .test, .playPlusDevelopment, .playPlusLocalhost:
+        case .test, .playPlusDevelopment:
             return SRGIntegrationLayerTestServiceURL()
         }
     }
@@ -65,8 +62,6 @@ enum ServerSetting: Int, CaseIterable, Codable, CustomLocalizedStringResourceCon
             return .playPlusIntegration
         case .playPlusDevelopment:
             return .playPlusDevelopment
-        case .playPlusLocalhost:
-            return .playPlusLocalhost
         }
     }
 }
