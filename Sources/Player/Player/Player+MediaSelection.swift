@@ -112,13 +112,16 @@ public extension Player {
             queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
         case .off:
             queuePlayer.setMediaSelectionCriteria(Self.emptyMediaSelectionCriteria(for: characteristic), forMediaCharacteristic: characteristic)
-        case let .on(languages: languages):
+        case let .on(languages: languages, characteristics: characteristics):
             let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
                 preferredLanguages: MAPreferredLanguages(for: characteristic),
                 preferredMediaCharacteristics: MAPreferredMediaCharacteristics(for: characteristic)
             )
             queuePlayer.setMediaSelectionCriteria(
-                selectionCriteria.selectionCriteria(byAdding: languages),
+                selectionCriteria.selectionCriteria(
+                    byAdding: languages,
+                    with: characteristics ?? selectionCriteria.preferredMediaCharacteristics ?? []
+                ),
                 forMediaCharacteristic: characteristic
             )
         }
