@@ -11,51 +11,13 @@ import Nimble
 import PillarboxCircumspect
 
 final class HLSParserTests: TestCase {
-    func testExtractKeyAttributes() throws {
-        expect(try HLSParser.extractKeyAttributes(
-            from: """
-                METHOD=AES-128,URI="http://localhost/serve.key"
-                """
-         )).to(equalDiff([
-            "METHOD": "AES-128",
-            "URI": "http://localhost/serve.key"
-         ]))
-    }
-
-    func testExtractKeyAttributesWithSeparatorsInValues() throws {
-        expect(try HLSParser.extractKeyAttributes(
-            from: """
-                METHOD=AES-128,URI="data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAAAAAA=="
-                """
-         )).to(equalDiff([
-            "METHOD": "AES-128",
-            "URI": "data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAAAAAA=="
-         ]))
-    }
-
-    func testExtractMalformedKeyAttributes1() throws {
-        expect(try HLSParser.extractKeyAttributes(
-            from: """
-                METHOD=AES-128,URI
-                """
-         )).to(throwError())
-    }
-
-    func testExtractMalformedKeyAttributes2() throws {
-        expect(try HLSParser.extractKeyAttributes(
-            from: """
-                METHOD=AES-128,URI=
-                """
-         )).to(throwError())
-    }
-
-    func testExtractKeyUrlsFromEmptyPlaylist() throws {
-        expect(try HLSParser.extractKeyUrls(from: "")).to(beEmpty())
+    func testExtractKeyUrlsFromEmptyPlaylist() {
+        expect(HLSParser.extractKeyUrls(from: "")).to(beEmpty())
     }
 
     // swiftlint:disable:next inclusive_language
-    func testExtractKeyUrlsFromMasterPlaylist() throws {
-        expect(try HLSParser.extractKeyUrls(
+    func testExtractKeyUrlsFromMasterPlaylist() {
+        expect(HLSParser.extractKeyUrls(
             from: """
                 #EXTM3U
                 #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost/serve.key"
@@ -66,7 +28,7 @@ final class HLSParserTests: TestCase {
     }
 
     func testExtractKeyUrlsFromMediaPlaylist() {
-        expect(try HLSParser.extractKeyUrls(
+        expect(HLSParser.extractKeyUrls(
             from: """
                 #EXTM3U
                 #EXT-X-TARGETDURATION:2
