@@ -11,8 +11,8 @@ import Nimble
 import PillarboxCircumspect
 
 final class HLSParserTests: TestCase {
-    func testExtractKeyAttributes() {
-        expect(HLSParser.extractKeyAttributes(
+    func testExtractKeyAttributes() throws {
+        expect(try HLSParser.extractKeyAttributes(
             from: """
                 METHOD=AES-128,URI="http://localhost/serve.key"
                 """
@@ -22,8 +22,8 @@ final class HLSParserTests: TestCase {
          ]))
     }
 
-    func testExtractKeyAttributesWithSeparatorsInValues() {
-        expect(HLSParser.extractKeyAttributes(
+    func testExtractKeyAttributesWithSeparatorsInValues() throws {
+        expect(try HLSParser.extractKeyAttributes(
             from: """
                 METHOD=AES-128,URI="data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAAAAAA=="
                 """
@@ -33,8 +33,8 @@ final class HLSParserTests: TestCase {
          ]))
     }
 
-    func testExtractMalformedKeyAttributes() {
-        expect(HLSParser.extractKeyAttributes(
+    func testExtractMalformedKeyAttributes() throws {
+        expect(try HLSParser.extractKeyAttributes(
             from: """
                 METHOD=AES-128,URI=
                 """
