@@ -13,7 +13,7 @@ enum HLSParser {
         try string.components(separatedBy: ",").reduce(into: [:]) { attributes, attribute in
             let components = attribute.components(separatedBy: "=")
             guard components.count == 2 else { throw MalformedHLSError() }
-            attributes[components[0]] = components[1]
+            attributes[components[0]] = components[1].trimmingCharacters(in: .init(charactersIn: "\""))
         }
     }
 
