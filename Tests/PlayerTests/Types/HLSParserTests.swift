@@ -6,7 +6,7 @@
 
 @testable import PillarboxPlayer
 
-import CoreMedia
+import Foundation
 import Nimble
 import PillarboxCircumspect
 
@@ -33,24 +33,29 @@ final class HLSParserTests: TestCase {
          ]))
     }
 
-    func testExtractMalformedKeyAttributes() throws {
+    func testExtractMalformedKeyAttributes1() throws {
+        expect(try HLSParser.extractKeyAttributes(
+            from: """
+                METHOD=AES-128,URI
+                """
+         )).to(throwError())
+    }
+
+    func testExtractMalformedKeyAttributes2() throws {
         expect(try HLSParser.extractKeyAttributes(
             from: """
                 METHOD=AES-128,URI=
                 """
-         )).to(equalDiff([
-            "METHOD": "AES-128",
-            "URI": "http://localhost/serve.key"
-         ]))
+         )).to(throwError())
     }
 
-    func testExtractKeyUrlsFromEmptyPlaylist() {
-        expect(HLSParser.extractKeyUrls(from: "")).to(beEmpty())
+    func testExtractKeyUrlsFromEmptyPlaylist() throws {
+        expect(try HLSParser.extractKeyUrls(from: "")).to(beEmpty())
     }
 
     // swiftlint:disable:next inclusive_language
-    func testExtractKeyUrlsFromMasterPlaylist() {
-        expect(HLSParser.extractKeyUrls(
+    func testExtractKeyUrlsFromMasterPlaylist() throws {
+        expect(try HLSParser.extractKeyUrls(
             from: """
                 #EXTM3U
                 #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost/serve.key"
@@ -61,7 +66,7 @@ final class HLSParserTests: TestCase {
     }
 
     func testExtractKeyUrlsFromMediaPlaylist() {
-        expect(HLSParser.extractKeyUrls(
+        expect(try HLSParser.extractKeyUrls(
             from: """
                 #EXTM3U
                 #EXT-X-TARGETDURATION:2
@@ -74,12 +79,15 @@ final class HLSParserTests: TestCase {
                 #EXT-X-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAAAAAA=="
                 #EXTINF:2.000,
                 seg-3.ts
-                #EXT-X-KEY:METHOD=AES-128,URI="https://localhost/serve.key?session=2",IV=0x00000000000000000000000000000001
+                #EXT-X-KEY:METHOD=AES-128,IV=0x00000000000000000000000000000001,URI="https://localhost/serve.key?session=2"
                 #EXTINF:2.000,
                 seg-4.ts
-                #EXT-X-KEY:METHOD=NONE
+                #EXT-X-KEY:URI="https://localhost/serve.key?session=3",METHOD=SAMPLE-AES
                 #EXTINF:2.000,
                 seg-5.ts
+                #EXT-X-KEY:METHOD=NONE
+                #EXTINF:2.000,
+                seg-6.ts
                 """
         )).to(equalDiff([
             URL(string: "http://localhost/serve.key?session=1")!,
