@@ -19,4 +19,8 @@ enum HLSParser {
     static func replaceUrl(_ url: URL, with data: Data, in string: String) -> String {
         string.replacingOccurrences(of: url.absoluteString, with: URI.dataUri(for: data))
     }
+
+    static func inlineAES128Keys(in string: String) async -> String {
+        string
+    }
 }

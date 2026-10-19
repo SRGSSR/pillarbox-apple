@@ -72,4 +72,20 @@ final class HLSParserTests: TestCase {
             """
         ))
     }
+
+    func testInlineAES128Keys() async {
+        await expect {
+            await HLSParser.inlineAES128Keys(
+                in: """
+                    #EXTM3U
+                    #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost:8123/aes128/test.key"
+                    """
+            )
+        }.to(equal(
+            """
+            #EXTM3U
+            #EXT-X-SESSION-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AQEBAQEBAQEBAQEBAQEBAQ=="
+            """
+        ))
+    }
 }
