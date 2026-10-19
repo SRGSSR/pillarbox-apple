@@ -15,4 +15,8 @@ enum HLSParser {
             .map(\.output.url)
             .compactMap { URL(string: String($0)) }
     }
+
+    static func replaceUrl(_ url: URL, with data: Data, in string: String) -> String {
+        string.replacingOccurrences(of: url.absoluteString, with: URI.dataUri(for: data))
+    }
 }

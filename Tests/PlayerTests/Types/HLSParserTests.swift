@@ -56,4 +56,20 @@ final class HLSParserTests: TestCase {
             URL(string: "https://localhost/serve.key?session=2")!
         ]))
     }
+
+    func testReplaceUrlWithData() {
+        expect(HLSParser.replaceUrl(
+            URL(string: "http://localhost/serve.key")!,
+            with: Data(repeating: 1, count: 16),
+            in: """
+                #EXTM3U
+                #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost/serve.key"
+                """
+        )).to(equal(
+            """
+            #EXTM3U
+            #EXT-X-SESSION-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AQEBAQEBAQEBAQEBAQEBAQ=="
+            """
+        ))
+    }
 }
