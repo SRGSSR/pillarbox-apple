@@ -9,11 +9,11 @@ import Foundation
 struct MalformedHLSError: Error {}
 
 enum HLSParser {
-    static func extractKeyUrls(from string: String) -> [URL] {
+    static func extractKeyUrls(from string: String) -> Set<URL> {
         let pattern = #/#EXT-X-(?:SESSION-)?KEY:(?=.*METHOD=AES-128).*URI="(?<url>https?[^"]+)"/#
-        return string.matches(of: pattern)
+        return Set(string.matches(of: pattern)
             .map(\.output.url)
-            .compactMap { URL(string: String($0)) }
+            .compactMap { URL(string: String($0)) })
     }
 
     static func replaceUrl(_ url: URL, with data: Data, in string: String) -> String {
@@ -22,7 +22,7 @@ enum HLSParser {
 
     static func inlineAES128Keys(in string: String) async -> String {
         var result = string
-        for url in Set(extractKeyUrls(from: string)) {
+        for url in extractKeyUrls(from: string) {
             guard let (data, _) = try? await URLSession.shared.data(from: url) else { continue }
             result = replaceUrl(url, with: data, in: result)
         }
