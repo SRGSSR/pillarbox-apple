@@ -21,6 +21,11 @@ enum HLSParser {
     }
 
     static func inlineAES128Keys(in string: String) async -> String {
-        string
+        var result = string
+        for url in Set(extractKeyUrls(from: string)) {
+            guard let (data, _) = try? await URLSession.shared.data(from: url) else { continue }
+            result = replaceUrl(url, with: data, in: result)
+        }
+        return result
     }
 }
