@@ -8,11 +8,18 @@ import Foundation
 
 struct MoviePackage {
     private let location: URL
+    private let originalUrl: URL
     private let playlistUrls: [URL]
 
-    init?(location: URL) {
-        guard location.isFileURL, let enumerator = FileManager.default.enumerator(at: location, includingPropertiesForKeys: nil) else { return nil }
+    init?(location: URL?, originalUrl: URL?) {
+        guard let location,
+              let originalUrl,
+              location.isFileURL,
+              let enumerator = FileManager.default.enumerator(at: location, includingPropertiesForKeys: nil) else {
+            return nil
+        }
         self.location = location
+        self.originalUrl = originalUrl
         playlistUrls = enumerator.allObjects
             .compactMap { object in
                 guard let url = object as? URL, url.pathExtension == "m3u8" else { return nil }
@@ -20,20 +27,29 @@ struct MoviePackage {
             }
     }
 
-    static func extractKeyUrls(from string: String) -> Set<URL> {
-        let pattern = #/#EXT-X-(?:SESSION-)?KEY:(?=.*METHOD=AES-128).*URI="(?<url>https?[^"]+)"/#
+    static func extractKeyUrls(from string: String, relativeTo originalUrl: URL) -> Set<URL> {
+        let pattern = #/#EXT-X-(?:SESSION-)?KEY:(?=.*METHOD=AES-128).*URI="(?:(?<url>https?[^"]+)|(?<relativeUrl>\/\/[^"]+))"/#
         return Set(string.matches(of: pattern)
-            .map(\.output.url)
-            .compactMap { URL(string: String($0)) })
+            .compactMap { pattern in
+                if let relativeUrl = pattern.output.relativeUrl {
+                    return URL(string: String(relativeUrl), relativeTo: originalUrl)
+                }
+                else if let url = pattern.output.url {
+                    return URL(string: String(url))
+                }
+                else {
+                    return nil
+                }
+            })
     }
 
     static func replaceUrl(_ url: URL, with data: Data, in string: String) -> String {
         string.replacingOccurrences(of: url.absoluteString, with: URI.dataUri(for: data))
     }
 
-    static func inlineAES128Keys(in string: String) async -> String {
+    static func inlineAES128Keys(in string: String, relativeTo originalUrl: URL) async -> String {
         var result = string
-        for url in extractKeyUrls(from: string) {
+        for url in extractKeyUrls(from: string, relativeTo: originalUrl) {
             guard let (data, _) = try? await URLSession.shared.data(from: url) else { continue }
             result = replaceUrl(url, with: data, in: result)
         }
@@ -43,7 +59,7 @@ struct MoviePackage {
     func inlineAES128Keys() async {
         for playlistUrl in playlistUrls {
             guard let content = try? String(contentsOf: playlistUrl) else { continue }
-            let newContent = await Self.inlineAES128Keys(in: content)
+            let newContent = await Self.inlineAES128Keys(in: content, relativeTo: originalUrl)
             try? newContent.write(to: playlistUrl, atomically: true, encoding: .utf8)
         }
     }

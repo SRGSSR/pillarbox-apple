@@ -12,23 +12,27 @@ import PillarboxCircumspect
 
 final class MoviePackageTests: TestCase {
     func testExtractKeyUrlsFromEmptyPlaylist() {
-        expect(MoviePackage.extractKeyUrls(from: "")).to(beEmpty())
+        expect(MoviePackage.extractKeyUrls(from: "", relativeTo: URL(string: "http://localhost")!)).to(beEmpty())
     }
 
     // swiftlint:disable:next inclusive_language
     func testExtractKeyUrlsFromMasterPlaylist() {
-        expect(MoviePackage.extractKeyUrls(
+        expect(Set(MoviePackage.extractKeyUrls(
             from: """
                 #EXTM3U
                 #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost/serve.key"
-                """
-        )).to(equalDiff([
-            URL(string: "http://localhost/serve.key")!
-        ]))
+                """,
+            relativeTo: URL(string: "https://localhost")!
+        )
+        .map(\.absoluteString))).to(
+            equalDiff([
+                "http://localhost/serve.key"
+            ])
+        )
     }
 
     func testExtractKeyUrlsFromMediaPlaylist() {
-        expect(MoviePackage.extractKeyUrls(
+        expect(Set(MoviePackage.extractKeyUrls(
             from: """
                 #EXTM3U
                 #EXT-X-TARGETDURATION:2
@@ -46,15 +50,22 @@ final class MoviePackageTests: TestCase {
                 seg-4.ts
                 #EXT-X-KEY:URI="https://localhost/serve.key?session=3",METHOD=SAMPLE-AES
                 #EXTINF:2.000,
+                #EXT-X-KEY:URI="//localhost/serve.key?session=4",METHOD=AES-128
+                #EXTINF:2.000,
                 seg-5.ts
                 #EXT-X-KEY:METHOD=NONE
                 #EXTINF:2.000,
                 seg-6.ts
-                """
-        )).to(equalDiff([
-            URL(string: "http://localhost/serve.key?session=1")!,
-            URL(string: "https://localhost/serve.key?session=2")!
-        ]))
+                """,
+            relativeTo: URL(string: "https://localhost")!
+        )
+        .map(\.absoluteString))).to(
+            equalDiff([
+                "http://localhost/serve.key?session=1",
+                "https://localhost/serve.key?session=2",
+                "https://localhost/serve.key?session=4"
+            ])
+        )
     }
 
     func testReplaceUrlWithData() {
@@ -79,7 +90,8 @@ final class MoviePackageTests: TestCase {
                 in: """
                     #EXTM3U
                     #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost:8123/aes128/test.key"
-                    """
+                    """,
+                relativeTo: URL(string: "https://localhost")!
             )
         }.to(equal(
             """

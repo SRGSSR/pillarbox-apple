@@ -104,7 +104,7 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: any Error?) {
         guard let id = task.taskDescription else { return }
-        if let location = locations[task.taskIdentifier], let package = MoviePackage(location: location) {
+        if let package = MoviePackage(location: locations[task.taskIdentifier], originalUrl: task.currentRequest?.url) {
             Task {
                 if error == nil {
                     await package.inlineAES128Keys()
