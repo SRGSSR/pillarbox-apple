@@ -9,11 +9,13 @@ import Foundation
 struct MalformedHLSError: Error {}
 
 struct MoviePackage {
-    private let packageUrls: [URL]
+    private let fileUrl: URL
+    private let playlistUrls: [URL]
 
-    init?(url: URL) {
-        guard url.isFileURL, let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil) else { return nil }
-        packageUrls = enumerator.allObjects
+    init?(fileUrl: URL) {
+        guard fileUrl.isFileURL, let enumerator = FileManager.default.enumerator(at: fileUrl, includingPropertiesForKeys: nil) else { return nil }
+        self.fileUrl = fileUrl
+        playlistUrls = enumerator.allObjects
             .compactMap { object in
                 guard let url = object as? URL else { return nil }
                 return url.pathExtension == "m3u8" ? url : nil
@@ -41,10 +43,22 @@ struct MoviePackage {
     }
 
     func inlineAES128Keys() async {
-        for packageUrl in packageUrls {
-            guard let content = try? String(contentsOf: packageUrl) else { continue }
+        for playlistUrl in playlistUrls {
+            guard let content = try? String(contentsOf: playlistUrl) else { continue }
             let newContent = await Self.inlineAES128Keys(in: content)
-            try? newContent.write(to: packageUrl, atomically: true, encoding: .utf8)
+            try? newContent.write(to: playlistUrl, atomically: true, encoding: .utf8)
+        }
+    }
+
+    func remove() async {
+        do {
+            try FileManager.default.removeItem(at: fileUrl)
+        }
+        catch {
+            // The location is not always immediately removable when the task completes. Insert a second attempt after
+            // a while if this failed the first time.
+            try? await Task.sleep(for: .seconds(2))
+            try? FileManager.default.removeItem(at: fileUrl)
         }
     }
 }
