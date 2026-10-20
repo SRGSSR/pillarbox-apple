@@ -8,7 +8,18 @@ import Foundation
 
 struct MalformedHLSError: Error {}
 
-enum HLSParser {
+struct MoviePackage {
+    private let packageUrls: [URL]
+
+    init?(url: URL) {
+        guard url.isFileURL, let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil) else { return nil }
+        packageUrls = enumerator.allObjects
+            .compactMap { object in
+                guard let url = object as? URL else { return nil }
+                return url.pathExtension == "m3u8" ? url : nil
+            }
+    }
+
     static func extractKeyUrls(from string: String) -> Set<URL> {
         let pattern = #/#EXT-X-(?:SESSION-)?KEY:(?=.*METHOD=AES-128).*URI="(?<url>https?[^"]+)"/#
         return Set(string.matches(of: pattern)
@@ -27,5 +38,13 @@ enum HLSParser {
             result = replaceUrl(url, with: data, in: result)
         }
         return result
+    }
+
+    func inlineAES128Keys() async {
+        for packageUrl in packageUrls {
+            guard let content = try? String(contentsOf: packageUrl) else { continue }
+            let newContent = await Self.inlineAES128Keys(in: content)
+            try? newContent.write(to: packageUrl, atomically: true, encoding: .utf8)
+        }
     }
 }

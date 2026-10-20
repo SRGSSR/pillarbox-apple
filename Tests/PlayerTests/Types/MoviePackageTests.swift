@@ -10,14 +10,14 @@ import Foundation
 import Nimble
 import PillarboxCircumspect
 
-final class HLSParserTests: TestCase {
+final class MoviePackageTests: TestCase {
     func testExtractKeyUrlsFromEmptyPlaylist() {
-        expect(HLSParser.extractKeyUrls(from: "")).to(beEmpty())
+        expect(MoviePackage.extractKeyUrls(from: "")).to(beEmpty())
     }
 
     // swiftlint:disable:next inclusive_language
     func testExtractKeyUrlsFromMasterPlaylist() {
-        expect(HLSParser.extractKeyUrls(
+        expect(MoviePackage.extractKeyUrls(
             from: """
                 #EXTM3U
                 #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost/serve.key"
@@ -28,7 +28,7 @@ final class HLSParserTests: TestCase {
     }
 
     func testExtractKeyUrlsFromMediaPlaylist() {
-        expect(HLSParser.extractKeyUrls(
+        expect(MoviePackage.extractKeyUrls(
             from: """
                 #EXTM3U
                 #EXT-X-TARGETDURATION:2
@@ -58,7 +58,7 @@ final class HLSParserTests: TestCase {
     }
 
     func testReplaceUrlWithData() {
-        expect(HLSParser.replaceUrl(
+        expect(MoviePackage.replaceUrl(
             URL(string: "http://localhost/serve.key")!,
             with: Data(repeating: 1, count: 16),
             in: """
@@ -75,7 +75,7 @@ final class HLSParserTests: TestCase {
 
     func testInlineAES128Keys() async {
         await expect {
-            await HLSParser.inlineAES128Keys(
+            await MoviePackage.inlineAES128Keys(
                 in: """
                     #EXTM3U
                     #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost:8123/aes128/test.key"
