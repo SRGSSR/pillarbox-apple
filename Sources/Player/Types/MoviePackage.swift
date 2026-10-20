@@ -6,19 +6,17 @@
 
 import Foundation
 
-struct MalformedHLSError: Error {}
-
 struct MoviePackage {
-    private let fileUrl: URL
+    private let location: URL
     private let playlistUrls: [URL]
 
-    init?(fileUrl: URL) {
-        guard fileUrl.isFileURL, let enumerator = FileManager.default.enumerator(at: fileUrl, includingPropertiesForKeys: nil) else { return nil }
-        self.fileUrl = fileUrl
+    init?(location: URL) {
+        guard location.isFileURL, let enumerator = FileManager.default.enumerator(at: location, includingPropertiesForKeys: nil) else { return nil }
+        self.location = location
         playlistUrls = enumerator.allObjects
             .compactMap { object in
-                guard let url = object as? URL else { return nil }
-                return url.pathExtension == "m3u8" ? url : nil
+                guard let url = object as? URL, url.pathExtension == "m3u8" else { return nil }
+                return url
             }
     }
 
@@ -52,13 +50,13 @@ struct MoviePackage {
 
     func remove() async {
         do {
-            try FileManager.default.removeItem(at: fileUrl)
+            try FileManager.default.removeItem(at: location)
         }
         catch {
             // The location is not always immediately removable when the task completes. Insert a second attempt after
             // a while if this failed the first time.
             try? await Task.sleep(for: .seconds(2))
-            try? FileManager.default.removeItem(at: fileUrl)
+            try? FileManager.default.removeItem(at: location)
         }
     }
 }
