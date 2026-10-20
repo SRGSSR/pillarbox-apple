@@ -45,25 +45,30 @@ final class MoviePackageTests: TestCase {
                 #EXT-X-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAAAAAA=="
                 #EXTINF:2.000,
                 seg-3.ts
-                #EXT-X-KEY:METHOD=AES-128,IV=0x00000000000000000000000000000001,URI="https://localhost/serve.key?session=2"
+                #EXT-X-KEY:METHOD=AES-128,IV=0x00000000000000000000000000000001,URI="https://localhost/serve.key?session=4"
                 #EXTINF:2.000,
                 seg-4.ts
-                #EXT-X-KEY:URI="https://localhost/serve.key?session=3",METHOD=SAMPLE-AES
-                #EXTINF:2.000,
-                #EXT-X-KEY:URI="//localhost/serve.key?session=4",METHOD=AES-128
+                #EXT-X-KEY:URI="https://localhost/serve.key?session=5",METHOD=SAMPLE-AES
                 #EXTINF:2.000,
                 seg-5.ts
-                #EXT-X-KEY:METHOD=NONE
+                #EXT-X-KEY:URI="serve.key?session=6",METHOD=AES-128
                 #EXTINF:2.000,
                 seg-6.ts
+                #EXT-X-KEY:URI="//localhost/serve.key?session=7",METHOD=AES-128
+                #EXTINF:2.000,
+                seg-7.ts
+                #EXT-X-KEY:METHOD=NONE
+                #EXTINF:2.000,
+                seg-8.ts
                 """,
             relativeTo: URL(string: "https://localhost")!
         )
         .map(\.absoluteString))).to(
             equalDiff([
                 "http://localhost/serve.key?session=1",
-                "https://localhost/serve.key?session=2",
-                "https://localhost/serve.key?session=4"
+                "https://localhost/serve.key?session=4",
+                "https://localhost/serve.key?session=6",
+                "https://localhost/serve.key?session=7"
             ])
         )
     }

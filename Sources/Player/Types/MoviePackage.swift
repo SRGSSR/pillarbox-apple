@@ -28,18 +28,10 @@ struct MoviePackage {
     }
 
     static func extractKeyUrls(from string: String, relativeTo originalUrl: URL) -> Set<URL> {
-        let pattern = #/#EXT-X-(?:SESSION-)?KEY:(?=.*METHOD=AES-128).*URI="(?:(?<url>https?[^"]+)|(?<relativeUrl>\/\/[^"]+))"/#
+        let pattern = #/#EXT-X-(?:SESSION-)?KEY:(?=.*METHOD=AES-128).*URI="(?<uri>(?!data:).+)"/#
         return Set(string.matches(of: pattern)
             .compactMap { pattern in
-                if let relativeUrl = pattern.output.relativeUrl {
-                    return URL(string: String(relativeUrl), relativeTo: originalUrl)
-                }
-                else if let url = pattern.output.url {
-                    return URL(string: String(url))
-                }
-                else {
-                    return nil
-                }
+                URL(string: String(pattern.output.uri), relativeTo: originalUrl)
             })
     }
 
