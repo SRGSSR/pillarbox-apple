@@ -27,23 +27,24 @@ struct MoviePackage {
             }
     }
 
-    static func extractKeyUrls(from string: String, relativeTo originalUrl: URL) -> Set<URL> {
+    static func extractKeyUris(from content: String) -> Set<String> {
         let pattern = #/#EXT-X-(?:SESSION-)?KEY:(?=.*METHOD=AES-128).*URI="(?<uri>(?!data:).+)"/#
-        return Set(string.matches(of: pattern)
-            .compactMap { pattern in
-                URL(string: String(pattern.output.uri), relativeTo: originalUrl)
-            })
+        return Set(
+            content.matches(of: pattern)
+                .compactMap(\.output.uri)
+                .map { String($0) }
+        )
     }
 
-    static func replaceUrl(_ url: URL, with data: Data, in string: String) -> String {
-        string.replacingOccurrences(of: url.absoluteString, with: URI.dataUri(for: data))
+    static func replaceUri(_ uri: String, with data: Data, in playlist: String) -> String {
+        playlist.replacingOccurrences(of: "URI=\"\(uri)\"", with: "URI=\"\(URI.dataUri(for: data))\"")
     }
 
-    static func inlineAES128Keys(in string: String, relativeTo originalUrl: URL) async -> String {
-        var result = string
-        for url in extractKeyUrls(from: string, relativeTo: originalUrl) {
-            guard let (data, _) = try? await URLSession.shared.data(from: url) else { continue }
-            result = replaceUrl(url, with: data, in: result)
+    static func inlineAES128Keys(in content: String, relativeTo originalUrl: URL) async -> String {
+        var result = content
+        for uri in extractKeyUris(from: content) {
+            guard let url = URL(string: String(uri), relativeTo: originalUrl), let (data, _) = try? await URLSession.shared.data(from: url) else { continue }
+            result = replaceUri(uri, with: data, in: result)
         }
         return result
     }

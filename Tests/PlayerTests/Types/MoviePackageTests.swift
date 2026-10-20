@@ -11,28 +11,26 @@ import Nimble
 import PillarboxCircumspect
 
 final class MoviePackageTests: TestCase {
-    func testExtractKeyUrlsFromEmptyPlaylist() {
-        expect(MoviePackage.extractKeyUrls(from: "", relativeTo: URL(string: "http://localhost")!)).to(beEmpty())
+    func testExtractKeyUrisFromEmptyPlaylist() {
+        expect(MoviePackage.extractKeyUris(from: "")).to(beEmpty())
     }
 
     // swiftlint:disable:next inclusive_language
-    func testExtractKeyUrlsFromMasterPlaylist() {
-        expect(Set(MoviePackage.extractKeyUrls(
+    func testExtractKeyUrisFromMasterPlaylist() {
+        expect(MoviePackage.extractKeyUris(
             from: """
                 #EXTM3U
                 #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost/serve.key"
-                """,
-            relativeTo: URL(string: "https://localhost")!
-        )
-        .map(\.absoluteString))).to(
+                """
+        )).to(
             equalDiff([
                 "http://localhost/serve.key"
             ])
         )
     }
 
-    func testExtractKeyUrlsFromMediaPlaylist() {
-        expect(Set(MoviePackage.extractKeyUrls(
+    func testExtractKeyUrisFromMediaPlaylist() {
+        expect(MoviePackage.extractKeyUris(
             from: """
                 #EXTM3U
                 #EXT-X-TARGETDURATION:2
@@ -60,22 +58,20 @@ final class MoviePackageTests: TestCase {
                 #EXT-X-KEY:METHOD=NONE
                 #EXTINF:2.000,
                 seg-8.ts
-                """,
-            relativeTo: URL(string: "https://localhost")!
-        )
-        .map(\.absoluteString))).to(
+                """
+        )).to(
             equalDiff([
                 "http://localhost/serve.key?session=1",
                 "https://localhost/serve.key?session=4",
-                "https://localhost/serve.key?session=6",
-                "https://localhost/serve.key?session=7"
+                "serve.key?session=6",
+                "//localhost/serve.key?session=7"
             ])
         )
     }
 
     func testReplaceUrlWithData() {
-        expect(MoviePackage.replaceUrl(
-            URL(string: "http://localhost/serve.key")!,
+        expect(MoviePackage.replaceUri(
+            "http://localhost/serve.key",
             with: Data(repeating: 1, count: 16),
             in: """
                 #EXTM3U
@@ -95,12 +91,14 @@ final class MoviePackageTests: TestCase {
                 in: """
                     #EXTM3U
                     #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost:8123/aes128/test.key"
+                    #EXT-X-SESSION-KEY:METHOD=AES-128,URI="test.key"
                     """,
-                relativeTo: URL(string: "https://localhost")!
+                relativeTo: URL(string: "http://localhost:8123/aes128/")!
             )
         }.to(equal(
             """
             #EXTM3U
+            #EXT-X-SESSION-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AQEBAQEBAQEBAQEBAQEBAQ=="
             #EXT-X-SESSION-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AQEBAQEBAQEBAQEBAQEBAQ=="
             """
         ))
