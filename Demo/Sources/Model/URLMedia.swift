@@ -183,6 +183,21 @@ enum URLMedia {
         imageUrl: kUnifiedStreamingImageUrl1,
         kind: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")
     )
+    static let unifiedStreamingOnDemandCPIX = Media(
+        title: "CPIX",
+        imageUrl: kUnifiedStreamingImageUrl2,
+        kind: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-multikey-cenc.ism/.m3u8")
+    )
+    static let unifiedStreamingOnDemandAES128 = Media(
+        title: "AES-128",
+        imageUrl: kUnifiedStreamingImageUrl2,
+        kind: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-aes.ism/.m3u8")
+    )
+    static let unifiedStreamingOnDemandSampleAES = Media(
+        title: "Sample-AES",
+        imageUrl: kUnifiedStreamingImageUrl2,
+        kind: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-sample-aes.ism/.m3u8")
+    )
     static let unifiedStreamingOnDemandKeyRotation = Media(
         title: "Key Rotation",
         imageUrl: kUnifiedStreamingImageUrl2,

@@ -47,6 +47,9 @@ final class ExamplesViewModel: ObservableObject {
 
     let unifiedStreamingMedias = [
         URLMedia.unifiedStreamingOnDemand_fMP4,
+        URLMedia.unifiedStreamingOnDemandCPIX,
+        URLMedia.unifiedStreamingOnDemandAES128,
+        URLMedia.unifiedStreamingOnDemandSampleAES,
         URLMedia.unifiedStreamingOnDemandKeyRotation,
         URLMedia.unifiedStreamingOnDemandAlternateAudio,
         URLMedia.unifiedStreamingOnDemandAudioOnly,
