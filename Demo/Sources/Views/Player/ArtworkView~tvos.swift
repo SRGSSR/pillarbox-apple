@@ -7,7 +7,7 @@
 import PillarboxPlayer
 import SwiftUI
 
-struct Artwork: View {
+struct ArtworkView: View {
     @ObservedObject var player: Player
 
     var body: some View {

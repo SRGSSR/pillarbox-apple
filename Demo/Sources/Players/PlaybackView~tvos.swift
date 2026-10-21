@@ -68,9 +68,9 @@ private struct MainView: View {
         self.infoViewTabsContent = infoViewTabsContent
     }
 
-    private func systemVideoView() -> SystemVideoView<Artwork> {
+    private func systemVideoView() -> SystemVideoView<ArtworkView> {
         SystemVideoView(player: player) {
-            Artwork(player: player)
+            ArtworkView(player: player)
         }
         .supportsPictureInPicture()
         .transportBar(content: transportBarContent)
