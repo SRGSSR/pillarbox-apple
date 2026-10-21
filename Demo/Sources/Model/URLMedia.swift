@@ -8,7 +8,9 @@ import Foundation
 
 private let kAppleImageUrl = URL("https://www.apple.com/newsroom/images/default/apple-logo-og.jpg?202312141200")
 private let kUnifiedStreamingImageUrl1 = URL("https://mango.blender.org/wp-content/gallery/4k-renders/01_thom_celia_bridge.jpg")
-private let kUnifiedStreamingImageUrl2 = URL("https://website-storage.unified-streaming.com/images/_1200x630_crop_center-center_none/default-facebook.png")
+private let kUnifiedStreamingImageUrl2 = URL(
+    "https://cdn.prod.website-files.com/664722cf0a7b39a4969c841a/666c0d5a96d47aba901175e3_Unified-Streaming-Opengraph-image.png"
+)
 
 // Stream sources:
 //   - Apple: https://developer.apple.com/streaming/examples/
