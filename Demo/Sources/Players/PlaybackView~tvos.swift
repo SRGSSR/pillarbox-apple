@@ -68,12 +68,14 @@ private struct MainView: View {
         self.infoViewTabsContent = infoViewTabsContent
     }
 
-    private func systemVideoView() -> SystemVideoView<EmptyView> {
-        SystemVideoView(player: player)
-            .supportsPictureInPicture()
-            .transportBar(content: transportBarContent)
-            .contextualActions(content: contextualActionsContent)
-            .infoViewActions(content: infoViewActionsContent)
+    private func systemVideoView() -> SystemVideoView<Artwork> {
+        SystemVideoView(player: player) {
+            Artwork(player: player)
+        }
+        .supportsPictureInPicture()
+        .transportBar(content: transportBarContent)
+        .contextualActions(content: contextualActionsContent)
+        .infoViewActions(content: infoViewActionsContent)
     }
 
     @TransportBarContentBuilder
