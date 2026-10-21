@@ -16,10 +16,10 @@ struct MoviePackage {
         self.manifest = manifest
     }
 
-    static func extractKeyUris(from content: String) -> Set<String> {
+    static func extractKeyUris(from playlist: String) -> Set<String> {
         let pattern = #/#EXT-X-(?:SESSION-)?KEY:(?=.*METHOD=AES-128).*URI="(?<uri>(?!data:).+)"/#
         return Set(
-            content.matches(of: pattern)
+            playlist.matches(of: pattern)
                 .compactMap(\.output.uri)
                 .map { String($0) }
         )
@@ -29,36 +29,36 @@ struct MoviePackage {
         playlist.replacingOccurrences(of: "URI=\"\(uri)\"", with: "URI=\"\(URI.dataUri(for: data))\"")
     }
 
-    static func inlineAES128Keys(in content: String, relativeTo streamUrl: URL) async -> String {
-        var result = content
-        for uri in extractKeyUris(from: content) {
+    static func inlineAES128Keys(in playlist: String, relativeTo streamUrl: URL) async -> String {
+        var result = playlist
+        for uri in extractKeyUris(from: playlist) {
             guard let url = URL(string: String(uri), relativeTo: streamUrl), let (data, _) = try? await URLSession.shared.data(from: url) else { continue }
             result = replaceUri(uri, with: data, in: result)
         }
         return result
     }
 
-    private static func inlineAES128KeysInPlaylist(at url: URL, withStreamUrl streamUrl: URL) async {
+    private static func inlineAES128KeysInPlaylist(at url: URL, relativeTo streamUrl: URL) async {
         guard let content = try? String(contentsOf: url) else { return }
         let newContent = await inlineAES128Keys(in: content, relativeTo: streamUrl)
         try? newContent.write(to: url, atomically: true, encoding: .utf8)
     }
 
     func inlineAES128Keys() async {
-        await inlineAES128KeysInPlaylists(inFolderNamed: "Data", withStreamUrl: manifest.masterPlaylistUrl)
+        await inlineAES128KeysInPlaylists(atPath: "Data", relativeTo: manifest.masterPlaylistUrl)
         for stream in manifest.streams {
-            await inlineAES128KeysInPlaylists(inFolderNamed: stream.path, withStreamUrl: stream.networkUrl)
+            await inlineAES128KeysInPlaylists(atPath: stream.path, relativeTo: stream.networkUrl)
         }
     }
 
-    private func inlineAES128KeysInPlaylists(inFolderNamed folderName: String, withStreamUrl streamUrl: URL) async {
-        for playlistUrl in playlistUrls(inFolderNamed: folderName) {
-            await Self.inlineAES128KeysInPlaylist(at: playlistUrl, withStreamUrl: streamUrl)
+    private func inlineAES128KeysInPlaylists(atPath path: String, relativeTo streamUrl: URL) async {
+        for playlistUrl in playlistUrls(atPath: path) {
+            await Self.inlineAES128KeysInPlaylist(at: playlistUrl, relativeTo: streamUrl)
         }
     }
 
-    private func playlistUrls(inFolderNamed folderName: String) -> [URL] {
-        guard let enumerator = FileManager.default.enumerator(at: location.appending(component: folderName), includingPropertiesForKeys: nil) else { return [] }
+    private func playlistUrls(atPath path: String) -> [URL] {
+        guard let enumerator = FileManager.default.enumerator(at: location.appending(component: path), includingPropertiesForKeys: nil) else { return [] }
         return enumerator.allObjects
             .compactMap { object in
                 guard let url = object as? URL, url.pathExtension == "m3u8" else { return nil }
