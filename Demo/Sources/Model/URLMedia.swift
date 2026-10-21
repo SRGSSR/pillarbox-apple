@@ -16,6 +16,7 @@ private let kUnifiedStreamingImageUrl2 = URL(
 //   - Apple: https://developer.apple.com/streaming/examples/
 //   - Unified Streaming: https://demo.unified-streaming.com/k8s/features/stable/#!/hls
 //   - BBC: https://rdmedia.bbc.co.uk/testcard/simulcast/
+//   - Bitmovin: iOS SDK demo app
 // swiftlint:disable:next type_body_length
 enum URLMedia {
     static let onDemandVideoHLS = Media(
@@ -260,6 +261,31 @@ enum URLMedia {
         title: "fMP4, HEVC 4K",
         imageUrl: kUnifiedStreamingImageUrl1,
         kind: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-hevc.ism/.m3u8")
+    )
+    static let bitmovinArtOfMotionVOD = Media(
+        title: "Art of Motion",
+        subtitle: "VoD, Single audio track",
+        kind: .url("https://cdn.bitmovin.com/content/internal/assets/MI201109210084/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
+    )
+    static let bitmovinSportsMashupVOD = Media(
+        title: "Sports Mashup",
+        subtitle: "Single audio track",
+        kind: .url("https://cdn.bitmovin.com/content/internal/sports-mashup/sports-mashup-hls/m3u8/master.m3u8")
+    )
+    static let bitmovinBigBuckBunny_4K_HEVC = Media(
+        title: "Big Buck Bunny",
+        subtitle: "4K, HEVC",
+        kind: .url("https://cdn.bitmovin.com/content/internal/encoding_test_dash_hls/4k/hls/4k_profile/master.m3u8")
+    )
+    static let bitmovinArtOfMotion_AES128 = Media(
+        title: "Art of Motion",
+        subtitle: "HLS, AES-128",
+        kind: .url("https://cdn.bitmovin.com/content/internal/assets/art-of-motion_drm/m3u8s/11331.m3u8")
+    )
+    static let bitmovinArtOfMotion_MP4 = Media(
+        title: "Art of Motion",
+        subtitle: "AVC, MP4",
+        kind: .url("https://cdn.bitmovin.com/content/internal/assets/MI201109210084/MI201109210084_mpeg-4_hd_high_1080p25_10mbits.mp4")
     )
     static let bbcTestCard_Audio_Video_AVC = Media(
         title: "Audio and AVC video",

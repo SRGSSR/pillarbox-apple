@@ -64,6 +64,14 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.unifiedStreamingOnDemand_fMP4_HEVC_4K
     ]
 
+    let bitmovinMedias = [
+        URLMedia.bitmovinArtOfMotionVOD,
+        URLMedia.bitmovinSportsMashupVOD,
+        URLMedia.bitmovinBigBuckBunny_4K_HEVC,
+        URLMedia.bitmovinArtOfMotion_AES128,
+        URLMedia.bitmovinArtOfMotion_MP4
+    ]
+
     let bbcTestCardMedias = [
         URLMedia.bbcTestCard_Audio_Video_AVC,
         URLMedia.bbcTestCard_Audio_Video_AVC_TVs,

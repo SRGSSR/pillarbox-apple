@@ -236,6 +236,7 @@ struct ExamplesView: View {
         section(title: "Apple streams", medias: model.appleMedias)
         section(title: "Third-party streams", medias: model.thirdPartyMedias)
         section(title: "Unified Streaming streams", medias: model.unifiedStreamingMedias)
+        section(title: "Bitmovin streams", medias: model.bitmovinMedias)
         section(title: "BBC Test Card streams", medias: model.bbcTestCardMedias)
         section(title: "Mux streams", medias: model.muxMedias)
     }
