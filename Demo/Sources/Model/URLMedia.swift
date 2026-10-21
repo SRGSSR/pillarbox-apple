@@ -11,6 +11,7 @@ private let kUnifiedStreamingImageUrl1 = URL("https://mango.blender.org/wp-conte
 private let kUnifiedStreamingImageUrl2 = URL(
     "https://cdn.prod.website-files.com/664722cf0a7b39a4969c841a/666c0d5a96d47aba901175e3_Unified-Streaming-Opengraph-image.png"
 )
+private let kBitmovinImageUrl = URL("https://bitmovin.com/wp-content/uploads/2022/10/bitmovin-icon.jpeg")
 
 // Stream sources:
 //   - Apple: https://developer.apple.com/streaming/examples/
@@ -266,26 +267,31 @@ enum URLMedia {
     static let bitmovinArtOfMotionVOD = Media(
         title: "Art of Motion",
         subtitle: "VoD, Single audio track",
+        imageUrl: kBitmovinImageUrl,
         kind: .url("https://cdn.bitmovin.com/content/internal/assets/MI201109210084/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
     )
     static let bitmovinSportsMashupVOD = Media(
         title: "Sports Mashup",
         subtitle: "Single audio track",
+        imageUrl: kBitmovinImageUrl,
         kind: .url("https://cdn.bitmovin.com/content/internal/sports-mashup/sports-mashup-hls/m3u8/master.m3u8")
     )
     static let bitmovinBigBuckBunny_4K_HEVC = Media(
         title: "Big Buck Bunny",
         subtitle: "4K, HEVC",
+        imageUrl: kBitmovinImageUrl,
         kind: .url("https://cdn.bitmovin.com/content/internal/encoding_test_dash_hls/4k/hls/4k_profile/master.m3u8")
     )
     static let bitmovinArtOfMotion_AES128 = Media(
         title: "Art of Motion",
         subtitle: "HLS, AES-128",
+        imageUrl: kBitmovinImageUrl,
         kind: .url("https://cdn.bitmovin.com/content/internal/assets/art-of-motion_drm/m3u8s/11331.m3u8")
     )
     static let bitmovinArtOfMotion_MP4 = Media(
         title: "Art of Motion",
         subtitle: "AVC, MP4",
+        imageUrl: kBitmovinImageUrl,
         kind: .url("https://cdn.bitmovin.com/content/internal/assets/MI201109210084/MI201109210084_mpeg-4_hd_high_1080p25_10mbits.mp4")
     )
     static let bbcTestCard_Audio_Video_AVC = Media(
