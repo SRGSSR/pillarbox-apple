@@ -8,12 +8,12 @@ import Foundation
 
 struct MoviePackage {
     private let location: URL
-    private let package: HLSMoviePackage
+    private let manifest: MoviePackageManifest
 
     init?(location: URL) {
-        guard location.isFileURL, let package = try? HLSMoviePackage(contentsOf: location.appending(component: "boot.xml")) else { return nil }
+        guard location.isFileURL, let manifest = try? MoviePackageManifest(contentsOf: location.appending(component: "boot.xml")) else { return nil }
         self.location = location
-        self.package = package
+        self.manifest = manifest
     }
 
     static func extractKeyUris(from content: String) -> Set<String> {
@@ -45,8 +45,8 @@ struct MoviePackage {
     }
 
     func inlineAES128Keys() async {
-        await inlineAES128KeysInPlaylists(inFolderNamed: "Data", withStreamUrl: package.masterPlaylistUrl)
-        for stream in package.streams {
+        await inlineAES128KeysInPlaylists(inFolderNamed: "Data", withStreamUrl: manifest.masterPlaylistUrl)
+        for stream in manifest.streams {
             await inlineAES128KeysInPlaylists(inFolderNamed: stream.path, withStreamUrl: stream.networkUrl)
         }
     }

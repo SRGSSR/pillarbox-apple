@@ -10,7 +10,7 @@ import CoreMedia
 import Nimble
 import PillarboxCircumspect
 
-final class HLSMoviePackageTests: TestCase {
+final class MoviePackageManifestTests: TestCase {
     func testValidParsing() throws {
         let bootXml = """
             <?xml version="1.0" encoding="UTF-8"?>
@@ -44,7 +44,7 @@ final class HLSMoviePackageTests: TestCase {
             </HLSMoviePackage>
             """
         let bootXmlData = try unwrap(bootXml.data(using: .utf8))
-        let package = try HLSMoviePackage(data: bootXmlData)
+        let package = try MoviePackageManifest(data: bootXmlData)
         expect(package.masterPlaylistUrl).to(equal(URL(string: "https://streaming.example.com/master.m3u8")!))
         expect(package.streams).to(equalDiff([
             .init(path: "0-3619739-XULJM7HZFBVN2ACHDWIEYVEEPTTKCIJS", networkUrl: URL(string: "https://streaming.example.com/index-f1-v1.m3u8")!),
@@ -55,7 +55,7 @@ final class HLSMoviePackageTests: TestCase {
     func testInvalidXml() throws {
         let bootXml = ""
         let bootXmlData = try unwrap(bootXml.data(using: .utf8))
-        expect(try HLSMoviePackage(data: bootXmlData)).to(throwError())
+        expect(try MoviePackageManifest(data: bootXmlData)).to(throwError())
     }
 
     // swiftlint:disable:next inclusive_language
@@ -89,6 +89,6 @@ final class HLSMoviePackageTests: TestCase {
             </HLSMoviePackage>
             """
         let bootXmlData = try unwrap(bootXml.data(using: .utf8))
-        expect(try HLSMoviePackage(data: bootXmlData)).to(throwError())
+        expect(try MoviePackageManifest(data: bootXmlData)).to(throwError())
     }
 }

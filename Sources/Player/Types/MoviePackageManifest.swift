@@ -10,7 +10,7 @@ private final class ParserDelegate: NSObject, XMLParserDelegate {
     private var path: [String] = []
     private var text = ""
 
-    var streams: [HLSMoviePackage.Stream] = []
+    var streams: [MoviePackageManifest.Stream] = []
 
     // swiftlint:disable:next inclusive_language
     var masterPlaylistUrl: URL?
@@ -49,7 +49,7 @@ private final class ParserDelegate: NSObject, XMLParserDelegate {
     }
 }
 
-struct HLSMoviePackage: Equatable {
+struct MoviePackageManifest: Equatable {
     struct Stream: Equatable {
         let path: String
         let networkUrl: URL
@@ -61,7 +61,7 @@ struct HLSMoviePackage: Equatable {
     let masterPlaylistUrl: URL
 }
 
-extension HLSMoviePackage {
+extension MoviePackageManifest {
     enum ParsingError: Error {
         case invalidFormat
     }
