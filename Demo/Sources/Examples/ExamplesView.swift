@@ -239,6 +239,7 @@ struct ExamplesView: View {
         section(title: "Bitmovin streams", medias: model.bitmovinMedias)
         section(title: "BBC Test Card streams", medias: model.bbcTestCardMedias)
         section(title: "Mux streams", medias: model.muxMedias)
+        section(title: "hls.js streams", medias: model.hlsjsMedias)
     }
 
     @ContentBuilder

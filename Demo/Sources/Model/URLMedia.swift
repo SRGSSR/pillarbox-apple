@@ -17,6 +17,7 @@ private let kUnifiedStreamingImageUrl2 = URL(
 //   - Unified Streaming: https://demo.unified-streaming.com/k8s/features/stable/#!/hls
 //   - BBC: https://rdmedia.bbc.co.uk/testcard/simulcast/
 //   - Bitmovin: iOS SDK demo app
+//   - hls.js: https://hlsjs.video-dev.org/demo/
 // swiftlint:disable:next type_body_length
 enum URLMedia {
     static let onDemandVideoHLS = Media(
@@ -455,6 +456,16 @@ enum URLMedia {
     static let mux_LowLatency = Media(
         title: "Low-Latency",
         kind: .url("https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8")
+    )
+    static let hlsjs_AES128_ABR = Media(
+        title: "AES-128 encrypted",
+        subtitle: "ABR",
+        kind: .url("https://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8")
+    )
+    static let hlsjs_AES128_TS_AAC = Media(
+        title: "AES-128 encrypted",
+        subtitle: "TS main with AAC audio track",
+        kind: .url("https://playertest.longtailvideo.com/adaptive/aes-with-tracks/master.m3u8")
     )
     static let apple_360 = Media(
         title: "Apple 360°",

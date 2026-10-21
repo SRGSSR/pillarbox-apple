@@ -112,6 +112,11 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.mux_LowLatency
     ]
 
+    let hlsjsMedias = [
+        URLMedia.hlsjs_AES128_ABR,
+        URLMedia.hlsjs_AES128_TS_AAC
+    ]
+
     let aspectRatioMedias = [
         URNMedia.onDemandHorizontalVideo,
         URNMedia.onDemandSquareVideo,
