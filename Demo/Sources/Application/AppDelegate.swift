@@ -8,7 +8,6 @@ import AVFAudio
 import Combine
 import os
 import PillarboxAnalytics
-import PillarboxCoreBusiness
 import ShowTime
 import SRGDataProvider
 import UIKit

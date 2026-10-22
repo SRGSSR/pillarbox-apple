@@ -4,11 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-import Combine
-import CoreMedia
-import MediaPlayer
-
 /// Metadata associated with playback.
 public typealias PlayerMetadata = AssetMetadata<EmptyCustomData>
 

@@ -6,8 +6,6 @@
 
 import AVFoundation
 import CoreMedia
-import PillarboxCoreBusiness
-import PillarboxMonitoring
 import PillarboxPlayer
 import SwiftUI
 

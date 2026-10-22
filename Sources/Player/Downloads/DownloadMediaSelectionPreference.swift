@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A preference for media selection (audible, legible) associated with a download.
 public struct DownloadMediaSelectionPreference: Equatable, Codable {
     enum Kind: Equatable, Codable {

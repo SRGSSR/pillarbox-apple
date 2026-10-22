@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Combine
 import Foundation
 
 /// A provider that manages no custom data.

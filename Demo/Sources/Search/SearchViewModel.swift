@@ -5,7 +5,6 @@
 //
 
 import Combine
-import Foundation
 import SRGDataProvider
 import SRGDataProviderCombine
 import SRGDataProviderModel

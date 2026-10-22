@@ -5,7 +5,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 @objc
 enum SeekBehaviorSetting: Int, CaseIterable, CustomLocalizedStringResourceConvertible {
