@@ -269,6 +269,7 @@ struct ShowcaseView: View {
     }
 
     private func miscellaneousPlayerFeaturesSection() -> some View {
+        // swiftlint:disable:next closure_body_length
         CustomSection("Miscellaneous player features (using Pillarbox)") {
 #if os(iOS)
             cell(
@@ -297,6 +298,15 @@ struct ShowcaseView: View {
                 subtitle: "Playback start at 10 minutes",
                 destination: .systemPlayer(media: URLMedia.startTimeVideo)
             )
+#endif
+
+            cell(
+                title: "19h30",
+                subtitle: "Sign language toggle",
+                destination: .signLanguageToggle
+            )
+#if os(iOS)
+            .sourceCode(of: SignLanguageToggleView.self)
 #endif
         }
     }
