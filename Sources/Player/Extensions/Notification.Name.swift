@@ -19,5 +19,4 @@ extension Notification.Name {
     static let willSeek = Notification.Name("PillarboxPlayer_willSeekNotification")
     static let didSeek = Notification.Name("PillarboxPlayer_didSeekNotification")
     static let didUpdateMediaSelectionCriteria = Notification.Name("PillarboxPlayer_didUpdateMediaSelectionCriteriaNotification")
-    static let didUpdateDownload = Notification.Name("PillarboxPlayer_didUpdateDownload")
 }
