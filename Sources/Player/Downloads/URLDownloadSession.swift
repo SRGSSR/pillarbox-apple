@@ -104,24 +104,17 @@ extension URLDownloadSession: AVAssetDownloadDelegate {
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: any Error?) {
         guard let id = task.taskDescription else { return }
-        if error != nil, let location = locations[task.taskIdentifier] {
-            removeFile(at: location)
+        if let location = locations[task.taskIdentifier], let package = MoviePackage(location: location) {
+            Task {
+                if error == nil {
+                    await package.inlineAES128Keys()
+                }
+                else {
+                    await package.remove()
+                }
+            }
         }
         locations[task.taskIdentifier] = nil
         delegate?.downloadSessionTask(task, didCompleteWithError: error, forId: id)
-    }
-
-    private func removeFile(at location: URL) {
-        Task {
-            do {
-                try FileManager.default.removeItem(at: location)
-            }
-            catch {
-                // The location is not always immediately removable when the task completes. Insert a second attempt after
-                // a while if this failed the first time.
-                try? await Task.sleep(for: .seconds(2))
-                try? FileManager.default.removeItem(at: location)
-            }
-        }
     }
 }

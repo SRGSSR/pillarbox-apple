@@ -8,12 +8,17 @@ import Foundation
 
 private let kAppleImageUrl = URL("https://www.apple.com/newsroom/images/default/apple-logo-og.jpg?202312141200")
 private let kUnifiedStreamingImageUrl1 = URL("https://mango.blender.org/wp-content/gallery/4k-renders/01_thom_celia_bridge.jpg")
-private let kUnifiedStreamingImageUrl2 = URL("https://website-storage.unified-streaming.com/images/_1200x630_crop_center-center_none/default-facebook.png")
+private let kUnifiedStreamingImageUrl2 = URL(
+    "https://cdn.prod.website-files.com/664722cf0a7b39a4969c841a/666c0d5a96d47aba901175e3_Unified-Streaming-Opengraph-image.png"
+)
+private let kBitmovinImageUrl = URL("https://bitmovin.com/wp-content/uploads/2022/10/bitmovin-icon.jpeg")
 
 // Stream sources:
 //   - Apple: https://developer.apple.com/streaming/examples/
 //   - Unified Streaming: https://demo.unified-streaming.com/k8s/features/stable/#!/hls
 //   - BBC: https://rdmedia.bbc.co.uk/testcard/simulcast/
+//   - Bitmovin: iOS SDK demo app
+//   - hls.js: https://hlsjs.video-dev.org/demo/
 // swiftlint:disable:next type_body_length
 enum URLMedia {
     static let onDemandVideoHLS = Media(
@@ -183,6 +188,16 @@ enum URLMedia {
         imageUrl: kUnifiedStreamingImageUrl1,
         kind: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")
     )
+    static let unifiedStreamingOnDemandCPIX = Media(
+        title: "CPIX",
+        imageUrl: kUnifiedStreamingImageUrl2,
+        kind: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-multikey-cenc.ism/.m3u8")
+    )
+    static let unifiedStreamingOnDemandAES128 = Media(
+        title: "AES-128",
+        imageUrl: kUnifiedStreamingImageUrl2,
+        kind: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-aes.ism/.m3u8")
+    )
     static let unifiedStreamingOnDemandKeyRotation = Media(
         title: "Key Rotation",
         imageUrl: kUnifiedStreamingImageUrl2,
@@ -243,6 +258,36 @@ enum URLMedia {
         title: "fMP4, HEVC 4K",
         imageUrl: kUnifiedStreamingImageUrl1,
         kind: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-hevc.ism/.m3u8")
+    )
+    static let bitmovinArtOfMotionVOD = Media(
+        title: "Art of Motion",
+        subtitle: "VoD, Single audio track",
+        imageUrl: kBitmovinImageUrl,
+        kind: .url("https://cdn.bitmovin.com/content/internal/assets/MI201109210084/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
+    )
+    static let bitmovinSportsMashupVOD = Media(
+        title: "Sports Mashup",
+        subtitle: "Single audio track",
+        imageUrl: kBitmovinImageUrl,
+        kind: .url("https://cdn.bitmovin.com/content/internal/sports-mashup/sports-mashup-hls/m3u8/master.m3u8")
+    )
+    static let bitmovinBigBuckBunny_4K_HEVC = Media(
+        title: "Big Buck Bunny",
+        subtitle: "4K, HEVC",
+        imageUrl: kBitmovinImageUrl,
+        kind: .url("https://cdn.bitmovin.com/content/internal/encoding_test_dash_hls/4k/hls/4k_profile/master.m3u8")
+    )
+    static let bitmovinArtOfMotion_AES128 = Media(
+        title: "Art of Motion",
+        subtitle: "HLS, AES-128",
+        imageUrl: kBitmovinImageUrl,
+        kind: .url("https://cdn.bitmovin.com/content/internal/assets/art-of-motion_drm/m3u8s/11331.m3u8")
+    )
+    static let bitmovinArtOfMotion_MP4 = Media(
+        title: "Art of Motion",
+        subtitle: "AVC, MP4",
+        imageUrl: kBitmovinImageUrl,
+        kind: .url("https://cdn.bitmovin.com/content/internal/assets/MI201109210084/MI201109210084_mpeg-4_hd_high_1080p25_10mbits.mp4")
     )
     static let bbcTestCard_Audio_Video_AVC = Media(
         title: "Audio and AVC video",
@@ -412,6 +457,16 @@ enum URLMedia {
     static let mux_LowLatency = Media(
         title: "Low-Latency",
         kind: .url("https://stream.mux.com/v69RSHhFelSm4701snP22dYz2jICy4E4FUyk02rW4gxRM.m3u8")
+    )
+    static let hlsjs_AES128_ABR = Media(
+        title: "AES-128 encrypted",
+        subtitle: "ABR",
+        kind: .url("https://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8")
+    )
+    static let hlsjs_AES128_TS_AAC = Media(
+        title: "AES-128 encrypted",
+        subtitle: "TS main with AAC audio track",
+        kind: .url("https://playertest.longtailvideo.com/adaptive/aes-with-tracks/master.m3u8")
     )
     static let apple_360 = Media(
         title: "Apple 360°",

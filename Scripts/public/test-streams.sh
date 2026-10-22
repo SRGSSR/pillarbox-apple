@@ -6,6 +6,7 @@ GENERATED_DIR="/tmp/pillarbox"
 
 METADATA_DIR="$SCRIPT_DIR/../../metadata"
 SUBTITLES_DIR="$METADATA_DIR/subtitles"
+AES_DIR="$METADATA_DIR/aes128"
 
 function serve_test_streams {
     local dest_dir="$1"
@@ -13,6 +14,7 @@ function serve_test_streams {
     kill_test_streams "$dest_dir"
 
     mkdir -p "$dest_dir"
+    cp -R "$AES_DIR" "$dest_dir"
 
     local sources_dir="$dest_dir/sources"
     generate_sources "$sources_dir"
