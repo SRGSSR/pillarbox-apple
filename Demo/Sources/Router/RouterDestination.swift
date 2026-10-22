@@ -16,6 +16,8 @@ enum RouterDestination: Identifiable, Hashable {
 
     case contentList(configuration: ContentList.Configuration)
 
+    case signLanguageToggle
+
 #if os(iOS)
     case inlineSystemPlayer(media: Media)
     case simplePlayer(media: Media)
@@ -53,6 +55,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "playlist"
         case .contentList:
             return "contentList"
+        case .signLanguageToggle:
+            return "signLanguageToggle"
 #if os(iOS)
         case .inlineSystemPlayer:
             return "player"
@@ -114,6 +118,8 @@ enum RouterDestination: Identifiable, Hashable {
             PlaylistView(medias: medias)
         case let .contentList(configuration: configuration):
             ContentListView(configuration: configuration)
+        case .signLanguageToggle:
+            SignLanguageToggleView()
 #if os(iOS)
         case let .inlineSystemPlayer(media: media):
             InlineSystemPlayerView(media: media)
