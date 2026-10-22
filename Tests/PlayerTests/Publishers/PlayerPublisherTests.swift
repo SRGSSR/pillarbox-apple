@@ -163,7 +163,7 @@ final class PlayerPublisherTests: TestCase {
             values: [
                 .invalid,
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
-                .invalid
+                .invalid,
             ],
             from: Self.seekableTimeRangePublisher(for: player),
             to: beClose(within: 1)

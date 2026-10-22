@@ -33,7 +33,7 @@ final class AVPlayerPeriodicTimePublisherTests: TestCase {
                 .zero,
                 CMTimeMake(value: 1, timescale: 10),
                 CMTimeMake(value: 2, timescale: 10),
-                CMTimeMake(value: 3, timescale: 10)
+                CMTimeMake(value: 3, timescale: 10),
             ],
             from: Publishers.PeriodicTimePublisher(
                 for: player,

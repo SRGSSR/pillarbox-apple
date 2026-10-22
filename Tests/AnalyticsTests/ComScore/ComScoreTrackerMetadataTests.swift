@@ -17,7 +17,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in
                     ["meta_1": "custom-1", "meta_2": "42"]
-                }
+                },
             ]
         ))
 

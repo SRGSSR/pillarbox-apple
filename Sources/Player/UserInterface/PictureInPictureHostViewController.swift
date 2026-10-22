@@ -20,7 +20,7 @@ final class PictureInPictureHostViewController: UIViewController {
             playerViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playerViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerViewController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            playerViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            playerViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
         playerViewController.didMove(toParent: self)

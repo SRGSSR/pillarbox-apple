@@ -17,12 +17,12 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             .test(id: "2"),
             .test(id: "3"),
             .test(id: "4"),
-            .test(id: "5")
+            .test(id: "5"),
         ]
         let currentContents: [AssetContent] = [
             .test(id: "A"),
             .test(id: "B"),
-            .test(id: "C")
+            .test(id: "C"),
         ]
         let items = AVPlayerItem.playerItems(
             for: currentContents,
@@ -44,13 +44,13 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             .test(id: "2"),
             currentItemContent,
             .test(id: "4"),
-            .test(id: "5")
+            .test(id: "5"),
         ]
         let currentContents = [
             .test(id: "A"),
             currentItemContent,
             .test(id: "B"),
-            .test(id: "C")
+            .test(id: "C"),
         ]
         let currentItem = currentItemContent.playerItem(reload: false, configuration: .default, resumeState: nil)
         let items = AVPlayerItem.playerItems(
@@ -74,13 +74,13 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             .test(id: "2"),
             currentItemContent,
             .test(id: "4"),
-            .test(id: "5")
+            .test(id: "5"),
         ]
         let currentContents = [
             .test(id: "A"),
             .test(id: "B"),
             .test(id: "C"),
-            currentItemContent
+            currentItemContent,
         ]
         let currentItem = currentItemContent.playerItem(reload: false, configuration: .default, resumeState: nil)
         let items = AVPlayerItem.playerItems(
@@ -100,11 +100,11 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
     func testPlayerItemsWithUnknownCurrentItem() {
         let previousContents: [AssetContent] = [
             .test(id: "1"),
-            .test(id: "2")
+            .test(id: "2"),
         ]
         let currentContents: [AssetContent] = [
             .test(id: "A"),
-            .test(id: "B")
+            .test(id: "B"),
         ]
         let unknownItem = AssetContent.test(id: "1").playerItem(reload: false, configuration: .default, resumeState: nil)
         let items = AVPlayerItem.playerItems(
@@ -126,12 +126,12 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
         let previousContents = [
             currentItemContent,
             otherContent,
-            .test(id: "3")
+            .test(id: "3"),
         ]
         let currentContents = [
             .test(id: "3"),
             otherContent,
-            .test(id: "C")
+            .test(id: "C"),
         ]
         let currentItem = currentItemContent.playerItem(reload: false, configuration: .default, resumeState: nil)
         let items = AVPlayerItem.playerItems(
@@ -152,12 +152,12 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
         let previousContents: [AssetContent] = [
             .test(id: "1"),
             .test(id: "2"),
-            .test(id: "3")
+            .test(id: "3"),
         ]
         let currentContents = [
             currentItemContent,
             .test(id: "2"),
-            .test(id: "3")
+            .test(id: "3"),
         ]
         let currentItem = currentItemContent.playerItem(reload: false, configuration: .default, resumeState: nil)
         let items = AVPlayerItem.playerItems(
@@ -179,7 +179,7 @@ final class AVPlayerItemRepeatAllUpdateTests: TestCase {
             .test(id: "A"),
             .test(id: "B"),
             .test(id: "C"),
-            .test(id: "D")
+            .test(id: "D"),
         ]
         let items = AVPlayerItem.playerItems(
             for: currentContents,

@@ -38,7 +38,7 @@ struct PlaylistSelectionView: View {
         URLMedia.unauthorized,
         URLMedia.unknown,
         URLMedia.unavailableMp3,
-        URNMedia.unknown
+        URNMedia.unknown,
     ]
 
     let model: PlaylistViewModel

@@ -104,7 +104,7 @@ extension UserDefaults {
             DemoSettingKey.backwardSkipInterval.rawValue: 10,
             DemoSettingKey.forwardSkipInterval.rawValue: 10,
             DemoSettingKey.serverSetting.rawValue: ServerSetting.production.rawValue,
-            DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue
+            DemoSettingKey.qualitySetting.rawValue: QualitySetting.high.rawValue,
         ])
     }
 
@@ -140,7 +140,7 @@ extension UserDefaults {
         playbackHud?.register(defaults: [
             PlaybackHudSettingKey.fontSize.rawValue: PlaybackHudFontSize.default.rawValue,
             PlaybackHudSettingKey.xOffset.rawValue: Self.playbackHudDefaultHudXOffset,
-            PlaybackHudSettingKey.yOffset.rawValue: Self.playbackHudDefaultHudYOffset
+            PlaybackHudSettingKey.yOffset.rawValue: Self.playbackHudDefaultHudYOffset,
         ])
     }
 }

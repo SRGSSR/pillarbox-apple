@@ -21,7 +21,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
             [],
             [.anyMetadata],
             [.anyMetadata, .anyAsset],
-            []
+            [],
         ], from: player.metricEventsPublisher) {
             player.play()
         }
@@ -32,7 +32,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         expectAtLeastSimilarPublished(values: [
             [],
             [.anyMetadata],
-            [.anyMetadata, .anyFailure]
+            [.anyMetadata, .anyFailure],
         ], from: player.metricEventsPublisher)
     }
 
@@ -43,7 +43,7 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
                 [],
                 [.anyMetadata],
                 [.anyMetadata, .anyAsset],
-                [.anyMetadata, .anyAsset]
+                [.anyMetadata, .anyAsset],
             ],
             from: player.metricEventsPublisher
         ) {

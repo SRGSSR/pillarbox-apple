@@ -44,7 +44,7 @@ public struct Chapter: Codable, Equatable {
             items: [
                 .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
                 .init(identifier: .commonIdentifierTitle, value: title),
-                .init(identifier: .commonIdentifierArtwork, value: artworkData)
+                .init(identifier: .commonIdentifierArtwork, value: artworkData),
             ].compactMap(\.self),
             timeRange: timeRange
         )

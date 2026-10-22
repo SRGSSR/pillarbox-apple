@@ -105,7 +105,7 @@ final class DemoDownloader: ObservableObject {
         urlDownloader.playerItem(for: download, trackerAdapters: [
             DemoTracker.adapter { metadata in
                 DemoTracker.Metadata(title: metadata.title)
-            }
+            },
         ])
     }
 
@@ -114,7 +114,7 @@ final class DemoDownloader: ObservableObject {
         urnDownloader.playerItem(for: download, trackerAdapters: [
             DemoTracker.adapter { metadata in
                 DemoTracker.Metadata(title: metadata.title)
-            }
+            },
         ])
     }
 
@@ -123,7 +123,7 @@ final class DemoDownloader: ObservableObject {
         standardDownloader.playerItem(for: download, trackerAdapters: [
             DemoTracker.adapter { metadata in
                 DemoTracker.Metadata(title: metadata.title)
-            }
+            },
         ])
     }
 

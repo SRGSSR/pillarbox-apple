@@ -19,7 +19,7 @@ final class CommandersActEventTests: CommandersActTestCase {
             labels: [
                 "event-label": "event",
                 "common-label": "event",
-                "page_id": "event"
+                "page_id": "event",
             ]
         )
         let globals = CommandersActGlobals(
@@ -28,7 +28,7 @@ final class CommandersActEventTests: CommandersActTestCase {
             labels: [
                 "globals-label": "globals",
                 "common-label": "globals",
-                "page_id": "globals"
+                "page_id": "globals",
             ]
         )
 
@@ -38,7 +38,7 @@ final class CommandersActEventTests: CommandersActTestCase {
             "globals-label": "globals",
             "event-label": "event",
             "common-label": "event",
-            "page_id": "event-source"
+            "page_id": "event-source",
         ]))
     }
 

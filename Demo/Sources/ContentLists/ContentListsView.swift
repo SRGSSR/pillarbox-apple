@@ -90,7 +90,7 @@ struct ContentListsView: View {
             .init(list: .radioShows(radioChannel: .SRF3), vendor: .SRF),
             .init(list: .radioShows(radioChannel: .SRF4News), vendor: .SRF),
             .init(list: .radioShows(radioChannel: .SRFMusikwelle), vendor: .SRF),
-            .init(list: .radioShows(radioChannel: .SRFVirus), vendor: .SRF)
+            .init(list: .radioShows(radioChannel: .SRFVirus), vendor: .SRF),
         ])
     }
 
@@ -110,7 +110,7 @@ struct ContentListsView: View {
             .init(list: .radioLatestMedias(radioChannel: .SRF3), vendor: .SRF),
             .init(list: .radioLatestMedias(radioChannel: .SRF4News), vendor: .SRF),
             .init(list: .radioLatestMedias(radioChannel: .SRFMusikwelle), vendor: .SRF),
-            .init(list: .radioLatestMedias(radioChannel: .SRFVirus), vendor: .SRF)
+            .init(list: .radioLatestMedias(radioChannel: .SRFVirus), vendor: .SRF),
         ])
     }
 

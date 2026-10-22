@@ -242,7 +242,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             trackerAdapters: [
                 CommandersActTracker.adapter(
                     configuration: .init(page: .init(identifier: "page"))
-                ) { _ in .test }
+                ) { _ in .test },
             ]
         ))
         expectAtLeastHits(

@@ -81,7 +81,7 @@ private extension URLSession {
                 ComScoreRequestInfoKey.queryItems: queryItems.reduce(into: [String: String]()) { partialResult, item in
                     guard let value = item.value?.removingPercentEncoding else { return }
                     partialResult[item.name] = value
-                }
+                },
             ])
         }
         return swizzled_dataTask(with: request, completionHandler: completionHandler)

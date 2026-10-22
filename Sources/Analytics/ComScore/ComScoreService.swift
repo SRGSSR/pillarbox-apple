@@ -27,7 +27,7 @@ struct ComScoreService {
             comScoreConfiguration.preventAdSupportUsage = true
             comScoreConfiguration.addPersistentLabels([
                 "mp_brand": configuration.vendor.rawValue,
-                "mp_v": Self.applicationVersion
+                "mp_v": Self.applicationVersion,
             ])
             if let globals {
                 comScoreConfiguration.addStartLabels(globals.labels)

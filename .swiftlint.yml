@@ -198,5 +198,8 @@ missing_docs:
 nesting:
   type_level: 2
 
+trailing_comma:
+  mandatory_comma: true
+
 type_name:
   allowed_symbols: "`"

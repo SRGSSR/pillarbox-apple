@@ -41,7 +41,7 @@ final class ReplayChecksTests: TestCase {
     func testWithManyGoodItems() {
         let player = Player(items: [
             .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.shortOnDemand.url)
+            .simple(url: Stream.shortOnDemand.url),
         ])
         player.play()
         expect(player.canReplay()).toEventually(beTrue())
@@ -50,7 +50,7 @@ final class ReplayChecksTests: TestCase {
     func testWithManyBadItems() {
         let player = Player(items: [
             .simple(url: Stream.unavailable.url),
-            .simple(url: Stream.unavailable.url)
+            .simple(url: Stream.unavailable.url),
         ])
         player.play()
         expect(player.canReplay()).toEventually(beTrue())
@@ -59,7 +59,7 @@ final class ReplayChecksTests: TestCase {
     func testWithOneGoodItemAndOneBadItem() {
         let player = Player(items: [
             .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.unavailable.url)
+            .simple(url: Stream.unavailable.url),
         ])
         player.play()
         expect(player.canReplay()).toEventually(beTrue())
@@ -68,7 +68,7 @@ final class ReplayChecksTests: TestCase {
     func testWithOneLongGoodItemAndOneBadItem() {
         let player = Player(items: [
             .simple(url: Stream.onDemand.url),
-            .simple(url: Stream.unavailable.url)
+            .simple(url: Stream.unavailable.url),
         ])
         player.play()
         expect(player.canReplay()).toNever(beTrue(), until: .milliseconds(500))

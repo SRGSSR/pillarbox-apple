@@ -56,7 +56,7 @@ private extension Player {
     func enableSilentPlayback(withLanguage language: String) {
         let textStyleRule = AVTextStyleRule(textMarkupAttributes: [
             kCMTextMarkupAttribute_BackgroundColorARGB: [1, 1, 0, 0],
-            kCMTextMarkupAttribute_ItalicStyle: true
+            kCMTextMarkupAttribute_ItalicStyle: true,
         ])
         textStyleRules = [textStyleRule]
         setMediaSelectionPreference(.on(languages: language), for: .legible)

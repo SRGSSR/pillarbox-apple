@@ -15,7 +15,7 @@ final class CommandersActSourceTests: CommandersActTestCase {
             section: .init(identifier: "section", version: "s", position: 4),
             labels: [
                 "custom-label": "source",
-                "page_id": "source"
+                "page_id": "source",
             ]
         )
         expect(source.labels).to(equal([
@@ -25,7 +25,7 @@ final class CommandersActSourceTests: CommandersActTestCase {
             "section_id": "section",
             "section_version": "s",
             "item_position_in_section": "4",
-            "custom-label": "source"
+            "custom-label": "source",
         ]))
     }
 }

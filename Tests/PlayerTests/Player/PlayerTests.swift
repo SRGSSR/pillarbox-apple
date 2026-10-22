@@ -69,12 +69,12 @@ final class PlayerTests: TestCase {
         let player = Player(items: [
             .simple(url: Stream.onDemand.url),
             .simple(url: Stream.onDemand.url),
-            .simple(url: Stream.onDemand.url)
+            .simple(url: Stream.onDemand.url),
         ])
         let expectedResources: [Resource] = [
             .simple(url: Stream.onDemand.url),
             .simple(url: Stream.onDemand.url),
-            .loading()
+            .loading(),
         ]
         expect(player.items.map(\.content.resource)).toEventually(beSimilarTo(expectedResources))
         expect(player.items.map(\.content.resource)).toAlways(beSimilarTo(expectedResources), until: .seconds(1))

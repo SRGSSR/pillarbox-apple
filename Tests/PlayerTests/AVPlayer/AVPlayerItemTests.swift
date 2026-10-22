@@ -26,7 +26,7 @@ final class AVPlayerItemTests: TestCase {
         let items = [
             PlayerItem.simple(url: Stream.onDemand.url),
             PlayerItem.simple(url: Stream.shortOnDemand.url),
-            PlayerItem.simple(url: Stream.live.url)
+            PlayerItem.simple(url: Stream.live.url),
         ]
         expect {
             AVPlayerItem.playerItems(
@@ -44,7 +44,7 @@ final class AVPlayerItemTests: TestCase {
         .toEventually(equal([
             Stream.onDemand.url,
             Stream.shortOnDemand.url,
-            Stream.live.url
+            Stream.live.url,
         ]))
     }
 
@@ -52,7 +52,7 @@ final class AVPlayerItemTests: TestCase {
         let items = [
             PlayerItem.simple(url: Stream.onDemand.url),
             PlayerItem.simple(url: Stream.shortOnDemand.url),
-            PlayerItem.simple(url: Stream.live.url)
+            PlayerItem.simple(url: Stream.live.url),
         ]
         expect {
             AVPlayerItem.playerItems(
@@ -71,7 +71,7 @@ final class AVPlayerItemTests: TestCase {
             Stream.onDemand.url,
             Stream.onDemand.url,
             Stream.shortOnDemand.url,
-            Stream.live.url
+            Stream.live.url,
         ]))
     }
 
@@ -79,7 +79,7 @@ final class AVPlayerItemTests: TestCase {
         let items = [
             PlayerItem.simple(url: Stream.onDemand.url),
             PlayerItem.simple(url: Stream.shortOnDemand.url),
-            PlayerItem.simple(url: Stream.live.url)
+            PlayerItem.simple(url: Stream.live.url),
         ]
         expect {
             AVPlayerItem.playerItems(
@@ -98,7 +98,7 @@ final class AVPlayerItemTests: TestCase {
             Stream.onDemand.url,
             Stream.shortOnDemand.url,
             Stream.live.url,
-            Stream.onDemand.url
+            Stream.onDemand.url,
         ]))
     }
 }

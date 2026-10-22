@@ -62,11 +62,11 @@ private extension PlayerMetadata {
 
     static let overlappingBlockedTimeRanges = PlayerMetadata(timeRanges: [
         .init(kind: .blocked, start: kBlockedTimeRange.start, end: kBlockedTimeRange.end),
-        .init(kind: .blocked, start: kOverlappingBlockedTimeRange.start, end: kOverlappingBlockedTimeRange.end)
+        .init(kind: .blocked, start: kOverlappingBlockedTimeRange.start, end: kOverlappingBlockedTimeRange.end),
     ])
 
     static let nestedBlockedTimeRanges = PlayerMetadata(timeRanges: [
         .init(kind: .blocked, start: kBlockedTimeRange.start, end: kBlockedTimeRange.end),
-        .init(kind: .blocked, start: kNestedBlockedTimeRange.start, end: kNestedBlockedTimeRange.end)
+        .init(kind: .blocked, start: kNestedBlockedTimeRange.start, end: kNestedBlockedTimeRange.end),
     ])
 }

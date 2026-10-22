@@ -21,7 +21,7 @@ public struct CommandersActGlobals {
     ) {
         self.labels = labels.merging([
             "consent_services": consentServices.joined(separator: ","),
-            "profile_id": profileIdentifier
+            "profile_id": profileIdentifier,
         ].compactMapValues(\.self)) { _, new in new }
     }
 }

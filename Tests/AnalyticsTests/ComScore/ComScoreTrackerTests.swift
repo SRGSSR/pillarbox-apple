@@ -45,7 +45,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in
                     ["cs_ucfr": "tracker"]
-                }
+                },
             ]
         ))
         expectAtLeastHits(

@@ -22,7 +22,7 @@ final class PlayerItemTrackerSessionTests: TestCase {
                 trackerAdapters: [
                     PlayerItemTrackerMock.adapter(configuration: .init(sessionIdentifier: "A"), mapper: \.self),
                     PlayerItemTrackerMock.adapter(configuration: .init(), mapper: \.self),
-                    PlayerItemTrackerMock.adapter(configuration: .init(sessionIdentifier: "B"), mapper: \.self)
+                    PlayerItemTrackerMock.adapter(configuration: .init(sessionIdentifier: "B"), mapper: \.self),
                 ]
             )
         )

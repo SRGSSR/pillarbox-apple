@@ -16,10 +16,10 @@ struct PackageInfoPlugin: BuildToolPlugin {
                 executable: try context.tool(named: "PackageInfo").url,
                 arguments: [
                     context.package.directoryURL.path(),
-                    context.pluginWorkDirectoryURL.path()
+                    context.pluginWorkDirectoryURL.path(),
                 ],
                 outputFilesDirectory: context.pluginWorkDirectoryURL
-            )
+            ),
         ]
     }
 }

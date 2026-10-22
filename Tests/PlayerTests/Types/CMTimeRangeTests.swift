@@ -17,7 +17,7 @@ final class CMTimeRangeTests: TestCase {
     func testNoOverlap() {
         let timeRanges: [CMTimeRange] = [
             .init(start: .init(value: 1, timescale: 1), end: .init(value: 10, timescale: 1)),
-            .init(start: .init(value: 20, timescale: 1), end: .init(value: 30, timescale: 1))
+            .init(start: .init(value: 20, timescale: 1), end: .init(value: 30, timescale: 1)),
         ]
         expect(CMTimeRange.flatten(timeRanges)).to(equal(timeRanges))
     }
@@ -25,7 +25,7 @@ final class CMTimeRangeTests: TestCase {
     func testOverlap() {
         let timeRanges: [CMTimeRange] = [
             .init(start: .init(value: 1, timescale: 1), end: .init(value: 10, timescale: 1)),
-            .init(start: .init(value: 5, timescale: 1), end: .init(value: 30, timescale: 1))
+            .init(start: .init(value: 5, timescale: 1), end: .init(value: 30, timescale: 1)),
         ]
         expect(CMTimeRange.flatten(timeRanges)).to(equal(
             [
@@ -37,7 +37,7 @@ final class CMTimeRangeTests: TestCase {
     func testContained() {
         let timeRanges: [CMTimeRange] = [
             .init(start: .init(value: 1, timescale: 1), end: .init(value: 10, timescale: 1)),
-            .init(start: .init(value: 2, timescale: 1), end: .init(value: 8, timescale: 1))
+            .init(start: .init(value: 2, timescale: 1), end: .init(value: 8, timescale: 1)),
         ]
         expect(CMTimeRange.flatten(timeRanges)).to(equal(
             [

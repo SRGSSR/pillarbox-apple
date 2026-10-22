@@ -15,7 +15,7 @@ final class AVMediaSelectionGroupTests: TestCase {
             .init(displayName: "Option 1 (music)", languageCode: "fr", characteristics: [.describesMusicAndSoundForAccessibility]),
             .init(displayName: "Option 2", languageCode: "fr", characteristics: []),
             .init(displayName: "Option 3 (music)", languageCode: "en", characteristics: [.describesMusicAndSoundForAccessibility]),
-            .init(displayName: "Option 4", languageCode: "it", characteristics: [])
+            .init(displayName: "Option 4", languageCode: "it", characteristics: []),
         ]
 
         expect(
@@ -29,7 +29,7 @@ final class AVMediaSelectionGroupTests: TestCase {
         .to(equal([
             "Option 1 (music)",
             "Option 3 (music)",
-            "Option 4"
+            "Option 4",
         ]))
     }
 
@@ -38,7 +38,7 @@ final class AVMediaSelectionGroupTests: TestCase {
             .init(displayName: "Option 1 (music)", languageCode: "fr", characteristics: [.describesMusicAndSoundForAccessibility]),
             .init(displayName: "Option 2", languageCode: "fr", characteristics: []),
             .init(displayName: "Option 3 (music)", languageCode: "en", characteristics: [.describesMusicAndSoundForAccessibility]),
-            .init(displayName: "Option 4", languageCode: "it", characteristics: [])
+            .init(displayName: "Option 4", languageCode: "it", characteristics: []),
         ]
 
         expect(
@@ -52,7 +52,7 @@ final class AVMediaSelectionGroupTests: TestCase {
         .to(equal([
             "Option 2",
             "Option 3 (music)",
-            "Option 4"
+            "Option 4",
         ]))
     }
 }
