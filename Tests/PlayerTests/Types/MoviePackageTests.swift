@@ -92,12 +92,14 @@ final class MoviePackageTests: TestCase {
                     #EXTM3U
                     #EXT-X-SESSION-KEY:METHOD=AES-128,URI="http://localhost:8123/aes128/test.key"
                     #EXT-X-SESSION-KEY:METHOD=AES-128,URI="test.key"
+                    #EXT-X-SESSION-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AQEBAQEBAQEBAQEBAQEBAQ=="
                     """,
                 relativeTo: URL(string: "http://localhost:8123/aes128/")!
             )
         }.to(equal(
             """
             #EXTM3U
+            #EXT-X-SESSION-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AQEBAQEBAQEBAQEBAQEBAQ=="
             #EXT-X-SESSION-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AQEBAQEBAQEBAQEBAQEBAQ=="
             #EXT-X-SESSION-KEY:METHOD=AES-128,URI="data:application/octet-stream;base64,AQEBAQEBAQEBAQEBAQEBAQ=="
             """

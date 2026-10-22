@@ -49,7 +49,6 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.unifiedStreamingOnDemand_fMP4,
         URLMedia.unifiedStreamingOnDemandCPIX,
         URLMedia.unifiedStreamingOnDemandAES128,
-        URLMedia.unifiedStreamingOnDemandSampleAES,
         URLMedia.unifiedStreamingOnDemandKeyRotation,
         URLMedia.unifiedStreamingOnDemandAlternateAudio,
         URLMedia.unifiedStreamingOnDemandAudioOnly,
