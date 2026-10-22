@@ -108,7 +108,7 @@ final class AccumulatePublisherTests: XCTestCase {
         expectOnlyEqualPublished(
             values: [
                 [0],
-                [1]
+                [1],
             ],
             from: Publishers.AccumulateLatestMany(
                 Self.prependedPublisher(at: 1)
@@ -121,7 +121,7 @@ final class AccumulatePublisherTests: XCTestCase {
             values: [
                 [0, 0],
                 [1, 0],
-                [1, 2]
+                [1, 2],
             ],
             from: Publishers.AccumulateLatestMany(
                 Self.prependedPublisher(at: 1),
@@ -136,7 +136,7 @@ final class AccumulatePublisherTests: XCTestCase {
                 [0, 0, 0],
                 [1, 0, 0],
                 [1, 2, 0],
-                [1, 2, 3]
+                [1, 2, 3],
             ],
             from: Publishers.AccumulateLatestMany(
                 Self.prependedPublisher(at: 1),
@@ -153,7 +153,7 @@ final class AccumulatePublisherTests: XCTestCase {
                 [1, 0, 0, 0],
                 [1, 2, 0, 0],
                 [1, 2, 3, 0],
-                [1, 2, 3, 4]
+                [1, 2, 3, 4],
             ],
             from: Publishers.AccumulateLatestMany(
                 Self.prependedPublisher(at: 1),
@@ -172,7 +172,7 @@ final class AccumulatePublisherTests: XCTestCase {
                 [1, 2, 0, 0, 0],
                 [1, 2, 3, 0, 0],
                 [1, 2, 3, 4, 0],
-                [1, 2, 3, 4, 5]
+                [1, 2, 3, 4, 5],
             ],
             from: Publishers.AccumulateLatestMany(
                 Self.prependedPublisher(at: 1),

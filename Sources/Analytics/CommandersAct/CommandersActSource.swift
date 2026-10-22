@@ -21,7 +21,7 @@ public struct CommandersActSource {
             "section_position_in_page": page.position,
             "section_id": section?.identifier,
             "section_version": section?.version,
-            "item_position_in_section": section?.position
+            "item_position_in_section": section?.position,
         ].compactMapValues(\.self)) { _, new in new }
     }
 }

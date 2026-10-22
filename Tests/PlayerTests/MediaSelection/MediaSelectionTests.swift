@@ -54,7 +54,7 @@ final class MediaSelectionTests: TestCase {
     func testCharacteristicsAndOptionsUpdateWhenAdvancingToNextItem() {
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
-            .simple(url: Stream.onDemandWithoutOptions.url)
+            .simple(url: Stream.onDemandWithoutOptions.url),
         ])
         expect(player.mediaSelectionCharacteristics).toEventuallyNot(beEmpty())
         player.advanceToNextItem()
@@ -120,7 +120,7 @@ final class MediaSelectionTests: TestCase {
     func testAudibleOptionUpdateWhenAdvancingToNextItem() {
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
-            .simple(url: Stream.onDemandWithoutOptions.url)
+            .simple(url: Stream.onDemandWithoutOptions.url),
         ])
         expect(player.selectedMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
         player.advanceToNextItem()
@@ -132,7 +132,7 @@ final class MediaSelectionTests: TestCase {
 
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
-            .simple(url: Stream.onDemandWithoutOptions.url)
+            .simple(url: Stream.onDemandWithoutOptions.url),
         ])
         expect(player.selectedMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
         player.advanceToNextItem()
@@ -234,7 +234,7 @@ final class MediaSelectionTests: TestCase {
 
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
-            .simple(url: Stream.onDemandWithOptions.url)
+            .simple(url: Stream.onDemandWithOptions.url),
         ])
         expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
 
@@ -253,7 +253,7 @@ final class MediaSelectionTests: TestCase {
 
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
-            .simple(url: Stream.onDemandWithOptions.url)
+            .simple(url: Stream.onDemandWithOptions.url),
         ])
         expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 

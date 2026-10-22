@@ -162,7 +162,7 @@ final class ItemNavigationBackwardTests: TestCase {
             PlayerItem.simple(url: Stream.squareOnDemand.url),
             PlayerItem.simple(url: Stream.mediumOnDemand.url),
             PlayerItem.simple(url: Stream.onDemand.url),
-            PlayerItem.simple(url: Stream.shortOnDemand.url)
+            PlayerItem.simple(url: Stream.shortOnDemand.url),
         ])
         player.advanceToNextItem()
         player.returnToPreviousItem()

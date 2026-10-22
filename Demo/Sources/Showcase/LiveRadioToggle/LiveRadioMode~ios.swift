@@ -29,7 +29,7 @@ enum LiveRadioMode: Identifiable, CaseIterable, CustomLocalizedStringResourceCon
                 .init(media: .init(title: "SRF3", kind: .urn("urn:srf:audio:dd0fa1ba-4ff6-4e1a-ab74-d7e49057d96f"))),
                 .init(media: .init(title: "SRF Musikwelle", kind: .urn("urn:srf:audio:a9c5c070-8899-46c7-ac27-f04f1be902fd"))),
                 .init(media: .init(title: "SRF Virus", kind: .urn("urn:srf:audio:66815fe2-9008-4853-80a5-f9caaffdf3a9"))),
-                .init(media: .init(title: "RTS Couleur3", kind: .urn("urn:rts:audio:3262363")))
+                .init(media: .init(title: "RTS Couleur3", kind: .urn("urn:rts:audio:3262363"))),
             ]
         case .video:
             [
@@ -37,7 +37,7 @@ enum LiveRadioMode: Identifiable, CaseIterable, CustomLocalizedStringResourceCon
                 .init(media: .init(title: "SRF3", kind: .urn("urn:srf:video:972b2dbd-3958-43b7-8c15-e92f56c8d734"))),
                 .init(media: .init(title: "SRF Musikwelle", kind: .urn("urn:srf:video:973440d3-60a5-4ddf-ae83-2c77815a32a1"))),
                 .init(media: .init(title: "SRF Virus", kind: .urn("urn:srf:video:2a60b590-8a28-4540-bce8-fc4e52b3b5d8"))),
-                .init(media: .init(title: "RTS Couleur3", kind: .urn("urn:rts:video:8841634")))
+                .init(media: .init(title: "RTS Couleur3", kind: .urn("urn:rts:video:8841634"))),
             ]
         }
     }

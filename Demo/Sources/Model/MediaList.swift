@@ -45,7 +45,7 @@ enum MediaList {
             title: "La trend Chill Guy",
             subtitle: "Tataki 8",
             kind: .url("https://rts-vod-amd.akamaized.net/ww/15429899/9913ec6b-6386-3805-9c3a-12f32048e046/master.m3u8")
-        )
+        ),
     ]
 
     static let videoUrns = [
@@ -88,7 +88,7 @@ enum MediaList {
             title: "La trend Chill Guy",
             subtitle: "Tataki 8",
             kind: .urn("urn:rts:video:15429899")
-        )
+        ),
     ]
 
     static let longVideoUrns = [
@@ -131,37 +131,37 @@ enum MediaList {
             title: "J'ai pas l'air malade mais… (#8)",
             subtitle: "Playlist item 8",
             kind: .urn("urn:rts:video:13296253")
-        )
+        ),
     ]
 
     static let videosWithMediaSelections = [
         URLMedia.appleTvMorningShowSeason1Trailer,
-        URLMedia.appleTvMorningShowSeason2Trailer
+        URLMedia.appleTvMorningShowSeason2Trailer,
     ]
 
     static let audios = [
         Media(title: "Le Journal horaire 1", kind: .urn("urn:rts:audio:13605286")),
         Media(title: "Forum", kind: .urn("urn:rts:audio:13598743")),
         Media(title: "Vertigo", kind: .urn("urn:rts:audio:13579611")),
-        Media(title: "Le Journal horaire 2", kind: .urn("urn:rts:audio:13605216"))
+        Media(title: "Le Journal horaire 2", kind: .urn("urn:rts:audio:13605216")),
     ]
 
     static let videosWithOneFailingUrl = [
         URLMedia.shortOnDemandVideoHLS,
         URLMedia.unknown,
-        URLMedia.onDemandVideoHLS
+        URLMedia.onDemandVideoHLS,
     ]
 
     static let videosWithOneFailingMp3Url = [
         URLMedia.shortOnDemandVideoHLS,
         URLMedia.unavailableMp3,
-        URLMedia.onDemandVideoHLS
+        URLMedia.onDemandVideoHLS,
     ]
 
     static let videosWithOneFailingUrn = [
         URNMedia.onDemandVideo,
         URNMedia.unknown,
-        URNMedia.onDemandSquareVideo
+        URNMedia.onDemandSquareVideo,
     ]
 
     static let videosWithOnlyFailingUrns = [
@@ -170,13 +170,13 @@ enum MediaList {
 
     static let videosWithOnlyFailingUrls = [
         URLMedia.unknown,
-        URLMedia.unauthorized
+        URLMedia.unauthorized,
     ]
 
     static let videosWithFailingUrlsAndUrns = [
         URNMedia.unknown,
         URLMedia.unknown,
         URLMedia.unauthorized,
-        URLMedia.unavailableMp3
+        URLMedia.unavailableMp3,
     ]
 }

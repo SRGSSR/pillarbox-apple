@@ -33,7 +33,7 @@ public struct InfoViewTabsContent {
                 identifier: "pillarbox-tvos26-chapters"
             ) {
                 ChapterList(player: player)
-            }
+            },
         ].map { $0.viewController(reusing: viewControllers) }
     }
 }

@@ -48,7 +48,7 @@ final class MoviePackageManifestTests: TestCase {
         expect(package.masterPlaylistUrl).to(equal(URL(string: "https://streaming.example.com/master.m3u8")!))
         expect(package.streams).to(equalDiff([
             .init(path: "0-3619739-XULJM7HZFBVN2ACHDWIEYVEEPTTKCIJS", networkUrl: URL(string: "https://streaming.example.com/index-f1-v1.m3u8")!),
-            .init(path: "1-3619739-FB2GR2JF7M6G7X25UB4QFPVU3REWJD25", networkUrl: URL(string: "https://streaming.example.com/index-f1-a1.m3u8")!)
+            .init(path: "1-3619739-FB2GR2JF7M6G7X25UB4QFPVU3REWJD25", networkUrl: URL(string: "https://streaming.example.com/index-f1-a1.m3u8")!),
         ]))
     }
 

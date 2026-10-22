@@ -32,7 +32,7 @@ enum MetricHitListener {
         guard let sessionIdentifier else { return }
         NotificationCenter.default.post(name: .didSendMetricRequest, object: self, userInfo: [
             MetricRequestInfoKey.identifier: sessionIdentifier,
-            MetricRequestInfoKey.payload: payload
+            MetricRequestInfoKey.payload: payload,
         ])
     }
 }

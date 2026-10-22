@@ -79,7 +79,7 @@ enum URLMedia {
         kind: .url("https://rts-vod-amd.akamaized.net/ch/10004745/c0547249-1328-308d-a392-47e0b86968bb/master.m3u8"),
         timeRanges: [
             .init(kind: .credits(.opening), start: .zero, end: .init(value: 9, timescale: 1)),
-            .init(kind: .credits(.closing), start: .init(value: 163, timescale: 1), end: .init(value: 183_680, timescale: 1000))
+            .init(kind: .credits(.closing), start: .init(value: 163, timescale: 1), end: .init(value: 183_680, timescale: 1000)),
         ]
     )
     static let blockedTimeRangesVideo = Media(
@@ -90,7 +90,7 @@ enum URLMedia {
         timeRanges: [
             .init(kind: .blocked, start: .zero, end: .init(value: 300, timescale: 1)),
             .init(kind: .blocked, start: .init(value: 600, timescale: 1), end: .init(value: 900, timescale: 1)),
-            .init(kind: .blocked, start: .init(value: 700, timescale: 1), end: .init(value: 1200, timescale: 1))
+            .init(kind: .blocked, start: .init(value: 700, timescale: 1), end: .init(value: 1200, timescale: 1)),
         ]
     )
     static let appleBasic_4_3_HLS = Media(

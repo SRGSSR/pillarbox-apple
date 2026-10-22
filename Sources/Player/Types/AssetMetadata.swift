@@ -66,7 +66,7 @@ public struct AssetMetadata<CustomData> {
             .init(identifier: .iTunesMetadataTrackSubTitle, value: subtitle),
             .init(identifier: .commonIdentifierDescription, value: description),
             .init(identifier: .commonIdentifierArtwork, value: artworkData),
-            .init(identifier: .quickTimeUserDataCreationDate, value: episodeDescription)
+            .init(identifier: .quickTimeUserDataCreationDate, value: episodeDescription),
         ].compactMap(\.self)
     }
 

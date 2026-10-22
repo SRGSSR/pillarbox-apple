@@ -20,7 +20,7 @@ final class SlicePublisherTests: XCTestCase {
         let publisher = [
             Person(firstName: "Jane", lastName: "Doe"),
             Person(firstName: "Jane", lastName: "Smith"),
-            Person(firstName: "John", lastName: "Bridges")
+            Person(firstName: "John", lastName: "Bridges"),
         ].publisher.slice(at: \.firstName)
         expectAtLeastEqualPublished(values: ["Jane", "John"], from: publisher)
     }

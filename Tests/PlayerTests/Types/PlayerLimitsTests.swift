@@ -41,7 +41,7 @@ final class PlayerLimitsTests: TestCase {
     func testAppliedDefaultValues() {
         let player = Player(items: [
             .simple(url: Stream.onDemand.url),
-            .simple(url: Stream.mediumOnDemand.url)
+            .simple(url: Stream.mediumOnDemand.url),
         ])
         player.queuePlayer.items().forEach { item in
             expect(item.preferredPeakBitRate).to(equal(0))
@@ -54,7 +54,7 @@ final class PlayerLimitsTests: TestCase {
     func testAppliedInitialValues() {
         let player = Player(items: [
             .simple(url: Stream.onDemand.url),
-            .simple(url: Stream.mediumOnDemand.url)
+            .simple(url: Stream.mediumOnDemand.url),
         ])
         player.limits = Self.limits
         player.queuePlayer.items().forEach { item in

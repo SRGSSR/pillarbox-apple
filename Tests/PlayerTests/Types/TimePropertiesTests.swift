@@ -21,7 +21,7 @@ final class TimePropertiesTests: TestCase {
     func testTimeRanges() {
         expect(TimeProperties.timeRange(from: [
             NSValue(timeRange: .init(start: .init(value: 1, timescale: 1), duration: .init(value: 3, timescale: 1))),
-            NSValue(timeRange: .init(start: .init(value: 10, timescale: 1), duration: .init(value: 5, timescale: 1)))
+            NSValue(timeRange: .init(start: .init(value: 10, timescale: 1), duration: .init(value: 5, timescale: 1))),
         ])).to(equal(
             .init(start: .init(value: 1, timescale: 1), duration: .init(value: 14, timescale: 1))
         ))

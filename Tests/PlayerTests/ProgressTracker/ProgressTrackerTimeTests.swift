@@ -58,7 +58,7 @@ final class ProgressTrackerTimeTests: TestCase {
                 CMTime(value: 1, timescale: 2),
                 CMTime(value: 3, timescale: 4),
                 CMTime(value: 1, timescale: 1),
-                .invalid
+                .invalid,
             ],
             from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),
@@ -80,7 +80,7 @@ final class ProgressTrackerTimeTests: TestCase {
                 CMTime(value: 17, timescale: 1),
                 CMTime(value: 17, timescale: 1),
                 CMTime(value: 17, timescale: 1),
-                CMTime(value: 17, timescale: 1)
+                CMTime(value: 17, timescale: 1),
             ],
             from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),

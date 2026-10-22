@@ -46,7 +46,7 @@ public extension PlayerItem {
                         metadataHeaders: metadata.mediaCompositionHeaders,
                         assetUrl: metadata.resource?.url
                     )
-                }
+                },
             ] + trackerAdapters
         )
     }

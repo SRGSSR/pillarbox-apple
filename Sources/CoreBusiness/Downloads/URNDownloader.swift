@@ -82,7 +82,7 @@ public final class URNDownloader: ObservableObject {
     ) -> PlayerItem? {
         downloader.playerItem(for: download, trackerAdapters: [
             ComScoreTracker.adapter(mapper: \.customData.analyticsData),
-            CommandersActTracker.adapter(configuration: commandersActSource, mapper: \.customData.analyticsMetadata)
+            CommandersActTracker.adapter(configuration: commandersActSource, mapper: \.customData.analyticsMetadata),
         ] + trackerAdapters)
     }
 

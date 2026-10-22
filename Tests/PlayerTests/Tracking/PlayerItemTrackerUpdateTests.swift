@@ -25,7 +25,7 @@ final class PlayerItemTrackerUpdateTests: TestCase {
                 .updatedMetadata(.init(title: "title")),
                 .enabled,
                 .updatedProperties,
-                .disabled
+                .disabled,
             ],
             from: publisher.removeDuplicates()
         ) {
@@ -53,7 +53,7 @@ final class PlayerItemTrackerUpdateTests: TestCase {
                 .updatedProperties,
                 .updatedMetadata(.init(title: "title2")),
                 .updatedProperties,
-                .disabled
+                .disabled,
             ],
             from: publisher.removeDuplicates()
         ) {

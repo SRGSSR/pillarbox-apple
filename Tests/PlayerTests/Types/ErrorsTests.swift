@@ -34,7 +34,7 @@ final class ErrorsTests: XCTestCase {
         let error = NSError(domain: "domain", code: 1012, userInfo: [
             NSLocalizedDescriptionKey: "Error description",
             NSLocalizedFailureReasonErrorKey: "Failure reason",
-            NSUnderlyingErrorKey: NSError(domain: "inner.domain", code: 2024)
+            NSUnderlyingErrorKey: NSError(domain: "inner.domain", code: 2024),
         ])
         expect(NSError.error(from: error)).to(equal(error))
     }

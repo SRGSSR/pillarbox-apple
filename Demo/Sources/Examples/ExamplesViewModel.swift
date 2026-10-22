@@ -18,13 +18,13 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.dvrVideoHLS,
         URLMedia.liveTimestampVideoHLS,
         URLMedia.onDemandAudioMP3,
-        URLMedia.liveAudioMP3
+        URLMedia.liveAudioMP3,
     ]
 
     let urnMedias = [
         URNMedia.liveVideo,
         URNMedia.dvrVideo,
-        URNMedia.dvrAudio
+        URNMedia.dvrAudio,
     ]
 
     let appleMedias = [
@@ -38,7 +38,7 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.appleTvMorningShowSeason1Trailer,
         URLMedia.appleTvMorningShowSeason2Trailer,
         URLMedia.appleTvTrailerBasicStreamAV1,
-        URLMedia.appleTvTrailerInterstitial
+        URLMedia.appleTvTrailerInterstitial,
     ]
 
     let thirdPartyMedias = [
@@ -60,7 +60,7 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.unifiedStreamingLiveAudio,
         URLMedia.unifiedStreamingPureLiveScte35,
         URLMedia.unifiedStreamingOnDemand_fMP4_Clear,
-        URLMedia.unifiedStreamingOnDemand_fMP4_HEVC_4K
+        URLMedia.unifiedStreamingOnDemand_fMP4_HEVC_4K,
     ]
 
     let bitmovinMedias = [
@@ -68,7 +68,7 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.bitmovinSportsMashupVOD,
         URLMedia.bitmovinBigBuckBunny_4K_HEVC,
         URLMedia.bitmovinArtOfMotion_AES128,
-        URLMedia.bitmovinArtOfMotion_MP4
+        URLMedia.bitmovinArtOfMotion_MP4,
     ]
 
     let bbcTestCardMedias = [
@@ -104,7 +104,7 @@ final class ExamplesViewModel: ObservableObject {
         URLMedia.bbcTestCard_Single_1920x1080p50_HEVC_AAC_LC,
         URLMedia.bbcTestCard_NoTLS_HTTP_TVs,
         URLMedia.bbcTestCard_NoTLS_Relative_TVs,
-        URLMedia.bbcTestCard_NoTLS_Relative_Mobile
+        URLMedia.bbcTestCard_NoTLS_Relative_Mobile,
     ]
 
     let muxMedias = [
@@ -113,18 +113,18 @@ final class ExamplesViewModel: ObservableObject {
 
     let hlsjsMedias = [
         URLMedia.hlsjs_AES128_ABR,
-        URLMedia.hlsjs_AES128_TS_AAC
+        URLMedia.hlsjs_AES128_TS_AAC,
     ]
 
     let aspectRatioMedias = [
         URNMedia.onDemandHorizontalVideo,
         URNMedia.onDemandSquareVideo,
-        URNMedia.onDemandVerticalVideo
+        URNMedia.onDemandVerticalVideo,
     ]
 
     let threeSixtyMedias = [
         URNMedia.gothard_360,
-        URLMedia.apple_360
+        URLMedia.apple_360,
     ]
 
     let unbufferedMedias = [
@@ -135,13 +135,13 @@ final class ExamplesViewModel: ObservableObject {
         URNMedia.unknown,
         URLMedia.unknown,
         URLMedia.unauthorized,
-        URLMedia.unavailableMp3
+        URLMedia.unavailableMp3,
     ]
 
     let timeRangesMedias = [
         URLMedia.timeRangesVideo,
         URLMedia.blockedTimeRangesVideo,
-        URNMedia.blockedTimeRangesVideo
+        URNMedia.blockedTimeRangesVideo,
     ]
 
     @Published private(set) var protectedMedias = [Media]()

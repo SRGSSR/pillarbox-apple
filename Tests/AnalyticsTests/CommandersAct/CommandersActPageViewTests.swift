@@ -19,7 +19,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             labels: [
                 "pageview-label": "pageview",
                 "common-label": "pageview",
-                "page_id": "pageview"
+                "page_id": "pageview",
             ]
         )
         let globals = CommandersActGlobals(
@@ -28,7 +28,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             labels: [
                 "globals-label": "globals",
                 "common-label": "globals",
-                "page_id": "globals"
+                "page_id": "globals",
             ]
         )
 
@@ -38,7 +38,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             "globals-label": "globals",
             "pageview-label": "pageview",
             "common-label": "pageview",
-            "page_id": "pageview-source"
+            "page_id": "pageview-source",
         ]))
     }
 
@@ -80,7 +80,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                         "level_5",
                         "level_6",
                         "level_7",
-                        "level_8"
+                        "level_8",
                     ],
                     source: .init(page: .init(identifier: "page"))
                 )
@@ -129,7 +129,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                         " ",
                         " ",
                         " ",
-                        " "
+                        " ",
                     ]
                 )
             )

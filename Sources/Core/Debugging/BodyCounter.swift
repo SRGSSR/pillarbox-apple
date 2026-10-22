@@ -61,7 +61,7 @@ private class _BodyCounterView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: topAnchor),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor)
+            label.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
 }

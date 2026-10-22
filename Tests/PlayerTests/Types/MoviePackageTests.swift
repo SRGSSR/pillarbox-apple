@@ -64,7 +64,7 @@ final class MoviePackageTests: TestCase {
                 "http://localhost/serve.key?session=1",
                 "https://localhost/serve.key?session=4",
                 "serve.key?session=6",
-                "//localhost/serve.key?session=7"
+                "//localhost/serve.key?session=7",
             ])
         )
     }

@@ -47,7 +47,7 @@ final class AVPlayerBoundaryTimePublisherTests: TestCase {
                 for: player,
                 times: [
                     CMTimeMake(value: 1, timescale: 2),
-                    CMTimeMake(value: 2, timescale: 2)
+                    CMTimeMake(value: 2, timescale: 2),
                 ]
             )
             .map { "tick" }

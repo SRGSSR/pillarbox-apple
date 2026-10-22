@@ -74,7 +74,7 @@ public enum Server: Codable {
         components.queryItems = [
             URLQueryItem(name: "onlyChapters", value: "true"),
             URLQueryItem(name: "vector", value: Self.vector),
-            URLQueryItem(name: "playerPlatform", value: "apple")
+            URLQueryItem(name: "playerPlatform", value: "apple"),
         ]
         var request = URLRequest(url: components.url ?? url)
         request.allHTTPHeaderFields = httpHeaders
@@ -90,7 +90,7 @@ public enum Server: Codable {
             components.queryItems = [
                 URLQueryItem(name: "imageUrl", value: url.absoluteString),
                 URLQueryItem(name: "format", value: "jpg"),
-                URLQueryItem(name: "width", value: String(width.rawValue))
+                URLQueryItem(name: "width", value: String(width.rawValue)),
             ]
             return components.url ?? url
         case .playPlusProduction, .playPlusIntegration, .playPlusDevelopment:
@@ -99,7 +99,7 @@ public enum Server: Codable {
             }
             components.queryItems = [
                 URLQueryItem(name: "src", value: url.absoluteString),
-                URLQueryItem(name: "imwidth", value: String(width.rawValue))
+                URLQueryItem(name: "imwidth", value: String(width.rawValue)),
             ]
             return components.url ?? url
         }

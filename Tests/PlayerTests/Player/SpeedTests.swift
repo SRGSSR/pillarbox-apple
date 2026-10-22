@@ -195,7 +195,7 @@ final class SpeedTests: TestCase {
         expectAtLeastEqualPublished(values: [
             .value(1),
             .value(2),
-            .value(2)
+            .value(2),
         ], from: player.desiredPlaybackSpeedUpdatePublisher()) {
             player.playbackSpeed = 1
             player.playbackSpeed = 2

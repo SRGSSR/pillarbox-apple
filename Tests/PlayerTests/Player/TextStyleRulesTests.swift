@@ -14,8 +14,8 @@ final class TextStyleRulesTests: TestCase {
     private static let textStyleRules = [
         AVTextStyleRule(textMarkupAttributes: [
             kCMTextMarkupAttribute_ForegroundColorARGB: [1, 1, 0, 0],
-            kCMTextMarkupAttribute_ItalicStyle: true
-        ])
+            kCMTextMarkupAttribute_ItalicStyle: true,
+        ]),
     ]
 
     func testDefaultWithEmptyPlayer() {
@@ -39,7 +39,7 @@ final class TextStyleRulesTests: TestCase {
     func testStylePreservedBetweenItems() {
         let player = Player(items: [
             .simple(url: Stream.shortOnDemand.url),
-            .simple(url: Stream.onDemand.url)
+            .simple(url: Stream.onDemand.url),
         ])
         player.textStyleRules = Self.textStyleRules
         player.advanceToNextItem()

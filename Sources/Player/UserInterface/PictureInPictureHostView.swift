@@ -39,7 +39,7 @@ final class PictureInPictureHostView: UIView {
             leadingAnchor.constraint(equalTo: videoLayerView.leadingAnchor),
             trailingAnchor.constraint(equalTo: videoLayerView.trailingAnchor),
             topAnchor.constraint(equalTo: videoLayerView.topAnchor),
-            bottomAnchor.constraint(equalTo: videoLayerView.bottomAnchor)
+            bottomAnchor.constraint(equalTo: videoLayerView.bottomAnchor),
         ])
         self.videoLayerView = videoLayerView
     }

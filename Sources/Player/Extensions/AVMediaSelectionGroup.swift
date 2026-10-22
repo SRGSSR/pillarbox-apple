@@ -72,7 +72,7 @@ extension AVMediaSelectionGroup {
         else {
             return preferredMediaSelectionOptions(from: unforcedOptions, withoutMediaCharacteristics: [
                 .describesMusicAndSoundForAccessibility,
-                .transcribesSpokenDialogForAccessibility
+                .transcribesSpokenDialogForAccessibility,
             ])
         }
     }

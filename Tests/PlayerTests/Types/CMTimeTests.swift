@@ -97,7 +97,7 @@ final class CMTimeTests: TestCase {
         let time = CMTime(value: 5, timescale: 1)
         expect(time.after(timeRanges: [
             .init(start: CMTime(value: 2, timescale: 1), end: CMTime(value: 6, timescale: 1)),
-            .init(start: CMTime(value: 4, timescale: 1), end: CMTime(value: 10, timescale: 1))
+            .init(start: CMTime(value: 4, timescale: 1), end: CMTime(value: 10, timescale: 1)),
         ])).to(equal(CMTime(value: 10, timescale: 1)))
     }
 }

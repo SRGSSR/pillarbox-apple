@@ -65,7 +65,7 @@ struct Media: Hashable {
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
-                    }
+                    },
                 ]
             )
         case let .urn(urn, serverSetting: serverSetting):
@@ -75,7 +75,7 @@ struct Media: Hashable {
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.mainChapter.title)
-                    }
+                    },
                 ]
             )
         case let .demo(identifier, isProduction: isProduction):
@@ -85,7 +85,7 @@ struct Media: Hashable {
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.title)
-                    }
+                    },
                 ]
             )
         case let .item(item):

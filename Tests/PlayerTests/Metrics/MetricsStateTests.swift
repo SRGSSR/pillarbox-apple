@@ -38,7 +38,7 @@ final class MetricsStateTests: TestCase {
                 segmentsDownloadedDuration: 18,
                 downloadOverdue: 19,
                 switchBitrate: 20
-            )
+            ),
         ], at: .init(value: 12, timescale: 1))
 
         let metrics = state.metrics(from: .empty)

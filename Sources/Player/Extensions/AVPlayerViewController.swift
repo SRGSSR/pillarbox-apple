@@ -81,7 +81,7 @@ extension AVPlayerViewController {
                 hostView.topAnchor.constraint(equalTo: contentOverlayView.topAnchor),
                 hostView.bottomAnchor.constraint(equalTo: contentOverlayView.bottomAnchor),
                 hostView.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor),
-                hostView.trailingAnchor.constraint(equalTo: contentOverlayView.trailingAnchor)
+                hostView.trailingAnchor.constraint(equalTo: contentOverlayView.trailingAnchor),
             ])
         }
     }

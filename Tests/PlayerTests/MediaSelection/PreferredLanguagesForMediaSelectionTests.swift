@@ -76,7 +76,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
     func testPreferredAudibleLanguageIsPreservedBetweenItems() {
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
-            .simple(url: Stream.onDemandWithOptions.url)
+            .simple(url: Stream.onDemandWithOptions.url),
         ])
         player.setMediaSelectionPreference(.on(languages: "fr"), for: .audible)
         expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
@@ -88,7 +88,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
     func testPreferredLegibleLanguageIsPreservedBetweenItems() {
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
-            .simple(url: Stream.onDemandWithOptions.url)
+            .simple(url: Stream.onDemandWithOptions.url),
         ])
         player.setMediaSelectionPreference(.on(languages: "fr"), for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
@@ -100,7 +100,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
     func testPreferredLegibleLanguageAcrossItems() {
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
-            .simple(url: Stream.onDemandWithManyLegibleAndAudibleOptions.url)
+            .simple(url: Stream.onDemandWithManyLegibleAndAudibleOptions.url),
         ])
 
         player.setMediaSelectionPreference(.on(languages: "en"), for: .legible)

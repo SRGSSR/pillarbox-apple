@@ -65,7 +65,7 @@ final class QueueTests: TestCase {
 
         expect(player.urls).toEventually(equal([
             Stream.shortOnDemand.url,
-            Stream.onDemand.url
+            Stream.onDemand.url,
         ]))
         expect(player.currentItem).to(equal(item1))
 

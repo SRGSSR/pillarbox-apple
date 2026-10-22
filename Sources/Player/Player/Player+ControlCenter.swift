@@ -40,7 +40,7 @@ private extension Player {
             nextTrackRegistration(),
             changePlaybackPositionRegistration(),
             skipBackwardRegistration(),
-            skipForwardRegistration()
+            skipForwardRegistration(),
         ]
     }
 
