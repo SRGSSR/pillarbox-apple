@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-import PillarboxPlayer
 import SwiftUI
 
 struct StoriesView: View {

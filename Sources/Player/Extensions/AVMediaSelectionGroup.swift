@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import MediaAccessibility
 
 extension AVMediaSelectionGroup {
     /// Returns media selection options where options with the provided characteristics are preferred.

@@ -7,9 +7,6 @@
 #if DOWNLOADS
 
 @_spi(DownloaderPrivate)
-import PillarboxCoreBusiness
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 import SwiftUI
