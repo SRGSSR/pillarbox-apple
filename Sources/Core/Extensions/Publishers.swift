@@ -91,7 +91,7 @@ public extension Publishers {
     /// Makes the upstream publisher publish each time another signal publisher emits some value.
     ///
     /// - Parameters:
-    ///   - signal: The signal to listen to. If `nil` the upstream publisher will never publish.
+    ///   - signal: The signal to listen to. If `nil`, the upstream publisher will never publish.
     ///   - publisher: The publisher to execute.
     /// - Returns: The resulting publisher.
     static func Publish<S, P>(
@@ -110,7 +110,7 @@ public extension Publishers {
     /// Makes the upstream publisher execute once and repeat each time another signal publisher emits some value.
     ///
     /// - Parameters:
-    ///   - signal: The signal to listen to. If `nil` the upstream publisher executes only once.
+    ///   - signal: The signal to listen to. If `nil`, the upstream publisher executes only once.
     ///   - publisher: The publisher to execute.
     /// - Returns: The resulting publisher.
     static func PublishAndRepeat<S, P>(
@@ -137,11 +137,11 @@ public extension NotificationCenter {
     ///
     /// - Parameters:
     ///   - name: The name of the notification to publish.
-    ///   - object: The object posting the named notification. If `nil` the publisher emits elements for any object
-    ///   producing a notification with the given name.
+    ///   - object: The object posting the named notification. If `nil`, the publisher emits elements for any object
+    ///     producing a notification with the given name.
     /// - Returns: A publisher that emits events when broadcasting notifications.
     ///
-    /// Unlike usual notification publishers this publisher does not retain the observed object, preventing reference
+    /// Unlike usual notification publishers, this publisher does not retain the observed object, preventing reference
     /// cycles.
     func weakPublisher<T>(for name: Notification.Name, object: T?) -> AnyPublisher<Notification, Never> where T: AnyObject {
         if let object {

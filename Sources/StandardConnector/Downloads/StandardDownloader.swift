@@ -18,7 +18,7 @@ import PillarboxPlayer
 public final class StandardDownloader<Provider>: ObservableObject where Provider: StandardAssetDownloadStoreProvider {
     private let downloader: Downloader<StandardAssetDownloadStore<Provider>>
 
-    /// Returns existing downloads.
+    /// The existing downloads.
     @Published public private(set) var downloads: [Download] = []
 
     /// Creates a downloader for Pillarbox-standard content with custom data.
@@ -36,24 +36,21 @@ public final class StandardDownloader<Provider>: ObservableObject where Provider
             .assign(to: &$downloads)
     }
 
-    /// Adds a download for the given URL and metadata.
+    /// Adds a download for the given input.
     ///
     /// - Parameters:
-    ///   - url: The URL of the content to download.
-    ///   - metadata: The metadata associated with the content.
+    ///   - input: The input that identifies the content to download.
     ///   - configuration: The download configuration.
-    /// - Returns: A download associated with the given URL. If a download already exists for the URL, the existing
+    /// - Returns: A download associated with the given input. If a download already exists for the input, the existing
     ///   download is returned instead.
     @discardableResult
     public func addDownload(for input: Provider.Input, configuration: DownloadConfiguration = .default) -> Download {
         downloader.addDownload(for: input, configuration: configuration)
     }
 
-    /// Returns the download matching the given URL.
+    /// Returns the download matching the given input.
     ///
-    /// - Parameters:
-    ///   - url: The URL of the content.
-    ///   - metadata: The metadata associated with the content.
+    /// - Parameter input: The input that identifies the content.
     public func download(matching input: Provider.Input) -> Download? {
         downloader.download(matching: input)
     }

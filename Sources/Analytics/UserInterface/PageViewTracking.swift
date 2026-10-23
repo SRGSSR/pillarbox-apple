@@ -11,12 +11,12 @@ import UIKit
 /// View controllers whose usage must be measured should conform to the `PageViewTracking` protocol, which describes
 /// the associated measurement data.
 ///
-/// For more information please read the <doc:page-views-article> article.
+/// For more information, please read the <doc:page-views-article> article.
 public protocol PageViewTracking {
     /// The Commanders Act page view data.
     var commandersActPageView: CommandersActPageView { get }
 
-    /// A Boolean to enable or disable automatic tracking. Defaults to `true`.
+    /// A Boolean describing whether automatic tracking is enabled. Defaults to `true`.
     var isTrackedAutomatically: Bool { get }
 }
 
@@ -76,10 +76,11 @@ extension UIViewController {
         }
     }
 
-    /// Perform manual page view tracking for the receiver, using data declared by `PageViewTracking` conformance.
+    /// Performs manual page view tracking for the receiver, using data declared by ``PageViewTracking`` conformance.
     ///
-    /// This method does nothing if the receiver does not conform to the `PageViewTracking` protocol and is mostly
-    /// useful when automatic tracking has been disabled by setting `isTrackedAutomatically` to `false`.
+    /// This method does nothing if the receiver does not conform to the ``PageViewTracking`` protocol and is mostly
+    /// useful when automatic tracking has been disabled by setting ``PageViewTracking/isTrackedAutomatically-80h6v``
+    /// to `false`.
     public func trackPageView() {
         guard let trackedViewController = self as? PageViewTracking else { return }
         Analytics.shared.trackPageView(commandersAct: trackedViewController.commandersActPageView)

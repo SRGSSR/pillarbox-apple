@@ -26,7 +26,7 @@ public extension SCNQuaternion {
 ///   - wy: The angle around the y-axis.
 /// - Returns: The rotated quaternion.
 ///
-/// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.)
+/// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/)
 /// for a short introduction to quaternions. The topic is covered more extensively in the [3D Math Primer book](https://gamemath.com/book/orient.html).
 public func SCNQuaternionRotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: Float) -> SCNQuaternion {
     let simdQuaternion = simd_quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w)
@@ -46,7 +46,7 @@ public func SCNQuaternionRotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: 
 ///   - z: The axis z-component.
 /// - Returns: The quaternion.
 ///
-/// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.)
+/// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/)
 /// for a short introduction to quaternions. The topic is covered more extensively in the [3D Math Primer book](https://gamemath.com/book/orient.html).
 public func SCNQuaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> SCNQuaternion {
     let simdQuaternion = simd_quaternion(radians, simd_make_float3(x, y, z))
@@ -61,11 +61,11 @@ public func SCNQuaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Flo
 /// - Parameter attitude: The current device orientation in space, as returned by a `CMMotionManager` instance.
 /// - Returns: The quaternion.
 ///
-/// Unlike [`CMAttitude/quaternion`](https://developer.apple.com/documentation/coremotion/cmattitude/1616025-quaternion)
-/// this property takes the current user interface orientation into account. The method must therefore be called again
+/// Unlike [`CMAttitude/quaternion`](https://developer.apple.com/documentation/coremotion/cmattitude/1616025-quaternion),
+/// this function takes the current user interface orientation into account. The function must therefore be called again
 /// should the user interface orientation change.
 ///
-/// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.)
+/// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/)
 /// for a short introduction to quaternions. The topic is covered more extensively in the [3D Math Primer book](https://gamemath.com/book/orient.html).
 public func SCNQuaternionForAttitude(_ attitude: CMAttitude) -> SCNQuaternion {
     // Based on: https://gist.github.com/travisnewby/96ee1ac2bc2002f1d480. Also see https://stackoverflow.com/a/28784841/760435.

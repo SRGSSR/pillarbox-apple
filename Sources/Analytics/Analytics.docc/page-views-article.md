@@ -91,7 +91,7 @@ With ``PageViewTracking/isTrackedAutomatically-80h6v`` set to `true`, page views
 
 If automatic tracking is not suitable, you can manually trigger page views using ``Analytics/trackPageView(commandersAct:)``.
 
-In general this is best avoided, though, since you are then responsible of correctly tracking appearing and revealed views, as well as views displayed when the app returns from background.
+In general, this is best avoided, though, since you are then responsible for correctly tracking appearing and revealed views, as well as views displayed when the app returns from the background.
 
 ### Support automatic page view tracking in custom UIKit containers
 

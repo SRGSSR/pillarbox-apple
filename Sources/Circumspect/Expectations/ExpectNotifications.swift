@@ -7,8 +7,8 @@
 import Combine
 import XCTest
 
-/// Remark: Nimble provides support for notifications but its collector is not thread-safe and might crash during
-///         collection.
+/// > Note: Nimble provides support for notifications, but its collector is not thread-safe and might crash during
+/// collection.
 public extension XCTestCase {
     /// Waits until a list of notifications has been received.
     func expectAtLeastReceived(
@@ -34,7 +34,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Collects notifications during some time interval and match them against an expected result.
+    /// Collects notifications during some time interval and matches them against an expected result.
     func expectReceived(
         notifications: [Notification],
         for names: Set<Notification.Name>,

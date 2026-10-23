@@ -25,7 +25,7 @@ public extension Player {
             .eraseToAnyPublisher()
     }
 
-    /// The current player metrics, if available.
+    /// Returns the current player metrics, if available.
     ///
     /// Each call to this function might return different results reflecting the most recent metrics available. The
     /// included ``Metrics/increment`` collates data from the entire playback session and is therefore always equal

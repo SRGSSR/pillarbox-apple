@@ -11,10 +11,10 @@ protocol MediaSelector {
     /// Creates the selector.
     init(provider: MediaSelectorProvider)
 
-    /// The available options.
+    /// Returns the available options.
     func mediaSelectionOptions() -> [MediaSelectionOption]
 
-    /// The selected media option matching the provided selection.
+    /// Returns the selected media option matching the provided selection.
     ///
     /// - Parameters:
     ///   - selection: The current selection information.
@@ -32,7 +32,7 @@ protocol MediaSelector {
     ///   - selectionCriteria: The current selection criteria.
     /// - Returns: Updated media selection to apply on return. Return `nil` if no update is required.
     ///
-    /// If selection should alter media selection criteria your implementation should update the received value
+    /// If selection should alter media selection criteria, your implementation should update the received value
     /// and return the corresponding result.
     func select(
         mediaOption: MediaSelectionOption,

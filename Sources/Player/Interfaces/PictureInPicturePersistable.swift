@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A protocol to for objects persisted during Picture in Picture playback.
+/// A protocol for objects persisted during Picture in Picture playback.
 ///
 /// The persisted object, if any, can be retrieved from the `persisted` property. The persisted object can also be
-/// notified about the Picture in Picture lifecycle, e.g to perform some bookkeeping work or to pause / resume
+/// notified about the Picture in Picture lifecycle, for example, to perform some bookkeeping work or to pause / resume
 /// processes.
 public protocol PictureInPicturePersistable: AnyObject {
     /// Called when Picture in Picture is about to start.

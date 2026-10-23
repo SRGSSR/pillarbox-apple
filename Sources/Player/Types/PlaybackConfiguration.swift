@@ -21,7 +21,7 @@ public struct PlaybackConfiguration {
     /// Note that starting at the default position is always efficient, no matter which tolerances have been requested.
     public var position: Position
 
-    /// A Boolean value that indicates whether the player preserves its time offset from the live time after a
+    /// A Boolean describing whether the player preserves its time offset from the live time after a
     /// buffering operation.
     public var automaticallyPreservesTimeOffsetFromLive: Bool
 

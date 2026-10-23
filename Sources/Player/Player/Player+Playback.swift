@@ -5,7 +5,7 @@
 //
 
 public extension Player {
-    /// A Boolean value whether the player should play content when possible.
+    /// A Boolean describing whether the player should play content when possible.
     var shouldPlay: Bool {
         get {
             queuePlayer.rate != 0

@@ -19,7 +19,7 @@ import PillarboxPlayer
 public final class URNDownloader: ObservableObject {
     private let downloader: Downloader<URNAssetDownloadStore>
 
-    /// Returns existing downloads.
+    /// The existing downloads.
     @Published public private(set) var downloads: [Download] = []
 
     /// Creates a downloader for URN-based content.

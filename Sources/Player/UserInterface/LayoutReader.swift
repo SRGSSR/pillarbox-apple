@@ -88,7 +88,7 @@ private struct LayoutReader: UIViewControllerRepresentable {
 @available(iOS 16, *)
 @available(tvOS, unavailable)
 public extension View {
-    /// Read layout information for a view.
+    /// Reads layout information for a view.
     ///
     /// - Parameter layoutInfo: The layout information.
     ///

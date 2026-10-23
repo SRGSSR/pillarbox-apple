@@ -16,7 +16,7 @@ For optimal compatibility with the ``PillarboxPlayer`` framework, certain specif
 
 ### Automatic media option selection
 
-``Player`` supports automatic selection of audio and subtitle tracks based on language preferences and accessibility settings (e.g., unforced subtitles, CC, SDH, and audio descriptions). This feature requires streams to meet specific criteria:
+``Player`` supports automatic selection of audio and subtitle tracks based on language preferences and accessibility settings (for example, unforced subtitles, CC, SDH, and audio descriptions). This feature requires streams to meet specific criteria:
 
 #### Audio renditions
 
@@ -29,7 +29,7 @@ For optimal compatibility with the ``PillarboxPlayer`` framework, certain specif
 #### Subtitle renditions
 
 - **Unforced Subtitles:** Set `AUTOSELECT` to `YES` for `SUBTITLES` and `CLOSED-CAPTIONS` renditions to allow selection in _Automatic_ mode.
-- **Forced Subtitles:** [Ensure](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Subtitles) `FORCED` and `AUTOSELECT` are set to `YES`. ``Player`` adheres to [Apple's' recommendations](https://developer.apple.com/library/archive/releasenotes/AudioVideo/RN-AVFoundation/index.html#//apple_ref/doc/uid/TP40010717-CH1-DontLinkElementID_3) and never returns forced subtitles for explicit user selection.
+- **Forced Subtitles:** [Ensure](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Subtitles) `FORCED` and `AUTOSELECT` are set to `YES`. ``Player`` adheres to [Apple's recommendations](https://developer.apple.com/library/archive/releasenotes/AudioVideo/RN-AVFoundation/index.html#//apple_ref/doc/uid/TP40010717-CH1-DontLinkElementID_3) and never returns forced subtitles for explicit user selection.
 
 > Note: In general, players should not display subtitles by default unless the user has explicitly chosen them. For this reason, subtitle renditions should avoid setting `DEFAULT` to `YES`.
 
@@ -46,17 +46,17 @@ Within a group of renditions (`EXT-X-MEDIA` tags with the same `TYPE` and `GROUP
 
 #### Troubleshooting rendition selection
 
-If renditions are not handled correctly (e.g., automatic selection does not work as intended, or the selected value seems incorrect):
+If renditions are not handled correctly (for example, automatic selection does not work as intended, or the selected value seems incorrect):
 
 1. **Validate the Master Playlist:** Confirm attributes like `AUTOSELECT`, `FORCED`, and accessibility characteristics are correctly set. Within each language of a rendition group, ensure that tags without `CHARACTERISTICS` come first, followed by those with `CHARACTERISTICS`.
-2. **Check System Settings**: Ensure the device’s system settings are configured with appropriate:
+2. **Check System Settings:** Ensure the device’s system settings are configured with appropriate:
     - **Languages:** List and order preferred languages correctly.
     - **Accessibility Settings:** Enable or disable AD and SDH/CC preferences as needed.
-3. **Inspect your Code:** Make sure ``Player/setMediaSelectionPreference(_:for:)`` isn’t accidentally overriding the automatic selection when it shouldn’t.
+3. **Inspect Your Code:** Make sure ``Player/setMediaSelectionPreference(_:for:)`` isn’t accidentally overriding the automatic selection when it shouldn’t.
 
 > Tip: Refer to the _Inspecting and testing streams_ section for useful troubleshooting tools.
 
-### Trick mode (Trick play)
+### Trick mode (trick play)
 
 ``Player`` supports [trick mode](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Trick-Play), which uses I-frame playlists for [fast scrubbing](https://en.wikipedia.org/wiki/Trick_mode). If I-frame playlists are unavailable, ``Player`` implements _smooth seeking_, optimizing scrubbing by avoiding redundant seeks. However, this fallback is significantly slower.
 
@@ -66,7 +66,7 @@ If renditions are not handled correctly (e.g., automatic selection does not work
 
 Use the following tools to ensure streams meet ``PillarboxPlayer`` compatibility requirements:
 
-#### HTTP Live Streaming Tools
+#### HTTP Live Streaming tools
 
 Apple provides HLS validation tools for macOS, accessible through the [developer portal](https://developer.apple.com/download/all/). Notable tools include:
 
@@ -90,7 +90,7 @@ Inspect HLS network activity using tools like:
 - [Charles](https://www.charlesproxy.com).
 - [Proxyman](https://proxyman.io).
 
-> Note: Consult the tool’s documentations for detailed usage instructions.
+> Note: Consult the tool’s documentation for detailed usage instructions.
 
 #### Official Apple players
 
@@ -115,7 +115,7 @@ Use the Pillarbox demo app to test URLs, including DRM-protected streams. Instal
 
 The demo app includes:
 
-- **Playback HUD**: Toggle in settings for detailed playback data.
+- **Playback HUD:** Toggle in settings for detailed playback data.
 - **Metrics Debugging View:** Accessible via player settings.
 
 ![Demo debugging views](stream-encoding-and-packaging-advice-debugging-views)

@@ -10,13 +10,13 @@ Take into account user choices about the data they are willing to share.
 
 The ``PillarboxAnalytics`` framework does not directly implement user consent management but provides a way to forward user consent choices to the Commanders Act and comScore SDKs so that user wishes can be properly taken into account at the data processing level.
 
-> Note: Do not worry if you observe analytics-related network traffic with a proxy tool like [Charles](https://www.charlesproxy.com). The ``PillarboxAnalytics`` framework still sends data but user consent is transmitted in each request payload for server-side processing.
+> Note: Do not worry if you observe analytics-related network traffic with a proxy tool like [Charles](https://www.charlesproxy.com). The ``PillarboxAnalytics`` framework still sends data, but user consent is transmitted in each request payload for server-side processing.
 
-### Setup an analytics data source
+### Set up an analytics data source
 
-User consent is sent with each analytic network call in globals set through a data source associated with the ``Analytics`` singleton.
+User consent is sent with each analytics network call in globals set through a data source associated with the ``Analytics`` singleton.
 
-To send user consent choices you must therefore register an ``AnalyticsDataSource`` when starting the tracker. The app delegate from which the tracker must be started is usually a perfect candidate for this role:
+To send user consent choices, you must therefore register an ``AnalyticsDataSource`` when starting the tracker. The app delegate from which the tracker must be started is usually a perfect candidate for this role:
 
 ```swift
 final class AppDelegate: NSObject, UIApplicationDelegate {
@@ -38,7 +38,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
 Read the <doc:setup-article> article for more information about tracking setup.
 
-### Provide user content choices
+### Provide user consent choices
 
 Implement the ``AnalyticsDataSource`` to provide user consent choices in globals:
 
@@ -58,6 +58,6 @@ extension AppDelegate: AnalyticsDataSource {
 }
 ```
 
-In the example above user consent has been hardcoded but a real implementation should check local user consent data to provide parameters matching the current user choices.
+In the example above, user consent has been hardcoded, but a real implementation should check local user consent data to provide parameters matching the current user choices.
 
 > Warning: ``AnalyticsDataSource`` methods are called with each event sent. Your implementation should therefore be as efficient as possible.

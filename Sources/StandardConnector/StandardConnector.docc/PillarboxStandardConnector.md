@@ -8,18 +8,18 @@ Connect to a standard metadata source.
 
 ## Overview
 
-The PillarboxStandardConnector framework provides a standard way to consume media metadata that complies with Pillarbox standard format.
+The PillarboxStandardConnector framework provides a standard way to consume media metadata that complies with the Pillarbox standard format.
 It establishes a clear contract between backends and Pillarbox clients, ensuring consistent metadata decoding.
 
 When creating a standard player item, the connector:
 
-- Performs the HTTP request
-- Maps HTTP errors
-- Decodes the JSON response into `PlayerData`
-- Supports additional metadata through a generic `CustomData` type
+- Performs the HTTP request.
+- Maps HTTP errors.
+- Decodes the JSON response into `PlayerData`.
+- Supports additional metadata through a generic `CustomData` type.
 
 > Important: The connector does not create the `Asset` automatically.
-> Instead, users must provide an `assetProvider` closure that transforms the decoded `PlayerData` into an `Asset`.
+> Instead, implement a ``StandardAssetLoaderProvider`` that describes how to request metadata and how to transform the decoded ``PlayerData`` into an `Asset`.
 
 ## Usage
 
@@ -45,18 +45,23 @@ This example shows how to use the standard connector with a backend endpoint and
     }
 
     @Tab("Frontend") {
-        Initialize a player using the standard connector.
+        Implement an asset provider and initialize a player using the standard connector.
 
         ```swift
-        let request = URLRequest(url: URL(string: "http://localhost/media/apple-basic-16-9")!)
-        let item = PlayerItem.standard(request: request) { playerData in
-            if let source = playerData.source {
-                .simple(url: source.url, metadata: playerData)
+        enum MediaAssetProvider: StandardAssetLoaderProvider {
+            static func request(for input: String) -> URLRequest {
+                URLRequest(url: URL(string: "http://localhost/media/\(input)")!)
             }
-            else {
-                .unavailable(with: NSError(), metadata: playerData)
+
+            static func asset(from input: String, metadata: PlayerData<EmptyCustomData>) -> Asset {
+                guard let source = metadata.source else {
+                    return .unavailable(with: URLError(.resourceUnavailable))
+                }
+                return .simple(url: source.url)
             }
         }
+
+        let item = PlayerItem.standard(assetProviderType: MediaAssetProvider.self, input: "apple-basic-16-9")
         let player = Player(item: item)
         ```
     }
@@ -64,12 +69,12 @@ This example shows how to use the standard connector with a backend endpoint and
 
 ## Topics
 
-### Content loading
+### Content Loading
 
-``PillarboxPlayer/PlayerItem/standard(request:type:decoder:trackerAdapters:assetProvider:)``
-``PlayerData``
-``Source``
+- ``PillarboxPlayer/PlayerItem/standard(assetProviderType:input:trackerAdapters:)``
+- ``PlayerData``
+- ``StandardAssetLoaderProvider``
 
 ### Errors
 
-``HttpError``
+- ``HttpError``

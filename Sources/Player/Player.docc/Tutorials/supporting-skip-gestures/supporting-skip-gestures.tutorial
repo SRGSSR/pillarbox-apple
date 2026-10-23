@@ -4,7 +4,7 @@
 
         Skip gestures, widely adopted by apps like YouTube, offer a fast and natural way for users to move through content by tapping multiple times in the desired direction.
 
-        @Image(source: supporting-skip-gestures-intro, alt: "Illustration showing a skip icon.")
+        @Image(source: supporting-skip-gestures-intro, alt: "An illustration showing a skip icon.")
     }
     
     @Section(title: "Implement a tap gesture to trigger skips") {

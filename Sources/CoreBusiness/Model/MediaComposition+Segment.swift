@@ -17,7 +17,7 @@ public extension MediaComposition {
             case _validTo = "validTo"
         }
 
-        /// Returns whether the content is blocked for some reason.
+        /// The reason why the content is blocked, if any.
         public var blockingReason: BlockingReason? {
             _blockingReason?.blockingReason(startDate: _validFrom, endDate: _validTo)
         }

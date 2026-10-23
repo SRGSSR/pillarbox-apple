@@ -30,7 +30,7 @@
             }
 
             @Step {
-                Bind the progress tracker to the player using the ``SwiftUICore/View/bind(_:to:)-8fqem`` modifier. This ensures the tracker reflects the player's current progress.
+                Bind the progress tracker to the player using the ``SwiftUICore/View/bind(_:to:)-(ProgressTracker,_)`` modifier. This ensures the tracker reflects the player's current progress.
 
                 @Code(name: "ContentView.swift", file: tracking-progress-1-4.swift)
             }

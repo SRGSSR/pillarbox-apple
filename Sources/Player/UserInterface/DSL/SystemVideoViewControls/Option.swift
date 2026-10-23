@@ -58,7 +58,7 @@ extension Option: InfoViewActionsElement where Body == InfoViewActionsBodyNotSup
 
 // MARK: Inline picker embedding
 
-/// The body of an option displayed in a picker.
+/// The body of an option displayed in an inline picker.
 public struct OptionInInlinePicker<Value>: InlinePickerBody where Value: Equatable {
     let title: String
     let subtitle: String?
@@ -88,7 +88,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.body = .init(title: String(title), subtitle: String(optional: subtitle), image: image, value: value, handler: handler)
@@ -101,7 +101,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: image, value: value, handler: handler)
     }
@@ -113,7 +113,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
@@ -127,7 +127,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @available(iOS 17.0, tvOS 17.0, *)
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), value: value, handler: handler)
@@ -140,7 +140,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - subtitle: The option's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
@@ -153,7 +153,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - subtitle: The option's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
     }
@@ -211,7 +211,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.body = .init(title: String(title), subtitle: String(optional: subtitle), image: image, value: value, handler: handler)
@@ -224,7 +224,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: image, value: value, handler: handler)
     }
@@ -236,7 +236,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
@@ -250,7 +250,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @available(iOS 17.0, tvOS 17.0, *)
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), value: value, handler: handler)
@@ -263,7 +263,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - subtitle: The option's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
@@ -276,7 +276,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - subtitle: The option's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
     }
@@ -314,7 +314,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.body = .init(title: String(title), subtitle: String(optional: subtitle), image: image, value: value, handler: handler)
@@ -327,7 +327,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: UIImage? = nil, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: image, value: value, handler: handler)
     }
@@ -339,7 +339,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @available(iOS 17.0, tvOS 17.0, *)
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
@@ -353,7 +353,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - subtitle: The option's subtitle.
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @available(iOS 17.0, tvOS 17.0, *)
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), value: value, handler: handler)
@@ -366,7 +366,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - subtitle: The option's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
@@ -379,7 +379,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - subtitle: The option's subtitle.
     ///   - systemImage: The name of the system symbol image associated with the option.
     ///   - value: The value associated with the option.
-    ///   - handler: The handler to invoke when the user selects the action.
+    ///   - handler: The handler to invoke when the user selects the option.
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, systemImage: String, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(systemName: systemImage) ?? UIImage(), value: value, handler: handler)
     }

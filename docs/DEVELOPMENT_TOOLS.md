@@ -75,14 +75,6 @@ Run this command to remove unused code:
 make find-dead-code
 ```
 
-### Reload SPM dependencies
-
-You can reload SPM dependencies by running:
-
-```shell
-make spm-reload
-```
-
 ## Editor configuration
 
 An [editor configuration file](../.editorconfig) and several linter configuration files are provided to ensure common styling and best practices. Editors can usually be configured to apply some of these rules automatically and consistently.

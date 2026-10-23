@@ -14,8 +14,8 @@ import SwiftUI
 /// A skip tracker is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject)
 /// designed to handle multi-tap gestures for skipping forward and backward in content played by a ``Player``.
 ///
-/// These gestures, popularized by apps like YouTube, provide a fast and intuitive way for users to navigate through content
-/// by tapping multiple times to skip in the desired direction.
+/// These gestures, popularized by apps like YouTube, provide a fast and intuitive way for users to navigate through
+/// content by tapping multiple times to skip in the desired direction.
 ///
 /// This tracker does not dictate how the multi-tap gesture itself is implemented. Instead, it provides an abstraction
 /// for managing rapid user interactions. When multiple skip requests occur within a short time interval, the tracker:
@@ -29,16 +29,17 @@ import SwiftUI
 ///
 /// - Once fast skipping is triggered, every additional request performs a skip, regardless of direction. This ensures
 ///   intuitive navigation, allowing users to move forward and backward effortlessly.
-/// - A request typically corresponds to a single interaction (e.g. a tap), avoiding the need for explicit multi-tap
-///   gestures that could introduce delays in single-tap interactions.
+/// - A request typically corresponds to a single interaction (for example, a tap), avoiding the need for explicit
+///   multi-tap gestures that could introduce delays in single-tap interactions.
 ///
 /// ## Usage
 ///
 /// A skip tracker is used as follows:
 ///
 /// 1. Instantiate a `SkipTracker` within your view hierarchy.
-/// 2. Bind it to a ``Player`` instance using the ``SwiftUICore/View/bind(_:to:)-kb3n`` modifier.
-/// 3. Attach a single-tap interaction (e.g. [TapGesture](https://developer.apple.com/documentation/swiftui/tapgesture)
+/// 2. Bind it to a ``Player`` instance using the ``SwiftUICore/View/bind(_:to:)-(SkipTracker,_)`` modifier.
+/// 3. Attach a single-tap interaction (for example,
+///    [TapGesture](https://developer.apple.com/documentation/swiftui/tapgesture)
 ///    or [SpatialTapGesture](https://developer.apple.com/documentation/swiftui/spatialtapgesture)) to request a skip
 ///    backward (``SkipTracker/requestSkipBackward()``) or forward (``SkipTracker/requestSkipForward()``).
 /// 4. Use ``SkipTracker/state-swift.property`` to update the UI dynamically when fast seeking is active, such as displaying lightweight
@@ -63,7 +64,7 @@ public final class SkipTracker: ObservableObject {
         Self.state(counter: counter, minimumCount: minimumCount, player: player)
     }
 
-    /// A Boolean that describes whether skipping is taking place.
+    /// A Boolean describing whether skipping is taking place.
     public var isSkipping: Bool {
         state.isSkipping
     }
@@ -73,7 +74,7 @@ public final class SkipTracker: ObservableObject {
 
     @Published private var counter: Counter?
 
-    /// Create a tracker managing skips.
+    /// Creates a tracker managing skips.
     ///
     /// - Parameters:
     ///   - count: The number of requests required to enable skipping.
@@ -100,7 +101,7 @@ public final class SkipTracker: ObservableObject {
         requestSkip(.forward)
     }
 
-    /// Request a skip in a given direction.
+    /// Requests a skip in a given direction.
     ///
     /// - Parameter skip: The skip direction.
     /// - Returns: `true` iff the request could be fulfilled.

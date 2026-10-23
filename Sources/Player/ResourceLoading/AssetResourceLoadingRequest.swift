@@ -12,14 +12,14 @@ public extension AVAssetResourceLoadingRequest {
     ///
     /// - Parameter error: An error object indicating the reason for the failure.
     ///
-    /// Unlike `finishLoading(with:)` this method ensures error information can be reliably forwarded to the player
+    /// Unlike `finishLoading(with:)`, this method ensures error information can be reliably forwarded to the player
     /// item being loaded in case of failure.
     func finishLoadingReliably(with error: Error?) {
         finishLoading(with: NSError.error(from: error))
     }
 
     /// Redirects the receiver to another URL.
-    /// 
+    ///
     /// - Parameter url: The URL to redirect the receiver to.
     func redirect(to url: URL) {
         var redirectRequest = request

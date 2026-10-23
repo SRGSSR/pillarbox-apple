@@ -33,13 +33,13 @@ public struct PlayerData<CustomData>: Decodable where CustomData: Decodable {
 
     /// The content title.
     ///
-    /// For example the name of the show which the content is associated with, if any, otherwise the name
+    /// For example, the name of the show which the content is associated with, if any, otherwise the name
     /// of the episode itself.
     public let title: String?
 
     /// A subtitle for the content.
     ///
-    /// For example the name of the episode when a show name has been provided as title.
+    /// For example, the name of the episode when a show name has been provided as title.
     public let subtitle: String?
 
     /// A description of the content.
@@ -146,7 +146,7 @@ public extension PlayerData {
         public let endTime: Int
     }
 
-    /// Represents a time range.
+    /// A time range.
     struct TimeRange: Decodable {
         /// The start time in milliseconds.
         public let startTime: Int
@@ -156,7 +156,7 @@ public extension PlayerData {
 
         /// The type.
         ///
-        /// `BLOCKED`, `OPENING_CREDITS`, `CLOSING_CREDITS` are natively supported.
+        /// `BLOCKED`, `OPENING_CREDITS`, and `CLOSING_CREDITS` are natively supported.
         public let type: String
 
         // swiftlint:disable:next prefer_self_in_static_references
@@ -211,7 +211,7 @@ public extension PlayerData {
         public let certificateUrl: URL?
     }
 
-    /// Represents the media source for a playable asset.
+    /// The media source for a playable asset.
     struct Source: Decodable {
         /// The media URL.
         public let url: URL

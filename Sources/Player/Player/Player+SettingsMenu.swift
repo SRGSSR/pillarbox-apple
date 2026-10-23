@@ -12,8 +12,8 @@ public extension Player {
     /// Returns content for a standard player settings menu.
     ///
     /// - Parameters:
-    ///    - speeds: The offered playback speeds.
-    ///    - action: The action to perform when the user interacts with an item from the menu.
+    ///   - speeds: The offered playback speeds.
+    ///   - action: The action to perform when the user interacts with an item from the menu.
     ///
     /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
     /// behavior.
@@ -27,8 +27,8 @@ public extension Player {
     /// Returns content for a playback speed settings menu.
     ///
     /// - Parameters:
-    ///    - speeds: The offered playback speeds.
-    ///    - action: The action to perform when the user selects an item from the menu.
+    ///   - speeds: The offered playback speeds.
+    ///   - action: The action to perform when the user selects an item from the menu.
     ///
     /// The returned view is intended for use as the content of a `Menu`. Using it for any other purpose results in
     /// undefined behavior.
@@ -42,8 +42,8 @@ public extension Player {
     /// Returns content for a media selection settings menu.
     ///
     /// - Parameters:
-    ///    - characteristic: The characteristic for which selection is made.
-    ///    - action: The action to perform when the user selects an item from the menu.
+    ///   - characteristic: The characteristic for which selection is made.
+    ///   - action: The action to perform when the user selects an item from the menu.
     ///
     /// The returned view is intended for use as the content of a `Menu`. Using it for any other purpose results in
     /// undefined behavior.
@@ -80,7 +80,7 @@ public extension Player {
     ///
     /// The returned view is intended for use as the content of a `Menu`. Using it for any other purpose results in
     /// undefined behavior.
-    /// 
+    ///
     /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
     func routePickerMenu(activeTintColor: Color? = nil) -> some View {
         RoutePickerMenuContent(activeTintColor: activeTintColor, player: self)
