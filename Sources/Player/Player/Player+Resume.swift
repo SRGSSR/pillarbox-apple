@@ -30,7 +30,7 @@ public extension Player {
         }
         else {
             resumeState = .init(position: position, id: item.id)
-            currentItem = item
+            replaceCurrentItemWithItem(item)
         }
     }
 }

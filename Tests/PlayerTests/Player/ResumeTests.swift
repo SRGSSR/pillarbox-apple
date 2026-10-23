@@ -59,6 +59,21 @@ final class ResumeTests: TestCase {
         expect(player.time()).to(equal(.zero))
     }
 
+    func testResumeInPreviouslyLoadedItemAfterReplacement() {
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item1)
+        expect(player.playbackState).toEventually(equal(.paused))
+
+        player.items = [item2]
+        expect(player.playbackState).toEventually(equal(.paused))
+
+        let time = CMTime(value: 11, timescale: 1)
+        player.items = [item1]
+        player.resume(at(time), in: item1)
+        expect(player.time()).toEventually(equal(time))
+    }
+
     func testResumeIsAppliedOnce() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
