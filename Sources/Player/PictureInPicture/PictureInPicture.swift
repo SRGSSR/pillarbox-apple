@@ -16,7 +16,7 @@ public final class PictureInPicture {
 
     /// The Picture in Picture delegate.
     ///
-    /// In-app Picture in Picture support requires your application to setup a delegate so that a playback view
+    /// In-app Picture in Picture support requires your application to set up a delegate so that a playback view
     /// supporting Picture in Picture can be dismissed and restored at a later time, letting users navigate your app
     /// while playback continues in the Picture in Picture overlay.
     public weak var delegate: PictureInPictureDelegate?
@@ -39,12 +39,12 @@ public final class PictureInPicture {
     /// Only `VideoView` is currently supported. The method does nothing if no video view is currently available for
     /// Picture in Picture.
     ///
-    /// > Important: This method must only be started in response to some form of user interaction.
+    /// > Important: This method must only be called in response to some form of user interaction.
     public func startIfPossible() {
         custom.start()
     }
 
-    /// Gracefully stops Picture if Picture if running.
+    /// Gracefully stops Picture in Picture if running.
     ///
     /// The ``PictureInPictureDelegate/pictureInPictureRestoreUserInterfaceForStop(with:)`` method is called.
     public func stop() {

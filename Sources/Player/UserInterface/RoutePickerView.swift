@@ -44,9 +44,9 @@ public struct RoutePickerView: View {
 
     /// Creates a route picker button.
     ///
-    /// - Parameter prioritizesVideoDevices: A Boolean setting whether or not the route picker should sort video
-    ///   capable output devices to the top of the list. Setting this to `true` will cause the route picker view to
-    ///   show a videocentric icon.
+    /// - Parameter prioritizesVideoDevices: A Boolean setting whether or not the route picker should sort
+    ///   video-capable output devices to the top of the list. Setting this to `true` will cause the route picker view
+    ///   to show a video-centric icon.
     public init(prioritizesVideoDevices: Bool = false) {
         self.prioritizesVideoDevices = prioritizesVideoDevices
     }

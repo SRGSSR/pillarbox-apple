@@ -10,7 +10,7 @@ import PillarboxCore
 import PillarboxPlayer
 import UIKit
 
-/// A tracker gathering metrics for Pillarbox monitoring platform.
+/// A tracker gathering metrics for the Pillarbox monitoring platform.
 public final class MetricsTracker: PlayerItemTracker {
     private let configuration: Configuration
     private let queue: DispatchQueue
@@ -98,7 +98,7 @@ public extension MetricsTracker {
         ///
         /// - Parameters:
         ///   - identifier: An identifier for the content.
-        ///   - serviceUrl: The URL service endpoint where data must be sent.
+        ///   - serviceUrl: The URL of the service endpoint where data must be sent.
         ///   - heartbeatInterval: The interval between heartbeats, in seconds.
         public init(identifier: String, serviceUrl: URL, heartbeatInterval: TimeInterval = 30) {
             assert(heartbeatInterval >= 1)
@@ -117,7 +117,7 @@ public extension MetricsTracker {
         /// Creates metadata.
         ///
         /// - Parameters:
-        ///   - metadataUrl: The URL where metadata has been fetched.
+        ///   - metadataUrl: The URL from which metadata has been fetched.
         ///   - metadataHeaders: Useful response headers received when fetching metadata.
         ///   - assetUrl: The URL of the asset being played.
         public init(metadataUrl: URL? = nil, metadataHeaders: [String: String] = [:], assetUrl: URL? = nil) {

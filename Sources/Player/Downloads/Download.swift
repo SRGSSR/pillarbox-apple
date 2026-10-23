@@ -8,11 +8,11 @@ import Combine
 import Foundation
 import PillarboxCore
 
-/// An [observable object]((https://developer.apple.com/documentation/combine/observableobject)) representing a download.
+/// An [observable object](https://developer.apple.com/documentation/combine/observableobject) representing a download.
 @available(tvOS, unavailable)
 @_spi(DownloaderPrivate)
 public final class Download: ObservableObject, Identifiable {
-    /// The download unique identifier.
+    /// The download's unique identifier.
     public let id: String
 
     @Published private var properties: DownloadProperties<EmptyCustomData> = .init()

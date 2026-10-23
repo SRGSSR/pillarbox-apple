@@ -12,7 +12,7 @@ import PillarboxPlayer
 ///
 /// This tracker implements streaming measurements according to Mediapulse official specifications.
 ///
-/// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
+/// Analytics have to be properly started for the tracker to collect data, see ``Analytics/start(with:dataSource:delegate:)``.
 public final class ComScoreTracker: PlayerItemTracker {
     private lazy var streamingAnalytics = SCORStreamingAnalytics()
     private var metadata: [String: String] = [:]

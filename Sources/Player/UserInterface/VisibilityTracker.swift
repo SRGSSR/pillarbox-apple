@@ -16,24 +16,24 @@ import UIKit
 /// used to manage playback control visibility. It provides several standard behaviors that are usually expected from
 /// player user interfaces:
 ///
-/// - Users should be able to toggle user interface visibility on or off with some kind of interaction (e.g., tapping
-///   the player interface itself).
+/// - Users should be able to toggle user interface visibility on or off with some kind of interaction (for example,
+///   tapping the player interface itself).
 /// - The user interface must automatically hide after some delay when the player is actually playing content (except
 ///   when VoiceOver has been enabled).
-/// - The user interface must be automatically revealed when playback is paused externally (e.g., by another app or
-///   through the Control Center) so that playback can be quickly resumed.
+/// - The user interface must be automatically revealed when playback is paused externally (for example, by another app
+///   or through Control Center) so that playback can be quickly resumed.
 ///
 /// ## Usage
 ///
 /// A visibility tracker is used as follows:
 ///
-/// 1. Instantiate a ``VisibilityTracker`` in your view hierarchy. You can setup the initial visibility status as well
+/// 1. Instantiate a ``VisibilityTracker`` in your view hierarchy. You can set up the initial visibility status as well
 ///    as the delay after which controls must be automatically hidden during playback.
-/// 2. Bind the visibility tracker to a ``Player`` instance by applying the ``SwiftUICore/View/bind(_:to:)-wthx`` modifier.
+/// 2. Bind the visibility tracker to a ``Player`` instance by applying the ``SwiftUICore/View/bind(_:to:)-(VisibilityTracker,_)`` modifier.
 /// 3. Use ``isUserInterfaceHidden`` to adjust visibility of your user interface components based on the current
 ///    visibility tracker recommendation.
-/// 4. Introduce an interaction (e.g., a tap gesture) that lets your users toggle user interface visibility on or off.
-///    Simply call ``toggle()`` from the action associated with this interaction.
+/// 4. Introduce an interaction (for example, a tap gesture) that lets your users toggle user interface visibility on or
+///    off. Simply call ``toggle()`` from the action associated with this interaction.
 /// 5. Call ``reset()`` when a user interaction should prevent the user interface from being automatically hidden. You
 ///    can for example call this method during slider interactions so that the user interface stays visible while the
 ///    user is still moving the slider.
@@ -51,7 +51,7 @@ public final class VisibilityTracker: ObservableObject {
     /// Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
 
-    /// Returns whether the user interface should be hidden.
+    /// A Boolean describing whether the user interface should be hidden.
     @Published public private(set) var isUserInterfaceHidden: Bool
 
     private let delay: TimeInterval
@@ -59,7 +59,7 @@ public final class VisibilityTracker: ObservableObject {
     private let togglePublisher = PassthroughSubject<Bool, Never>()
 
     /// Creates a tracker managing user interface visibility.
-    /// 
+    ///
     /// - Parameters:
     ///   - delay: The delay after which `isUserInterfaceHidden` is automatically reset to `true`.
     ///   - isUserInterfaceHidden: The initial value for `isUserInterfaceHidden`.
@@ -104,7 +104,7 @@ public final class VisibilityTracker: ObservableObject {
         togglePublisher.send(true)
     }
 
-    /// Resets user interface auto hide delay.
+    /// Resets the user interface auto-hide delay.
     public func reset() {
         guard !isUserInterfaceHidden else { return }
         trigger.activate(for: TriggerId.reset)
@@ -181,7 +181,7 @@ public final class VisibilityTracker: ObservableObject {
 @available(tvOS, unavailable)
 public extension View {
     /// Binds a visibility tracker to a player.
-    /// 
+    ///
     /// - Parameters:
     ///   - visibilityTracker: The visibility tracker to bind.
     ///   - player: The player to observe.

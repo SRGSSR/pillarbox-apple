@@ -9,7 +9,7 @@ public struct CommandersActSource {
     let labels: [String: String]
 
     /// Creates Commanders Act source information.
-    /// 
+    ///
     /// - Parameters:
     ///   - page: Page information.
     ///   - section: Section information.

@@ -21,7 +21,7 @@ public extension PlayerMetadata {
     ///   - imageSource: The source of the image associated with the content.
     ///   - viewport: The content viewport.
     ///   - episodeInformation: Episode information associated with the content.
-    ///   - chapters: Chapter associated with the content.
+    ///   - chapters: Chapters associated with the content.
     ///   - timeRanges: Time ranges associated with the content.
     ///
     /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).

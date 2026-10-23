@@ -8,7 +8,7 @@ import SwiftUI
 
 /// A view that displays an image from an associated source.
 ///
-/// The image is loaded when needed and delivered through usual `PlayerMetadata` updates.
+/// The image is loaded when needed and delivered through usual ``PlayerMetadata`` updates.
 public struct LazyImage<Content>: View where Content: View {
     private let source: ImageSource
     private let content: (Image) -> Content

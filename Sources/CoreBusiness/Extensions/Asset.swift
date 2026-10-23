@@ -28,7 +28,7 @@ public extension Asset {
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
-    ///   - certificateUrl: The URL where the FairPlay certificate must be downloaded.
+    ///   - certificateUrl: The URL from which the FairPlay certificate must be downloaded.
     ///   - configuration: The configuration to apply to the asset.
     /// - Returns: The asset.
     static func encrypted(url: URL, certificateUrl: URL, configuration: PlaybackConfiguration = .default) -> Self {

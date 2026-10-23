@@ -13,15 +13,15 @@ public struct PlayerConfiguration {
     /// The default configuration.
     public static let `default` = Self()
 
-    /// A Boolean value that indicates whether the player allows switching to external playback mode.
+    /// A Boolean describing whether the player allows switching to external playback mode.
     public var allowsExternalPlayback: Bool
 
-    /// A Boolean value that indicates whether the player allows switching to external playback when mirroring.
+    /// A Boolean describing whether the player allows switching to external playback when mirroring.
     ///
     /// This property has no effect when `allowsExternalPlayback` is `false`.
     public var usesExternalPlaybackWhileMirroring: Bool
 
-    /// A Boolean indicating whether video playback prevents display and device sleep.
+    /// A Boolean describing whether video playback prevents display and device sleep.
     public var preventsDisplaySleepDuringVideoPlayback: Bool
 
     /// The navigation mode.
@@ -33,7 +33,7 @@ public struct PlayerConfiguration {
     /// The backward skip interval in seconds.
     public var backwardSkipInterval: TimeInterval
 
-    /// A Boolean value indicating whether the player is permitted to play content on networks with Low Data Mode
+    /// A Boolean describing whether the player is permitted to play content on networks with Low Data Mode
     /// enabled.
     ///
     /// When this property is set to `false`, playback fails with a network availability error on constrained networks.
@@ -65,7 +65,7 @@ public struct PlayerConfiguration {
         self.allowsConstrainedNetworkAccess = allowsConstrainedNetworkAccess
     }
 
-    /// The skip interval for some direction, in seconds.
+    /// Returns the skip interval for some direction, in seconds.
     public func interval(forSkip skip: Skip) -> TimeInterval {
         switch skip {
         case .backward:

@@ -11,7 +11,7 @@ Learn how to observe and respond to state changes in a player.
 
 The ``PillarboxPlayer`` framework leverages [Combine](https://developer.apple.com/documentation/combine), [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject), and published properties, allowing SwiftUI views to automatically react to changes in state.
 
-However, indiscriminate property publishing can lead to excessive updates, causing unnecessary SwiftUI view refreshes, degraded layout performance, and higher energy consumption. To address this, ``Player`` only publishes essential states (e.g., playback status or media type), while other frequently updated states require explicit subscription.
+However, indiscriminate property publishing can lead to excessive updates, causing unnecessary SwiftUI view refreshes, degraded layout performance, and higher energy consumption. To address this, ``Player`` only publishes essential states (for example, playback status or media type), while other frequently updated states require explicit subscription.
 
 ### Observe essential player states
 
@@ -47,7 +47,7 @@ In other contexts, you can directly subscribe to time update publishers:
 
 ### Explicitly subscribe to non-essential state updates
 
-Non-essential states (e.g., buffer positions or derived properties like stream type) are not automatically published. Instead, you can:
+Non-essential states (for example, buffer positions or derived properties like stream type) are not automatically published. Instead, you can:
 
 - Subscribe to ``Player/propertiesPublisher`` for direct observation.
 - Use the ``SwiftUICore/View/onReceive(player:assign:to:)`` modifier to observe specific property changes locally. For example, to display a loading indicator during buffering:
@@ -97,7 +97,7 @@ struct PlaybackView: View {
 
 ### Use SwiftUI property wrappers wisely
 
- [Proper use](https://developer.apple.com/documentation/swiftui/model-data) of SwiftUI property wrappers ensures efficient UI updates. Below are common patterns:
+[Proper use](https://developer.apple.com/documentation/swiftui/model-data) of SwiftUI property wrappers ensures efficient UI updates. Below are common patterns:
 
 1. **Player Neither Owned nor Observed:** Pass the player as a constant:
 
@@ -152,7 +152,7 @@ struct PlaybackView: View {
 To minimize unnecessary UI refreshes, keep subscriptions scoped to the smallest required view hierarchy:
 
 - Use `View/_debugBodyCounter()` (from the PillarboxCore framework) to identify excessive view refreshes.
-- Move high-frequency updates (e.g., progress tracking with small intervals or explicit ``SwiftUICore/View/onReceive(player:assign:to:)`` subscriptions) into smaller subviews.
+- Move high-frequency updates (for example, progress tracking with small intervals or explicit ``SwiftUICore/View/onReceive(player:assign:to:)`` subscriptions) into smaller subviews.
 - Recheck your layout with `View/_debugBodyCounter()` after implementing optimizations.
 
-> Note:  Refer to the <doc:optimizing-custom-layouts> tutorial for detailed optimization techniques.
+> Note: Refer to the <doc:optimizing-custom-layouts> tutorial for detailed optimization techniques.

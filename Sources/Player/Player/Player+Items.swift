@@ -57,7 +57,7 @@ public extension Player {
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the back of
-    ///     the queue. If this item does not exist the method does nothing.
+    ///     the queue. If this item does not exist, the method does nothing.
     /// - Returns: `true` iff the item could be inserted.
     ///
     /// Does nothing if the item already belongs to the queue.
@@ -97,7 +97,7 @@ public extension Player {
     /// - Parameters:
     ///   - item: The item to move. The method does nothing if the item does not belong to the queue.
     ///   - beforeItem: The item before which the moved item must be relocated. Pass `nil` to move the item to the
-    ///     front of the queue. If the item does not belong to the queue the method does nothing.
+    ///     front of the queue. If the item does not belong to the queue, the method does nothing.
     /// - Returns: `true` iff the item could be moved.
     @discardableResult
     func move(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
@@ -119,7 +119,7 @@ public extension Player {
     /// - Parameters:
     ///   - item: The item to move.
     ///   - afterItem: The item after which the moved item must be relocated. Pass `nil` to move the item to the
-    ///     back of the queue. If the item does not belong to the queue the method does nothing.
+    ///     back of the queue. If the item does not belong to the queue, the method does nothing.
     /// - Returns: `true` iff the item could be moved.
     @discardableResult
     func move(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {

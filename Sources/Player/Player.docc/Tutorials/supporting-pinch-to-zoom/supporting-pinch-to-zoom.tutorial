@@ -4,7 +4,7 @@
 
         Zooming in allows users to have a more immersive video experience. This tutorial explores how to enable pinch-to-zoom functionality, making it available only when the video player is displayed in full-screen mode.
 
-        @Image(source: supporting-pinch-to-zoom-intro, alt: "Illustration showing pinch gestures with directional arrows.")
+        @Image(source: supporting-pinch-to-zoom-intro, alt: "An illustration showing pinch gestures with directional arrows.")
     }
     
     @Section(title: "Add a pinch gesture for video zooming") {
@@ -48,7 +48,7 @@
         
         @Steps {
             @Step {
-                Add padding around the ``VideoView``, so it no longer occupies the full parent context.
+                Add padding around the ``VideoView`` so that it no longer occupies the full parent context.
 
                 Run the project to confirm that the zoom gesture still works.
 

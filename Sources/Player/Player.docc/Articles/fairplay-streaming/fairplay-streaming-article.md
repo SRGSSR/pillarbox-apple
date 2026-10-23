@@ -13,7 +13,7 @@ You can manage [FairPlay](https://developer.apple.com/streaming/fps/) decryption
 
 ### Create a content key session delegate
 
-To support FairPlay decryption you need a content key session delegate:
+To support FairPlay decryption, you need a content key session delegate:
 
 1. **Define a Delegate Type:** Create a type conforming to [`AVContentKeySessionDelegate`](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate).
 2. **Implement Key Retrieval:** Implement methods required for retrieving and managing content keys, based on the needs of the protected resource.

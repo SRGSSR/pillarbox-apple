@@ -10,7 +10,7 @@ import CoreMedia
 public extension Player {
     /// Returns the optimal position to use when seeking to a given time, depending on the provided item.
     ///
-    /// For an even better seek experience the position should be reached with the player paused during the seek
+    /// For an even better seek experience, the position should be reached with the player paused during the seek
     /// operation.
     ///
     /// - Parameters:
@@ -50,13 +50,13 @@ public extension Player {
     }
 
     /// Seeks to a given position.
-    /// 
+    ///
     /// - Parameters:
     ///   - position: The position to seek to.
     ///   - smooth: Set to `true` to enable smooth seeking. This allows any currently pending seek to complete before
     ///     any new seek is performed, preventing unnecessary cancellation and providing for a smoother experience.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
-    ///     finish without being cancelled.
+    ///     finish without being canceled.
     func seek(
         _ position: Position,
         smooth: Bool = true,
@@ -82,7 +82,7 @@ public extension Player {
     /// - Parameters:
     ///   - time: The time to reach.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
-    ///     finish without being cancelled.
+    ///     finish without being canceled.
     ///
     /// If a user interaction is causing this seek method to be called several times in a row, the player should be paused
     /// during the interaction to achieve the best possible result.
@@ -91,12 +91,12 @@ public extension Player {
         seek(position, smooth: true, completion: completion)
     }
 
-    /// Requests that the player seek to a specified date, and to notify you when the seek is complete.
+    /// Requests that the player seek to a specified date and notify you when the seek is complete.
     ///
     /// - Parameters:
     ///   - date: The date to reach.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
-    ///     finish without being cancelled.
+    ///     finish without being canceled.
     func seek(to date: Date, completion: @escaping (Bool) -> Void = { _ in }) {
         queuePlayer.seek(to: date, completionHandler: completion)
     }
@@ -106,7 +106,7 @@ public extension Player {
     /// - Parameters:
     ///   - chapter: The chapter to reach.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
-    ///     finish without being cancelled.
+    ///     finish without being canceled.
     func seek(to chapter: Chapter, completion: @escaping (Bool) -> Void = { _ in }) {
         seek(at(chapter.timeRange.start + CMTime(value: 1, timescale: 10)), completion: completion)
     }

@@ -76,7 +76,7 @@ final class SystemPictureInPicture: NSObject {
         }
     }
 
-    /// Avoid unnecessary pauses when transitioning via Picture in Picture to a view which does not support
+    /// Avoids unnecessary pauses when transitioning via Picture in Picture to a view which does not support
     /// it.
     ///
     /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.

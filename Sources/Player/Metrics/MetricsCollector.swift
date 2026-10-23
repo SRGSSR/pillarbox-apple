@@ -18,8 +18,8 @@ import SwiftUI
 /// A metrics collector is used as follows:
 ///
 /// 1. Instantiate a `MetricsCollector` in your view hierarchy, setting up the refresh interval you need.
-/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUICore/View/bind(_:to:)-31gwp`` modifier.
-/// 3. Current metrics can be retrieved from the ``metrics`` property and displayed in any way you want, e.g., in a
+/// 2. Bind the metrics collector to a ``Player`` instance by applying the ``SwiftUICore/View/bind(_:to:)-(MetricsCollector,_)`` modifier.
+/// 3. Current metrics can be retrieved from the ``metrics`` property and displayed in any way you want, for example, in a
 ///    textual form or with charts.
 public final class MetricsCollector: ObservableObject {
     /// The maximum number of metrics to keep in the history.
@@ -38,7 +38,7 @@ public final class MetricsCollector: ObservableObject {
     /// The metric event history for the item being played, if any.
     @Published public private(set) var metricEvents: [MetricEvent] = []
 
-    /// A Boolean value that indicates whether no data is available from the collector.
+    /// A Boolean describing whether no data is available from the collector.
     public var isEmpty: Bool {
         metrics.isEmpty && metricEvents.isEmpty
     }

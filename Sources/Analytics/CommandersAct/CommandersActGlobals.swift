@@ -9,7 +9,7 @@ public struct CommandersActGlobals {
     let labels: [String: String]
 
     /// Creates Commanders Act global labels.
-    /// 
+    ///
     /// - Parameters:
     ///   - consentServices: The list of services for which the user provided consent.
     ///   - profileIdentifier: An identifier for the app user, if any.

@@ -18,7 +18,7 @@ public struct InfoViewActionsBodyNotSupported: InfoViewActionsBody {
 /// A protocol describing the body of elements wrapped in info view actions.
 public protocol InfoViewActionsBody {
     /// Converts the body to an action.
-    /// 
+    ///
     /// - Parameter viewController: The view controller to dismiss when triggering the action.
     func toAction(dismissing viewController: UIViewController) -> UIAction
 }

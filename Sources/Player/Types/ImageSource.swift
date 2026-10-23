@@ -40,7 +40,7 @@ public struct ImageSource: Codable, Equatable {
     /// - Parameters:
     ///   - standardResolutionUrl: The URL where a variant with standard resolution can be retrieved.
     ///   - lowResolutionUrl: The URL where a variant with low resolution can be retrieved when Low Data Mode has been
-    ///     enabled. If omitted the standard resolution URL is used.
+    ///     enabled. If omitted, the standard resolution URL is used.
     public static func url(standardResolution standardResolutionUrl: URL, lowResolution lowResolutionUrl: URL? = nil) -> Self {
         Self(kind: .url(standardResolution: standardResolutionUrl, lowResolution: lowResolutionUrl ?? standardResolutionUrl))
     }

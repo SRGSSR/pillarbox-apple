@@ -58,10 +58,10 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
     /// Creates a view displaying video content.
     ///
     /// - Parameters:
-    ///    - player: The player whose content is displayed.
-    ///    - videoOverlay: A closure returning an overlay view to be placed atop the player's content. This view is
-    ///      fully interactive, but is placed below the system-provided playback controls and will only receive unhandled
-    ///      events.
+    ///   - player: The player whose content is displayed.
+    ///   - videoOverlay: A closure returning an overlay view to be placed atop the player's content. This view is
+    ///     fully interactive, but is placed below the system-provided playback controls and will only receive
+    ///     unhandled events.
     public init(player: Player, @ContentBuilder videoOverlay: () -> VideoOverlay) {
         self.player = player
         self.videoOverlay = videoOverlay()
@@ -105,7 +105,7 @@ public extension SystemVideoView {
 @available(iOS, unavailable)
 @available(tvOS 16, *)
 public extension SystemVideoView {
-    /// Items presented in the transport bar.
+    /// Configures the items presented in the transport bar.
     ///
     /// - Parameter content: The content builder.
     ///
@@ -117,7 +117,7 @@ public extension SystemVideoView {
     ///        Button("Favorite", systemImage: "heart") {
     ///            // ...
     ///        }
-    ///        Picker"Quality", systemImage: "person.and.background.dotted", selection: $quality) {
+    ///        Picker("Quality", systemImage: "person.and.background.dotted", selection: $quality) {
     ///            Option("Low", value: .low)
     ///            Option("Medium", value: .medium)
     ///            Option("High", value: .high)
@@ -125,11 +125,11 @@ public extension SystemVideoView {
     ///    }
     /// ```
     ///
-    /// Complex menu hierarchies can be created by nesting ``Menu``, ``Picker``, ``ÌnlinePicker`` and ``Section`` elements
-    /// containing ``Button``s and ``Option``s. Some combinations are not permitted, so follow compilation error messages when
-    /// constructing menus.
+    /// Complex menu hierarchies can be created by nesting ``Menu``, ``Picker``, ``InlinePicker`` and ``Section``
+    /// elements containing ``Button``s and ``Option``s. Some combinations are not permitted, so follow compilation
+    /// error messages when constructing menus.
     ///
-    /// > Important: One up to seven root items are supported.
+    /// > Important: One to seven root items are supported.
     ///
     /// @Image(source: transport-bar, alt: "A screenshot of the transport bar")
     func transportBar(@TransportBarContentBuilder content: () -> TransportBarContent) -> SystemVideoView {
@@ -138,9 +138,9 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Actions presented contextually during playback.
+    /// Configures the actions presented contextually during playback.
     ///
-    /// - Parameter content: The content builder
+    /// - Parameter content: The content builder.
     ///
     /// Use this modifier to configure actions:
     ///
@@ -153,7 +153,7 @@ public extension SystemVideoView {
     ///    }
     /// ```
     ///
-    /// > Important: One up to seven actions are supported.
+    /// > Important: One to seven actions are supported.
     ///
     /// @Image(source: contextual-actions, alt: "A screenshot of contextual actions")
     @available(iOS, unavailable)
@@ -164,7 +164,7 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Actions presented in the main Info view.
+    /// Configures the actions presented in the main Info view.
     ///
     /// - Parameter content: The content builder.
     ///
@@ -191,7 +191,7 @@ public extension SystemVideoView {
         return view
     }
 
-    /// Additional tabs presented in the Info view.
+    /// Configures additional tabs presented in the Info view.
     ///
     /// - Parameter content: The content builder.
     ///
@@ -201,7 +201,7 @@ public extension SystemVideoView {
     /// SystemVideoView(player: player)
     ///    .infoViewTabs {
     ///        Tab("Cast") {
-    ///             VStack {
+    ///            VStack {
     ///                Text("Actor 1")
     ///                Text("Actor 2")
     ///            }

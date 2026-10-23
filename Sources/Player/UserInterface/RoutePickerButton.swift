@@ -80,8 +80,8 @@ public struct RoutePickerButton<Content>: View where Content: View {
     /// Creates a route picker button.
     ///
     /// - Parameters:
-    ///   - prioritizesVideoDevices: A Boolean setting whether or not the route picker should sort video capable output
-    ///     devices to the top of the list.
+    ///   - prioritizesVideoDevices: A Boolean setting whether or not the route picker should sort video-capable
+    ///     output devices to the top of the list.
     ///   - content: The content displayed by the button.
     public init(prioritizesVideoDevices: Bool = false, @ContentBuilder content: @escaping () -> Content) {
         self.prioritizesVideoDevices = prioritizesVideoDevices

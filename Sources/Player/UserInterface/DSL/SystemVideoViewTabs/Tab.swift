@@ -16,8 +16,8 @@ public struct Tab<Content> where Content: View {
     ///
     /// - Parameters:
     ///   - title: The tab title.
-    ///   - identifier: A unique tab identifier. If omitted `title` is used instead.
-    ///   - content: The tab content
+    ///   - identifier: A unique tab identifier. If omitted, `title` is used instead.
+    ///   - content: The tab content.
     ///
     /// For optimal behavior you should ensure that each tab is assigned a unique stable identifier.
     @_disfavoredOverload
@@ -31,8 +31,8 @@ public struct Tab<Content> where Content: View {
     ///
     /// - Parameters:
     ///   - title: The tab title.
-    ///   - identifier: A unique tab identifier. If omitted `title` is used instead.
-    ///   - content: The tab content
+    ///   - identifier: A unique tab identifier. If omitted, `title` is used instead.
+    ///   - content: The tab content.
     ///
     /// For optimal behavior you should ensure that each tab is assigned a unique stable identifier.
     @_disfavoredOverload

@@ -7,11 +7,11 @@
 import CoreMedia
 
 public extension Player {
-    /// Returns whether the current player item player can be returned to its default position.
+    /// Returns whether the current player item can be returned to its default position.
     ///
     /// - Returns: `true` if skipping to the default position is possible.
     ///
-    /// For a livestream supporting DVR this method can be used to check whether the stream is played at the live
+    /// For a livestream supporting DVR, this method can be used to check whether the stream is played at the live
     /// edge or not.
     func canSkipToDefault() -> Bool {
         switch streamType {
@@ -25,11 +25,11 @@ public extension Player {
     }
 
     /// Returns the current item to its default position.
-    /// 
-    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
-    ///   whether the skip could finish without being cancelled.
     ///
-    /// For a livestream supporting DVR the default position corresponds to the live edge.
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
+    ///   whether the skip could finish without being canceled.
+    ///
+    /// For a livestream supporting DVR, the default position corresponds to the live edge.
     func skipToDefault(completion: @escaping (Bool) -> Void = { _ in }) {
         switch streamType {
         case .dvr:
