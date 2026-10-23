@@ -17,6 +17,10 @@ public struct Position {
     /// The tolerance allowed after the time to reach.
     public let toleranceAfter: CMTime
 
+    var isValid: Bool {
+        time.isValid
+    }
+
     fileprivate init(time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) {
         self.time = time
         self.toleranceBefore = toleranceBefore

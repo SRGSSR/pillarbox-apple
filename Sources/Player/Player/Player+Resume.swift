@@ -18,13 +18,15 @@ public extension Player {
     ///
     ///   - item: The item to resume. The method has no effect if the item is not part of the current item list.
     ///
+    /// The method has no effect if the position time is invalid.
+    ///
     /// This method can be used not only during active playback, but also to set the initial item and position for a
     /// player immediately after creation.
     ///
     /// > Note: To consistently start playback of an item at a specific position, use ``PlaybackConfiguration/position``
     ///   instead. Calling ``resume(_:in:)`` overrides this setting temporarily.
     func resume(_ position: Position, in item: PlayerItem) {
-        guard items.contains(item) else { return }
+        guard position.isValid, items.contains(item) else { return }
         if item == currentItem, canSeek(to: position.time) {
             seek(position)
         }
