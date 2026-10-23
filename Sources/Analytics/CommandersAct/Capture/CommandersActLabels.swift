@@ -6,7 +6,7 @@
 
 /// The labels associated with a Commanders Act hit.
 ///
-/// Mainly used for development-oriented purposes (e.g., unit testing).
+/// Mainly used for development-oriented purposes (for example, unit testing).
 public struct CommandersActLabels: Decodable {
     private let _media_airplay_on: String?
     private let _media_audiodescription_on: String?

@@ -15,13 +15,13 @@ public struct AssetMetadata<CustomData> {
 
     /// The content title.
     ///
-    /// For example the name of the show which the content is associated with, if any, otherwise the name
+    /// For example, the name of the show which the content is associated with, if any, otherwise the name
     /// of the episode itself.
     public let title: String?
 
     /// A subtitle for the content.
     ///
-    /// For example the name of the episode when a show name has been provided as title.
+    /// For example, the name of the episode when a show name has been provided as title.
     public let subtitle: String?
 
     /// A description of the content.
@@ -117,7 +117,7 @@ public struct AssetMetadata<CustomData> {
     ///   - imageSource: The source of the image associated with the content.
     ///   - viewport: The content viewport.
     ///   - episodeInformation: Episode information associated with the content.
-    ///   - chapters: Chapter associated with the content.
+    ///   - chapters: Chapters associated with the content.
     ///   - timeRanges: Time ranges associated with the content.
     ///   - customData: Custom data associated with the content.
     ///

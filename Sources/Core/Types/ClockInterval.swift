@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Contains a time interval associated with a clock.
+/// A time interval associated with a clock.
 public struct ClockInterval<C>: Equatable where C: Clock {
     /// The start of the interval.
     public let start: C.Instant
@@ -21,7 +21,7 @@ public struct ClockInterval<C>: Equatable where C: Clock {
 }
 
 public extension ClockInterval where C.Duration == Duration {
-    /// The duration as a time interval.
+    /// Returns the duration as a time interval.
     func timeInterval() -> TimeInterval {
         duration.timeInterval()
     }

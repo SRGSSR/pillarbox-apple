@@ -20,7 +20,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 > Warning: PillarboxPlayer APIs are designed for use exclusively on the main thread. Invoking these APIs from background threads is unsupported and may result in unpredictable behavior.
 
-### General Advice
+### General advice
 
 - Refer to the Human Interface Guidelines for best practices on integrating [audio](https://developer.apple.com/design/human-interface-guidelines/playing-audio) and [video](https://developer.apple.com/design/human-interface-guidelines/playing-video) experiences within your app.
 - Supporting [multi-window](https://developer.apple.com/documentation/uikit/specifying-the-scenes-your-app-supports) experiences in video playback apps is generally a challenge (audio session management and Picture in Picture support). It is therefore generally recommended to set `UIApplicationSupportsMultipleScenes` to `NO`.
@@ -163,7 +163,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``Section``
 - ``Toggle``
 
-### Domain-specific Language
+### Domain-Specific Language
 
 #### System Video View Controls
 

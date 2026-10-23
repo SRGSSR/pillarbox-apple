@@ -65,7 +65,7 @@ public struct TimeRange: Codable, Hashable {
     /// - Parameters:
     ///   - kind: The kind of the time range.
     ///   - start: The start time of the time range.
-    ///   - duration: The start time of the time range.
+    ///   - duration: The duration of the time range.
     public init(kind: Kind, start: CMTime, duration: CMTime) {
         self.init(kind: kind, timeRange: .init(start: start, duration: duration))
     }
@@ -83,7 +83,7 @@ public struct TimeRange: Codable, Hashable {
     /// Returns a Boolean value that indicates whether the time range contains a time.
     ///
     /// - Parameter time: A time value to test for in the time range.
-    /// - Returns: true if the time range contains the time value; otherwise, false.
+    /// - Returns: `true` if the time range contains the time value; otherwise, `false`.
     public func containsTime(_ time: CMTime) -> Bool {
         timeRange.containsTime(time)
     }

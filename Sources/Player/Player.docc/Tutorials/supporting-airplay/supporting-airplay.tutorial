@@ -16,7 +16,7 @@
             }
             
             @Step {
-                Configure your app's [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`, e.g., in your application delegate.
+                Configure your app's [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`, for example in your application delegate.
 
                 @Code(name: "Application.swift", file: supporting-airplay-1-2.swift)
             }
@@ -51,7 +51,7 @@
                 You can now use the AirPlay button to stream media to a compatible receiver.
 
                 @Code(name: "ContentView.swift", file: supporting-airplay-2-3.swift) {
-                    @Image(source: supporting-airplay-2-3, alt: "A screenshot displaying the AirPlay router interface.")
+                    @Image(source: supporting-airplay-2-3, alt: "A screenshot displaying the AirPlay route picker interface.")
                 }
             }
         }

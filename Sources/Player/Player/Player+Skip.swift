@@ -44,25 +44,25 @@ public extension Player {
     /// Skips backward.
     ///
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs whether the skip
-    ///   could finish without being cancelled.
+    ///   could finish without being canceled.
     func skipBackward(completion: @escaping (Bool) -> Void = { _ in }) {
         skip(withInterval: backwardSkipTime, toleranceBefore: .positiveInfinity, toleranceAfter: .zero, completion: completion)
     }
 
     /// Skips forward.
-    /// 
+    ///
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs whether the skip
-    ///   could finish without being cancelled.
+    ///   could finish without being canceled.
     func skipForward(completion: @escaping (Bool) -> Void = { _ in }) {
         skip(withInterval: forwardSkipTime, toleranceBefore: .zero, toleranceAfter: .positiveInfinity, completion: completion)
     }
 
     /// Skips in a given direction.
-    /// 
+    ///
     /// - Parameters:
     ///   - skip: The skip direction.
     ///   - completion: A completion called when skipping ends. The provided Boolean informs whether the skip
-    ///     could finish without being cancelled.
+    ///     could finish without being canceled.
     func skip(_ skip: Skip, completion: @escaping (Bool) -> Void = { _ in }) {
         switch skip {
         case .backward:

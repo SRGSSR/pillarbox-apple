@@ -6,7 +6,7 @@
 
 /// A hit made by the Commanders Act SDK.
 ///
-/// Mainly used for development-oriented purposes (e.g., unit testing).
+/// Mainly used for development-oriented purposes (for example, unit testing).
 public struct CommandersActHit {
     /// A name describing a Commanders Act hit.
     public enum Name: Equatable {
@@ -37,7 +37,7 @@ public struct CommandersActHit {
         /// Custom.
         case custom(String)
 
-        /// Returns the hit raw representation.
+        /// The hit raw representation.
         public var rawValue: String {
             switch self {
             case .play:

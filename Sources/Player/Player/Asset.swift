@@ -18,7 +18,7 @@ public struct Asset {
     let configuration: PlaybackConfiguration
 
     /// Returns a simple asset playable from a URL.
-    /// 
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - configuration: The configuration to apply to the asset.
@@ -67,9 +67,8 @@ public struct Asset {
 
     /// Returns an unavailable asset.
     ///
-    /// - Parameters:
-    ///   - error: The reason why the asset is not available.
-    /// - Returns: The asset
+    /// - Parameter error: The reason why the asset is not available.
+    /// - Returns: The asset.
     ///
     /// Use an unavailable asset when a business reason prevents the content from being played but metadata is
     /// nonetheless available.

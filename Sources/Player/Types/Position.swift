@@ -74,7 +74,7 @@ public func before(_ time: CMTime) -> Position {
 }
 
 /// Returns an approximate position always located after the specified time.
-/// 
+///
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
 public func after(_ time: CMTime) -> Position {

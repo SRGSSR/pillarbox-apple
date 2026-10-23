@@ -25,7 +25,7 @@ import SwiftUI
 /// 1. Instantiate a `ProgressTracker` in your view hierarchy, setting up the refresh interval you need. You should
 ///    instantiate a progress tracker in the narrowest possible view scope so that refreshes only affect a small
 ///    portion of your view hierarchy, especially if the applied refresh interval is small.
-/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUICore/View/bind(_:to:)-8fqem`` modifier.
+/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUICore/View/bind(_:to:)-(ProgressTracker,_)`` modifier.
 /// 3. The current progress can be retrieved from the ``progress`` property and displayed in any way you want. Use
 ///    the ``range`` property to determine the currently available range, and ``isProgressAvailable`` to know whether
 ///    progress should actually be displayed.
@@ -34,7 +34,7 @@ import SwiftUI
 ///    during the interaction.
 ///
 /// The PillarboxPlayer framework also provides automatic progress interaction integration with the SwiftUI standard
-/// slider, see ``SwiftUI/Slider/init(progressTracker:label:minimumValueLabel:maximumValueLabel:onEditingChanged:)``.
+/// slider. See ``SwiftUI/Slider/init(progressTracker:label:minimumValueLabel:maximumValueLabel:onEditingChanged:)``.
 ///
 /// > Note: For step-by-step integration instructions have a look at the associated <doc:tracking-progress> tutorial.
 public final class ProgressTracker: ObservableObject {
@@ -101,10 +101,10 @@ public final class ProgressTracker: ObservableObject {
         _progress != nil ? 0...1 : 0...0
     }
 
-    /// A Boolean reporting whether progress information is available.
+    /// A Boolean describing whether progress information is available.
     ///
     /// This Boolean is a recommendation you can use to entirely hide progress information in cases where it is not
-    /// meaningful (e.g., when loading content or for livestreams).
+    /// meaningful (for example, when loading content or for livestreams).
     public var isProgressAvailable: Bool {
         _progress != nil
     }

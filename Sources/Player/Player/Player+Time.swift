@@ -7,14 +7,14 @@
 import CoreMedia
 
 public extension Player {
-    /// The current time.
+    /// Returns the current time.
     ///
     /// Returns `.invalid` when the time is unknown.
     func time() -> CMTime {
         properties.time()
     }
 
-    /// The current date.
+    /// Returns the current date.
     ///
     /// The date is `nil` when no date information is available from the stream.
     func date() -> Date? {

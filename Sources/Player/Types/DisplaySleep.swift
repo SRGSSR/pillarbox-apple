@@ -8,9 +8,9 @@ import UIKit
 
 /// Manages display sleep prevention.
 ///
-/// There is no real reliable way to manage `isIdleTimerDisabled` as soon as 3rd party code is involved, but this
+/// There is no real reliable way to manage `isIdleTimerDisabled` as soon as third-party code is involved, but this
 /// class at least implements correct reference counting for the PillarboxPlayer framework. This ensures that the
-/// idle timer is enabled most of the time, as written in `isIdleTimerDisabled` documentation.
+/// idle timer is enabled most of the time, as written in the `isIdleTimerDisabled` documentation.
 final class DisplaySleep {
     static let shared = DisplaySleep()
 

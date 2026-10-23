@@ -11,8 +11,9 @@ import SwiftUI
 /// The button is automatically hidden when Picture in Picture is not available. The body closure is provided a
 /// Boolean indicating when Picture in Picture is active.
 ///
-/// For the button to be visible at least one `VideoView` or `SystemVideoView` must be enabled for in-app Picture in
-/// Picture by applying the `View/enabledForInAppPictureInPicture(persisting:)` modifier to one of its parent views.
+/// For the button to be visible, at least one ``VideoView`` or ``SystemVideoView`` must be enabled for in-app Picture
+/// in Picture by applying the ``SwiftUICore/View/enabledForInAppPictureInPicture(persisting:)`` modifier to one of its
+/// parent views.
 public struct PictureInPictureButton<Content>: View where Content: View {
     private let content: (Bool) -> Content
 

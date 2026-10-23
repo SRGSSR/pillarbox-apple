@@ -22,13 +22,13 @@
             }
 
             @Step {
-                Add a ``VisibilityTracker`` to `ContentView`, and store it as a `@StateObject` to manage visibility states effectively.
+                Add a ``VisibilityTracker`` to `ContentView` and store it as a `@StateObject` to manage visibility states effectively.
 
                 @Code(name: "ContentView.swift", file: tracking-visibility-1-2.swift)
             }
 
             @Step {
-                Bind the visibility tracker to the player using the ``SwiftUICore/View/bind(_:to:)-wthx`` modifier. This ensures the tracker reacts to player state changes and adjusts the user interface visibility accordingly.
+                Bind the visibility tracker to the player using the ``SwiftUICore/View/bind(_:to:)-(VisibilityTracker,_)`` modifier. This ensures the tracker reacts to player state changes and adjusts the user interface visibility accordingly.
 
                 @Code(name: "ContentView.swift", file: tracking-visibility-1-3.swift)
             }

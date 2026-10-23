@@ -22,7 +22,7 @@ public extension Player {
         }
     }
 
-    /// The list of media options associated with a characteristic.
+    /// Returns the list of media options associated with a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The list of options associated with the characteristic.
@@ -33,7 +33,7 @@ public extension Player {
         return selector.mediaSelectionOptions()
     }
 
-    /// The currently selected media option for a characteristic.
+    /// Returns the currently selected media option for a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The selected option.
@@ -66,7 +66,7 @@ public extension Player {
         queuePlayer.setMediaSelectionCriteria(updatedSelectionCriteria, forMediaCharacteristic: characteristic)
     }
 
-    /// A binding to read and write the current media selection for a characteristic.
+    /// Returns a binding to read and write the current media selection for a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The binding.
@@ -78,26 +78,26 @@ public extension Player {
         }
     }
 
-    /// The current media option for a characteristic.
+    /// Returns the current media option for a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The current option.
     ///
-    /// Unlike `selectedMediaOption(for:)` this method provides the currently applied option. This method can
+    /// Unlike `selectedMediaOption(for:)`, this method provides the currently applied option. This method can
     /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
     /// and `.off` options (forced options might be returned where applicable).
     func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         properties.currentMediaOption(for: characteristic)
     }
 
-    /// Sets desired media selection preference for the specified media characteristic.
+    /// Sets the desired media selection preference for the specified media characteristic.
     ///
     /// - Parameters:
     ///   - preference: The preference to apply.
     ///   - characteristic: The media characteristic for which the preference must be applied. Supported values
     ///     include `.audible`, `.legible`, and `.visual`.
     ///
-    /// This method can be used to override the default media option selection for some characteristic, e.g., to start
+    /// This method can be used to override the default media option selection for some characteristic, for example, to start
     /// playback with a predefined language for audio and/or subtitles.
     ///
     /// > Important: Media selection only works when HLS playlists are correctly formatted. If selection does not behave

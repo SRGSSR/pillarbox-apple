@@ -13,8 +13,8 @@ public struct CommandersActLocation {
     /// Creates Commanders Act location information.
     ///
     /// - Parameters:
-    ///   - identifier: The location identifier
-    ///   - version: The location version (e.g. for A/B testing).
+    ///   - identifier: The location identifier.
+    ///   - version: The location version (for example, for A/B testing).
     ///   - position: The position within the location.
     public init(identifier: String, version: String? = nil, position: Int? = nil) {
         self.identifier = identifier

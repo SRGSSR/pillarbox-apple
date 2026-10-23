@@ -19,8 +19,8 @@ public final class Player: ObservableObject, Equatable {
 
     /// The current item.
     ///
-    /// This method can be used to replace the current item with an item not in the current ``items``. If the item set
-    /// is identical to the current item a skip to its default position is performed instead.
+    /// This property can be used to replace the current item with an item not in the current ``items``. If the item set
+    /// is identical to the current item, a skip to its default position is performed instead.
     @Published public var currentItem: PlayerItem? {
         willSet {
             if currentItem != newValue {
@@ -130,7 +130,7 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
-    /// A Boolean setting indicating whether the audio output of the player must be muted.
+    /// A Boolean describing whether the audio output of the player must be muted.
     public var isMuted: Bool {
         get {
             properties.isMuted
@@ -140,11 +140,10 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// A Boolean setting whether trackers must be enabled or not.
+    /// A Boolean describing whether trackers must be enabled or not.
     ///
     /// This property only affects trackers having optional ``TrackingBehavior``, set when creating a corresponding
     /// adapter using ``PlayerItemTracker/adapter(configuration:behavior:mapper:)`` or similar methods.
-    ///
     public var isTrackingEnabled = true {
         didSet {
             tracker?.isEnabled = isTrackingEnabled
@@ -153,7 +152,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// The low-level system player.
     ///
-    /// Exposed for specific read-only needs like interfacing with `AVPlayer`-based 3rd party APIs. Mutating the state
+    /// Exposed for specific read-only needs like interfacing with `AVPlayer`-based third-party APIs. Mutating the state
     /// of this player directly is not supported and leads to undefined behavior.
     public var systemPlayer: AVPlayer {
         queuePlayer
@@ -258,7 +257,7 @@ public final class Player: ObservableObject, Equatable {
         Self.currentPlayer = nil
     }
 
-    /// The list of current sessions managed by trackers of a specific type.
+    /// Returns the list of current sessions managed by trackers of a specific type.
     ///
     /// Only trackers with an associated ``PlayerItemTracker/sessionIdentifier`` are returned.
     public func currentSessionIdentifiers<T>(trackedBy type: T.Type) -> [String] where T: PlayerItemTracker {

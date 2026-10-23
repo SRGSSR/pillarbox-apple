@@ -16,7 +16,7 @@
             }
             
             @Step {
-                Configure your app's [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`, e.g., in your application delegate.
+                Configure your app's [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`, for example in your application delegate.
 
                 @Code(name: "Application.swift", file: supporting-basic-picture-in-picture-1-2)
             }
@@ -52,7 +52,7 @@
             }
             
             @Step {
-                Test the functionality by returning to the Home screen. Picture in Picture should initiate automatically.
+                Test the functionality by returning to the Home Screen. Picture in Picture should initiate automatically.
 
                 @Image(source: supporting-basic-picture-in-picture-2-4, alt: "An example of Picture in Picture in action.")
             }

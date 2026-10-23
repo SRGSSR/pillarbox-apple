@@ -23,7 +23,7 @@ Regardless of the integration mode you choose, your app must be properly configu
 To enable PiP, ensure the following configurations are applied:
 
 1. **Background Modes:** Enable PiP support in your app’s [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#4182619).
-2. **Audio Session:** Set the [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) category to [`.playback`](https://developer.apple.com/documentation/avfaudio/avaudiosession/category/1616509-playback).
+2. **Audio Session:** Set the [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to [`.playback`](https://developer.apple.com/documentation/avfaudio/avaudiosession/category/1616509-playback).
 
 ### Basic integration
 
@@ -85,4 +85,4 @@ To test your integration, follow these steps:
 
 When using ``SystemVideoView`` inline (not fullscreen), its close button is replaced with a maximize button to enable fullscreen mode. If you want to dismiss the view containing the inline player when PiP starts, wait for the ``PictureInPictureDelegate/pictureInPictureDidStart()`` callback to avoid playback interruptions.
 
-> Warning: Automatic PiP activation (e.g., swiping to go Home) may not work if multiple ``SystemVideoView`` instances with PiP enabled are active simultaneously.
+> Warning: Automatic PiP activation (for example, swiping to go Home) may not work if multiple ``SystemVideoView`` instances with PiP enabled are active simultaneously.
