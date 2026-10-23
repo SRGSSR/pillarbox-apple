@@ -51,4 +51,16 @@ final class SeekChecksTests: TestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSeek(to: player.seekableTimeRange.end + CMTime(value: 1, timescale: 1))).to(beFalse())
     }
+
+    func testCannotSeekToInvalidTime() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        expect(player.canSeek(to: .invalid)).to(beFalse())
+    }
+
+    func testCannotSeekToIndefiniteTime() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        expect(player.canSeek(to: .indefinite)).to(beFalse())
+    }
 }
