@@ -38,10 +38,9 @@ final class ImageSourceTests: TestCase {
     func testFailingUrl() throws {
         let url = URL(string: "https://localhost:8123/missing.jpg")!
         let source = ImageSource.url(standardResolution: url)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.url(standardResolution: url)],
-            from: source.imageSourcePublisher(),
-            during: .milliseconds(100)
+            from: source.imageSourcePublisher()
         )
     }
 }

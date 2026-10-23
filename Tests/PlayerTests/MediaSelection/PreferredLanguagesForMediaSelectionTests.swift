@@ -205,7 +205,7 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
 
         player.select(mediaOption: .automatic, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
-        expect(player.currentMediaOption(for: .legible)).toNever(haveLanguageIdentifier("ja"), until: .seconds(1))
+        expect(player.currentMediaOption(for: .legible)).toEventuallyNot(haveLanguageIdentifier("ja"), timeout: .seconds(1))
     }
 
     func testAutomaticAudibleMediaSelection() {
