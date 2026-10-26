@@ -66,7 +66,7 @@ public extension Slider where ValueLabel == EmptyView {
 @available(tvOS, unavailable)
 public extension Slider where Label == EmptyView, ValueLabel == EmptyView {
     /// Creates a slider bound to a progress tracker.
-    /// 
+    ///
     /// - Parameters:
     ///   - progressTracker: The progress tracker.
     ///   - onEditingChanged: A closure called when editing begins or ends.

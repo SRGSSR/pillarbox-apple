@@ -20,7 +20,7 @@ The ``PlayerItemTracker`` protocol uses two associated types to define the data 
 - ``PlayerItemTracker/Metadata`` represents metadata required by the tracker. This updates whenever a tracked player item delivers a new asset.
 - ``PlayerItemTracker/Configuration`` represents configuration parameters provided during tracker creation. These parameters are independent of the player item itself.
 
-> Note: Use Void for either type if it is not applicable to your tracker.
+> Note: Use `Void` for either type if it is not applicable to your tracker.
 
 ### Implement the tracker lifecycle
 
@@ -45,7 +45,7 @@ let item = PlayerItem.simple(url: url, metadata: CustomMetadata(), trackerAdapte
     CustomTracker.adapter(configuration: configuration) { metadata in
         // Convert `CustomMetadata` into tracker metadata
     }
-]
+])
 ```
 
 You can also:

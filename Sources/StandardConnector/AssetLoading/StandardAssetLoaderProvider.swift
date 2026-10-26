@@ -16,12 +16,12 @@ public protocol StandardAssetLoaderProvider {
     /// Custom data associated with the content.
     associatedtype CustomData: Decodable = EmptyCustomData
 
-    /// The request to load the metadata
+    /// Returns the request to load the metadata.
     ///
     /// - Parameter input: The input that identifies the asset.
     static func request(for input: Input) -> URLRequest
 
-    /// The decoder to parse the custom data.
+    /// Returns the decoder used to parse the custom data.
     static func decoder() -> JSONDecoder
 
     /// Converts the given input and metadata into an asset.
@@ -41,7 +41,7 @@ public protocol StandardAssetLoaderProvider {
     /// - Returns: An asset representing the content to be downloaded. The publisher can be used to perform any kind of
     ///   required work (potentially asynchronous) to return an asset that can be downloaded.
     ///
-    /// If not implemented defaults to a publisher immediately returning ``StandardAssetLoaderProvider/asset(from:metadata:)``.
+    /// If not implemented, defaults to a publisher immediately returning ``StandardAssetLoaderProvider/asset(from:metadata:)``.
     static func downloadableAssetPublisher(from input: Input, metadata: PlayerData<CustomData>) -> AnyPublisher<Asset, Never>
 }
 

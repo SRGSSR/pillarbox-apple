@@ -44,7 +44,7 @@ public extension View {
 }
 
 public extension View {
-    /// Enable in-app Picture in Picture support.
+    /// Enables in-app Picture in Picture support.
     ///
     /// - Parameter persistable: The object to persist during Picture in Picture.
     ///

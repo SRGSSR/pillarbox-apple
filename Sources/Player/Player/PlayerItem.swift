@@ -36,7 +36,7 @@ public final class PlayerItem: Identifiable {
     /// - Parameters:
     ///   - assetLoaderType: The asset loader type.
     ///   - input: The input expected by the asset loader.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - trackerAdapters: An array of ``TrackerAdapter`` instances to use for tracking playback events.
     public init<Loader>(assetLoaderType: Loader.Type, input: Loader.Input, trackerAdapters: [TrackerAdapter<Loader.Metadata>] = []) where Loader: AssetLoader {
         self.trackerAdapters = trackerAdapters
         self.content = .loading(id: id)
@@ -123,12 +123,12 @@ public extension PlayerItem {
         self.init(assetLoaderType: URLAssetLoader<Provider>.self, input: input, trackerAdapters: trackerAdapters)
     }
 
-    /// Creates a simple player item.
+    /// Returns a simple player item.
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - trackerAdapters: An array of ``TrackerAdapter`` instances to use for tracking playback events.
     /// - Returns: The item.
     static func simple(
         url: URL,
@@ -138,13 +138,13 @@ public extension PlayerItem {
         self.init(assetProviderType: URLEmptyAssetProvider.self, input: .init(url: url, metadata: metadata), trackerAdapters: trackerAdapters)
     }
 
-    /// Creates a custom URL-based player item.
+    /// Returns a custom URL-based player item.
     ///
     /// - Parameters:
     ///   - assetProviderType: The asset provider type.
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
-    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - trackerAdapters: An array of ``TrackerAdapter`` instances to use for tracking playback events.
     /// - Returns: The item.
     static func custom<Provider>(
         assetProviderType: Provider.Type,

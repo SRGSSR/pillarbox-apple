@@ -7,14 +7,14 @@
 import Combine
 import Foundation
 
-/// An [observable object](https://developer.apple.com/documentation/combine/observableobject)) managing media downloads.
+/// An [observable object](https://developer.apple.com/documentation/combine/observableobject) managing media downloads.
 @_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     private let store: S
     private let session: any DownloadSession
 
-    /// Returns existing downloads.
+    /// The existing downloads.
     @Published public private(set) var downloads: [Download]
 
     init(store: S, session: some DownloadSession) {

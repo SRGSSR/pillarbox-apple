@@ -50,4 +50,4 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
 The source key determines the destination to which measurements are sent. Use `.production` for production builds and `.development` for development builds.
 
-> Tip: For SwiftUI apps, use an [UIApplicationDelegateAdaptor](https://developer.apple.com/documentation/swiftui/uiapplicationdelegateadaptor) to register an application delegate.
+> Tip: For SwiftUI apps, use a [UIApplicationDelegateAdaptor](https://developer.apple.com/documentation/swiftui/uiapplicationdelegateadaptor) to register an application delegate.

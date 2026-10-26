@@ -7,7 +7,7 @@
 
     @Section(title: "Create a basic video playback interface") {
         @ContentAndMedia {
-            Build a basic video playback featuring displaying a play/pause button.
+            Build a basic video playback interface featuring a play/pause button.
         }
 
         @Steps {
@@ -50,22 +50,22 @@
 
         @Steps {
             @Step {
-                Add a button for skipping backward. Use `skipBackward()` as the action.
+                Add a button for skipping backward. Use ``Player/skipBackward(completion:)`` as the action.
 
                 The button icon matches the default backward skip interval (-10 seconds).
 
-                @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-1.swift, previousFile: creating-basic-user-interface-1-5.swift) {
-                    @Image(source: creating-basic-user-interface-2-1, alt: "A screenshot of an iPhone UI with a +10 seconds button.")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-1.swift, previousFile: creating-basic-user-interface-1-4.swift) {
+                    @Image(source: creating-basic-user-interface-2-1, alt: "A screenshot of an iPhone UI with a -10 seconds button.")
                 }
             }
 
             @Step {
-                Add a button for skipping forward. Use `skipForward()` as the action.
+                Add a button for skipping forward. Use ``Player/skipForward(completion:)`` as the action.
 
                 The button icon matches the default forward skip interval (+10 seconds).
 
                 @Code(name: "ContentView.swift", file: creating-basic-user-interface-2-2.swift) {
-                    @Image(source: creating-basic-user-interface-2-2, alt: "A screenshot of an iPhone UI with a -10 seconds button.")
+                    @Image(source: creating-basic-user-interface-2-2, alt: "A screenshot of an iPhone UI with a +10 seconds button.")
                 }
             }
 

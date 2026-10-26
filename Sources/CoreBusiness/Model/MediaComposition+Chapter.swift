@@ -8,7 +8,7 @@ import CoreMedia
 import Foundation
 
 public extension MediaComposition {
-    /// A content providing a playable resource.
+    /// Content providing a playable resource.
     struct Chapter: Decodable {
         enum CodingKeys: String, CodingKey {
             case _analyticsData = "analyticsData"
@@ -37,7 +37,7 @@ public extension MediaComposition {
         /// The full-length URN.
         public let fullLengthUrn: String?
 
-        /// The chapter title
+        /// The chapter title.
         public let title: String
 
         /// The chapter description.
@@ -57,7 +57,7 @@ public extension MediaComposition {
         /// The publication date.
         public let date: Date
 
-        /// Returns whether the content is blocked for some reason.
+        /// The reason why the content is blocked, if any.
         public var blockingReason: BlockingReason? {
             _blockingReason?.blockingReason(startDate: _validFrom, endDate: _validTo)
         }
@@ -82,12 +82,12 @@ public extension MediaComposition {
             _analyticsMetadata ?? [:]
         }
 
-        /// The time interval associated with the chapter.
+        /// The time intervals associated with the chapter.
         public var timeIntervals: [TimeInterval] {
             _timeIntervals ?? []
         }
 
-        /// Time range associated with the chapter.
+        /// The time range associated with the chapter.
         public var timeRange: CMTimeRange {
             guard let _markIn, let _markOut else { return .zero }
             return CMTimeRange(

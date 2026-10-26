@@ -31,7 +31,7 @@ public final class Stopwatch<C> where C: Clock {
         self.instant = nil
     }
 
-    /// The duration accumulated by the stopwatch.
+    /// Returns the duration accumulated by the stopwatch.
     public func duration() -> C.Duration {
         if let instant {
             return total + instant.duration(to: clock.now)
@@ -49,7 +49,7 @@ public final class Stopwatch<C> where C: Clock {
 }
 
 public extension Stopwatch where C.Duration == Duration {
-    /// The duration accumulated by the stopwatch, as a time interval.
+    /// Returns the duration accumulated by the stopwatch, as a time interval.
     func timeInterval() -> TimeInterval {
         duration().timeInterval()
     }

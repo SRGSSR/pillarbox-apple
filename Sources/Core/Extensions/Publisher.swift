@@ -103,13 +103,13 @@ public extension Publisher {
     ///
     /// - Parameters:
     ///   - interval: The amount of time to delay.
-    ///   - tolerance: The allowed tolerance in delivering delayed events. The `Delay` publisher may deliver elements 
+    ///   - tolerance: The allowed tolerance in delivering delayed events. The `Delay` publisher may deliver elements
     ///     this much sooner or later than the interval specifies.
     ///   - scheduler: The scheduler to deliver the delayed events.
     ///   - options: Options relevant to the scheduler’s behavior.
     /// - Returns: A publisher that delays delivery of elements and completion to the downstream receiver.
     ///
-    /// If the `interval` is zero the value is published synchronously, not on the specified scheduler.
+    /// If the `interval` is zero, the value is published synchronously, not on the specified scheduler.
     func delayIfNeeded<S>(
         for interval: S.SchedulerTimeType.Stride,
         tolerance: S.SchedulerTimeType.Stride? = nil,
@@ -134,7 +134,7 @@ public extension Publisher {
     /// Slices a publisher output to emit equatable values found at a specific path downstream, removing any duplicates
     /// in the process.
     ///
-    /// - Parameter keyPath: The key path to extract
+    /// - Parameter keyPath: The key path to extract.
     /// - Returns: A publisher emitting values at the specified key path.
     func slice<T>(at keyPath: KeyPath<Output, T>) -> AnyPublisher<T, Failure> where T: Equatable {
         map(keyPath)
@@ -142,8 +142,8 @@ public extension Publisher {
             .eraseToAnyPublisher()
     }
 
-    /// Make the upstream publisher wait until a second signal publisher emits some value.
-    /// 
+    /// Makes the upstream publisher wait until a second signal publisher emits some value.
+    ///
     /// - Parameter signal: The signal publisher.
     /// - Returns: A publisher emitting values after the signal publisher emits a value.
     func wait<S>(untilOutputFrom signal: S) -> AnyPublisher<Output, Failure> where S: Publisher, S.Failure == Never {
@@ -154,11 +154,11 @@ public extension Publisher {
         .eraseToAnyPublisher()
     }
 
-    /// Make the upstream publisher fail if a second signal publisher emits some value.
+    /// Makes the upstream publisher fail if a second signal publisher emits some value.
     ///
     /// - Parameters:
-    ///    - signal: The signal publisher.
-    ///    - error: The error to report on failure.
+    ///   - signal: The signal publisher.
+    ///   - error: The error to report on failure.
     /// - Returns: A publisher emitting values until the signal publisher emits a value, which leads to the publisher
     ///   completing with an error.
     func fail<S>(onOutputFrom signal: S, with error: Failure) -> AnyPublisher<Output, Failure> where S: Publisher, S.Failure == Never {
@@ -181,7 +181,7 @@ public extension Publisher where Failure == Never {
     ///
     /// - Parameters:
     ///   - keyPath: A key path that indicates the property to assign.
-    ///   - object: The object that contains the property. The subscriber assigns the object’s property every time it 
+    ///   - object: The object that contains the property. The subscriber assigns the object’s property every time it
     ///     receives a new value.
     /// - Returns: An `AnyCancellable` instance which can be used to cancel the subscription.
     func weakAssign<T>(to keyPath: ReferenceWritableKeyPath<T, Output>, on object: T) -> AnyCancellable where T: AnyObject {
@@ -196,7 +196,7 @@ public extension Publisher {
     ///
     /// - Parameter bufferSize: The maximum number of values that must be buffered.
     ///
-    /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
+    /// Upon subscription, new subscribers automatically receive recent values available from the buffer, as well as
     /// any relevant completion.
     func share(replay bufferSize: Int) -> AnyPublisher<Output, Failure> {
         multicast(subject: ReplaySubject(bufferSize: bufferSize))

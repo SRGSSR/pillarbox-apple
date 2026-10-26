@@ -81,7 +81,7 @@ extension InlinePicker: MenuElement where Body == InlinePickerInMenu<Value> {
     ///
     /// - Parameters:
     ///   - title: The picker's title.
-    ///   - selection: A binding to a property that determines the currently-selected option.
+    ///   - selection: A binding to a property that determines the currently selected option.
     ///   - content: The picker's content.
     @_disfavoredOverload
     public init<S>(_ title: S, selection: Binding<Value>, @InlinePickerContentBuilder<Value> content: () -> InlinePickerContent<Value>) where S: StringProtocol {
@@ -92,7 +92,7 @@ extension InlinePicker: MenuElement where Body == InlinePickerInMenu<Value> {
     ///
     /// - Parameters:
     ///   - title: The picker's title.
-    ///   - selection: A binding to a property that determines the currently-selected option.
+    ///   - selection: A binding to a property that determines the currently selected option.
     ///   - content: The picker's content.
     public init(_ title: LocalizedStringResource, selection: Binding<Value>, @InlinePickerContentBuilder<Value> content: () -> InlinePickerContent<Value>) {
         self.init(String(localized: title), selection: selection, content: content)
@@ -101,7 +101,7 @@ extension InlinePicker: MenuElement where Body == InlinePickerInMenu<Value> {
     /// Creates a picker.
     ///
     /// - Parameters:
-    ///   - selection: A binding to a property that determines the currently-selected option.
+    ///   - selection: A binding to a property that determines the currently selected option.
     ///   - content: The picker's content.
     public init(selection: Binding<Value>, @InlinePickerContentBuilder<Value> content: () -> InlinePickerContent<Value>) {
         self.init(String(""), selection: selection, content: content)

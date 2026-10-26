@@ -6,7 +6,7 @@
 
 /// A protocol to respond to Picture in Picture life cycle events.
 ///
-/// Applications which require in-app Picture in Picture support must setup a delegate and rely on the Picture in
+/// Applications which require in-app Picture in Picture support must set up a delegate and rely on the Picture in
 /// Picture life cycle to dismiss and restore views as required.
 public protocol PictureInPictureDelegate: AnyObject {
     /// Called when Picture in Picture is about to start.

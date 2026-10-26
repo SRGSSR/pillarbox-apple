@@ -8,7 +8,7 @@ import AVFoundation
 
 /// A protocol for custom player item tracking implementation.
 ///
-/// For more information about implementing custom trackers please read <doc:tracking-article>.
+/// For more information about implementing custom trackers, please read <doc:tracking-article>.
 public protocol PlayerItemTracker: AnyObject {
     /// A type describing the configuration required by the tracker.
     ///
@@ -35,8 +35,9 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// Creates the tracker.
     ///
-    /// - Parameter configuration: The tracker configuration.
-    /// - Parameter queue: The queue onto which tracker methods will be called.
+    /// - Parameters:
+    ///   - configuration: The tracker configuration.
+    ///   - queue: The queue onto which tracker methods will be called.
     init(configuration: Configuration, queue: DispatchQueue)
 
     /// A method called when the tracker is enabled for a player.
@@ -106,7 +107,7 @@ public extension PlayerItemTracker {
 
 public extension PlayerItemTracker where Configuration == Void {
     /// Creates an adapter for the receiver.
-    /// 
+    ///
     /// - Parameters:
     ///   - behavior: The tracking behavior.
     ///   - mapper: A closure that maps an item metadata to tracker metadata.

@@ -8,7 +8,7 @@ import Combine
 
 /// A subject that stores a number of recent values into a buffer.
 ///
-/// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
+/// Upon subscription, new subscribers automatically receive recent values available from the buffer, as well as
 /// any relevant completion.
 public final class ReplaySubject<Output, Failure>: Subject where Failure: Error {
     private let buffer: LimitedBuffer<Output>
@@ -16,7 +16,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     private let subscriptions: RecursiveLock<[ReplaySubscription]> = .init(initialState: [])
     private let completion: RecursiveLock<Subscribers.Completion<Failure>?> = .init(initialState: nil)
 
-    /// For use in tests only
+    /// For use in tests only.
     var isEmpty: Bool {
         subscriptions.withLock(\.isEmpty)
     }

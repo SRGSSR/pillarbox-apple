@@ -16,7 +16,7 @@ public extension Collection where Element: Hashable {
 
 public extension Collection {
     /// Safely returns the item at the specified index.
-    /// 
+    ///
     /// - Parameter index: The index.
     /// - Returns: The item at the specified index or `nil` if the index is not within range.
     subscript(safeIndex index: Index) -> Element? {

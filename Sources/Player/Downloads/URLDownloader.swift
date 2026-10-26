@@ -15,7 +15,7 @@ import Foundation
 public final class URLDownloader<Provider>: ObservableObject where Provider: URLAssetDownloadStoreProvider {
     private let downloadManager: Downloader<URLAssetDownloadStore<Provider>>
 
-    /// Returns existing downloads.
+    /// The existing downloads.
     @Published public private(set) var downloads: [Download] = []
 
     /// Creates a downloader for URL-based content with custom data.

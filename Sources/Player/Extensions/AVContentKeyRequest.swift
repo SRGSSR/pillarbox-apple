@@ -11,7 +11,7 @@ public extension AVContentKeyRequest {
     ///
     /// - Parameter error: An error object indicating the reason for the failure.
     ///
-    /// Unlike `processContentKeyResponseError(_:)` this method ensures error information can be reliably
+    /// Unlike `processContentKeyResponseError(_:)`, this method ensures error information can be reliably
     /// forwarded to the player item being loaded in case of failure.
     func processContentKeyResponseErrorReliably(_ error: Error) {
         if let nsError = NSError.error(from: error) {
