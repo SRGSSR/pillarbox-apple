@@ -103,11 +103,6 @@ class QueuePlayer: AVQueuePlayer {
             seek.completionHandler(finished)
             pendingSeeks.removeAll()
         }
-        else {
-            // Sometimes the target seek might fail for no reason, especially when seeking near the stream end.
-            // In such cases retry.
-            enqueue(seek: seek, completion: completion)
-        }
     }
 
     override func seek(to time: CMTime, completionHandler: @escaping (Bool) -> Void) {
