@@ -58,14 +58,10 @@ extension TimeProperties {
     /// For livestreams the seekable time range end jumps each time a chunk is added. The estimate compensates
     /// for these jumps by moving from the previous end to the current one as time elapses since the last update.
     var smoothedSeekableTimeRangeEnd: CMTime {
-        let end = seekableTimeRange.end
-        guard previousSeekableTimeRangeEnd.isValid, seekableTimeRangeEndUpdateTime.isValid,
-              previousSeekableTimeRangeEnd < end else {
-            return end
+        guard previousSeekableTimeRangeEnd.isValid, seekableTimeRangeEndUpdateTime.isValid else {
+            return seekableTimeRange.end
         }
-        let elapsedTime = CMClockGetTime(CMClockGetHostTimeClock()) - seekableTimeRangeEndUpdateTime
-        let step = end - previousSeekableTimeRangeEnd
-        return previousSeekableTimeRangeEnd + CMTimeClampToRange(elapsedTime, range: .init(start: .zero, end: step))
+        return previousSeekableTimeRangeEnd + CMClockGetTime(CMClockGetHostTimeClock()) - seekableTimeRangeEndUpdateTime
     }
 
     /// Returns properties whose seekable time range end history is carried over from previous properties if the

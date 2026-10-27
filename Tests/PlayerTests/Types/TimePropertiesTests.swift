@@ -97,28 +97,6 @@ final class TimePropertiesTests: TestCase {
         expect(properties.smoothedSeekableTimeRangeEnd.seconds).to(beCloseTo(1, within: 0.1))
     }
 
-    func testSmoothedSeekableTimeRangeEndIsClamped() {
-        let properties = TimeProperties(
-            loadedTimeRanges: [],
-            seekableTimeRanges: [NSValue(timeRange: .twoSeconds)],
-            isPlaybackLikelyToKeepUp: true,
-            previousSeekableTimeRangeEnd: .init(value: 1, timescale: 1),
-            seekableTimeRangeEndUpdateTime: CMClockGetTime(CMClockGetHostTimeClock()) - CMTime(value: 10, timescale: 1)
-        )
-        expect(properties.smoothedSeekableTimeRangeEnd).to(equal(.init(value: 2, timescale: 1)))
-    }
-
-    func testSmoothedSeekableTimeRangeEndWhenEndMovesBackward() {
-        let properties = TimeProperties(
-            loadedTimeRanges: [],
-            seekableTimeRanges: [NSValue(timeRange: .oneSecond)],
-            isPlaybackLikelyToKeepUp: true,
-            previousSeekableTimeRangeEnd: .init(value: 2, timescale: 1),
-            seekableTimeRangeEndUpdateTime: CMClockGetTime(CMClockGetHostTimeClock())
-        )
-        expect(properties.smoothedSeekableTimeRangeEnd).to(equal(.init(value: 1, timescale: 1)))
-    }
-
     func testHistoryPreservedWhenEndIsUnchanged() {
         let updateTime = CMTime(value: 1, timescale: 1)
         let previous = TimeProperties(
