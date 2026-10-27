@@ -118,8 +118,6 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 - <doc:downloads-article>
 
-#### Downloading Content
-
 - ``AssetDownloadStore``
 - ``Download``
 - ``DownloadConfiguration``
@@ -128,9 +126,6 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``DownloadSize``
 - ``DownloadState``
 - ``Downloader``
-
-#### Downloading URL-Based Content
-
 - ``URLAssetDownloadStoreProvider``
 - ``URLAssetLoaderProvider``
 - ``URLDownloader``
@@ -190,8 +185,6 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 ### Domain-Specific Language
 
-#### System Video View Controls
-
 - ``ButtonInContextualActions``
 - ``ButtonInInfoViewActions``
 - ``ButtonInMenu``
@@ -207,6 +200,8 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``InfoViewActionsContent``
 - ``InfoViewActionsContentBuilder``
 - ``InfoViewActionsElement``
+- ``InfoViewTabsContent``
+- ``InfoViewTabsContentBuilder``
 - ``InlinePicker``
 - ``InlinePickerBody``
 - ``InlinePickerBodyNotSupported``
@@ -245,6 +240,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``SectionInMenu``
 - ``SectionInPicker``
 - ``SectionElement``
+- ``Tab``
 - ``ToggleInMenu``
 - ``ToggleInSection``
 - ``ToggleInTransportBar``
@@ -253,12 +249,6 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``TransportBarContent``
 - ``TransportBarContentBuilder``
 - ``TransportBarElement``
-
-#### System Video View Tabs
-
-- ``InfoViewTabsContent``
-- ``InfoViewTabsContentBuilder``
-- ``Tab``
 
 ### Technical Notes
 
