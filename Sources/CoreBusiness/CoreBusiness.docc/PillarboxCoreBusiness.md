@@ -24,6 +24,20 @@ You can specify a different server or add custom tracker adapters. Standard SRG 
 
 > Tip: Tracker adapters receive a ``MediaMetadata`` instance as input. If your tracker requires additional data that is not currently available, please submit a corresponding [feature request](https://github.com/SRGSSR/pillarbox-apple/issues/new?assignees=&labels=enhancement%2Ctriage&projects=&template=feature_request.yml).
 
+### Download SRG SSR content
+
+SRG SSR content can be downloaded for offline playback on iOS 17 and above. Downloads work as described in the [Downloads](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxplayer/downloads-article) article of the PillarboxPlayer framework, with the following differences:
+
+- Use a ``URNDownloader`` instead of a `Downloader`. It persists downloads with SwiftData, so you don't need to implement a download store.
+- Add downloads with a URN, and optionally a server, using ``URNDownloader/addDownload(urn:server:httpHeaders:configuration:)``. Retrieve an existing download with ``URNDownloader/download(matchingUrn:server:)``.
+
+```swift
+let downloader = try URNDownloader(configuration: .background(withIdentifier: "com.example.downloads"))
+downloader.addDownload(urn: "urn:rts:video:8806923")
+```
+
+Player items created with ``URNDownloader/playerItem(for:commandersActSource:trackerAdapters:)`` are tracked according to SRG SSR analytics standards, like streamed content. Tracking events may be cached while the device is offline and submitted when connectivity is restored.
+
 ### Avoid background playback
 
 comScore regulations prohibit video measurements without a visible video view on the screen.
