@@ -41,7 +41,9 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
 
     /// Adds a download for the given input.
     ///
-    /// - Parameter input: The input required to perform the download.
+    /// - Parameters:
+    ///   - input: The input required to perform the download.
+    ///   - configuration: The download configuration.
     /// - Returns: A download associated with the given input. If a download already exists for the input, the existing
     ///   download is returned instead.
     @discardableResult
