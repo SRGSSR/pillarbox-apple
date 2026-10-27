@@ -67,6 +67,45 @@ This example shows how to use the standard connector with a backend endpoint and
     }
 }
 
+## Downloads
+
+Standard content can be downloaded for offline playback on iOS 17 and above. Downloads work as described in the [Downloads](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxplayer/downloads-article) article of the PillarboxPlayer framework, with the following differences:
+
+- Use a ``StandardDownloader`` instead of a `Downloader`. It persists downloads with SwiftData, so you don't need to implement a download store.
+- Make your asset provider conform to ``StandardAssetDownloadStoreProvider``. Its `Input` and `CustomData` types must be `Codable`.
+
+@TabNavigator {
+    @Tab("Provider") {
+        Extend the asset provider to identify downloads and play downloaded files.
+
+        ```swift
+        extension MediaAssetProvider: StandardAssetDownloadStoreProvider {
+            static func id(from input: String) -> String {
+                input
+            }
+
+            static func asset(fileUrl: URL, customData: EmptyCustomData?) -> Asset {
+                .simple(url: fileUrl)
+            }
+        }
+        ```
+    }
+
+    @Tab("Downloader") {
+        Create a downloader with the provider and add downloads.
+
+        ```swift
+        let downloader = try StandardDownloader(
+            storeProviderType: MediaAssetProvider.self,
+            configuration: .background(withIdentifier: "com.example.downloads")
+        )
+        downloader.addDownload(for: "apple-basic-16-9")
+        ```
+    }
+}
+
+Metadata is fetched with your provider's request and persisted automatically, including the custom data decoded from ``PlayerData``.
+
 ## Topics
 
 ### Content Loading
