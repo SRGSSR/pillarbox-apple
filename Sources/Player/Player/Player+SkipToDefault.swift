@@ -18,7 +18,7 @@ public extension Player {
         case .onDemand, .live:
             return true
         case .dvr where chunkDuration.isValid:
-            return time() < properties.smoothedSeekableTimeRangeEnd - chunkDuration
+            return time() < properties.seekableTimeRangeEnd - chunkDuration
         default:
             return false
         }

@@ -55,7 +55,7 @@ extension Player {
         properties.seekableTimeRange
     }
 
-    var smoothedSeekableTimeRangeEnd: CMTime {
-        properties.smoothedSeekableTimeRangeEnd
+    var seekableTimeRangeEnd: CMTime {
+        properties.seekableTimeRangeEnd
     }
 }

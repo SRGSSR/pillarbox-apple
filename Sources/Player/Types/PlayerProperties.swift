@@ -176,10 +176,10 @@ public extension PlayerProperties {
 }
 
 extension PlayerProperties {
-    var smoothedSeekableTimeRangeEnd: CMTime {
+    var seekableTimeRangeEnd: CMTime {
         switch streamType {
         case .dvr:
-            timeProperties.smoothedSeekableTimeRangeEnd
+            timeProperties.dvrSeekableTimeRangeEnd
         default:
             timeProperties.seekableTimeRange.end
         }
