@@ -54,7 +54,7 @@ public extension PlayerProperties {
 
     /// The type of stream currently being played.
     var streamType: StreamType {
-        StreamType(for: seekableTimeRange, duration: coreProperties.duration)
+        StreamType(for: timeProperties.seekableTimeRange, duration: coreProperties.duration)
     }
 }
 
@@ -156,7 +156,12 @@ public extension PlayerProperties {
     ///
     /// Returns `.invalid` when the time range is unknown.
     var seekableTimeRange: CMTimeRange {
-        timeProperties.seekableTimeRange
+        switch streamType {
+        case .dvr:
+            CMTimeRange(start: timeProperties.seekableTimeRange.start, end: timeProperties.dvrSeekableTimeRangeEnd)
+        default:
+            timeProperties.seekableTimeRange
+        }
     }
 
     /// The time range which has been loaded.
@@ -172,16 +177,5 @@ public extension PlayerProperties {
     /// playback.
     var buffer: Float {
         timeProperties.buffer
-    }
-}
-
-extension PlayerProperties {
-    var seekableTimeRangeEnd: CMTime {
-        switch streamType {
-        case .dvr:
-            timeProperties.dvrSeekableTimeRangeEnd
-        default:
-            timeProperties.seekableTimeRange.end
-        }
     }
 }
