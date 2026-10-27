@@ -57,7 +57,7 @@ private extension Player {
         switch properties.streamType {
         case .live:
             return .range(1...1)
-        case .dvr where time > properties.seekableTimeRangeEnd - properties.chunkDuration:
+        case .dvr where time > properties.seekableTimeRange.end - properties.chunkDuration:
             return .range(0.1...1)
         case .unknown:
             // Updates must be suspended while the stream type is unknown
