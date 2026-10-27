@@ -88,7 +88,9 @@ struct MyApp: App {
 }
 ```
 
-Use a [background session configuration](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)) so that downloads continue while your app is suspended. When the downloader is created, it restores the downloads saved in the store.
+When the downloader is created, it restores the downloads saved in the store.
+
+> Warning: Downloaders require a background session configuration, created with [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)). Background configurations support reliable downloading while your app is suspended. Use a different identifier for each downloader.
 
 ### Display the list of downloads
 
@@ -222,6 +224,8 @@ If you play content from URLs without a custom ``AssetLoader``, use ``URLDownloa
 let downloader = try URLDownloader(configuration: .background(withIdentifier: "com.example.url-downloads"))
 downloader.addDownload(url: url, metadata: .init(title: "My video"))
 ```
+
+> Warning: URL downloaders also require a background session configuration, created with [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)). Background configurations support reliable downloading while your app is suspended. Use a different identifier for each downloader.
 
 Since the content has no asset loader, provide its metadata when adding the download with ``URLDownloader/addDownload(url:metadata:configuration:)-(_,AssetMetadata<Provider.CustomData>,_)``. The rest of the API matches the one of ``Downloader``, with ``URLDownloader/downloads``, ``URLDownloader/playerItem(for:trackerAdapters:)`` and the removal methods.
 

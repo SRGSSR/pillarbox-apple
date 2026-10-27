@@ -24,8 +24,12 @@ public final class StandardDownloader<Provider>: ObservableObject where Provider
     ///   - name: The name of the database on disk. If an application uses multiple ``StandardDownloader`` instances, each
     ///     one should use a different name.
     ///   - storeProviderType: The store provider type.
-    ///   - configuration: A configuration object that defines the behavior and policies of the URL session used to
-    ///     perform file transfers.
+    ///   - configuration: A background configuration object that defines the behavior and policies of the URL session
+    ///     used to perform file transfers.
+    ///
+    /// The configuration must be created with
+    /// [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)),
+    /// which supports reliable downloading while the app is suspended. Use a different identifier for each downloader.
     public init(name: String? = nil, storeProviderType: Provider.Type, configuration: URLSessionConfiguration) throws {
         self.downloader = Downloader(configuration: configuration, store: try StandardAssetDownloadStore(name: name, providerType: storeProviderType))
 

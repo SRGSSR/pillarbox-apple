@@ -36,6 +36,8 @@ let downloader = try URNDownloader(configuration: .background(withIdentifier: "c
 downloader.addDownload(urn: "urn:rts:video:8806923")
 ```
 
+> Warning: URN downloaders require a background session configuration, created with [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)). Background configurations support reliable downloading while your app is suspended. Use a different identifier for each downloader.
+
 Player items created with ``URNDownloader/playerItem(for:commandersActSource:trackerAdapters:)`` are tracked according to SRG SSR analytics standards, like streamed content. Tracking events may be cached while the device is offline and submitted when connectivity is restored.
 
 ### Avoid background playback

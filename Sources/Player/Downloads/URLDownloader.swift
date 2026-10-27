@@ -23,8 +23,12 @@ public final class URLDownloader<Provider>: ObservableObject where Provider: URL
     ///   - name: The name of the database on disk. If an application uses multiple ``URLDownloader`` instances, each
     ///     one should use a different name.
     ///   - storeProviderType: The store provider type.
-    ///   - configuration: A configuration object that defines the behavior and policies of the URL session used to
-    ///     perform file transfers.
+    ///   - configuration: A background configuration object that defines the behavior and policies of the URL session
+    ///     used to perform file transfers.
+    ///
+    /// The configuration must be created with
+    /// [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)),
+    /// which supports reliable downloading while the app is suspended. Use a different identifier for each downloader.
     public init(
         name: String? = nil,
         storeProviderType: Provider.Type,
@@ -97,8 +101,12 @@ public extension URLDownloader where Provider == URLEmptyAssetProvider {
     /// - Parameters:
     ///   - name: The name of the database on disk. If an application uses multiple ``URLDownloader`` instances, each
     ///     one should use a different name.
-    ///   - configuration: A configuration object that defines the behavior and policies of the URL session used to
-    ///     perform file transfers.
+    ///   - configuration: A background configuration object that defines the behavior and policies of the URL session
+    ///     used to perform file transfers.
+    ///
+    /// The configuration must be created with
+    /// [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)),
+    /// which supports reliable downloading while the app is suspended. Use a different identifier for each downloader.
     convenience init(name: String? = nil, configuration: URLSessionConfiguration) throws {
         try self.init(name: name, storeProviderType: URLEmptyAssetProvider.self, configuration: configuration)
     }
