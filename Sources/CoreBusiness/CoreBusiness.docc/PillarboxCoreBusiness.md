@@ -37,6 +37,11 @@ Do not enable background video playback using `audiovisualBackgroundPlaybackPoli
 - ``PillarboxPlayer/PlayerItem``
 - ``Server``
 
+### Downloads
+
+- ``URNDownloader``
+- ``URNMetadata``
+
 ### Metadata
 
 - ``MediaComposition``

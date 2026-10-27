@@ -112,6 +112,29 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``PlaybackConfiguration``
 - ``PlayerItem``
 
+### Downloads
+
+- <doc:downloads-article>
+
+#### Downloading Content
+
+- ``AssetDownloadStore``
+- ``Download``
+- ``DownloadConfiguration``
+- ``DownloadMediaSelectionPreference``
+- ``DownloadRecord``
+- ``DownloadSize``
+- ``DownloadState``
+- ``Downloader``
+
+#### Downloading URL-Based Content
+
+- ``URLAssetDownloadStoreProvider``
+- ``URLAssetLoaderProvider``
+- ``URLDownloader``
+- ``URLEmptyAssetProvider``
+- ``URLInput``
+
 ### Tracking
 
 - <doc:tracking-article>

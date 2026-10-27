@@ -75,6 +75,11 @@ This example shows how to use the standard connector with a backend endpoint and
 - ``PlayerData``
 - ``StandardAssetLoaderProvider``
 
+### Downloads
+
+- ``StandardAssetDownloadStoreProvider``
+- ``StandardDownloader``
+
 ### Errors
 
 - ``HttpError``
