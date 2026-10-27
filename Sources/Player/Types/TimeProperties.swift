@@ -13,6 +13,9 @@ struct TimeProperties: Equatable {
     let seekableTimeRanges: [NSValue]
     let isPlaybackLikelyToKeepUp: Bool
 
+    /// The seekable time range end before its last update.
+    var previousSeekableTimeRangeEnd: CMTime = .invalid
+
     /// The host time at which the seekable time range end was last updated.
     var seekableTimeRangeEndUpdateTime: CMTime = .invalid
 }
@@ -50,29 +53,31 @@ extension TimeProperties {
 }
 
 extension TimeProperties {
-    /// Returns a continuous estimate of the seekable time range end.
+    /// A continuous estimate of the seekable time range end.
     ///
-    /// - Parameter chunkDuration: The chunk duration.
-    /// - Returns: The estimated end.
-    ///
-    /// For livestreams the seekable time range end jumps by about a chunk duration each time a chunk is added.
-    /// The estimate compensates for these jumps by having the end lag a chunk behind, catching up with time
-    /// elapsed since the last update.
-    func smoothedSeekableTimeRangeEnd(chunkDuration: CMTime) -> CMTime {
+    /// For livestreams the seekable time range end jumps each time a chunk is added. The estimate compensates
+    /// for these jumps by moving from the previous end to the current one as time elapses since the last update.
+    var smoothedSeekableTimeRangeEnd: CMTime {
         let end = seekableTimeRange.end
-        guard chunkDuration.isValid, seekableTimeRangeEndUpdateTime.isValid else { return end }
+        guard previousSeekableTimeRangeEnd.isValid, seekableTimeRangeEndUpdateTime.isValid,
+              previousSeekableTimeRangeEnd < end else {
+            return end
+        }
         let elapsedTime = CMClockGetTime(CMClockGetHostTimeClock()) - seekableTimeRangeEndUpdateTime
-        return end - chunkDuration + CMTimeClampToRange(elapsedTime, range: .init(start: .zero, end: chunkDuration))
+        let step = end - previousSeekableTimeRangeEnd
+        return previousSeekableTimeRangeEnd + CMTimeClampToRange(elapsedTime, range: .init(start: .zero, end: step))
     }
 
-    /// Returns properties whose seekable time range end update time is carried over from previous properties
-    /// if the end did not change.
+    /// Returns properties whose seekable time range end history is carried over from previous properties if the
+    /// end did not change, or updated otherwise.
     func updated(from previous: Self) -> Self {
         var properties = self
         if seekableTimeRange.end == previous.seekableTimeRange.end {
+            properties.previousSeekableTimeRangeEnd = previous.previousSeekableTimeRangeEnd
             properties.seekableTimeRangeEndUpdateTime = previous.seekableTimeRangeEndUpdateTime
         }
         else {
+            properties.previousSeekableTimeRangeEnd = previous.seekableTimeRange.end
             properties.seekableTimeRangeEndUpdateTime = CMClockGetTime(CMClockGetHostTimeClock())
         }
         return properties
