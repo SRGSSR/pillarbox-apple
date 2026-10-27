@@ -6,7 +6,7 @@ Detailed information about these reports is available from our [Apple feedback p
 
 ## Video view leak (FB11934227)
 
-A bug in AVKit makes `SystemVideoView` leak resources after having interacted with the playback button
+A bug in AVKit makes `SystemVideoView` leak resources after the user has interacted with the playback button.
 
 > [!IMPORTANT]
 > This issue has been fixed in iOS 17.
@@ -15,7 +15,7 @@ A bug in AVKit makes `SystemVideoView` leak resources after having interacted wi
 
 No workaround is available yet.
 
-## DRM-protected contents do not play in the simulator
+## DRM-protected content does not play in the simulator
 
 DRM-protected streams do not play in the simulator. This is expected behavior as the required hardware features are not available in the simulator.
 
@@ -31,9 +31,9 @@ When running an iPad app on macOS, attempting to play DRM-protected content whil
 
 Disable _Debug executable_ in the associated scheme.
 
-## Seeking to the end of an on-demand might confuse the player (FB12020197, FB12019343, FB11970329)
+## Seeking to the end of an on-demand stream might confuse the player (FB12020197, FB12019343, FB11970329)
 
-Seeking near the end of a content might sometimes confuse the player (image stuck while sound is still playing, for example).
+Seeking near the end of on-demand content might sometimes confuse the player (for example, the image freezes while sound keeps playing).
 
 ### Workaround
 
@@ -41,7 +41,7 @@ No workaround is available yet.
 
 ## DRM playback is sometimes not possible anymore (FB19383686)
 
-It might happen that attempting to play DRM streams always ends with an error. The reason is likely an issue with key session management.
+Attempts to play DRM streams might consistently fail with an error. The cause is likely an issue with key session management.
 
 > [!IMPORTANT]
 > This issue has been fixed in iOS 26.3.
@@ -52,7 +52,7 @@ Kill and restart the application.
 
 ## Token-protected content is not playable on Apple TV 3rd generation devices
 
-Token-protected content cannot be played on old Apple TV 3rd generation devices. An error is returned when attempting to play such content.
+Token-protected content cannot be played on Apple TV 3rd generation devices. An error is returned when attempting to play such content.
 
 ### Workaround
 
@@ -62,7 +62,7 @@ No workaround is available yet.
 
 The media type is `.unknown` if playback is started after an AirPlay session has been established. A correct value is delivered when AirPlay is enabled after playback has already been started, though.
 
-As a result some behaviors based on the media type might not always be reliable over AirPlay.
+As a result, some behaviors based on the media type might not always be reliable over AirPlay.
 
 ### Workaround
 
@@ -70,7 +70,7 @@ No workaround is available yet.
 
 ## Media type is briefly incorrect when disabling AirPlay while the media type is still unknown
 
-The media type can be `.unknown` if an AirPlay session was established before playback started (see previous issue). In such cases closing the AirPlay session ensures a correct media type is delivered, though for video it might briefly be set to `.audio` first.
+The media type can be `.unknown` if an AirPlay session was established before playback started (see previous issue). In such cases, closing the AirPlay session ensures a correct media type is delivered, though for video it might briefly be set to `.audio` first.
 
 ### Workaround
 
@@ -78,7 +78,7 @@ No workaround is available yet.
 
 ## AirPlay does not work in Mac applications "Designed for iPad" (FB15343579)
 
-Pillarbox can be used in iPad applications run on Silicon Macs (_Designed for iPad_ destination) but AirPlay does not work. Playback fails.
+Pillarbox can be used in iPad applications running on Apple silicon Macs (_Designed for iPad_ destination), but playback over AirPlay fails.
 
 ### Workaround
 
@@ -86,7 +86,7 @@ No workaround is available yet.
 
 ## Playback of a livestream in a playlist might fail if the previous item was played at a speed > 1
 
-When chaining an on-demand stream played at a speed > 1 to a livestream (without DVR) in a playlist, livestream playback might fail with a Core Media error. If there is an item after it the livestream item will simply be skipped, otherwise the player will end in a failed state.
+When chaining an on-demand stream played at a speed > 1 to a livestream (without DVR) in a playlist, livestream playback might fail with a Core Media error. If another item follows, the livestream item is simply skipped; otherwise, the player ends in a failed state.
 
 ### Workaround
 
@@ -94,7 +94,7 @@ No workaround is available yet.
 
 ## Sound of a player casting to AirPlay incorrectly overlaps with sound of local player instances (FB12311238)
 
-When casting a player to AirPlay while other players are playing other content locally (even muted), sound of these other instances overlaps with the sound of the main instance played on the AirPlay receiver.
+When casting a player to AirPlay while other players are playing other content locally (even muted), the sound of these other instances overlaps with the sound of the main instance played on the AirPlay receiver.
 
 ### Workaround
 
@@ -102,7 +102,7 @@ Pause players playing content locally.
 
 ## Presentation size cannot be determined when AirPlay is enabled (FB12080967, FB20914272)
 
-When AirPlay is activated the value of the `AVPlayerItem.presentationSize` property is always zero. It is therefore not possible to tell whether a video or audio is played when AirPlay is enabled.
+When AirPlay is enabled, the value of the `AVPlayerItem.presentationSize` property is always zero. It is therefore not possible to tell whether video or audio is being played.
 
 ### Workaround
 
@@ -127,9 +127,9 @@ When approaching the end of the current item, and if there is a next item in the
 
 No workaround is available yet.
 
-## Slow seeking when Spatial audio is enabled for connected AirPods (FB13322077)
+## Slow seeking when Spatial Audio is enabled for connected AirPods (FB13322077)
 
-Seeks might feel sluggish when Spatial audio is enabled for connected AirPods. This only happens when a player view supporting Picture is Picture is displayed while seeking is made.
+Seeking might feel sluggish when Spatial Audio is enabled for connected AirPods. This only happens when a player view supporting Picture in Picture is displayed while seeking.
 
 ### Workaround
 
@@ -137,7 +137,7 @@ No workaround is available yet.
 
 ## Control Center playback button state is incorrect in multi-player configurations (FB13684239)
 
-When multiple player instances are used and one of them has been made active, the  Control Center playback button state does not always correctly reflect the state of the active player, but is altered by the state of the other available players as well.
+When multiple player instances are used and one of them has been made active, the Control Center playback button state does not always correctly reflect the state of the active player, but is altered by the state of the other available players as well.
 
 ### Workaround
 
@@ -171,9 +171,9 @@ Due to an `AVQueuePlayer` issue, toggling `isMuted` can cause the player to rema
 
 No workaround is available yet. Audio is restored when transitioning between items, when the player is paused and resumed, or when a seek operation occurs.
 
-## Playback incorrectly jumps to the live edge when resuming a DVR video livestream after an interruption (e.g. alarm) (FB21701670)
+## Playback incorrectly jumps to the live edge when resuming a DVR video livestream after an interruption (FB21701670)
 
-When playing a video livestream that offers a DVR window, the player incorrectly resumes at the live edge after an interruption instead of resuming from the previous playback position.
+When playing a video livestream that offers a DVR window, the player incorrectly resumes at the live edge after an interruption (for example, an alarm) instead of resuming from the previous playback position.
 
 ### Workaround
 
@@ -181,7 +181,7 @@ Apps that require this behavior to be handled correctly can manage [audio sessio
 
 ## FairPlay-protected content playback fails with Lightning adapter (A1438) on iOS 18 and above (FB22052832)
 
-When using an official Lightning-to-HDMI Apple adapter (A1438) to connect a Lightning-equipped iOS device to a screen, using an appropriate HDMI cable, playback always fails with an error when playing FairPlay protected content on iOS 18 and 26.
+When using an official Lightning-to-HDMI Apple adapter (A1438) to connect a Lightning-equipped iOS device to a screen, using an appropriate HDMI cable, playback of FairPlay-protected content always fails with an error on iOS 18 and later.
 
 ### Workaround
 
@@ -195,17 +195,17 @@ Some increments reported in `Metrics` may contain negative values immediately fo
 
 No workaround is available yet.
 
-## Download files might remain after cleanup
+## Downloaded files might remain after cleanup
 
-If a file download is pending but has not yet started when the app is terminated, its location can no longer be retrieved. As a result, the downloaded file can no longer be located for cleanup.
+If a download is pending but has not started yet when the app is terminated, the location of its file can no longer be retrieved. As a result, the file cannot be cleaned up.
 
 ### Workaround
 
-These orphaned download files are typically very small (at most a few kilobytes). They can be removed manually through the device’s storage settings or will eventually be reclaimed automatically by the system.
+These orphaned download files are typically very small (at most a few kilobytes). They can be removed manually from the Storage section of the Settings app, or are eventually reclaimed by the system.
 
 ## Offline playback fails due to media selection picking variants declared in the master playlist but not available offline (FB24445920)
 
-When playing a downloaded stream offline (e.g. Airplane mode with no WiFi access), the player may incorrectly attempt to load variants declared in the master playlist but not available offline. This makes playback fail with a network error ("The Internet connection appears to be offline") since the player incorrectly attempts to load a variant not available locally from the network instead.
+When playing a downloaded stream offline (for example, in Airplane Mode without Wi-Fi), the player may incorrectly attempt to load variants that are declared in the master playlist but not available offline. Playback then fails with a network error ("The Internet connection appears to be offline").
 
 ### Workaround
 
@@ -221,8 +221,8 @@ No workaround is available yet.
 
 ## Standard Pillarbox menus may prevent players from being immediately deallocated on iOS 27 (FB24486991)
 
-Objects whose properties are bound to items displayed in a `Menu` are not immediately deallocated on iOS 27. As a result, standard menus provided by Pillarbox may retain the associated player longer than expected. This can lead to playback unexpectedly continuing in background.
+Objects whose properties are bound to items displayed in a `Menu` are not immediately deallocated on iOS 27. As a result, standard menus provided by Pillarbox may retain the associated player longer than expected. This can lead to playback unexpectedly continuing in the background.
 
 ### Workaround
 
-No workaround is currently available.
+No workaround is available yet.
