@@ -51,6 +51,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
     - <doc:airplay-article>
     - <doc:control-center-article>
     - <doc:picture-in-picture-article>
+    - <doc:downloads-article>
 }
 
 ## Topics

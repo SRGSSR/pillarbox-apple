@@ -2,6 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
+    @PageImage(purpose: card, source: downloads-card, alt: "An image depicting a download arrow in a circle.")
 }
 
 Download content to play it offline.
