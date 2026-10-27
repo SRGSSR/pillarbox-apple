@@ -64,7 +64,7 @@ extension TimeProperties {
 }
 
 extension TimeProperties {
-    var smoothedSeekableTimeRangeEnd: CMTime {
+    var dvrSeekableTimeRangeEnd: CMTime {
         seekableTimeRange.end + CMClockGetTime(CMClockGetHostTimeClock()) - clockTime
     }
 

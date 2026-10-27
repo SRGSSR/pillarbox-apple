@@ -46,7 +46,7 @@ public extension Player {
     /// - Returns: `true` if possible.
     func canSeek(to time: CMTime) -> Bool {
         guard seekableTimeRange.isValidAndNotEmpty else { return false }
-        return seekableTimeRange.start <= time && time <= smoothedSeekableTimeRangeEnd
+        return seekableTimeRange.start <= time && time <= seekableTimeRangeEnd
     }
 
     /// Seeks to a given position.
