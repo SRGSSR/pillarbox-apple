@@ -36,8 +36,6 @@ When implementing an ``AssetLoader``, use ``AssetLoader/playerMetadata(from:meta
 
 ```swift
 enum MediaAssetLoader: AssetLoader {
-    typealias Input = String
-
     static func metadataPublisher(for input: String) -> AnyPublisher<Media, any Error> {
         // ...
     }

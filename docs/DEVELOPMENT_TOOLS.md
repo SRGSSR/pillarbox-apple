@@ -14,7 +14,7 @@ to list all available commands.
 
 ### Local test streams
 
-Since Apple players [cannot play local manifests](https://developer.apple.com/forums/thread/69357?answerId=202051022#202051022), we use Python to run a simple [web server](https://docs.python.org/3/library/http.server.html) that serves various [test streams](../Scripts/public/test-streams.sh) from a local directory. These streams are used throughout the unit test suites.
+Since Apple players [cannot play local manifests](https://developer.apple.com/forums/thread/69357?answerId=202051022#202051022), we use Python to run a simple [web server](https://docs.python.org/3/library/http.server.html) that serves various test streams from a local directory. These streams are used throughout the unit test suites.
 
 The web server must be manually started using:
 

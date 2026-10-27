@@ -88,6 +88,8 @@ struct MyApp: App {
 }
 ```
 
+> Important: If your app uses several URL downloaders, give each one a different `name`.
+
 When the downloader is created, it restores the downloads saved in the store.
 
 > Warning: Downloaders require a background session configuration, created with [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)). Background configurations support reliable downloading while your app is suspended. Use a different identifier for each downloader.
@@ -193,11 +195,11 @@ struct DownloadButton: View {
 }
 ```
 
-If a download already exists for the input, the existing download is returned instead of a new one. Use ``Downloader/download(matching:)`` to retrieve it, for example to display its status with the cell view above rather than a download button.
+If a download already exists for the input, the existing download is returned instead of a new one. Use ``Downloader/download(matching:)`` to retrieve it.
 
 ### Configure what is downloaded
 
-By default, a download uses ``DownloadConfiguration/default``. To control the quality and the audio and subtitle languages that are downloaded, pass a ``DownloadConfiguration`` when adding the download:
+By default, a download uses a ``DownloadConfiguration/default`` configuration. To control the quality and the audio and subtitle languages that are downloaded, pass a ``DownloadConfiguration`` when adding the download:
 
 ```swift
 var configuration = DownloadConfiguration(preferredMaximumResolution: CGSize(width: 1280, height: 720))
@@ -288,5 +290,3 @@ downloader.addDownload(url: url, metadata: .init(title: "My video", customData: 
 ```
 
 The same provider can stream content with ``PlayerItem/custom(assetProviderType:url:metadata:trackerAdapters:)``. ``URLEmptyAssetProvider`` is the provider used when no custom data is needed.
-
-> Tip: If your app uses several URL downloaders, give each one a different `name`.
