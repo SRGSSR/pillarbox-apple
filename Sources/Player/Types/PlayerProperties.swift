@@ -174,3 +174,9 @@ public extension PlayerProperties {
         timeProperties.buffer
     }
 }
+
+extension PlayerProperties {
+    var smoothedSeekableTimeRangeEnd: CMTime {
+        timeProperties.smoothedSeekableTimeRangeEnd(chunkDuration: chunkDuration)
+    }
+}
