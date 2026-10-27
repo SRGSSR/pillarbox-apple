@@ -195,7 +195,33 @@ struct DownloadButton: View {
 
 If a download already exists for the input, the existing download is returned instead of a new one. Use ``Downloader/download(matching:)`` to retrieve it, for example to display its status with the cell view above rather than a download button.
 
-> Tip: Pass a ``DownloadConfiguration`` to limit the downloaded quality with ``DownloadConfiguration/preferredPeakBitRate`` or ``DownloadConfiguration/preferredMaximumResolution``, or to select which audio and subtitle languages are downloaded with ``DownloadConfiguration/setMediaSelectionPreference(_:for:)``.
+### Configure what is downloaded
+
+By default, a download uses ``DownloadConfiguration/default``. To control the quality and the audio and subtitle languages that are downloaded, pass a ``DownloadConfiguration`` when adding the download:
+
+```swift
+var configuration = DownloadConfiguration(preferredMaximumResolution: CGSize(width: 1280, height: 720))
+configuration.setMediaSelectionPreference(.languages("fr", "en"), for: .audible)
+configuration.setMediaSelectionPreference(.all, for: .legible)
+downloader.addDownload(for: identifier, configuration: configuration)
+```
+
+Limit the downloaded quality with:
+
+- ``DownloadConfiguration/preferredMaximumResolution``, the maximum video resolution.
+- ``DownloadConfiguration/preferredPeakBitRate``, the maximum bitrate.
+
+Each limit is disabled when set to zero, which is the default.
+
+Select which renditions are downloaded with ``DownloadConfiguration/setMediaSelectionPreference(_:for:)``, for audio (`.audible`) and subtitles (`.legible`). A ``DownloadMediaSelectionPreference`` can be:
+
+- ``DownloadMediaSelectionPreference/automatic``, the default, which selects renditions based on the system language and accessibility settings.
+- ``DownloadMediaSelectionPreference/languages(_:)``, which downloads the given languages if available. Use BCP 47 language identifiers or ISO 639-2/T language codes.
+- ``DownloadMediaSelectionPreference/all``, which downloads all available languages.
+
+With explicit languages or all languages, the downloaded renditions still respect the user's accessibility settings.
+
+The configuration is persisted with the download and exposed as ``Download/configuration``. To change it, restart the download with ``Download/restart(configuration:)``. The downloaded file is discarded and the download starts over.
 
 ### Play downloaded content
 
