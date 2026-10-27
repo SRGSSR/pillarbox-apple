@@ -177,6 +177,6 @@ public extension PlayerProperties {
 
 extension PlayerProperties {
     var smoothedSeekableTimeRangeEnd: CMTime {
-        timeProperties.smoothedSeekableTimeRangeEnd(chunkDuration: chunkDuration)
+        timeProperties.smoothedSeekableTimeRangeEnd
     }
 }
