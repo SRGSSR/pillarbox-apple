@@ -5,8 +5,6 @@
 //
 
 import Foundation
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 /// An [observable object](https://developer.apple.com/documentation/combine/observableobject) that manages Pillarbox-standard media downloads.
@@ -14,7 +12,6 @@ import PillarboxPlayer
 /// This downloader persists download metadata in a SwiftData database.
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public final class StandardDownloader<Provider>: ObservableObject where Provider: StandardAssetDownloadStoreProvider {
     private let downloader: Downloader<StandardAssetDownloadStore<Provider>>
 

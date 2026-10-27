@@ -5,10 +5,7 @@
 //
 
 import Foundation
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
-
 import SwiftData
 
 @available(iOS 17.0, *)

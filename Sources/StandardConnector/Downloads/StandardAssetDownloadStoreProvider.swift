@@ -10,7 +10,6 @@ import PillarboxPlayer
 /// A protocol that defines how Pillarbox-standard content is retrieved from a store.
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public protocol StandardAssetDownloadStoreProvider: StandardAssetLoaderProvider where Input: Codable, CustomData: Codable {
     /// Creates a unique identifier for the given download input.
     ///

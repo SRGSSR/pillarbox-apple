@@ -11,7 +11,6 @@ import Foundation
 /// This downloader persists download metadata in a SwiftData database.
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public final class URLDownloader<Provider>: ObservableObject where Provider: URLAssetDownloadStoreProvider {
     private let downloadManager: Downloader<URLAssetDownloadStore<Provider>>
 
@@ -92,7 +91,6 @@ public final class URLDownloader<Provider>: ObservableObject where Provider: URL
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public extension URLDownloader where Provider == URLEmptyAssetProvider {
     /// Creates a downloader for URL-based content without custom data.
     ///

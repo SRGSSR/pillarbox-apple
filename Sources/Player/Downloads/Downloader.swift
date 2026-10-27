@@ -8,7 +8,6 @@ import Combine
 import Foundation
 
 /// An [observable object](https://developer.apple.com/documentation/combine/observableobject) managing media downloads.
-@_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     private let store: S

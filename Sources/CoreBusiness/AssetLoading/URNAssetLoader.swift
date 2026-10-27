@@ -6,8 +6,6 @@
 
 import Combine
 import PillarboxCore
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 enum URNAssetLoader: AssetLoader {

@@ -9,7 +9,6 @@ import Foundation
 @_spi(CoreBusinessPrivate)
 import PillarboxCoreBusiness
 
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 enum MediaAssetProvider: URLAssetLoaderProvider {

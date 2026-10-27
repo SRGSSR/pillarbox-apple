@@ -7,7 +7,6 @@
 import Foundation
 
 /// Contains data associated with a download record.
-@_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public struct DownloadRecord<Input, CustomData> {
     /// The input used to perform the download.

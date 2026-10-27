@@ -8,14 +8,8 @@
 
 import Combine
 import Foundation
-
-@_spi(DownloaderPrivate)
 import PillarboxCoreBusiness
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
-
-@_spi(DownloaderPrivate)
 import PillarboxStandardConnector
 
 @available(tvOS, unavailable)
