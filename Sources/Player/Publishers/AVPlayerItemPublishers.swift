@@ -46,7 +46,7 @@ extension AVPlayerItem {
             publisher(for: \.isPlaybackLikelyToKeepUp)
         )
         .map { TimeProperties(loadedTimeRanges: $0, seekableTimeRanges: $1, isPlaybackLikelyToKeepUp: $2) }
-        .scan(TimeProperties.empty) { $1.updated(from: $0) }
+        .scan(.empty) { $1.updated(from: $0) }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
