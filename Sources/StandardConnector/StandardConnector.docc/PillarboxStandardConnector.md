@@ -74,6 +74,8 @@ Standard content can be downloaded for offline playback on iOS 17 and above. Dow
 - Use a ``StandardDownloader`` instead of a `Downloader`. It persists downloads with SwiftData, so you don't need to implement a download store.
 - Make your asset provider conform to ``StandardAssetDownloadStoreProvider``. Its `Input` and `CustomData` types must be `Codable`.
 
+> Important: Standard downloaders persist downloads with [SwiftData](https://developer.apple.com/documentation/swiftdata), which is only available on iOS 17 and above. If your app supports iOS 16, add `SwiftData.framework` to the _Frameworks, Libraries, and Embedded Content_ section of your app target and set its status to _Optional_. Otherwise, your app crashes at launch on iOS 16.
+
 @TabNavigator {
     @Tab("Provider") {
         Extend the asset provider to identify downloads and play downloaded files.

@@ -31,6 +31,8 @@ SRG SSR content can be downloaded for offline playback on iOS 17 and above. Down
 - Use a ``URNDownloader`` instead of a `Downloader`. It persists downloads with SwiftData, so you don't need to implement a download store.
 - Add downloads with a URN, and optionally a server, using ``URNDownloader/addDownload(urn:server:httpHeaders:configuration:)``. Retrieve an existing download with ``URNDownloader/download(matchingUrn:server:)``.
 
+> Important: URN downloaders persist downloads with [SwiftData](https://developer.apple.com/documentation/swiftdata), which is only available on iOS 17 and above. If your app supports iOS 16, add `SwiftData.framework` to the _Frameworks, Libraries, and Embedded Content_ section of your app target and set its status to _Optional_. Otherwise, your app crashes at launch on iOS 16.
+
 ```swift
 let downloader = try URNDownloader(configuration: .background(withIdentifier: "com.example.downloads"))
 downloader.addDownload(urn: "urn:rts:video:8806923")

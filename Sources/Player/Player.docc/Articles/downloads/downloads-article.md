@@ -218,7 +218,11 @@ To track playback of downloaded content, pass ``TrackerAdapter`` instances when 
 
 ### Download URL-based content
 
-If you play content from URLs without a custom ``AssetLoader``, use ``URLDownloader`` instead of implementing a store yourself. A URL downloader persists its downloads with SwiftData and is available on iOS 17 and above:
+If you play content from URLs without a custom ``AssetLoader``, use ``URLDownloader`` instead of implementing a store yourself. A URL downloader persists its downloads with SwiftData and is available on iOS 17 and above.
+
+> Important: URL downloaders persist downloads with [SwiftData](https://developer.apple.com/documentation/swiftdata), which is only available on iOS 17 and above. If your app supports iOS 16, add `SwiftData.framework` to the _Frameworks, Libraries, and Embedded Content_ section of your app target and set its status to _Optional_. Otherwise, your app crashes at launch on iOS 16.
+
+Create a URL downloader and add downloads with their metadata:
 
 ```swift
 let downloader = try URLDownloader(configuration: .background(withIdentifier: "com.example.url-downloads"))
