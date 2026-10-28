@@ -34,8 +34,12 @@ struct TimeProperties: Equatable {
 
 extension TimeProperties {
     var seekableTimeRange: CMTimeRange {
+        Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+    }
+
+    var correctedSeekableTimeRange: CMTimeRange {
         let time = CMClockGetTime(CMClockGetHostTimeClock())
-        let timeRange = Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+        let timeRange = seekableTimeRange
         return .init(start: start(of: timeRange, at: time), end: end(of: timeRange, at: time))
     }
 

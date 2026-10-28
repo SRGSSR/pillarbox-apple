@@ -54,7 +54,7 @@ public extension PlayerProperties {
 
     /// The type of stream currently being played.
     var streamType: StreamType {
-        StreamType(for: timeProperties.seekableTimeRange, duration: coreProperties.duration)
+        StreamType(for: seekableTimeRange, duration: coreProperties.duration)
     }
 }
 
@@ -172,5 +172,11 @@ public extension PlayerProperties {
     /// playback.
     var buffer: Float {
         timeProperties.buffer
+    }
+}
+
+extension PlayerProperties {
+    var correctedSeekableTimeRange: CMTimeRange {
+        timeProperties.correctedSeekableTimeRange
     }
 }
