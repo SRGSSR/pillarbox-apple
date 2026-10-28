@@ -30,8 +30,7 @@ enum DemoAssetProvider: StandardAssetLoaderProvider {
     }
 
     static func request(for input: Input) -> URLRequest {
-        let hostname = input.isProduction ? "api.pillarbox.ch" : "dev.api.pillarbox.ch"
-        return URLRequest(url: URL(string: "https://\(hostname)/v1/player/media/\(input.identifier)?platform=apple")!)
+        URLRequest(url: URL(string: "http://localhost:8080/metadata")!)
     }
 
     static func asset(from input: Input, metadata: PlayerData<EmptyCustomData>) -> Asset {

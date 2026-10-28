@@ -7,6 +7,7 @@
 import AVFoundation
 import CoreMedia
 import PillarboxPlayer
+import PillarboxStandardConnector
 import SwiftUI
 
 private struct ScrubbingCapsule: View {
@@ -28,6 +29,7 @@ private struct ScrubbingCapsule: View {
 struct PlaybackView: View {
     @ObservedObject private var player: Player
     @Binding private var layout: PlaybackViewLayout
+    @State private var streamType: StreamType = .unknown
 
     private var supportsPictureInPicture = false
 
@@ -51,6 +53,17 @@ struct PlaybackView: View {
             }
         }
         .background(.black)
+        .onReceive(player: player, assign: \.streamType, to: $streamType)
+        .onChange(of: streamType) { oldValue, newValue in
+            guard oldValue == .dvr, newValue == .onDemand else { return }
+            let time = player.time()
+            let item = PlayerItem.standard(
+                assetProviderType: DemoAssetProvider.self,
+                input: .init(identifier: "asdfsd", isProduction: true)
+            )
+            player.items = [item]
+            player.resume(at(time), in: item)
+        }
     }
 
     init(player: Player, layout: Binding<PlaybackViewLayout> = .constant(.inline)) {
