@@ -50,7 +50,7 @@ public struct DownloadConfiguration: Equatable, Codable {
     }
 
     private func mediaSelections(from selection: AVMediaSelection, using provider: MediaSelectionProvider) -> [AVMediaSelection] {
-        mediaSelectionPreferences.flatMap { characteristic, preference -> [AVMediaSelection] in
+        [selection] + mediaSelectionPreferences.flatMap { characteristic, preference -> [AVMediaSelection] in
             switch preference.kind {
             case .automatic:
                 return []
