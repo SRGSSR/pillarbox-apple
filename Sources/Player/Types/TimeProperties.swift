@@ -9,24 +9,25 @@ import CoreMedia
 struct TimeProperties: Equatable {
     static let empty = Self(loadedTimeRanges: [], seekableTimeRanges: [], isPlaybackLikelyToKeepUp: false)
 
-    let loadedTimeRanges: [NSValue]
-    let seekableTimeRanges: [NSValue]
-    let isPlaybackLikelyToKeepUp: Bool
-    let clockTime: CMTime
+    private let loadedTimeRanges: [NSValue]
+    private let seekableTimeRanges: [NSValue]
+    private let clockTime: CMTime
 
-    private init(loadedTimeRanges: [NSValue], seekableTimeRanges: [NSValue], isPlaybackLikelyToKeepUp: Bool, clockTime: CMTime) {
+    let isPlaybackLikelyToKeepUp: Bool
+
+    private init(loadedTimeRanges: [NSValue], seekableTimeRanges: [NSValue], clockTime: CMTime, isPlaybackLikelyToKeepUp: Bool) {
         self.loadedTimeRanges = loadedTimeRanges
         self.seekableTimeRanges = seekableTimeRanges
-        self.isPlaybackLikelyToKeepUp = isPlaybackLikelyToKeepUp
         self.clockTime = clockTime
+        self.isPlaybackLikelyToKeepUp = isPlaybackLikelyToKeepUp
     }
 
     init(loadedTimeRanges: [NSValue], seekableTimeRanges: [NSValue], isPlaybackLikelyToKeepUp: Bool) {
         self.init(
             loadedTimeRanges: loadedTimeRanges,
             seekableTimeRanges: seekableTimeRanges,
-            isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
-            clockTime: CMClockGetTime(CMClockGetHostTimeClock())
+            clockTime: CMClockGetTime(CMClockGetHostTimeClock()),
+            isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp
         )
     }
 }
@@ -72,8 +73,8 @@ extension TimeProperties {
         .init(
             loadedTimeRanges: loadedTimeRanges,
             seekableTimeRanges: seekableTimeRanges,
-            isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
-            clockTime: (seekableTimeRange.end == previous.seekableTimeRange.end) ? previous.clockTime : clockTime
+            clockTime: (seekableTimeRange.end == previous.seekableTimeRange.end) ? previous.clockTime : clockTime,
+            isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp
         )
     }
 }
