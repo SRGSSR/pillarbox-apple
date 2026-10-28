@@ -37,12 +37,6 @@ extension TimeProperties {
         Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
     }
 
-    var correctedSeekableTimeRange: CMTimeRange {
-        let time = CMClockGetTime(CMClockGetHostTimeClock())
-        let timeRange = seekableTimeRange
-        return .init(start: start(of: timeRange, at: time), end: end(of: timeRange, at: time))
-    }
-
     var loadedTimeRange: CMTimeRange {
         Self.timeRange(from: loadedTimeRanges) ?? .invalid
     }
@@ -71,12 +65,18 @@ extension TimeProperties {
 }
 
 extension TimeProperties {
-    func start(of timeRange: CMTimeRange, at time: CMTime) -> CMTime {
+    var smoothSeekableTimeRange: CMTimeRange {
+        let time = CMClockGetTime(CMClockGetHostTimeClock())
+        let timeRange = seekableTimeRange
+        return .init(start: start(of: timeRange, at: time), end: end(of: timeRange, at: time))
+    }
+
+    private func start(of timeRange: CMTimeRange, at time: CMTime) -> CMTime {
         guard clockTime.isValid, timeRange.start != .zero else { return .zero }
         return timeRange.start + time - clockTime
     }
 
-    func end(of timeRange: CMTimeRange, at time: CMTime) -> CMTime {
+    private func end(of timeRange: CMTimeRange, at time: CMTime) -> CMTime {
         guard clockTime.isValid else { return timeRange.end }
         return timeRange.end + time - clockTime
     }
