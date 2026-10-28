@@ -54,4 +54,8 @@ extension Player {
     var seekableTimeRange: CMTimeRange {
         properties.seekableTimeRange
     }
+
+    var correctedSeekableTimeRange: CMTimeRange {
+        properties.correctedSeekableTimeRange
+    }
 }
