@@ -158,9 +158,10 @@ public extension PlayerProperties {
     var seekableTimeRange: CMTimeRange {
         switch streamType {
         case .dvr:
-            CMTimeRange(start: timeProperties.seekableTimeRange.start, end: timeProperties.dvrSeekableTimeRangeEnd)
+            let seekableTimeRange = timeProperties.dvrSeekableTimeRange()
+            return CMTimeRange(start: seekableTimeRange.start, end: seekableTimeRange.end)
         default:
-            timeProperties.seekableTimeRange
+            return timeProperties.seekableTimeRange
         }
     }
 
