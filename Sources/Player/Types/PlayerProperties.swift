@@ -177,6 +177,11 @@ public extension PlayerProperties {
 
 extension PlayerProperties {
     var correctedSeekableTimeRange: CMTimeRange {
-        timeProperties.correctedSeekableTimeRange
+        switch streamType {
+        case .dvr:
+            timeProperties.correctedSeekableTimeRange
+        default:
+            timeProperties.seekableTimeRange
+        }
     }
 }
