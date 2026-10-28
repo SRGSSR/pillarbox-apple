@@ -7,7 +7,7 @@
 import CoreMedia
 
 struct TimeProperties: Equatable {
-    static let empty = Self(loadedTimeRanges: [], seekableTimeRanges: [], isPlaybackLikelyToKeepUp: false)
+    static let empty = Self(loadedTimeRanges: [], seekableTimeRanges: [], clockTime: .invalid, isPlaybackLikelyToKeepUp: false)
 
     private let loadedTimeRanges: [NSValue]
     private let seekableTimeRanges: [NSValue]
@@ -34,7 +34,9 @@ struct TimeProperties: Equatable {
 
 extension TimeProperties {
     var seekableTimeRange: CMTimeRange {
-        Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+        let time = CMClockGetTime(CMClockGetHostTimeClock())
+        let timeRange = Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+        return .init(start: start(of: timeRange, at: time), end: end(of: timeRange, at: time))
     }
 
     var loadedTimeRange: CMTimeRange {
@@ -65,18 +67,14 @@ extension TimeProperties {
 }
 
 extension TimeProperties {
-    func dvrSeekableTimeRange() -> CMTimeRange {
-        let time = CMClockGetTime(CMClockGetHostTimeClock())
-        return .init(start: dvrSeekableTimeRangeStart(at: time), end: dvrSeekableTimeRangeEnd(at: time))
+    func start(of timeRange: CMTimeRange, at time: CMTime) -> CMTime {
+        guard clockTime.isValid, timeRange.start != .zero else { return .zero }
+        return timeRange.start + time - clockTime
     }
 
-    private func dvrSeekableTimeRangeStart(at time: CMTime) -> CMTime {
-        guard seekableTimeRange.start != .zero else { return .zero }
-        return seekableTimeRange.start + time - clockTime
-    }
-
-    private func dvrSeekableTimeRangeEnd(at time: CMTime) -> CMTime {
-        seekableTimeRange.end + time - clockTime
+    func end(of timeRange: CMTimeRange, at time: CMTime) -> CMTime {
+        guard clockTime.isValid else { return timeRange.end }
+        return timeRange.end + time - clockTime
     }
 
     func updated(from previous: Self) -> Self {

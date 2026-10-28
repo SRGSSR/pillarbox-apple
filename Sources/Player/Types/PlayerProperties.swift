@@ -156,13 +156,7 @@ public extension PlayerProperties {
     ///
     /// Returns `.invalid` when the time range is unknown.
     var seekableTimeRange: CMTimeRange {
-        switch streamType {
-        case .dvr:
-            let seekableTimeRange = timeProperties.dvrSeekableTimeRange()
-            return CMTimeRange(start: seekableTimeRange.start, end: seekableTimeRange.end)
-        default:
-            return timeProperties.seekableTimeRange
-        }
+        timeProperties.seekableTimeRange
     }
 
     /// The time range which has been loaded.
