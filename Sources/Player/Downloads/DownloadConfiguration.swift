@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import OrderedCollections
 
 /// The configuration applied to a download.
 @available(tvOS, unavailable)
@@ -49,7 +50,7 @@ public struct DownloadConfiguration: Equatable, Codable {
     }
 
     private func mediaSelections(from selection: AVMediaSelection, using provider: MediaSelectionProvider) -> [AVMediaSelection] {
-        mediaSelectionPreferences.flatMap { characteristic, preference -> [AVMediaSelection] in
+        let selections = mediaSelectionPreferences.flatMap { characteristic, preference -> [AVMediaSelection] in
             switch preference.kind {
             case .automatic:
                 return []
@@ -61,6 +62,7 @@ public struct DownloadConfiguration: Equatable, Codable {
                 return configurator.allMediaSelections(from: selection)
             }
         }
+        return Array(OrderedSet([selection] + selections))
     }
 
     private func mediaSelectionConfigurator(for characteristic: AVMediaCharacteristic, using provider: MediaSelectionProvider) -> MediaSelectionConfigurator? {
