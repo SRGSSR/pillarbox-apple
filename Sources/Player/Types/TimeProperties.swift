@@ -65,8 +65,18 @@ extension TimeProperties {
 }
 
 extension TimeProperties {
-    var dvrSeekableTimeRangeEnd: CMTime {
-        seekableTimeRange.end + CMClockGetTime(CMClockGetHostTimeClock()) - clockTime
+    func dvrSeekableTimeRange() -> CMTimeRange {
+        let time = CMClockGetTime(CMClockGetHostTimeClock())
+        return .init(start: dvrSeekableTimeRangeStart(at: time), end: dvrSeekableTimeRangeEnd(at: time))
+    }
+
+    private func dvrSeekableTimeRangeStart(at time: CMTime) -> CMTime {
+        guard seekableTimeRange.start != .zero else { return .zero }
+        return seekableTimeRange.start + time - clockTime
+    }
+
+    private func dvrSeekableTimeRangeEnd(at time: CMTime) -> CMTime {
+        seekableTimeRange.end + time - clockTime
     }
 
     func updated(from previous: Self) -> Self {
