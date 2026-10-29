@@ -46,11 +46,34 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func makeHostView(for player: Player) -> PictureInPictureHostView {
+    func makeHostView(for player: Player, supportsPictureInPicture: Bool) -> PictureInPictureHostView {
         let hostView = PictureInPictureHostView()
-        hostViews.append(hostView)
-        hostView.addVideoLayerView(makeVideoLayerView(for: player))
+        if supportsPictureInPicture {
+            hostViews.append(hostView)
+            hostView.addVideoLayerView(makeVideoLayerView(for: player))
+        }
+        else {
+            hostView.addVideoLayerView(VideoLayerView())
+        }
         return hostView
+    }
+
+    /// Enables or disables Picture in Picture support for an existing host view.
+    ///
+    /// The video layer of the host view is kept so that the displayed video is not interrupted.
+    func updateHostView(_ hostView: PictureInPictureHostView, supportsPictureInPicture: Bool) {
+        if supportsPictureInPicture {
+            guard hostViews.append(hostView).inserted else { return }
+            if videoLayerView == nil, let contentSource = hostView.contentSource {
+                controller?.contentSource = contentSource
+            }
+        }
+        else {
+            guard hostViews.remove(hostView) != nil else { return }
+            if !isActive && controller?.contentSource == hostView.contentSource {
+                controller?.contentSource = hostViews.last?.contentSource ?? .empty
+            }
+        }
     }
 
     private func makeVideoLayerView(for player: Player) -> VideoLayerView {
@@ -73,7 +96,7 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func dismantleHostView(_ hostView: PictureInPictureHostView) {
-        hostViews.remove(hostView)
+        guard hostViews.remove(hostView) != nil else { return }
         if !isActive && controller?.contentSource == hostView.contentSource {
             controller?.contentSource?.playerLayer?.player = nil
             if let lastHostView = hostViews.last {
