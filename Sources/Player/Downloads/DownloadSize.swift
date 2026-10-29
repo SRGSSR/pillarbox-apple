@@ -8,7 +8,6 @@ import Foundation
 
 /// Information about a download's size.
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public struct DownloadSize: Equatable {
     private static let fileSizeFormatter: ByteCountFormatter = {
         let formatter = ByteCountFormatter()

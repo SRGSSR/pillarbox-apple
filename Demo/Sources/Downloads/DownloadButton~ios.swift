@@ -6,9 +6,7 @@
 
 #if DOWNLOADS
 
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
-
 import SwiftUI
 
 private struct DownloadIcon: View {

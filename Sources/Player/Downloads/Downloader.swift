@@ -8,7 +8,6 @@ import Combine
 import Foundation
 
 /// An [observable object](https://developer.apple.com/documentation/combine/observableobject) managing media downloads.
-@_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     private let store: S
@@ -29,16 +28,22 @@ public final class Downloader<S>: ObservableObject where S: AssetDownloadStore {
     /// Creates a downloader that persists its downloads to a store.
     ///
     /// - Parameters:
-    ///   - configuration: A configuration object that defines the behavior and policies of the URL session used to
-    ///     perform file transfers.
+    ///   - configuration: A background configuration object that defines the behavior and policies of the URL session
+    ///     used to perform file transfers.
     ///   - store: The store used to persist downloads.
+    ///
+    /// The configuration must be created with
+    /// [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)),
+    /// which supports reliable downloading while the app is suspended. Use a different identifier for each downloader.
     public convenience init(configuration: URLSessionConfiguration, store: S) {
         self.init(store: store, session: URLDownloadSession(configuration: configuration))
     }
 
     /// Adds a download for the given input.
     ///
-    /// - Parameter input: The input required to perform the download.
+    /// - Parameters:
+    ///   - input: The input required to perform the download.
+    ///   - configuration: The download configuration.
     /// - Returns: A download associated with the given input. If a download already exists for the input, the existing
     ///   download is returned instead.
     @discardableResult

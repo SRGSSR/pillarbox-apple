@@ -6,8 +6,6 @@
 
 import Combine
 import Foundation
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 // Extensions allowing the use of KVO to detect user default changes by key.

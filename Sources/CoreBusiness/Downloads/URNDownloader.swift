@@ -6,8 +6,6 @@
 
 import Foundation
 import PillarboxAnalytics
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 /// An [observable object](https://developer.apple.com/documentation/combine/observableobject) that manages URN-based media downloads.
@@ -15,7 +13,6 @@ import PillarboxPlayer
 /// This downloader persists download metadata in a SwiftData database.
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public final class URNDownloader: ObservableObject {
     private let downloader: Downloader<URNAssetDownloadStore>
 
@@ -27,8 +24,12 @@ public final class URNDownloader: ObservableObject {
     /// - Parameters:
     ///   - name: The name of the database on disk. If an application uses multiple ``URNDownloader`` instances, each
     ///     one should use a different name.
-    ///   - configuration: A configuration object that defines the behavior and policies of the URL session used to
-    ///     perform file transfers.
+    ///   - configuration: A background configuration object that defines the behavior and policies of the URL session
+    ///     used to perform file transfers.
+    ///
+    /// The configuration must be created with
+    /// [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)),
+    /// which supports reliable downloading while the app is suspended. Use a different identifier for each downloader.
     public init(name: String? = nil, configuration: URLSessionConfiguration) throws {
         let downloader = Downloader(configuration: configuration, store: try URNAssetDownloadStore(name: name))
         self.downloader = downloader

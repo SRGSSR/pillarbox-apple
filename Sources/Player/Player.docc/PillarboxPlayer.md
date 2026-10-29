@@ -10,9 +10,10 @@ Craft immersive audiovisual playback experiences.
 
 The PillarboxPlayer framework offers a comprehensive suite of tools to seamlessly integrate advanced audiovisual media capabilities into your app:
 
-- Easily play content using a ``Player`` and display it in the standard AVKit user interface with ``SystemVideoView``, or create a fully custom user interface starting with a simple ``VideoView``.
-- Support any type of content from any source by implementing custom ``PlayerItem``s and ``Asset``s, regardless of its origin or playback requirements.
-- Monitor and analyze playback with your own ``PlayerItemTracker``, tailored for purposes like analytics or performance tracking.
+- Play content with a ``Player`` and display it in the standard AVKit user interface with ``SystemVideoView``, or build a fully custom user interface on top of a simple ``VideoView``.
+- Play any type of content from any source by implementing an ``AssetLoader``, which fetches metadata and describes the ``Asset`` that a ``PlayerItem`` plays.
+- Download content for offline playback on iOS with a ``Downloader``, reusing the asset loaders you use for streaming.
+- Monitor playback with your own ``PlayerItemTracker``, for example for analytics or performance tracking.
 
 @Image(source: player-intro, alt: "A screenshot of a player user interface")
 
@@ -51,6 +52,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
     - <doc:airplay-article>
     - <doc:control-center-article>
     - <doc:picture-in-picture-article>
+    - <doc:downloads-article>
 }
 
 ## Topics
@@ -112,6 +114,27 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``PlaybackConfiguration``
 - ``PlayerItem``
 
+### Downloads
+
+- <doc:downloads-article>
+
+- ``AssetDownloadStore``
+- ``Download``
+- ``DownloadConfiguration``
+- ``DownloadMediaSelectionPreference``
+- ``DownloadRecord``
+- ``DownloadSize``
+- ``DownloadState``
+- ``Downloader``
+
+### URL-Based Content
+
+- ``URLAssetDownloadStoreProvider``
+- ``URLAssetLoaderProvider``
+- ``URLDownloader``
+- ``URLEmptyAssetProvider``
+- ``URLInput``
+
 ### Tracking
 
 - <doc:tracking-article>
@@ -165,8 +188,6 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 
 ### Domain-Specific Language
 
-#### System Video View Controls
-
 - ``ButtonInContextualActions``
 - ``ButtonInInfoViewActions``
 - ``ButtonInMenu``
@@ -182,6 +203,8 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``InfoViewActionsContent``
 - ``InfoViewActionsContentBuilder``
 - ``InfoViewActionsElement``
+- ``InfoViewTabsContent``
+- ``InfoViewTabsContentBuilder``
 - ``InlinePicker``
 - ``InlinePickerBody``
 - ``InlinePickerBodyNotSupported``
@@ -220,6 +243,7 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``SectionInMenu``
 - ``SectionInPicker``
 - ``SectionElement``
+- ``Tab``
 - ``ToggleInMenu``
 - ``ToggleInSection``
 - ``ToggleInTransportBar``
@@ -228,12 +252,6 @@ The PillarboxPlayer framework seamlessly integrates with SwiftUI, leveraging its
 - ``TransportBarContent``
 - ``TransportBarContentBuilder``
 - ``TransportBarElement``
-
-#### System Video View Tabs
-
-- ``InfoViewTabsContent``
-- ``InfoViewTabsContentBuilder``
-- ``Tab``
 
 ### Technical Notes
 

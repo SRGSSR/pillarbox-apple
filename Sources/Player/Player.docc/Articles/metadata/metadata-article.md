@@ -30,16 +30,23 @@ struct Media {
 }
 ```
 
-and a given `Input`.
+and that you fetch it using a `String` identifier as input.
 
 When implementing an ``AssetLoader``, use ``AssetLoader/playerMetadata(from:metadata:)`` to build a ``PlayerMetadata`` instance that the player can understand and expose:
 
 ```swift
 enum MediaAssetLoader: AssetLoader {
-    // ...
+    static func metadataPublisher(for input: String) -> AnyPublisher<Media, any Error> {
+        // ...
+    }
+    
+    static func asset(from input: String, metadata: Media) -> Asset {
+        .simple(url: metadata.streamUrl)
+    }
 
     static func playerMetadata(from input: Input, metadata: Media?) -> PlayerMetadata {
-        .init(title: show, subtitle: name, imageSource: .url(artworkUrl))
+        guard let metadata else { return .empty }
+        return .init(title: metadata.show, subtitle: metadata.name, imageSource: .url(standardResolution: metadata.artworkUrl))
     }
 }
 ```
