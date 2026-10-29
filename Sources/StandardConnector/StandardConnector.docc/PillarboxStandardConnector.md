@@ -106,7 +106,7 @@ Standard content can be downloaded for offline playback on iOS 17 and above. Dow
     }
 }
 
-> Warning: Standard downloaders require a background session configuration, created with [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)). Background configurations support reliable downloading while your app is suspended. Use a different identifier for each downloader.
+> Warning: Standard downloaders require a background session configuration, created with [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)). Background configurations support reliable downloading while your app is suspended. Use a different identifier for each downloader. If your app uses several standard downloaders, also give each one a different `name`.
 
 Metadata is fetched with your provider's request and persisted automatically, including the custom data decoded from ``PlayerData``.
 
