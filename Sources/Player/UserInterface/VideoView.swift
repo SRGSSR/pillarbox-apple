@@ -21,7 +21,7 @@ public struct VideoView: View {
         ZStack {
             switch player.metadata.viewport {
             case .standard:
-                PictureInPictureSupportingVideoView(player: player, gravity: gravity, supportsPictureInPicture: supportsPictureInPicture)
+                StandardVideoView(player: player, gravity: gravity, supportsPictureInPicture: supportsPictureInPicture)
                     .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                         // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
                         // is merged back into the player view.

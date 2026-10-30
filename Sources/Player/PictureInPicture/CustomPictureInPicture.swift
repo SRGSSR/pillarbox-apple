@@ -14,7 +14,7 @@ final class CustomPictureInPicture: NSObject {
     @Published private(set) var isActive = false
 
     private let controller = AVPictureInPictureController(playerLayer: .init())
-    private var hostViews: OrderedSet<PictureInPictureHostView> = []
+    private var hostViews: OrderedSet<VideoHostView> = []
 
     weak var delegate: PictureInPictureDelegate?
 
@@ -46,8 +46,8 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func makeHostView(for player: Player, supportsPictureInPicture: Bool) -> PictureInPictureHostView {
-        let hostView = PictureInPictureHostView()
+    func makeHostView(for player: Player, supportsPictureInPicture: Bool) -> VideoHostView {
+        let hostView = VideoHostView()
         if supportsPictureInPicture {
             hostViews.append(hostView)
             hostView.addVideoLayerView(makeVideoLayerView(for: player))
@@ -58,7 +58,7 @@ final class CustomPictureInPicture: NSObject {
         return hostView
     }
 
-    func updateHostView(_ hostView: PictureInPictureHostView, supportsPictureInPicture: Bool) {
+    func updateHostView(_ hostView: VideoHostView, supportsPictureInPicture: Bool) {
         if supportsPictureInPicture {
             guard hostViews.append(hostView).inserted else { return }
             if videoLayerView == nil, let contentSource = hostView.contentSource {
@@ -76,7 +76,7 @@ final class CustomPictureInPicture: NSObject {
     private func makeVideoLayerView(for player: Player) -> VideoLayerView {
         if let videoLayerView {
             if videoLayerView.player == player.queuePlayer {
-                if let hostView = videoLayerView.superview as? PictureInPictureHostView {
+                if let hostView = videoLayerView.superview as? VideoHostView {
                     hostView.addVideoLayerView(videoLayerView.duplicate())
                 }
                 return videoLayerView
@@ -92,7 +92,7 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func dismantleHostView(_ hostView: PictureInPictureHostView) {
+    func dismantleHostView(_ hostView: VideoHostView) {
         guard hostViews.remove(hostView) != nil else { return }
         if !isActive && controller?.contentSource == hostView.contentSource {
             controller?.contentSource?.playerLayer?.player = nil
