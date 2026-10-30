@@ -22,30 +22,16 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
-        ZStack {
-            if supportsPictureInPicture {
-                PictureInPictureSupportingSystemVideoView(
-                    player: player,
-                    videoOverlay: videoOverlay,
-                    gravity: gravity,
-                    transportBarContent: transportBarContent,
-                    contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent,
-                    infoViewTabsContent: infoViewTabsContent
-                )
-            }
-            else {
-                BasicSystemVideoView(
-                    player: player,
-                    videoOverlay: videoOverlay,
-                    gravity: gravity,
-                    transportBarContent: transportBarContent,
-                    contextualActionsContent: contextualActionsContent,
-                    infoViewActionsContent: infoViewActionsContent,
-                    infoViewTabsContent: infoViewTabsContent
-                )
-            }
-        }
+        StandardSystemVideoView(
+            player: player,
+            videoOverlay: videoOverlay,
+            gravity: gravity,
+            supportsPictureInPicture: supportsPictureInPicture,
+            transportBarContent: transportBarContent,
+            contextualActionsContent: contextualActionsContent,
+            infoViewActionsContent: infoViewActionsContent,
+            infoViewTabsContent: infoViewTabsContent
+        )
         .onAppear {
             PictureInPicture.shared.custom.detach(with: player.queuePlayer)
             PictureInPicture.shared.system.onAppear(
