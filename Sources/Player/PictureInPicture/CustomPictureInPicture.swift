@@ -58,9 +58,6 @@ final class CustomPictureInPicture: NSObject {
         return hostView
     }
 
-    /// Enables or disables Picture in Picture support for an existing host view.
-    ///
-    /// The video layer of the host view is kept so that the displayed video is not interrupted.
     func updateHostView(_ hostView: PictureInPictureHostView, supportsPictureInPicture: Bool) {
         if supportsPictureInPicture {
             guard hostViews.append(hostView).inserted else { return }
