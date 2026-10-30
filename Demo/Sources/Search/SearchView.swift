@@ -43,7 +43,6 @@ struct SearchView: View {
 
     @ContentBuilder
     private func loadedView(_ medias: [SRGMedia]) -> some View {
-        // swiftlint:disable:next closure_body_length
         CustomList(data: medias) { srgMedia in
             if let srgMedia {
                 let media = Media(title: srgMedia.title, kind: .urn(srgMedia.urn))
@@ -67,9 +66,7 @@ struct SearchView: View {
 #if os(iOS)
                 .swipeActions {
                     CopyActions(text: srgMedia.urn)
-#if DOWNLOADS
                     DownloadAction(media: media)
-#endif
                 }
                 .refreshable { await model.refresh() }
 #else

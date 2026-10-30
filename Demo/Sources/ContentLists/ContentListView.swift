@@ -106,9 +106,7 @@ private struct ContentCell: View {
 #if os(iOS)
             .swipeActions {
                 CopyActions(text: srgMedia.urn)
-#if DOWNLOADS
                 DownloadAction(media: media)
-#endif
             }
 #endif
         case let .show(show):

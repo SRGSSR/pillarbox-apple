@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DOWNLOADS
-
 import Combine
 import Foundation
 import PillarboxCoreBusiness
@@ -135,5 +133,3 @@ final class DemoDownloader: ObservableObject {
         standardDownloader.removeAllDownloads()
     }
 }
-
-#endif

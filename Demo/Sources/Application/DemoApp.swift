@@ -12,7 +12,7 @@ struct DemoApp: App {
 
     @StateObject private var router = Router()
 
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
     @State private var downloader = DemoDownloader()
 #endif
 
@@ -23,7 +23,7 @@ struct DemoApp: App {
                 showcaseTab()
                 contentListsTab()
                 searchTab()
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
                 downloadsTab()
 #endif
                 settingsTab()
@@ -33,7 +33,7 @@ struct DemoApp: App {
             }
             // TODO: Starting with iOS 17 this can be moved on the window group.
             .environmentObject(router)
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
             .environmentObject(downloader)
 #endif
         }
@@ -75,7 +75,7 @@ struct DemoApp: App {
         }
     }
 
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
     @ContentBuilder
     private func downloadsTab() -> some View {
         if downloader.canDownload {

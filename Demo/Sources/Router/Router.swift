@@ -15,11 +15,7 @@ final class Router: ObservableObject {
     @Published var showcasePath: [RouterDestination] = []
     @Published var contentListsPath: [RouterDestination] = []
     @Published var searchPath: [RouterDestination] = []
-
-#if DOWNLOADS
     @Published var downloadsPath: [RouterDestination] = []
-#endif
-
     @Published var settingsPath: [RouterDestination] = []
 
     @Published var presented: RouterDestination?

@@ -22,7 +22,7 @@ extension UserDefaults {
         case forwardSkipInterval
         case serverSetting
         case qualitySetting
-#if os(iOS) && DOWNLOADS
+#if os(iOS)
         case downloadQualitySetting
         case downloadAudibleMediaSelectionSetting
         case downloadLegibleMediaSelectionSetting
@@ -46,7 +46,7 @@ extension UserDefaults {
         }
     }
 
-#if os(iOS) && DOWNLOADS
+#if os(iOS)
     var downloadConfiguration: DownloadConfiguration {
         var configuration = DownloadConfiguration(preferredPeakBitRate: downloadQualitySetting.preferredPeakBitRate)
         configuration.setMediaSelectionPreference(downloadAudibleMediaSelectionSetting.mediaSelectionPreference, for: .audible)
@@ -79,7 +79,7 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: DemoSettingKey.qualitySetting.rawValue)) ?? .high
     }
 
-#if os(iOS) && DOWNLOADS
+#if os(iOS)
     @objc dynamic var downloadQualitySetting: QualitySetting {
         .init(rawValue: integer(forKey: DemoSettingKey.downloadQualitySetting.rawValue)) ?? .high
     }
