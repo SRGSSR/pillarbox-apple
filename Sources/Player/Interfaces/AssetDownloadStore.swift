@@ -8,7 +8,6 @@ import Combine
 import Foundation
 
 /// A protocol defining how downloads are loaded and persisted.
-@_spi(DownloaderPrivate)
 @available(tvOS, unavailable)
 public protocol AssetDownloadStore: AnyObject {
     /// The type of loader used to load the underlying asset.

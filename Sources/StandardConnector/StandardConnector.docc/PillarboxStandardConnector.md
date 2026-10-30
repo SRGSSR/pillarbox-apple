@@ -67,6 +67,49 @@ This example shows how to use the standard connector with a backend endpoint and
     }
 }
 
+## Downloads
+
+Standard content can be downloaded for offline playback on iOS 17 and above. Downloads work as described in the [Downloads](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxplayer/downloads-article) article of the PillarboxPlayer framework, with the following differences:
+
+- Use a ``StandardDownloader`` instead of a `Downloader`. It persists downloads with SwiftData, so you don't need to implement a download store.
+- Make your asset provider conform to ``StandardAssetDownloadStoreProvider``. Its `Input` and `CustomData` types must be `Codable`.
+
+> Important: Standard downloaders persist downloads with [SwiftData](https://developer.apple.com/documentation/swiftdata), which is only available on iOS 17 and above. If your app supports iOS 16, add `SwiftData.framework` to the _Frameworks, Libraries, and Embedded Content_ section of your app target and set its status to _Optional_. Otherwise, your app crashes at launch on iOS 16.
+
+@TabNavigator {
+    @Tab("Provider") {
+        Extend the asset provider to identify downloads and play downloaded files.
+
+        ```swift
+        extension MediaAssetProvider: StandardAssetDownloadStoreProvider {
+            static func id(from input: String) -> String {
+                input
+            }
+
+            static func asset(fileUrl: URL, customData: EmptyCustomData?) -> Asset {
+                .simple(url: fileUrl)
+            }
+        }
+        ```
+    }
+
+    @Tab("Downloader") {
+        Create a downloader with the provider and add downloads.
+
+        ```swift
+        let downloader = try StandardDownloader(
+            storeProviderType: MediaAssetProvider.self,
+            configuration: .background(withIdentifier: "com.example.downloads")
+        )
+        downloader.addDownload(for: "apple-basic-16-9")
+        ```
+    }
+}
+
+> Warning: Standard downloaders require a background session configuration, created with [`background(withIdentifier:)`](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/background(withidentifier:)). Background configurations support reliable downloading while your app is suspended. Use a different identifier for each downloader. If your app uses several standard downloaders, also give each one a different `name`.
+
+Metadata is fetched with your provider's request and persisted automatically, including the custom data decoded from ``PlayerData``.
+
 ## Topics
 
 ### Content Loading
@@ -74,6 +117,11 @@ This example shows how to use the standard connector with a backend endpoint and
 - ``PillarboxPlayer/PlayerItem/standard(assetProviderType:input:trackerAdapters:)``
 - ``PlayerData``
 - ``StandardAssetLoaderProvider``
+
+### Downloads
+
+- ``StandardAssetDownloadStoreProvider``
+- ``StandardDownloader``
 
 ### Errors
 

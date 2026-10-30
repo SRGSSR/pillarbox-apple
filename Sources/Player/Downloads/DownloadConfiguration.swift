@@ -8,7 +8,6 @@ import AVFoundation
 
 /// The configuration applied to a download.
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public struct DownloadConfiguration: Equatable, Codable {
     /// The default configuration.
     public static let `default` = Self()

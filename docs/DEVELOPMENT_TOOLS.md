@@ -1,4 +1,3 @@
-
 # Development tools
 
 This article discusses the various development tools available when working on Pillarbox.
@@ -15,7 +14,7 @@ to list all available commands.
 
 ### Local test streams
 
-Since Apple players [cannot play local manifests](https://developer.apple.com/forums/thread/69357?answerId=202051022#202051022) we are using Python to run a simple [web server](https://docs.python.org/3/library/http.server.html) serving various [test streams](TEST_STREAM_GENERATION.md) from a local directory. These streams are used throughout unit test suites.
+Since Apple players [cannot play local manifests](https://developer.apple.com/forums/thread/69357?answerId=202051022#202051022), we use Python to run a simple [web server](https://docs.python.org/3/library/http.server.html) that serves various test streams from a local directory. These streams are used throughout the unit test suites.
 
 The web server must be manually started using:
 
@@ -29,7 +28,7 @@ before running tests. It can be stopped at any time with:
 make test-streams-stop
 ```
 
-If unit tests fail you should check that streams are served correctly at [http://localhost:8123](http://localhost:8123) and start the server if needed. Note that some sample streams require ~20 seconds to be fully available after the server was started.
+If unit tests fail, check that streams are served correctly at [http://localhost:8123](http://localhost:8123) and start the server if needed. Note that some sample streams take about 20 seconds to become available after the server has started.
 
 ### Quality checks
 
@@ -69,7 +68,7 @@ make clean-imports
 
 ### Find dead code
 
-Run this command to remove unused code:
+Run this command to find unused code:
 
 ```shell
 make find-dead-code
@@ -91,12 +90,14 @@ An [editor configuration file](../.editorconfig) and several linter configuratio
 
 Xcode _Text Editing_ settings should be configured as follows:
 
-- Enable _Automatically trim trailing whitespaces_ with _Including whitespace-only lines_ enabled as well.
+- Enable _Automatically trim trailing whitespace_, with _Including whitespace-only lines_ enabled as well.
 - Set _Default Text Encoding_ to _UTF-8_.
 - Set _Default Line Endings_ to _macOS / Unix (LF)_.
 - Use _Spaces_ for indentation (with 4 spaces both for _Tab Width_ and _Indent Width_).
 
 ### Visual Studio Code
+
+The following extensions are recommended:
 
 - [EditorConfig extension](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
 - [shellcheck extension](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck)
@@ -104,8 +105,8 @@ Xcode _Text Editing_ settings should be configured as follows:
 
 ## Xcode previews
 
-Please ensure that the target an Xcode preview belongs to is selected before attempting to render an Xcode preview (otherwise rendering will crash). Note that attempting to use the `Pillarbox` umbrella target does not work.
+Before rendering an Xcode preview, make sure the target it belongs to is selected, otherwise rendering crashes. Previews cannot be rendered with the `Pillarbox` umbrella target.
 
 ## Code signing
 
-We are currently using [cloud signing](https://developer.apple.com/wwdc21/10204) with automatic provisioning updates.
+We use [cloud signing](https://developer.apple.com/wwdc21/10204) with automatic provisioning updates.

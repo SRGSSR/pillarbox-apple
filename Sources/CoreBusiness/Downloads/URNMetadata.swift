@@ -6,7 +6,6 @@
 
 /// Metadata associated with URN-based content.
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public struct URNMetadata: Codable {
     /// comScore analytics data.
     let analyticsData: [String: String]

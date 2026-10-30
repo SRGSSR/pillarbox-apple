@@ -5,8 +5,6 @@
 //
 
 import Foundation
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
 
 @objc

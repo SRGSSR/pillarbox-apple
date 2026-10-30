@@ -1,6 +1,6 @@
 # Continuous integration
 
-Continuous integration is performed using GitHub Actions. Worflows require a few action secrets and variables to be set in the GitHub repository settings.
+Continuous integration is performed using GitHub Actions. Workflows require a few action secrets and variables to be set in the GitHub repository settings.
 
 ## Secrets
 
@@ -8,7 +8,7 @@ Some information is kept confidential and stored in secrets.
 
 ### Apple developer certificate
 
-An Apple developer certificate exported from Xcode, and protected by a password, is required. More information is available from the [GitHub documentation](https://docs.github.com/en/actions/use-cases-and-examples/deploying/installing-an-apple-certificate-on-macos-runners-for-xcode-development):
+An Apple developer certificate, exported from Xcode and protected by a password, is required. More information is available from the [GitHub documentation](https://docs.github.com/en/actions/use-cases-and-examples/deploying/installing-an-apple-certificate-on-macos-runners-for-xcode-development):
 
 - `APPLE_DEV_CERTIFICATE`: The certificate `p12` file converted to Base64 can be copied to the clipboard with:
 
@@ -34,7 +34,7 @@ An [App Store Connect API key](https://appstoreconnect.apple.com/access/integrat
 ### Other secrets
 
 - `TEAM_ID`: The team ID.
-- `KEYCHAIN_PASSWORD`: An arbitrary password used to create a local keychain to store certificates on GitHub runners. This password is only used to prevent secrets from being easily read from this keychain, should it somehow leak from a GitHub-hosted agent.
+- `KEYCHAIN_PASSWORD`: An arbitrary password used to create a local keychain to store certificates on GitHub runners. This password is only used to prevent secrets from being easily read from this keychain, should it somehow leak from a GitHub-hosted runner.
 
 ## Environment variables
 

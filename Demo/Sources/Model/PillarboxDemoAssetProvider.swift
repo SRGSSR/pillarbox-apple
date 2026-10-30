@@ -10,8 +10,6 @@ import Foundation
 import PillarboxCoreBusiness
 
 import PillarboxPlayer
-
-@_spi(DownloaderPrivate)
 import PillarboxStandardConnector
 
 enum DemoAssetProvider: StandardAssetLoaderProvider {

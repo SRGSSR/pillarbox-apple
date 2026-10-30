@@ -9,7 +9,6 @@ import Foundation
 /// A protocol that defines how URL-based content is retrieved from a store.
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
-@_spi(DownloaderPrivate)
 public protocol URLAssetDownloadStoreProvider: URLAssetLoaderProvider where CustomData: Codable {
     /// Creates an asset from a local file URL and custom data.
     ///

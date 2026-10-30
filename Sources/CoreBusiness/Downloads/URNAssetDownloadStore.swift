@@ -5,10 +5,8 @@
 //
 
 import Foundation
-import SwiftData
-
-@_spi(DownloaderPrivate)
 import PillarboxPlayer
+import SwiftData
 
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
@@ -24,7 +22,6 @@ final class URNAssetDownloadStore {
     }
 }
 
-@_spi(DownloaderPrivate)
 @available(iOS 17.0, *)
 @available(tvOS, unavailable)
 extension URNAssetDownloadStore: AssetDownloadStore {
