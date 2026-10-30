@@ -61,7 +61,7 @@ final class CustomPictureInPicture: NSObject {
     func updateHostView(_ hostView: VideoHostView, supportsPictureInPicture: Bool) {
         if supportsPictureInPicture {
             guard hostViews.append(hostView).inserted else { return }
-            if videoLayerView == nil, let contentSource = hostView.contentSource {
+            if !isActive, let contentSource = hostView.contentSource {
                 controller?.contentSource = contentSource
             }
         }
