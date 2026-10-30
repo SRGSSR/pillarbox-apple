@@ -7,11 +7,11 @@
 import AVKit
 import SwiftUI
 
-// swiftlint:disable:next type_name
-struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
+struct StandardSystemVideoView<VideoOverlay>: UIViewControllerRepresentable where VideoOverlay: View {
     let player: Player
     let videoOverlay: VideoOverlay
     let gravity: AVLayerVideoGravity
+    let supportsPictureInPicture: Bool
 
     let transportBarContent: TransportBarContent
     let contextualActionsContent: ContextualActionsContent
@@ -23,14 +23,23 @@ struct PictureInPictureSupportingSystemVideoView<VideoOverlay>: UIViewController
     }
 
     func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
-        PictureInPicture.shared.system.makeHostViewController(for: player)
+        let controller = PictureInPicture.shared.system.makeHostViewController(for: player, supportsPictureInPicture: supportsPictureInPicture)
+        if let playerViewController = controller.playerViewController {
+            playerViewController.allowsPictureInPicturePlayback = supportsPictureInPicture
+#if os(iOS)
+            playerViewController.canStartPictureInPictureAutomaticallyFromInline = true
+#endif
+        }
+        return controller
     }
 
     func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
         if let playerViewController = uiViewController.playerViewController {
             playerViewController.player = player.systemPlayer
+            playerViewController.allowsPictureInPicturePlayback = supportsPictureInPicture
             playerViewController.videoGravity = gravity
             playerViewController.setVideoOverlay(videoOverlay)
+            PictureInPicture.shared.system.updateHostViewController(uiViewController, supportsPictureInPicture: supportsPictureInPicture)
 #if os(tvOS)
             playerViewController.updateTransportBarCustomMenuItemsIfNeeded(with: transportBarContent.toMenuElements())
             playerViewController.updateContextualActionsIfNeeded(with: contextualActionsContent.toActions())
