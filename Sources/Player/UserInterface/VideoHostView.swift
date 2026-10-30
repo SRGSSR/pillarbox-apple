@@ -7,7 +7,7 @@
 import AVKit
 import UIKit
 
-final class PictureInPictureHostView: UIView {
+final class VideoHostView: UIView {
     private(set) weak var videoLayerView: VideoLayerView?
 
     var player: AVPlayer? {
