@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DOWNLOADS
-
 import PillarboxPlayer
 import SwiftUI
 
@@ -75,5 +73,3 @@ struct DownloadCell: View {
         }
     }
 }
-
-#endif

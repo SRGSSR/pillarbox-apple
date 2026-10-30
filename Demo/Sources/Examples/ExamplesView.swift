@@ -82,7 +82,7 @@ private struct MediaEntryView: View {
     @State private var certificateUrlString = ""
     @EnvironmentObject private var router: Router
 
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
     @EnvironmentObject private var downloader: DemoDownloader
 #endif
 
@@ -174,7 +174,7 @@ private struct MediaEntryView: View {
                 Text("Play")
                     .frame(maxWidth: .infinity)
             }
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
             Button(action: download) {
                 Text("Download")
                     .frame(maxWidth: .infinity)
@@ -188,7 +188,7 @@ private struct MediaEntryView: View {
         router.presented = .player(media: media)
     }
 
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
     private func download() {
         downloader.addDownload(media: media)
     }
@@ -259,7 +259,7 @@ struct ExamplesView: View {
                 Cell(title: media.title, subtitle: media.subtitle, imageUrl: media.imageUrl) {
                     router.presented = .player(media: media)
                 }
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
                 .swipeActions {
                     DownloadAction(media: media)
                 }

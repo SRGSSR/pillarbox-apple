@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-#if DOWNLOADS
-
 import PillarboxPlayer
 import SwiftUI
 
@@ -75,5 +73,3 @@ struct DownloadButton: View {
         DownloadIcon(state: .suspended(0.5), side: 100)
     }
 }
-
-#endif

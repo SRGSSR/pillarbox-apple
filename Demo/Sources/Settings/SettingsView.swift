@@ -75,7 +75,7 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.DemoSettingKey.qualitySetting.rawValue)
     private var qualitySetting: QualitySetting = .high
 
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
     @AppStorage(UserDefaults.DemoSettingKey.downloadQualitySetting.rawValue)
     private var downloadQualitySetting: QualitySetting = .high
 
@@ -101,7 +101,7 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.PlaybackHudSettingKey.yOffset.rawValue, store: .playbackHud)
     private var playbackHudYOffset = UserDefaults.playbackHudDefaultHudYOffset
 
-#if DOWNLOADS && os(iOS)
+#if os(iOS)
     @EnvironmentObject private var downloader: DemoDownloader
 #endif
 
@@ -158,9 +158,7 @@ extension SettingsView {
         playerSection()
 #if os(iOS)
         skipsSection()
-#if DOWNLOADS
         downloadsSection()
-#endif
 #endif
         debuggingSection()
         playbackHudSection()
@@ -254,7 +252,6 @@ extension SettingsView {
         }
     }
 
-#if DOWNLOADS
     @ContentBuilder
     private func downloadsSection() -> some View {
         if downloader.canDownload {
@@ -294,7 +291,6 @@ extension SettingsView {
             }
         }
     }
-#endif
 #endif
 
     private func debuggingSection() -> some View {
