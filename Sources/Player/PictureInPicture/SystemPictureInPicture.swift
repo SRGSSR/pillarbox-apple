@@ -38,7 +38,7 @@ final class SystemPictureInPicture: NSObject {
             hostViewController.addViewController(makePlayerViewController(for: player))
         }
         else {
-            hostViewController.addViewController(PlayerViewController())
+            hostViewController.addViewController(makePlayerViewController())
         }
         return hostViewController
     }
@@ -66,15 +66,19 @@ final class SystemPictureInPicture: NSObject {
             return playerViewController
         }
         else {
-            let playerViewController = PlayerViewController()
-
-#if os(iOS)
-            playerViewController.updatesNowPlayingInfoCenter = false
-#endif
-            playerViewController.delegate = self
+            let playerViewController = makePlayerViewController()
             playerViewController.player = player.queuePlayer
             return playerViewController
         }
+    }
+
+    private func makePlayerViewController() -> AVPlayerViewController {
+        let playerViewController = PlayerViewController()
+#if os(iOS)
+        playerViewController.updatesNowPlayingInfoCenter = false
+#endif
+        playerViewController.delegate = self
+        return playerViewController
     }
 
     func dismantleHostViewController(_ hostViewController: PictureInPictureHostViewController) {
