@@ -21,8 +21,6 @@ public struct VideoView: View {
         ZStack {
             switch player.metadata.viewport {
             case .standard:
-                // A single view type is used whether Picture in Picture is supported or not. Switching between view
-                // types would recreate the video layer, briefly displaying nothing until the new layer is ready.
                 PictureInPictureSupportingVideoView(player: player, gravity: gravity, supportsPictureInPicture: supportsPictureInPicture)
                     .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                         // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
