@@ -96,12 +96,7 @@ final class CustomPictureInPicture: NSObject {
         guard hostViews.remove(hostView) != nil else { return }
         if !isActive && controller?.contentSource == hostView.contentSource {
             controller?.contentSource?.playerLayer?.player = nil
-            if let lastHostView = hostViews.last {
-                controller?.contentSource = lastHostView.contentSource ?? .empty
-            }
-            else {
-                controller?.contentSource = .empty
-            }
+            controller?.contentSource = hostViews.last?.contentSource ?? .empty
         }
     }
 
