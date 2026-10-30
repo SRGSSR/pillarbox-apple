@@ -31,11 +31,31 @@ final class SystemPictureInPicture: NSObject {
         playerViewController?.stopPictureInPicture()
     }
 
-    func makeHostViewController(for player: Player) -> PictureInPictureHostViewController {
+    func makeHostViewController(for player: Player, supportsPictureInPicture: Bool) -> PictureInPictureHostViewController {
         let hostViewController = PictureInPictureHostViewController()
-        hostViewControllers.append(hostViewController)
-        hostViewController.addViewController(makePlayerViewController(for: player))
+        if supportsPictureInPicture {
+            hostViewControllers.append(hostViewController)
+            hostViewController.addViewController(makePlayerViewController(for: player))
+        }
+        else {
+            hostViewController.addViewController(makePlayerViewController())
+        }
         return hostViewController
+    }
+
+    func updateHostViewController(_ hostViewController: PictureInPictureHostViewController, supportsPictureInPicture: Bool) {
+        if supportsPictureInPicture {
+            guard hostViewControllers.append(hostViewController).inserted else { return }
+            if !isActive, let playerViewController = hostViewController.playerViewController {
+                self.playerViewController = playerViewController
+            }
+        }
+        else {
+            guard hostViewControllers.remove(hostViewController) != nil else { return }
+            if !isActive && playerViewController == hostViewController.playerViewController {
+                playerViewController = hostViewControllers.last?.playerViewController
+            }
+        }
     }
 
     private func makePlayerViewController(for player: Player) -> AVPlayerViewController {
@@ -46,27 +66,25 @@ final class SystemPictureInPicture: NSObject {
             return playerViewController
         }
         else {
-            let playerViewController = PlayerViewController()
-            playerViewController.allowsPictureInPicturePlayback = true
-#if os(iOS)
-            playerViewController.canStartPictureInPictureAutomaticallyFromInline = true
-            playerViewController.updatesNowPlayingInfoCenter = false
-#endif
-            playerViewController.delegate = self
+            let playerViewController = makePlayerViewController()
             playerViewController.player = player.queuePlayer
             return playerViewController
         }
     }
 
+    private func makePlayerViewController() -> AVPlayerViewController {
+        let playerViewController = PlayerViewController()
+#if os(iOS)
+        playerViewController.updatesNowPlayingInfoCenter = false
+#endif
+        playerViewController.delegate = self
+        return playerViewController
+    }
+
     func dismantleHostViewController(_ hostViewController: PictureInPictureHostViewController) {
-        hostViewControllers.remove(hostViewController)
+        guard hostViewControllers.remove(hostViewController) != nil else { return }
         if !isActive && playerViewController == hostViewController.playerViewController {
-            if let lastHostView = hostViewControllers.last {
-                playerViewController = lastHostView.playerViewController
-            }
-            else {
-                playerViewController = nil
-            }
+            playerViewController = hostViewControllers.last?.playerViewController
         }
     }
 
