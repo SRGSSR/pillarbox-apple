@@ -13,13 +13,14 @@ import PillarboxStreams
 
 @available(tvOS, unavailable)
 final class DownloadConfigurationTests: TestCase {
-    private static func legibleLanguageIdentifiersPublisher(for url: URL, configuration: DownloadConfiguration) -> AnyPublisher<[String?], Never> {
+    private static func legibleLanguageIdentifiersPublisher(for url: URL, configuration: DownloadConfiguration) -> AnyPublisher<[String], Never> {
         let urlAsset = AVURLAsset(url: url)
         return Publishers.CombineLatest(urlAsset.preferredMediaSelectionPublisher(), urlAsset.mediaSelectionProviderPublisher())
-            .map { selection, provider in
+            .compactMap { selection, provider in
+                guard let selection else { return nil }
                 let downloadConfiguration = AVAssetDownloadConfiguration(asset: urlAsset, title: "title")
                 configuration.apply(selection: selection, to: downloadConfiguration, using: provider)
-                return downloadConfiguration.primaryContentConfiguration.mediaSelections.map { selection in
+                return downloadConfiguration.primaryContentConfiguration.mediaSelections.compactMap { selection in
                     provider.mediaSelectorProvider(for: .legible)?.selectedMediaOption(in: selection)?.languageIdentifier
                 }
             }
@@ -28,7 +29,7 @@ final class DownloadConfigurationTests: TestCase {
 
     func testAutomaticWithoutDefaultLegibleOption() throws {
         let identifiers = try waitForSingleOutput(from: Self.legibleLanguageIdentifiersPublisher(for: Stream.onDemandWithOptions.url, configuration: .default))
-        expect(identifiers).to(equal([nil]))
+        expect(identifiers).to(equal([]))
     }
 
     func testAutomaticWithDefaultLegibleOption() throws {
@@ -62,7 +63,6 @@ final class DownloadConfigurationTests: TestCase {
                 configuration: configuration
             )
         )
-        expect(identifiers.first).to(equal("en"))
-        expect(identifiers.compactMap(\.self).sorted()).to(equal(["en", "es", "fr", "ja"]))
+        expect(identifiers.sorted()).to(equal(["en", "es", "fr", "ja"]))
     }
 }
