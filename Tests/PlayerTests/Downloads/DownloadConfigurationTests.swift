@@ -29,7 +29,7 @@ final class DownloadConfigurationTests: TestCase {
 
     func testAutomaticWithoutDefaultLegibleOption() throws {
         let identifiers = try waitForSingleOutput(from: Self.legibleLanguageIdentifiersPublisher(for: Stream.onDemandWithOptions.url, configuration: .default))
-        expect(identifiers).to(equal([]))
+        expect(identifiers).to(beEmpty())
     }
 
     func testAutomaticWithDefaultLegibleOption() throws {
