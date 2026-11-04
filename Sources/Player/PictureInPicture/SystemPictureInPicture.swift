@@ -75,6 +75,7 @@ final class SystemPictureInPicture: NSObject {
     private func makePlayerViewController() -> AVPlayerViewController {
         let playerViewController = PlayerViewController()
 #if os(iOS)
+        playerViewController.canStartPictureInPictureAutomaticallyFromInline = true
         playerViewController.updatesNowPlayingInfoCenter = false
 #endif
         playerViewController.delegate = self

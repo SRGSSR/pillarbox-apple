@@ -23,14 +23,7 @@ struct StandardSystemVideoView<VideoOverlay>: UIViewControllerRepresentable wher
     }
 
     func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
-        let controller = PictureInPicture.shared.system.makeHostViewController(for: player, supportsPictureInPicture: supportsPictureInPicture)
-        if let playerViewController = controller.playerViewController {
-            playerViewController.allowsPictureInPicturePlayback = supportsPictureInPicture
-#if os(iOS)
-            playerViewController.canStartPictureInPictureAutomaticallyFromInline = true
-#endif
-        }
-        return controller
+        PictureInPicture.shared.system.makeHostViewController(for: player, supportsPictureInPicture: supportsPictureInPicture)
     }
 
     func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
