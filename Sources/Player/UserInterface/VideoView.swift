@@ -21,19 +21,13 @@ public struct VideoView: View {
         ZStack {
             switch player.metadata.viewport {
             case .standard:
-                ZStack {
-                    if supportsPictureInPicture {
-                        PictureInPictureSupportingVideoView(player: player, gravity: gravity)
-                            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                                // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
-                                // is merged back into the player view.
-                                PictureInPicture.shared.custom.stop()
-                            }
+                StandardVideoView(player: player, gravity: gravity, supportsPictureInPicture: supportsPictureInPicture)
+                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                        // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
+                        // is merged back into the player view.
+                        guard supportsPictureInPicture else { return }
+                        PictureInPicture.shared.custom.stop()
                     }
-                    else {
-                        BasicVideoView(player: player, gravity: gravity)
-                    }
-                }
             case .monoscopic:
                 MonoscopicVideoView(player: player, orientation: orientation)
             }
