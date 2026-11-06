@@ -22,6 +22,9 @@ public struct VideoView: View {
             switch player.metadata.viewport {
             case .standard:
                 StandardVideoView(player: player, gravity: gravity, supportsPictureInPicture: supportsPictureInPicture)
+                    // Moving players between existing player layers (e.g. when swapping players between views) can
+                    // lead to a layer no longer displaying video. Use a fresh view when the player changes.
+                    .id(ObjectIdentifier(player))
                     .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                         // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
                         // is merged back into the player view.
