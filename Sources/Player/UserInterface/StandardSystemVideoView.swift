@@ -18,15 +18,15 @@ struct StandardSystemVideoView<VideoOverlay>: UIViewControllerRepresentable wher
     let infoViewActionsContent: InfoViewActionsContent
     let infoViewTabsContent: InfoViewTabsContent
 
-    static func dismantleUIViewController(_ uiViewController: PictureInPictureHostViewController, coordinator: Void) {
+    static func dismantleUIViewController(_ uiViewController: VideoHostViewController, coordinator: Void) {
         PictureInPicture.shared.system.dismantleHostViewController(uiViewController)
     }
 
-    func makeUIViewController(context: Context) -> PictureInPictureHostViewController {
+    func makeUIViewController(context: Context) -> VideoHostViewController {
         PictureInPicture.shared.system.makeHostViewController(for: player, supportsPictureInPicture: supportsPictureInPicture)
     }
 
-    func updateUIViewController(_ uiViewController: PictureInPictureHostViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: VideoHostViewController, context: Context) {
         if let playerViewController = uiViewController.playerViewController {
             playerViewController.player = player.systemPlayer
             playerViewController.allowsPictureInPicturePlayback = supportsPictureInPicture
