@@ -1,13 +1,13 @@
 {
-  "originHash" : "2e12f0a47884c9569f425a1cee76e252890bbe99f21bd5cb93381d20cadd2d88",
+  "originHash" : "4f213af2a64124cb39ab449b05b3aaf630b380463281c7289db3d304175dbef6",
   "pins" : [
     {
       "identity" : "comscore-swift-package-manager",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
       "state" : {
-        "revision" : "966992952a84510ac3a086d745f1681302b5cb26",
-        "version" : "6.17.0"
+        "revision" : "a375bfe4f686b1d329fa2f028b92cf856687c81e",
+        "version" : "6.18.0"
       }
     },
     {
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "a0cb0954ecb21e4e31b0070e6ed5674e8556685a",
-        "version" : "1.6.0"
+        "revision" : "f96b909e1a9e469620bc5037c1e24e00153f376f",
+        "version" : "1.7.5"
       }
     }
   ],
