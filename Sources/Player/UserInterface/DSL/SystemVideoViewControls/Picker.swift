@@ -93,7 +93,7 @@ public struct PickerInMenu<Value>: MenuBody {
     }
 }
 
-@available(iOS 17.0, tvOS 18.0, *)
+@available(iOS 17, tvOS 18, *)
 extension Picker: MenuElement where Body == PickerInMenu<Value> {
     /// Creates a picker.
     ///
@@ -227,7 +227,7 @@ public struct PickerInSection<Value>: SectionBody {
     }
 }
 
-@available(iOS 17.0, tvOS 18.0, *)
+@available(iOS 17, tvOS 18, *)
 extension Picker: SectionElement where Body == PickerInSection<Value> {
     /// Creates a picker.
     ///
@@ -351,7 +351,7 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - image: The image associated with the picker.
     ///   - selection: A binding to a property that determines the currently selected option.
     ///   - content: The picker's content.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     @_disfavoredOverload
     public init<S>(_ title: S, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) where S: StringProtocol {
         self.init(String(title), image: UIImage(resource: image), selection: selection, content: content)
@@ -364,7 +364,7 @@ extension Picker: TransportBarElement where Body == PickerInTransportBar<Value> 
     ///   - image: The image associated with the picker.
     ///   - selection: A binding to a property that determines the currently selected option.
     ///   - content: The picker's content.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     public init(_ title: LocalizedStringResource, image: ImageResource, selection: Binding<Value>, @PickerContentBuilder<Value> content: () -> PickerContent<Value>) {
         self.init(String(localized: title), image: image, selection: selection, content: content)
     }

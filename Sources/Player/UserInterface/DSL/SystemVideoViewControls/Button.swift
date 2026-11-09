@@ -59,7 +59,7 @@ extension Button: ContextualActionsElement where Body == ButtonInContextualActio
     ///   - title: The button's title.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     @_disfavoredOverload
     public init<S>(_ title: S, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
         self.init(String(title), image: UIImage(resource: image), action: action)
@@ -71,7 +71,7 @@ extension Button: ContextualActionsElement where Body == ButtonInContextualActio
     ///   - title: The button's title.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     public init(_ title: LocalizedStringResource, image: ImageResource, action: @escaping () -> Void) {
         self.init(String(localized: title), image: UIImage(resource: image), action: action)
     }
@@ -143,7 +143,7 @@ extension Button: InfoViewActionsElement where Body == ButtonInInfoViewActions, 
     ///   - title: The button's title.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     @_disfavoredOverload
     public init<S>(_ title: S, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
         self.init(String(title), image: UIImage(resource: image), action: action)
@@ -155,7 +155,7 @@ extension Button: InfoViewActionsElement where Body == ButtonInInfoViewActions, 
     ///   - title: The button's title.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     public init(_ title: LocalizedStringResource, image: ImageResource, action: @escaping () -> Void) {
         self.init(String(localized: title), image: UIImage(resource: image), action: action)
     }
@@ -248,7 +248,7 @@ extension Button: MenuElement where Body == ButtonInMenu, Value == Never {
     ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
         self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(resource: image), action: action)
@@ -261,7 +261,7 @@ extension Button: MenuElement where Body == ButtonInMenu, Value == Never {
     ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, action: @escaping () -> Void) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), action: action)
     }
@@ -376,7 +376,7 @@ extension Button: SectionElement where Body == ButtonInSection, Value == Never {
     ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
         self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(resource: image), action: action)
@@ -389,7 +389,7 @@ extension Button: SectionElement where Body == ButtonInSection, Value == Never {
     ///   - subtitle: The button's subtitle.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, action: @escaping () -> Void) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), action: action)
     }
@@ -460,7 +460,7 @@ extension Button: TransportBarElement where Body == ButtonInTransportBar, Value 
     ///   - title: The button's title.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     @_disfavoredOverload
     public init<S>(_ title: S, image: ImageResource, action: @escaping () -> Void) where S: StringProtocol {
         self.init(String(title), image: UIImage(resource: image), action: action)
@@ -472,7 +472,7 @@ extension Button: TransportBarElement where Body == ButtonInTransportBar, Value 
     ///   - title: The button's title.
     ///   - image: The image associated with the button.
     ///   - action: A closure triggered when the user presses the button.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     public init(_ title: LocalizedStringResource, image: ImageResource, action: @escaping () -> Void) {
         self.init(String(localized: title), image: UIImage(resource: image), action: action)
     }

@@ -114,7 +114,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the option.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(resource: image), value: value, handler: handler)
@@ -128,7 +128,7 @@ extension Option: InlinePickerElement where Body == OptionInInlinePicker<Value> 
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the option.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), value: value, handler: handler)
     }
@@ -237,7 +237,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the option.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(resource: image), value: value, handler: handler)
@@ -251,7 +251,7 @@ extension Option: PickerElement where Body == OptionInPicker<Value> {
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the option.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), value: value, handler: handler)
     }
@@ -340,7 +340,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the option.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     @_disfavoredOverload
     public init<S>(_ title: S, subtitle: S? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) where S: StringProtocol {
         self.init(String(title), subtitle: String(optional: subtitle), image: UIImage(resource: image), value: value, handler: handler)
@@ -354,7 +354,7 @@ extension Option: PickerSectionElement where Body == OptionInPickerSection<Value
     ///   - image: The image associated with the option.
     ///   - value: The value associated with the option.
     ///   - handler: The handler to invoke when the user selects the option.
-    @available(iOS 17.0, tvOS 17.0, *)
+    @available(iOS 17, tvOS 17, *)
     public init(_ title: LocalizedStringResource, subtitle: LocalizedStringResource? = nil, image: ImageResource, value: Value, handler: @escaping (Value) -> Void = { _ in }) {
         self.init(String(localized: title), subtitle: String(localizedOptional: subtitle), image: UIImage(resource: image), value: value, handler: handler)
     }

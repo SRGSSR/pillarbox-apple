@@ -8,7 +8,7 @@ import Foundation
 import PillarboxPlayer
 import SwiftData
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 enum URNSchemaV1 {
     struct EntryAssetMetadata: Codable {
@@ -153,7 +153,7 @@ enum URNSchemaV1 {
     }
 }
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 extension URNSchemaV1: VersionedSchema {
     static let models: [any PersistentModel.Type] = [URNEntry.self]

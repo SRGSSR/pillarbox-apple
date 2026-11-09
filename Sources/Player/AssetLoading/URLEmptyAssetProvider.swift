@@ -14,7 +14,7 @@ public enum URLEmptyAssetProvider: URLAssetLoaderProvider {
     }
 }
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 extension URLEmptyAssetProvider: URLAssetDownloadStoreProvider {
     // swiftlint:disable:next missing_docs

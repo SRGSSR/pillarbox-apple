@@ -7,7 +7,7 @@
 import Foundation
 import SwiftData
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 final class URLAssetDownloadStore<Provider> where Provider: URLAssetDownloadStoreProvider {
     typealias URLEntry = URLSchemaV1<Provider.CustomData>.URLEntry
@@ -21,7 +21,7 @@ final class URLAssetDownloadStore<Provider> where Provider: URLAssetDownloadStor
     }
 }
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 extension URLAssetDownloadStore: AssetDownloadStore {
     typealias Loader = URLAssetLoader<Provider>

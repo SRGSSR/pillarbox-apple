@@ -11,7 +11,7 @@ import PillarboxPlayer
 /// An [observable object](https://developer.apple.com/documentation/combine/observableobject) that manages URN-based media downloads.
 ///
 /// This downloader persists download metadata in a SwiftData database.
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 public final class URNDownloader: ObservableObject {
     private let downloader: Downloader<URNAssetDownloadStore>

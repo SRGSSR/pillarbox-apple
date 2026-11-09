@@ -8,7 +8,7 @@ import Foundation
 import PillarboxPlayer
 import SwiftData
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 final class URNAssetDownloadStore {
     typealias URNEntry = URNSchemaV1.URNEntry
@@ -22,7 +22,7 @@ final class URNAssetDownloadStore {
     }
 }
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 extension URNAssetDownloadStore: AssetDownloadStore {
     typealias Loader = URNAssetLoader

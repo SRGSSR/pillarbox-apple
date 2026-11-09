@@ -7,7 +7,7 @@
 import Foundation
 import SwiftData
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 enum URLSchemaV1<CustomData> where CustomData: Codable {
     struct EntryAssetMetadata: Codable {
@@ -152,7 +152,7 @@ enum URLSchemaV1<CustomData> where CustomData: Codable {
     }
 }
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 extension URLSchemaV1: VersionedSchema {
     static var models: [any PersistentModel.Type] {
