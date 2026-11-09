@@ -7,7 +7,7 @@
 import AVKit
 import UIKit
 
-final class PictureInPictureHostViewController: UIViewController {
+final class VideoHostViewController: UIViewController {
     weak var playerViewController: AVPlayerViewController?
 
     func addViewController(_ playerViewController: AVPlayerViewController) {

@@ -23,7 +23,7 @@ final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
 
     private var playerViewController: AVPlayerViewController?
-    private var hostViewControllers: OrderedSet<PictureInPictureHostViewController> = []
+    private var hostViewControllers: OrderedSet<VideoHostViewController> = []
 
     weak var delegate: PictureInPictureDelegate?
 
@@ -31,8 +31,8 @@ final class SystemPictureInPicture: NSObject {
         playerViewController?.stopPictureInPicture()
     }
 
-    func makeHostViewController(for player: Player, supportsPictureInPicture: Bool) -> PictureInPictureHostViewController {
-        let hostViewController = PictureInPictureHostViewController()
+    func makeHostViewController(for player: Player, supportsPictureInPicture: Bool) -> VideoHostViewController {
+        let hostViewController = VideoHostViewController()
         if supportsPictureInPicture {
             hostViewControllers.append(hostViewController)
             hostViewController.addViewController(makePlayerViewController(for: player))
@@ -43,7 +43,7 @@ final class SystemPictureInPicture: NSObject {
         return hostViewController
     }
 
-    func updateHostViewController(_ hostViewController: PictureInPictureHostViewController, supportsPictureInPicture: Bool) {
+    func updateHostViewController(_ hostViewController: VideoHostViewController, supportsPictureInPicture: Bool) {
         if supportsPictureInPicture {
             guard hostViewControllers.append(hostViewController).inserted else { return }
             if !isActive, let playerViewController = hostViewController.playerViewController {
@@ -60,7 +60,7 @@ final class SystemPictureInPicture: NSObject {
 
     private func makePlayerViewController(for player: Player) -> AVPlayerViewController {
         if let playerViewController, playerViewController.player == player.queuePlayer {
-            if let parent = playerViewController.parent as? PictureInPictureHostViewController {
+            if let parent = playerViewController.parent as? VideoHostViewController {
                 parent.addViewController(playerViewController.duplicate())
             }
             return playerViewController
@@ -82,7 +82,7 @@ final class SystemPictureInPicture: NSObject {
         return playerViewController
     }
 
-    func dismantleHostViewController(_ hostViewController: PictureInPictureHostViewController) {
+    func dismantleHostViewController(_ hostViewController: VideoHostViewController) {
         guard hostViewControllers.remove(hostViewController) != nil else { return }
         if !isActive && playerViewController == hostViewController.playerViewController {
             playerViewController = hostViewControllers.last?.playerViewController
