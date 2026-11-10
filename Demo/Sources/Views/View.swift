@@ -8,7 +8,7 @@ import SwiftUI
 
 private struct PulseSymbolEffect17: ViewModifier {
     func body(content: Content) -> some View {
-        if #available(iOS 17.0, tvOS 17.0, *) {
+        if #available(iOS 17, tvOS 17, *) {
             content
                 .symbolEffect(.pulse)
         }
@@ -22,7 +22,7 @@ private struct ScaleEffect17: ViewModifier {
     let scale: CGFloat
 
     func body(content: Content) -> some View {
-        if #available(iOS 17.0, tvOS 17.0, *) {
+        if #available(iOS 17, tvOS 17, *) {
             content
                 .scaleEffect(scale)
         }
@@ -41,7 +41,7 @@ private struct ScrollClipDisabled17: ViewModifier {
 
     func body(content: Content) -> some View {
         Group {
-            if #available(iOS 17.0, tvOS 17.0, *) {
+            if #available(iOS 17, tvOS 17, *) {
                 content
                     .scrollClipDisabled(isDisabled)
             }
@@ -57,7 +57,7 @@ private struct SearchScopes16<V, S>: ViewModifier where V: Hashable, S: View {
     @ContentBuilder let scopes: () -> S
 
     func body(content: Content) -> some View {
-        if #available(iOS 16.0, tvOS 16.4, *) {
+        if #available(iOS 16, tvOS 16.4, *) {
             content
                 .searchScopes(binding, scopes: scopes)
         }
@@ -71,7 +71,7 @@ private struct ChangeSensoryFeedback17<T>: ViewModifier where T: Equatable {
     let trigger: T
 
     func body(content: Content) -> some View {
-        if #available(iOS 17.0, tvOS 17.0, *) {
+        if #available(iOS 17, tvOS 17, *) {
             content
                 .sensoryFeedback(.increase, trigger: trigger)
         }

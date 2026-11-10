@@ -8,7 +8,7 @@ import PillarboxPlayer
 import UIKit
 
 private enum PickerDSLChecks {
-    @available(iOS 17.0, tvOS 18.0, *)
+    @available(iOS 17, tvOS 18, *)
     @MenuContentBuilder
     static func menu() -> MenuContent {
         Picker("", selection: .constant(true)) {}
@@ -21,7 +21,7 @@ private enum PickerDSLChecks {
         Picker("", subtitle: "", systemImage: "circle", selection: .constant(true)) {}
     }
 
-    @available(iOS 17.0, tvOS 18.0, *)
+    @available(iOS 17, tvOS 18, *)
     @SectionContentBuilder
     static func section() -> SectionContent {
         Picker("", selection: .constant(true)) {}

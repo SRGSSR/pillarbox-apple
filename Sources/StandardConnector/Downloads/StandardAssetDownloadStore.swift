@@ -8,7 +8,7 @@ import Foundation
 import PillarboxPlayer
 import SwiftData
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 final class StandardAssetDownloadStore<Provider> where Provider: StandardAssetDownloadStoreProvider {
     typealias StandardEntry = StandardSchemaV1<Provider.Input, Provider.CustomData>.StandardEntry
@@ -22,7 +22,7 @@ final class StandardAssetDownloadStore<Provider> where Provider: StandardAssetDo
     }
 }
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 extension StandardAssetDownloadStore: AssetDownloadStore {
     typealias Loader = StandardAssetLoader<Provider>

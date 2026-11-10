@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-@available(iOS 16.0, tvOS 17.0, *)
+@available(iOS 16, tvOS 17, *)
 struct PlaybackSpeedMenuContent: View {
     let speeds: Set<Float>
     let action: (Float) -> Void

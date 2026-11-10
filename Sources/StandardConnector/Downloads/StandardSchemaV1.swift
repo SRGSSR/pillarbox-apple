@@ -8,7 +8,7 @@ import Foundation
 import PillarboxPlayer
 import SwiftData
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 enum StandardSchemaV1<Input, CustomData> where Input: Codable, CustomData: Codable {
     struct EntryAssetMetadata: Codable {
@@ -153,7 +153,7 @@ enum StandardSchemaV1<Input, CustomData> where Input: Codable, CustomData: Codab
     }
 }
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 extension StandardSchemaV1: VersionedSchema {
     static var models: [any PersistentModel.Type] {

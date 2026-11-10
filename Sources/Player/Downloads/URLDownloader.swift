@@ -9,7 +9,7 @@ import Foundation
 /// An [observable object](https://developer.apple.com/documentation/combine/observableobject) that manages URL-based media downloads.
 ///
 /// This downloader persists download metadata in a SwiftData database.
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 public final class URLDownloader<Provider>: ObservableObject where Provider: URLAssetDownloadStoreProvider {
     private let downloadManager: Downloader<URLAssetDownloadStore<Provider>>
@@ -93,7 +93,7 @@ public final class URLDownloader<Provider>: ObservableObject where Provider: URL
     }
 }
 
-@available(iOS 17.0, *)
+@available(iOS 17, *)
 @available(tvOS, unavailable)
 public extension URLDownloader where Provider == URLEmptyAssetProvider {
     /// Creates a downloader for URL-based content without custom data.

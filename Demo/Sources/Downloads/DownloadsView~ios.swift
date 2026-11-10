@@ -88,7 +88,7 @@ struct DownloadsView: View {
 
 #Preview {
     NavigationStack {
-        if #available(iOS 17.0, *) {
+        if #available(iOS 17, *) {
             DownloadsView()
         }
     }

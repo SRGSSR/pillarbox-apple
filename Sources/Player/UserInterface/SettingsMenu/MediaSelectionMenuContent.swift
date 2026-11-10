@@ -7,7 +7,7 @@
 import AVFoundation
 import SwiftUI
 
-@available(iOS 16.0, tvOS 17.0, *)
+@available(iOS 16, tvOS 17, *)
 struct MediaSelectionMenuContent: View {
     let characteristic: AVMediaCharacteristic
     let action: (MediaSelectionOption) -> Void

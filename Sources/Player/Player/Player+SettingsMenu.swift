@@ -7,7 +7,7 @@
 import AVFoundation
 import SwiftUI
 
-@available(iOS 16.0, tvOS 17.0, *)
+@available(iOS 16, tvOS 17, *)
 public extension Player {
     /// Returns content for a standard player settings menu.
     ///

@@ -7,7 +7,7 @@
 import AVFoundation
 import SwiftUI
 
-@available(iOS 16.0, tvOS 17.0, *)
+@available(iOS 16, tvOS 17, *)
 struct ZoomMenuContent: View {
     private static let gravities: [AVLayerVideoGravity] = [.resizeAspect, .resizeAspectFill]
 
