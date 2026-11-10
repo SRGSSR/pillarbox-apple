@@ -150,7 +150,7 @@ struct ChapterCell: View {
 private extension View {
     @ContentBuilder
     func backgroundExtension(spacing: CGFloat) -> some View {
-        if #available(iOS 26, tvOS 26, *) {
+        if #available(anyAppleOS 26, *) {
             // Trick, see https://nilcoalescing.com/blog/BackgroundExtensionEffectInSwiftUI/
             backgroundExtensionEffect()
                 .safeAreaInset(edge: .bottom, spacing: spacing) {

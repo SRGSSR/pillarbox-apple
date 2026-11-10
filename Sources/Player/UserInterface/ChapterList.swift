@@ -55,7 +55,7 @@ struct ChapterList: View {
 
 private extension View {
     func scrollClipDisabled26() -> some View {
-        if #available(iOS 26, tvOS 26, *) {
+        if #available(anyAppleOS 26, *) {
             return scrollClipDisabled()
         }
         else {
