@@ -40,13 +40,13 @@ private struct _RoutePickerView: UIViewRepresentable {
 
 private struct _RoutePickerButton<Content>: View where Content: View {
     let prioritizesVideoDevices: Bool
-    let content: () -> Content
+    let content: Content
 
     @Control private var control
 
     var body: some View {
         SwiftUI::Button(action: sendAction) {
-            content()
+            content
                 .background {
                     _RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices, control: control)
                 }
@@ -68,7 +68,7 @@ private struct _RoutePickerButton<Content>: View where Content: View {
 /// > Important: This button is not available for iPad applications run on macOS or using Catalyst.
 public struct RoutePickerButton<Content>: View where Content: View {
     private let prioritizesVideoDevices: Bool
-    private let content: () -> Content
+    private let content: Content
 
     // swiftlint:disable:next missing_docs
     public var body: some View {
@@ -83,9 +83,9 @@ public struct RoutePickerButton<Content>: View where Content: View {
     ///   - prioritizesVideoDevices: A Boolean setting whether or not the route picker should sort video-capable
     ///     output devices to the top of the list.
     ///   - content: The content displayed by the button.
-    public init(prioritizesVideoDevices: Bool = false, @ContentBuilder content: @escaping () -> Content) {
+    public init(prioritizesVideoDevices: Bool = false, @ContentBuilder content: () -> Content) {
         self.prioritizesVideoDevices = prioritizesVideoDevices
-        self.content = content
+        self.content = content()
     }
 }
 
