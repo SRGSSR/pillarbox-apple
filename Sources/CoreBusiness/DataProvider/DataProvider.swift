@@ -18,36 +18,36 @@ final class DataProvider {
         self.server = server
     }
 
-    static func decoder() -> JSONDecoder {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
-    }
-
     private func mediaCompositionPublisher(forUrn urn: String, httpHeaders: [String: String]) -> AnyPublisher<MediaCompositionResponse, Error> {
         session.dataTaskPublisher(for: server.mediaCompositionRequest(forUrn: urn, httpHeaders: httpHeaders))
             .mapHttpErrors()
-            .removeDuplicates { $0.data != $1.data }
             .tryMap { data, response in
-                MediaCompositionResponse(
-                    mediaComposition: try Self.decoder().decode(MediaComposition.self, from: data),
-                    response: response
-                )
+                try MediaCompositionResponse(data: data, response: response)
             }
             .eraseToAnyPublisher()
     }
 
     func polledMediaCompositionIfNeededPublisher(forUrn urn: String, httpHeaders: [String: String]) -> AnyPublisher<MediaCompositionResponse, Error> {
         mediaCompositionPublisher(forUrn: urn, httpHeaders: httpHeaders)
-            .flatMap { [weak self] response in // swiftlint:disable:this unused_closure_parameter
-                // TODO: Check if polling is needed
-                Timer.publish(every: 3, on: .main, in: .common)
+            .map { [weak self] response -> AnyPublisher<MediaCompositionResponse, Error> in
+                guard let self, response.isScheduledLivestream else {
+                    return Just(response)
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+                return Timer.publish(every: 5, on: .main, in: .common) // TODO: Should this value be hardcoded/configured?
+                // Or should we check the cache max-age to extract the value?
                     .autoconnect()
-                    .compactMap { _ -> AnyPublisher<MediaCompositionResponse, Error>? in
-                        self?.mediaCompositionPublisher(forUrn: urn, httpHeaders: httpHeaders).eraseToAnyPublisher()
+                    .map { [weak self] _ -> AnyPublisher<MediaCompositionResponse, Error> in
+                        guard let self else { return Empty().eraseToAnyPublisher() }
+                        return mediaCompositionPublisher(forUrn: urn, httpHeaders: httpHeaders)
                     }
+                    .switchToLatest()
+                    .prepend(response)
+                    .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
