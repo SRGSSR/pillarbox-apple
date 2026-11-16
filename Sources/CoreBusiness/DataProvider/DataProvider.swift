@@ -24,7 +24,7 @@ final class DataProvider {
         return decoder
     }
 
-    func mediaCompositionPublisher(forUrn urn: String, httpHeaders: [String: String]) -> AnyPublisher<MediaCompositionResponse, Error> {
+    private func mediaCompositionPublisher(forUrn urn: String, httpHeaders: [String: String]) -> AnyPublisher<MediaCompositionResponse, Error> {
         session.dataTaskPublisher(for: server.mediaCompositionRequest(forUrn: urn, httpHeaders: httpHeaders))
             .mapHttpErrors()
             .tryMap { data, response in
@@ -33,6 +33,20 @@ final class DataProvider {
                     response: response
                 )
             }
+            .eraseToAnyPublisher()
+    }
+
+    func polledMediaCompositionIfNeededPublisher(forUrn urn: String, httpHeaders: [String: String]) -> AnyPublisher<MediaCompositionResponse, Error> {
+        mediaCompositionPublisher(forUrn: urn, httpHeaders: httpHeaders)
+            .flatMap { [weak self] response in // swiftlint:disable:this unused_closure_parameter
+                // TODO: Check if polling is needed
+                Timer.publish(every: 3, on: .main, in: .common)
+                    .autoconnect()
+                    .compactMap { _ -> AnyPublisher<MediaCompositionResponse, Error>? in
+                        self?.mediaCompositionPublisher(forUrn: urn, httpHeaders: httpHeaders).eraseToAnyPublisher()
+                    }
+            }
+            .switchToLatest()
             .eraseToAnyPublisher()
     }
 

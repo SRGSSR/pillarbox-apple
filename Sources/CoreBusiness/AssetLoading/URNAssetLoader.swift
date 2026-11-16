@@ -21,7 +21,7 @@ enum URNAssetLoader: AssetLoader {
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
         let dataProvider = DataProvider(server: input.server)
-        return dataProvider.mediaCompositionPublisher(forUrn: input.urn, httpHeaders: input.httpHeaders)
+        return dataProvider.polledMediaCompositionIfNeededPublisher(forUrn: input.urn, httpHeaders: input.httpHeaders)
             .tryMap { response in
                 try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
             }
