@@ -85,6 +85,11 @@ public final class PlayerItem: Identifiable {
             trackerAdapters: trackerAdapters
         )
     }
+    
+    /// Reloads the item.
+    public func reload() {
+        Self.reload(for: id)
+    }
 
     static func load(for id: UUID) {
         trigger.activate(for: TriggerId.load(id))
