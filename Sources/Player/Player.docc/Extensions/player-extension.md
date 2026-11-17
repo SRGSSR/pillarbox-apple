@@ -30,6 +30,7 @@
 - ``nextItems``
 - ``prepend(_:)``
 - ``previousItems``
+- ``reload()``
 - ``remove(_:)``
 - ``removeAllItems()``
 

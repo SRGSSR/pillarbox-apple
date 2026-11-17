@@ -87,6 +87,16 @@ public final class PlayerItem: Identifiable {
     }
     
     /// Reloads the item.
+    ///
+    /// Retrieves the asset and its metadata again from the ``AssetLoader`` the item was created with, for example to
+    /// obtain fresh metadata or a new playback URL. Attached trackers receive the updated metadata.
+    ///
+    /// The item keeps its current content until reloading completes. If the reloaded asset is played from the same
+    /// resource, the item is updated in place and playback continues without interruption. Otherwise the item is
+    /// replaced and playback starts again according to the ``PlaybackConfiguration`` of the reloaded asset. If
+    /// reloading fails, the item fails with the associated error.
+    ///
+    /// To reload the item currently played by a player, you can also call ``Player/reload()``.
     public func reload() {
         Self.reload(for: id)
     }

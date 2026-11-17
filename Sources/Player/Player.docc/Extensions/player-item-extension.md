@@ -10,3 +10,7 @@
 
 - ``simple(url:metadata:trackerAdapters:)``
 - ``custom(assetProviderType:url:metadata:trackerAdapters:)``
+
+### Reloading a Player Item
+
+- ``reload()``

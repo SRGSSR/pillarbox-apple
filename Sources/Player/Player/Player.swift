@@ -287,6 +287,8 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// Reloads the current item.
+    ///
+    /// Does nothing if the player has no current item. See ``PlayerItem/reload()`` for more information.
     public func reload() {
         currentItem?.reload()
     }
