@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Foundation
 import PillarboxCore
 import PillarboxPlayer
 
@@ -21,10 +22,10 @@ enum URNAssetLoader: AssetLoader {
 
     static func metadataPublisher(for input: Input) -> AnyPublisher<MediaMetadata, any Error> {
         let dataProvider = DataProvider(server: input.server)
-        return dataProvider.mediaCompositionPublisher(forUrn: input.urn, httpHeaders: input.httpHeaders)
-            .tryMap { response in
-                try MediaMetadata(mediaCompositionResponse: response, dataProvider: dataProvider)
-            }
+        return mediaMetadataPublisher(for: input, dataProvider: dataProvider)
+            .map { pollingMediaMetadataPublisher(from: $0, input: input, dataProvider: dataProvider) }
+            .switchToLatest()
+            .removeDuplicates { $0.mediaCompositionData == $1.mediaCompositionData }
             .eraseToAnyPublisher()
     }
 
@@ -70,6 +71,29 @@ enum URNAssetLoader: AssetLoader {
 
     static func playerMetadata(from input: Input, metadata: MediaMetadata?) -> PlayerMetadata {
         metadata?.playerMetadata(dateFormat: .relative) ?? .empty
+    }
+
+    private static func mediaMetadataPublisher(for input: Input, dataProvider: DataProvider) -> AnyPublisher<MediaMetadata, any Error> {
+        dataProvider.mediaCompositionPublisher(forUrn: input.urn, httpHeaders: input.httpHeaders)
+            .tryMap { try MediaMetadata(mediaCompositionResponse: $0, dataProvider: dataProvider) }
+            .eraseToAnyPublisher()
+    }
+
+    private static func pollingMediaMetadataPublisher(
+        from metadata: MediaMetadata,
+        input: Input,
+        dataProvider: DataProvider
+    ) -> AnyPublisher<MediaMetadata, Never> {
+        guard metadata.mainChapter.contentType == .scheduledLivestream else { return Just(metadata).eraseToAnyPublisher() }
+        return Timer.publish(every: 30, on: .main, in: .common)
+            .autoconnect()
+            .map { _ in
+                mediaMetadataPublisher(for: input, dataProvider: dataProvider)
+                    .catch { _ in Empty() }
+            }
+            .switchToLatest()
+            .prepend(metadata)
+            .eraseToAnyPublisher()
     }
 
     private static func assetConfiguration(for resource: MediaComposition.Resource) -> PlaybackConfiguration {
