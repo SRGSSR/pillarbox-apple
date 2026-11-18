@@ -27,6 +27,25 @@ final class PlayerItemTrackerMetricPublisherTests: TestCase {
         }
     }
 
+    func testItemPlaybackWithMetadataUpdate() {
+        let player = Player(
+            item: .playable(
+                url: Stream.shortOnDemand.url,
+                metadata: .init(title: "title1"),
+                after: 0.1,
+                updatedWithMetadata: .init(title: "title2")
+            )
+        )
+        expectAtLeastSimilarPublished(values: [
+            [],
+            [.anyMetadata],
+            [.anyMetadata, .anyAsset],
+            [],
+        ], from: player.metricEventsPublisher) {
+            player.play()
+        }
+    }
+
     func testError() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expectAtLeastSimilarPublished(values: [
