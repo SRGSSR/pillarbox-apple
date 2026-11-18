@@ -20,8 +20,7 @@ enum Mock {
         case audioChapters
     }
 
-    static func mediaComposition(_ kind: MediaCompositionKind = .onDemand) -> MediaComposition {
-        let data = NSDataAsset(name: "MediaComposition_\(kind.rawValue)", bundle: .module)!.data
-        return try! DataProvider.decoder().decode(MediaComposition.self, from: data)
+    static func dataMediaComposition(_ kind: MediaCompositionKind = .onDemand) -> Data {
+        NSDataAsset(name: "MediaComposition_\(kind.rawValue)", bundle: .module)!.data
     }
 }

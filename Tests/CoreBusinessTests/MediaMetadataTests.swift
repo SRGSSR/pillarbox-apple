@@ -13,7 +13,7 @@ final class MediaMetadataTests: XCTestCase {
     private static func metadata(_ kind: Mock.MediaCompositionKind) throws -> MediaMetadata {
         try MediaMetadata(
             mediaCompositionResponse: .init(
-                mediaComposition: Mock.mediaComposition(kind),
+                data: Mock.dataMediaComposition(kind),
                 response: .init()
             ),
             dataProvider: DataProvider()

@@ -18,7 +18,7 @@ final class DataProvider {
         self.server = server
     }
 
-    private func mediaCompositionPublisher(forUrn urn: String, httpHeaders: [String: String]) -> AnyPublisher<MediaCompositionResponse, Error> {
+    func mediaCompositionPublisher(forUrn urn: String, httpHeaders: [String: String]) -> AnyPublisher<MediaCompositionResponse, Error> {
         session.dataTaskPublisher(for: server.mediaCompositionRequest(forUrn: urn, httpHeaders: httpHeaders))
             .mapHttpErrors()
             .tryMap { data, response in
