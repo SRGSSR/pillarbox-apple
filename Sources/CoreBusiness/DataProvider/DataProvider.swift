@@ -38,11 +38,14 @@ final class DataProvider {
                 return Timer.publish(every: 5, on: .main, in: .common) // TODO: Should this value be hardcoded/configured?
                 // Or should we check the cache max-age to extract the value?
                     .autoconnect()
-                    .map { [weak self] _ -> AnyPublisher<MediaCompositionResponse, Error> in
+                    .map { [weak self] _ -> AnyPublisher<MediaCompositionResponse, Never> in
                         guard let self else { return Empty().eraseToAnyPublisher() }
                         return mediaCompositionPublisher(forUrn: urn, httpHeaders: httpHeaders)
+                            .catch { _ in Empty() }
+                            .eraseToAnyPublisher()
                     }
                     .switchToLatest()
+                    .setFailureType(to: Error.self)
                     .prepend(response)
                     .eraseToAnyPublisher()
             }
