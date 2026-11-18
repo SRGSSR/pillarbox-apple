@@ -23,6 +23,9 @@ public struct LazyImage<Content>: View where Content: View {
         .onAppear {
             source.fetchData()
         }
+        .onChange(of: source) { source in
+            source.fetchData()
+        }
     }
 
     /// Creates a lazy image.
