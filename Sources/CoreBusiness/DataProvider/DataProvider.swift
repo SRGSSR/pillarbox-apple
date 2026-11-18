@@ -30,6 +30,7 @@ final class DataProvider {
             .tryMap { data, response in
                 MediaCompositionResponse(
                     mediaComposition: try Self.decoder().decode(MediaComposition.self, from: data),
+                    data: data,
                     response: response
                 )
             }

@@ -24,6 +24,9 @@ public struct MediaMetadata {
     /// The resource to be played.
     public let resource: MediaComposition.Resource?
 
+    /// The raw media composition data, used to detect content changes.
+    let mediaCompositionData: Data
+
     private let dataProvider: DataProvider
 
     /// The stream type.
@@ -76,6 +79,7 @@ public struct MediaMetadata {
         self.mediaComposition = mediaComposition
         self.mediaCompositionUrl = mediaCompositionResponse.response.url
         self.mediaCompositionHeaders = Self.mediaCompositionHeaders(from: mediaCompositionResponse.response)
+        self.mediaCompositionData = mediaCompositionResponse.data
         self.mainChapter = mainChapter
         self.resource = mainChapter.resources.first
         self.dataProvider = dataProvider
