@@ -1,5 +1,5 @@
 {
-  "originHash" : "708a2ef74cc2a1eaa1e8fa5808c4714a8b1dfae854945a33a32ed7c6a18728bb",
+  "originHash" : "fc276388fb91566db357e1df430e05ac64292fb1773a48249b16618ea70b14e5",
   "pins" : [
     {
       "identity" : "comscore-swift-package-manager",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CommandersAct/iOSV5-spm.git",
       "state" : {
-        "revision" : "e28f6bcb00d15d9ca113d45074bab27ddb853e1e",
-        "version" : "5.5.1"
+        "revision" : "7f1db401cbe5170508d9ab15ca6960ebaccda1a2",
+        "version" : "5.6.0"
       }
     },
     {
