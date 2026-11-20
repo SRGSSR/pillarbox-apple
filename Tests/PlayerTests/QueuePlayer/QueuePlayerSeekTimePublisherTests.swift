@@ -76,6 +76,21 @@ final class QueuePlayerSeekTimePublisherTests: TestCase {
         }
     }
 
+    func testUnfinishedSeek() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+
+        let time = CMTime(value: 10, timescale: 1)
+        expectAtLeastEqualPublished(
+            values: [nil, time, nil],
+            from: player.seekTimePublisher()
+        ) {
+            player.seek(to: time)
+            item.cancelPendingSeeks()
+        }
+    }
+
     func testMultipleSeeksAtTheSameLocationWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
