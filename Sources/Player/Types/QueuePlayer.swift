@@ -103,6 +103,9 @@ class QueuePlayer: AVQueuePlayer {
             seek.completionHandler(finished)
             pendingSeeks.removeAll()
         }
+        else {
+            completion()
+        }
     }
 
     override func seek(to time: CMTime, completionHandler: @escaping (Bool) -> Void) {
