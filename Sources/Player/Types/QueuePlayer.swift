@@ -98,7 +98,7 @@ class QueuePlayer: AVQueuePlayer {
                 enqueue(seek: targetSeek, completion: completion)
             }
         }
-        else if finished {
+        else {
             completion()
             seek.completionHandler(finished)
             pendingSeeks.removeAll()
