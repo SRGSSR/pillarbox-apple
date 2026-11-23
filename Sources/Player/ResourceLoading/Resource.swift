@@ -88,12 +88,11 @@ extension Resource {
 extension Resource: Equatable {
     static func == (lhs: Resource, rhs: Resource) -> Bool {
         switch (lhs, rhs) {
-        case let (.simple(url: lhsUrl), .simple(url: rhsUrl)):
+        case
+            let (.simple(url: lhsUrl), .simple(url: rhsUrl)),
+            let (.custom(url: lhsUrl, _), .custom(url: rhsUrl, _)),
+            let (.encrypted(url: lhsUrl, _), .encrypted(url: rhsUrl, _)):
             return lhsUrl == rhsUrl
-        case let (.custom(url: lhsUrl, delegate: lhsDelegate), .custom(url: rhsUrl, delegate: rhsDelegate)):
-            return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
-        case let (.encrypted(url: lhsUrl, delegate: lhsDelegate), .encrypted(url: rhsUrl, delegate: rhsDelegate)):
-            return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
         default:
             return false
         }
