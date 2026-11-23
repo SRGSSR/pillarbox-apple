@@ -179,10 +179,11 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         player.seek(to: CMTime(value: 10, timescale: 1))
         item.cancelPendingSeeks()
 
-        var isFinished = false
-        player.seek(to: CMTime(value: 20, timescale: 1), smooth: true) { finished in
-            isFinished = finished
+        waitUntil { done in
+            player.seek(to: CMTime(value: 20, timescale: 1), smooth: true) { finished in
+                expect(finished).to(beTrue())
+                done()
+            }
         }
-        expect(isFinished).toEventually(beTrue())
     }
 }
