@@ -170,4 +170,20 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         player.seek(to: time2, smooth: true) { _ in }
         expect(player.targetSeekTime).to(equal(time2))
     }
+
+    func testSmoothSeekAfterUnfinishedSeek() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+
+        player.seek(to: CMTime(value: 10, timescale: 1))
+        item.cancelPendingSeeks()
+
+        waitUntil { done in
+            player.seek(to: CMTime(value: 20, timescale: 1), smooth: true) { finished in
+                expect(finished).to(beTrue())
+                done()
+            }
+        }
+    }
 }
