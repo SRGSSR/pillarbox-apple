@@ -43,7 +43,7 @@ enum URNAssetLoader: AssetLoader {
         else {
             switch resource.tokenType {
             case .akamai:
-                return .tokenProtected(url: resource.url, configuration: configuration)
+                return .tokenProtected(url: resource.url, id: "\(input.urn.hashValue)", configuration: configuration)
             default:
                 return .simple(url: resource.url, configuration: configuration)
             }

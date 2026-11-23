@@ -10,18 +10,18 @@ import Nimble
 import XCTest
 
 final class AkamaiURLCodingTests: XCTestCase {
-    private static let uuid = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E5F")!
+    private static let id = "E621E1F8-C36C-495A-93FC-0C247A3E6E5F"
 
     func testEncoding() {
         expect(Akamai.encodeUrl(
             URL(string: "http://www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(equal(URL(string: "akamai+E621E1F8-C36C-495A-93FC-0C247A3E6E5F+http://www.server.com/playlist.m3u8?param1=value1&param2=value2")))
 
         expect(Akamai.encodeUrl(
             URL(string: "https://www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(equal(URL(string: "akamai+E621E1F8-C36C-495A-93FC-0C247A3E6E5F+https://www.server.com/playlist.m3u8?param1=value1&param2=value2")))
     }
@@ -29,7 +29,7 @@ final class AkamaiURLCodingTests: XCTestCase {
     func testFailedEncoding() {
         expect(Akamai.encodeUrl(
             URL(string: "//www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(equal(URL(string: "//www.server.com/playlist.m3u8?param1=value1&param2=value2")))
     }
@@ -37,13 +37,13 @@ final class AkamaiURLCodingTests: XCTestCase {
     func testDecoding() {
         expect(Akamai.decodeUrl(
             URL(string: "akamai+E621E1F8-C36C-495A-93FC-0C247A3E6E5F+http://www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(equal(URL(string: "http://www.server.com/playlist.m3u8?param1=value1&param2=value2")))
 
         expect(Akamai.decodeUrl(
             URL(string: "akamai+E621E1F8-C36C-495A-93FC-0C247A3E6E5F+https://www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(equal(URL(string: "https://www.server.com/playlist.m3u8?param1=value1&param2=value2")))
     }
@@ -51,31 +51,31 @@ final class AkamaiURLCodingTests: XCTestCase {
     func testFailedDecoding() {
         expect(Akamai.decodeUrl(
             URL(string: "http://www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(beNil())
 
         expect(Akamai.decodeUrl(
             URL(string: "https://www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(beNil())
 
         expect(Akamai.decodeUrl(
             URL(string: "custom://www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(beNil())
 
         expect(Akamai.decodeUrl(
             URL(string: "//www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(beNil())
 
         expect(Akamai.decodeUrl(
             URL(string: "akamai+1111111-1111-1111-1111-111111111111+https://www.server.com/playlist.m3u8?param1=value1&param2=value2")!,
-            id: Self.uuid
+            id: Self.id
         ))
         .to(beNil())
     }

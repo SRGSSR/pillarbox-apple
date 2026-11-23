@@ -13,11 +13,11 @@ public extension Asset {
     ///
     /// - Parameters:
     ///   - url: The URL to be played.
+    ///   - id: A stable identifier for the content.
     ///   - configuration: The configuration to apply to the asset.
     /// - Returns: The asset.
-    static func tokenProtected(url: URL, configuration: PlaybackConfiguration = .default) -> Self {
-        let id = UUID()
-        return .custom(
+    static func tokenProtected(url: URL, id: String, configuration: PlaybackConfiguration = .default) -> Self {
+        .custom(
             url: Akamai.encodeUrl(url, id: id),
             delegate: AkamaiResourceLoaderDelegate(id: id),
             configuration: configuration
