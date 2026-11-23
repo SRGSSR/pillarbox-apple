@@ -31,6 +31,13 @@ enum Resource {
         }
     }
 
+    var url: URL {
+        switch self {
+        case let .simple(url), let .custom(url, _), let .encrypted(url, _):
+            url
+        }
+    }
+
     private func asset(for url: URL, with configuration: PlayerConfiguration) -> AVURLAsset {
         .init(url: url, options: [
             AVURLAssetAllowsConstrainedNetworkAccessKey: configuration.allowsConstrainedNetworkAccess
@@ -66,12 +73,7 @@ enum Resource {
 
 extension Resource: PlaybackResource {
     func contains(url: URL) -> Bool {
-        switch self {
-        case let .custom(url: customUrl, _) where customUrl == url:
-            true
-        default:
-            false
-        }
+        self.url == url
     }
 }
 
@@ -87,14 +89,6 @@ extension Resource {
 
 extension Resource: Equatable {
     static func == (lhs: Resource, rhs: Resource) -> Bool {
-        switch (lhs, rhs) {
-        case
-            let (.simple(url: lhsUrl), .simple(url: rhsUrl)),
-            let (.custom(url: lhsUrl, _), .custom(url: rhsUrl, _)),
-            let (.encrypted(url: lhsUrl, _), .encrypted(url: rhsUrl, _)):
-            return lhsUrl == rhsUrl
-        default:
-            return false
-        }
+        lhs.url == rhs.url
     }
 }
