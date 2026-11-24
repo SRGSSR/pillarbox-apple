@@ -9,9 +9,9 @@ import AVFoundation
 final class AkamaiResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     private static let session = URLSession(configuration: .default)
 
-    private let id: UUID
+    private let id: String
 
-    init(id: UUID) {
+    init(id: String) {
         self.id = id
     }
 

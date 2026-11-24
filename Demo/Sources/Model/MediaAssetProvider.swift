@@ -27,7 +27,7 @@ enum MediaAssetProvider: URLAssetLoaderProvider {
         case .none:
             return .simple(url: input.url, configuration: configuration)
         case .token:
-            return .tokenProtected(url: input.url, configuration: configuration)
+            return .tokenProtected(url: input.url, id: "\(input.url.absoluteString.hashValue)", configuration: configuration)
         case let .fairPlay(certificateUrl: certificateUrl):
             return .encrypted(url: input.url, certificateUrl: certificateUrl, configuration: configuration)
         }

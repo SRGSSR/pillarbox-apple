@@ -11,16 +11,16 @@ enum Akamai {
     private static let separator = "+"
     private static let tokenServiceUrl = URL(string: "https://tp.srgssr.ch/akahd/token")!
 
-    static func encodeUrl(_ url: URL, id: UUID) -> URL {
+    static func encodeUrl(_ url: URL, id: String) -> URL {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let scheme = components.scheme else {
             return url
         }
-        components.scheme = "\(schemePrefix)\(separator)\(id.uuidString)\(separator)\(scheme)"
+        components.scheme = "\(schemePrefix)\(separator)\(id)\(separator)\(scheme)"
         return components.url ?? url
     }
 
-    static func decodeUrl(_ url: URL, id: UUID) -> URL? {
+    static func decodeUrl(_ url: URL, id: String) -> URL? {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let scheme = components.scheme else {
             return nil
@@ -28,7 +28,7 @@ enum Akamai {
         let schemeComponents = scheme.components(separatedBy: separator)
         guard schemeComponents.count == 3
                 && schemeComponents[0] == schemePrefix
-                && schemeComponents[1] == id.uuidString else {
+                && schemeComponents[1] == id else {
             return nil
         }
         components.scheme = schemeComponents[2]
