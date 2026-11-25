@@ -18,9 +18,22 @@ public protocol AssetLoader {
     ///
     /// - Parameter input: The input that identifies the asset.
     /// - Returns: A publisher that delivers the metadata associated with the given input.
+    ///
+    /// The publisher can deliver metadata more than once, for example to reflect changes made to the content while it
+    /// is being played. Each update is forwarded to trackers and converted again into an asset with
+    /// ``AssetLoader/asset(from:metadata:)`` and into player metadata with
+    /// ``AssetLoader/playerMetadata(from:metadata:)``.
     static func metadataPublisher(for input: Input) -> AnyPublisher<Metadata, any Error>
 
     /// Converts the given input and metadata into an asset.
+    ///
+    /// This method is called each time ``AssetLoader/metadataPublisher(for:)`` delivers metadata. If the returned
+    /// asset points to the same URL as the one currently in use, playback continues uninterrupted and only metadata is
+    /// updated. If it points to a different URL, the new asset replaces the current one and is loaded at its
+    /// default position, as defined by its ``PlaybackConfiguration/position``. The current playback position is not
+    /// preserved.
+    ///
+    /// > Tip: To avoid interrupting playback when metadata is updated, return an asset with the same URL as before.
     ///
     /// - Parameters:
     ///   - input: The input that identifies the asset.
