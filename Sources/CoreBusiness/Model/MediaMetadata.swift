@@ -22,7 +22,7 @@ public struct MediaMetadata {
     public let mainChapter: MediaComposition.Chapter
 
     /// The resource to be played.
-    public let resource: MediaComposition.Resource?
+    public private(set) var resource: MediaComposition.Resource?
 
     /// The raw media composition data, used to detect content changes.
     let mediaCompositionData: Data
@@ -94,6 +94,12 @@ public struct MediaMetadata {
         return headers.filter { key, _ in
             ["akamai-grn", "x-location-info", "x-proxy-detection-info", "x-tracing-id"].contains(key.lowercased())
         }
+    }
+
+    func withResource(resource: MediaComposition.Resource?) -> Self {
+        var metadata = self
+        metadata.resource = resource
+        return metadata
     }
 }
 

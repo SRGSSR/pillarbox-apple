@@ -90,6 +90,9 @@ enum URNAssetLoader: AssetLoader {
             .map { _ in
                 mediaMetadataPublisher(for: input, dataProvider: dataProvider)
                     .catch { _ in Empty() }
+                    .map { newMetadata in
+                        newMetadata.withResource(resource: metadata.resource)
+                    }
             }
             .switchToLatest()
             .prepend(metadata)
