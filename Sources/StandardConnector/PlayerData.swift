@@ -184,6 +184,21 @@ public extension PlayerData {
     }
 }
 
+extension PlayerData.Chapter: Identifiable {
+    /// A chapter identity.
+    public struct ID: Hashable {
+        // swiftlint:disable:previous type_name
+        let identifier: String?
+        let startTime: Int
+        let endTime: Int
+    }
+
+    // swiftlint:disable:next missing_docs
+    public var id: ID {
+        .init(identifier: identifier, startTime: startTime, endTime: endTime)
+    }
+}
+
 extension PlayerData {
     /// A video viewport.
     public enum Viewport: String, Decodable {

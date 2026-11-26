@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import CoreMedia
 import SwiftUI
 
 // TODO: Remove once tvOS 26 is not supported anymore.
@@ -12,7 +11,7 @@ struct ChapterList: View {
     @ObservedObject var player: Player
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
     @Environment(\.dismiss) private var dismiss
-    @FocusState private var focusedTimeRange: CMTimeRange?
+    @FocusState private var focusedChapterId: Chapter.ID?
 
     private var chapters: [Chapter] {
         player.metadata.chapters
@@ -26,27 +25,27 @@ struct ChapterList: View {
         ScrollViewReader { proxy in
             ScrollView(.horizontal) {
                 HStack(spacing: 40) {
-                    ForEach(chapters, id: \.timeRange) { chapter in
-                        ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter, isFocused: chapter.timeRange == focusedTimeRange) {
+                    ForEach(chapters) { chapter in
+                        ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter, isFocused: chapter.id == focusedChapterId) {
                             player.seek(to: chapter)
                             dismiss()
                         }
-                        .focused($focusedTimeRange, equals: chapter.timeRange)
-                        .id(chapter.timeRange)
+                        .focused($focusedChapterId, equals: chapter.id)
+                        .id(chapter.id)
                     }
                 }
             }
             .scrollClipDisabled26()
             .bind(progressTracker, to: player)
             .onAppear {
-                focusedTimeRange = currentChapter?.timeRange
-                proxy.scrollTo(currentChapter?.timeRange)
+                focusedChapterId = currentChapter?.id
+                proxy.scrollTo(currentChapter?.id)
             }
-            .onChange(of: focusedTimeRange) { focusedTimeRange in
-                // When a cell loses focus (e.g. leaving the list) focusedTimeRange becomes nil.
-                // To avoid losing the last state we retain the current chapter time range.
-                if focusedTimeRange == nil {
-                    self.focusedTimeRange = currentChapter?.timeRange
+            .onChange(of: focusedChapterId) { focusedChapterId in
+                // When a cell loses focus (e.g. leaving the list) focusedChapterId becomes nil.
+                // To avoid losing the last state we retain the current chapter identity.
+                if focusedChapterId == nil {
+                    self.focusedChapterId = currentChapter?.id
                 }
             }
         }
