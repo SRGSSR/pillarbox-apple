@@ -82,6 +82,20 @@ public struct Chapter: Codable, Equatable {
     }
 }
 
+extension Chapter: Identifiable {
+    /// A chapter identity.
+    public struct ID: Hashable {
+        // swiftlint:disable:previous type_name
+        let identifier: String?
+        let timeRange: CMTimeRange
+    }
+
+    // swiftlint:disable:next missing_docs
+    public var id: ID {
+        .init(identifier: identifier, timeRange: timeRange)
+    }
+}
+
 extension Chapter {
     func lazyChapterPublisher() -> AnyPublisher<Chapter, Never> {
         imageSource.lazyImageSourcePublisher()

@@ -86,7 +86,7 @@ private struct ChaptersList: View {
 
     private func chaptersList() -> some View {
         LazyHStack(spacing: 15) {
-            ForEach(chapters, id: \.timeRange) { chapter in
+            ForEach(chapters) { chapter in
                 Button {
                     player.seek(to: chapter)
                 } label: {
