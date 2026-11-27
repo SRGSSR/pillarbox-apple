@@ -29,7 +29,6 @@ public final class ComScoreTracker: PlayerItemTracker {
     // swiftlint:disable:next missing_docs
     public func updateMetadata(to metadata: [String: String]) {
         self.metadata = metadata
-        setMetadata(metadata)
     }
 
     // swiftlint:disable:next missing_docs
